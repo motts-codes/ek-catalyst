@@ -106,6 +106,23 @@ export default async function Product({ params, searchParams }: Props) {
     return notFound();
   }
 
+  // Breadcrumbs: Home / <category trail> / <product name>.
+  // The category trail comes from the product's first associated category (Product has no
+  // primary-category field in the schema). Any nested subcategories a product is assigned to
+  // appear automatically here — the depth is driven by the store's category data.
+  const firstCategory = removeEdgesAndNodes(baseProduct.categories)[0];
+  const categoryCrumbs = firstCategory
+    ? removeEdgesAndNodes(firstCategory.breadcrumbs).map(({ name, path }) => ({
+        label: name,
+        href: path ?? '#',
+      }))
+    : [];
+  const breadcrumbs = [
+    { label: 'Home', href: '/' },
+    ...categoryCrumbs,
+    { label: baseProduct.name, href: baseProduct.path },
+  ];
+
   const streamableProduct = Streamable.from(async () => {
     const variables = {
       entityId: Number(productId),
@@ -552,6 +569,7 @@ export default async function Product({ params, searchParams }: Props) {
       <ProductAnalyticsProvider data={streamableAnalyticsData}>
         <ProductDetail
           action={addToCart}
+          breadcrumbs={breadcrumbs}
           additionalActions={
             <WishlistButton
               formId={detachedWishlistFormId}
@@ -585,6 +603,7 @@ export default async function Product({ params, searchParams }: Props) {
             showRating,
             numberOfReviews: baseProduct.reviewSummary.numberOfReviews,
             subtitle: baseProduct.brand?.name,
+            subtitleHref: baseProduct.brand?.path,
             rating: baseProduct.reviewSummary.averageRating,
             accordions: streameableAccordions,
             minQuantity: streamableMinQuantity,

@@ -1,16 +1,24 @@
-import { DM_Serif_Text, Inter, Roboto_Mono } from 'next/font/google';
+import { Open_Sans, Roboto_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 
-export const inter = Inter({
+// Body font: Open Sans (Google Fonts)
+export const openSans = Open_Sans({
   display: 'swap',
   subsets: ['latin'],
-  variable: '--font-family-inter',
+  variable: '--font-family-open-sans',
 });
 
-export const dmSerifText = DM_Serif_Text({
+// Heading font: Gilroy (self-hosted, licensed — files in app/fonts/).
+export const gilroy = localFont({
+  src: [
+    { path: './fonts/Gilroy-Light.woff', weight: '300', style: 'normal' },
+    { path: './fonts/Gilroy-Regular.woff', weight: '400', style: 'normal' },
+    { path: './fonts/Gilroy-Medium.woff', weight: '500', style: 'normal' },
+    { path: './fonts/Gilroy-Bold.woff', weight: '700', style: 'normal' },
+    { path: './fonts/Gilroy-Heavy.woff', weight: '800', style: 'normal' },
+  ],
   display: 'swap',
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-family-dm-serif-text',
+  variable: '--font-family-gilroy',
 });
 
 export const robotoMono = Roboto_Mono({
@@ -19,4 +27,4 @@ export const robotoMono = Roboto_Mono({
   variable: '--font-family-roboto-mono',
 });
 
-export const fonts = [inter, dmSerifText, robotoMono];
+export const fonts = [openSans, gilroy, robotoMono];

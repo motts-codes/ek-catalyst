@@ -88,7 +88,7 @@ export const NumberInput = React.forwardRef<
           <button
             aria-label={decrementLabel}
             className={clsx(
-              'group rounded-l-lg p-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--number-input-focus,hsl(var(--primary)))] disabled:cursor-not-allowed disabled:opacity-30',
+              'group rounded-l-lg p-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--number-input-focus,hsl(var(--primary)))] disabled:cursor-not-allowed disabled:opacity-30',
               {
                 light:
                   'bg-[var(--number-input-light-button-background,hsl(var(--background)))] hover:bg-[var(--number-input-light-button-background-hover,hsl(var(--contrast-100)/50%))]',
@@ -114,7 +114,7 @@ export const NumberInput = React.forwardRef<
                   dark: 'text-[var(--number-input-dark-icon,hsl(var(--contrast-300)))] group-hover:text-[var(--number-input-dark-icon-hover,hsl(var(--background)))]',
                 }[colorScheme],
               )}
-              size={18}
+              size={14}
               strokeWidth={1.5}
             />
           </button>
@@ -136,7 +136,7 @@ export const NumberInput = React.forwardRef<
           <button
             aria-label={incrementLabel}
             className={clsx(
-              'group rounded-r-lg p-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--number-input-focus,hsl(var(--primary)))] disabled:cursor-not-allowed disabled:opacity-30',
+              'group rounded-r-lg p-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--number-input-focus,hsl(var(--primary)))] disabled:cursor-not-allowed disabled:opacity-30',
               {
                 light:
                   'bg-[var(--number-input-light-button-background,hsl(var(--background)))] hover:bg-[var(--number-input-light-button-background-hover,hsl(var(--contrast-100)/50%))]',
@@ -162,7 +162,7 @@ export const NumberInput = React.forwardRef<
                   dark: 'text-[var(--number-input-dark-icon,hsl(var(--contrast-300)))] group-hover:text-[var(--number-input-dark-icon-hover,hsl(var(--background)))]',
                 }[colorScheme],
               )}
-              size={18}
+              size={14}
               strokeWidth={1.5}
             />
           </button>

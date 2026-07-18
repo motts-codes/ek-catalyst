@@ -4,12 +4,12 @@ export const fontFamilyTokens = {
   heading: Font({
     label: 'Heading',
     variant: false,
-    defaultValue: { fontFamily: 'var(--font-family-dm-serif-text)' },
+    defaultValue: { fontFamily: 'var(--font-family-gilroy)' },
   }),
   body: Font({
     label: 'Body',
     variant: false,
-    defaultValue: { fontFamily: 'var(--font-family-inter)' },
+    defaultValue: { fontFamily: 'var(--font-family-open-sans)' },
   }),
   accent: Font({
     label: 'Accent',

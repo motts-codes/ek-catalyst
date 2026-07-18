@@ -16,6 +16,8 @@
   --contrast-300: 0 0% 70%;
   --contrast-400: 0 0% 54%;
   --contrast-500: 0 0% 34%;
+  /* PDP gallery: transparent image backdrop instead of the default grey (--contrast-100) */
+  --product-gallery-image-background: transparent;
   --font-variation-settings-body: 'slnt' 0;
   --font-variation-settings-heading: 'slnt' 0;
   --font-size-xs: 0.75rem;

@@ -47,7 +47,7 @@ export const RadioGroup = React.forwardRef<
         <RadioGroupPrimitive.Root
           {...rest}
           aria-labelledby={id}
-          className="space-y-2"
+          className="flex flex-wrap items-center gap-x-6 gap-y-2"
           ref={ref}
           required={required}
         >

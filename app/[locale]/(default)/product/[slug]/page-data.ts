@@ -190,10 +190,26 @@ const ProductQuery = graphql(
           path
           brand {
             name
+            path
           }
           reviewSummary {
             averageRating
             numberOfReviews
+          }
+          categories(first: 1) {
+            edges {
+              node {
+                breadcrumbs(depth: 5) {
+                  edges {
+                    node {
+                      name
+                      path
+                      entityId
+                    }
+                  }
+                }
+              }
+            }
           }
           description
           ...ProductOptionsFragment
