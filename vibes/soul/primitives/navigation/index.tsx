@@ -557,7 +557,6 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
         >
           {searchAction ? (
             <Popover.Root onOpenChange={setIsSearchOpen} open={isSearchOpen}>
-              <Popover.Anchor className="absolute left-0 right-0 top-full" />
               <Popover.Trigger asChild>
                 <button
                   aria-label={openSearchPopupLabel}
@@ -570,7 +569,17 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                 </button>
               </Popover.Trigger>
               <Popover.Portal>
-                <Popover.Content className="max-h-[calc(var(--radix-popover-content-available-height)-16px)] w-[var(--radix-popper-anchor-width)] py-2 @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+                {/* Anchor to the trigger with explicit positioning instead of the nav-width anchor
+                    variable, which measures 0px in this environment (collapsing the bar to
+                    invisible / mispositioned top-right). This drops a full-width search bar just
+                    below the nav: width = viewport minus page gutter, aligned to the nav edges. */}
+                <Popover.Content
+                  align="end"
+                  className="max-h-[calc(var(--radix-popover-content-available-height)-16px)] w-[calc(100vw-2rem)] max-w-screen-2xl py-2 @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+                  collisionPadding={16}
+                  side="bottom"
+                  sideOffset={12}
+                >
                   <div className="flex max-h-[inherit] flex-col rounded-2xl bg-[var(--nav-search-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-search-border,hsl(var(--foreground)/5%))] transition-all duration-200 ease-in-out @4xl:inset-x-0">
                     <SearchForm
                       searchAction={searchAction}

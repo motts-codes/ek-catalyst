@@ -274,8 +274,16 @@ export function ProductDetailForm<F extends Field>({
           <div className="space-y-3">
             {header != null && <div>{header}</div>}
             <div className="space-y-2.5">
-              {fields.map((field) => {
-                return (
+              {(() => {
+                // Windows-style products expose a "Width (in.)" and "Height (in.)" option. When
+                // both are present, render them side-by-side as `Width [ ] × Height [ ]` instead
+                // of stacked. Keyed on the option labels (not the category, which the form never
+                // receives), so it applies to any product with both dimensions.
+                const widthField = fields.find((f) => /width/i.test(f.label));
+                const heightField = fields.find((f) => /height/i.test(f.label));
+                const paired = widthField != null && heightField != null;
+
+                const renderField = (field: F) => (
                   <FormField
                     emptySelectPlaceholder={emptySelectPlaceholder}
                     field={field}
@@ -286,7 +294,26 @@ export function ProductDetailForm<F extends Field>({
                     onPrefetch={onPrefetch}
                   />
                 );
-              })}
+
+                if (paired) {
+                  const rest = fields.filter(
+                    (f) => f !== widthField && f !== heightField,
+                  );
+
+                  return (
+                    <>
+                      <div className="flex items-end gap-3">
+                        {renderField(widthField)}
+                        <span className="pb-2 text-lg text-contrast-400">×</span>
+                        {renderField(heightField)}
+                      </div>
+                      {rest.map(renderField)}
+                    </>
+                  );
+                }
+
+                return fields.map(renderField);
+              })()}
             </div>
           {form.errors?.map((error, index) => (
             <FormStatus className="pt-3" key={index} type="error">
