@@ -72,6 +72,9 @@ export interface ProductDetailFormProps<F extends Field> {
   fields: F[];
   action: ProductDetailFormAction<F>;
   productId: string;
+  // Rendered in the left cell above the variant options, inside the form, so the purchase panel
+  // (right cell) sits alongside the product name/price from the top of the column.
+  header?: ReactNode;
   ctaLabel?: string;
   quantityLabel?: string;
   incrementLabel?: string;
@@ -90,6 +93,7 @@ export function ProductDetailForm<F extends Field>({
   action,
   fields,
   productId,
+  header,
   ctaLabel = 'Add to cart',
   quantityLabel = 'Quantity',
   incrementLabel = 'Increase quantity',
@@ -263,24 +267,27 @@ export function ProductDetailForm<F extends Field>({
       <FormStateInput />
       <form {...getFormProps(form)} action={formAction}>
         <input name="id" type="hidden" value={productId} />
-        <div className="space-y-6 pb-8">
-          {/* Tighter vertical gap between individual variant option groups than the rest
-              of the form (which keeps the wider space-y-6 to the add-to-cart area). */}
+        <div className="grid grid-cols-1 gap-6 pb-8 @2xl:grid-cols-[7fr_3fr] @2xl:items-start">
+          {/* LEFT (70%): product header (title/price/etc.) + variant option groups.
+              The header keeps its own internal margins, so it's wrapped in a single element
+              (not spread into the space-y-6 flow, which would add 24px between every header row). */}
           <div className="space-y-3">
-            {fields.map((field) => {
-              return (
-                <FormField
-                  emptySelectPlaceholder={emptySelectPlaceholder}
-                  field={field}
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  formField={formFields[field.name]!}
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  key={formFields[field.name]!.id}
-                  onPrefetch={onPrefetch}
-                />
-              );
-            })}
-          </div>
+            {header != null && <div>{header}</div>}
+            <div className="space-y-2.5">
+              {fields.map((field) => {
+                return (
+                  <FormField
+                    emptySelectPlaceholder={emptySelectPlaceholder}
+                    field={field}
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    formField={formFields[field.name]!}
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    key={formFields[field.name]!.id}
+                    onPrefetch={onPrefetch}
+                  />
+                );
+              })}
+            </div>
           {form.errors?.map((error, index) => (
             <FormStatus className="pt-3" key={index} type="error">
               {error}
@@ -290,7 +297,7 @@ export function ProductDetailForm<F extends Field>({
           {/* Reserved slot for stock/backorder messages — only takes space when there is a
               message to show, so it collapses to zero height otherwise. */}
           {(!!stockDisplayData?.stockLevelMessage || !!backorderMessages) && (
-          <div className="h-[1.6rem] sm:h-[1.3rem]">
+          <div className="h-[1.6rem] sm:h-[1.3rem] @2xl:h-auto">
             {!!stockDisplayData?.stockLevelMessage && (
               <div
                 className={clsx(
@@ -335,37 +342,39 @@ export function ProductDetailForm<F extends Field>({
             )}
           </div>
           )}
-
-          <div className="mb-4">
-            <Label className="mb-2" id="quantity-label">
-              {quantityLabel}
-            </Label>
-            <NumberInput
-              aria-label={quantityLabel}
-              decrementLabel={decrementLabel}
-              incrementLabel={incrementLabel}
-              max={maxQuantity}
-              min={minQuantity ?? 1}
-              name={formFields.quantity.name}
-              onBlur={quantityControl.blur}
-              onChange={(e) => quantityControl.change(e.currentTarget.value)}
-              onFocus={quantityControl.focus}
-              required
-              value={quantityControl.value}
-            />
           </div>
-          <div className="flex gap-x-3">
-            <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
-            <SubmitButton
-              disabled={ctaDisabled}
-              onClick={() => {
-                buyNowRef.current = true;
-              }}
-              variant="tertiary"
-            >
-              Buy now
-            </SubmitButton>
-            {additionalActions}
+          {/* RIGHT (30%): purchase panel — quantity + stacked buttons in a grey rounded box */}
+          <div className="space-y-4 rounded-xl border border-contrast-100 p-4 @2xl:sticky @2xl:top-4">
+            <div>
+              <Label className="mb-2" id="quantity-label" required>
+                {quantityLabel}
+              </Label>
+              <NumberInput
+                aria-label={quantityLabel}
+                decrementLabel={decrementLabel}
+                incrementLabel={incrementLabel}
+                max={maxQuantity}
+                min={minQuantity ?? 1}
+                name={formFields.quantity.name}
+                onBlur={quantityControl.blur}
+                onChange={(e) => quantityControl.change(e.currentTarget.value)}
+                onFocus={quantityControl.focus}
+                required
+                value={quantityControl.value}
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+              <SubmitButton
+                disabled={ctaDisabled}
+                onClick={() => {
+                  buyNowRef.current = true;
+                }}
+                variant="tertiary"
+              >
+                Buy now
+              </SubmitButton>
+            </div>
           </div>
         </div>
       </form>
@@ -388,7 +397,7 @@ function SubmitButton({
 
   return (
     <Button
-      className="w-auto @xl:w-56"
+      className="w-full"
       disabled={disabled}
       loading={pending && variant === 'primary'}
       onClick={onClick}

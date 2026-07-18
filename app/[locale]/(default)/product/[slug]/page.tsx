@@ -475,14 +475,14 @@ export default async function Product({ params, searchParams }: Props) {
             {
               title: t('ProductDetails.Accordions.specifications'),
               content: (
-                <div className="prose @container">
-                  <dl className="flex flex-col gap-4">
+                <div className="@container text-xs">
+                  <dl className="flex flex-col gap-1.5">
                     {specifications.map((field, index) => (
-                      <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2" key={index}>
-                        <dt>
-                          <strong>{field.name}</strong>
-                        </dt>
-                        <dd>{field.value}</dd>
+                      <div className="flex gap-2" key={index}>
+                        <dt className="shrink-0 font-semibold">{field.name}:</dt>
+                        <dd className="text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
+                          {field.value}
+                        </dd>
                       </div>
                     ))}
                   </dl>

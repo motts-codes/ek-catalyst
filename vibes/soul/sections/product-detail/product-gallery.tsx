@@ -33,7 +33,8 @@ export interface ProductGalleryProps {
     | '16:9'
     | '9:16'
     | '5:6'
-    | '6:5';
+    | '6:5'
+    | '16:15';
   fit?: 'contain' | 'cover';
   pageInfo?: { hasNextPage: boolean; endCursor: string | null };
   productId?: number;
@@ -252,7 +253,7 @@ export function ProductGallery({
   }, [emblaThumbsApi, addThumbsScrollListener, onSlideChanges]);
 
   return (
-    <div className={clsx('sticky top-4 flex flex-col gap-2', className)}>
+    <div className={clsx('sticky top-4 mt-6 flex flex-col gap-6', className)}>
       <div aria-live="polite" className="sr-only" role="status">
         {loadingStatus}
       </div>
@@ -273,6 +274,7 @@ export function ProductGallery({
                   '6:5': 'aspect-[6/5]',
                   '5:4': 'aspect-[5/4]',
                   '4:3': 'aspect-[4/3]',
+                  '16:15': 'aspect-[16/15]',
                   '1:1': 'aspect-square',
                 }[aspectRatio],
               )}

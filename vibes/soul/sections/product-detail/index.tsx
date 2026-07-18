@@ -133,12 +133,12 @@ export function ProductDetail<F extends Field>({
         <Stream fallback={<ProductDetailSkeleton />} value={streamableProduct}>
           {(product) =>
             product && (
-              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-[2fr_3fr] @5xl:gap-x-12">
+              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-[3fr_7fr] @5xl:gap-x-12">
                 <div className="group/product-gallery hidden @2xl:block">
                   <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                     {(imagesData) => (
                       <ProductGallery
-                        aspectRatio="4:3"
+                        aspectRatio="1:1"
                         images={imagesData.images}
                         loadMoreAction={loadMoreImagesAction}
                         pageInfo={imagesData.pageInfo}
@@ -149,107 +149,6 @@ export function ProductDetail<F extends Field>({
                 </div>
                 {/* Product Details */}
                 <div className="text-[var(--product-detail-primary-text,hsl(var(--foreground)))] @2xl:border-l @2xl:border-contrast-100 @2xl:pl-8 @5xl:pl-12">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      {Boolean(product.subtitle) &&
-                        (product.subtitleHref ? (
-                          <Link
-                            className="group/subtitle mb-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-400 transition-colors hover:text-foreground"
-                            href={product.subtitleHref}
-                          >
-                            Shop {product.subtitle}
-                          </Link>
-                        ) : (
-                          <p className="mb-1 font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-400">
-                            {product.subtitle}
-                          </p>
-                        ))}
-                      <h1 className="mb-0 pb-0 font-[family-name:var(--product-detail-title-font-family,var(--font-family-heading))] text-lg font-semibold leading-tight @xl:text-2xl @4xl:text-[1.65rem]">
-                        {product.title}
-                      </h1>
-                    </div>
-                    {additionalActions && (
-                      <div className="shrink-0">{additionalActions}</div>
-                    )}
-                  </div>
-                  {product.reviewsEnabled && (
-                    <div className="group/product-rating">
-                      <ReviewForm
-                        action={reviewFormAction}
-                        formEmailLabel={reviewFormEmailLabel}
-                        formModalTitle={reviewFormModalTitle}
-                        formNameLabel={reviewFormNameLabel}
-                        formRatingLabel={reviewFormRatingLabel}
-                        formReviewLabel={reviewFormReviewLabel}
-                        formSubmitLabel={reviewFormSubmitLabel}
-                        formTitleLabel={reviewFormTitleLabel}
-                        productId={Number(product.id)}
-                        recaptchaSiteKey={recaptchaSiteKey}
-                        streamableImages={product.images}
-                        streamableProduct={{ name: product.title }}
-                        streamableUser={user}
-                        trigger={
-                          <AnimatedUnderline className="cursor-pointer">
-                            Write a review
-                          </AnimatedUnderline>
-                        }
-                      />
-                    </div>
-                  )}
-                  {product.showRating && (
-                    <div className="group/product-rating">
-                      <Stream
-                        fallback={<RatingSkeleton />}
-                        value={Streamable.all([product.rating, product.numberOfReviews])}
-                      >
-                        {([rating, numberOfReviews]) => (
-                          <RatingLink
-                            numberOfReviews={numberOfReviews ?? 0}
-                            rating={rating ?? 0}
-                            scrollTargetId="reviews"
-                          />
-                        )}
-                      </Stream>
-                    </div>
-                  )}
-                  <hr className="mb-3 mt-1 w-full border-t border-contrast-100" />
-                  <div className="group/product-price">
-                    <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
-                      {(price) => (
-                        <PriceLabel
-                          className="my-0.5 text-2xl @xl:text-3xl"
-                          price={price ?? ''}
-                          showSavings
-                        />
-                      )}
-                    </Stream>
-                  </div>
-                  <hr className="mb-4 w-full border-t border-contrast-100" />
-                  <div className="group/product-gallery mb-8 @2xl:hidden">
-                    <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
-                      {(imagesData) => (
-                        <ProductGallery
-                          aspectRatio="4:3"
-                          images={imagesData.images}
-                          loadMoreAction={loadMoreImagesAction}
-                          pageInfo={imagesData.pageInfo}
-                          productId={Number(product.id)}
-                          thumbnailLabel={thumbnailLabel}
-                        />
-                      )}
-                    </Stream>
-                  </div>
-                  <div className="group/product-summary">
-                    <Stream fallback={<ProductSummarySkeleton />} value={product.summary}>
-                      {(summary) =>
-                        Boolean(summary) && (
-                          <p className="text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
-                            {summary}
-                          </p>
-                        )
-                      }
-                    </Stream>
-                  </div>
                   <div className="group/product-detail-form">
                     <Stream
                       fallback={<ProductDetailFormSkeleton />}
@@ -280,6 +179,120 @@ export function ProductDetail<F extends Field>({
                           decrementLabel={decrementLabel}
                           emptySelectPlaceholder={emptySelectPlaceholder}
                           fields={fields}
+                          header={
+                            <>
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                  {Boolean(product.subtitle) &&
+                                    (product.subtitleHref ? (
+                                      <Link
+                                        className="group/subtitle mb-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-400 transition-colors hover:text-foreground"
+                                        href={product.subtitleHref}
+                                      >
+                                        Shop {product.subtitle}
+                                      </Link>
+                                    ) : (
+                                      <p className="mb-1 font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-400">
+                                        {product.subtitle}
+                                      </p>
+                                    ))}
+                                  <h1 className="mb-0 pb-0 font-[family-name:var(--product-detail-title-font-family,var(--font-family-heading))] text-lg font-semibold leading-tight @xl:text-2xl @4xl:text-[1.65rem]">
+                                    {product.title}
+                                  </h1>
+                                </div>
+                                {additionalActions && (
+                                  <div className="shrink-0">{additionalActions}</div>
+                                )}
+                              </div>
+                              {product.reviewsEnabled && (
+                                <div className="group/product-rating">
+                                  <ReviewForm
+                                    action={reviewFormAction}
+                                    formEmailLabel={reviewFormEmailLabel}
+                                    formModalTitle={reviewFormModalTitle}
+                                    formNameLabel={reviewFormNameLabel}
+                                    formRatingLabel={reviewFormRatingLabel}
+                                    formReviewLabel={reviewFormReviewLabel}
+                                    formSubmitLabel={reviewFormSubmitLabel}
+                                    formTitleLabel={reviewFormTitleLabel}
+                                    productId={Number(product.id)}
+                                    recaptchaSiteKey={recaptchaSiteKey}
+                                    streamableImages={product.images}
+                                    streamableProduct={{ name: product.title }}
+                                    streamableUser={user}
+                                    trigger={
+                                      <AnimatedUnderline className="cursor-pointer">
+                                        Write a review
+                                      </AnimatedUnderline>
+                                    }
+                                  />
+                                </div>
+                              )}
+                              {product.showRating && (
+                                <div className="group/product-rating">
+                                  <Stream
+                                    fallback={<RatingSkeleton />}
+                                    value={Streamable.all([
+                                      product.rating,
+                                      product.numberOfReviews,
+                                    ])}
+                                  >
+                                    {([rating, numberOfReviews]) => (
+                                      <RatingLink
+                                        numberOfReviews={numberOfReviews ?? 0}
+                                        rating={rating ?? 0}
+                                        scrollTargetId="reviews"
+                                      />
+                                    )}
+                                  </Stream>
+                                </div>
+                              )}
+                              {/* <hr className="mb-3 mt-1 w-full border-t border-contrast-100" /> */}
+                              <div className="group/product-price">
+                                <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
+                                  {(price) => (
+                                    <PriceLabel
+                                      className="my-2 text-2xl @xl:text-3xl"
+                                      price={price ?? ''}
+                                      showSavings
+                                    />
+                                  )}
+                                </Stream>
+                              </div>
+                              <hr className="mb-4 w-full border-t border-contrast-100" />
+                              <div className="group/product-gallery mb-8 @2xl:hidden">
+                                <Stream
+                                  fallback={<ProductGallerySkeleton />}
+                                  value={product.images}
+                                >
+                                  {(imagesData) => (
+                                    <ProductGallery
+                                      aspectRatio="1:1"
+                                      images={imagesData.images}
+                                      loadMoreAction={loadMoreImagesAction}
+                                      pageInfo={imagesData.pageInfo}
+                                      productId={Number(product.id)}
+                                      thumbnailLabel={thumbnailLabel}
+                                    />
+                                  )}
+                                </Stream>
+                              </div>
+                              <div className="group/product-summary">
+                                <Stream
+                                  fallback={<ProductSummarySkeleton />}
+                                  value={product.summary}
+                                >
+                                  {(summary) =>
+                                    Boolean(summary) && (
+                                      <p className="text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
+                                        {summary}
+                                      </p>
+                                    )
+                                  }
+                                </Stream>
+                              </div>
+                            </>
+                          }
                           incrementLabel={incrementLabel}
                           maxQuantity={maxQuantity ?? undefined}
                           minQuantity={minQuantity ?? undefined}
@@ -295,7 +308,7 @@ export function ProductDetail<F extends Field>({
                     <Stream fallback={<ProductDescriptionSkeleton />} value={product.description}>
                       {(description) =>
                         Boolean(description) && (
-                          <div className="prose prose-sm max-w-none border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] py-8 [&>div>*:first-child]:mt-0 [&>div>*:last-child]:mb-0">
+                          <div className="prose prose-sm max-w-none border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] py-4 [&>div>*:first-child]:mt-0 [&>div>*:last-child]:mb-0">
                             {description}
                           </div>
                         )
@@ -308,7 +321,7 @@ export function ProductDetail<F extends Field>({
                       {(accordions) =>
                         accordions && (
                           <Accordion
-                            className="border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] pt-4"
+                            className="border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] pt-4 [&_button]:!py-1"
                             type="multiple"
                           >
                             {accordions.map((accordion, index) => (
