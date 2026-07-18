@@ -30,11 +30,14 @@ export const button = Group({
   preferredLayout: Group.Layout.Popover,
   props: {
     fontFamily: FontFamily({ label: 'Font', defaultValue: FontFamily.Body }),
+    // Brand button colors (Add to Cart = primary; Buy Now uses tertiary).
+    // NOTE: these defaults are overridden at runtime by the Makeswift theme snapshot, so the
+    // authoritative values are ALSO set with !important in globals.css. Keep both in sync.
     primary: colorGroup('Primary', {
-      background: hsl(colors.primary),
-      backgroundHover: hsl(colors.primaryMix.white[75]),
-      foreground: hsl(colors.foreground),
-      border: hsl(colors.primary),
+      background: '#D90716',
+      backgroundHover: '#B80613',
+      foreground: '#FFFFFF',
+      border: '#D90716',
     }),
     secondary: colorGroup('Secondary', {
       background: hsl(colors.foreground),
@@ -43,10 +46,10 @@ export const button = Group({
       border: hsl(colors.foreground),
     }),
     tertiary: colorGroup('Tertiary', {
-      background: hsl(colors.background),
-      backgroundHover: hsl(colors.contrast[100]),
-      foreground: hsl(colors.foreground),
-      border: hsl(colors.contrast[200]),
+      background: '#96050F',
+      backgroundHover: '#6B040B',
+      foreground: '#FFFFFF',
+      border: '#96050F',
     }),
     ghost: colorGroup('Ghost', {
       background: 'transparent',

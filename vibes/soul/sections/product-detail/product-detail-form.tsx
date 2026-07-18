@@ -445,7 +445,7 @@ export function ProductDetailForm<F extends Field>({
           </div>
           {/* Fulfillment box (__fulfillment custom field): delivery/pickup message with an icon. */}
           {fulfillmentMessage != null && fulfillmentMessage !== '' && (
-            <div className="flex items-start gap-3 rounded-xl bg-[var(--product-detail-fulfillment-background,hsl(var(--contrast-100)))] p-4">
+            <div className="flex items-start gap-3 rounded-xl bg-[var(--product-detail-fulfillment-background,#F6EBD6)] p-4">
               <FulfillmentIcon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--product-detail-fulfillment-icon,hsl(var(--foreground)))]" />
               <p className="text-sm text-[var(--product-detail-fulfillment-text,hsl(var(--contrast-500)))]">
                 {fulfillmentMessage}

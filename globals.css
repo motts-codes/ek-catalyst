@@ -18,6 +18,20 @@
   --contrast-500: 0 0% 34%;
   /* PDP gallery: transparent image backdrop instead of the default grey (--contrast-100) */
   --product-gallery-image-background: transparent;
+  /* Brand button colors. `!important` because the Makeswift runtime theme (<style
+     data-makeswift="theme">) emits stored values that would otherwise override these. Also set as
+     defaults in lib/makeswift/components/site-theme/components/button.ts — keep both in sync.
+     Primary = Add to Cart, Tertiary = Buy Now. */
+  --button-primary-background: #d90716 !important;
+  --button-primary-background-hover: #b80613 !important;
+  --button-primary-foreground: #ffffff !important;
+  --button-primary-text: #ffffff !important;
+  --button-primary-border: #d90716 !important;
+  --button-tertiary-background: #96050f !important;
+  --button-tertiary-background-hover: #6b040b !important;
+  --button-tertiary-foreground: #ffffff !important;
+  --button-tertiary-text: #ffffff !important;
+  --button-tertiary-border: #96050f !important;
   --font-variation-settings-body: 'slnt' 0;
   --font-variation-settings-heading: 'slnt' 0;
   --font-size-xs: 0.75rem;
