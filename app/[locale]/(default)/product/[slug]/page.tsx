@@ -10,6 +10,7 @@ import { auth, getSessionCustomerAccessToken } from '~/auth';
 import { rewriteWysiwygContentUrls } from '~/data-transformers/html-content-transformer';
 import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
+import { buildOptionDependencyMap } from '~/data-transformers/option-dependency-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
@@ -122,6 +123,12 @@ export default async function Product({ params, searchParams }: Props) {
     ...categoryCrumbs,
     { label: baseProduct.name, href: baseProduct.path },
   ];
+
+  // The __fulfillment custom field (delivery/pickup message) is shown in the purchase panel, not
+  // in specifications. Present on products across categories; absent -> no fulfillment box.
+  const fulfillmentMessage = removeEdgesAndNodes(baseProduct.customFields)
+    .find((field) => field.name === '__fulfillment')
+    ?.value?.trim();
 
   const streamableProduct = Streamable.from(async () => {
     const variables = {
@@ -463,10 +470,14 @@ export default async function Product({ params, searchParams }: Props) {
         name: t('ProductDetails.Accordions.condition'),
         value: product.condition,
       },
-      ...customFields.map((field) => ({
-        name: field.name,
-        value: field.value,
-      })),
+      ...customFields
+        // Hide empty custom fields, and exclude __fulfillment — it's surfaced separately in the
+        // purchase panel (see fulfillmentMessage below), not in the specifications list.
+        .filter((field) => field.name !== '__fulfillment' && field.value?.trim())
+        .map((field) => ({
+          name: field.name,
+          value: field.value,
+        })),
     ];
 
     return [
@@ -583,6 +594,8 @@ export default async function Product({ params, searchParams }: Props) {
           decrementLabel={t('ProductDetails.decreaseQuantity')}
           emptySelectPlaceholder={t('ProductDetails.emptySelectPlaceholder')}
           fields={productOptionsTransformer(baseProduct.productOptions)}
+          optionDependencyMap={buildOptionDependencyMap(baseProduct.variants?.edges)}
+          fulfillmentMessage={fulfillmentMessage}
           incrementLabel={t('ProductDetails.increaseQuantity')}
           loadMoreImagesAction={getMoreProductImages}
           prefetch={true}

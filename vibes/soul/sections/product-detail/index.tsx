@@ -78,6 +78,11 @@ export interface ProductDetailProps<F extends Field> {
   user: Streamable<{ email: string; name: string }>;
   loadMoreImagesAction?: ProductGalleryLoadMoreAction;
   recaptchaSiteKey?: string;
+  // Map of option-value entityId -> co-occurring option-value entityIds (from other options),
+  // built from the product's variants. Enables dependent option filtering (e.g. Width -> Heights).
+  optionDependencyMap?: Record<number, number[]>;
+  // Delivery/pickup message (from the __fulfillment custom field). Shown in the purchase panel.
+  fulfillmentMessage?: string;
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -121,6 +126,8 @@ export function ProductDetail<F extends Field>({
   user,
   loadMoreImagesAction,
   recaptchaSiteKey,
+  optionDependencyMap,
+  fulfillmentMessage,
 }: ProductDetailProps<F>) {
   return (
     <section className="@container">
@@ -179,6 +186,8 @@ export function ProductDetail<F extends Field>({
                           decrementLabel={decrementLabel}
                           emptySelectPlaceholder={emptySelectPlaceholder}
                           fields={fields}
+                          fulfillmentMessage={fulfillmentMessage}
+                          optionDependencyMap={optionDependencyMap}
                           header={
                             <>
                               <div className="flex items-start justify-between gap-3">

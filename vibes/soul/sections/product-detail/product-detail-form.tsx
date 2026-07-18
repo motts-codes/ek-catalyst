@@ -43,6 +43,7 @@ import { useEvents } from '~/components/analytics/events';
 import { usePathname, useRouter } from '~/i18n/routing';
 
 import { revalidateCart } from './actions/revalidate-cart';
+import { FulfillmentIcon } from './fulfillment-icon';
 import { Field, schema, SchemaRawShape } from './schema';
 
 type Action<S, P> = (state: Awaited<S>, payload: P) => S | Promise<S>;
@@ -87,6 +88,12 @@ export interface ProductDetailFormProps<F extends Field> {
   maxQuantity?: number;
   stockDisplayData?: StockDisplayData;
   backorderDisplayData?: BackorderDisplayData;
+  // Option-value entityId -> co-occurring option-value entityIds. When present, the Height
+  // options are filtered to those valid for the selected Width (and vice versa).
+  optionDependencyMap?: Record<number, number[]>;
+  // Delivery/pickup message (__fulfillment). When set, a grey box with a delivery icon is shown
+  // below the purchase panel.
+  fulfillmentMessage?: string;
 }
 
 export function ProductDetailForm<F extends Field>({
@@ -106,6 +113,8 @@ export function ProductDetailForm<F extends Field>({
   maxQuantity,
   stockDisplayData,
   backorderDisplayData,
+  optionDependencyMap,
+  fulfillmentMessage,
 }: ProductDetailFormProps<F>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -300,12 +309,42 @@ export function ProductDetailForm<F extends Field>({
                     (f) => f !== widthField && f !== heightField,
                   );
 
+                  // Dependent filtering (one-directional): Width always shows ALL options; once a
+                  // Width is chosen, Height is restricted to values that co-occur with it in a real
+                  // variant. Kept one-way on purpose — if it were bidirectional, picking a Height
+                  // would shrink the Width list and the user could get stuck with no way back to
+                  // the full set. Derived at render time from the current selection (no local
+                  // state, so it never goes stale).
+                  const selectedWidth = params[widthField.name] ?? undefined;
+
+                  let filteredHeightField = heightField;
+
+                  if (
+                    optionDependencyMap != null &&
+                    selectedWidth != null &&
+                    'options' in heightField &&
+                    Array.isArray((heightField as { options?: unknown }).options)
+                  ) {
+                    const allowed = optionDependencyMap[Number(selectedWidth)];
+
+                    if (allowed != null) {
+                      const allowedSet = new Set(allowed.map((id) => id.toString()));
+
+                      filteredHeightField = {
+                        ...heightField,
+                        options: (
+                          heightField as unknown as { options: Array<{ value: string }> }
+                        ).options.filter((option) => allowedSet.has(option.value)),
+                      } as F;
+                    }
+                  }
+
                   return (
                     <>
                       <div className="flex items-end gap-3">
                         {renderField(widthField)}
                         <span className="pb-2 text-lg text-contrast-400">×</span>
-                        {renderField(heightField)}
+                        {renderField(filteredHeightField)}
                       </div>
                       {rest.map(renderField)}
                     </>
@@ -370,8 +409,9 @@ export function ProductDetailForm<F extends Field>({
           </div>
           )}
           </div>
-          {/* RIGHT (30%): purchase panel — quantity + stacked buttons in a grey rounded box */}
-          <div className="space-y-4 rounded-xl border border-contrast-100 p-4 @2xl:sticky @2xl:top-4">
+          {/* RIGHT (30%): purchase panel (quantity + buttons) and, below it, the fulfillment box. */}
+          <div className="space-y-4 @2xl:sticky @2xl:top-4">
+          <div className="space-y-4 rounded-xl border border-contrast-100 p-4">
             <div>
               <Label className="mb-2" id="quantity-label" required>
                 {quantityLabel}
@@ -402,6 +442,16 @@ export function ProductDetailForm<F extends Field>({
                 Buy now
               </SubmitButton>
             </div>
+          </div>
+          {/* Fulfillment box (__fulfillment custom field): delivery/pickup message with an icon. */}
+          {fulfillmentMessage != null && fulfillmentMessage !== '' && (
+            <div className="flex items-start gap-3 rounded-xl bg-[var(--product-detail-fulfillment-background,hsl(var(--contrast-100)))] p-4">
+              <FulfillmentIcon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--product-detail-fulfillment-icon,hsl(var(--foreground)))]" />
+              <p className="text-sm text-[var(--product-detail-fulfillment-text,hsl(var(--contrast-500)))]">
+                {fulfillmentMessage}
+              </p>
+            </div>
+          )}
           </div>
         </div>
       </form>

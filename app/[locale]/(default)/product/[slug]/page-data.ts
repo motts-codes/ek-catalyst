@@ -211,7 +211,44 @@ const ProductQuery = graphql(
               }
             }
           }
+          # All variants with the option values that compose each one — used to build the
+          # width->available-heights map for dependent option filtering (e.g. Windows).
+          variants(first: 250) {
+            edges {
+              node {
+                entityId
+                isPurchasable
+                productOptions {
+                  edges {
+                    node {
+                      __typename
+                      entityId
+                      displayName
+                      ... on MultipleChoiceOption {
+                        values {
+                          edges {
+                            node {
+                              entityId
+                              label
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
           description
+          customFields {
+            edges {
+              node {
+                name
+                value
+              }
+            }
+          }
           ...ProductOptionsFragment
         }
       }
