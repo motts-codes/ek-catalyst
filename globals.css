@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --primary: 96 100% 68%;
+  --primary: 356 89% 57%;
   --accent: 96 100% 88%;
   --background: 0 0% 100%;
   --foreground: 0 0% 7%;
@@ -18,6 +18,10 @@
   --contrast-500: 0 0% 34%;
   /* PDP gallery: transparent image backdrop instead of the default grey (--contrast-100) */
   --product-gallery-image-background: transparent;
+  /* Underline highlight (breadcrumbs, AnimatedUnderline) at 50% opacity — full-strength primary
+     reads too dark as an underline. Scoped to underlines; focus rings etc. stay full primary. */
+  --animated-underline-hover: hsl(var(--primary) / 50%);
+  --breadcrumbs-hover: hsl(var(--primary) / 50%);
   /* Brand button colors. `!important` because the Makeswift runtime theme (<style
      data-makeswift="theme">) emits stored values that would otherwise override these. Also set as
      defaults in lib/makeswift/components/site-theme/components/button.ts — keep both in sync.

@@ -249,6 +249,22 @@ const ProductQuery = graphql(
               }
             }
           }
+          # Features grid (headline + description + feature cells), stored as one JSON metafield.
+          featuresMetafield: metafields(namespace: "features", keys: ["grid"], first: 1) {
+            edges {
+              node {
+                value
+              }
+            }
+          }
+          # FAQ (headline + Q/A items), stored as one JSON metafield.
+          faqMetafield: metafields(namespace: "faq", keys: ["list"], first: 1) {
+            edges {
+              node {
+                value
+              }
+            }
+          }
           ...ProductOptionsFragment
         }
       }

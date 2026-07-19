@@ -6,10 +6,14 @@ import { SearchParams } from 'nuqs/server';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { FeaturedProductCarousel } from '@/vibes/soul/sections/featured-product-carousel';
+import { Faq } from '@/vibes/soul/sections/faq';
+import { FeaturesGrid } from '@/vibes/soul/sections/features-grid';
 import { auth, getSessionCustomerAccessToken } from '~/auth';
 import { rewriteWysiwygContentUrls } from '~/data-transformers/html-content-transformer';
 import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
+import { faqTransformer } from '~/data-transformers/faq-transformer';
+import { featuresGridTransformer } from '~/data-transformers/features-grid-transformer';
 import { buildOptionDependencyMap } from '~/data-transformers/option-dependency-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
@@ -129,6 +133,12 @@ export default async function Product({ params, searchParams }: Props) {
   const fulfillmentMessage = removeEdgesAndNodes(baseProduct.customFields)
     .find((field) => field.name === '__fulfillment')
     ?.value?.trim();
+
+  // Features grid (from the `features/grid` JSON metafield). Null when the product has none.
+  const featuresGrid = featuresGridTransformer(baseProduct.featuresMetafield);
+
+  // FAQ (from the `faq/list` JSON metafield). Null when the product has none.
+  const faq = faqTransformer(baseProduct.faqMetafield);
 
   const streamableProduct = Streamable.from(async () => {
     const variables = {
@@ -633,6 +643,8 @@ export default async function Product({ params, searchParams }: Props) {
         />
       </ProductAnalyticsProvider>
 
+      <FeaturesGrid featuresGrid={featuresGrid} />
+
       <FeaturedProductCarousel
         cta={{ label: t('RelatedProducts.cta'), href: '/shop-all' }}
         emptyStateSubtitle={t('RelatedProducts.browseCatalog')}
@@ -683,6 +695,8 @@ export default async function Product({ params, searchParams }: Props) {
           </>
         )}
       </Stream>
+
+      <Faq faq={faq} />
 
       <WishlistButtonForm
         formId={detachedWishlistFormId}
