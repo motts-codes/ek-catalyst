@@ -257,7 +257,7 @@ export function ProductDetail<F extends Field>({
                                 </div>
                               )}
                               {product.showRating && (
-                                <div className="group/product-rating">
+                                <div className="group/product-rating flex items-center gap-2">
                                   <Stream
                                     fallback={<RatingSkeleton />}
                                     value={Streamable.all([
@@ -273,6 +273,30 @@ export function ProductDetail<F extends Field>({
                                       />
                                     )}
                                   </Stream>
+                                  <span
+                                    aria-hidden="true"
+                                    className="h-4 w-px bg-contrast-200"
+                                  />
+                                  <ReviewForm
+                                    action={reviewFormAction}
+                                    formEmailLabel={reviewFormEmailLabel}
+                                    formModalTitle={reviewFormModalTitle}
+                                    formNameLabel={reviewFormNameLabel}
+                                    formRatingLabel={reviewFormRatingLabel}
+                                    formReviewLabel={reviewFormReviewLabel}
+                                    formSubmitLabel={reviewFormSubmitLabel}
+                                    formTitleLabel={reviewFormTitleLabel}
+                                    productId={Number(product.id)}
+                                    recaptchaSiteKey={recaptchaSiteKey}
+                                    streamableImages={product.images}
+                                    streamableProduct={{ name: product.title }}
+                                    streamableUser={user}
+                                    trigger={
+                                      <AnimatedUnderline className="cursor-pointer text-xs !font-normal text-contrast-500">
+                                        Write a Review
+                                      </AnimatedUnderline>
+                                    }
+                                  />
                                 </div>
                               )}
                               {/* <hr className="mb-3 mt-1 w-full border-t border-contrast-100" /> */}

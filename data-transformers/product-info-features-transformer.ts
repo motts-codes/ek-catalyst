@@ -1,8 +1,13 @@
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 
+export interface ProductInfoFeatureItem {
+  name: string;
+  value: string;
+}
+
 export interface ProductInfoFeatures {
   headline: string;
-  items: string[];
+  items: ProductInfoFeatureItem[];
 }
 
 interface MetafieldConnection {
@@ -25,9 +30,9 @@ export function productInfoFeaturesTransformer(
 
   try {
     const parsed = JSON.parse(raw) as Partial<ProductInfoFeatures>;
-    const items = (parsed.items ?? []).filter(
-      (item): item is string => typeof item === 'string' && item.trim() !== '',
-    );
+    const items = (parsed.items ?? [])
+      .filter((item): item is ProductInfoFeatureItem => Boolean(item?.name))
+      .map((item) => ({ name: item.name, value: item.value ?? '' }));
 
     if (items.length === 0) {
       return null;

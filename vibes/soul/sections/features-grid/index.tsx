@@ -1,8 +1,7 @@
-import { clsx } from 'clsx';
-
 import { Image } from '~/components/image';
 
 import { FeaturesGrid as FeaturesGridData } from '~/data-transformers/features-grid-transformer';
+import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 
 interface Props {
   featuresGrid: FeaturesGridData | null;
@@ -22,13 +21,11 @@ export function FeaturesGrid({ featuresGrid, className }: Props) {
   const { headline, description, features } = featuresGrid;
 
   return (
-    <section
-      className={clsx('mx-auto w-full max-w-[1320px] px-4 py-10 @xl:px-6 @4xl:px-8', className)}
-    >
+    <SectionLayout className={className} containerSize="2xl">
       {(headline || description) && (
         <div className="mb-10 max-w-3xl">
           {headline && (
-            <h2 className="font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight @xl:text-3xl">
+            <h2 className="font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
               {headline}
             </h2>
           )}
@@ -70,6 +67,6 @@ export function FeaturesGrid({ featuresGrid, className }: Props) {
           </div>
         ))}
       </div>
-    </section>
+    </SectionLayout>
   );
 }

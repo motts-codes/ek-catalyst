@@ -1,6 +1,5 @@
-import { clsx } from 'clsx';
-
 import { Faq as FaqData } from '~/data-transformers/faq-transformer';
+import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 
 import { FaqSchema } from './faq-schema';
 
@@ -21,12 +20,10 @@ export function Faq({ faq, className }: Props) {
   const { headline, items } = faq;
 
   return (
-    <section
-      className={clsx('mx-auto w-full max-w-[1320px] px-4 py-10 @xl:px-6 @4xl:px-8', className)}
-    >
+    <SectionLayout className={className} containerSize="2xl">
       <FaqSchema faq={faq} />
       {headline && (
-        <h2 className="mb-8 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight @xl:text-3xl">
+        <h2 className="mb-8 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
           {headline}
         </h2>
       )}
@@ -43,6 +40,6 @@ export function Faq({ faq, className }: Props) {
           </div>
         ))}
       </dl>
-    </section>
+    </SectionLayout>
   );
 }

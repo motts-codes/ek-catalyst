@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 
 import { ProductInfoFeatures } from '~/data-transformers/product-info-features-transformer';
+import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 
 interface SpecRow {
   name: string;
@@ -28,10 +29,8 @@ export function ProductInformation({ features, specifications, className }: Prop
   const hasFeatures = features != null;
 
   return (
-    <section
-      className={clsx('mx-auto w-full max-w-[1320px] px-4 py-10 @xl:px-6 @4xl:px-8', className)}
-    >
-      <h2 className="mb-6 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight @xl:text-3xl">
+    <SectionLayout className={className} containerSize="2xl">
+      <h2 className="mb-6 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
         Product Information
       </h2>
 
@@ -47,19 +46,26 @@ export function ProductInformation({ features, specifications, className }: Prop
             <div className="bg-contrast-100 px-4 py-2.5 font-[family-name:var(--font-family-heading)] text-sm font-semibold uppercase">
               {features.headline}
             </div>
-            <ul>
+            <dl>
               {features.items.map((item, index) => (
-                <li
+                <div
                   className={clsx(
-                    'px-4 py-2.5 text-sm text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]',
+                    'grid grid-cols-2 gap-2 px-4 py-2.5 text-sm',
                     index % 2 === 1 && 'bg-[#f5f5f5]',
                   )}
                   key={index}
                 >
-                  {item}
-                </li>
+                  <dt className={clsx('font-semibold', !item.value && 'col-span-2')}>
+                    {item.name}
+                  </dt>
+                  {item.value && (
+                    <dd className="text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
+                      {item.value}
+                    </dd>
+                  )}
+                </div>
               ))}
-            </ul>
+            </dl>
           </div>
         )}
 
@@ -88,6 +94,6 @@ export function ProductInformation({ features, specifications, className }: Prop
           </div>
         )}
       </div>
-    </section>
+    </SectionLayout>
   );
 }
