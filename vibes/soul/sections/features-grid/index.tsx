@@ -26,7 +26,7 @@ export function FeaturesGrid({ featuresGrid, className }: Props) {
       className={clsx('mx-auto w-full max-w-[1320px] px-4 py-10 @xl:px-6 @4xl:px-8', className)}
     >
       {(headline || description) && (
-        <div className="mx-auto mb-10 max-w-2xl text-center">
+        <div className="mb-10 max-w-3xl">
           {headline && (
             <h2 className="font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight @xl:text-3xl">
               {headline}

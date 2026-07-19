@@ -265,6 +265,18 @@ const ProductQuery = graphql(
               }
             }
           }
+          # Product Information > Features list (col 1). Separate from features/grid (image cards).
+          productInfoFeaturesMetafield: metafields(
+            namespace: "product_info"
+            keys: ["features"]
+            first: 1
+          ) {
+            edges {
+              node {
+                value
+              }
+            }
+          }
           ...ProductOptionsFragment
         }
       }

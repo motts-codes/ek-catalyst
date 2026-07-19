@@ -2,6 +2,8 @@ import { clsx } from 'clsx';
 
 import { Faq as FaqData } from '~/data-transformers/faq-transformer';
 
+import { FaqSchema } from './faq-schema';
+
 interface Props {
   faq: FaqData | null;
   className?: string;
@@ -22,6 +24,7 @@ export function Faq({ faq, className }: Props) {
     <section
       className={clsx('mx-auto w-full max-w-[1320px] px-4 py-10 @xl:px-6 @4xl:px-8', className)}
     >
+      <FaqSchema faq={faq} />
       {headline && (
         <h2 className="mb-8 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight @xl:text-3xl">
           {headline}

@@ -8,12 +8,14 @@ import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { FeaturedProductCarousel } from '@/vibes/soul/sections/featured-product-carousel';
 import { Faq } from '@/vibes/soul/sections/faq';
 import { FeaturesGrid } from '@/vibes/soul/sections/features-grid';
+import { ProductInformation } from '@/vibes/soul/sections/product-information';
 import { auth, getSessionCustomerAccessToken } from '~/auth';
 import { rewriteWysiwygContentUrls } from '~/data-transformers/html-content-transformer';
 import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { faqTransformer } from '~/data-transformers/faq-transformer';
 import { featuresGridTransformer } from '~/data-transformers/features-grid-transformer';
+import { productInfoFeaturesTransformer } from '~/data-transformers/product-info-features-transformer';
 import { buildOptionDependencyMap } from '~/data-transformers/option-dependency-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
@@ -139,6 +141,11 @@ export default async function Product({ params, searchParams }: Props) {
 
   // FAQ (from the `faq/list` JSON metafield). Null when the product has none.
   const faq = faqTransformer(baseProduct.faqMetafield);
+
+  // Product Information > Features list (product_info/features metafield). Null -> col 1 hidden.
+  const productInfoFeatures = productInfoFeaturesTransformer(
+    baseProduct.productInfoFeaturesMetafield,
+  );
 
   const streamableProduct = Streamable.from(async () => {
     const variables = {
@@ -281,6 +288,24 @@ export default async function Product({ params, searchParams }: Props) {
   // inventory setting to be ON — that's what exposes availableToSell to the storefront API. If
   // that setting is turned off, availableToSell goes null and 'limited' silently stops firing
   // (everything in-stock just shows 'in'). Do not hide the stock UI by toggling that setting off.
+  // Available stock as a number (variant-aware), or null when the store doesn't expose stock
+  // levels or the product tracks nothing meaningful. Shared by the stock badge AND the quantity
+  // cap so they read one computation and re-resolve together on variant change.
+  // Preorder returns null (uncapped by stock — it's purchasable beyond on-hand quantity).
+  const streamableAvailableStock = Streamable.from(async () => {
+    const product = await streamableProductInventory;
+
+    if (product.availabilityV2.status === 'Preorder') {
+      return null;
+    }
+
+    // streamableProductInventory is queried WITH the selected optionValueIds, so
+    // product.inventory.aggregated.availableToSell is already the selected variant's quantity —
+    // no separate by-SKU variant lookup needed (and variant SKUs can be empty, which broke that).
+    return product.inventory.aggregated?.availableToSell ?? null;
+  });
+
+  // Badge state: 'out' | 'in' | { low: N } (shows "Only N in stock" when 1–4 available).
   const streamableStockStatus = Streamable.from(async () => {
     const product = await streamableProductInventory;
 
@@ -296,15 +321,10 @@ export default async function Product({ params, searchParams }: Props) {
       return 'out' as const;
     }
 
-    // Quantity lives on the VARIANT's inventory when the product tracks stock per variant
-    // (product.inventory.aggregated is null in that case); otherwise on the product aggregate.
-    const variant = await streamableProductVariantInventory;
-    const availableToSell = product.inventory.hasVariantInventory
-      ? variant?.inventory.aggregated?.availableToSell
-      : product.inventory.aggregated?.availableToSell;
+    const availableToSell = await streamableAvailableStock;
 
     if (availableToSell != null && availableToSell > 0 && availableToSell < 5) {
-      return 'limited' as const;
+      return { low: availableToSell };
     }
 
     return 'in' as const;
@@ -500,56 +520,34 @@ export default async function Product({ params, searchParams }: Props) {
     };
   });
 
-  const streameableAccordions = Streamable.from(async () => {
+  // The specification rows (SKU, weight, condition, custom fields). Extracted so they feed the
+  // "Product Information" section's Product Details table, and are NO LONGER in the accordion.
+  const streamableSpecifications = Streamable.from(async () => {
     const product = await streamableProduct;
 
     const customFields = removeEdgesAndNodes(product.customFields);
 
-    const specifications = [
-      {
-        name: t('ProductDetails.Accordions.sku'),
-        value: product.sku,
-      },
+    return [
+      { name: t('ProductDetails.Accordions.sku'), value: product.sku },
       {
         name: t('ProductDetails.Accordions.weight'),
-        value: `${product.weight?.value} ${product.weight?.unit}`,
+        value:
+          product.weight?.value != null ? `${product.weight.value} ${product.weight.unit}` : '',
       },
-      {
-        name: t('ProductDetails.Accordions.condition'),
-        value: product.condition,
-      },
+      { name: t('ProductDetails.Accordions.condition'), value: product.condition },
       ...customFields
-        // Hide empty custom fields, and exclude __fulfillment — it's surfaced separately in the
-        // purchase panel (see fulfillmentMessage below), not in the specifications list.
-        .filter((field) => field.name !== '__fulfillment' && field.value?.trim())
-        .map((field) => ({
-          name: field.name,
-          value: field.value,
-        })),
-    ];
+        // Exclude __fulfillment — it's surfaced separately in the purchase panel.
+        .filter((field) => field.name !== '__fulfillment')
+        .map((field) => ({ name: field.name, value: field.value })),
+    ]
+      // Drop any spec row without a value (empty SKU/condition, missing custom fields, etc.).
+      .filter((spec) => spec.value != null && spec.value.trim() !== '');
+  });
+
+  const streameableAccordions = Streamable.from(async () => {
+    const product = await streamableProduct;
 
     return [
-      ...(specifications.length
-        ? [
-            {
-              title: t('ProductDetails.Accordions.specifications'),
-              content: (
-                <div className="@container text-xs">
-                  <dl className="flex flex-col gap-1.5">
-                    {specifications.map((field, index) => (
-                      <div className="flex gap-2" key={index}>
-                        <dt className="shrink-0 font-semibold">{field.name}:</dt>
-                        <dd className="text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
-                          {field.value}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              ),
-            },
-          ]
-        : []),
       ...(product.warranty
         ? [
             {
@@ -586,10 +584,25 @@ export default async function Product({ params, searchParams }: Props) {
     return product.minPurchaseQuantity;
   });
 
+  // Effective quantity cap = min(available stock, max-purchase-quantity setting). Whichever are
+  // set constrain it; if neither, no cap (undefined). This flows to the form's `maxQuantity`,
+  // which caps BOTH the +/- input AND the zod validation, so typing and clicking agree with the
+  // server. `maxPurchaseQuantity` of 0 means "no limit" in BigCommerce. Falls back to the
+  // purchase-limit only when stock is unknown (store setting off) or preorder (availableStock null).
   const streamableMaxQuantity = Streamable.from(async () => {
     const product = await streamableProduct;
+    const availableStock = await streamableAvailableStock;
 
-    return product.maxPurchaseQuantity;
+    const purchaseLimit =
+      product.maxPurchaseQuantity != null && product.maxPurchaseQuantity > 0
+        ? product.maxPurchaseQuantity
+        : undefined;
+
+    const caps = [purchaseLimit, availableStock ?? undefined].filter(
+      (n): n is number => typeof n === 'number',
+    );
+
+    return caps.length > 0 ? Math.min(...caps) : undefined;
   });
 
   const streamableAnalyticsData = Streamable.from(async () => {
@@ -681,6 +694,12 @@ export default async function Product({ params, searchParams }: Props) {
           user={streamableUser}
         />
       </ProductAnalyticsProvider>
+
+      <Stream fallback={null} value={streamableSpecifications}>
+        {(specifications) => (
+          <ProductInformation features={productInfoFeatures} specifications={specifications} />
+        )}
+      </Stream>
 
       <FeaturesGrid featuresGrid={featuresGrid} />
 

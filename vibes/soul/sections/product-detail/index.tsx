@@ -63,7 +63,7 @@ export interface ProductDetailProps<F extends Field> {
   emptySelectPlaceholder?: string;
   ctaLabel?: Streamable<string | null>;
   ctaDisabled?: Streamable<boolean | null>;
-  stockStatus?: Streamable<'in' | 'limited' | 'out' | null>;
+  stockStatus?: Streamable<'in' | 'out' | { low: number } | null>;
   prefetch?: boolean;
   thumbnailLabel?: string;
   additionalInformationTitle?: string;
@@ -336,7 +336,8 @@ export function ProductDetail<F extends Field>({
                   <div className="group/product-accordion">
                     <Stream fallback={<ProductAccordionsSkeleton />} value={product.accordions}>
                       {(accordions) =>
-                        accordions && (
+                        accordions != null &&
+                        accordions.length > 0 && (
                           <Accordion
                             className="border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] pt-4 [&_button]:!py-1"
                             type="multiple"

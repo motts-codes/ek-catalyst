@@ -97,9 +97,9 @@ export interface ProductDetailFormProps<F extends Field> {
   // Delivery/pickup message (__fulfillment). When set, a grey box with a delivery icon is shown
   // below the purchase panel.
   fulfillmentMessage?: string;
-  // Variant-aware stock badge above the quantity: 'in' -> green "In stock", 'limited' -> dark red
-  // "Limited stock", 'out' -> red "Out of stock". Kept consistent with the Add-to-cart button.
-  stockStatus?: 'in' | 'limited' | 'out';
+  // Variant-aware stock badge above the quantity: 'in' -> green "In stock", { low: N } -> dark red
+  // "Only N in stock" (1–4 available), 'out' -> red "Out of stock". Consistent with the CTA.
+  stockStatus?: 'in' | 'out' | { low: number };
 }
 
 export function ProductDetailForm<F extends Field>({
@@ -406,12 +406,12 @@ export function ProductDetailForm<F extends Field>({
                 className={clsx(
                   'text-sm font-semibold',
                   stockStatus === 'in' && 'text-[#16A34A]',
-                  stockStatus === 'limited' && 'text-[#96050F]',
+                  typeof stockStatus === 'object' && 'text-[#96050F]',
                   stockStatus === 'out' && 'text-error',
                 )}
               >
                 {stockStatus === 'in' && 'In stock'}
-                {stockStatus === 'limited' && 'Limited stock'}
+                {typeof stockStatus === 'object' && `Only ${stockStatus.low} in stock`}
                 {stockStatus === 'out' && 'Out of stock'}
               </p>
             )}

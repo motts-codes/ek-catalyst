@@ -59,6 +59,16 @@ export const NumberInput = React.forwardRef<
   ) => {
     const id = React.useId();
 
+    // Disable +/- at the value's bounds so the stepper can't exceed `max` (e.g. available stock)
+    // or drop below `min`. Reads the value/max/min passed through as input props.
+    const currentValue = Number(rest.value);
+    const maxValue = rest.max != null ? Number(rest.max) : undefined;
+    const minValue = rest.min != null ? Number(rest.min) : undefined;
+    const atMax =
+      maxValue != null && !Number.isNaN(currentValue) && currentValue >= maxValue;
+    const atMin =
+      minValue != null && !Number.isNaN(currentValue) && currentValue <= minValue;
+
     return (
       <div className={clsx('space-y-2', className)}>
         {label != null && label !== '' && (
@@ -95,7 +105,7 @@ export const NumberInput = React.forwardRef<
                 dark: 'bg-[var(--number-input-dark-button-background,hsl(var(--foreground)))] hover:bg-[var(--number-input-dark-button-background-hover,hsl(var(--contrast-500)/50%))]',
               }[colorScheme],
             )}
-            disabled={disabled}
+            disabled={disabled || atMin}
             onClick={(e) => {
               e.preventDefault();
 
@@ -143,7 +153,7 @@ export const NumberInput = React.forwardRef<
                 dark: 'bg-[var(--number-input-dark-button-background,hsl(var(--foreground)))] hover:bg-[var(--number-input-dark-button-background-hover,hsl(var(--contrast-500)/50%))]',
               }[colorScheme],
             )}
-            disabled={disabled}
+            disabled={disabled || atMax}
             onClick={(e) => {
               e.preventDefault();
 
