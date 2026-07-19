@@ -8,6 +8,7 @@ export interface FaqItem {
 export interface Faq {
   headline: string;
   items: FaqItem[];
+  image?: string;
 }
 
 interface MetafieldConnection {
@@ -40,6 +41,7 @@ export function faqTransformer(metafields: MetafieldConnection | null | undefine
     return {
       headline: parsed.headline ?? '',
       items,
+      image: parsed.image?.trim() || undefined,
     };
   } catch {
     return null;

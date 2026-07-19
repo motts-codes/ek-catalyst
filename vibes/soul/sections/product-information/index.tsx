@@ -37,7 +37,9 @@ export function ProductInformation({ features, specifications, className }: Prop
       <div
         className={clsx(
           'grid grid-cols-1 items-start gap-8',
-          hasFeatures && 'lg:grid-cols-[3fr_2fr]',
+          // With features: Features 60% | Product Details 40%.
+          // Without features: Product Details alone takes the same 40% (left), not full width.
+          hasFeatures ? 'lg:grid-cols-[3fr_2fr]' : 'lg:grid-cols-[2fr_3fr]',
         )}
       >
         {/* Col 1: Features (optional) */}
