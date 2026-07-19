@@ -196,7 +196,7 @@ const ProductQuery = graphql(
             averageRating
             numberOfReviews
           }
-          categories(first: 1) {
+          categories(first: 10) {
             edges {
               node {
                 breadcrumbs(depth: 5) {

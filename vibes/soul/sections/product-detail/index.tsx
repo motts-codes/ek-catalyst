@@ -34,6 +34,11 @@ interface ProductDetailProduct {
   subtitle?: string;
   subtitleHref?: string;
   badge?: string;
+  /**
+   * Marketing pills shown above the product name (e.g. Bestseller, Trending).
+   * Rendered absolutely-positioned so they never shift the product name's baseline.
+   */
+  badges?: Array<{ label: string; color: string }>;
   rating?: Streamable<number | null>;
   reviewsEnabled?: boolean;
   showRating?: boolean;
@@ -133,17 +138,20 @@ export function ProductDetail<F extends Field>({
 }: ProductDetailProps<F>) {
   return (
     <section className="@container">
-      <div className="group/product-detail mx-auto w-full max-w-screen-2xl px-4 pb-10 pt-[15px] @xl:px-6 @xl:pb-14 @xl:pt-[21px] @4xl:px-8 @4xl:pb-20 @4xl:pt-[30px]">
+      <div className="group/product-detail mx-auto w-full max-w-screen-2xl px-4 pb-10 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-20">
         {breadcrumbs && (
-          <div className="group/breadcrumbs mb-6">
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          <div className="group/breadcrumbs mb-16">
+            <Breadcrumbs
+              breadcrumbs={breadcrumbs}
+              className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
+            />
           </div>
         )}
         <Stream fallback={<ProductDetailSkeleton />} value={streamableProduct}>
           {(product) =>
             product && (
-              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-[3fr_7fr] @5xl:gap-x-12">
-                <div className="group/product-gallery hidden @2xl:block">
+              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-[minmax(0,3fr)_minmax(0,7fr)] @5xl:gap-x-12">
+                <div className="group/product-gallery hidden @2xl:-mt-3 @2xl:block">
                   <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                     {(imagesData) => (
                       <ProductGallery
@@ -210,23 +218,36 @@ export function ProductDetail<F extends Field>({
                           header={
                             <>
                               <div className="flex items-start justify-between gap-3">
-                                <div className="min-w-0">
+                                <div className="relative min-w-0 pt-1">
+                                  {product.badges && product.badges.length > 0 && (
+                                    <div className="absolute bottom-full left-0 mb-1 flex flex-wrap gap-1.5">
+                                      {product.badges.map((badge) => (
+                                        <span
+                                          className="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
+                                          key={badge.label}
+                                          style={{ backgroundColor: badge.color }}
+                                        >
+                                          {badge.label}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                  <h1 className="mb-0 pb-0 font-[family-name:var(--product-detail-title-font-family,var(--font-family-heading))] text-lg font-semibold leading-tight @xl:text-2xl @4xl:text-[1.65rem]">
+                                    {product.title}
+                                  </h1>
                                   {Boolean(product.subtitle) &&
                                     (product.subtitleHref ? (
                                       <Link
-                                        className="group/subtitle mb-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-400 transition-colors hover:text-foreground"
+                                        className="group/subtitle mt-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-300 transition-colors hover:text-foreground"
                                         href={product.subtitleHref}
                                       >
                                         Shop {product.subtitle}
                                       </Link>
                                     ) : (
-                                      <p className="mb-1 font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-400">
+                                      <p className="mt-1 font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-300">
                                         {product.subtitle}
                                       </p>
                                     ))}
-                                  <h1 className="mb-0 pb-0 font-[family-name:var(--product-detail-title-font-family,var(--font-family-heading))] text-lg font-semibold leading-tight @xl:text-2xl @4xl:text-[1.65rem]">
-                                    {product.title}
-                                  </h1>
                                 </div>
                                 {additionalActions && (
                                   <div className="shrink-0">{additionalActions}</div>
@@ -312,7 +333,9 @@ export function ProductDetail<F extends Field>({
                                 </Stream>
                               </div>
                               <hr className="mb-4 w-full border-t border-contrast-100" />
-                              <div className="group/product-gallery mb-8 @2xl:hidden">
+                              {/* Mobile gallery: force a shorter 4:3 frame so the image isn't
+                                  full-width-tall on phones (desktop stays 1:1). */}
+                              <div className="group/product-gallery mb-8 [&_.aspect-square]:!aspect-[4/3] @2xl:hidden">
                                 <Stream
                                   fallback={<ProductGallerySkeleton />}
                                   value={product.images}

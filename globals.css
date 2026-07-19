@@ -18,6 +18,11 @@
   --contrast-500: 0 0% 34%;
   /* Section heading color (Product Information, Features, FAQ, etc.) */
   --secondary-heading-color: #d90716;
+  /* PDP marketing pills above the product name
+     (__is_bestseller / __is_trending / __is_new custom fields) */
+  --pill-bestseller-background: #fee3e5bf;
+  --pill-trending-background: #a9d6e063;
+  --pill-new-background: #d1f0d9;
   /* PDP gallery: transparent image backdrop instead of the default grey (--contrast-100) */
   --product-gallery-image-background: transparent;
   /* Underline highlight (breadcrumbs, AnimatedUnderline) at 50% opacity — full-strength primary

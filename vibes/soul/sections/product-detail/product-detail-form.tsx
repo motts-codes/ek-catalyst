@@ -284,7 +284,7 @@ export function ProductDetailForm<F extends Field>({
       <FormStateInput />
       <form {...getFormProps(form)} action={formAction}>
         <input name="id" type="hidden" value={productId} />
-        <div className="grid grid-cols-1 gap-6 pb-8 @5xl:grid-cols-[7fr_3fr] @5xl:items-start">
+        <div className="grid grid-cols-1 gap-6 pb-8 @5xl:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] @5xl:items-start">
           {/* LEFT (70%): product header (title/price/etc.) + variant option groups.
               The header keeps its own internal margins, so it's wrapped in a single element
               (not spread into the space-y-6 flow, which would add 24px between every header row). */}

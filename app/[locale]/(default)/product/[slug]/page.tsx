@@ -114,12 +114,22 @@ export default async function Product({ params, searchParams }: Props) {
   }
 
   // Breadcrumbs: Home / <category trail> / <product name>.
-  // The category trail comes from the product's first associated category (Product has no
-  // primary-category field in the schema). Any nested subcategories a product is assigned to
-  // appear automatically here — the depth is driven by the store's category data.
-  const firstCategory = removeEdgesAndNodes(baseProduct.categories)[0];
-  const categoryCrumbs = firstCategory
-    ? removeEdgesAndNodes(firstCategory.breadcrumbs).map(({ name, path }) => ({
+  // A product can be assigned to several categories at once — including both a parent
+  // (e.g. "Appliances") and its child ("Fridges & Freezers"). BigCommerce returns them in
+  // assignment order, not deepest-first, so we pick the category whose breadcrumb trail is
+  // longest (the most specific one) to get the full trail down to the subcategory.
+  const categories = removeEdgesAndNodes(baseProduct.categories);
+  const deepestCategory = categories.reduce<(typeof categories)[number] | undefined>(
+    (deepest, category) => {
+      const depth = removeEdgesAndNodes(category.breadcrumbs).length;
+      const deepestDepth = deepest ? removeEdgesAndNodes(deepest.breadcrumbs).length : 0;
+
+      return depth > deepestDepth ? category : deepest;
+    },
+    undefined,
+  );
+  const categoryCrumbs = deepestCategory
+    ? removeEdgesAndNodes(deepestCategory.breadcrumbs).map(({ name, path }) => ({
         label: name,
         href: path ?? '#',
       }))
@@ -135,6 +145,22 @@ export default async function Product({ params, searchParams }: Props) {
   const fulfillmentMessage = removeEdgesAndNodes(baseProduct.customFields)
     .find((field) => field.name === '__fulfillment')
     ?.value?.trim();
+
+  // Marketing pills above the product name, driven by the __is_bestseller / __is_trending custom
+  // fields (only when the value is exactly "yes"). Bestseller shows first. Products without these
+  // fields show no pills. The __ prefix keeps them out of the Product Details spec table (which
+  // filters out all __-prefixed fields).
+  const productFlags = removeEdgesAndNodes(baseProduct.customFields);
+  const isFlagYes = (name: string) =>
+    productFlags.find((field) => field.name === name)?.value?.trim().toLowerCase() === 'yes';
+  const badges = [
+    isFlagYes('__is_new') && { label: 'New', color: 'var(--pill-new-background)' },
+    isFlagYes('__is_bestseller') && {
+      label: 'Bestseller',
+      color: 'var(--pill-bestseller-background)',
+    },
+    isFlagYes('__is_trending') && { label: 'Trending', color: 'var(--pill-trending-background)' },
+  ].filter((badge): badge is { label: string; color: string } => Boolean(badge));
 
   // Features grid (from the `features/grid` JSON metafield). Null when the product has none.
   const featuresGrid = featuresGridTransformer(baseProduct.featuresMetafield);
@@ -536,8 +562,9 @@ export default async function Product({ params, searchParams }: Props) {
       },
       { name: t('ProductDetails.Accordions.condition'), value: product.condition },
       ...customFields
-        // Exclude __fulfillment — it's surfaced separately in the purchase panel.
-        .filter((field) => field.name !== '__fulfillment')
+        // Exclude all __-prefixed fields — they drive UI (fulfillment box, marketing pills), not
+        // spec rows.
+        .filter((field) => !field.name.startsWith('__'))
         .map((field) => ({ name: field.name, value: field.value })),
     ]
       // Drop any spec row without a value (empty SKU/condition, missing custom fields, etc.).
@@ -679,6 +706,7 @@ export default async function Product({ params, searchParams }: Props) {
             numberOfReviews: baseProduct.reviewSummary.numberOfReviews,
             subtitle: baseProduct.brand?.name,
             subtitleHref: baseProduct.brand?.path,
+            badges,
             rating: baseProduct.reviewSummary.averageRating,
             accordions: streameableAccordions,
             minQuantity: streamableMinQuantity,
