@@ -76,6 +76,9 @@ export interface ProductDetailFormProps<F extends Field> {
   // Rendered in the left cell above the variant options, inside the form, so the purchase panel
   // (right cell) sits alongside the product name/price from the top of the column.
   header?: ReactNode;
+  // Rendered as its own grid item under the left column on desktop (via col-start-1), but placed
+  // AFTER the purchase panel in DOM order so it doesn't push add-to-cart down on mobile.
+  descriptionSlot?: ReactNode;
   ctaLabel?: string;
   quantityLabel?: string;
   incrementLabel?: string;
@@ -104,6 +107,7 @@ export function ProductDetailForm<F extends Field>({
   fields,
   productId,
   header,
+  descriptionSlot,
   ctaLabel = 'Add to cart',
   quantityLabel = 'Quantity',
   incrementLabel = 'Increase quantity',
@@ -280,7 +284,7 @@ export function ProductDetailForm<F extends Field>({
       <FormStateInput />
       <form {...getFormProps(form)} action={formAction}>
         <input name="id" type="hidden" value={productId} />
-        <div className="grid grid-cols-1 gap-6 pb-8 @2xl:grid-cols-[7fr_3fr] @2xl:items-start">
+        <div className="grid grid-cols-1 gap-6 pb-8 @5xl:grid-cols-[7fr_3fr] @5xl:items-start">
           {/* LEFT (70%): product header (title/price/etc.) + variant option groups.
               The header keeps its own internal margins, so it's wrapped in a single element
               (not spread into the space-y-6 flow, which would add 24px between every header row). */}
@@ -364,31 +368,12 @@ export function ProductDetailForm<F extends Field>({
             </FormStatus>
           ))}
 
-          {/* Reserved slot for stock/backorder messages — only takes space when there is a
-              message to show, so it collapses to zero height otherwise. */}
-          {(!!stockDisplayData?.stockLevelMessage || !!backorderMessages) && (
+          {/* Reserved slot for backorder messages — collapses to zero height when empty.
+              BigCommerce's stock-level count message ("N in stock") is intentionally NOT shown
+              here; the stock state is conveyed by the In/Limited/Out badge above the quantity
+              instead. */}
+          {!!backorderMessages && (
           <div className="h-[1.6rem] sm:h-[1.3rem] @2xl:h-auto">
-            {!!stockDisplayData?.stockLevelMessage && (
-              <div
-                className={clsx(
-                  'flex flex-wrap justify-start gap-x-2.5 gap-y-2 text-sm text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]',
-                  'transition-transform duration-200 ease-in-out',
-                  backorderMessages?.backorderQuantityMessage ||
-                    backorderMessages?.backorderInfoMessage
-                    ? 'translate-y-0'
-                    : 'translate-y-[calc(100%+4px)]',
-                )}
-              >
-                <div className="flex-none whitespace-nowrap font-semibold text-black">
-                  {stockDisplayData.stockLevelMessage}
-                </div>
-                {!!stockDisplayData.backorderAvailabilityPrompt && (
-                  <div className="flex-none whitespace-nowrap border-s border-gray-300 pl-2.5">
-                    {stockDisplayData.backorderAvailabilityPrompt}
-                  </div>
-                )}
-              </div>
-            )}
             {!!backorderMessages && (
               <div
                 className={clsx(
@@ -414,7 +399,7 @@ export function ProductDetailForm<F extends Field>({
           )}
           </div>
           {/* RIGHT (30%): purchase panel (quantity + buttons) and, below it, the fulfillment box. */}
-          <div className="space-y-4 @2xl:sticky @2xl:top-4">
+          <div className="space-y-4 @5xl:sticky @5xl:top-4">
           <div className="space-y-4 rounded-xl border border-contrast-100 bg-[#f5f5f5] p-4">
             {stockStatus != null && (
               <p
@@ -471,6 +456,9 @@ export function ProductDetailForm<F extends Field>({
             </div>
           )}
           </div>
+          {/* Description as its own grid item: under the left column on desktop (col-start-1), but
+              kept after the purchase panel in DOM order so add-to-cart stays high on mobile. */}
+          {descriptionSlot != null && <div className="@5xl:col-start-1">{descriptionSlot}</div>}
         </div>
       </form>
     </FormProvider>

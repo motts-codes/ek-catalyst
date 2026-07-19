@@ -277,6 +277,10 @@ export default async function Product({ params, searchParams }: Props) {
   // is treated as in-stock for the badge (never shows red next to an enabled button).
   // 'limited' when the available quantity is 1–4 (needs a real quantity; if the store doesn't
   // expose stock levels, availableToSell is null and we fall back to plain 'in').
+  // DEPENDENCY: the 'limited' state requires the store's "Display stock levels on storefront"
+  // inventory setting to be ON — that's what exposes availableToSell to the storefront API. If
+  // that setting is turned off, availableToSell goes null and 'limited' silently stops firing
+  // (everything in-stock just shows 'in'). Do not hide the stock UI by toggling that setting off.
   const streamableStockStatus = Streamable.from(async () => {
     const product = await streamableProductInventory;
 

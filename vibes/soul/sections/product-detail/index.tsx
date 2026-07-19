@@ -190,6 +190,20 @@ export function ProductDetail<F extends Field>({
                           decrementLabel={decrementLabel}
                           stockStatus={stockStatus ?? undefined}
                           emptySelectPlaceholder={emptySelectPlaceholder}
+                          descriptionSlot={
+                            <Stream
+                              fallback={<ProductDescriptionSkeleton />}
+                              value={product.description}
+                            >
+                              {(description) =>
+                                Boolean(description) && (
+                                  <div className="prose prose-sm max-w-none border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] py-4 [&>div>*:first-child]:mt-0 [&>div>*:last-child]:mb-0">
+                                    {description}
+                                  </div>
+                                )
+                              }
+                            </Stream>
+                          }
                           fields={fields}
                           fulfillmentMessage={fulfillmentMessage}
                           optionDependencyMap={optionDependencyMap}
@@ -316,17 +330,6 @@ export function ProductDetail<F extends Field>({
                           stockDisplayData={stockDisplayData ?? undefined}
                         />
                       )}
-                    </Stream>
-                  </div>
-                  <div className="group/product-description">
-                    <Stream fallback={<ProductDescriptionSkeleton />} value={product.description}>
-                      {(description) =>
-                        Boolean(description) && (
-                          <div className="prose prose-sm max-w-none border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] py-4 [&>div>*:first-child]:mt-0 [&>div>*:last-child]:mb-0">
-                            {description}
-                          </div>
-                        )
-                      }
                     </Stream>
                   </div>
                   <h2 className="sr-only">{additionalInformationTitle}</h2>
