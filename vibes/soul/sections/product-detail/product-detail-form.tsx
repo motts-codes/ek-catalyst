@@ -94,6 +94,9 @@ export interface ProductDetailFormProps<F extends Field> {
   // Delivery/pickup message (__fulfillment). When set, a grey box with a delivery icon is shown
   // below the purchase panel.
   fulfillmentMessage?: string;
+  // Variant-aware stock badge above the quantity: 'in' -> green "In stock", 'limited' -> dark red
+  // "Limited stock", 'out' -> red "Out of stock". Kept consistent with the Add-to-cart button.
+  stockStatus?: 'in' | 'limited' | 'out';
 }
 
 export function ProductDetailForm<F extends Field>({
@@ -115,6 +118,7 @@ export function ProductDetailForm<F extends Field>({
   backorderDisplayData,
   optionDependencyMap,
   fulfillmentMessage,
+  stockStatus,
 }: ProductDetailFormProps<F>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -411,7 +415,21 @@ export function ProductDetailForm<F extends Field>({
           </div>
           {/* RIGHT (30%): purchase panel (quantity + buttons) and, below it, the fulfillment box. */}
           <div className="space-y-4 @2xl:sticky @2xl:top-4">
-          <div className="space-y-4 rounded-xl border border-contrast-100 p-4">
+          <div className="space-y-4 rounded-xl border border-contrast-100 bg-[#f5f5f5] p-4">
+            {stockStatus != null && (
+              <p
+                className={clsx(
+                  'text-sm font-semibold',
+                  stockStatus === 'in' && 'text-[#16A34A]',
+                  stockStatus === 'limited' && 'text-[#96050F]',
+                  stockStatus === 'out' && 'text-error',
+                )}
+              >
+                {stockStatus === 'in' && 'In stock'}
+                {stockStatus === 'limited' && 'Limited stock'}
+                {stockStatus === 'out' && 'Out of stock'}
+              </p>
+            )}
             <div>
               <Label className="mb-2" id="quantity-label" required>
                 {quantityLabel}

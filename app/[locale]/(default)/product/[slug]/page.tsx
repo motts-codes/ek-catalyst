@@ -272,6 +272,40 @@ export default async function Product({ params, searchParams }: Props) {
     return false;
   });
 
+  // Stock badge state — variant-aware (same inventory stream as the CTA) and consistent with the
+  // Add-to-cart button: only 'out' when genuinely not purchasable. Preorder is purchasable, so it
+  // is treated as in-stock for the badge (never shows red next to an enabled button).
+  // 'limited' when the available quantity is 1–4 (needs a real quantity; if the store doesn't
+  // expose stock levels, availableToSell is null and we fall back to plain 'in').
+  const streamableStockStatus = Streamable.from(async () => {
+    const product = await streamableProductInventory;
+
+    if (product.availabilityV2.status === 'Unavailable') {
+      return 'out' as const;
+    }
+
+    if (product.availabilityV2.status === 'Preorder') {
+      return 'in' as const;
+    }
+
+    if (!product.inventory.isInStock) {
+      return 'out' as const;
+    }
+
+    // Quantity lives on the VARIANT's inventory when the product tracks stock per variant
+    // (product.inventory.aggregated is null in that case); otherwise on the product aggregate.
+    const variant = await streamableProductVariantInventory;
+    const availableToSell = product.inventory.hasVariantInventory
+      ? variant?.inventory.aggregated?.availableToSell
+      : product.inventory.aggregated?.availableToSell;
+
+    if (availableToSell != null && availableToSell > 0 && availableToSell < 5) {
+      return 'limited' as const;
+    }
+
+    return 'in' as const;
+  });
+
   const streamableInventorySettings = Streamable.from(async () => {
     return await getStreamableInventorySettingsQuery(customerAccessToken);
   });
@@ -601,6 +635,7 @@ export default async function Product({ params, searchParams }: Props) {
           additionalInformationTitle={t('ProductDetails.additionalInformation')}
           ctaDisabled={streameableCtaDisabled}
           ctaLabel={streameableCtaLabel}
+          stockStatus={streamableStockStatus}
           decrementLabel={t('ProductDetails.decreaseQuantity')}
           emptySelectPlaceholder={t('ProductDetails.emptySelectPlaceholder')}
           fields={productOptionsTransformer(baseProduct.productOptions)}

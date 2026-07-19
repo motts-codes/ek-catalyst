@@ -63,6 +63,7 @@ export interface ProductDetailProps<F extends Field> {
   emptySelectPlaceholder?: string;
   ctaLabel?: Streamable<string | null>;
   ctaDisabled?: Streamable<boolean | null>;
+  stockStatus?: Streamable<'in' | 'limited' | 'out' | null>;
   prefetch?: boolean;
   thumbnailLabel?: string;
   additionalInformationTitle?: string;
@@ -111,6 +112,7 @@ export function ProductDetail<F extends Field>({
   emptySelectPlaceholder,
   ctaLabel: streamableCtaLabel,
   ctaDisabled: streamableCtaDisabled,
+  stockStatus: streamableStockStatus,
   prefetch,
   thumbnailLabel,
   additionalInformationTitle = 'Additional information',
@@ -167,6 +169,7 @@ export function ProductDetail<F extends Field>({
                         product.maxQuantity,
                         product.stockDisplayData,
                         product.backorderDisplayData,
+                        streamableStockStatus ?? Streamable.from(async () => null),
                       ])}
                     >
                       {([
@@ -177,6 +180,7 @@ export function ProductDetail<F extends Field>({
                         maxQuantity,
                         stockDisplayData,
                         backorderDisplayData,
+                        stockStatus,
                       ]) => (
                         <ProductDetailForm
                           action={action}
@@ -184,6 +188,7 @@ export function ProductDetail<F extends Field>({
                           ctaDisabled={ctaDisabled ?? undefined}
                           ctaLabel={ctaLabel ?? undefined}
                           decrementLabel={decrementLabel}
+                          stockStatus={stockStatus ?? undefined}
                           emptySelectPlaceholder={emptySelectPlaceholder}
                           fields={fields}
                           fulfillmentMessage={fulfillmentMessage}
