@@ -237,18 +237,14 @@ export function ProductDetail<F extends Field>({
                                   <h1 className="mb-0 pb-0 font-[family-name:var(--product-detail-title-font-family,var(--font-family-heading))] text-lg font-semibold leading-tight @xl:text-2xl @4xl:text-[1.65rem]">
                                     {product.title}
                                   </h1>
-                                  {product.sku != null && (
-                                    <Stream fallback={null} value={product.sku}>
-                                      {(sku) =>
-                                        sku != null &&
-                                        sku !== '' && (
-                                          <p className="mb-2 mt-1 text-xs text-contrast-400">
-                                            SKU: {sku}
-                                          </p>
-                                        )
-                                      }
+                                  {/* Always rendered and height-reserved (min-h-[1lh]) even when
+                                      the product/variant has no SKU, so the content below never
+                                      shifts as a SKU appears (e.g. once a variant is chosen). */}
+                                  <p className="mb-2 mt-1 min-h-[1lh] text-xs text-contrast-400">
+                                    <Stream fallback={null} value={product.sku ?? null}>
+                                      {(sku) => (sku != null && sku !== '' ? `SKU: ${sku}` : null)}
                                     </Stream>
-                                  )}
+                                  </p>
                                   {Boolean(product.subtitle) &&
                                     (product.subtitleHref ? (
                                       <Link
