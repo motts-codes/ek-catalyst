@@ -193,6 +193,61 @@ const MobileMenuButton = forwardRef<
 
 MobileMenuButton.displayName = 'MobileMenuButton';
 
+/**
+ * One top-level row in the mobile menu. When the category has subcategories, they're collapsed
+ * by default and the row becomes a toggle (chevron) that expands them on click — the full tree
+ * is too long to show all at once. Categories without subcategories render as a plain link.
+ */
+function MobileMenuItem({ item, onNavigate }: { item: Link; onNavigate: () => void }) {
+  const subLinks = item.groups?.flatMap((group) => group.links) ?? [];
+  const hasSubLinks = subLinks.length > 0;
+  const [open, setOpen] = useState(false);
+
+  const rowClassName =
+    'flex w-full items-center justify-between gap-2 rounded-lg bg-[var(--nav-mobile-link-background,transparent)] px-3 py-2 text-left font-[family-name:var(--nav-mobile-link-font-family,var(--font-family-body))] font-semibold text-[var(--nav-mobile-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4';
+
+  return (
+    <ul className="flex flex-col p-2 @4xl:gap-2 @4xl:p-5">
+      {item.label !== '' && (
+        <li>
+          {hasSubLinks ? (
+            <button
+              aria-expanded={open}
+              className={rowClassName}
+              onClick={() => setOpen((prev) => !prev)}
+              type="button"
+            >
+              <span>{item.label}</span>
+              <ChevronDown
+                className={clsx('shrink-0 transition-transform duration-200', open && 'rotate-180')}
+                size={18}
+                strokeWidth={1.5}
+              />
+            </button>
+          ) : (
+            <Link className={rowClassName} href={item.href} onClick={onNavigate}>
+              {item.label}
+            </Link>
+          )}
+        </li>
+      )}
+      {hasSubLinks &&
+        open &&
+        subLinks.map((link, j) => (
+          <li key={j}>
+            <Link
+              className="block rounded-lg bg-[var(--nav-mobile-sub-link-background,transparent)] px-3 py-2 font-[family-name:var(--nav-mobile-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-mobile-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4"
+              href={link.href}
+              onClick={onNavigate}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+    </ul>
+  );
+}
+
 const navGroupClassName =
   'block rounded-lg bg-[var(--nav-group-background,transparent)] px-3 py-2 font-[family-name:var(--nav-group-font-family,var(--font-family-body))] font-medium text-[var(--nav-group-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-group-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-group-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 const navButtonClassName =
@@ -343,7 +398,6 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
       >
         {/* Mobile Menu */}
         <Popover.Root onOpenChange={setIsMobileMenuOpen} open={isMobileMenuOpen}>
-          <Popover.Anchor className="absolute left-0 right-0 top-full" />
           <Popover.Trigger asChild>
             <MobileMenuButton
               aria-label={mobileMenuTriggerLabel}
@@ -353,7 +407,16 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             />
           </Popover.Trigger>
           <Popover.Portal>
-            <Popover.Content className="max-h-[calc(var(--radix-popover-content-available-height)-8px)] w-[var(--radix-popper-anchor-width)] @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+            {/* Explicit width + side/offset instead of the nav-width anchor variable, which
+                measures 0px in this environment (collapsing the menu to invisible). Drops a
+                full-width panel below the nav: width = viewport minus page gutter. */}
+            <Popover.Content
+              align="start"
+              className="max-h-[calc(var(--radix-popover-content-available-height)-16px)] w-[calc(100vw-2rem)] max-w-screen-2xl @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+              collisionPadding={16}
+              side="bottom"
+              sideOffset={12}
+            >
               <div className="max-h-[inherit] divide-y divide-[var(--nav-mobile-divider,hsl(var(--contrast-100)))] overflow-y-auto bg-[var(--nav-mobile-background,hsl(var(--background)))]">
                 <Stream
                   fallback={
@@ -376,30 +439,11 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                 >
                   {(links) =>
                     links.map((item, i) => (
-                      <ul className="flex flex-col p-2 @4xl:gap-2 @4xl:p-5" key={i}>
-                        {item.label !== '' && (
-                          <li>
-                            <Link
-                              className="block rounded-lg bg-[var(--nav-mobile-link-background,transparent)] px-3 py-2 font-[family-name:var(--nav-mobile-link-font-family,var(--font-family-body))] font-semibold text-[var(--nav-mobile-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4"
-                              href={item.href}
-                            >
-                              {item.label}
-                            </Link>
-                          </li>
-                        )}
-                        {item.groups
-                          ?.flatMap((group) => group.links)
-                          .map((link, j) => (
-                            <li key={j}>
-                              <Link
-                                className="block rounded-lg bg-[var(--nav-mobile-sub-link-background,transparent)] px-3 py-2 font-[family-name:var(--nav-mobile-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-mobile-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4"
-                                href={link.href}
-                              >
-                                {link.label}
-                              </Link>
-                            </li>
-                          ))}
-                      </ul>
+                      <MobileMenuItem
+                        item={item}
+                        key={i}
+                        onNavigate={() => setIsMobileMenuOpen(false)}
+                      />
                     ))
                   }
                 </Stream>
