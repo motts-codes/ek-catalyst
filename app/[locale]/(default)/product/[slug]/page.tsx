@@ -706,6 +706,7 @@ export default async function Product({ params, searchParams }: Props) {
             numberOfReviews: baseProduct.reviewSummary.numberOfReviews,
             subtitle: baseProduct.brand?.name,
             subtitleHref: baseProduct.brand?.path,
+            sku: streamableProductSku,
             badges,
             rating: baseProduct.reviewSummary.averageRating,
             accordions: streameableAccordions,

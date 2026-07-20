@@ -135,6 +135,19 @@ export function ProductDetailForm<F extends Field>({
 
   const [params] = useQueryStates(searchParams, { shallow: false });
 
+  // A required option the shopper hasn't picked yet (e.g. Width / Height on windows). Until every
+  // one is chosen there's no specific variant, so the stock badge would be reporting the whole
+  // product's aggregate — showing "In stock" before any choice is made. We show a prompt instead.
+  // Only persisted fields are product options (they round-trip through the URL); `quantity` and
+  // other non-persisted inputs are also `required` but aren't variant selections.
+  const hasUnselectedRequiredOption = fields.some(
+    (field) =>
+      field.persist === true &&
+      field.required === true &&
+      field.type !== 'checkbox' &&
+      (params[field.name] ?? field.defaultValue ?? '') === '',
+  );
+
   const onPrefetch = (fieldName: string, value: string) => {
     if (prefetch) {
       const serialize = createSerializer(searchParams);
@@ -444,19 +457,23 @@ export function ProductDetailForm<F extends Field>({
           {/* RIGHT (30%): purchase panel (quantity + buttons) and, below it, the fulfillment box. */}
           <div className="space-y-4 @5xl:sticky @5xl:top-4">
           <div className="space-y-4 rounded-xl border border-contrast-100 bg-[#f5f5f5] p-4">
-            {stockStatus != null && (
-              <p
-                className={clsx(
-                  'text-sm font-semibold',
-                  stockStatus === 'in' && 'text-[#16A34A]',
-                  typeof stockStatus === 'object' && 'text-[#96050F]',
-                  stockStatus === 'out' && 'text-error',
-                )}
-              >
-                {stockStatus === 'in' && 'In stock'}
-                {typeof stockStatus === 'object' && `Only ${stockStatus.low} in stock`}
-                {stockStatus === 'out' && 'Out of stock'}
-              </p>
+            {hasUnselectedRequiredOption ? (
+              <p className="text-sm font-semibold text-foreground">Select size for availability</p>
+            ) : (
+              stockStatus != null && (
+                <p
+                  className={clsx(
+                    'text-sm font-semibold',
+                    stockStatus === 'in' && 'text-[#16A34A]',
+                    typeof stockStatus === 'object' && 'text-[#96050F]',
+                    stockStatus === 'out' && 'text-error',
+                  )}
+                >
+                  {stockStatus === 'in' && 'In stock'}
+                  {typeof stockStatus === 'object' && `Only ${stockStatus.low} in stock`}
+                  {stockStatus === 'out' && 'Out of stock'}
+                </p>
+              )
             )}
             <div>
               <Label className="mb-2" id="quantity-label" required>

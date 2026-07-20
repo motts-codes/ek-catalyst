@@ -20,17 +20,17 @@ export function Faq({ faq, className }: Props) {
     return null;
   }
 
-  const { headline, items, image } = faq;
+  const { items, image } = faq;
   const hasImage = Boolean(image);
 
   return (
     <SectionLayout className={className} containerSize="2xl">
       <FaqSchema faq={faq} />
-      {headline && (
-        <h2 className="mb-8 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
-          {headline}
-        </h2>
-      )}
+      {/* Fixed section heading — the same on every product, so it isn't authored per-product in
+          the metafield (any `headline` key there is ignored). */}
+      <h2 className="mb-8 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
+        Frequently Asked Questions
+      </h2>
 
       {/* 60/40 split (FAQ list | image) when an image is present; full-width list otherwise. */}
       <div
@@ -55,7 +55,7 @@ export function Faq({ faq, className }: Props) {
         {hasImage && image != null && (
           <div className="lg:sticky lg:top-4 lg:self-start">
             <Image
-              alt={headline || 'FAQ'}
+              alt="Frequently Asked Questions"
               className="h-auto w-full rounded-xl object-contain"
               height={800}
               sizes="(min-width: 64rem) 40vw, 100vw"

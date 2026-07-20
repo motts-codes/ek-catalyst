@@ -18,24 +18,22 @@ export function FeaturesGrid({ featuresGrid, className }: Props) {
     return null;
   }
 
-  const { headline, description, features } = featuresGrid;
+  const { description, features } = featuresGrid;
 
   return (
     <SectionLayout className={className} containerSize="2xl">
-      {(headline || description) && (
-        <div className="mb-10 max-w-3xl">
-          {headline && (
-            <h2 className="font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
-              {headline}
-            </h2>
-          )}
-          {description && (
-            <p className="mt-3 text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
-              {description}
-            </p>
-          )}
-        </div>
-      )}
+      {/* Fixed section heading — the same on every product, so it isn't authored per-product in
+          the metafield (any `headline` key there is ignored). Only the content below varies. */}
+      <div className="mb-10 max-w-3xl">
+        <h2 className="font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
+          Highlights
+        </h2>
+        {description && (
+          <p className="mt-3 text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
+            {description}
+          </p>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, index) => (

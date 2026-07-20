@@ -33,6 +33,8 @@ interface ProductDetailProduct {
   price?: Streamable<Price | null>;
   subtitle?: string;
   subtitleHref?: string;
+  /** Variant-specific SKU, shown under the product name. */
+  sku?: Streamable<string | null>;
   badge?: string;
   /**
    * Marketing pills shown above the product name (e.g. Bestseller, Trending).
@@ -235,16 +237,28 @@ export function ProductDetail<F extends Field>({
                                   <h1 className="mb-0 pb-0 font-[family-name:var(--product-detail-title-font-family,var(--font-family-heading))] text-lg font-semibold leading-tight @xl:text-2xl @4xl:text-[1.65rem]">
                                     {product.title}
                                   </h1>
+                                  {product.sku != null && (
+                                    <Stream fallback={null} value={product.sku}>
+                                      {(sku) =>
+                                        sku != null &&
+                                        sku !== '' && (
+                                          <p className="mb-2 mt-1 text-xs text-contrast-400">
+                                            SKU: {sku}
+                                          </p>
+                                        )
+                                      }
+                                    </Stream>
+                                  )}
                                   {Boolean(product.subtitle) &&
                                     (product.subtitleHref ? (
                                       <Link
-                                        className="group/subtitle mt-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-300 transition-colors hover:text-foreground"
+                                        className="group/subtitle mt-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-[10px] uppercase text-contrast-300 transition-colors hover:text-foreground"
                                         href={product.subtitleHref}
                                       >
                                         Shop {product.subtitle}
                                       </Link>
                                     ) : (
-                                      <p className="mt-1 font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-xs uppercase text-contrast-300">
+                                      <p className="mt-1 font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-[10px] uppercase text-contrast-300">
                                         {product.subtitle}
                                       </p>
                                     ))}
@@ -278,7 +292,10 @@ export function ProductDetail<F extends Field>({
                                 </div>
                               )}
                               {product.showRating && (
-                                <div className="group/product-rating flex items-center gap-2">
+                                // Rating number and "N reviews" toned to the same grey as the
+                                // brand line; the shared Rating primitive keeps its own defaults
+                                // everywhere else (product cards etc.).
+                                <div className="group/product-rating flex items-center gap-2 [&_span.text-contrast-400]:!text-contrast-300 [&_span.text-contrast-500]:!text-contrast-300">
                                   <Stream
                                     fallback={<RatingSkeleton />}
                                     value={Streamable.all([
@@ -313,7 +330,7 @@ export function ProductDetail<F extends Field>({
                                     streamableProduct={{ name: product.title }}
                                     streamableUser={user}
                                     trigger={
-                                      <AnimatedUnderline className="cursor-pointer text-xs !font-normal text-contrast-500">
+                                      <AnimatedUnderline className="cursor-pointer text-xs !font-normal text-contrast-300">
                                         Write a Review
                                       </AnimatedUnderline>
                                     }
