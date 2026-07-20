@@ -241,7 +241,9 @@ const ProductQuery = graphql(
             }
           }
           description
-          customFields {
+          # first: 50 (the API max) — without an explicit page size this defaults to 10, and
+          # products with >10 custom fields would drop __fulfillment / __is_* flags off the end.
+          customFields(first: 50) {
             edges {
               node {
                 name
@@ -384,7 +386,9 @@ const StreamableProductQuery = graphql(
             unit
           }
           condition
-          customFields {
+          # first: 50 (the API max) — see the note on the other customFields block; the default
+          # of 10 would drop spec rows / control fields on products with many custom fields.
+          customFields(first: 50) {
             edges {
               node {
                 entityId
