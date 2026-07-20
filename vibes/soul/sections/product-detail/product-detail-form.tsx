@@ -312,6 +312,49 @@ export function ProductDetailForm<F extends Field>({
                   />
                 );
 
+                // Sort a select field's options by the numeric value in their label, ascending
+                // (e.g. Width / Height dimensions: 24, 30, 36...). Falls back to a locale string
+                // compare when a label has no leading number. Leaves non-select fields untouched.
+                const sortOptionsAscending = (field: F): F => {
+                  if (
+                    !('options' in field) ||
+                    !Array.isArray((field as { options?: unknown }).options)
+                  ) {
+                    return field;
+                  }
+
+                  // Parse dimension labels to a sortable number. Handles plain numbers ("30",
+                  // "30.5") and the "whole-numerator/denominator" fraction format BigCommerce
+                  // uses for windows ("17-3/4" -> 17.75, "23-1/4" -> 23.25).
+                  const toNum = (label: string) => {
+                    const fraction = /^(\d+)-(\d+)\/(\d+)/.exec(label.trim());
+
+                    if (fraction) {
+                      const [, whole, num, den] = fraction;
+
+                      return Number(whole) + Number(num) / Number(den);
+                    }
+
+                    return parseFloat(label.replace(/[^0-9.]/g, ''));
+                  };
+
+                  return {
+                    ...field,
+                    options: [
+                      ...(field as unknown as { options: Array<{ label: string }> }).options,
+                    ].sort((a, b) => {
+                      const na = toNum(a.label);
+                      const nb = toNum(b.label);
+
+                      if (Number.isNaN(na) || Number.isNaN(nb)) {
+                        return a.label.localeCompare(b.label, undefined, { numeric: true });
+                      }
+
+                      return na - nb;
+                    }),
+                  } as F;
+                };
+
                 if (paired) {
                   const rest = fields.filter(
                     (f) => f !== widthField && f !== heightField,
@@ -350,9 +393,9 @@ export function ProductDetailForm<F extends Field>({
                   return (
                     <>
                       <div className="flex items-end gap-3">
-                        {renderField(widthField)}
+                        {renderField(sortOptionsAscending(widthField))}
                         <span className="pb-2 text-lg text-contrast-400">×</span>
-                        {renderField(filteredHeightField)}
+                        {renderField(sortOptionsAscending(filteredHeightField))}
                       </div>
                       {rest.map(renderField)}
                     </>
@@ -421,6 +464,9 @@ export function ProductDetailForm<F extends Field>({
               </Label>
               <NumberInput
                 aria-label={quantityLabel}
+                // On press, use a clearly-lighter grey than the black hover background so the
+                // press is visibly distinct.
+                className="[&_button:active]:!bg-[#666666]"
                 decrementLabel={decrementLabel}
                 incrementLabel={incrementLabel}
                 max={maxQuantity}

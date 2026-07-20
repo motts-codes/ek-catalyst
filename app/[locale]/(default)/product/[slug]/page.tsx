@@ -726,7 +726,7 @@ export default async function Product({ params, searchParams }: Props) {
       {/* Full-width (edge-to-edge) separator between the main product area and the sections below.
           Rendered here (not inside ProductInformation) so it always shows, even when a product has
           no Product Information content. */}
-      <hr className="w-full border-t border-contrast-100" />
+      <hr className="w-full border-t border-[hsl(var(--product-detail-divider))]" />
 
       <Stream fallback={null} value={streamableSpecifications}>
         {(specifications) => (

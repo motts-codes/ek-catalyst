@@ -18,11 +18,17 @@
   --contrast-500: 0 0% 34%;
   /* Section heading color (Product Information, Features, FAQ, etc.) */
   --secondary-heading-color: #d90716;
+  /* PDP divider lines (horizontal <hr>s + the vertical gallery/details rule) — a step darker
+     than contrast-100 (93%) so the separators read a little more clearly. */
+  --product-detail-divider: 0 0% 90%;
   /* PDP marketing pills above the product name
      (__is_bestseller / __is_trending / __is_new custom fields) */
   --pill-bestseller-background: #fee3e5bf;
   --pill-trending-background: #a9d6e063;
   --pill-new-background: #d1f0d9;
+  /* Quantity stepper (+/-) hover: black background with reversed (white) icon */
+  --number-input-light-button-background-hover: #000000;
+  --number-input-light-icon-hover: #ffffff;
   /* PDP gallery: transparent image backdrop instead of the default grey (--contrast-100) */
   --product-gallery-image-background: transparent;
   /* Underline highlight (breadcrumbs, AnimatedUnderline) at 50% opacity — full-strength primary

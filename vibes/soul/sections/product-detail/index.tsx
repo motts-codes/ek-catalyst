@@ -165,7 +165,7 @@ export function ProductDetail<F extends Field>({
                   </Stream>
                 </div>
                 {/* Product Details */}
-                <div className="text-[var(--product-detail-primary-text,hsl(var(--foreground)))] @2xl:border-l @2xl:border-contrast-100 @2xl:pl-8 @5xl:pl-12">
+                <div className="text-[var(--product-detail-primary-text,hsl(var(--foreground)))] @2xl:border-l @2xl:border-[hsl(var(--product-detail-divider))] @2xl:pl-8 @5xl:pl-12">
                   <div className="group/product-detail-form">
                     <Stream
                       fallback={<ProductDetailFormSkeleton />}
@@ -332,7 +332,7 @@ export function ProductDetail<F extends Field>({
                                   )}
                                 </Stream>
                               </div>
-                              <hr className="mb-4 w-full border-t border-contrast-100" />
+                              <hr className="mb-4 w-full border-t border-[hsl(var(--product-detail-divider))]" />
                               {/* Mobile gallery: force a shorter 4:3 frame so the image isn't
                                   full-width-tall on phones (desktop stays 1:1). */}
                               <div className="group/product-gallery mb-8 [&_.aspect-square]:!aspect-[4/3] @2xl:hidden">

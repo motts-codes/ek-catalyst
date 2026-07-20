@@ -92,7 +92,9 @@ export const Rating = function Rating({
             <div className="flex items-center gap-1">
               <span className="mx-1 h-4 w-px bg-contrast-200" />
               <span className="text-xs text-contrast-500">
-                {numberOfReviews} {numberOfReviews === 1 ? 'review' : 'reviews'}
+                {numberOfReviews === 0
+                  ? 'No reviews'
+                  : `${numberOfReviews} ${numberOfReviews === 1 ? 'review' : 'reviews'}`}
               </span>
             </div>
           )}
