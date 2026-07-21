@@ -4,6 +4,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client';
 
+// The category/brand/search filter sidebar. Customizations (see docs/CATEGORY-PAGE.md):
+//  - Sections are always open (no accordion) — FilterSection: bold title + options below.
+//  - Multi-option facets render as vertical checkbox lists (not toggle chips).
+//  - The subcategory link-group heading is the current category's own name, subcategories indented.
+//  - Marketing-flag facets (__is_bestseller/__is_trending/__is_new) are hidden here — they surface
+//    as pills on the card/PDP instead (see MARKETING_FLAG_LABELS / isMarketingFlagFacet).
+//  - Compact price range inputs; 12px titles.
+
 import { clsx } from 'clsx';
 import { parseAsString, useQueryStates } from 'nuqs';
 import { useOptimistic, useTransition } from 'react';

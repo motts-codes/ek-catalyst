@@ -1,3 +1,7 @@
+// Builds the ProductCard `Product` (presentation shape) from a BigCommerce product. Used by the
+// faceted grids (category/brand/search), the PDP related carousel, wishlist, etc. Derives the
+// marketing badges (from __is_* custom fields) and `requiresOptions` (drives the card CTA) — both
+// require the fragment to fetch customFields + productOptions. See docs/PRODUCT-CARD.md.
 import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { ResultOf } from 'gql.tada';
 import { getFormatter } from 'next-intl/server';
