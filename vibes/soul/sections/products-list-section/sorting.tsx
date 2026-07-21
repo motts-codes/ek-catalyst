@@ -40,6 +40,9 @@ export function Sorting({
 
   return (
     <Select
+      // Compact sort dropdown: shorter trigger, 12px text, and a light-red (brand) border. The
+      // className lands on the wrapper, so target the trigger button within it.
+      className="[&_button]:!h-8 [&_button]:!border-[hsl(var(--primary)/40%)] [&_button]:!pl-3 [&_button]:!text-xs"
       hideLabel
       label={label}
       name={paramName}
@@ -63,5 +66,5 @@ export function Sorting({
 }
 
 export function SortingSkeleton() {
-  return <div className="h-[50px] w-[12ch] animate-pulse rounded-full bg-contrast-100" />;
+  return <div className="h-8 w-[12ch] animate-pulse rounded-full bg-contrast-100" />;
 }

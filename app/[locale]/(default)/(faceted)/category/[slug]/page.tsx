@@ -268,6 +268,9 @@ export default async function Category(props: Props) {
       />
       <ProductsListSection
         breadcrumbs={breadcrumbs}
+        // Hide the category name + count so the Makeswift "top content" (images/banner) leads the
+        // page; the sort control moves to the left.
+        hideHeader
         compareLabel={t('Compare.compare')}
         compareProducts={streamableCompareProducts}
         emptyStateSubtitle={t('Category.Empty.subtitle')}

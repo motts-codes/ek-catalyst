@@ -231,7 +231,11 @@ export function FiltersPanelInner({
             case 'range':
               return (
                 <FilterSection key={key} title={filter.label}>
-                  <RangeInput
+                  {/* Compact price range: Min/Max + apply circle in one row, with narrower inputs
+                      (12px, tighter padding) and a smaller apply circle than the defaults. The
+                      input wrappers are flex-1 by default; cap them so the fields stay compact. */}
+                  <div className="[&>div>div]:!max-w-20 [&_button>span]:!size-7 [&_button>span]:!min-h-0 [&_button>span]:!min-w-0 [&_input]:!px-2 [&_input]:!py-1.5 [&_input]:!text-xs [&_svg]:!size-3.5">
+                    <RangeInput
                     applyLabel={rangeFilterApplyLabel}
                     disabled={filter.disabled}
                     max={filter.max}
@@ -262,7 +266,8 @@ export function FiltersPanelInner({
                       min: optimisticParams[filter.minParamName] ?? null,
                       max: optimisticParams[filter.maxParamName] ?? null,
                     }}
-                  />
+                    />
+                  </div>
                 </FilterSection>
               );
 
@@ -309,6 +314,7 @@ export function FiltersPanelInner({
       </div>
 
       <Button
+        className="!mt-6"
         onClick={() => {
           startTransition(async () => {
             const nextParams = {
@@ -321,7 +327,7 @@ export function FiltersPanelInner({
             await setParams(nextParams);
           });
         }}
-        size="small"
+        size="x-small"
         variant="secondary"
       >
         {resetFiltersLabel}

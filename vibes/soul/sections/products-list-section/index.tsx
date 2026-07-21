@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { Sliders } from 'lucide-react';
 import { Suspense } from 'react';
 
@@ -18,6 +19,8 @@ import {
 interface Props {
   breadcrumbs?: Streamable<Breadcrumb[]>;
   title?: Streamable<string | null>;
+  /** Hide the page heading (title + product count); the sort control moves to the left. */
+  hideHeader?: boolean;
   totalCount: Streamable<string>;
   products: Streamable<Product[]>;
   filters: Streamable<Filter[]>;
@@ -48,6 +51,7 @@ interface Props {
 export function ProductsListSection({
   breadcrumbs: streamableBreadcrumbs,
   title = 'Products',
+  hideHeader = false,
   totalCount,
   products,
   showRating,
@@ -90,23 +94,32 @@ export function ProductsListSection({
               )
             }
           </Stream>
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-8 pt-6 text-foreground">
-            <h1 className="flex items-center gap-2 font-heading text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl">
-              <Suspense
-                fallback={
-                  <span className="inline-flex h-[1lh] w-[6ch] animate-pulse rounded-lg bg-contrast-100" />
-                }
-              >
-                {title}
-              </Suspense>
-              <Suspense
-                fallback={
-                  <span className="inline-flex h-[1lh] w-[2ch] animate-pulse rounded-lg bg-contrast-100" />
-                }
-              >
-                <span className="text-contrast-300">{totalCount}</span>
-              </Suspense>
-            </h1>
+          <div
+            className={clsx(
+              'flex flex-wrap items-center gap-4 text-foreground',
+              // With the big heading hidden, the row holds only the compact sort control, so it
+              // needs far less vertical padding above the grid.
+              hideHeader ? 'justify-start pb-4 pt-2' : 'justify-between pb-8 pt-6',
+            )}
+          >
+            {!hideHeader && (
+              <h1 className="flex items-center gap-2 font-heading text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl">
+                <Suspense
+                  fallback={
+                    <span className="inline-flex h-[1lh] w-[6ch] animate-pulse rounded-lg bg-contrast-100" />
+                  }
+                >
+                  {title}
+                </Suspense>
+                <Suspense
+                  fallback={
+                    <span className="inline-flex h-[1lh] w-[2ch] animate-pulse rounded-lg bg-contrast-100" />
+                  }
+                >
+                  <span className="text-contrast-300">{totalCount}</span>
+                </Suspense>
+              </h1>
+            )}
             <div className="flex gap-2">
               <Stream
                 fallback={<SortingSkeleton />}
@@ -154,7 +167,7 @@ export function ProductsListSection({
           </div>
         </div>
         <div className="flex items-stretch gap-8 @4xl:gap-10">
-          <aside className="hidden w-52 @3xl:block @4xl:w-60">
+          <aside className="hidden w-52 @3xl:block @4xl:w-60 @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:pr-10">
             <Stream value={streamableFiltersPanelTitle}>
               {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
             </Stream>
