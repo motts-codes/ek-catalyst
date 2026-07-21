@@ -121,10 +121,13 @@ export default async function Category(props: Props) {
     return notFound();
   }
 
-  const breadcrumbs = removeEdgesAndNodes(category.breadcrumbs).map(({ name, path }) => ({
-    label: name,
-    href: path ?? '#',
-  }));
+  // Home / <category trail>, matching the PDP. Prepending Home means top-level categories
+  // (whose own trail is a single crumb) still render a breadcrumb. Consecutive duplicate labels
+  // are collapsed — the category data can repeat the current category (e.g. "Windows / Windows").
+  const categoryCrumbs = removeEdgesAndNodes(category.breadcrumbs)
+    .map(({ name, path }) => ({ label: name, href: path ?? '#' }))
+    .filter((crumb, index, all) => index === 0 || crumb.label !== all[index - 1].label);
+  const breadcrumbs = [{ label: 'Home', href: '/' }, ...categoryCrumbs];
 
   const showRating = Boolean(settings?.reviews.enabled && settings.display.showProductRating);
 

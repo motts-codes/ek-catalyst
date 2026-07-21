@@ -76,11 +76,18 @@ export function ProductsListSection({
 }: Props) {
   return (
     <div className="group/products-list-section @container">
-      <div className="mx-auto max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-12">
+      <div className="mx-auto max-w-screen-2xl px-4 pb-10 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-12">
         <div>
           <Stream fallback={<BreadcrumbsSkeleton />} value={streamableBreadcrumbs}>
             {(breadcrumbs) =>
-              breadcrumbs && breadcrumbs.length > 1 && <Breadcrumbs breadcrumbs={breadcrumbs} />
+              breadcrumbs &&
+              breadcrumbs.length > 1 && (
+                // Match the PDP breadcrumb treatment: 10px, light grey.
+                <Breadcrumbs
+                  breadcrumbs={breadcrumbs}
+                  className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
+                />
+              )
             }
           </Stream>
           <div className="flex flex-wrap items-center justify-between gap-4 pb-8 pt-6 text-foreground">

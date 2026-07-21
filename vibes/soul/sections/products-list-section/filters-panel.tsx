@@ -68,6 +68,13 @@ interface Props {
 
 type InnerProps = Props & { filters: Filter[] };
 
+// Scoped filter-sidebar styling (doesn't touch the shared Accordion/ToggleGroup primitives used
+// elsewhere): smaller 12px accordion titles with tighter padding, and compact option chips.
+const FILTER_ITEM_CLASS =
+  '[&_button]:!py-2.5 [&_button>div:first-child]:!text-xs';
+const FILTER_CHIP_CLASS =
+  '[&_button]:!h-8 [&_button]:!px-3 [&_button]:!text-xs';
+
 function getParamCountLabel(params: Record<string, string | null | string[]>, key: string) {
   const value = params[key];
 
@@ -155,12 +162,12 @@ export function FiltersPanelInner({
     <div className={clsx('space-y-5', className)} data-pending={isPending ? true : null}>
       {linkGroupFilters.map((linkGroup, index) => (
         <div key={index.toString()}>
-          <h3 className="py-4 font-mono text-sm uppercase text-contrast-400">{linkGroup.label}</h3>
+          <h3 className="py-3 font-mono text-xs uppercase text-contrast-400">{linkGroup.label}</h3>
           <ul>
             {linkGroup.links.map((link, linkIndex) => (
-              <li className="py-2" key={linkIndex.toString()}>
+              <li className="py-1" key={linkIndex.toString()}>
                 <Link
-                  className="font-body text-base font-medium text-contrast-500 transition-colors duration-300 ease-out hover:text-foreground"
+                  className="font-body text-xs font-medium text-contrast-500 transition-colors duration-300 ease-out hover:text-foreground"
                   href={link.href}
                 >
                   {link.label}
@@ -184,11 +191,13 @@ export function FiltersPanelInner({
             case 'toggle-group':
               return (
                 <AccordionItem
+                  className={FILTER_ITEM_CLASS}
                   key={key}
                   title={`${filter.label}${getParamCountLabel(optimisticParams, filter.paramName)}`}
                   value={value}
                 >
                   <ToggleGroup
+                    className={FILTER_CHIP_CLASS}
                     onValueChange={(toggleGroupValues) => {
                       startTransition(async () => {
                         const nextParams = {
@@ -212,7 +221,7 @@ export function FiltersPanelInner({
 
             case 'range':
               return (
-                <AccordionItem key={key} title={filter.label} value={value}>
+                <AccordionItem className={FILTER_ITEM_CLASS} key={key} title={filter.label} value={value}>
                   <RangeInput
                     applyLabel={rangeFilterApplyLabel}
                     disabled={filter.disabled}
@@ -250,7 +259,7 @@ export function FiltersPanelInner({
 
             case 'rating':
               return (
-                <AccordionItem key={key} title={filter.label} value={value}>
+                <AccordionItem className={FILTER_ITEM_CLASS} key={key} title={filter.label} value={value}>
                   <div className="space-y-3">
                     {[5, 4, 3, 2, 1].map((rating) => (
                       <Checkbox
