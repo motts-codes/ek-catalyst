@@ -71,9 +71,19 @@ type InnerProps = Props & { filters: Filter[] };
 // Scoped filter-sidebar styling (doesn't touch the shared Accordion/ToggleGroup primitives used
 // elsewhere): smaller 12px accordion titles with tighter padding, and compact option chips.
 const FILTER_ITEM_CLASS =
-  '[&_button]:!py-2.5 [&_button>div:first-child]:!text-xs';
+  '[&_button]:!py-2 [&_button>div:first-child]:!text-xs [&_[data-state]]:!pb-3';
 const FILTER_CHIP_CLASS =
-  '[&_button]:!h-8 [&_button]:!px-3 [&_button]:!text-xs';
+  '[&_button]:!inline-flex [&_button]:!h-8 [&_button]:!items-center [&_button]:!px-3 [&_button]:!text-xs';
+
+// Marketing-flag facets (__is_bestseller / __is_trending / __is_new) reuse the PDP pills — grey
+// when off, brand color when selected. Keyed by the facet's display label (lower-cased); the value
+// is the selected-state background (the same --pill-*-background vars the PDP uses). Membership in
+// this map also marks a facet as a "marketing pill" that's lifted to the top pill row.
+const PILL_FACET_ON_BG_STYLE: Record<string, string> = {
+  bestseller: 'var(--pill-bestseller-background)',
+  trending: 'var(--pill-trending-background)',
+  new: 'var(--pill-new-background)',
+};
 
 function getParamCountLabel(params: Record<string, string | null | string[]>, key: string) {
   const value = params[key];
@@ -141,8 +151,18 @@ export function FiltersPanelInner({
     return initial;
   });
 
+  // Marketing-flag facets (Bestseller / Trending / New) are lifted out of the accordion list and
+  // shown as direct-click pills at the top — each is a single-option toggle, so a full collapsible
+  // section per flag is overkill.
+  const marketingPillFilters = filters.filter(
+    (filter): filter is ToggleGroupFilter =>
+      filter.type === 'toggle-group' && filter.label.trim().toLowerCase() in PILL_FACET_ON_BG_STYLE,
+  );
+  const isMarketingPill = (filter: Filter) =>
+    filter.type === 'toggle-group' && filter.label.trim().toLowerCase() in PILL_FACET_ON_BG_STYLE;
+
   const accordionItems = filters
-    .filter((filter) => filter.type !== 'link-group')
+    .filter((filter) => filter.type !== 'link-group' && !isMarketingPill(filter))
     .map((filter) => {
       return {
         key: filter.label.toLowerCase(),
@@ -158,8 +178,49 @@ export function FiltersPanelInner({
     (filter): filter is LinkGroupFilter => filter.type === 'link-group',
   );
 
+  const toggleMarketingPill = (filter: ToggleGroupFilter, value: string, selected: boolean) => {
+    startTransition(async () => {
+      const nextParams = {
+        ...optimisticParams,
+        [startCursorParamName]: null,
+        [endCursorParamName]: null,
+        [filter.paramName]: selected ? [value] : null,
+      };
+
+      setOptimisticParams(nextParams);
+      await setParams(nextParams);
+    });
+  };
+
   return (
     <div className={clsx('space-y-5', className)} data-pending={isPending ? true : null}>
+      {marketingPillFilters.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {marketingPillFilters.map((filter) => {
+            const value = filter.options[0]?.value ?? 'yes';
+            const selected = optimisticParams[filter.paramName]?.includes(value) ?? false;
+            const onColor = PILL_FACET_ON_BG_STYLE[filter.label.trim().toLowerCase()];
+
+            return (
+              <button
+                aria-pressed={selected}
+                className={clsx(
+                  'inline-flex h-8 items-center rounded-full px-3.5 text-xs font-medium transition-colors',
+                  selected
+                    ? 'text-foreground'
+                    : 'bg-contrast-100 text-contrast-500 hover:bg-contrast-200/70',
+                )}
+                key={filter.paramName}
+                onClick={() => toggleMarketingPill(filter, value, !selected)}
+                style={selected ? { backgroundColor: onColor } : undefined}
+                type="button"
+              >
+                {filter.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
       {linkGroupFilters.map((linkGroup, index) => (
         <div key={index.toString()}>
           <h3 className="py-3 font-mono text-xs uppercase text-contrast-400">{linkGroup.label}</h3>
