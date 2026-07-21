@@ -23,6 +23,8 @@ export interface Product {
   rating?: number;
   inventoryMessage?: string;
   numberOfReviews?: number;
+  /** True when the product has required options; the CTA then links to the PDP to choose them. */
+  requiresOptions?: boolean;
 }
 
 export interface ProductCardProps {
@@ -70,6 +72,7 @@ export function ProductCard({
     price,
     image,
     href,
+    requiresOptions,
     inventoryMessage,
     rating,
     numberOfReviews,
@@ -203,6 +206,17 @@ export function ProductCard({
             >
               {inventoryMessage}
             </span>
+            {href !== '#' && (
+              // CTA. Products with required options (the common case here) can't be added in one
+              // click, so the button links to the PDP to choose options. relative z-10 keeps it
+              // above the full-card overlay link. Sits inline with the card's own PDP link.
+              <Link
+                className="relative z-10 mt-3 inline-flex h-9 w-full items-center justify-center rounded-full bg-[var(--button-primary-background,hsl(var(--primary)))] px-4 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-text,hsl(var(--foreground)))] transition-opacity hover:opacity-90"
+                href={href}
+              >
+                {requiresOptions === false ? 'Add to Cart' : 'View Options'}
+              </Link>
+            )}
           </div>
         </div>
         {href !== '#' && (

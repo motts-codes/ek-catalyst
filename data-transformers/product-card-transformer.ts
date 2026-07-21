@@ -83,6 +83,10 @@ export const singleProductCardTransformer = (
     price: pricesTransformer(product, format, taxDisplay),
     subtitle: product.brand?.name ?? undefined,
     badges: getCardBadges(product),
+    requiresOptions:
+      'productOptions' in product
+        ? removeEdgesAndNodes(product.productOptions).some((o) => o.isRequired)
+        : undefined,
     rating: product.reviewSummary.averageRating,
     numberOfReviews: product.reviewSummary.numberOfReviews,
     inventoryMessage:
