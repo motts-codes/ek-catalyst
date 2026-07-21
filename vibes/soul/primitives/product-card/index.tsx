@@ -90,11 +90,11 @@ export function ProductCard({
   return (
     <article
       className={clsx(
-        'group flex min-w-0 max-w-md flex-col gap-3 font-[family-name:var(--card-font-family,var(--font-family-body))] @container',
+        'group flex h-full min-w-0 max-w-md flex-col gap-3 font-[family-name:var(--card-font-family,var(--font-family-body))] @container',
         className,
       )}
     >
-      <div className="relative">
+      <div className="relative flex flex-1 flex-col">
         <div
           className={clsx(
             'relative overflow-hidden rounded-xl @md:rounded-2xl',
@@ -157,11 +157,13 @@ export function ProductCard({
           )}
         </div>
 
-        <div className="mt-2 flex flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3 @2xl:flex-row">
-          <div className="flex-1 text-sm @[16rem]:text-base">
+        <div className="mt-2 flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3">
+          <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
             <span
               className={clsx(
-                'line-clamp-2 font-semibold',
+                // Reserve a full 2 lines (min-h) even for 1-line titles so the price and CTA
+                // below align across cards in a row.
+                'line-clamp-2 block min-h-[2lh] font-semibold',
                 {
                   light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
                   dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
@@ -211,7 +213,7 @@ export function ProductCard({
               // click, so the button links to the PDP to choose options. relative z-10 keeps it
               // above the full-card overlay link. Sits inline with the card's own PDP link.
               <Link
-                className="relative z-10 mt-3 inline-flex h-9 w-full items-center justify-center rounded-full bg-[var(--button-primary-background,hsl(var(--primary)))] px-4 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-text,hsl(var(--foreground)))] transition-opacity hover:opacity-90"
+                className="relative z-10 mt-auto inline-flex h-9 w-full items-center justify-center rounded-full bg-[var(--button-primary-background,hsl(var(--primary)))] px-4 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-text,hsl(var(--foreground)))] transition-opacity hover:opacity-90"
                 href={href}
               >
                 {requiresOptions === false ? 'Add to Cart' : 'View Options'}
@@ -237,8 +239,9 @@ export function ProductCard({
         )}
       </div>
       {showCompare && (
-        // Smaller compare checkbox + label than the default.
-        <div className="ml-1 mt-auto shrink-0 [&_button]:!size-3.5 [&_label]:!text-xs [&_svg]:!size-2.5">
+        // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
+        // so the small box doesn't read as a circle.
+        <div className="ml-1 mt-auto shrink-0 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
           <Compare
             colorScheme={colorScheme}
             label={compareLabel}
