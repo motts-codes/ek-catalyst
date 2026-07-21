@@ -64,7 +64,8 @@ export const facetsTransformer = async ({
       return {
         type: 'toggle-group' as const,
         paramName: 'brand',
-        label: facet.displayName,
+        // Rename "Brand" -> "Brands" (the BC facet display name is singular).
+        label: facet.displayName === 'Brand' ? 'Brands' : facet.displayName,
         defaultCollapsed: facet.isCollapsedByDefault,
         options: facet.brands.map((brand) => {
           const refinedBrand = refinedBrandSearchFilter?.brands.find(

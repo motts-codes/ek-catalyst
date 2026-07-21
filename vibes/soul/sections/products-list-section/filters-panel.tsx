@@ -10,7 +10,6 @@ import { useOptimistic, useState, useTransition } from 'react';
 
 import { Checkbox } from '@/vibes/soul/form/checkbox';
 import { RangeInput } from '@/vibes/soul/form/range-input';
-import { ToggleGroup } from '@/vibes/soul/form/toggle-group';
 import { Stream, Streamable, useStreamable } from '@/vibes/soul/lib/streamable';
 import { Accordion, AccordionItem } from '@/vibes/soul/primitives/accordion';
 import { Button } from '@/vibes/soul/primitives/button';
@@ -68,12 +67,10 @@ interface Props {
 
 type InnerProps = Props & { filters: Filter[] };
 
-// Scoped filter-sidebar styling (doesn't touch the shared Accordion/ToggleGroup primitives used
-// elsewhere): smaller 12px accordion titles with tighter padding, and compact option chips.
+// Scoped filter-sidebar styling (doesn't touch the shared Accordion primitive used elsewhere):
+// smaller 12px accordion titles with tighter padding.
 const FILTER_ITEM_CLASS =
   '[&_button]:!py-2 [&_button>div:first-child]:!text-xs [&_[data-state]]:!pb-3';
-const FILTER_CHIP_CLASS =
-  '[&_button]:!inline-flex [&_button]:!h-8 [&_button]:!items-center [&_button]:!px-3 [&_button]:!text-xs';
 
 // Marketing-flag facets (__is_bestseller / __is_trending / __is_new) reuse the PDP pills — grey
 // when off, brand color when selected. Keyed by the facet's display label (lower-cased); the value
@@ -257,26 +254,41 @@ export function FiltersPanelInner({
                   title={`${filter.label}${getParamCountLabel(optimisticParams, filter.paramName)}`}
                   value={value}
                 >
-                  <ToggleGroup
-                    className={FILTER_CHIP_CLASS}
-                    onValueChange={(toggleGroupValues) => {
-                      startTransition(async () => {
-                        const nextParams = {
-                          ...optimisticParams,
-                          [startCursorParamName]: null,
-                          [endCursorParamName]: null,
-                          [filter.paramName]:
-                            toggleGroupValues.length === 0 ? null : toggleGroupValues,
-                        };
+                  <div className="space-y-2">
+                    {filter.options.map((option) => {
+                      const selectedValues = optimisticParams[filter.paramName] ?? [];
+                      const checked = selectedValues.includes(option.value);
 
-                        setOptimisticParams(nextParams);
-                        await setParams(nextParams);
-                      });
-                    }}
-                    options={filter.options}
-                    type="multiple"
-                    value={optimisticParams[filter.paramName] ?? []}
-                  />
+                      return (
+                        <Checkbox
+                          checked={checked}
+                          className="text-xs [&_label]:!text-xs [&_label]:!font-normal"
+                          disabled={option.disabled}
+                          key={option.value}
+                          label={option.label}
+                          onCheckedChange={(isChecked) =>
+                            startTransition(async () => {
+                              const next = new Set(selectedValues);
+
+                              if (isChecked === true) next.add(option.value);
+                              else next.delete(option.value);
+
+                              const values = Array.from(next);
+                              const nextParams = {
+                                ...optimisticParams,
+                                [startCursorParamName]: null,
+                                [endCursorParamName]: null,
+                                [filter.paramName]: values.length === 0 ? null : values,
+                              };
+
+                              setOptimisticParams(nextParams);
+                              await setParams(nextParams);
+                            })
+                          }
+                        />
+                      );
+                    })}
+                  </div>
                 </AccordionItem>
               );
 
