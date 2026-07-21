@@ -6,12 +6,11 @@
 
 import { clsx } from 'clsx';
 import { parseAsString, useQueryStates } from 'nuqs';
-import { useOptimistic, useState, useTransition } from 'react';
+import { useOptimistic, useTransition } from 'react';
 
 import { Checkbox } from '@/vibes/soul/form/checkbox';
 import { RangeInput } from '@/vibes/soul/form/range-input';
 import { Stream, Streamable, useStreamable } from '@/vibes/soul/lib/streamable';
-import { Accordion, AccordionItem } from '@/vibes/soul/primitives/accordion';
 import { Button } from '@/vibes/soul/primitives/button';
 import { CursorPaginationInfo } from '@/vibes/soul/primitives/cursor-pagination';
 import { Rating } from '@/vibes/soul/primitives/rating';
@@ -67,19 +66,23 @@ interface Props {
 
 type InnerProps = Props & { filters: Filter[] };
 
-// Scoped filter-sidebar styling (doesn't touch the shared Accordion primitive used elsewhere):
-// smaller 12px accordion titles with tighter padding.
-const FILTER_ITEM_CLASS =
-  '[&_button]:!py-2 [&_button>div:first-child]:!text-xs [&_[data-state]]:!pb-3';
+// An always-open filter section: a bold title with its options below (no accordion toggle).
+function FilterSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h3 className="mb-2 font-body text-xs font-bold uppercase text-foreground">{title}</h3>
+      {children}
+    </div>
+  );
+}
 
-// Marketing-flag facets (__is_bestseller / __is_trending / __is_new) reuse the PDP pills — grey
-// when off, brand color when selected. Keyed by the facet's display label (lower-cased); the value
-// is the selected-state background (the same --pill-*-background vars the PDP uses). Membership in
-// this map also marks a facet as a "marketing pill" that's lifted to the top pill row.
-const PILL_FACET_ON_BG_STYLE: Record<string, string> = {
-  bestseller: 'var(--pill-bestseller-background)',
-  trending: 'var(--pill-trending-background)',
-  new: 'var(--pill-new-background)',
+// Marketing-flag facets (__is_bestseller / __is_trending / __is_new). These are internal
+// merchandising flags surfaced via the PDP pills, so they're hidden from the filter sidebar.
+// Keyed by the facet's display label (lower-cased).
+const MARKETING_FLAG_LABELS: Record<string, true> = {
+  bestseller: true,
+  trending: true,
+  new: true,
 };
 
 function getParamCountLabel(params: Record<string, string | null | string[]>, key: string) {
@@ -135,39 +138,15 @@ export function FiltersPanelInner({
   );
   const [isPending, startTransition] = useTransition();
   const [optimisticParams, setOptimisticParams] = useOptimistic(params);
-  const [expandedItems, setExpandedItems] = useState(() => {
-    const initial = new Set<string>();
 
-    filters
-      .filter((filter) => filter.type !== 'link-group')
-      .slice(0, 3)
-      .forEach((filter) => {
-        initial.add(filter.label.toLowerCase());
-      });
-
-    return initial;
-  });
-
-  // Marketing-flag facets (Bestseller / Trending / New) are lifted out of the accordion list and
-  // shown as direct-click pills at the top — each is a single-option toggle, so a full collapsible
-  // section per flag is overkill.
-  const marketingPillFilters = filters.filter(
-    (filter): filter is ToggleGroupFilter =>
-      filter.type === 'toggle-group' && filter.label.trim().toLowerCase() in PILL_FACET_ON_BG_STYLE,
-  );
-  const isMarketingPill = (filter: Filter) =>
-    filter.type === 'toggle-group' && filter.label.trim().toLowerCase() in PILL_FACET_ON_BG_STYLE;
+  // Marketing-flag facets (Bestseller / Trending / New) are internal merchandising flags — hidden
+  // from the filter sidebar entirely.
+  const isMarketingFlagFacet = (filter: Filter) =>
+    filter.type === 'toggle-group' && filter.label.trim().toLowerCase() in MARKETING_FLAG_LABELS;
 
   const accordionItems = filters
-    .filter((filter) => filter.type !== 'link-group' && !isMarketingPill(filter))
-    .map((filter) => {
-      return {
-        key: filter.label.toLowerCase(),
-        value: filter.label.toLowerCase(),
-        filter,
-        expanded: expandedItems.has(filter.label.toLowerCase()),
-      };
-    });
+    .filter((filter) => filter.type !== 'link-group' && !isMarketingFlagFacet(filter))
+    .map((filter) => ({ key: filter.label.toLowerCase(), filter }));
 
   if (filters.length === 0) return null;
 
@@ -175,55 +154,18 @@ export function FiltersPanelInner({
     (filter): filter is LinkGroupFilter => filter.type === 'link-group',
   );
 
-  const toggleMarketingPill = (filter: ToggleGroupFilter, value: string, selected: boolean) => {
-    startTransition(async () => {
-      const nextParams = {
-        ...optimisticParams,
-        [startCursorParamName]: null,
-        [endCursorParamName]: null,
-        [filter.paramName]: selected ? [value] : null,
-      };
-
-      setOptimisticParams(nextParams);
-      await setParams(nextParams);
-    });
-  };
-
   return (
-    <div className={clsx('space-y-5', className)} data-pending={isPending ? true : null}>
-      {marketingPillFilters.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {marketingPillFilters.map((filter) => {
-            const value = filter.options[0]?.value ?? 'yes';
-            const selected = optimisticParams[filter.paramName]?.includes(value) ?? false;
-            const onColor = PILL_FACET_ON_BG_STYLE[filter.label.trim().toLowerCase()];
-
-            return (
-              <button
-                aria-pressed={selected}
-                className={clsx(
-                  'inline-flex h-8 items-center rounded-full px-3.5 text-xs font-medium transition-colors',
-                  selected
-                    ? 'text-foreground'
-                    : 'bg-contrast-100 text-contrast-500 hover:bg-contrast-200/70',
-                )}
-                key={filter.paramName}
-                onClick={() => toggleMarketingPill(filter, value, !selected)}
-                style={selected ? { backgroundColor: onColor } : undefined}
-                type="button"
-              >
-                {filter.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
+    <div className={clsx('space-y-3', className)} data-pending={isPending ? true : null}>
       {linkGroupFilters.map((linkGroup, index) => (
         <div key={index.toString()}>
-          <h3 className="py-3 font-mono text-xs uppercase text-contrast-400">{linkGroup.label}</h3>
-          <ul>
+          {/* Main category name as a bold heading (matches the filter section titles), with its
+              subcategories listed indented beneath. */}
+          <h3 className="mb-2 font-body text-xs font-bold uppercase text-foreground">
+            {linkGroup.label}
+          </h3>
+          <ul className="space-y-1 pl-3">
             {linkGroup.links.map((link, linkIndex) => (
-              <li className="py-1" key={linkIndex.toString()}>
+              <li key={linkIndex.toString()}>
                 <Link
                   className="font-body text-xs font-medium text-contrast-500 transition-colors duration-300 ease-out hover:text-foreground"
                   href={link.href}
@@ -235,24 +177,18 @@ export function FiltersPanelInner({
           </ul>
         </div>
       ))}
-      <Accordion
-        onValueChange={(items) => {
-          setExpandedItems(new Set(items));
-        }}
-        type="multiple"
-        value={accordionItems.filter((item) => item.expanded).map((item) => item.value)}
-      >
+      {/* Filter sections are always open (no accordion toggle). Each has a bold title and its
+          options listed below. */}
+      <div className="space-y-5">
         {accordionItems.map((accordionItem) => {
-          const { key, value, filter } = accordionItem;
+          const { key, filter } = accordionItem;
 
           switch (filter.type) {
             case 'toggle-group':
               return (
-                <AccordionItem
-                  className={FILTER_ITEM_CLASS}
+                <FilterSection
                   key={key}
                   title={`${filter.label}${getParamCountLabel(optimisticParams, filter.paramName)}`}
-                  value={value}
                 >
                   <div className="space-y-2">
                     {filter.options.map((option) => {
@@ -289,12 +225,12 @@ export function FiltersPanelInner({
                       );
                     })}
                   </div>
-                </AccordionItem>
+                </FilterSection>
               );
 
             case 'range':
               return (
-                <AccordionItem className={FILTER_ITEM_CLASS} key={key} title={filter.label} value={value}>
+                <FilterSection key={key} title={filter.label}>
                   <RangeInput
                     applyLabel={rangeFilterApplyLabel}
                     disabled={filter.disabled}
@@ -327,12 +263,12 @@ export function FiltersPanelInner({
                       max: optimisticParams[filter.maxParamName] ?? null,
                     }}
                   />
-                </AccordionItem>
+                </FilterSection>
               );
 
             case 'rating':
               return (
-                <AccordionItem className={FILTER_ITEM_CLASS} key={key} title={filter.label} value={value}>
+                <FilterSection key={key} title={filter.label}>
                   <div className="space-y-3">
                     {[5, 4, 3, 2, 1].map((rating) => (
                       <Checkbox
@@ -363,14 +299,14 @@ export function FiltersPanelInner({
                       />
                     ))}
                   </div>
-                </AccordionItem>
+                </FilterSection>
               );
 
             default:
               return null;
           }
         })}
-      </Accordion>
+      </div>
 
       <Button
         onClick={() => {

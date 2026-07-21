@@ -224,7 +224,9 @@ export default async function Category(props: Props) {
         : [
             {
               type: 'link-group' as const,
-              label: t('Category.subCategories'),
+              // Use the current category's own name as the heading (e.g. "Appliances") with its
+              // subcategories listed (indented) beneath, instead of a generic "Categories" label.
+              label: tree.name,
               links: tree.children.map((child) => ({
                 label: child.name,
                 href: child.path,
