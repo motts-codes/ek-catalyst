@@ -46,6 +46,26 @@ const getInventoryMessage = (
   return inventoryByLocation?.backorderMessage ?? undefined;
 };
 
+// Marketing pills shown on the card, driven by the __is_* custom fields (value "yes"). Order:
+// New, Bestseller, Trending. Colors reuse the PDP pill CSS variables so cards match the PDP.
+const getCardBadges = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+): Array<{ label: string; color: string }> => {
+  if (!('customFields' in product)) {
+    return [];
+  }
+
+  const fields = removeEdgesAndNodes(product.customFields);
+  const isYes = (name: string) =>
+    fields.find((f) => f.name === name)?.value?.trim().toLowerCase() === 'yes';
+
+  return [
+    isYes('__is_new') && { label: 'New', color: 'var(--pill-new-background)' },
+    isYes('__is_bestseller') && { label: 'Bestseller', color: 'var(--pill-bestseller-background)' },
+    isYes('__is_trending') && { label: 'Trending', color: 'var(--pill-trending-background)' },
+  ].filter((b): b is { label: string; color: string } => Boolean(b));
+};
+
 export const singleProductCardTransformer = (
   product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
   format: ExistingResultType<typeof getFormatter>,
@@ -62,6 +82,7 @@ export const singleProductCardTransformer = (
       : undefined,
     price: pricesTransformer(product, format, taxDisplay),
     subtitle: product.brand?.name ?? undefined,
+    badges: getCardBadges(product),
     rating: product.reviewSummary.averageRating,
     numberOfReviews: product.reviewSummary.numberOfReviews,
     inventoryMessage:

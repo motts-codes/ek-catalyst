@@ -18,6 +18,8 @@ export interface Product {
   price?: Price;
   subtitle?: string;
   badge?: string;
+  /** Marketing pills (Bestseller / Trending / New) shown top-left on the image. */
+  badges?: Array<{ label: string; color: string }>;
   rating?: number;
   inventoryMessage?: string;
   numberOfReviews?: number;
@@ -64,6 +66,7 @@ export function ProductCard({
     title,
     subtitle,
     badge,
+    badges,
     price,
     image,
     href,
@@ -136,6 +139,19 @@ export function ProductCard({
               {badge}
             </Badge>
           )}
+          {badges != null && badges.length > 0 && (
+            <div className="absolute left-3 top-3 flex flex-wrap items-start gap-1">
+              {badges.map((b) => (
+                <span
+                  className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
+                  key={b.label}
+                  style={{ backgroundColor: b.color }}
+                >
+                  {b.label}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-2 flex flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3 @2xl:flex-row">
@@ -154,9 +170,10 @@ export function ProductCard({
             {subtitle != null && subtitle !== '' && (
               <span
                 className={clsx(
-                  'mb-1.5 block text-sm font-normal',
+                  'mb-1.5 block text-xs font-normal',
+                  // Brand name in light grey, matching the PDP.
                   {
-                    light: 'text-[var(--product-card-light-subtitle,hsl(var(--foreground)/75%))]',
+                    light: 'text-contrast-300',
                     dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
                   }[colorScheme],
                 )}
@@ -166,9 +183,10 @@ export function ProductCard({
             )}
             {price != null && (
               <PriceLabel
-                className="[&_abbr]:cursor-default [&_abbr]:no-underline"
+                className="mt-0.5 text-base [&_abbr]:cursor-default [&_abbr]:no-underline @[16rem]:text-lg"
                 colorScheme={colorScheme}
                 price={price}
+                superscript
               />
             )}
             {showRating && typeof rating === 'number' && rating > 0 && (
@@ -205,7 +223,8 @@ export function ProductCard({
         )}
       </div>
       {showCompare && (
-        <div className="ml-1 mt-auto shrink-0">
+        // Smaller compare checkbox + label than the default.
+        <div className="ml-1 mt-auto shrink-0 [&_button]:!size-3.5 [&_label]:!text-xs [&_svg]:!size-2.5">
           <Compare
             colorScheme={colorScheme}
             label={compareLabel}

@@ -15,6 +15,16 @@ export const ProductCardFragment = graphql(
         name
         path
       }
+      # Marketing-flag custom fields (__is_bestseller / __is_trending / __is_new) drive the card
+      # badges. first: 50 (API max) so they aren't dropped on products with many custom fields.
+      customFields(first: 50) {
+        edges {
+          node {
+            name
+            value
+          }
+        }
+      }
       inventory {
         hasVariantInventory
         isInStock

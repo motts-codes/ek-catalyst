@@ -39,6 +39,9 @@ interface Props {
   //   Price: <strikethrough original>   (1.5x smaller)
   // Defaults to false so shared surfaces (product cards, cart) keep the compact inline layout.
   showSavings?: boolean;
+  // When true, render amounts with the $ + raised-cents superscript style (matching the PDP),
+  // for both plain and range prices. Independent of showSavings.
+  superscript?: boolean;
 }
 
 // Parse a formatted currency string (e.g. "$791.99") to a number for computing the discount.
@@ -117,7 +120,13 @@ function savedAmount(previous: string, current: string): string | null {
  * }
  * ```
  */
-export function PriceLabel({ className, colorScheme = 'light', price, showSavings = false }: Props) {
+export function PriceLabel({
+  className,
+  colorScheme = 'light',
+  price,
+  showSavings = false,
+  superscript = false,
+}: Props) {
   const t = useTranslations('Components.Price');
 
   const baseColorClass = {
@@ -212,6 +221,30 @@ export function PriceLabel({ className, colorScheme = 'light', price, showSaving
         )}
       >
         <SuperscriptPrice formatted={price.money[tax]} />
+      </span>
+    );
+  }
+
+  // Superscript style for cards etc. (plain single amount or a min–max range), without the full
+  // PDP savings layout.
+  if (superscript && (price.type === 'plain' || price.type === 'range')) {
+    return (
+      <span
+        className={clsx(
+          'block font-[family-name:var(--font-family-heading)] font-bold',
+          baseColorClass,
+          className,
+        )}
+      >
+        {price.type === 'plain' ? (
+          <SuperscriptPrice formatted={price.money[tax]} />
+        ) : (
+          <>
+            <SuperscriptPrice formatted={price.min[tax]} />
+            <span className="mx-1">–</span>
+            <SuperscriptPrice formatted={price.max[tax]} />
+          </>
+        )}
       </span>
     );
   }
