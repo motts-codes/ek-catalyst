@@ -5,6 +5,7 @@ import { CompareDrawer, CompareDrawerProvider } from '@/vibes/soul/primitives/co
 import {
   type Product,
   ProductCard,
+  type ProductCardAddToCartAction,
   ProductCardSkeleton,
 } from '@/vibes/soul/primitives/product-card';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
@@ -20,6 +21,7 @@ interface ProductListProps {
   compareHref?: string;
   compareLabel?: Streamable<string>;
   compareParamName?: string;
+  addToCartAction?: ProductCardAddToCartAction;
   emptyStateTitle?: Streamable<string>;
   emptyStateSubtitle?: Streamable<string>;
   placeholderCount?: number;
@@ -55,6 +57,7 @@ export function ProductList({
   compareProducts: streamableCompareProducts = [],
   compareLabel: streamableCompareLabel = 'Compare',
   compareParamName = 'compare',
+  addToCartAction,
   emptyStateTitle = 'No products found',
   emptyStateSubtitle = 'Try browsing our complete catalog of products.',
   placeholderCount = 8,
@@ -102,6 +105,7 @@ export function ProductList({
               <div className="mx-auto grid grid-cols-1 gap-x-6 gap-y-10 @sm:grid-cols-2 @2xl:grid-cols-3 @2xl:gap-x-8 @2xl:gap-y-12 @5xl:grid-cols-4 @7xl:grid-cols-5">
                 {products.map((product) => (
                   <ProductCard
+                    addToCartAction={addToCartAction}
                     aspectRatio={aspectRatio}
                     colorScheme={colorScheme}
                     compareLabel={compareLabel}

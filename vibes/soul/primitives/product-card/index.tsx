@@ -8,7 +8,11 @@ import { Link } from '~/components/link';
 
 import { Rating } from '../rating';
 
+import { AddToCartCta, ProductCardAddToCartAction } from './add-to-cart-cta';
 import { Compare } from './compare';
+import { OptionsIcon } from './cta-icons';
+
+export type { ProductCardAddToCartAction } from './add-to-cart-cta';
 
 export interface Product {
   id: string;
@@ -36,6 +40,9 @@ export interface ProductCardProps {
   imageSizes?: string;
   compareLabel?: string;
   compareParamName?: string;
+  /** Direct add-to-cart action; the icon CTA on no-option products fires it. When omitted, even
+   *  no-option products fall back to a PDP link. */
+  addToCartAction?: ProductCardAddToCartAction;
   product: Product;
   showRating?: boolean;
 }
@@ -84,6 +91,7 @@ export function ProductCard({
   aspectRatio = '5:6',
   compareLabel,
   compareParamName,
+  addToCartAction,
   imagePriority = false,
   imageSizes = '(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw',
 }: ProductCardProps) {
@@ -213,18 +221,13 @@ export function ProductCard({
             </span>
             {href !== '#' && (
               // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
-              // pt-4 guarantees space above the button even on the tallest card (where mt-auto
-              // collapses to zero).
-              <div className="mt-auto w-full pt-4">
-                {/* Outline red / black text, filling red with white text on hover. relative z-10
-                    keeps it above the full-card overlay link. min-h-12 matches the PDP add-to-cart
-                    height. Products needing options link to the PDP to choose them. */}
-                <Link
-                  className="relative z-10 inline-flex min-h-12 w-full items-center justify-center rounded-full border border-[hsl(var(--primary))] bg-transparent px-4 text-xs font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-[hsl(var(--primary))] hover:text-white"
-                  href={href}
-                >
-                  {requiresOptions === false ? 'Add to Cart' : 'View Options'}
-                </Link>
+              // pt-4 guarantees space above the button even on the tallest card.
+              <div className="relative z-10 mt-auto pt-4">
+                {requiresOptions === false && addToCartAction != null ? (
+                  <AddToCartCta action={addToCartAction} id={id} />
+                ) : (
+                  <ViewOptionsCta href={href} />
+                )}
               </div>
             )}
           </div>
@@ -259,6 +262,32 @@ export function ProductCard({
         </div>
       )}
     </article>
+  );
+}
+
+// Shared CTA button look: pill, red outline / black text at rest, with the PDP add-to-cart's
+// left-to-right slide-fill hover (an ::after that translates in), turning it solid red + white.
+const CTA_BUTTON_CLASS =
+  'group/cta relative inline-flex min-h-12 items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,hsl(var(--primary)))] bg-transparent text-xs font-semibold uppercase tracking-wide text-foreground transition-[width] duration-300 ease-out after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,hsl(var(--primary)))] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0';
+
+/**
+ * "View Options" CTA for products with required options: a red-outline circle with an options
+ * icon that expands on hover to reveal the label (desktop). On touch/small screens (no hover) the
+ * label is always shown, so it's never a bare, ambiguous icon. Links to the PDP to choose options.
+ */
+function ViewOptionsCta({ href }: { href: string }) {
+  return (
+    <Link
+      aria-label="View options"
+      className={clsx(CTA_BUTTON_CLASS, 'min-w-12 pl-3 pr-3')}
+      href={href}
+    >
+      <OptionsIcon className="size-5 shrink-0" />
+      {/* Label: collapsed on desktop until hover; always open on touch (max-lg). */}
+      <span className="max-w-0 overflow-hidden whitespace-nowrap transition-[max-width,margin,opacity] duration-300 ease-out group-hover/cta:ml-2 group-hover/cta:max-w-[12rem] group-hover/cta:opacity-100 max-lg:ml-2 max-lg:max-w-[12rem] max-lg:opacity-100 lg:opacity-0">
+        View Options
+      </span>
+    </Link>
   );
 }
 

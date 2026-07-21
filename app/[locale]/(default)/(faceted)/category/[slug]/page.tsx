@@ -21,6 +21,7 @@ import { getMetadataAlternates } from '~/lib/seo/canonical';
 import { MAX_COMPARE_LIMIT } from '../../../compare/page-data';
 import { getCompareProducts } from '../../fetch-compare-products';
 import { fetchFacetedSearch } from '../../fetch-faceted-search';
+import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import { CategoryViewed } from './_components/category-viewed';
 import { getCategoryPageData } from './page-data';
@@ -126,7 +127,7 @@ export default async function Category(props: Props) {
   // are collapsed — the category data can repeat the current category (e.g. "Windows / Windows").
   const categoryCrumbs = removeEdgesAndNodes(category.breadcrumbs)
     .map(({ name, path }) => ({ label: name, href: path ?? '#' }))
-    .filter((crumb, index, all) => index === 0 || crumb.label !== all[index - 1].label);
+    .filter((crumb, index, all) => index === 0 || crumb.label !== all[index - 1]?.label);
   const breadcrumbs = [{ label: 'Home', href: '/' }, ...categoryCrumbs];
 
   const showRating = Boolean(settings?.reviews.enabled && settings.display.showProductRating);
@@ -271,6 +272,7 @@ export default async function Category(props: Props) {
         // Hide the category name + count so the Makeswift "top content" (images/banner) leads the
         // page; the sort control moves to the left.
         hideHeader
+        addToCartAction={productCardAddToCartAction}
         compareLabel={t('Compare.compare')}
         compareProducts={streamableCompareProducts}
         emptyStateSubtitle={t('Category.Empty.subtitle')}

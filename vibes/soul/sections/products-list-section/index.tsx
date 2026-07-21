@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Button } from '@/vibes/soul/primitives/button';
 import { CursorPagination, CursorPaginationInfo } from '@/vibes/soul/primitives/cursor-pagination';
-import { Product } from '@/vibes/soul/primitives/product-card';
+import { Product, type ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
 import * as SidePanel from '@/vibes/soul/primitives/side-panel';
 import { Breadcrumb, Breadcrumbs, BreadcrumbsSkeleton } from '@/vibes/soul/sections/breadcrumbs';
 import { ProductList } from '@/vibes/soul/sections/product-list';
@@ -40,6 +40,7 @@ interface Props {
   sortParamName?: string;
   sortDefaultValue?: string;
   compareParamName?: string;
+  addToCartAction?: ProductCardAddToCartAction;
   emptyStateSubtitle?: Streamable<string>;
   emptyStateTitle?: Streamable<string>;
   placeholderCount?: number;
@@ -71,6 +72,7 @@ export function ProductsListSection({
   sortPlaceholder: streamableSortPlaceholder,
   sortParamName,
   compareParamName,
+  addToCartAction,
   emptyStateSubtitle,
   emptyStateTitle,
   placeholderCount = 8,
@@ -182,6 +184,7 @@ export function ProductsListSection({
 
           <div className="group-has-data-pending/products-list-section:animate-pulse flex-1">
             <ProductList
+              addToCartAction={addToCartAction}
               compareHref={compareHref}
               compareLabel={compareLabel}
               compareParamName={compareParamName}
