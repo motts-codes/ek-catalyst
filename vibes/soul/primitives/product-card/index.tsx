@@ -221,8 +221,8 @@ export function ProductCard({
             </span>
             {href !== '#' && (
               // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
-              // pt-4 guarantees space above the button even on the tallest card.
-              <div className="relative z-10 mt-auto pt-4">
+              // pt-2 guarantees a little space above the button even on the tallest card.
+              <div className="relative z-10 mt-auto pt-2">
                 {requiresOptions === false && addToCartAction != null ? (
                   <AddToCartCta action={addToCartAction} id={id} />
                 ) : (
@@ -265,10 +265,10 @@ export function ProductCard({
   );
 }
 
-// Shared CTA button look: pill, red outline / black text at rest, with the PDP add-to-cart's
+// Shared CTA button look: pill, red outline / red icon at rest, with the PDP add-to-cart's
 // left-to-right slide-fill hover (an ::after that translates in), turning it solid red + white.
 const CTA_BUTTON_CLASS =
-  'group/cta relative inline-flex min-h-12 items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,hsl(var(--primary)))] bg-transparent text-xs font-semibold uppercase tracking-wide text-foreground transition-[width] duration-300 ease-out after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,hsl(var(--primary)))] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0';
+  'group/cta relative inline-flex min-h-9 items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,hsl(var(--primary)))] bg-transparent text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,hsl(var(--primary)))] transition-[width] duration-300 ease-out after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,hsl(var(--primary)))] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0';
 
 /**
  * "View Options" CTA for products with required options: a red-outline circle with an options
@@ -279,12 +279,21 @@ function ViewOptionsCta({ href }: { href: string }) {
   return (
     <Link
       aria-label="View options"
-      className={clsx(CTA_BUTTON_CLASS, 'min-w-12 pl-3 pr-3')}
+      // A perfect 36px circle at rest (fixed h-9, min-w-9, no horizontal padding — the icon-only
+      // content makes it exactly square). On hover — and always on touch (max-lg) — horizontal
+      // padding appears and the label expands, so it grows into a pill.
+      className={clsx(
+        CTA_BUTTON_CLASS,
+        // hover:px-4 (not group-hover) — the padding is on the button itself, which can't be
+        // targeted by its own group-hover. max-lg keeps it padded on touch.
+        'h-9 min-w-9 hover:px-4 max-lg:px-4',
+      )}
       href={href}
     >
-      <OptionsIcon className="size-5 shrink-0" />
-      {/* Label: collapsed on desktop until hover; always open on touch (max-lg). */}
-      <span className="max-w-0 overflow-hidden whitespace-nowrap transition-[max-width,margin,opacity] duration-300 ease-out group-hover/cta:ml-2 group-hover/cta:max-w-[12rem] group-hover/cta:opacity-100 max-lg:ml-2 max-lg:max-w-[12rem] max-lg:opacity-100 lg:opacity-0">
+      <OptionsIcon className="size-6 shrink-0" />
+      {/* Label: collapsed on desktop until hover; always open on touch (max-lg). Slightly smaller
+          than the base text; a small icon-to-label gap so both clear the padded edges. */}
+      <span className="max-w-0 overflow-hidden whitespace-nowrap text-[11px] transition-[max-width,margin,opacity] duration-300 ease-out group-hover/cta:ml-1.5 group-hover/cta:max-w-[12rem] group-hover/cta:opacity-100 max-lg:ml-1.5 max-lg:max-w-[12rem] max-lg:opacity-100 lg:opacity-0">
         View Options
       </span>
     </Link>
