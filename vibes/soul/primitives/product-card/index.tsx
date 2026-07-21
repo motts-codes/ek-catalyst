@@ -97,14 +97,16 @@ export function ProductCard({
       <div className="relative flex flex-1 flex-col">
         <div
           className={clsx(
-            'relative overflow-hidden rounded-xl @md:rounded-2xl',
+            'relative overflow-hidden rounded-xl border border-contrast-100 @md:rounded-2xl',
             {
               '5:6': 'aspect-[5/6]',
               '3:4': 'aspect-[3/4]',
               '1:1': 'aspect-square',
             }[aspectRatio],
+            // White image backdrop (products are shot on white); a light border keeps the card
+            // edge defined now that the fill isn't grey.
             {
-              light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100)))]',
+              light: 'bg-white',
               dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500)))]',
             }[colorScheme],
           )}
@@ -113,7 +115,8 @@ export function ProductCard({
             <Image
               alt={image.alt}
               className={clsx(
-                'w-full scale-100 select-none object-cover transition-transform duration-500 ease-out group-hover:scale-110',
+                // Contain (show the whole product, not cropped) and scale DOWN on hover.
+                'h-full w-full scale-100 select-none object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-95',
                 {
                   light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
                   dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
@@ -209,15 +212,20 @@ export function ProductCard({
               {inventoryMessage}
             </span>
             {href !== '#' && (
-              // CTA. Products with required options (the common case here) can't be added in one
-              // click, so the button links to the PDP to choose options. relative z-10 keeps it
-              // above the full-card overlay link. Sits inline with the card's own PDP link.
-              <Link
-                className="relative z-10 mt-auto inline-flex h-9 w-full items-center justify-center rounded-full bg-[var(--button-primary-background,hsl(var(--primary)))] px-4 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-text,hsl(var(--foreground)))] transition-opacity hover:opacity-90"
-                href={href}
-              >
-                {requiresOptions === false ? 'Add to Cart' : 'View Options'}
-              </Link>
+              // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
+              // pt-4 guarantees space above the button even on the tallest card (where mt-auto
+              // collapses to zero).
+              <div className="mt-auto w-full pt-4">
+                {/* Outline red / black text, filling red with white text on hover. relative z-10
+                    keeps it above the full-card overlay link. min-h-12 matches the PDP add-to-cart
+                    height. Products needing options link to the PDP to choose them. */}
+                <Link
+                  className="relative z-10 inline-flex min-h-12 w-full items-center justify-center rounded-full border border-[hsl(var(--primary))] bg-transparent px-4 text-xs font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-[hsl(var(--primary))] hover:text-white"
+                  href={href}
+                >
+                  {requiresOptions === false ? 'Add to Cart' : 'View Options'}
+                </Link>
+              </div>
             )}
           </div>
         </div>
