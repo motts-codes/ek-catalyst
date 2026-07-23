@@ -12,10 +12,14 @@ import { logoTransformer } from '~/data-transformers/logo-transformer';
 import { routing } from '~/i18n/routing';
 import { getCartId } from '~/lib/cart';
 import { getPreferredCurrencyCode } from '~/lib/currency';
+import { getAudienceMode } from '~/lib/navigation/audience-mode';
+import { AUDIENCE_CTA, getMenu } from '~/lib/navigation/menu-config';
+import { switchAudienceMode } from '~/lib/navigation/switch-audience-action';
 import { SiteHeader as HeaderSection } from '~/lib/makeswift/components/site-header';
 
 import { search } from './_actions/search';
 import { switchCurrency } from './_actions/switch-currency';
+import { AudienceToggle } from './audience-toggle';
 import { CurrencyCode, HeaderFragment, HeaderLinksFragment } from './fragment';
 
 const GetCartCountQuery = graphql(`
@@ -94,34 +98,11 @@ export const Header = async () => {
         }))
     : [];
 
-  const streamableLinks = Streamable.from(async () => {
-    const [customerAccessToken, currencyCode] = await Promise.all([
-      getSessionCustomerAccessToken(),
-      getPreferredCurrencyCode(),
-    ]);
-    // const customerAccessToken = await getSessionCustomerAccessToken();
-    // const currencyCode = await getPreferredCurrencyCode();
-    const categoryTree = (await getHeaderLinks(customerAccessToken, currencyCode)).categoryTree;
-
-    /**  To prevent the navigation menu from overflowing, we limit the number of categories to 6.
-   To show a full list of categories, modify the `slice` method to remove the limit.
-   Will require modification of navigation menu styles to accommodate the additional categories.
-   */
-    const slicedTree = categoryTree.slice(0, 6);
-
-    return slicedTree.map(({ name, path, children }) => ({
-      label: name,
-      href: path,
-      groups: children.map((firstChild) => ({
-        label: firstChild.name,
-        href: firstChild.path,
-        links: firstChild.children.map((secondChild) => ({
-          label: secondChild.name,
-          href: secondChild.path,
-        })),
-      })),
-    }));
-  });
+  // Nav links come from the audience-mode menu config (lib/navigation/menu-config.ts), NOT the
+  // BigCommerce category tree — the menu is developer-edited and decoupled from the catalog.
+  // The current mode (homeowner default / pro) is read from the ek_audience cookie.
+  const audienceMode = await getAudienceMode();
+  const streamableLinks = Streamable.from(async () => getMenu(audienceMode));
 
   const streamableGiftCertificatesEnabled = Streamable.from(async () => {
     const [customerAccessToken, currencyCode] = await Promise.all([
@@ -169,6 +150,7 @@ export const Header = async () => {
         searchInputPlaceholder: t('Search.inputPlaceholder'),
         searchSubmitLabel: t('Search.submitLabel'),
         links: streamableLinks,
+        audienceToggle: <AudienceToggle mode={audienceMode} />,
         logo,
         mobileMenuTriggerLabel: t('toggleNavigation'),
         openSearchPopupLabel: t('Icons.search'),

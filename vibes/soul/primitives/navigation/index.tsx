@@ -18,6 +18,7 @@ import {
 import { useParams, useSearchParams } from 'next/navigation';
 import React, {
   forwardRef,
+  type ReactNode,
   Ref,
   useActionState,
   useCallback,
@@ -132,6 +133,8 @@ interface Props<S extends SearchResult> {
   giftCertificatesLabel?: string;
   giftCertificatesHref: string;
   giftCertificatesEnabled?: Streamable<boolean>;
+  /** Audience-mode toggle (Homeowner/Pro), rendered in the top-right icon cluster. */
+  audienceToggle?: ReactNode;
 }
 
 const MobileMenuButton = forwardRef<
@@ -357,6 +360,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     giftCertificatesLabel = 'Gift Certificates',
     giftCertificatesHref,
     giftCertificatesEnabled: streamableGiftCertificatesEnabled,
+    audienceToggle,
   }: Props<S>,
   ref: Ref<HTMLDivElement>,
 ) {
@@ -599,6 +603,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             linksPosition === 'center' ? 'flex-1' : 'flex-1 @4xl:flex-none',
           )}
         >
+          {audienceToggle != null && <div className="mr-2">{audienceToggle}</div>}
           {searchAction ? (
             <Popover.Root onOpenChange={setIsSearchOpen} open={isSearchOpen}>
               <Popover.Trigger asChild>
