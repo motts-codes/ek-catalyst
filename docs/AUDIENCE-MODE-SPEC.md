@@ -134,6 +134,16 @@ Showroom/will-call → trade testimonials.
 5. **(Phase 2) Trade commerce** — pricing, contractor program (CliqStudios tier model as template),
    login gating + verification.
 
+## 8a. Countertops — call-to-order (not shoppable)
+
+Countertops **cannot be bought online** — customers call to place an order. Decisions:
+- **Menu placement:** grouped **inside Kitchen & Bath** (not an L1 shop item), **both** modes.
+  Done in `menu-config.ts`.
+- **PDP / card CTA:** countertop products get a **"Call to place order"** button **instead of Add
+  to Cart / View Options.** ⚠ Not built yet — needs a card/PDP CTA variant. Likely keyed off a
+  product flag (custom field, e.g. `__call_to_order = yes`) so any call-to-order product picks it
+  up, same pattern as the marketing flags. Revisit when countertop products/pages exist.
+
 ## 9. Still to decide before / during build  ⚠
 - [ ] **Category creation:** create Cabinets → RTA/Assembled (+ color/style children) and Kitchen &
   Bath structure in tree 3. Needs your product/category plan. **This gates the menu build.**

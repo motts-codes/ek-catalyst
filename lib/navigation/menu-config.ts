@@ -66,21 +66,6 @@ const homeownerMenu: MenuItem[] = [
     ],
   },
   {
-    label: 'Countertops',
-    href: '#',
-    groups: [
-      {
-        links: [
-          { label: 'Granite', href: '#' },
-          { label: 'Quartz', href: '#' },
-          { label: 'Laminate', href: '#' },
-          { label: 'Prefabricated', href: '#' },
-          { label: 'How to choose', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
     label: 'Appliances',
     href: '#',
     groups: [
@@ -122,6 +107,17 @@ const homeownerMenu: MenuItem[] = [
     label: 'Kitchen & Bath',
     href: '#',
     groups: [
+      {
+        // Countertops is call-to-order (not shoppable online), so it lives here rather than as a
+        // shop L1. Its pages/PDP will use a "Call to place order" CTA instead of Add to Cart.
+        label: 'Countertops',
+        links: [
+          { label: 'Granite', href: '#' },
+          { label: 'Quartz', href: '#' },
+          { label: 'Laminate', href: '#' },
+          { label: 'Prefabricated', href: '#' },
+        ],
+      },
       {
         label: 'Sinks',
         links: [
@@ -231,20 +227,6 @@ const proMenu: MenuItem[] = [
     ],
   },
   {
-    label: 'Countertops',
-    href: '#',
-    groups: [
-      {
-        links: [
-          { label: 'Granite', href: '#' },
-          { label: 'Quartz', href: '#' },
-          { label: 'Laminate', href: '#' },
-          { label: 'Prefabricated', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
     label: 'Appliances',
     href: '#',
     groups: [
@@ -280,6 +262,16 @@ const proMenu: MenuItem[] = [
     label: 'Kitchen & Bath',
     href: '#',
     groups: [
+      {
+        // Countertops is call-to-order (not shoppable online) — see the homeowner menu note.
+        label: 'Countertops',
+        links: [
+          { label: 'Granite', href: '#' },
+          { label: 'Quartz', href: '#' },
+          { label: 'Laminate', href: '#' },
+          { label: 'Prefabricated', href: '#' },
+        ],
+      },
       {
         links: [
           { label: 'Sinks', href: '#' },
