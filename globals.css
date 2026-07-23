@@ -19,7 +19,7 @@
   /* Section heading color (Product Information, Features, FAQ, etc.) */
   --secondary-heading-color: #d90716;
   /* Header utility bar (thin top strip). Change these to restyle it. */
-  --utility-bar-background: #760000;
+  --utility-bar-background: #424242;
   --utility-bar-text: #d1d1d1;
   --utility-bar-text-hover: #ffffff;
   --utility-bar-divider: #ffb1b9;
