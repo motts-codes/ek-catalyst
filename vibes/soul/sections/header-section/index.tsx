@@ -40,7 +40,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       <div ref={ref}>
         {banner && <Banner ref={setBannerElement} {...banner} />}
         {/* Thin utility strip — sits above the sticky nav and scrolls away with the page. */}
-        <UtilityBar />
+        <UtilityBar mode={navigation.audienceMode} />
         <Headroom
           onUnfix={() => setIsFloating(false)}
           onUnpin={() => setIsFloating(true)}

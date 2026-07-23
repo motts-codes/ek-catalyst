@@ -16,10 +16,13 @@ const UTILITY_LINKS: Array<{ label: string; href: string; highlight?: boolean }>
 ];
 
 // Colors come from CSS variables (see globals.css --utility-bar-*) so the bar can be restyled in
-// one place. Dark by default.
-export function UtilityBar() {
+// one place. In Pro audience mode the background shifts to the Pro blue tint.
+export function UtilityBar({ mode }: { mode?: 'homeowner' | 'pro' }) {
   return (
-    <div className="hidden bg-[var(--utility-bar-background,#111111)] text-[var(--utility-bar-text,#d1d1d1)] md:block">
+    <div
+      className="hidden text-[var(--utility-bar-text,#d1d1d1)] md:block"
+      style={{ background: mode === 'pro' ? '#a9d6e073' : 'var(--utility-bar-background,#111111)' }}
+    >
       {/* Desktop L/R padding is tuned so the call number lines up under the EK logo and the right
           links line up under the shopping icons in the main nav below. */}
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-1.5 text-xs md:pl-10 md:pr-7">

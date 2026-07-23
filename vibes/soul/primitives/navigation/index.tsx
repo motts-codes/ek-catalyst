@@ -140,6 +140,8 @@ interface Props<S extends SearchResult> {
   audienceToggle?: ReactNode;
   /** Persistent CTA button (e.g. "Free Design Help"), rendered in the top-right cluster. */
   ctaButton?: ReactNode;
+  /** Current audience mode — used by the header (e.g. utility bar tint in Pro mode). */
+  audienceMode?: 'homeowner' | 'pro';
 }
 
 const MobileMenuButton = forwardRef<
@@ -367,6 +369,9 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     giftCertificatesEnabled: streamableGiftCertificatesEnabled,
     audienceToggle,
     ctaButton,
+    // Consumed by HeaderSection (utility-bar tint); accepted here so it's a valid navigation prop
+    // and not spread onto the DOM.
+    audienceMode: _audienceMode,
   }: Props<S>,
   ref: Ref<HTMLDivElement>,
 ) {

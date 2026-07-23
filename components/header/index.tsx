@@ -151,6 +151,7 @@ export const Header = async () => {
         searchInputPlaceholder: t('Search.inputPlaceholder'),
         searchSubmitLabel: t('Search.submitLabel'),
         links: streamableLinks,
+        audienceMode,
         audienceToggle: <AudienceToggle mode={audienceMode} />,
         ctaButton: (
           // Same red as the PDP "Buy now" (tertiary = #96050f); compact height via x-small.
