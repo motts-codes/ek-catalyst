@@ -23,9 +23,14 @@ export interface MenuGroup {
   links: MenuLink[];
 }
 
+// Visual grouping in the nav bar: 'shop' items (categories) and 'content' items (Inspiration,
+// Resources, Blog) render as separate clusters with space between them.
+export type MenuItemGroup = 'shop' | 'content';
+
 export interface MenuItem {
   label: string;
   href: string;
+  group: MenuItemGroup;
   groups?: MenuGroup[];
 }
 
@@ -37,6 +42,7 @@ const homeownerMenu: MenuItem[] = [
   {
     label: 'Cabinets',
     href: '#',
+    group: 'shop',
     groups: [
       {
         label: 'Shop by Construction',
@@ -68,6 +74,7 @@ const homeownerMenu: MenuItem[] = [
   {
     label: 'Appliances',
     href: '#',
+    group: 'shop',
     groups: [
       {
         links: [
@@ -86,6 +93,7 @@ const homeownerMenu: MenuItem[] = [
   {
     label: 'Windows',
     href: '#',
+    group: 'shop',
     groups: [
       {
         label: 'Replacement',
@@ -106,6 +114,7 @@ const homeownerMenu: MenuItem[] = [
   {
     label: 'Kitchen & Bath',
     href: '#',
+    group: 'shop',
     groups: [
       {
         // Countertops is call-to-order (not shoppable online), so it lives here rather than as a
@@ -146,13 +155,13 @@ const homeownerMenu: MenuItem[] = [
   {
     label: 'Inspiration',
     href: '#',
+    group: 'content',
     groups: [
       {
         links: [
           { label: 'Gallery / Featured Projects', href: '#' },
           { label: 'Best-Selling Designs', href: '#' },
           { label: 'Reviews', href: '#' },
-          { label: 'Blog', href: '#' },
         ],
       },
     ],
@@ -160,6 +169,7 @@ const homeownerMenu: MenuItem[] = [
   {
     label: 'Resources',
     href: '#',
+    group: 'content',
     groups: [
       {
         links: [
@@ -174,6 +184,7 @@ const homeownerMenu: MenuItem[] = [
       },
     ],
   },
+  { label: 'Blog', href: '#', group: 'content' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -185,6 +196,7 @@ const proMenu: MenuItem[] = [
   {
     label: 'RTA',
     href: '#',
+    group: 'shop',
     groups: [
       {
         label: 'Shop RTA',
@@ -207,6 +219,7 @@ const proMenu: MenuItem[] = [
   {
     label: 'Assembled',
     href: '#',
+    group: 'shop',
     groups: [
       {
         label: 'Shop Assembled',
@@ -229,6 +242,7 @@ const proMenu: MenuItem[] = [
   {
     label: 'Appliances',
     href: '#',
+    group: 'shop',
     groups: [
       {
         links: [
@@ -244,6 +258,7 @@ const proMenu: MenuItem[] = [
   {
     label: 'Windows',
     href: '#',
+    group: 'shop',
     groups: [
       {
         label: 'Replacement',
@@ -261,6 +276,7 @@ const proMenu: MenuItem[] = [
   {
     label: 'Kitchen & Bath',
     href: '#',
+    group: 'shop',
     groups: [
       {
         // Countertops is call-to-order (not shoppable online) — see the homeowner menu note.
@@ -284,10 +300,12 @@ const proMenu: MenuItem[] = [
   {
     label: 'Clearance',
     href: '#',
+    group: 'content',
   },
   {
     label: 'Pro Program',
     href: '#',
+    group: 'content',
     groups: [
       {
         links: [
@@ -302,6 +320,7 @@ const proMenu: MenuItem[] = [
       },
     ],
   },
+  { label: 'Blog', href: '#', group: 'content' },
 ];
 
 export const AUDIENCE_MENUS: Record<AudienceMode, MenuItem[]> = {

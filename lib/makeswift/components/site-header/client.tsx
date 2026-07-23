@@ -76,20 +76,13 @@ interface Props {
 
 function combineLinks(
   passedLinks: Awaited<NavigationProps['links']>,
-  links: Props['links'],
+  _links: Props['links'],
 ): ContextProps['navigation']['links'] {
-  return [
-    ...passedLinks,
-    ...links.map(({ label, link, groups }) => ({
-      label,
-      href: link.href,
-      groups: groups.map((group) => ({
-        label: group.label,
-        href: group.link.href,
-        links: group.links.map((item) => ({ label: item.label, href: item.link.href })),
-      })),
-    })),
-  ];
+  // The nav is fully owned by our code menu config (lib/navigation/menu-config.ts) — a single
+  // source of truth. Makeswift-authored header links (`_links`) are intentionally ignored so the
+  // menu can't drift or break the spaced grouping. (Re-enable the merge if editable header links
+  // are ever wanted.)
+  return passedLinks;
 }
 
 export const MakeswiftHeader = forwardRef(

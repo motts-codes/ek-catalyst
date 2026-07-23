@@ -105,7 +105,7 @@ runtime.registerComponent(MakeswiftHeader, {
         { value: 'left', label: 'Left' },
         { value: 'right', label: 'Right' },
       ],
-      defaultValue: 'center',
+      defaultValue: 'left',
     }),
   },
 });

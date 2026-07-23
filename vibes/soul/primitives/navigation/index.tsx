@@ -44,6 +44,9 @@ import { getLocalizedPathname } from './_actions/localized-pathname';
 interface Link {
   label: string;
   href: string;
+  // Optional visual grouping ('shop' | 'content'): consecutive items sharing a group render as a
+  // cluster, with space inserted between different groups in the top nav bar.
+  group?: string;
   groups?: Array<{
     label?: string;
     href?: string;
@@ -547,7 +550,15 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           >
             {(links) =>
               links.map((item, i) => (
-                <NavigationMenu.Item key={i} value={i.toString()}>
+                // Insert space before an item whose group differs from the previous item's — this
+                // visually separates the shop cluster from the content cluster in the nav bar.
+                <NavigationMenu.Item
+                  className={clsx(
+                    i > 0 && item.group != null && item.group !== links[i - 1]?.group && '@4xl:ml-8',
+                  )}
+                  key={i}
+                  value={i.toString()}
+                >
                   <NavigationMenu.Trigger asChild>
                     <Link
                       className="hidden items-center whitespace-nowrap rounded-xl bg-[var(--nav-link-background,transparent)] p-2.5 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:inline-flex"
@@ -603,7 +614,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             linksPosition === 'center' ? 'flex-1' : 'flex-1 @4xl:flex-none',
           )}
         >
-          {audienceToggle != null && <div className="mr-2">{audienceToggle}</div>}
+          {audienceToggle != null && <div className="mr-4 @4xl:ml-4">{audienceToggle}</div>}
           {searchAction ? (
             <Popover.Root onOpenChange={setIsSearchOpen} open={isSearchOpen}>
               <Popover.Trigger asChild>
