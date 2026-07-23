@@ -18,6 +18,11 @@
   --contrast-500: 0 0% 34%;
   /* Section heading color (Product Information, Features, FAQ, etc.) */
   --secondary-heading-color: #d90716;
+  /* Header utility bar (thin top strip): dark by default. Change these to restyle it. */
+  --utility-bar-background: #111111;
+  --utility-bar-text: #d1d1d1;
+  --utility-bar-text-hover: #ffffff;
+  --utility-bar-divider: #3a3a3a;
   /* PDP divider lines (horizontal <hr>s + the vertical gallery/details rule) — a step darker
      than contrast-100 (93%) so the separators read a little more clearly. */
   --product-detail-divider: 0 0% 90%;

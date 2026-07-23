@@ -6,6 +6,8 @@ import Headroom from 'react-headroom';
 import { Banner } from '@/vibes/soul/primitives/banner';
 import { Navigation } from '@/vibes/soul/primitives/navigation';
 
+import { UtilityBar } from './utility-bar';
+
 interface Props {
   navigation: React.ComponentPropsWithoutRef<typeof Navigation>;
   banner?: React.ComponentPropsWithoutRef<typeof Banner>;
@@ -37,6 +39,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
     return (
       <div ref={ref}>
         {banner && <Banner ref={setBannerElement} {...banner} />}
+        {/* Thin utility strip — sits above the sticky nav and scrolls away with the page. */}
+        <UtilityBar />
         <Headroom
           onUnfix={() => setIsFloating(false)}
           onUnpin={() => setIsFloating(true)}
