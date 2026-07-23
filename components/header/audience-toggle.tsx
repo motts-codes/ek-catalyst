@@ -25,7 +25,7 @@ export function AudienceToggle({ mode }: Props) {
 
   return (
     <div
-      className="inline-flex items-center rounded-full border border-contrast-200 p-0.5 text-xs font-medium"
+      className="inline-flex items-center rounded-full border border-[var(--button-tertiary-border,#96050f)] p-0.5 text-xs font-medium"
       data-pending={isPending ? true : null}
       role="group"
     >

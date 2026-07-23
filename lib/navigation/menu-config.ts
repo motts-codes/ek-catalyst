@@ -178,13 +178,28 @@ const homeownerMenu: MenuItem[] = [
           { label: 'Financing', href: '#' },
           { label: 'Measuring Guide', href: '#' },
           { label: 'FAQs', href: '#' },
-          { label: 'About Us', href: '#' },
           { label: 'Guarantee', href: '#' },
+          { label: 'Blog', href: '#' },
         ],
       },
     ],
   },
-  { label: 'Blog', href: '#', group: 'content' },
+  {
+    label: 'Company',
+    href: '#',
+    group: 'content',
+    groups: [
+      {
+        links: [
+          { label: 'About Us', href: '#' },
+          { label: 'Our Story', href: '#' },
+          { label: 'Showrooms', href: '#' },
+          { label: 'Careers', href: '#' },
+          { label: 'Contact', href: '#' },
+        ],
+      },
+    ],
+  },
 ];
 
 // ---------------------------------------------------------------------------

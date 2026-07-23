@@ -2,6 +2,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { cache } from 'react';
 
 import { Streamable } from '@/vibes/soul/lib/streamable';
+import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { GetLinksAndSectionsQuery, LayoutQuery } from '~/app/[locale]/(default)/page-data';
 import { getSessionCustomerAccessToken } from '~/auth';
 import { client } from '~/client';
@@ -13,7 +14,7 @@ import { routing } from '~/i18n/routing';
 import { getCartId } from '~/lib/cart';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getAudienceMode } from '~/lib/navigation/audience-mode';
-import { AUDIENCE_CTA, getMenu } from '~/lib/navigation/menu-config';
+import { getMenu } from '~/lib/navigation/menu-config';
 import { switchAudienceMode } from '~/lib/navigation/switch-audience-action';
 import { SiteHeader as HeaderSection } from '~/lib/makeswift/components/site-header';
 
@@ -151,6 +152,12 @@ export const Header = async () => {
         searchSubmitLabel: t('Search.submitLabel'),
         links: streamableLinks,
         audienceToggle: <AudienceToggle mode={audienceMode} />,
+        ctaButton: (
+          // Same red as the PDP "Buy now" (tertiary = #96050f); compact height via x-small.
+          <ButtonLink href="#" size="x-small" variant="tertiary">
+            Free Design Consult
+          </ButtonLink>
+        ),
         logo,
         mobileMenuTriggerLabel: t('toggleNavigation'),
         openSearchPopupLabel: t('Icons.search'),

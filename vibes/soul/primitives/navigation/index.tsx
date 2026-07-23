@@ -138,6 +138,8 @@ interface Props<S extends SearchResult> {
   giftCertificatesEnabled?: Streamable<boolean>;
   /** Audience-mode toggle (Homeowner/Pro), rendered in the top-right icon cluster. */
   audienceToggle?: ReactNode;
+  /** Persistent CTA button (e.g. "Free Design Help"), rendered in the top-right cluster. */
+  ctaButton?: ReactNode;
 }
 
 const MobileMenuButton = forwardRef<
@@ -364,6 +366,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     giftCertificatesHref,
     giftCertificatesEnabled: streamableGiftCertificatesEnabled,
     audienceToggle,
+    ctaButton,
   }: Props<S>,
   ref: Ref<HTMLDivElement>,
 ) {
@@ -546,7 +549,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
               <NavigationMenu.Item key={i} value={i.toString()}>
                 <NavigationMenu.Trigger asChild>
                   <Link
-                    className="hidden items-center whitespace-nowrap rounded-xl bg-[var(--nav-link-background,transparent)] p-2.5 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:inline-flex"
+                    className="hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:inline-flex"
                     href={item.href}
                   >
                     {item.label}
@@ -614,7 +617,8 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             linksPosition === 'center' ? 'flex-1' : 'flex-1 @4xl:flex-none',
           )}
         >
-          {audienceToggle != null && <div className="mr-4 @4xl:ml-4">{audienceToggle}</div>}
+          {ctaButton != null && <div className="mr-3 hidden @4xl:block">{ctaButton}</div>}
+          {audienceToggle != null && <div className="mr-4 @4xl:ml-2">{audienceToggle}</div>}
           {searchAction ? (
             <Popover.Root onOpenChange={setIsSearchOpen} open={isSearchOpen}>
               <Popover.Trigger asChild>

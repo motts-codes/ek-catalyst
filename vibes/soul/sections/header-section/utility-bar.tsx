@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { Phone } from 'lucide-react';
 
 import { Link } from '~/components/link';
@@ -6,7 +7,8 @@ import { Link } from '~/components/link';
 // Homeowner/Pro toggle lives in the main nav row, not here. Edit the phone number / links below.
 const PHONE = { label: '860-247-1000', href: 'tel:+18602471000' };
 
-const UTILITY_LINKS: Array<{ label: string; href: string }> = [
+const UTILITY_LINKS: Array<{ label: string; href: string; highlight?: boolean }> = [
+  { label: 'Sale', href: '#', highlight: true },
   { label: 'Free Samples', href: '#' },
   { label: '0% Financing', href: '#' },
   { label: 'Download Catalog', href: '#' },
@@ -41,7 +43,12 @@ export function UtilityBar() {
                 />
               )}
               <Link
-                className="transition-colors hover:text-[var(--utility-bar-text-hover,#fff)]"
+                className={clsx(
+                  'transition-colors',
+                  link.highlight
+                    ? 'font-semibold text-[var(--button-primary-background,#d90716)] hover:opacity-80'
+                    : 'hover:text-[var(--utility-bar-text-hover,#fff)]',
+                )}
                 href={link.href}
               >
                 {link.label}
