@@ -81,7 +81,7 @@ export function ProductsListSection({
   maxCompareLimitMessage,
 }: Props) {
   return (
-    <div className="group/products-list-section @container">
+    <div className="group/products-list-section bg-[#f9fafd] @container">
       <div className="mx-auto max-w-screen-2xl px-4 pb-10 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-12">
         <div>
           <Stream fallback={<BreadcrumbsSkeleton />} value={streamableBreadcrumbs}>

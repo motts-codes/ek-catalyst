@@ -210,6 +210,12 @@ export default async function Category(props: Props) {
       (facet) => facet.__typename !== 'CategorySearchFilter',
     );
 
+    // NOTE: Subcategory product counts are intentionally NOT shown. BigCommerce does not return a
+    // CategorySearchFilter facet when inside this category, and per-subcategory count queries return
+    // 0 because the products aren't associated with the subcategories in the search index. Showing
+    // "(0)" everywhere would be worse than no count. Revisit once subcategory associations are
+    // indexed (then source counts from the category facet by entityId, like brand/attribute facets).
+
     const transformedFacets = await facetsTransformer({
       refinedFacets,
       allFacets,
