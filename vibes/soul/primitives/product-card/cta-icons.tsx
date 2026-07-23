@@ -1,4 +1,4 @@
-// Inline icons for the product-card CTA (Material Symbols "tune"/options and "add_shopping_cart").
+// Inline icons for the product-card CTA (an "expand" icon and "add_shopping_cart").
 // currentColor so they inherit the button's text color and its hover transition.
 
 export function OptionsIcon({ className }: { className?: string }) {
@@ -12,7 +12,7 @@ export function OptionsIcon({ className }: { className?: string }) {
       width="24"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path d="M618.88-231.96q-34.26-34.27-34.26-83.42 0-49.16 34.26-83.43 34.27-34.27 83.43-34.27 49.15 0 83.42 34.27T820-315.38q0 49.15-34.27 83.42t-83.42 34.27q-49.16 0-83.43-34.27Zm138.31-28.46Q780-283.15 780-315.31q0-32.15-22.73-54.96-22.73-22.81-54.88-22.81-32.16 0-54.97 22.73-22.8 22.73-22.8 54.89 0 32.15 22.73 54.96 22.73 22.81 54.88 22.81 32.15 0 54.96-22.73ZM200-295.38v-40h289.23v40H200Zm-25.73-265.81Q140-595.46 140-644.62q0-49.15 34.27-83.42t83.42-34.27q49.16 0 83.43 34.27 34.26 34.27 34.26 83.42 0 49.16-34.26 83.43-34.27 34.27-83.43 34.27-49.15 0-83.42-34.27Zm138.31-28.46q22.8-22.73 22.8-54.89 0-32.15-22.73-54.96-22.73-22.81-54.88-22.81-32.15 0-54.96 22.73Q180-676.85 180-644.69q0 32.15 22.73 54.96 22.73 22.81 54.88 22.81 32.16 0 54.97-22.73Zm158.19-34.97v-40H760v40H470.77Zm231.54 309.24ZM257.69-644.62Z" />
+      <path d="M240-240v-200h40v160h160v40H240Zm440-280v-160H520v-40h200v200h-40Z" />
     </svg>
   );
 }

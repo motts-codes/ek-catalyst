@@ -98,21 +98,24 @@ export function ProductCard({
   return (
     <article
       className={clsx(
-        'group flex h-full min-w-0 max-w-md flex-col gap-3 font-[family-name:var(--card-font-family,var(--font-family-body))] @container',
+        // White card with a border wrapping the whole thing, inner padding so content doesn't
+        // touch the edge (stands out against the tinted listing-page background). Border darkens
+        // slightly on hover.
+        'group flex h-full min-w-0 max-w-md flex-col gap-3 rounded-2xl border border-contrast-100 bg-white p-3 font-[family-name:var(--card-font-family,var(--font-family-body))] transition-colors duration-200 hover:border-contrast-200 @container @md:p-4',
         className,
       )}
     >
       <div className="relative flex flex-1 flex-col">
         <div
           className={clsx(
-            'relative overflow-hidden rounded-xl border border-contrast-100 @md:rounded-2xl',
+            'relative overflow-hidden rounded-xl @md:rounded-2xl',
             {
               '5:6': 'aspect-[5/6]',
               '3:4': 'aspect-[3/4]',
               '1:1': 'aspect-square',
             }[aspectRatio],
-            // White image backdrop (products are shot on white); a light border keeps the card
-            // edge defined now that the fill isn't grey.
+            // White image backdrop (products are shot on white). The border now lives on the whole
+            // card, not the image.
             {
               light: 'bg-white',
               dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500)))]',
@@ -153,20 +156,22 @@ export function ProductCard({
               {badge}
             </Badge>
           )}
-          {badges != null && badges.length > 0 && (
-            <div className="absolute left-3 top-3 flex flex-wrap items-start gap-1">
-              {badges.map((b) => (
-                <span
-                  className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
-                  key={b.label}
-                  style={{ backgroundColor: b.color }}
-                >
-                  {b.label}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
+        {/* Marketing pills — positioned against the (non-clipped) card wrapper, NOT the image
+            container (which is overflow-hidden and would clip them at the corner). */}
+        {badges != null && badges.length > 0 && (
+          <div className="absolute left-0 top-0 flex flex-wrap items-start gap-1">
+            {badges.map((b) => (
+              <span
+                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
+                key={b.label}
+                style={{ backgroundColor: b.color }}
+              >
+                {b.label}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div className="mt-2 flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3">
           <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
@@ -186,7 +191,7 @@ export function ProductCard({
             {subtitle != null && subtitle !== '' && (
               <span
                 className={clsx(
-                  'mb-1.5 block text-xs font-normal',
+                  'block text-xs font-normal',
                   // Brand name in light grey, matching the PDP.
                   {
                     light: 'text-contrast-300',
@@ -197,6 +202,8 @@ export function ProductCard({
                 {subtitle}
               </span>
             )}
+            {/* Grey divider below the brand name, above the price (margin below the line). */}
+            <hr className="mb-3 mt-2 border-t border-contrast-100" />
             {price != null && (
               <PriceLabel
                 className="mt-0.5 text-base [&_abbr]:cursor-default [&_abbr]:no-underline @[16rem]:text-lg"
@@ -268,7 +275,7 @@ export function ProductCard({
 // Shared CTA button look: pill, red outline / red icon at rest, with the PDP add-to-cart's
 // left-to-right slide-fill hover (an ::after that translates in), turning it solid red + white.
 const CTA_BUTTON_CLASS =
-  'group/cta relative inline-flex min-h-9 items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,hsl(var(--primary)))] bg-transparent text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,hsl(var(--primary)))] transition-[width] duration-300 ease-out after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,hsl(var(--primary)))] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0';
+  'group/cta relative inline-flex min-h-7 items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,hsl(var(--primary)))] bg-transparent text-xs font-semibold tracking-wide text-[var(--button-primary-background,hsl(var(--primary)))] transition-[width] duration-300 ease-out after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,hsl(var(--primary)))] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0';
 
 /**
  * "View Options" CTA for products with required options: a red-outline circle with an options
@@ -278,7 +285,7 @@ const CTA_BUTTON_CLASS =
 function ViewOptionsCta({ href }: { href: string }) {
   return (
     <Link
-      aria-label="View options"
+      aria-label="See options"
       // A perfect 36px circle at rest (fixed h-9, min-w-9, no horizontal padding — the icon-only
       // content makes it exactly square). On hover — and always on touch (max-lg) — horizontal
       // padding appears and the label expands, so it grows into a pill.
@@ -286,15 +293,15 @@ function ViewOptionsCta({ href }: { href: string }) {
         CTA_BUTTON_CLASS,
         // hover:px-4 (not group-hover) — the padding is on the button itself, which can't be
         // targeted by its own group-hover. max-lg keeps it padded on touch.
-        'h-9 min-w-9 hover:px-4 max-lg:px-4',
+        'h-7 min-w-7 hover:px-3.5 max-lg:px-3.5',
       )}
       href={href}
     >
-      <OptionsIcon className="size-6 shrink-0" />
+      <OptionsIcon className="size-5 shrink-0" />
       {/* Label: collapsed on desktop until hover; always open on touch (max-lg). Slightly smaller
           than the base text; a small icon-to-label gap so both clear the padded edges. */}
       <span className="max-w-0 overflow-hidden whitespace-nowrap text-[11px] transition-[max-width,margin,opacity] duration-300 ease-out group-hover/cta:ml-1.5 group-hover/cta:max-w-[12rem] group-hover/cta:opacity-100 max-lg:ml-1.5 max-lg:max-w-[12rem] max-lg:opacity-100 lg:opacity-0">
-        View Options
+        See options
       </span>
     </Link>
   );
