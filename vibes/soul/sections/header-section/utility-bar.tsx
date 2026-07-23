@@ -18,7 +18,9 @@ const UTILITY_LINKS: Array<{ label: string; href: string }> = [
 export function UtilityBar() {
   return (
     <div className="hidden bg-[var(--utility-bar-background,#111111)] text-[var(--utility-bar-text,#d1d1d1)] md:block">
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-1.5 text-xs @xl:px-6 @4xl:px-8">
+      {/* Desktop L/R padding is tuned so the call number lines up under the EK logo and the right
+          links line up under the shopping icons in the main nav below. */}
+      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 py-1.5 text-xs md:pl-10 md:pr-7">
         {/* Left: call number */}
         <Link
           className="inline-flex items-center gap-1.5 font-medium transition-colors hover:text-[var(--utility-bar-text-hover,#fff)]"
