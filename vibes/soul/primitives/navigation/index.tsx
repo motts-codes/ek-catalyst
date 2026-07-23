@@ -518,7 +518,8 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           )}
         </div>
 
-        {/* Top Level Nav Links */}
+        {/* Top Level Nav Links. flex-1 so the group boundary's auto-margin can spread the shop and
+            content clusters apart across the row; items within a group stay tight (gap-1). */}
         <ul
           className={clsx(
             'hidden gap-1 @4xl:flex @4xl:flex-1',
@@ -550,11 +551,16 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           >
             {(links) =>
               links.map((item, i) => (
-                // Insert space before an item whose group differs from the previous item's — this
-                // visually separates the shop cluster from the content cluster in the nav bar.
+                // At a group boundary (item's group differs from the previous item's), an auto
+                // left-margin absorbs the free space — pushing the content cluster apart from the
+                // shop cluster so the two groups spread across the row (like justify-between, but
+                // between groups rather than every item).
                 <NavigationMenu.Item
                   className={clsx(
-                    i > 0 && item.group != null && item.group !== links[i - 1]?.group && '@4xl:ml-8',
+                    i > 0 &&
+                      item.group != null &&
+                      item.group !== links[i - 1]?.group &&
+                      '@4xl:ml-auto',
                   )}
                   key={i}
                   value={i.toString()}
