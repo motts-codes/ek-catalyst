@@ -518,100 +518,94 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           )}
         </div>
 
-        {/* Top Level Nav Links. flex-1 so the group boundary's auto-margin can spread the shop and
-            content clusters apart across the row; items within a group stay tight (gap-1). */}
-        <ul
-          className={clsx(
-            'hidden gap-1 @4xl:flex @4xl:flex-1',
-            {
-              left: '@4xl:justify-start',
-              center: '@4xl:justify-center',
-              right: '@4xl:justify-end',
-            }[linksPosition],
-          )}
+        {/* Top Level Nav Links — split into two <ul>s (shop group, content group). With the row's
+            justify-between, the four blocks (logo · shop · content · icons) spread evenly across
+            the width. Items keep their original index (i) as the NavigationMenu.Item value so the
+            mega-menu still works across both lists. */}
+        <Stream
+          fallback={
+            <ul className="hidden min-h-[41px] animate-pulse flex-row items-center @4xl:flex @4xl:gap-6 @4xl:p-2.5">
+              <li>
+                <span className="block h-4 w-10 rounded-md bg-contrast-100" />
+              </li>
+              <li>
+                <span className="block h-4 w-14 rounded-md bg-contrast-100" />
+              </li>
+              <li>
+                <span className="block h-4 w-24 rounded-md bg-contrast-100" />
+              </li>
+              <li>
+                <span className="block h-4 w-16 rounded-md bg-contrast-100" />
+              </li>
+            </ul>
+          }
+          value={streamableLinks}
         >
-          <Stream
-            fallback={
-              <ul className="flex min-h-[41px] animate-pulse flex-row items-center @4xl:gap-6 @4xl:p-2.5">
-                <li>
-                  <span className="block h-4 w-10 rounded-md bg-contrast-100" />
-                </li>
-                <li>
-                  <span className="block h-4 w-14 rounded-md bg-contrast-100" />
-                </li>
-                <li>
-                  <span className="block h-4 w-24 rounded-md bg-contrast-100" />
-                </li>
-                <li>
-                  <span className="block h-4 w-16 rounded-md bg-contrast-100" />
-                </li>
-              </ul>
-            }
-            value={streamableLinks}
-          >
-            {(links) =>
-              links.map((item, i) => (
-                // At a group boundary (item's group differs from the previous item's), an auto
-                // left-margin absorbs the free space — pushing the content cluster apart from the
-                // shop cluster so the two groups spread across the row (like justify-between, but
-                // between groups rather than every item).
-                <NavigationMenu.Item
-                  className={clsx(
-                    i > 0 &&
-                      item.group != null &&
-                      item.group !== links[i - 1]?.group &&
-                      '@4xl:ml-auto',
-                  )}
-                  key={i}
-                  value={i.toString()}
-                >
-                  <NavigationMenu.Trigger asChild>
-                    <Link
-                      className="hidden items-center whitespace-nowrap rounded-xl bg-[var(--nav-link-background,transparent)] p-2.5 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:inline-flex"
-                      href={item.href}
-                    >
-                      {item.label}
-                    </Link>
-                  </NavigationMenu.Trigger>
-                  {item.groups != null && item.groups.length > 0 && (
-                    <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
-                      <div className="m-auto grid w-full max-w-screen-lg grid-cols-5 justify-center gap-5 px-5 pb-8 pt-5">
-                        {item.groups.map((group, columnIndex) => (
-                          <ul className="flex flex-col" key={columnIndex}>
-                            {/* Second Level Links */}
-                            {group.label != null && group.label !== '' && (
-                              <li>
-                                {group.href != null && group.href !== '' ? (
-                                  <Link className={navGroupClassName} href={group.href}>
-                                    {group.label}
-                                  </Link>
-                                ) : (
-                                  <span className={navGroupClassName}>{group.label}</span>
-                                )}
-                              </li>
-                            )}
-
-                            {group.links.map((link, idx) => (
-                              // Third Level Links
-                              <li key={idx}>
-                                <Link
-                                  className="block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2"
-                                  href={link.href}
-                                >
-                                  {link.label}
+          {(links) => {
+            const renderItem = (item: Link, i: number) => (
+              <NavigationMenu.Item key={i} value={i.toString()}>
+                <NavigationMenu.Trigger asChild>
+                  <Link
+                    className="hidden items-center whitespace-nowrap rounded-xl bg-[var(--nav-link-background,transparent)] p-2.5 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:inline-flex"
+                    href={item.href}
+                  >
+                    {item.label}
+                  </Link>
+                </NavigationMenu.Trigger>
+                {item.groups != null && item.groups.length > 0 && (
+                  <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
+                    <div className="m-auto grid w-full max-w-screen-lg grid-cols-5 justify-center gap-5 px-5 pb-8 pt-5">
+                      {item.groups.map((group, columnIndex) => (
+                        <ul className="flex flex-col" key={columnIndex}>
+                          {/* Second Level Links */}
+                          {group.label != null && group.label !== '' && (
+                            <li>
+                              {group.href != null && group.href !== '' ? (
+                                <Link className={navGroupClassName} href={group.href}>
+                                  {group.label}
                                 </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        ))}
-                      </div>
-                    </NavigationMenu.Content>
-                  )}
-                </NavigationMenu.Item>
-              ))
-            }
-          </Stream>
-        </ul>
+                              ) : (
+                                <span className={navGroupClassName}>{group.label}</span>
+                              )}
+                            </li>
+                          )}
+
+                          {group.links.map((link, idx) => (
+                            // Third Level Links
+                            <li key={idx}>
+                              <Link
+                                className="block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2"
+                                href={link.href}
+                              >
+                                {link.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      ))}
+                    </div>
+                  </NavigationMenu.Content>
+                )}
+              </NavigationMenu.Item>
+            );
+
+            // Preserve original indices when filtering so each item's mega-menu value is stable.
+            const withIndex = links.map((item, i) => ({ item, i }));
+            const shop = withIndex.filter(({ item }) => item.group !== 'content');
+            const content = withIndex.filter(({ item }) => item.group === 'content');
+
+            return (
+              <>
+                <ul className="hidden gap-1 @4xl:flex">
+                  {shop.map(({ item, i }) => renderItem(item, i))}
+                </ul>
+                <ul className="hidden gap-1 @4xl:flex">
+                  {content.map(({ item, i }) => renderItem(item, i))}
+                </ul>
+              </>
+            );
+          }}
+        </Stream>
 
         {/* Icon Buttons */}
         <div
