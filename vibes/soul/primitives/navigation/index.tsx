@@ -422,15 +422,16 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             />
           </Popover.Trigger>
           <Popover.Portal>
-            {/* Explicit width + side/offset instead of the nav-width anchor variable, which
-                measures 0px in this environment (collapsing the menu to invisible). Drops a
-                full-width panel below the nav: width = viewport minus page gutter. */}
+            {/* Full-width panel dropped below the header. sideOffset is large enough to clear the
+                mobile action row (Free Consult + toggle) that sits below the nav, so the first
+                menu item (Cabinets) isn't hidden behind it. Explicit width instead of the nav-width
+                anchor variable, which measures 0px here. */}
             <Popover.Content
               align="start"
-              className="max-h-[calc(var(--radix-popover-content-available-height)-16px)] w-[calc(100vw-2rem)] max-w-screen-2xl @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
-              collisionPadding={16}
+              className="max-h-[var(--radix-popover-content-available-height)] w-screen @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+              collisionPadding={0}
               side="bottom"
-              sideOffset={12}
+              sideOffset={64}
             >
               <div className="max-h-[inherit] divide-y divide-[var(--nav-mobile-divider,hsl(var(--contrast-100)))] overflow-y-auto bg-[var(--nav-mobile-background,hsl(var(--background)))]">
                 <Stream
