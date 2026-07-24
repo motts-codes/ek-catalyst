@@ -513,7 +513,7 @@
       "quantity": "Quantity",
       "increaseQuantity": "Increase quantity",
       "decreaseQuantity": "Decrease quantity",
-      "emptySelectPlaceholder": "Select an option",
+      "emptySelectPlaceholder": "Pick size",
       "successMessage": "{cartItems, plural, =1 {1 item} other {# items}} added to <cartLink> your cart</cartLink>",
       "missingCart": "Cart not found. Please try again later!",
       "unknownError": "Unknown error. Please try again later.",
