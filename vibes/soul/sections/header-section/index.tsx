@@ -1,6 +1,5 @@
 'use client';
 
-import { Phone } from 'lucide-react';
 import { forwardRef, useEffect, useState } from 'react';
 import Headroom from 'react-headroom';
 
@@ -65,8 +64,8 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
 HeaderSection.displayName = 'HeaderSection';
 
-// Mobile-only row below the nav: Free Design Consult (left) · toggle (center) · Call us (right),
-// spread edge-to-edge. Shown below 1050px, where the CTA + toggle don't fit in the main nav row.
+// Mobile-only row below the nav: Free Design Consult · toggle, spread edge-to-edge. Shown below
+// 1050px, where the CTA + toggle don't fit in the main nav row. (Call lives in the utility bar.)
 function MobileActionRow({
   ctaButton,
   audienceToggle,
@@ -80,13 +79,6 @@ function MobileActionRow({
     <div className="flex items-center justify-between gap-3 border-t border-contrast-100 px-4 py-2 min-[1050px]:hidden">
       {ctaButton}
       {audienceToggle}
-      <a
-        className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-contrast-500 transition-colors hover:text-foreground"
-        href="tel:+18602471000"
-      >
-        <Phone size={14} strokeWidth={1.75} />
-        Call us
-      </a>
     </div>
   );
 }
