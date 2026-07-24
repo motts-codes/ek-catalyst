@@ -622,8 +622,15 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             linksPosition === 'center' ? 'flex-1' : 'flex-1 @4xl:flex-none',
           )}
         >
-          {ctaButton != null && <div className="mr-3 hidden @4xl:block">{ctaButton}</div>}
-          {audienceToggle != null && <div className="mr-4 @4xl:ml-2">{audienceToggle}</div>}
+          {/* CTA + toggle only show when the full nav fits (~1400px container). Below that they're
+              hidden so the links + icons don't overflow into a horizontal scroll on laptops.
+              (Phase 2: a "…" overflow menu for the links themselves.) */}
+          {ctaButton != null && (
+            <div className="mr-3 hidden @[1400px]:block">{ctaButton}</div>
+          )}
+          {audienceToggle != null && (
+            <div className="mr-4 hidden @[1400px]:ml-2 @[1400px]:block">{audienceToggle}</div>
+          )}
           {searchAction ? (
             <Popover.Root onOpenChange={setIsSearchOpen} open={isSearchOpen}>
               <Popover.Trigger asChild>
