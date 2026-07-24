@@ -416,7 +416,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           <Popover.Trigger asChild>
             <MobileMenuButton
               aria-label={mobileMenuTriggerLabel}
-              className="mr-1 @4xl:hidden"
+              className="mr-1 @[1050px]:hidden"
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
               open={isMobileMenuOpen}
             />
@@ -503,11 +503,11 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
         <div
           className={clsx(
             'flex items-center justify-start self-stretch',
-            linksPosition === 'center' ? 'flex-1' : 'flex-1 @4xl:flex-none',
+            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[1050px]:flex-none',
           )}
         >
           <Logo
-            className={clsx(streamableMobileLogo != null ? 'hidden @4xl:flex' : 'flex')}
+            className={clsx(streamableMobileLogo != null ? 'hidden @[1050px]:flex' : 'flex')}
             height={logoHeight}
             href={logoHref}
             label={logoLabel}
@@ -516,7 +516,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           />
           {streamableMobileLogo != null && (
             <Logo
-              className="flex @4xl:hidden"
+              className="flex @[1050px]:hidden"
               height={mobileLogoHeight}
               href={logoHref}
               label={logoLabel}
@@ -554,7 +554,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
               <NavigationMenu.Item key={i} value={i.toString()}>
                 <NavigationMenu.Trigger asChild>
                   <Link
-                    className="hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:inline-flex"
+                    className="hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @[1050px]:inline-flex"
                     href={item.href}
                   >
                     {item.label}
@@ -604,10 +604,10 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
 
             return (
               <>
-                <ul className="hidden gap-1 @4xl:flex">
+                <ul className="hidden gap-1 @[1050px]:flex">
                   {shop.map(({ item, i }) => renderItem(item, i))}
                 </ul>
-                <ul className="hidden gap-1 @4xl:flex">
+                <ul className="hidden gap-1 @[1050px]:flex">
                   {content.map(({ item, i }) => renderItem(item, i))}
                 </ul>
               </>
@@ -619,18 +619,20 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
         <div
           className={clsx(
             'flex items-center justify-end gap-0.5 transition-colors duration-300',
-            linksPosition === 'center' ? 'flex-1' : 'flex-1 @4xl:flex-none',
+            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[1050px]:flex-none',
           )}
         >
-          {/* CTA + toggle only show when the full nav fits (~1400px container). Below that they're
-              hidden so the links + icons don't overflow into a horizontal scroll on laptops.
-              (Phase 2: a "…" overflow menu for the links themselves.) */}
+          {/* CTA button shows on mobile (<1050px, where the hamburger holds the links) and on wide
+              desktop (>=1400px, where the full nav fits) — but is hidden in the compact desktop
+              band (1050-1400px) so the links + icons don't overflow. Two slots: mobile + desktop.
+              The toggle shows only on wide desktop. (Phase 2: a "…" overflow menu for the links.) */}
           {ctaButton != null && (
             <div className="mr-3 hidden @[1400px]:block">{ctaButton}</div>
           )}
           {audienceToggle != null && (
             <div className="mr-4 hidden @[1400px]:ml-2 @[1400px]:block">{audienceToggle}</div>
           )}
+          {ctaButton != null && <div className="mr-2 @[1050px]:hidden">{ctaButton}</div>}
           {searchAction ? (
             <Popover.Root onOpenChange={setIsSearchOpen} open={isSearchOpen}>
               <Popover.Trigger asChild>
