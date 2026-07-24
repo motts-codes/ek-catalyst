@@ -622,17 +622,15 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             linksPosition === 'center' ? 'flex-1' : 'flex-1 @[1050px]:flex-none',
           )}
         >
-          {/* CTA button shows on mobile (<1050px, where the hamburger holds the links) and on wide
-              desktop (>=1400px, where the full nav fits) — but is hidden in the compact desktop
-              band (1050-1400px) so the links + icons don't overflow. Two slots: mobile + desktop.
-              The toggle shows only on wide desktop. (Phase 2: a "…" overflow menu for the links.) */}
+          {/* CTA + toggle in the main nav row only on wide desktop (>=1400px, where the full nav
+              fits). Below that they're hidden here and instead surface in the mobile utility row
+              rendered below the nav (see the parent component). */}
           {ctaButton != null && (
             <div className="mr-3 hidden @[1400px]:block">{ctaButton}</div>
           )}
           {audienceToggle != null && (
             <div className="mr-4 hidden @[1400px]:ml-2 @[1400px]:block">{audienceToggle}</div>
           )}
-          {ctaButton != null && <div className="mr-2 @[1050px]:hidden">{ctaButton}</div>}
           {searchAction ? (
             <Popover.Root onOpenChange={setIsSearchOpen} open={isSearchOpen}>
               <Popover.Trigger asChild>
