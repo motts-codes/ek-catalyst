@@ -155,8 +155,10 @@ export const Header = async () => {
         audienceToggle: <AudienceToggle mode={audienceMode} />,
         ctaButton: (
           // Same red as the PDP "Buy now" (tertiary = #96050f); compact height via x-small.
+          // Shorter label ("Free Consult") on mobile; full label on wider screens.
           <ButtonLink href="#" size="x-small" variant="tertiary">
-            Free Design Consult
+            <span className="hidden min-[1050px]:inline">Free Design Consult</span>
+            <span className="min-[1050px]:hidden">Free Consult</span>
           </ButtonLink>
         ),
         logo,
