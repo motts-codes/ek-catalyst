@@ -144,11 +144,9 @@ export function ProductsListSection({
               <div className="block @3xl:hidden">
                 <SidePanel.Root>
                   <SidePanel.Trigger asChild>
-                    <Button size="medium" variant="secondary">
+                    <Button className="text-xs" size="x-small" variant="secondary">
                       {filterLabel}
-                      <span className="hidden @xl:block">
-                        <Sliders size={20} />
-                      </span>
+                      <Sliders size={15} />
                     </Button>
                   </SidePanel.Trigger>
                   <Stream value={streamableFiltersPanelTitle}>
