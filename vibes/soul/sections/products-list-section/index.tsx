@@ -144,7 +144,11 @@ export function ProductsListSection({
               <div className="block @3xl:hidden">
                 <SidePanel.Root>
                   <SidePanel.Trigger asChild>
-                    <Button className="text-xs" size="x-small" variant="secondary">
+                    <Button
+                      className="!h-8 text-xs [&>span]:!min-h-0"
+                      size="x-small"
+                      variant="secondary"
+                    >
                       {filterLabel}
                       <Sliders size={15} />
                     </Button>
