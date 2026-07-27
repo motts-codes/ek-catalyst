@@ -142,7 +142,9 @@ export function ProductDetail<F extends Field>({
     <section className="@container">
       <div className="group/product-detail mx-auto w-full max-w-screen-2xl px-4 pb-10 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-20">
         {breadcrumbs && (
-          <div className="group/breadcrumbs mb-16">
+          // Smaller gap below the breadcrumb on mobile (name sits right below it there); larger on
+          // desktop where the gap separates the breadcrumb from the gallery/details row.
+          <div className="group/breadcrumbs mb-4 @2xl:mb-16">
             <Breadcrumbs
               breadcrumbs={breadcrumbs}
               className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
@@ -153,6 +155,23 @@ export function ProductDetail<F extends Field>({
           {(product) =>
             product && (
               <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-[minmax(0,3fr)_minmax(0,7fr)] @5xl:gap-x-12">
+                {/* Mobile gallery: shown FIRST (image above all details). Forced to a shorter 4:3
+                    frame so it isn't full-width-tall on phones. Hidden at @2xl where the gallery
+                    lives in its own grid column instead. */}
+                <div className="group/product-gallery -mt-1 mb-2 [&_.aspect-square]:!aspect-[4/3] @2xl:hidden">
+                  <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
+                    {(imagesData) => (
+                      <ProductGallery
+                        aspectRatio="1:1"
+                        images={imagesData.images}
+                        loadMoreAction={loadMoreImagesAction}
+                        pageInfo={imagesData.pageInfo}
+                        productId={Number(product.id)}
+                        thumbnailLabel={thumbnailLabel}
+                      />
+                    )}
+                  </Stream>
+                </div>
                 <div className="group/product-gallery hidden @2xl:-mt-3 @2xl:block">
                   <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                     {(imagesData) => (
@@ -346,25 +365,8 @@ export function ProductDetail<F extends Field>({
                                 </Stream>
                               </div>
                               <hr className="mb-4 w-full border-t border-[hsl(var(--product-detail-divider))]" />
-                              {/* Mobile gallery: force a shorter 4:3 frame so the image isn't
-                                  full-width-tall on phones (desktop stays 1:1). */}
-                              <div className="group/product-gallery mb-8 [&_.aspect-square]:!aspect-[4/3] @2xl:hidden">
-                                <Stream
-                                  fallback={<ProductGallerySkeleton />}
-                                  value={product.images}
-                                >
-                                  {(imagesData) => (
-                                    <ProductGallery
-                                      aspectRatio="1:1"
-                                      images={imagesData.images}
-                                      loadMoreAction={loadMoreImagesAction}
-                                      pageInfo={imagesData.pageInfo}
-                                      productId={Number(product.id)}
-                                      thumbnailLabel={thumbnailLabel}
-                                    />
-                                  )}
-                                </Stream>
-                              </div>
+                              {/* Mobile gallery moved to the top of the grid (image-first layout);
+                                  it no longer renders here between price and summary. */}
                               <div className="group/product-summary">
                                 <Stream
                                   fallback={<ProductSummarySkeleton />}
@@ -553,6 +555,10 @@ export function ProductDetailSkeleton() {
       className="grid grid-cols-1 items-stretch gap-x-6 gap-y-8 group-has-[[data-pending]]/product-detail:animate-pulse @2xl:grid-cols-2 @5xl:gap-x-12"
       pending
     >
+      {/* Mobile: gallery-first (matches the live image-above-details order). */}
+      <div className="mb-2 @2xl:hidden">
+        <ProductGallerySkeleton />
+      </div>
       <div className="hidden @2xl:block">
         <ProductGallerySkeleton />
       </div>
@@ -562,9 +568,6 @@ export function ProductDetailSkeleton() {
         <RatingSkeleton />
         <PriceLabelSkeleton />
         <ProductSummarySkeleton />
-        <div className="mb-8 @2xl:hidden">
-          <ProductGallerySkeleton />
-        </div>
         <ProductDetailFormSkeleton />
       </div>
     </Skeleton.Root>

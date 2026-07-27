@@ -92,10 +92,10 @@ export function ProductCarousel({
 
         return (
           <Carousel className={className} hideOverflow={hideOverflow}>
-            <CarouselContent className="-ml-4 mb-10 @2xl:-ml-5">
+            <CarouselContent className="-ml-3 mb-10 @2xl:-ml-5">
               {products.map(({ id, ...product }) => (
                 <CarouselItem
-                  className="basis-full pl-4 @md:basis-1/2 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
+                  className="basis-1/2 pl-3 @md:basis-1/3 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
                   key={id}
                 >
                   <ProductCard
@@ -144,7 +144,7 @@ export function ProductsCarouselSkeleton({
         <div className="-ml-4 flex @2xl:-ml-5">
           {Array.from({ length: placeholderCount }).map((_, index) => (
             <div
-              className="min-w-0 shrink-0 grow-0 basis-full pl-4 @md:basis-1/2 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
+              className="min-w-0 shrink-0 grow-0 basis-1/2 pl-3 @md:basis-1/3 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
               key={index}
             >
               <ProductCardSkeleton />
@@ -185,7 +185,7 @@ export function ProductsCarouselEmptyState({
         <div className="-ml-4 flex [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)] @2xl:-ml-5">
           {Array.from({ length: placeholderCount }).map((_, index) => (
             <div
-              className="min-w-0 shrink-0 grow-0 basis-full pl-4 @md:basis-1/2 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
+              className="min-w-0 shrink-0 grow-0 basis-1/2 pl-3 @md:basis-1/3 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
               key={index}
             >
               <ProductCardSkeleton />

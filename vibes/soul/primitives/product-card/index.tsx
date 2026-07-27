@@ -22,8 +22,11 @@ export interface Product {
   price?: Price;
   subtitle?: string;
   badge?: string;
-  /** Marketing pills (Bestseller / Trending / New) shown top-left on the image. */
-  badges?: Array<{ label: string; color: string }>;
+  /** Marketing pills (Bestseller / Trending / New / Sale) shown top-left on the image.
+   *  `textColor` overrides the default dark text (used by the solid-red Sale pill for white text). */
+  badges?: Array<{ label: string; color: string; textColor?: string }>;
+  /** Sale percentage from the __sale custom field; drives the top-right "UP TO N% OFF" blurb. */
+  salePercent?: number;
   rating?: number;
   inventoryMessage?: string;
   numberOfReviews?: number;
@@ -76,6 +79,7 @@ export function ProductCard({
     subtitle,
     badge,
     badges,
+    salePercent,
     price,
     image,
     href,
@@ -165,11 +169,21 @@ export function ProductCard({
               <span
                 className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
                 key={b.label}
-                style={{ backgroundColor: b.color }}
+                style={{ backgroundColor: b.color, color: b.textColor }}
               >
                 {b.label}
               </span>
             ))}
+          </div>
+        )}
+
+        {/* Sale blurb — top-right, driven by the __sale custom field (percentage). Placeholder red
+            disc for now; will be replaced with the supplied SVG shape. "UP TO / N% / OFF" in 3 lines. */}
+        {typeof salePercent === 'number' && salePercent > 0 && (
+          <div className="absolute right-0 top-0 flex size-[52px] flex-col items-center justify-center rounded-full bg-[var(--pill-sale-background,#d90716)] text-center leading-none text-[var(--pill-sale-text,#fff)] @md:size-[58px]">
+            <span className="text-[7px] font-semibold uppercase tracking-wide">Up to</span>
+            <span className="text-[15px] font-bold @md:text-base">{salePercent}%</span>
+            <span className="text-[7px] font-semibold uppercase tracking-wide">Off</span>
           </div>
         )}
 

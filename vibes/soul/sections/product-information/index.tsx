@@ -52,7 +52,8 @@ export function ProductInformation({ features, specifications, className }: Prop
               {features.items.map((item, index) => (
                 <div
                   className={clsx(
-                    'grid grid-cols-2 gap-2 px-4 py-2.5 text-sm',
+                    // Roomier row spacing (py-4) for more breathing room between each feature.
+                    'grid grid-cols-2 gap-2 px-4 py-4 text-sm',
                     index % 2 === 1 && 'bg-[#f5f5f5]',
                   )}
                   key={index}
@@ -81,7 +82,7 @@ export function ProductInformation({ features, specifications, className }: Prop
               {specifications.map((spec, index) => (
                 <div
                   className={clsx(
-                    'grid grid-cols-2 gap-2 px-4 py-2.5 text-sm',
+                    'grid grid-cols-2 gap-2 px-4 py-4 text-sm',
                     index % 2 === 1 && 'bg-[#f5f5f5]',
                   )}
                   key={index}

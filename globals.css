@@ -32,6 +32,9 @@
   --pill-bestseller-background: #fee3e5bf;
   --pill-trending-background: #a9d6e063;
   --pill-new-background: #d1f0d9;
+  /* SALE pill: solid brand red with white text (driven by the __sale custom field) */
+  --pill-sale-background: #d90716;
+  --pill-sale-text: #ffffff;
   /* Quantity stepper (+/-) hover: black background with reversed (white) icon */
   --number-input-light-button-background-hover: #000000;
   --number-input-light-icon-hover: #ffffff;

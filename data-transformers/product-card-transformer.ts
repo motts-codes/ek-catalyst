@@ -54,7 +54,7 @@ const getInventoryMessage = (
 // New, Bestseller, Trending. Colors reuse the PDP pill CSS variables so cards match the PDP.
 const getCardBadges = (
   product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
-): Array<{ label: string; color: string }> => {
+): Array<{ label: string; color: string; textColor?: string }> => {
   if (!('customFields' in product)) {
     return [];
   }
@@ -62,12 +62,43 @@ const getCardBadges = (
   const fields = removeEdgesAndNodes(product.customFields);
   const isYes = (name: string) =>
     fields.find((f) => f.name === name)?.value?.trim().toLowerCase() === 'yes';
+  // A product is "on sale" when __sale holds a positive percentage.
+  const onSale = getSalePercent(product) != null;
 
   return [
+    // Sale first (most prominent) — solid red pill with white text, unlike the pastel badges.
+    onSale && {
+      label: 'Sale',
+      color: 'var(--pill-sale-background)',
+      textColor: 'var(--pill-sale-text)',
+    },
     isYes('__is_new') && { label: 'New', color: 'var(--pill-new-background)' },
     isYes('__is_bestseller') && { label: 'Bestseller', color: 'var(--pill-bestseller-background)' },
     isYes('__is_trending') && { label: 'Trending', color: 'var(--pill-trending-background)' },
-  ].filter((b): b is { label: string; color: string } => Boolean(b));
+  ].filter((b): b is { label: string; color: string; textColor?: string } => Boolean(b));
+};
+
+// Sale percentage from the __sale custom field. Returns a positive number, or undefined when the
+// field is absent / empty / non-positive (so the card shows nothing).
+const getSalePercent = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+): number | undefined => {
+  if (!('customFields' in product)) {
+    return undefined;
+  }
+
+  const raw = removeEdgesAndNodes(product.customFields)
+    .find((f) => f.name === '__sale')
+    ?.value?.replace('%', '')
+    .trim();
+
+  if (raw == null || raw === '') {
+    return undefined;
+  }
+
+  const pct = Number(raw);
+
+  return Number.isFinite(pct) && pct > 0 ? pct : undefined;
 };
 
 export const singleProductCardTransformer = (
@@ -87,6 +118,7 @@ export const singleProductCardTransformer = (
     price: pricesTransformer(product, format, taxDisplay),
     subtitle: product.brand?.name ?? undefined,
     badges: getCardBadges(product),
+    salePercent: getSalePercent(product),
     requiresOptions:
       'productOptions' in product
         ? removeEdgesAndNodes(product.productOptions).some((o) => o.isRequired)

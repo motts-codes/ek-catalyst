@@ -146,7 +146,11 @@ export const WishlistButton = async ({ productId, productSku, formId }: Props) =
       newWishlistLabel={t('addToNewWishlist')}
       wishlists={wishlists}
     >
-      <Favorite checked={isProductInWishlist} label={t('label')} />
+      {/* Scale the wishlist heart to 0.75x on the PDP (origin top-right so it stays tucked
+          against the product name); the shared Favorite primitive is left at full size elsewhere. */}
+      <span className="inline-flex origin-top-right scale-75">
+        <Favorite checked={isProductInWishlist} label={t('label')} />
+      </span>
     </WishlistButtonDropdown>
   );
 };

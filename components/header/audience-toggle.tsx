@@ -26,7 +26,9 @@ export function AudienceToggle({ mode }: Props) {
   return (
     <div
       className={clsx(
-        'inline-flex items-center rounded-full border p-0.5 text-xs font-medium',
+        // Solid white background so the inactive side never shows the utility bar / page content
+        // bleeding through (the control is otherwise transparent).
+        'inline-flex items-center rounded-full border bg-white p-0.5 text-xs font-medium',
         // Outline matches the active mode: red for Homeowner, blue for Pro.
         mode === 'pro' ? 'border-[#a9d6e0]' : 'border-[var(--button-tertiary-border,#96050f)]',
       )}

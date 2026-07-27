@@ -72,11 +72,19 @@ export const SwatchRadioGroup = React.forwardRef<
   ) => {
     const id = React.useId();
 
+    // Show the selected swatch's name next to the label (e.g. "FINISH: Bisque"). The group is
+    // controlled, so the current value arrives via `rest.value` (falls back to defaultValue).
+    const selectedValue = (rest.value ?? rest.defaultValue) as string | undefined;
+    const selectedLabel = options.find((o) => o.value === selectedValue)?.label;
+
     return (
       <div className={clsx('space-y-2', className)}>
         {label !== undefined && label !== '' && (
           <Label colorScheme={colorScheme} id={id} required={required}>
             {label}
+            {selectedLabel != null && selectedLabel !== '' && (
+              <span className="ml-1.5 font-normal text-contrast-400">{selectedLabel}</span>
+            )}
           </Label>
         )}
         <RadioGroupPrimitive.Root
