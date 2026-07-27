@@ -89,8 +89,15 @@ export async function generateMetadata(): Promise<Metadata> {
     baseUrl = new URL(vanityUrl);
   }
 
+  // Keep every non-production deployment (preview + local) out of search indexes with an explicit
+  // `noindex, nofollow` robots meta tag. This is belt-and-suspenders alongside Vercel's
+  // `X-Robots-Tag: noindex` header on previews — but it's also visible in View Source and travels
+  // with the HTML. Production (VERCEL_ENV === 'production') stays indexable.
+  const isProduction = process.env.VERCEL_ENV === 'production';
+
   return {
     metadataBase: baseUrl,
+    robots: isProduction ? undefined : { index: false, follow: false },
     title: {
       template: `%s - ${storeName}`,
       default: pageTitle || storeName,
