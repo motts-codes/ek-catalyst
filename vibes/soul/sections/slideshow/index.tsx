@@ -15,6 +15,8 @@ type ButtonLinkProps = ComponentPropsWithoutRef<typeof ButtonLink>;
 
 interface Slide {
   title: string;
+  /** When true, the headline renders in brand red instead of the default (white). */
+  redTitle?: boolean;
   description?: string;
   showDescription?: boolean;
   image?: { alt: string; blurDataUrl?: string; src: string };
@@ -26,6 +28,15 @@ interface Slide {
     shape?: ButtonLinkProps['shape'];
   };
   showCta?: boolean;
+  /** Optional second CTA, rendered next to the first. */
+  cta2?: {
+    label: string;
+    href: string;
+    variant?: ButtonLinkProps['variant'];
+    size?: ButtonLinkProps['size'];
+    shape?: ButtonLinkProps['shape'];
+  };
+  showCta2?: boolean;
 }
 
 interface Props {
@@ -160,7 +171,20 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
       <div className="h-full overflow-hidden" ref={emblaRef}>
         <div className="flex h-full">
           {slides.map(
-            ({ title, description, showDescription = true, image, cta, showCta = true }, idx) => {
+            (
+              {
+                title,
+                redTitle = false,
+                description,
+                showDescription = true,
+                image,
+                cta,
+                showCta = true,
+                cta2,
+                showCta2 = false,
+              },
+              idx,
+            ) => {
               return (
                 <div
                   className="relative h-full w-full min-w-0 shrink-0 grow-0 basis-full"
@@ -168,7 +192,16 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
                 >
                   <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[var(--slideshow-mask,hsl(var(--foreground)/80%))] to-transparent">
                     <div className="mx-auto w-full max-w-screen-2xl text-balance px-4 pb-16 pt-12 @xl:px-6 @xl:pb-20 @xl:pt-16 @4xl:px-8 @4xl:pt-20">
-                      <h1 className="m-0 max-w-xl font-[family-name:var(--slideshow-title-font-family,var(--font-family-heading))] text-4xl font-medium leading-none text-[var(--slideshow-title,hsl(var(--background)))] @2xl:text-5xl @2xl:leading-[.9] @4xl:text-6xl">
+                      {/* Reduced heading size (was text-4xl → 6xl, which read as too large).
+                          Per-slide `redTitle` swaps the default white for brand red. */}
+                      <h1
+                        className={clsx(
+                          'm-0 max-w-xl font-[family-name:var(--slideshow-title-font-family,var(--font-family-heading))] text-2xl font-bold leading-tight @2xl:text-3xl @4xl:text-4xl',
+                          redTitle
+                            ? 'text-[var(--button-primary-background,#d90716)]'
+                            : 'text-[var(--slideshow-title,hsl(var(--background)))]',
+                        )}
+                      >
                         {title}
                       </h1>
                       {showDescription && (
@@ -176,16 +209,33 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
                           {description}
                         </p>
                       )}
-                      {showCta && (
-                        <ButtonLink
-                          className="mt-6 @xl:mt-8"
-                          href={cta?.href ?? '#'}
-                          shape={cta?.shape ?? 'pill'}
-                          size={cta?.size ?? 'large'}
-                          variant={cta?.variant ?? 'tertiary'}
-                        >
-                          {cta?.label ?? 'Learn more'}
-                        </ButtonLink>
+                      {(showCta || showCta2) && (
+                        <div className="mt-6 flex flex-wrap items-center gap-3 @xl:mt-8">
+                          {showCta && (
+                            <ButtonLink
+                              // Slightly shorter than the default large button (less top/bottom
+                              // padding) — scoped to the slideshow so other large buttons are unaffected.
+                              className="!min-h-11 !py-2.5"
+                              href={cta?.href ?? '#'}
+                              shape={cta?.shape ?? 'pill'}
+                              size={cta?.size ?? 'large'}
+                              variant={cta?.variant ?? 'tertiary'}
+                            >
+                              {cta?.label ?? 'Learn more'}
+                            </ButtonLink>
+                          )}
+                          {showCta2 && (
+                            <ButtonLink
+                              className="!min-h-11 !py-2.5"
+                              href={cta2?.href ?? '#'}
+                              shape={cta2?.shape ?? 'pill'}
+                              size={cta2?.size ?? 'large'}
+                              variant={cta2?.variant ?? 'secondary'}
+                            >
+                              {cta2?.label ?? 'Learn more'}
+                            </ButtonLink>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>

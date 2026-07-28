@@ -1,6 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
+import { usePathname } from 'next/navigation';
 import { useTransition } from 'react';
 
 import { AudienceMode } from '~/lib/navigation/menu-config';
@@ -15,13 +16,24 @@ const OPTIONS: Array<{ value: AudienceMode; label: string }> = [
   { value: 'pro', label: 'Pro' },
 ];
 
+// Strip the leading locale segment (e.g. "/en/pro" -> "/pro", "/en" -> "/") so we can tell whether
+// we're on the home page or the Pro landing page regardless of locale.
+function pathWithoutLocale(pathname: string): string {
+  const withoutLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/i, '');
+
+  return withoutLocale === '' ? '/' : withoutLocale;
+}
+
 /**
  * Homeowner | Pro audience toggle — a small segmented control. Clicking the inactive side sets the
- * ek_audience cookie via a server action and revalidates, so the header (and page) re-render in the
- * new mode. (Cookie + reload; /pro routing layers on later.)
+ * ek_audience cookie via a server action, then navigates:
+ *  - Pro selected on the home page  → /pro (the Pro landing page)
+ *  - Homeowner selected on /pro      → / (home)
+ *  - anywhere else                   → reload in place (just swap menu/branding)
  */
 export function AudienceToggle({ mode }: Props) {
   const [isPending, startTransition] = useTransition();
+  const pathname = usePathname();
 
   return (
     <div
@@ -56,9 +68,27 @@ export function AudienceToggle({ mode }: Props) {
             onClick={() =>
               startTransition(async () => {
                 await switchAudienceMode(option.value);
-                // Full reload so the server re-reads the cookie and re-renders the header in the new
-                // mode. (router.refresh() doesn't reliably bust the cached header shell here.)
-                window.location.reload();
+
+                // Decide where to go based on the current page. The locale prefix (e.g. "/en") is
+                // preserved so navigation stays within the active locale.
+                const relative = pathWithoutLocale(pathname);
+                const localePrefix = pathname.match(/^\/[a-z]{2}(?=\/|$)/i)?.[0] ?? '';
+                let destination: string | null = null;
+
+                if (option.value === 'pro' && relative === '/') {
+                  destination = `${localePrefix}/pro`;
+                } else if (option.value === 'homeowner' && relative === '/pro') {
+                  destination = localePrefix || '/';
+                }
+
+                if (destination) {
+                  // Navigate to the audience landing page (full load re-reads the cookie).
+                  window.location.href = destination;
+                } else {
+                  // Same page — full reload so the server re-renders the header in the new mode.
+                  // (router.refresh() doesn't reliably bust the cached header shell here.)
+                  window.location.reload();
+                }
               })
             }
             type="button"
