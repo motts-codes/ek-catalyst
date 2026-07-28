@@ -36,9 +36,9 @@ const PRO_HERO_IMAGE = '/images/pro-hero.jpg';
 export default function Pro() {
   return (
     <Slideshow
-      // The default slideshow text mask is ~80% black, which greys out this red banner. Override it
-      // with a lighter, red-tinted mask so the image's red shows through while white text stays legible.
-      className="[--slideshow-mask:rgba(60,0,0,0.55)]"
+      // Lighten the default ~80%-black text mask so the blue banner shows through, while keeping the
+      // bottom dark enough for legible white text. Neutral (cool) tint to match the blue image.
+      className="[--slideshow-mask:rgba(10,20,35,0.55)]"
       slides={[
         {
           title: 'Built for the trade',
