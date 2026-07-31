@@ -126,6 +126,9 @@ export interface ProductDetailFormProps<F extends Field> {
   // Delivery/pickup message (__fulfillment). When set, a grey box with a delivery icon is shown
   // below the purchase panel.
   fulfillmentMessage?: string;
+  // First trust-block row label (__delivery custom field, e.g. "Same Day Pickup"). Falls back to
+  // the default label when absent.
+  deliveryMessage?: string;
   // Variant-aware stock badge above the quantity: 'in' -> green "In stock", { low: N } -> dark red
   // "Only N in stock" (1–4 available), 'out' -> red "Out of stock". Consistent with the CTA.
   stockStatus?: 'in' | 'out' | { low: number };
@@ -151,6 +154,7 @@ export function ProductDetailForm<F extends Field>({
   backorderDisplayData,
   optionDependencyMap,
   fulfillmentMessage,
+  deliveryMessage,
   stockStatus,
 }: ProductDetailFormProps<F>) {
   const router = useRouter();
@@ -550,14 +554,22 @@ export function ProductDetailForm<F extends Field>({
               </p>
             </div>
           )}
-          {/* Trust / service block: three small icon + label rows under the purchase panel. */}
+          {/* Trust / service block: three small icon + label rows under the purchase panel. The
+              first row's label comes from the __delivery custom field (deliveryMessage) when set. */}
           <ul className="flex flex-col gap-3 rounded-xl border border-contrast-100 p-4">
-            {TRUST_ITEMS.map((item) => (
-              <li className="flex items-center gap-3" key={item.label}>
-                <span className="shrink-0 text-foreground">{item.icon}</span>
-                <span className="text-xs font-medium text-foreground">{item.label}</span>
-              </li>
-            ))}
+            {TRUST_ITEMS.map((item, idx) => {
+              const label =
+                idx === 0 && deliveryMessage != null && deliveryMessage !== ''
+                  ? deliveryMessage
+                  : item.label;
+
+              return (
+                <li className="flex items-center gap-3" key={item.label}>
+                  <span className="shrink-0 text-foreground">{item.icon}</span>
+                  <span className="text-xs font-medium text-foreground">{label}</span>
+                </li>
+              );
+            })}
           </ul>
           </div>
         </div>

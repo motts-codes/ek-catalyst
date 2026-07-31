@@ -94,6 +94,8 @@ export interface ProductDetailProps<F extends Field> {
   optionDependencyMap?: Record<number, number[]>;
   // Delivery/pickup message (from the __fulfillment custom field). Shown in the purchase panel.
   fulfillmentMessage?: string;
+  // First trust-block row label (from the __delivery custom field, e.g. "Same Day Pickup").
+  deliveryMessage?: string;
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -156,6 +158,7 @@ export function ProductDetail<F extends Field>({
   recaptchaSiteKey,
   optionDependencyMap,
   fulfillmentMessage,
+  deliveryMessage,
 }: ProductDetailProps<F>) {
   return (
     <section className="@container">
@@ -262,6 +265,7 @@ export function ProductDetail<F extends Field>({
                           }
                           fields={fields}
                           fulfillmentMessage={fulfillmentMessage}
+                          deliveryMessage={deliveryMessage}
                           optionDependencyMap={optionDependencyMap}
                           header={
                             <>

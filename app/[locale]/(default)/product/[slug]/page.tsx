@@ -146,6 +146,12 @@ export default async function Product({ params, searchParams }: Props) {
     .find((field) => field.name === '__fulfillment')
     ?.value?.trim();
 
+  // The __delivery custom field drives the first trust-block row (e.g. "Same Day Pickup").
+  // Absent -> the row falls back to its default label.
+  const deliveryMessage = removeEdgesAndNodes(baseProduct.customFields)
+    .find((field) => field.name === '__delivery')
+    ?.value?.trim();
+
   // "N bought in past month" social-proof count, from the __bought_last_month custom field.
   // Framework is real (see docs/BOUGHT-COUNT-SYNC.md): a scheduled job will write actual last-30-day
   // order tallies into this field. For now (sandbox store, no orders) it's seeded with dummy values
@@ -695,6 +701,7 @@ export default async function Product({ params, searchParams }: Props) {
           fields={productOptionsTransformer(baseProduct.productOptions)}
           optionDependencyMap={buildOptionDependencyMap(baseProduct.variants?.edges)}
           fulfillmentMessage={fulfillmentMessage}
+          deliveryMessage={deliveryMessage}
           incrementLabel={t('ProductDetails.increaseQuantity')}
           loadMoreImagesAction={getMoreProductImages}
           prefetch={true}
