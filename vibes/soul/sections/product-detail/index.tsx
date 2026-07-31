@@ -35,6 +35,9 @@ interface ProductDetailProduct {
   subtitleHref?: string;
   /** Variant-specific SKU, shown under the product name. */
   sku?: Streamable<string | null>;
+  /** Units sold in the past month (from the __bought_last_month custom field). Drives the small
+   *  grey social-proof badge under the name; shown only when >= the display threshold. */
+  boughtLastMonth?: number;
   badge?: string;
   /**
    * Marketing pills shown above the product name (e.g. Bestseller, Trending).
@@ -108,6 +111,22 @@ export interface ProductDetailProps<F extends Field> {
  * }
  * ```
  */
+// Threshold below which the "bought in past month" badge is hidden (a low count shouldn't advertise
+// weak demand). At/above it, round DOWN to a friendly bucket so it reads as social proof.
+const BOUGHT_BADGE_MIN = 25;
+
+function boughtBadgeLabel(count?: number): string | null {
+  if (count == null || !Number.isFinite(count) || count < BOUGHT_BADGE_MIN) {
+    return null;
+  }
+
+  if (count >= 1000) return `${Math.floor(count / 1000)}K+`;
+  if (count >= 100) return `${Math.floor(count / 100) * 100}+`;
+  if (count >= 50) return '50+';
+
+  return '25+';
+}
+
 export function ProductDetail<F extends Field>({
   product: streamableProduct,
   action,
@@ -226,8 +245,16 @@ export function ProductDetail<F extends Field>({
                             >
                               {(description) =>
                                 Boolean(description) && (
-                                  <div className="prose prose-sm max-w-none border-t border-[var(--product-detail-border,hsl(var(--contrast-100)))] py-4 [&>div>*:first-child]:mt-0 [&>div>*:last-child]:mb-0">
-                                    {description}
+                                  <div className="mt-6">
+                                    {/* Heading styled like the option labels (FINISH / CAPACITY).
+                                        "About this item" (Amazon convention) reads well over the
+                                        bulleted descriptions and is fine over prose too. */}
+                                    <p className="mb-2 block font-mono text-xs uppercase text-[var(--label-light-text,hsl(var(--contrast-500)))]">
+                                      About this item
+                                    </p>
+                                    <div className="prose prose-sm max-w-none [&>div>*:first-child]:mt-0 [&>div>*:last-child]:mb-0 [&_li]:before:mr-2 [&_li]:before:content-['–'] [&_ul>li]:pl-0 [&_ul]:list-none [&_ul]:pl-0">
+                                      {description}
+                                    </div>
                                   </div>
                                 )
                               }
@@ -364,6 +391,18 @@ export function ProductDetail<F extends Field>({
                                   )}
                                 </Stream>
                               </div>
+                              {/* "N+ bought in past month" social proof — plain grey text, above the
+                                  divider below the price. Driven by the __bought_last_month custom
+                                  field (threshold + bucketing via boughtBadgeLabel). */}
+                              {boughtBadgeLabel(product.boughtLastMonth) != null && (
+                                <p className="mb-3 text-xs text-contrast-400">
+                                  {/* "N+ bought" in black for emphasis; "in past month" stays grey. */}
+                                  <span className="font-semibold text-foreground">
+                                    {boughtBadgeLabel(product.boughtLastMonth)} bought
+                                  </span>{' '}
+                                  in past month
+                                </p>
+                              )}
                               <hr className="mb-4 w-full border-t border-[hsl(var(--product-detail-divider))]" />
                               {/* Mobile gallery moved to the top of the grid (image-first layout);
                                   it no longer renders here between price and summary. */}

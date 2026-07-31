@@ -46,6 +46,35 @@ import { revalidateCart } from './actions/revalidate-cart';
 import { FulfillmentIcon } from './fulfillment-icon';
 import { Field, schema, SchemaRawShape } from './schema';
 
+// Small trust/service reassurances shown under the purchase panel. Icons are inline Material-style
+// SVGs (no extra deps); labels are static for now.
+const TRUST_ITEMS: Array<{ label: string; icon: ReactNode }> = [
+  {
+    label: 'Same Day Pickup',
+    icon: (
+      <svg fill="currentColor" height="22" viewBox="0 -960 960 960" width="22" aria-hidden>
+        <path d="M240-160q-50 0-85-35t-35-85H40v-440q0-33 23.5-56.5T120-800h560v160h120l120 160v200h-80q0 50-35 85t-85 35q-50 0-85-35t-35-85H360q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T280-280q0-17-11.5-28.5T240-320q-17 0-28.5 11.5T200-280q0 17 11.5 28.5T240-240Zm480 0q17 0 28.5-11.5T760-280q0-17-11.5-28.5T720-320q-17 0-28.5 11.5T680-280q0 17 11.5 28.5T720-240ZM680-360h170l-90-120h-80v120Z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Price Match Guarantee',
+    icon: (
+      <svg fill="currentColor" height="22" viewBox="0 -960 960 960" width="22" aria-hidden>
+        <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q97-30 162-118.5T718-480H480v-315l-240 90v207q0 7 2 18h238v316Z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Returns Policy',
+    icon: (
+      <svg fill="currentColor" height="22" viewBox="0 -960 960 960" width="22" aria-hidden>
+        <path d="M280-80 120-240l160-160 56 58-62 62h406v-160h80v240H274l62 62-56 58Zm-40-440v-240h486l-62-62 56-58 160 160-160 160-56-58 62-62H320v160h-80Z" />
+      </svg>
+    ),
+  },
+];
+
 type Action<S, P> = (state: Awaited<S>, payload: P) => S | Promise<S>;
 
 interface State<F extends Field> {
@@ -453,8 +482,11 @@ export function ProductDetailForm<F extends Field>({
             )}
           </div>
           )}
+          {/* Description at the bottom of the LEFT column (under the options). */}
+          {descriptionSlot != null && <div className="pt-2">{descriptionSlot}</div>}
           </div>
-          {/* RIGHT (30%): purchase panel (quantity + buttons) and, below it, the fulfillment box. */}
+          {/* RIGHT (30%): purchase panel (quantity + buttons), the fulfillment box, and a small
+              trust/service block (pickup / price match / returns). */}
           <div className="space-y-4 @5xl:sticky @5xl:top-4">
           <div className="space-y-4 rounded-xl border border-contrast-100 bg-[#f5f5f5] p-4">
             {hasUnselectedRequiredOption ? (
@@ -518,10 +550,16 @@ export function ProductDetailForm<F extends Field>({
               </p>
             </div>
           )}
+          {/* Trust / service block: three small icon + label rows under the purchase panel. */}
+          <ul className="flex flex-col gap-3 rounded-xl border border-contrast-100 p-4">
+            {TRUST_ITEMS.map((item) => (
+              <li className="flex items-center gap-3" key={item.label}>
+                <span className="shrink-0 text-foreground">{item.icon}</span>
+                <span className="text-xs font-medium text-foreground">{item.label}</span>
+              </li>
+            ))}
+          </ul>
           </div>
-          {/* Description as its own grid item: under the left column on desktop (col-start-1), but
-              kept after the purchase panel in DOM order so add-to-cart stays high on mobile. */}
-          {descriptionSlot != null && <div className="@5xl:col-start-1">{descriptionSlot}</div>}
         </div>
       </form>
     </FormProvider>

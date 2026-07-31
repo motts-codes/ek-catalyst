@@ -146,6 +146,16 @@ export default async function Product({ params, searchParams }: Props) {
     .find((field) => field.name === '__fulfillment')
     ?.value?.trim();
 
+  // "N bought in past month" social-proof count, from the __bought_last_month custom field.
+  // Framework is real (see docs/BOUGHT-COUNT-SYNC.md): a scheduled job will write actual last-30-day
+  // order tallies into this field. For now (sandbox store, no orders) it's seeded with dummy values
+  // on a few products. Absent / non-numeric / below threshold -> no badge.
+  const boughtLastMonthRaw = removeEdgesAndNodes(baseProduct.customFields)
+    .find((field) => field.name === '__bought_last_month')
+    ?.value?.replace(/[^0-9]/g, '');
+  const boughtLastMonth =
+    boughtLastMonthRaw && boughtLastMonthRaw !== '' ? Number(boughtLastMonthRaw) : undefined;
+
   // Marketing pills above the product name, driven by the __is_bestseller / __is_trending custom
   // fields (only when the value is exactly "yes"). Bestseller shows first. Products without these
   // fields show no pills. The __ prefix keeps them out of the Product Details spec table (which
@@ -707,6 +717,7 @@ export default async function Product({ params, searchParams }: Props) {
             subtitle: baseProduct.brand?.name,
             subtitleHref: baseProduct.brand?.path,
             sku: streamableProductSku,
+            boughtLastMonth,
             badges,
             rating: baseProduct.reviewSummary.averageRating,
             accordions: streameableAccordions,
