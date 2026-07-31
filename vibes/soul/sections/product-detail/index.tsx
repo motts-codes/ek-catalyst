@@ -7,6 +7,7 @@ import { AnimatedUnderline } from '@/vibes/soul/primitives/animated-underline';
 import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { type Breadcrumb, Breadcrumbs } from '@/vibes/soul/sections/breadcrumbs';
+import { AboutThisItem } from '@/vibes/soul/sections/product-detail/about-this-item';
 import {
   ProductGallery,
   ProductGalleryLoadMoreAction,
@@ -113,20 +114,22 @@ export interface ProductDetailProps<F extends Field> {
  * }
  * ```
  */
-// Threshold below which the "bought in past month" badge is hidden (a low count shouldn't advertise
-// weak demand). At/above it, round DOWN to a friendly bucket so it reads as social proof.
-const BOUGHT_BADGE_MIN = 25;
+// The "bought in past month" badge is only shown when more than this many were sold (a very low
+// count shouldn't advertise weak demand). Counts of 5 or fewer hide the line entirely.
+const BOUGHT_BADGE_MIN = 5;
 
 function boughtBadgeLabel(count?: number): string | null {
-  if (count == null || !Number.isFinite(count) || count < BOUGHT_BADGE_MIN) {
+  if (count == null || !Number.isFinite(count) || count <= BOUGHT_BADGE_MIN) {
     return null;
   }
 
+  // Larger counts round DOWN to a friendly "N+" bucket; small counts (6–49) show the exact number
+  // so we never over-state (e.g. 8 sold shouldn't read as "25+").
   if (count >= 1000) return `${Math.floor(count / 1000)}K+`;
   if (count >= 100) return `${Math.floor(count / 100) * 100}+`;
   if (count >= 50) return '50+';
 
-  return '25+';
+  return `${count}`;
 }
 
 export function ProductDetail<F extends Field>({
@@ -162,7 +165,7 @@ export function ProductDetail<F extends Field>({
 }: ProductDetailProps<F>) {
   return (
     <section className="@container">
-      <div className="group/product-detail mx-auto w-full max-w-screen-2xl px-4 pb-10 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-20">
+      <div className="group/product-detail mx-auto w-full max-w-screen-2xl px-4 pb-24 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-20">
         {breadcrumbs && (
           // Smaller gap below the breadcrumb on mobile (name sits right below it there); larger on
           // desktop where the gap separates the breadcrumb from the gallery/details row.
@@ -248,17 +251,10 @@ export function ProductDetail<F extends Field>({
                             >
                               {(description) =>
                                 Boolean(description) && (
-                                  <div className="mt-6">
-                                    {/* Heading styled like the option labels (FINISH / CAPACITY).
-                                        "About this item" (Amazon convention) reads well over the
-                                        bulleted descriptions and is fine over prose too. */}
-                                    <p className="mb-2 block font-mono text-xs uppercase text-[var(--label-light-text,hsl(var(--contrast-500)))]">
-                                      About this item
-                                    </p>
-                                    <div className="prose prose-sm max-w-none [&>div>*:first-child]:mt-0 [&>div>*:last-child]:mb-0 [&_li]:before:mr-2 [&_li]:before:content-['–'] [&_ul>li]:pl-0 [&_ul]:list-none [&_ul]:pl-0">
-                                      {description}
-                                    </div>
-                                  </div>
+                                  // Accordion at every size (user can always open/close). Defaults
+                                  // open on desktop, closed on mobile (keeps add-to-cart in the first
+                                  // fold). "+"/"−" indicator after the heading.
+                                  <AboutThisItem>{description}</AboutThisItem>
                                 )
                               }
                             </Stream>
@@ -399,7 +395,7 @@ export function ProductDetail<F extends Field>({
                                   divider below the price. Driven by the __bought_last_month custom
                                   field (threshold + bucketing via boughtBadgeLabel). */}
                               {boughtBadgeLabel(product.boughtLastMonth) != null && (
-                                <p className="mb-3 text-xs text-contrast-400">
+                                <p className="mb-3 mt-3 text-xs text-contrast-400">
                                   {/* "N+ bought" in black for emphasis; "in past month" stays grey. */}
                                   <span className="font-semibold text-foreground">
                                     {boughtBadgeLabel(product.boughtLastMonth)} bought
@@ -407,7 +403,8 @@ export function ProductDetail<F extends Field>({
                                   in past month
                                 </p>
                               )}
-                              <hr className="mb-4 w-full border-t border-[hsl(var(--product-detail-divider))]" />
+                              {/* >1rem gap below the divider before the options/summary. */}
+                              <hr className="mb-8 w-full border-t border-[hsl(var(--product-detail-divider))]" />
                               {/* Mobile gallery moved to the top of the grid (image-first layout);
                                   it no longer renders here between price and summary. */}
                               <div className="group/product-summary">

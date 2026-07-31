@@ -46,11 +46,12 @@ import { revalidateCart } from './actions/revalidate-cart';
 import { FulfillmentIcon } from './fulfillment-icon';
 import { Field, schema, SchemaRawShape } from './schema';
 
-// Small trust/service reassurances shown under the purchase panel. Icons are inline Material-style
-// SVGs (no extra deps); labels are static for now.
-const TRUST_ITEMS: Array<{ label: string; icon: ReactNode }> = [
+// Small trust/service reassurances shown under the purchase panel. Each is a link to its policy
+// page (hrefs are '#' placeholders for now). Icons are inline Material-style SVGs (no extra deps).
+const TRUST_ITEMS: Array<{ label: string; href: string; icon: ReactNode }> = [
   {
     label: 'Same Day Pickup',
+    href: '#', // TODO: shipping/pickup page
     icon: (
       <svg fill="currentColor" height="22" viewBox="0 -960 960 960" width="22" aria-hidden>
         <path d="M240-160q-50 0-85-35t-35-85H40v-440q0-33 23.5-56.5T120-800h560v160h120l120 160v200h-80q0 50-35 85t-85 35q-50 0-85-35t-35-85H360q0 50-35 85t-85 35Zm0-80q17 0 28.5-11.5T280-280q0-17-11.5-28.5T240-320q-17 0-28.5 11.5T200-280q0 17 11.5 28.5T240-240Zm480 0q17 0 28.5-11.5T760-280q0-17-11.5-28.5T720-320q-17 0-28.5 11.5T680-280q0 17 11.5 28.5T720-240ZM680-360h170l-90-120h-80v120Z" />
@@ -59,6 +60,7 @@ const TRUST_ITEMS: Array<{ label: string; icon: ReactNode }> = [
   },
   {
     label: 'Price Match Guarantee',
+    href: '#', // TODO: price match page
     icon: (
       <svg fill="currentColor" height="22" viewBox="0 -960 960 960" width="22" aria-hidden>
         <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q97-30 162-118.5T718-480H480v-315l-240 90v207q0 7 2 18h238v316Z" />
@@ -67,6 +69,7 @@ const TRUST_ITEMS: Array<{ label: string; icon: ReactNode }> = [
   },
   {
     label: 'Returns Policy',
+    href: '#', // TODO: returns page
     icon: (
       <svg fill="currentColor" height="22" viewBox="0 -960 960 960" width="22" aria-hidden>
         <path d="M280-80 120-240l160-160 56 58-62 62h406v-160h80v240H274l62 62-56 58Zm-40-440v-240h486l-62-62 56-58 160 160-160 160-56-58 62-62H320v160h-80Z" />
@@ -517,9 +520,19 @@ export function ProductDetailForm<F extends Field>({
               </Label>
               <NumberInput
                 aria-label={quantityLabel}
-                // On press, use a clearly-lighter grey than the black hover background so the
-                // press is visibly distinct.
-                className="[&_button:active]:!bg-[#666666]"
+                // +/- states (scoped to this PDP stepper):
+                //  • regular icon: black (visible) — but NOT on hover (icon turns white there).
+                //  • regular hover: black bg + white icon (from the global vars).
+                //  • disabled (at min/max/stock): faded via disabled:opacity-30, and on hover a light
+                //    (near-white) bg instead of the dark actionable hover, since it can't be used.
+                //  • press: a lighter grey bg so the press reads distinct from the black hover.
+                className={clsx(
+                  '[&_button:active]:!bg-[#666666]',
+                  // Black icon only when the button is enabled and not hovered/active.
+                  '[&_button:not(:hover):not(:disabled)_svg]:!text-foreground',
+                  // Disabled buttons: light hover bg + keep the (faded) icon, no dark fill.
+                  '[&_button:disabled]:hover:!bg-contrast-100 [&_button:disabled_svg]:!text-foreground',
+                )}
                 decrementLabel={decrementLabel}
                 incrementLabel={incrementLabel}
                 max={maxQuantity}
@@ -532,7 +545,8 @@ export function ProductDetailForm<F extends Field>({
                 value={quantityControl.value}
               />
             </div>
-            <div className="flex flex-col gap-3">
+            {/* In-flow buttons — desktop only. On mobile they live in the sticky bottom bar. */}
+            <div className="hidden flex-col gap-3 @2xl:flex">
               <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
               <SubmitButton
                 disabled={ctaDisabled}
@@ -554,8 +568,10 @@ export function ProductDetailForm<F extends Field>({
               </p>
             </div>
           )}
-          {/* Trust / service block: three small icon + label rows under the purchase panel. The
-              first row's label comes from the __delivery custom field (deliveryMessage) when set. */}
+          {/* Trust / service block: three small icon + label rows under the purchase panel, each a
+              link to its policy page (href placeholders for now). The first row's label comes from
+              the __delivery custom field (deliveryMessage) when set. Only the TEXT is link-colored
+              (#2162a1, darker on hover); the icon keeps its own color (SVGs to be supplied). */}
           <ul className="flex flex-col gap-3 rounded-xl border border-contrast-100 p-4">
             {TRUST_ITEMS.map((item, idx) => {
               const label =
@@ -564,13 +580,53 @@ export function ProductDetailForm<F extends Field>({
                   : item.label;
 
               return (
-                <li className="flex items-center gap-3" key={item.label}>
-                  <span className="shrink-0 text-foreground">{item.icon}</span>
-                  <span className="text-xs font-medium text-foreground">{label}</span>
+                <li key={item.label}>
+                  <a className="group/trust flex items-center gap-3" href={item.href}>
+                    <span className="shrink-0 text-foreground">{item.icon}</span>
+                    <span className="text-xs font-normal text-[#2162a1] underline-offset-2 transition-colors group-hover/trust:text-[#16487a] group-hover/trust:underline">
+                      {label}
+                    </span>
+                  </a>
                 </li>
               );
             })}
           </ul>
+          </div>
+        </div>
+
+        {/* Mobile sticky bottom bar: Add to cart + Buy now side-by-side, fixed to the viewport
+            bottom so the CTAs are always reachable while scrolling. Hidden on desktop (@2xl), where
+            the in-flow buttons in the purchase panel are shown instead. Inside the <form> so both
+            buttons submit correctly. */}
+        <div className="fixed inset-x-0 bottom-0 z-40 flex items-stretch gap-2 border-t border-contrast-100 bg-white p-3 shadow-[0_-2px_10px_rgba(0,0,0,0.06)] @2xl:hidden">
+          {/* Compact quantity stepper. No `name` — it's display-only and drives quantityControl; the
+              actual form value is carried by the (CSS-hidden but still-mounted) desktop input above,
+              so we don't submit a duplicate quantity field. Black icons like the main stepper. */}
+          <NumberInput
+            aria-label={quantityLabel}
+            className="shrink-0 [&_button:active]:!bg-[#666666] [&_button:not(:hover):not(:disabled)_svg]:!text-foreground [&_input]:w-6"
+            decrementLabel={decrementLabel}
+            incrementLabel={incrementLabel}
+            max={maxQuantity}
+            min={minQuantity ?? 1}
+            onBlur={quantityControl.blur}
+            onChange={(e) => quantityControl.change(e.currentTarget.value)}
+            onFocus={quantityControl.focus}
+            value={quantityControl.value}
+          />
+          <div className="flex-1 [&_button]:h-full [&_button]:w-full">
+            <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+          </div>
+          <div className="flex-1 [&_button]:h-full [&_button]:w-full">
+            <SubmitButton
+              disabled={ctaDisabled}
+              onClick={() => {
+                buyNowRef.current = true;
+              }}
+              variant="tertiary"
+            >
+              Buy now
+            </SubmitButton>
           </div>
         </div>
       </form>
