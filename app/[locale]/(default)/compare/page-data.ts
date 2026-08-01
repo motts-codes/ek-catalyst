@@ -29,7 +29,9 @@ const ComparedProductsQuery = graphql(
                 unit
               }
               condition
-              customFields {
+              # Must match the argument used by ProductCardFragment's customFields (first: 50),
+              # otherwise BigCommerce rejects the merged selection with a "differing arguments" conflict.
+              customFields(first: 50) {
                 edges {
                   node {
                     entityId
