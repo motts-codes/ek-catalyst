@@ -1,9 +1,13 @@
+import { clsx } from 'clsx';
 import { ReactNode } from 'react';
 
 import { Link } from '~/components/link';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Accordion, AccordionItem } from '@/vibes/soul/primitives/accordion';
-import { AnimatedUnderline } from '@/vibes/soul/primitives/animated-underline';
+import {
+  AnimatedUnderline,
+  animatedUnderlineClassName,
+} from '@/vibes/soul/primitives/animated-underline';
 import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { type Breadcrumb, Breadcrumbs } from '@/vibes/soul/sections/breadcrumbs';
@@ -172,7 +176,7 @@ export function ProductDetail<F extends Field>({
           <div className="group/breadcrumbs mb-4 @2xl:mb-16">
             <Breadcrumbs
               breadcrumbs={breadcrumbs}
-              className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
+              className="[&_a:hover_span]:!text-foreground [&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
             />
           </div>
         )}
@@ -294,7 +298,11 @@ export function ProductDetail<F extends Field>({
                                   {Boolean(product.subtitle) &&
                                     (product.subtitleHref ? (
                                       <Link
-                                        className="group/subtitle mt-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-[10px] uppercase text-contrast-300 transition-colors hover:text-foreground"
+                                        className={clsx(
+                                          'mt-1 inline-block font-[family-name:var(--product-detail-subtitle-font-family,var(--font-family-mono))] text-[10px] uppercase text-contrast-300',
+                                          // Same animated red-underline hover as breadcrumbs / trust links.
+                                          animatedUnderlineClassName,
+                                        )}
                                         href={product.subtitleHref}
                                       >
                                         Shop {product.subtitle}
