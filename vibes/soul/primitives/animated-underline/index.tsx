@@ -13,7 +13,7 @@ export interface AnimatedUnderlineProps {
  * `position` in normal flow; combine with your own color/size classes.
  */
 export const animatedUnderlineClassName =
-  'bg-[linear-gradient(0deg,var(--animated-underline-hover,hsl(var(--primary))),var(--animated-underline-hover,hsl(var(--primary))))] bg-[length:0_2px] bg-[position:left_bottom] bg-no-repeat transition-[background-size,color] duration-300 hover:bg-[length:100%_2px] hover:text-foreground';
+  'bg-[linear-gradient(0deg,var(--animated-underline-hover,hsl(var(--primary))),var(--animated-underline-hover,hsl(var(--primary))))] bg-[length:0_1px] bg-[position:left_bottom] bg-no-repeat transition-[background-size,color] duration-300 hover:bg-[length:100%_1px] hover:text-foreground';
 
 // eslint-disable-next-line valid-jsdoc
 /**
@@ -32,7 +32,7 @@ export function AnimatedUnderline({ className, children }: AnimatedUnderlineProp
   return (
     <span
       className={clsx(
-        'origin-left font-[family-name:var(--animated-underline-font-family,var(--font-family-body))] font-semibold leading-normal text-[var(--animated-underline-text,hsl(var(--foreground)))] transition-[background-size,color] duration-300 [background:linear-gradient(0deg,var(--animated-underline-hover,hsl(var(--primary))),var(--animated-underline-hover,hsl(var(--primary))))_no-repeat_left_bottom_/_0_2px] hover:bg-[size:100%_2px] hover:!text-foreground group-focus/underline:bg-[size:100%_2px]',
+        'origin-left font-[family-name:var(--animated-underline-font-family,var(--font-family-body))] font-semibold leading-normal text-[var(--animated-underline-text,hsl(var(--foreground)))] transition-[background-size,color] duration-300 [background:linear-gradient(0deg,var(--animated-underline-hover,hsl(var(--primary))),var(--animated-underline-hover,hsl(var(--primary))))_no-repeat_left_bottom_/_0_1px] hover:bg-[size:100%_1px] hover:!text-foreground group-focus/underline:bg-[size:100%_1px]',
         className,
       )}
     >
