@@ -7,6 +7,7 @@ import { cache } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { createCompareLoader } from '@/vibes/soul/primitives/compare-drawer/loader';
+import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { getSessionCustomerAccessToken } from '~/auth';
@@ -22,6 +23,8 @@ import { MAX_COMPARE_LIMIT } from '../../../compare/page-data';
 import { getCompareProducts } from '../../fetch-compare-products';
 import { fetchFacetedSearch } from '../../fetch-faceted-search';
 import { productCardAddToCartAction } from '../../product-card-add-to-cart';
+
+import { getCabinetCollectionHeader, isCabinetCollection } from '~/lib/cabinets/cabinet-collection';
 
 import { CategoryViewed } from './_components/category-viewed';
 import { getCategoryPageData } from './page-data';
@@ -267,12 +270,19 @@ export default async function Category(props: Props) {
     }));
   });
 
+  // Cabinet collections (Avon, Dover — children of Cabinets) show a metafield-driven collection
+  // header above the normal product grid. Program defaults to Assembled (the primary line).
+  const cabinetHeader = (await isCabinetCollection(categoryId))
+    ? await getCabinetCollectionHeader(categoryId, 'assembled')
+    : null;
+
   return (
     <>
       <Slot
         label={`${category.name} top content`}
         snapshotId={`category-${categoryId}-top-content`}
       />
+      {cabinetHeader && <CabinetCollectionHeader data={cabinetHeader} program="assembled" />}
       <ProductsListSection
         breadcrumbs={breadcrumbs}
         // Hide the category name + count so the Makeswift "top content" (images/banner) leads the
