@@ -101,6 +101,22 @@ const getSalePercent = (
   return Number.isFinite(pct) && pct > 0 ? pct : undefined;
 };
 
+// Delivery/pickup message from the __delivery custom field (e.g. "Same Day Pickup", "2 Day pickup").
+// Shown on the card after the price. Absent -> nothing shown.
+const getDeliveryMessage = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+): string | undefined => {
+  if (!('customFields' in product)) {
+    return undefined;
+  }
+
+  const value = removeEdgesAndNodes(product.customFields)
+    .find((f) => f.name === '__delivery')
+    ?.value?.trim();
+
+  return value !== undefined && value !== '' ? value : undefined;
+};
+
 export const singleProductCardTransformer = (
   product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
   format: ExistingResultType<typeof getFormatter>,
@@ -119,6 +135,7 @@ export const singleProductCardTransformer = (
     subtitle: product.brand?.name ?? undefined,
     badges: getCardBadges(product),
     salePercent: getSalePercent(product),
+    deliveryMessage: getDeliveryMessage(product),
     requiresOptions:
       'productOptions' in product
         ? removeEdgesAndNodes(product.productOptions).some((o) => o.isRequired)

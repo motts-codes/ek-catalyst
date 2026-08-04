@@ -616,10 +616,14 @@ export function ProductDetailForm<F extends Field>({
               (#2162a1, darker on hover); the icon keeps its own color (SVGs to be supplied). */}
           <ul className="flex flex-col gap-2 rounded-xl border border-contrast-100 p-4 [&_svg]:size-6">
             {TRUST_ITEMS.map((item, idx) => {
-              const label =
-                idx === 0 && deliveryMessage != null && deliveryMessage !== ''
-                  ? deliveryMessage
-                  : item.label;
+              const isDeliveryRow = idx === 0;
+              // The delivery row (first) is driven by the __delivery custom field — only shown when
+              // that field is set. The other trust items always render.
+              if (isDeliveryRow && (deliveryMessage == null || deliveryMessage === '')) {
+                return null;
+              }
+
+              const label = isDeliveryRow ? deliveryMessage : item.label;
 
               return (
                 <li key={item.label}>
