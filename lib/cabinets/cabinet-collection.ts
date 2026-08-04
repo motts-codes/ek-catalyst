@@ -37,6 +37,40 @@ export async function isCabinetCollection(categoryId: number): Promise<boolean> 
   return (await getCabinetCollectionIds()).has(categoryId);
 }
 
+/**
+ * Whether a product belongs to the given program's listing. The RTA/Assembled split lives in the
+ * product NAME (e.g. "Avon Assembled …" / "Avon RTA …"); products with neither in the name are
+ * accessories (moldings, panels, fillers, samples) shown under BOTH programs. Non-collection items
+ * (e.g. mis-categorized closet products without the collection prefix) are excluded by requiring the
+ * name to start with the collection name.
+ */
+export function productMatchesProgram(
+  productName: string,
+  program: CabinetProgram,
+  collectionName: string,
+): boolean {
+  if (!productName.toLowerCase().startsWith(`${collectionName.toLowerCase()} `)) {
+    return false;
+  }
+
+  const hasRta = / RTA /i.test(productName);
+  const hasAssembled = / Assembled /i.test(productName);
+
+  // Accessory (neither program named) -> show under both programs.
+  if (!hasRta && !hasAssembled) {
+    return true;
+  }
+
+  return program === 'rta' ? hasRta : hasAssembled;
+}
+
+/** Parse the ?program= search param, defaulting to Assembled. */
+export function parseCabinetProgram(value: string | string[] | undefined): CabinetProgram {
+  const v = Array.isArray(value) ? value[0] : value;
+
+  return v === 'rta' ? 'rta' : 'assembled';
+}
+
 const CabinetCollectionQuery = graphql(`
   query CabinetCollectionQuery($entityId: Int!) {
     site {

@@ -117,18 +117,22 @@ export const getCabinetLines = cache(
           .value;
         const delivery = parseJson<Record<string, string>>(deliveryRaw)?.[program];
 
+        // Carry the program in the URL so the collection detail page scopes its grid + header to
+        // the same program (Assembled / RTA) the visitor came from.
+        const href = `${child.path}?program=${program}`;
+
         // sample.order_sample = { product_id, price } — for now the card links to the category page
         // (add-to-cart of a specific sample product is a later step).
         return {
           entityId: child.entityId,
           name: child.name,
-          href: child.path,
+          href,
           image: child.image ? { src: child.image.url, alt: child.image.altText } : undefined,
           price: pricing?.price,
           strikePrice: pricing?.strike_price,
           emiText: pricing?.emi_text,
           deliveryTime: delivery,
-          orderSampleHref: child.path,
+          orderSampleHref: href,
         };
       }),
     );

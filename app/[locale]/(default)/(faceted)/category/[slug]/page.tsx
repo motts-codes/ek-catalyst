@@ -24,7 +24,11 @@ import { getCompareProducts } from '../../fetch-compare-products';
 import { fetchFacetedSearch } from '../../fetch-faceted-search';
 import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
-import { getCabinetCollectionHeader, isCabinetCollection } from '~/lib/cabinets/cabinet-collection';
+import {
+  getCabinetCollectionHeader,
+  isCabinetCollection,
+  parseCabinetProgram,
+} from '~/lib/cabinets/cabinet-collection';
 
 import { CategoryViewed } from './_components/category-viewed';
 import { getCategoryPageData } from './page-data';
@@ -121,6 +125,14 @@ export default async function Category(props: Props) {
     customerAccessToken,
   );
 
+  // Cabinet collection pages (Avon, Dover) scope their grid + header to a program (Assembled / RTA)
+  // carried in ?program=. The RTA/Assembled split is by product name; accessories (neither) show
+  // under both.
+  const isCabinet = await isCabinetCollection(categoryId);
+  const cabinetProgram = isCabinet
+    ? parseCabinetProgram((await props.searchParams).program)
+    : undefined;
+
   if (!category) {
     return notFound();
   }
@@ -168,6 +180,11 @@ export default async function Category(props: Props) {
 
     const search = await streamableFacetedSearch;
     const products = search.products.items;
+
+    // NOTE: program (Assembled/RTA) filtering is intentionally NOT applied here. The split lives in
+    // the product name, and filtering the already-paginated result yields an incomplete grid. The
+    // correct fix is a "Program" search facet in BigCommerce — see docs/CABINET-FACETS.md. The
+    // header is still program-aware via ?program.
 
     const { defaultOutOfStockMessage, showOutOfStockMessage, showBackorderMessage } =
       settings?.inventory ?? {};
@@ -270,11 +287,12 @@ export default async function Category(props: Props) {
     }));
   });
 
-  // Cabinet collections (Avon, Dover — children of Cabinets) show a metafield-driven collection
-  // header above the normal product grid. Program defaults to Assembled (the primary line).
-  const cabinetHeader = (await isCabinetCollection(categoryId))
-    ? await getCabinetCollectionHeader(categoryId, 'assembled')
-    : null;
+  // Cabinet collections (Avon, Dover) show a metafield-driven collection header above the grid,
+  // scoped to the same program (Assembled / RTA) the visitor arrived with.
+  const cabinetHeader =
+    isCabinet && cabinetProgram
+      ? await getCabinetCollectionHeader(categoryId, cabinetProgram)
+      : null;
 
   return (
     <>
@@ -282,7 +300,9 @@ export default async function Category(props: Props) {
         label={`${category.name} top content`}
         snapshotId={`category-${categoryId}-top-content`}
       />
-      {cabinetHeader && <CabinetCollectionHeader data={cabinetHeader} program="assembled" />}
+      {cabinetHeader && cabinetProgram && (
+        <CabinetCollectionHeader data={cabinetHeader} program={cabinetProgram} />
+      )}
       <ProductsListSection
         breadcrumbs={breadcrumbs}
         // Hide the category name + count so the Makeswift "top content" (images/banner) leads the
