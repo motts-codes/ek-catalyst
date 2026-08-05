@@ -6,7 +6,7 @@ import { signOutAction } from '../actions';
 const TABS = [
   { key: 'collections', label: 'Collections', href: '/cabinet-admin?tab=collections' },
   { key: 'products', label: 'Products', href: '/cabinet-admin?tab=products' },
-  { key: 'program-faq', label: 'Program FAQ', href: '/cabinet-admin?tab=program-faq' },
+  { key: 'program-faq', label: 'Cabinet Assembly', href: '/cabinet-admin?tab=program-faq' },
 ] as const;
 
 export type AdminTab = (typeof TABS)[number]['key'];

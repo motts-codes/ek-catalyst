@@ -26,10 +26,11 @@ export function ProgramFaqEditor({ initial }: { initial: ProgramFaq }) {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-semibold">Program FAQ</h1>
+      <h1 className="mb-1 text-2xl font-semibold">Cabinet Assembly</h1>
       <p className="mb-4 max-w-2xl text-sm text-gray-500">
-        Shown on the cabinet shop pages (Assembled and RTA). This FAQ applies to the whole program —
-        for questions specific to one collection (Avon, Dover…), edit that collection instead.
+        Content shown on the cabinet shop pages (Assembled and RTA). For now this is the program-wide
+        FAQ — questions that apply to the whole program. For questions specific to one collection
+        (Avon, Dover…), edit that collection instead. More sections can be added here later.
       </p>
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
