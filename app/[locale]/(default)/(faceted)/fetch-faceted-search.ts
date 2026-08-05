@@ -180,7 +180,9 @@ interface ProductSearch {
 
 const getProductSearchResults = cache(
   async (
-    { limit = 9, after, before, sort, filters }: ProductSearch,
+    // 12 per page so the grid fills evenly at 2 / 3 / 4 columns (9 left a lone item in the last row
+    // on the 4-col desktop layout).
+    { limit = 12, after, before, sort, filters }: ProductSearch,
     currencyCode?: CurrencyCode,
     customerAccessToken?: string,
   ) => {
@@ -410,7 +412,7 @@ export const fetchFacetedSearch = cache(
     currencyCode?: CurrencyCode,
     customerAccessToken?: string,
   ) => {
-    const { after, before, limit = 9, sort, filters } = PublicToPrivateParams.parse(params);
+    const { after, before, limit = 12, sort, filters } = PublicToPrivateParams.parse(params);
 
     return getProductSearchResults(
       {

@@ -32,7 +32,8 @@ export const config = {
      * - robots.txt (robots route)
      * - images (static assets in /public/images — otherwise withRoutes tries to resolve them as
      *   BigCommerce entities and 404s)
+     * - cabinet-admin (internal admin panel — a top-level route, not locale-prefixed or a BC entity)
      */
-    '/((?!api|admin|_next/static|_next/image|_vercel|favicon.ico|xmlsitemap.php|sitemap.xml|robots.txt|images).*)',
+    '/((?!api|admin|cabinet-admin|_next/static|_next/image|_vercel|favicon.ico|xmlsitemap.php|sitemap.xml|robots.txt|images).*)',
   ],
 };
