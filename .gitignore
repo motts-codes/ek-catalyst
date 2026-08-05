@@ -63,3 +63,5 @@ bigcommerce-graphql.d.ts
 
 # BigCommerce deploy project link (machine/account-specific)
 .bigcommerce/
+
+__pycache__/
