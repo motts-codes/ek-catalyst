@@ -2,6 +2,8 @@ import { clsx } from 'clsx';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 
+import { Gallery } from './gallery';
+
 /**
  * Collection detail header shown ABOVE the product grid on a cabinet collection category page
  * (Avon, Dover). Everything here comes from the category's BigCommerce metafields — see
@@ -17,7 +19,10 @@ export interface CabinetSwatch {
 
 export interface CabinetCollectionHeaderData {
   name: string;
-  description?: string;
+  /** Overview HTML — the collection's long copy (replaces the native BC category description). */
+  overview?: string;
+  /** Gallery image URLs; images[0] is the main image. */
+  images?: string[];
   /** Merch info: line / door style / default finish. */
   line?: string;
   doorStyle?: string;
@@ -47,12 +52,16 @@ interface Props {
 export function CabinetCollectionHeader({ data, className }: Props) {
   const hasPricing = data.price != null && data.price !== '';
 
+  const images = (data.images ?? []).filter((u) => u !== '');
+
   return (
     <div className={clsx('border-b border-contrast-100 bg-white @container', className)}>
       <div className="mx-auto max-w-screen-2xl px-4 py-8 @xl:px-6 @4xl:px-8">
         <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-[1fr_auto] @3xl:items-start">
-          {/* Left: name, merch line, description, spec sheet. */}
+          {/* Left: gallery, name, merch line, overview, spec sheet. */}
           <div className="max-w-2xl">
+            {images.length > 0 && <Gallery images={images} name={data.name} />}
+
             <h1 className="font-heading text-3xl font-medium leading-tight @lg:text-4xl">
               {data.name}
             </h1>
@@ -99,10 +108,13 @@ export function CabinetCollectionHeader({ data, className }: Props) {
               </div>
             )}
 
-            {data.description != null && data.description !== '' && (
-              <p className="mt-4 text-sm leading-relaxed text-contrast-500 @xl:text-base">
-                {data.description}
-              </p>
+            {data.overview != null && data.overview !== '' && (
+              // Staff-authored HTML (same trust boundary as the native BC category description).
+              <div
+                className="prose prose-sm mt-4 max-w-none text-contrast-500 @xl:prose-base [&_a]:text-[#2162a1] [&_li]:my-1 [&_ul]:list-disc [&_ul]:pl-5"
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: data.overview }}
+              />
             )}
 
             {data.specSheetUrl != null && data.specSheetUrl !== '' && (

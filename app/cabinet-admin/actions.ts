@@ -51,6 +51,9 @@ export async function saveCollectionAction(
     revalidatePath('/cabinet-admin');
     revalidatePath('/cabinets/shop/assembled-cabinets');
     revalidatePath('/cabinets/shop/rta-cabinets');
+    // Refresh the collection detail pages (Avon, Dover…) where the header, overview, gallery,
+    // specifications, disclaimer, FAQ and assembly videos render.
+    revalidatePath('/cabinets', 'layout');
 
     return { ok: true };
   } catch (error) {

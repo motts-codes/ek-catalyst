@@ -143,6 +143,22 @@ const CabinetCollectionQuery = graphql(`
             }
           }
         }
+        content: metafields(namespace: "content") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
+        media: metafields(namespace: "media") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
       }
     }
   }
@@ -319,9 +335,17 @@ export const getCabinetCollectionHeader = cache(
       .filter((c): c is ColorOption => c != null)
       .map((c) => ({ id: c.id, name: c.name, hex: c.hex, image: c.image }));
 
+    // Overview (staff-authored HTML metafield) replaces the native BC category description for
+    // cabinet collections. Gallery images come from media.images (images[0] = main).
+    const overview = cat.content.edges?.find((e) => e.node.key === 'overview')?.node.value ?? '';
+    const images = (parseJson<string[]>(
+      cat.media.edges?.find((e) => e.node.key === 'images')?.node.value,
+    ) ?? []).filter((u): u is string => typeof u === 'string' && u !== '');
+
     return {
       name: cat.name,
-      description: cat.description ? stripHtml(cat.description) : undefined,
+      overview: overview !== '' ? overview : undefined,
+      images: images.length > 0 ? images : undefined,
       line: merch?.line,
       doorStyle: merch?.door_style,
       defaultFinish: merch?.default_finish,
@@ -338,6 +362,23 @@ export const getCabinetCollectionHeader = cache(
       orderSampleHref: undefined,
       orderSamplePrice: sample?.price,
     };
+  },
+);
+
+export interface CabinetCollectionContent {
+  specifications: string;
+  disclaimer: string;
+}
+
+/** Specifications + disclaimer HTML for a collection (staff-authored; rendered verbatim). */
+export const getCabinetCollectionContent = cache(
+  async (categoryId: number): Promise<CabinetCollectionContent> => {
+    const cat = await fetchCabinetCollection(categoryId);
+
+    const val = (key: string) =>
+      cat?.content.edges?.find((e) => e.node.key === key)?.node.value ?? '';
+
+    return { specifications: val('specifications'), disclaimer: val('disclaimer') };
   },
 );
 
@@ -380,14 +421,4 @@ function parseYouTubeId(url: string): string | null {
   }
 
   return null;
-}
-
-// Category description comes back as HTML; the header renders plain text.
-function stripHtml(html: string): string {
-  return html
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
 }

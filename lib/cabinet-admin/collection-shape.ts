@@ -55,7 +55,15 @@ export interface CollectionMetafields {
   spec: CollectionSpec;
   // assembly.videos = [{ name, url }] — per-collection assembly instruction videos (YouTube links).
   assembly: { videos: AssemblyVideo[] };
+  // content.* — HTML rich text authored by staff (rendered directly; same trust boundary as the
+  // native BC category description). Overview REPLACES the native category-description render for
+  // cabinets. Disclaimer is small print at the bottom. Specifications is its own section.
+  content: { overview: string; disclaimer: string; specifications: string };
+  // media.images = [url×5] — collection gallery; images[0] is the main image.
+  images: string[];
 }
+
+const IMAGE_SLOTS = 5;
 
 const emptyPricing = (): ProgramPricing => ({ price: '', strike_price: '', emi_text: '' });
 
@@ -74,7 +82,14 @@ export function emptyCollectionMetafields(): CollectionMetafields {
     },
     spec: { productLineId: '', constructionId: '', colorIds: [], defaultColorId: '' },
     assembly: { videos: [] },
+    content: { overview: '', disclaimer: '', specifications: '' },
+    images: Array.from({ length: IMAGE_SLOTS }, () => ''),
   };
+}
+
+// Raw metafield string (not JSON-parsed) — for HTML rich-text fields stored verbatim.
+function findRaw(mfs: Metafield[], namespace: string, key: string): string {
+  return mfs.find((m) => m.namespace === namespace && m.key === key)?.value ?? '';
 }
 
 function findValue(mfs: Metafield[], namespace: string, key: string): unknown {
@@ -121,6 +136,10 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
       }
     | undefined;
   const assembly = findValue(mfs, 'assembly', 'videos') as AssemblyVideo[] | undefined;
+  const imagesRaw = findValue(mfs, 'media', 'images') as string[] | undefined;
+  const images = Array.from({ length: IMAGE_SLOTS }, (_, i) =>
+    Array.isArray(imagesRaw) && typeof imagesRaw[i] === 'string' ? imagesRaw[i] : '',
+  );
 
   const normalizeFaqSide = (
     side: { headline?: string; items?: FaqItem[] } | undefined,
@@ -157,6 +176,12 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
         ? assembly.map((v) => ({ name: v.name ?? '', url: v.url ?? '' }))
         : [],
     },
+    content: {
+      overview: findRaw(mfs, 'content', 'overview'),
+      disclaimer: findRaw(mfs, 'content', 'disclaimer'),
+      specifications: findRaw(mfs, 'content', 'specifications'),
+    },
+    images,
   };
 }
 
@@ -246,6 +271,34 @@ export async function writeCollectionMetafields(
     JSON.stringify(
       data.assembly.videos.filter((v) => v.name.trim() !== '' || v.url.trim() !== ''),
     ),
+  );
+
+  // Rich-text content — stored as raw HTML strings (rendered verbatim on the storefront).
+  await upsertMetafield('categories', categoryId, 'content', 'overview', data.content.overview);
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'content',
+    'disclaimer',
+    data.content.disclaimer,
+  );
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'content',
+    'specifications',
+    data.content.specifications,
+  );
+
+  // Gallery images — fixed 5 slots (images[0] = main); trailing blanks preserved so slot order is
+  // stable, but a fully-empty gallery stores [].
+  const trimmedImages = data.images.slice(0, IMAGE_SLOTS).map((u) => u.trim());
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'media',
+    'images',
+    JSON.stringify(trimmedImages.some((u) => u !== '') ? trimmedImages : []),
   );
 }
 

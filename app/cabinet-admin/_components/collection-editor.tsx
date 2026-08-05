@@ -112,6 +112,45 @@ export function CollectionEditor({
           />
         </Group>
 
+        <Group title="Gallery Images">
+          <p className="text-xs text-gray-500">
+            Up to 5 image URLs. The first is the main image.
+          </p>
+          {data.images.map((url, i) => (
+            <Field
+              key={i}
+              label={i === 0 ? 'Main image URL' : `Image ${i + 1} URL`}
+              onChange={(v) =>
+                setData((d) => ({ ...d, images: d.images.map((u, idx) => (idx === i ? v : u)) }))
+              }
+              value={url}
+            />
+          ))}
+        </Group>
+
+        <Group title="Content">
+          <Textarea
+            label="Overview (HTML)"
+            onChange={(v) => setData((d) => ({ ...d, content: { ...d.content, overview: v } }))}
+            rows={6}
+            value={data.content.overview}
+          />
+          <Textarea
+            label="Specifications (HTML)"
+            onChange={(v) =>
+              setData((d) => ({ ...d, content: { ...d.content, specifications: v } }))
+            }
+            rows={6}
+            value={data.content.specifications}
+          />
+          <Textarea
+            label="Disclaimer (HTML) — small print shown at the bottom"
+            onChange={(v) => setData((d) => ({ ...d, content: { ...d.content, disclaimer: v } }))}
+            rows={3}
+            value={data.content.disclaimer}
+          />
+        </Group>
+
         <Group title="Assembly Instructions">
           <AssemblyEditor
             onChange={(videos) => setData((d) => ({ ...d, assembly: { videos } }))}
@@ -196,6 +235,31 @@ function set<T>(obj: T, path: string[], value: string): T {
   if (path.length === 1) return { ...record, [head]: value } as T;
 
   return { ...record, [head]: set(record[head], path.slice(1), value) } as T;
+}
+
+// Multi-line text input for rich-text HTML fields (Overview / Specifications / Disclaimer).
+function Textarea({
+  label,
+  value,
+  onChange,
+  rows,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  rows: number;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs font-medium text-gray-600">{label}</span>
+      <textarea
+        className="w-full rounded-lg border border-gray-300 px-3 py-1.5 font-mono text-xs focus:border-gray-900 focus:outline-none"
+        onChange={(e) => onChange(e.target.value)}
+        rows={rows}
+        value={value}
+      />
+    </label>
+  );
 }
 
 // Single-select dropdown fed by an attribute master-list ({id, name}).

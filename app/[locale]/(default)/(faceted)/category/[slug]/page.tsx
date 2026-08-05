@@ -10,6 +10,7 @@ import { createCompareLoader } from '@/vibes/soul/primitives/compare-drawer/load
 import { CabinetAssembly } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CabinetSpecs } from '@/vibes/soul/sections/cabinet-specs';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { getSessionCustomerAccessToken } from '~/auth';
@@ -28,6 +29,7 @@ import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import {
   getCabinetAssemblyVideos,
+  getCabinetCollectionContent,
   getCabinetCollectionFaq,
   getCabinetCollectionHeader,
   isCabinetCollection,
@@ -307,6 +309,8 @@ export default async function Category(props: Props) {
 
   // Assembly-instruction videos (per collection, not program-specific).
   const cabinetAssembly = isCabinet ? await getCabinetAssemblyVideos(categoryId) : [];
+  // Specifications + disclaimer (per collection).
+  const cabinetContent = isCabinet ? await getCabinetCollectionContent(categoryId) : null;
 
   return (
     <>
@@ -360,8 +364,14 @@ export default async function Category(props: Props) {
         label={`${category.name} bottom content`}
         snapshotId={`category-${categoryId}-bottom-content`}
       />
+      {Boolean(cabinetContent?.specifications) && (
+        <CabinetSpecs specifications={cabinetContent?.specifications} />
+      )}
       {cabinetAssembly.length > 0 && <CabinetAssembly videos={cabinetAssembly} />}
       {cabinetFaq && <CabinetFaq data={cabinetFaq} />}
+      {Boolean(cabinetContent?.disclaimer) && (
+        <CabinetSpecs disclaimer={cabinetContent?.disclaimer} />
+      )}
       <Stream value={streamableFacetedSearch}>
         {(search) => (
           <CategoryViewed
