@@ -8,6 +8,7 @@ import {
   getAdminEmail,
   isAdminAuthenticated,
 } from '~/lib/cabinet-admin/admin-auth';
+import { type CabinetAttributes, writeCabinetAttributes } from '~/lib/cabinet-admin/attributes-shape';
 import {
   type CollectionMetafields,
   type ProgramFaq,
@@ -50,6 +51,26 @@ export async function saveCollectionAction(
     revalidatePath('/cabinet-admin');
     revalidatePath('/cabinets/shop/assembled-cabinets');
     revalidatePath('/cabinets/shop/rta-cabinets');
+
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Save failed.' };
+  }
+}
+
+/** Save the cabinet attribute master-lists (category 863): product lines, constructions, colors. */
+export async function saveAttributesAction(data: CabinetAttributes): Promise<ActionResult> {
+  const adminEmail = await getAdminEmail();
+
+  if (!adminEmail || !(await isAdminAuthenticated())) {
+    return { ok: false, error: 'Not authenticated.' };
+  }
+
+  try {
+    await writeCabinetAttributes(data);
+    revalidatePath('/cabinet-admin');
+    // Attribute changes (e.g. a hex fix) propagate to every collection page.
+    revalidatePath('/cabinets', 'layout');
 
     return { ok: true };
   } catch (error) {

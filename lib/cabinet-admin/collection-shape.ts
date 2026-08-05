@@ -1,4 +1,8 @@
+import { readCabinetAttributes } from './attributes-shape';
+import { CABINETS_PARENT_CATEGORY_ID } from './collection-shape-const';
 import { listCabinetCollections, listMetafields, type Metafield, upsertMetafield } from './metafields-api';
+
+export { CABINETS_PARENT_CATEGORY_ID };
 
 // Structured shape of a cabinet collection's editable metafields. The panel edits these fields; the
 // helpers below convert to/from the stored JSON-string metafields (namespace.key = value).
@@ -12,6 +16,20 @@ export interface ProgramPricing {
 export interface FaqItem {
   q: string;
   a: string;
+}
+
+export interface AssemblyVideo {
+  name: string;
+  url: string;
+}
+
+// A collection's selections from the attribute master-lists (see attributes-shape.ts). Options are
+// referenced by stable id; dangling ids (option deleted from the master list) are ignored on read.
+export interface CollectionSpec {
+  productLineId: string;
+  constructionId: string;
+  colorIds: string[];
+  defaultColorId: string;
 }
 
 export interface CollectionMetafields {
@@ -31,6 +49,12 @@ export interface CollectionMetafields {
     assembled: { headline: string; items: FaqItem[] };
     rta: { headline: string; items: FaqItem[] };
   };
+  // spec.info = { product_line_id, construction_id, color_ids[], default_color_id } — references into
+  // the attribute master-lists on 863. Product Line replaces the old free-text merch.line;
+  // Construction replaces merch.door_style; the default color supersedes merch.default_finish.
+  spec: CollectionSpec;
+  // assembly.videos = [{ name, url }] — per-collection assembly instruction videos (YouTube links).
+  assembly: { videos: AssemblyVideo[] };
 }
 
 const emptyPricing = (): ProgramPricing => ({ price: '', strike_price: '', emi_text: '' });
@@ -48,6 +72,8 @@ export function emptyCollectionMetafields(): CollectionMetafields {
       assembled: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
       rta: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
     },
+    spec: { productLineId: '', constructionId: '', colorIds: [], defaultColorId: '' },
+    assembly: { videos: [] },
   };
 }
 
@@ -86,6 +112,15 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
   const faq = findValue(mfs, 'faq', 'by_program') as
     | Partial<CollectionMetafields['faq']>
     | undefined;
+  const spec = findValue(mfs, 'spec', 'info') as
+    | {
+        product_line_id?: string;
+        construction_id?: string;
+        color_ids?: string[];
+        default_color_id?: string;
+      }
+    | undefined;
+  const assembly = findValue(mfs, 'assembly', 'videos') as AssemblyVideo[] | undefined;
 
   const normalizeFaqSide = (
     side: { headline?: string; items?: FaqItem[] } | undefined,
@@ -110,6 +145,17 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
     faq: {
       assembled: normalizeFaqSide(faq?.assembled, base.faq.assembled),
       rta: normalizeFaqSide(faq?.rta, base.faq.rta),
+    },
+    spec: {
+      productLineId: spec?.product_line_id ?? '',
+      constructionId: spec?.construction_id ?? '',
+      colorIds: Array.isArray(spec?.color_ids) ? spec.color_ids : [],
+      defaultColorId: spec?.default_color_id ?? '',
+    },
+    assembly: {
+      videos: Array.isArray(assembly)
+        ? assembly.map((v) => ({ name: v.name ?? '', url: v.url ?? '' }))
+        : [],
     },
   };
 }
@@ -170,14 +216,43 @@ export async function writeCollectionMetafields(
       rta: cleanSide(data.faq.rta),
     }),
   );
+
+  // Attribute selections (references into the 863 master-lists). Drop a default color that isn't in
+  // the selected set so the two stay consistent.
+  const colorIds = data.spec.colorIds.filter(Boolean);
+  const defaultColorId = colorIds.includes(data.spec.defaultColorId)
+    ? data.spec.defaultColorId
+    : (colorIds[0] ?? '');
+
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'spec',
+    'info',
+    JSON.stringify({
+      product_line_id: data.spec.productLineId,
+      construction_id: data.spec.constructionId,
+      color_ids: colorIds,
+      default_color_id: defaultColorId,
+    }),
+  );
+
+  // Assembly videos — drop rows with no name AND no url.
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'assembly',
+    'videos',
+    JSON.stringify(
+      data.assembly.videos.filter((v) => v.name.trim() !== '' || v.url.trim() !== ''),
+    ),
+  );
 }
 
 // ── Program-wide FAQ ────────────────────────────────────────────────────────────────────────────
 // The Cabinets parent category (863) stores a faq.by_program metafield shown on the /cabinets/shop/*
 // listing pages — one FAQ per program, distinct from the per-collection FAQ above (same JSON shape,
 // different category). Edited on the "Program FAQ" admin tab.
-
-export const CABINETS_PARENT_CATEGORY_ID = 863;
 
 export interface ProgramFaq {
   assembled: { headline: string; items: FaqItem[] };
@@ -237,18 +312,27 @@ export interface CollectionRow {
 }
 
 export async function listCollectionRows(): Promise<CollectionRow[]> {
-  const collections = await listCabinetCollections();
+  const [collections, attributes] = await Promise.all([
+    listCabinetCollections(),
+    readCabinetAttributes(),
+  ]);
+
+  const lineName = (id: string) => attributes.productLines.find((o) => o.id === id)?.name ?? '';
+  const constructionName = (id: string) =>
+    attributes.constructions.find((o) => o.id === id)?.name ?? '';
+  const colorName = (id: string) => attributes.colors.find((o) => o.id === id)?.name ?? '';
 
   return Promise.all(
     collections.map(async (c) => {
       const mf = await readCollectionMetafields(c.id);
 
+      // Prefer the attribute selection; fall back to the legacy free-text merch fields.
       return {
         id: c.id,
         name: c.name,
-        line: mf.merch.line,
-        doorStyle: mf.merch.door_style,
-        defaultFinish: mf.merch.default_finish,
+        line: lineName(mf.spec.productLineId) || mf.merch.line,
+        doorStyle: constructionName(mf.spec.constructionId) || mf.merch.door_style,
+        defaultFinish: colorName(mf.spec.defaultColorId) || mf.merch.default_finish,
       };
     }),
   );

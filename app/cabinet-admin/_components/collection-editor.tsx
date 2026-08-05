@@ -3,7 +3,11 @@
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 
-import { type CollectionMetafields } from '~/lib/cabinet-admin/collection-shape';
+import { type CabinetAttributes } from '~/lib/cabinet-admin/attributes-shape';
+import {
+  type AssemblyVideo,
+  type CollectionMetafields,
+} from '~/lib/cabinet-admin/collection-shape';
 
 import { saveCollectionAction } from '../actions';
 
@@ -15,7 +19,13 @@ interface CollectionData {
   metafields: CollectionMetafields;
 }
 
-export function CollectionEditor({ collection }: { collection: CollectionData }) {
+export function CollectionEditor({
+  collection,
+  attributes,
+}: {
+  collection: CollectionData;
+  attributes: CabinetAttributes;
+}) {
   const [data, setData] = useState<CollectionMetafields>(collection.metafields);
   const [pending, startTransition] = useTransition();
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
@@ -25,7 +35,7 @@ export function CollectionEditor({ collection }: { collection: CollectionData })
     startTransition(async () => {
       const res = await saveCollectionAction(collection.id, data);
 
-      setStatus({ ok: res.ok, msg: res.ok ? 'Saved.' : res.error ?? 'Save failed.' });
+      setStatus({ ok: res.ok, msg: res.ok ? 'Saved.' : (res.error ?? 'Save failed.') });
     });
   };
 
@@ -71,21 +81,41 @@ export function CollectionEditor({ collection }: { collection: CollectionData })
           </div>
         </Group>
 
-        <Group title="Merchandising">
-          <Field
-            label="Line"
-            onChange={(v) => setData((d) => set(d, ['merch', 'line'], v))}
-            value={data.merch.line}
+        <Group title="Specification">
+          <Select
+            emptyLabel="— Select a product line —"
+            label="Product Line"
+            onChange={(v) => setData((d) => ({ ...d, spec: { ...d.spec, productLineId: v } }))}
+            options={attributes.productLines}
+            value={data.spec.productLineId}
           />
-          <Field
-            label="Door style"
-            onChange={(v) => setData((d) => set(d, ['merch', 'door_style'], v))}
-            value={data.merch.door_style}
+          <Select
+            emptyLabel="— Select a construction —"
+            label="Construction"
+            onChange={(v) => setData((d) => ({ ...d, spec: { ...d.spec, constructionId: v } }))}
+            options={attributes.constructions}
+            value={data.spec.constructionId}
           />
-          <Field
-            label="Default finish"
-            onChange={(v) => setData((d) => set(d, ['merch', 'default_finish'], v))}
-            value={data.merch.default_finish}
+          {attributes.productLines.length === 0 && attributes.constructions.length === 0 && (
+            <p className="text-xs text-gray-400">
+              Add options in the Attributes tab to populate these dropdowns.
+            </p>
+          )}
+        </Group>
+
+        <Group title="Colors / Finishes">
+          <ColorPicker
+            colors={attributes.colors}
+            defaultColorId={data.spec.defaultColorId}
+            onChange={(spec) => setData((d) => ({ ...d, spec: { ...d.spec, ...spec } }))}
+            selectedIds={data.spec.colorIds}
+          />
+        </Group>
+
+        <Group title="Assembly Instructions">
+          <AssemblyEditor
+            onChange={(videos) => setData((d) => ({ ...d, assembly: { videos } }))}
+            videos={data.assembly.videos}
           />
         </Group>
 
@@ -166,4 +196,166 @@ function set<T>(obj: T, path: string[], value: string): T {
   if (path.length === 1) return { ...record, [head]: value } as T;
 
   return { ...record, [head]: set(record[head], path.slice(1), value) } as T;
+}
+
+// Single-select dropdown fed by an attribute master-list ({id, name}).
+function Select({
+  label,
+  value,
+  options,
+  onChange,
+  emptyLabel,
+}: {
+  label: string;
+  value: string;
+  options: Array<{ id: string; name: string }>;
+  onChange: (v: string) => void;
+  emptyLabel: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs font-medium text-gray-600">{label}</span>
+      <select
+        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+        onChange={(e) => onChange(e.target.value)}
+        value={value}
+      >
+        <option value="">{emptyLabel}</option>
+        {options.map((o) => (
+          <option key={o.id} value={o.id}>
+            {o.name}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+// Multi-select of colors from the master palette, with one marked as the default (lead) finish.
+function ColorPicker({
+  colors,
+  selectedIds,
+  defaultColorId,
+  onChange,
+}: {
+  colors: Array<{ id: string; name: string; hex: string; image: string }>;
+  selectedIds: string[];
+  defaultColorId: string;
+  onChange: (spec: { colorIds: string[]; defaultColorId: string }) => void;
+}) {
+  if (colors.length === 0) {
+    return (
+      <p className="text-xs text-gray-400">Add colors in the Attributes tab to pick finishes.</p>
+    );
+  }
+
+  const toggle = (id: string) => {
+    const next = selectedIds.includes(id)
+      ? selectedIds.filter((x) => x !== id)
+      : [...selectedIds, id];
+    // Keep default valid: clear it if it was just removed; adopt the first if none set.
+    const def = next.includes(defaultColorId) ? defaultColorId : (next[0] ?? '');
+
+    onChange({ colorIds: next, defaultColorId: def });
+  };
+
+  const setDefault = (id: string) => {
+    const next = selectedIds.includes(id) ? selectedIds : [...selectedIds, id];
+
+    onChange({ colorIds: next, defaultColorId: id });
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="grid gap-2 sm:grid-cols-2">
+        {colors.map((c) => {
+          const selected = selectedIds.includes(c.id);
+          const isDefault = defaultColorId === c.id;
+
+          return (
+            <div
+              className={`flex items-center gap-3 rounded-lg border p-2 ${
+                selected ? 'border-gray-900' : 'border-gray-200'
+              }`}
+              key={c.id}
+            >
+              <label className="flex flex-1 items-center gap-2">
+                <input checked={selected} onChange={() => toggle(c.id)} type="checkbox" />
+                <span
+                  aria-hidden
+                  className="inline-block size-5 rounded-full border border-gray-200 bg-cover bg-center"
+                  style={{
+                    backgroundColor: c.hex || undefined,
+                    backgroundImage: c.image ? `url(${c.image})` : undefined,
+                  }}
+                />
+                <span className="text-sm">{c.name}</span>
+              </label>
+              {selected &&
+                (isDefault ? (
+                  <span className="rounded bg-gray-900 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white">
+                    Default
+                  </span>
+                ) : (
+                  <button
+                    className="text-[10px] text-gray-500 hover:text-gray-900 hover:underline"
+                    onClick={() => setDefault(c.id)}
+                    type="button"
+                  >
+                    Set default
+                  </button>
+                ))}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Repeatable assembly video rows (name + YouTube URL) — authored per collection.
+function AssemblyEditor({
+  videos,
+  onChange,
+}: {
+  videos: AssemblyVideo[];
+  onChange: (next: AssemblyVideo[]) => void;
+}) {
+  const patch = (i: number, p: Partial<AssemblyVideo>) =>
+    onChange(videos.map((v, idx) => (idx === i ? { ...v, ...p } : v)));
+  const remove = (i: number) => onChange(videos.filter((_, idx) => idx !== i));
+  const add = () => onChange([...videos, { name: '', url: '' }]);
+
+  return (
+    <div className="space-y-3">
+      {videos.length === 0 && <p className="text-sm text-gray-400">No videos yet.</p>}
+      {videos.map((v, i) => (
+        <div className="rounded-lg border border-gray-100 p-3" key={i}>
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              Video {i + 1}
+            </span>
+            <button
+              className="text-xs text-red-600 hover:underline"
+              onClick={() => remove(i)}
+              type="button"
+            >
+              Remove
+            </button>
+          </div>
+          <Field label="Title" onChange={(val) => patch(i, { name: val })} value={v.name} />
+          <div className="mt-2">
+            <Field label="YouTube URL" onChange={(val) => patch(i, { url: val })} value={v.url} />
+          </div>
+        </div>
+      ))}
+      <button
+        className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+        onClick={add}
+        type="button"
+      >
+        + Add video
+      </button>
+    </div>
+  );
 }

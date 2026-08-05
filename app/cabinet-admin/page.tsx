@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 
 import { getAdminEmail } from '~/lib/cabinet-admin/admin-auth';
+import { readCabinetAttributes } from '~/lib/cabinet-admin/attributes-shape';
 import {
   listCollectionRows,
   readCollectionMetafields,
@@ -12,6 +13,7 @@ import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
 import { AdminShell, type AdminTab } from './_components/admin-shell';
 import { CollectionsTable } from './_components/collections-table';
 import { LoginForm } from './_components/login-form';
+import { AttributesEditor } from './_components/attributes-editor';
 import { ProductsTable } from './_components/products-table';
 import { ProgramFaqEditor } from './_components/program-faq-editor';
 
@@ -41,8 +43,10 @@ export default async function CabinetAdminPage(props: Props) {
   }
 
   const sp = await props.searchParams;
-  const tab: AdminTab =
-    sp.tab === 'products' ? 'products' : sp.tab === 'program-faq' ? 'program-faq' : 'collections';
+  const validTabs: AdminTab[] = ['collections', 'products', 'attributes', 'program-faq'];
+  const tab: AdminTab = validTabs.includes(sp.tab as AdminTab)
+    ? (sp.tab as AdminTab)
+    : 'collections';
 
   return (
     <AdminShell adminEmail={adminEmail} tab={tab}>
@@ -52,9 +56,16 @@ export default async function CabinetAdminPage(props: Props) {
       {tab === 'products' && (
         <ProductsContent page={sp.page ? Number(sp.page) : 1} search={sp.q ?? ''} />
       )}
+      {tab === 'attributes' && <AttributesContent />}
       {tab === 'program-faq' && <ProgramFaqContent />}
     </AdminShell>
   );
+}
+
+async function AttributesContent() {
+  const initial = await readCabinetAttributes();
+
+  return <AttributesEditor initial={initial} />;
 }
 
 async function ProgramFaqContent() {
@@ -70,10 +81,18 @@ async function CollectionsContent({ editId }: { editId?: number }) {
     const target = collections.find((c) => c.id === editId);
 
     if (target) {
-      const metafields = await readCollectionMetafields(editId);
+      const [metafields, attributes] = await Promise.all([
+        readCollectionMetafields(editId),
+        readCabinetAttributes(),
+      ]);
       const { CollectionEditor } = await import('./_components/collection-editor');
 
-      return <CollectionEditor collection={{ id: target.id, name: target.name, metafields }} />;
+      return (
+        <CollectionEditor
+          attributes={attributes}
+          collection={{ id: target.id, name: target.name, metafields }}
+        />
+      );
     }
   }
 

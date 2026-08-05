@@ -1,5 +1,6 @@
 import { cache } from 'react';
 
+import { CabinetAssemblyVideo } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeaderData } from '@/vibes/soul/sections/cabinet-collection-header';
 import { CabinetFaqData } from '@/vibes/soul/sections/cabinet-faq';
 import { client } from '~/client';
@@ -126,10 +127,78 @@ const CabinetCollectionQuery = graphql(`
             }
           }
         }
+        spec: metafields(namespace: "spec") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
+        assembly: metafields(namespace: "assembly") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
       }
     }
   }
 `);
+
+// Attribute master-lists live on the Cabinets parent (863) under namespace "attributes". Fetched
+// once per request and joined against each collection's spec selections.
+const CabinetAttributesQuery = graphql(`
+  query CabinetAttributesQuery($entityId: Int!) {
+    site {
+      category(entityId: $entityId) {
+        attributes: metafields(namespace: "attributes") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
+interface AttrOption {
+  id: string;
+  name: string;
+}
+interface ColorOption {
+  id: string;
+  name: string;
+  hex?: string;
+  image?: string;
+}
+interface CabinetAttributeLists {
+  productLines: AttrOption[];
+  constructions: AttrOption[];
+  colors: ColorOption[];
+}
+
+const getCabinetAttributes = cache(async (): Promise<CabinetAttributeLists> => {
+  const { data } = await client.fetch({
+    document: CabinetAttributesQuery,
+    variables: { entityId: CABINETS_CATEGORY_ID },
+    fetchOptions: { next: { revalidate } },
+  });
+
+  const attrs = data.site.category?.attributes.edges ?? [];
+  const val = (key: string) => attrs.find((e) => e.node.key === key)?.node.value;
+
+  return {
+    productLines: parseJson<AttrOption[]>(val('product_lines')) ?? [],
+    constructions: parseJson<AttrOption[]>(val('constructions')) ?? [],
+    colors: parseJson<ColorOption[]>(val('colors')) ?? [],
+  };
+});
 
 function parseJson<T>(value: string | undefined): T | undefined {
   if (value == null || value === '') return undefined;
@@ -233,12 +302,32 @@ export const getCabinetCollectionHeader = cache(
       cat.sample.edges?.find((e) => e.node.key === 'order_sample')?.node.value,
     );
 
+    // Attribute selections: resolve ids against the 863 master-lists. Dangling ids (option deleted)
+    // are dropped silently.
+    const spec = parseJson<{
+      product_line_id?: string;
+      construction_id?: string;
+      color_ids?: string[];
+      default_color_id?: string;
+    }>(cat.spec.edges?.find((e) => e.node.key === 'info')?.node.value);
+    const attributes = await getCabinetAttributes();
+
+    const productLine = attributes.productLines.find((o) => o.id === spec?.product_line_id)?.name;
+    const construction = attributes.constructions.find((o) => o.id === spec?.construction_id)?.name;
+    const colors = (spec?.color_ids ?? [])
+      .map((id) => attributes.colors.find((c) => c.id === id))
+      .filter((c): c is ColorOption => c != null)
+      .map((c) => ({ id: c.id, name: c.name, hex: c.hex, image: c.image }));
+
     return {
       name: cat.name,
       description: cat.description ? stripHtml(cat.description) : undefined,
       line: merch?.line,
       doorStyle: merch?.door_style,
       defaultFinish: merch?.default_finish,
+      productLine,
+      construction,
+      colors,
       price: pricing?.price,
       strikePrice: pricing?.strike_price,
       emiText: pricing?.emi_text,
@@ -251,6 +340,47 @@ export const getCabinetCollectionHeader = cache(
     };
   },
 );
+
+/** Assembly-instruction videos for a collection (name + YouTube url), with the video id parsed. */
+export const getCabinetAssemblyVideos = cache(
+  async (categoryId: number): Promise<CabinetAssemblyVideo[]> => {
+    const cat = await fetchCabinetCollection(categoryId);
+
+    if (!cat) return [];
+
+    const raw = parseJson<Array<{ name?: string; url?: string }>>(
+      cat.assembly.edges?.find((e) => e.node.key === 'videos')?.node.value,
+    );
+
+    if (!Array.isArray(raw)) return [];
+
+    return raw
+      .map((v) => ({ name: (v.name ?? '').trim(), url: (v.url ?? '').trim() }))
+      .filter((v) => v.name !== '' || v.url !== '')
+      .map((v) => ({ ...v, youtubeId: parseYouTubeId(v.url) }));
+  },
+);
+
+// Pull the 11-char video id out of the common YouTube URL forms (watch?v=, youtu.be/, /embed/,
+// /shorts/). Returns null for anything unrecognized so the section links out instead of embedding.
+function parseYouTubeId(url: string): string | null {
+  if (!url) return null;
+
+  const patterns = [
+    /[?&]v=([A-Za-z0-9_-]{11})/,
+    /youtu\.be\/([A-Za-z0-9_-]{11})/,
+    /\/embed\/([A-Za-z0-9_-]{11})/,
+    /\/shorts\/([A-Za-z0-9_-]{11})/,
+  ];
+
+  for (const re of patterns) {
+    const m = url.match(re);
+
+    if (m?.[1]) return m[1];
+  }
+
+  return null;
+}
 
 // Category description comes back as HTML; the header renders plain text.
 function stripHtml(html: string): string {

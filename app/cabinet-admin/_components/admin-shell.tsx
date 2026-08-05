@@ -6,6 +6,7 @@ import { signOutAction } from '../actions';
 const TABS = [
   { key: 'collections', label: 'Collections', href: '/cabinet-admin?tab=collections' },
   { key: 'products', label: 'Products', href: '/cabinet-admin?tab=products' },
+  { key: 'attributes', label: 'Attributes', href: '/cabinet-admin?tab=attributes' },
   { key: 'program-faq', label: 'Cabinet Assembly', href: '/cabinet-admin?tab=program-faq' },
 ] as const;
 

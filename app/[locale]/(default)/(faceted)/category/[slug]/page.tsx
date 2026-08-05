@@ -7,6 +7,7 @@ import { cache } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { createCompareLoader } from '@/vibes/soul/primitives/compare-drawer/loader';
+import { CabinetAssembly } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
@@ -26,6 +27,7 @@ import { fetchFacetedSearch } from '../../fetch-faceted-search';
 import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import {
+  getCabinetAssemblyVideos,
   getCabinetCollectionFaq,
   getCabinetCollectionHeader,
   isCabinetCollection,
@@ -303,6 +305,9 @@ export default async function Category(props: Props) {
       ? await getCabinetCollectionFaq(categoryId, cabinetProgram)
       : null;
 
+  // Assembly-instruction videos (per collection, not program-specific).
+  const cabinetAssembly = isCabinet ? await getCabinetAssemblyVideos(categoryId) : [];
+
   return (
     <>
       <Slot
@@ -355,6 +360,7 @@ export default async function Category(props: Props) {
         label={`${category.name} bottom content`}
         snapshotId={`category-${categoryId}-bottom-content`}
       />
+      {cabinetAssembly.length > 0 && <CabinetAssembly videos={cabinetAssembly} />}
       {cabinetFaq && <CabinetFaq data={cabinetFaq} />}
       <Stream value={streamableFacetedSearch}>
         {(search) => (

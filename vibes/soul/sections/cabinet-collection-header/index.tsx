@@ -8,6 +8,13 @@ import { ButtonLink } from '@/vibes/soul/primitives/button-link';
  * lib/cabinets/cabinet-collection.ts. Deferred (Laravel-fed in Stencil, not seeded here): image
  * carousel, badges, specifications, assembly instructions, category color swatches.
  */
+export interface CabinetSwatch {
+  id: string;
+  name: string;
+  hex?: string;
+  image?: string;
+}
+
 export interface CabinetCollectionHeaderData {
   name: string;
   description?: string;
@@ -15,6 +22,10 @@ export interface CabinetCollectionHeaderData {
   line?: string;
   doorStyle?: string;
   defaultFinish?: string;
+  /** Attribute selections resolved against the master lists: product line, construction, colors. */
+  productLine?: string;
+  construction?: string;
+  colors?: CabinetSwatch[];
   /** "Basic Kitchen Starting" pricing for the shown program. */
   price?: string;
   strikePrice?: string;
@@ -46,10 +57,46 @@ export function CabinetCollectionHeader({ data, className }: Props) {
               {data.name}
             </h1>
 
-            {(data.line || data.doorStyle || data.defaultFinish) && (
-              <p className="mt-2 text-sm text-contrast-400">
-                {[data.line, data.doorStyle, data.defaultFinish].filter(Boolean).join(' · ')}
-              </p>
+            {(() => {
+              // Prefer the attribute selections (Product Line / Construction); fall back to the
+              // legacy free-text merch fields for collections not yet migrated.
+              const line = data.productLine || data.line;
+              const construction = data.construction || data.doorStyle;
+              const meta = [
+                line,
+                construction,
+                data.colors?.length ? undefined : data.defaultFinish,
+              ]
+                .filter(Boolean)
+                .join(' · ');
+
+              return meta ? <p className="mt-2 text-sm text-contrast-400">{meta}</p> : null;
+            })()}
+
+            {data.colors != null && data.colors.length > 0 && (
+              <div className="mt-4">
+                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-contrast-400">
+                  Available Finishes
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {data.colors.map((c) => (
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full border border-contrast-100 py-1 pl-1 pr-3 text-xs text-contrast-500"
+                      key={c.id}
+                    >
+                      <span
+                        className="inline-block size-5 rounded-full border border-contrast-100 bg-cover bg-center"
+                        style={{
+                          backgroundColor: c.hex || undefined,
+                          backgroundImage: c.image ? `url(${c.image})` : undefined,
+                        }}
+                        title={c.name}
+                      />
+                      {c.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
 
             {data.description != null && data.description !== '' && (
@@ -100,7 +147,8 @@ export function CabinetCollectionHeader({ data, className }: Props) {
                   )}
                   {data.deliveryTime != null && data.deliveryTime !== '' && (
                     <p className="mt-2 text-sm text-contrast-500">
-                      Ships: <span className="font-medium text-foreground">{data.deliveryTime}</span>
+                      Ships:{' '}
+                      <span className="font-medium text-foreground">{data.deliveryTime}</span>
                     </p>
                   )}
                 </>
