@@ -4,19 +4,11 @@ import { getFormatter, setRequestLocale } from 'next-intl/server';
 
 import { Streamable } from '@/vibes/soul/lib/streamable';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { CabinetAssembly } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
-import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
-import { CabinetSpecs } from '@/vibes/soul/sections/cabinet-specs';
 import { ProductList } from '@/vibes/soul/sections/product-list';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
-import {
-  getCabinetAssemblyVideos,
-  getCabinetCollectionContent,
-  getCabinetCollectionFaq,
-  getCabinetCollectionHeader,
-} from '~/lib/cabinets/cabinet-collection';
+import { getCabinetCollectionHeader } from '~/lib/cabinets/cabinet-collection';
 import {
   type CabinetProgram,
   resolveCabinetCollectionBySlug,
@@ -66,12 +58,9 @@ export default async function CabinetEducationPage(props: Props) {
     notFound();
   }
 
-  const [header, content, faq, assembly] = await Promise.all([
-    getCabinetCollectionHeader(ref.entityId, prog),
-    getCabinetCollectionContent(ref.entityId),
-    getCabinetCollectionFaq(ref.entityId, prog),
-    getCabinetAssemblyVideos(ref.entityId),
-  ]);
+  // Education page = inspiration only (gallery + overview + materials/factory + teaser). The
+  // sale-closing content (FAQ / specs / assembly) lives on the shopping side, not here.
+  const header = await getCabinetCollectionHeader(ref.entityId, prog);
 
   // Shopping route for this collection + program (the BigCommerce category URL).
   const shopHref = `${ref.path.replace(/\/$/, '')}?program=${prog}`;
@@ -100,12 +89,6 @@ export default async function CabinetEducationPage(props: Props) {
         title="Our Factory"
       />
 
-      {Boolean(content?.specifications) && (
-        <CabinetSpecs specifications={content?.specifications} />
-      )}
-      {assembly.length > 0 && <CabinetAssembly videos={assembly} />}
-      {faq && <CabinetFaq data={faq} />}
-
       {/* Product teaser + Shop CTA into the shopping journey. */}
       <section className="mx-auto max-w-screen-2xl px-4 py-10 @xl:px-6 @4xl:px-8">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
@@ -118,8 +101,6 @@ export default async function CabinetEducationPage(props: Props) {
         </div>
         <ProductList products={streamableTeaser} />
       </section>
-
-      {Boolean(content?.disclaimer) && <CabinetSpecs disclaimer={content?.disclaimer} />}
     </>
   );
 }

@@ -69,6 +69,22 @@ Two metafields live on **product** resources (`/v3/catalog/products/{id}/metafie
 These are the product-level counterpart to the category metafields above; the category seeder does
 not touch them.
 
+> **`merch.program_sibling` — deferred / future work.** It links a product to its twin in the other
+> program (e.g. *Avon RTA Wall Diagonal Corner* #14314 ⇄ *Avon Assembled Wall Diagonal Corner*
+> #14386 — the same cabinet as an RTA product and an Assembled product, two separate BigCommerce
+> products with two IDs). Its intent is a **PDP "program toggle"**: on the RTA product page, a
+> shopper clicks "Want it pre-assembled?" and jumps to the Assembled product (and vice-versa).
+>
+> Current status (as of this writing): the data is **written** (the pilot script auto-links RTA↔Assembled
+> pairs by matching product names) and shown **view-only** in the admin product editor, but **nothing
+> on the storefront consumes it yet** — the PDP toggle component is not built. So it is staged data
+> awaiting a feature.
+>
+> When we build it, two follow-ups: (1) render the toggle on the PDP (reads this metafield), and
+> (2) make the sibling link **editable** in the admin product editor (pick the twin by product
+> search) so a new product pair can be linked without the API/name-matching script. Until then, new
+> pairs are linked via `scripts/cabinets_pilot.py` (name-matched) or the API.
+
 ### Field-source map (code)
 
 - Read/write on collections: [lib/cabinet-admin/collection-shape.ts](../lib/cabinet-admin/collection-shape.ts)
