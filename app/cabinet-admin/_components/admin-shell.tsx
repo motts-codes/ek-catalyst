@@ -6,13 +6,16 @@ import { signOutAction } from '../actions';
 const TABS = [
   { key: 'collections', label: 'Collections', href: '/cabinet-admin?tab=collections' },
   { key: 'products', label: 'Products', href: '/cabinet-admin?tab=products' },
+  { key: 'program-faq', label: 'Program FAQ', href: '/cabinet-admin?tab=program-faq' },
 ] as const;
+
+export type AdminTab = (typeof TABS)[number]['key'];
 
 export function AdminShell({
   adminEmail,
   tab,
   children,
-}: PropsWithChildren<{ adminEmail: string; tab: 'collections' | 'products' }>) {
+}: PropsWithChildren<{ adminEmail: string; tab: AdminTab }>) {
   return (
     <div className="flex min-h-screen bg-gray-50 text-gray-900">
       {/* Sidebar */}

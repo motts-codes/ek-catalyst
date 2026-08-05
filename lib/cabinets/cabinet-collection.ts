@@ -1,6 +1,7 @@
 import { cache } from 'react';
 
 import { CabinetCollectionHeaderData } from '@/vibes/soul/sections/cabinet-collection-header';
+import { CabinetFaqData } from '@/vibes/soul/sections/cabinet-faq';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
@@ -117,6 +118,14 @@ const CabinetCollectionQuery = graphql(`
             }
           }
         }
+        faq: metafields(namespace: "faq") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
       }
     }
   }
@@ -146,19 +155,67 @@ interface SampleInfo {
   price?: string;
 }
 
+// faq.by_program = { assembled: {headline, items[]}, rta: {headline, items[]} } — written by the
+// admin panel (lib/cabinet-admin/collection-shape.ts) and by the program-wide FAQ editor.
+interface FaqSide {
+  headline?: string;
+  items?: Array<{ q?: string; a?: string }>;
+}
+type FaqByProgram = Partial<Record<CabinetProgram, FaqSide>>;
+
+/**
+ * Pull one program's FAQ out of a `faq.by_program` metafield value. Returns null when there's no
+ * usable FAQ (missing side, or no non-empty rows) so the section renders nothing.
+ */
+function pickFaqForProgram(
+  faqValue: string | undefined,
+  program: CabinetProgram,
+): CabinetFaqData | null {
+  const side = parseJson<FaqByProgram>(faqValue)?.[program];
+
+  if (!side) return null;
+
+  const items = (side.items ?? [])
+    .map((it) => ({ q: (it.q ?? '').trim(), a: (it.a ?? '').trim() }))
+    .filter((it) => it.q !== '' || it.a !== '');
+
+  if (items.length === 0) return null;
+
+  return { headline: side.headline?.trim() || 'Frequently Asked Questions', items };
+}
+
+// One network round-trip per collection, deduped per request; both the header and the FAQ read from it.
+const fetchCabinetCollection = cache(async (categoryId: number) => {
+  const { data } = await client.fetch({
+    document: CabinetCollectionQuery,
+    variables: { entityId: categoryId },
+    fetchOptions: { next: { revalidate } },
+  });
+
+  return data.site.category;
+});
+
+/** The per-collection FAQ for a program (Avon's Assembled FAQ, etc.), or null when none is authored. */
+export const getCabinetCollectionFaq = cache(
+  async (categoryId: number, program: CabinetProgram): Promise<CabinetFaqData | null> => {
+    const cat = await fetchCabinetCollection(categoryId);
+
+    if (!cat) return null;
+
+    return pickFaqForProgram(
+      cat.faq.edges?.find((e) => e.node.key === 'by_program')?.node.value,
+      program,
+    );
+  },
+);
+
 /** Build the collection-header data for a cabinet collection category + program (Assembled / RTA). */
 export const getCabinetCollectionHeader = cache(
   async (
     categoryId: number,
     program: CabinetProgram,
   ): Promise<CabinetCollectionHeaderData | null> => {
-    const { data } = await client.fetch({
-      document: CabinetCollectionQuery,
-      variables: { entityId: categoryId },
-      fetchOptions: { next: { revalidate } },
-    });
-
-    const cat = data.site.category;
+    const cat = await fetchCabinetCollection(categoryId);
 
     if (!cat) return null;
 

@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
+import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
-import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
+import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -22,14 +23,20 @@ export default async function AssembledCabinets({ params }: Props) {
 
   setRequestLocale(locale);
 
-  const lines = await getCabinetLines('assembled');
+  const [lines, faq] = await Promise.all([
+    getCabinetLines('assembled'),
+    getCabinetProgramFaq('assembled'),
+  ]);
 
   return (
-    <CabinetLines
-      description="Premium, ready-to-install cabinets in a range of door styles and finishes — soft-close doors and drawers, customizable storage, and quality materials, in both framed and frameless designs."
-      lines={lines}
-      program="assembled"
-      title="Assembled Kitchen Cabinets"
-    />
+    <>
+      <CabinetLines
+        description="Premium, ready-to-install cabinets in a range of door styles and finishes — soft-close doors and drawers, customizable storage, and quality materials, in both framed and frameless designs."
+        lines={lines}
+        program="assembled"
+        title="Assembled Kitchen Cabinets"
+      />
+      <CabinetFaq data={faq} />
+    </>
   );
 }

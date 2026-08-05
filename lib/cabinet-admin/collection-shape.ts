@@ -172,6 +172,61 @@ export async function writeCollectionMetafields(
   );
 }
 
+// ── Program-wide FAQ ────────────────────────────────────────────────────────────────────────────
+// The Cabinets parent category (863) stores a faq.by_program metafield shown on the /cabinets/shop/*
+// listing pages — one FAQ per program, distinct from the per-collection FAQ above (same JSON shape,
+// different category). Edited on the "Program FAQ" admin tab.
+
+export const CABINETS_PARENT_CATEGORY_ID = 863;
+
+export interface ProgramFaq {
+  assembled: { headline: string; items: FaqItem[] };
+  rta: { headline: string; items: FaqItem[] };
+}
+
+export function emptyProgramFaq(): ProgramFaq {
+  return {
+    assembled: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
+    rta: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
+  };
+}
+
+/** Read the program-wide FAQ (category 863) into the structured shape. */
+export async function readProgramFaq(): Promise<ProgramFaq> {
+  const mfs = await listMetafields('categories', CABINETS_PARENT_CATEGORY_ID);
+  const base = emptyProgramFaq();
+  const faq = findValue(mfs, 'faq', 'by_program') as Partial<ProgramFaq> | undefined;
+
+  const side = (
+    s: { headline?: string; items?: FaqItem[] } | undefined,
+    fallback: { headline: string; items: FaqItem[] },
+  ) => ({
+    headline: s?.headline ?? fallback.headline,
+    items: Array.isArray(s?.items) ? s.items : fallback.items,
+  });
+
+  return {
+    assembled: side(faq?.assembled, base.assembled),
+    rta: side(faq?.rta, base.rta),
+  };
+}
+
+/** Write the program-wide FAQ back to category 863 (drops empty Q&A rows). */
+export async function writeProgramFaq(data: ProgramFaq): Promise<void> {
+  const cleanSide = (s: { headline: string; items: FaqItem[] }) => ({
+    headline: s.headline,
+    items: s.items.filter((it) => it.q.trim() !== '' || it.a.trim() !== ''),
+  });
+
+  await upsertMetafield(
+    'categories',
+    CABINETS_PARENT_CATEGORY_ID,
+    'faq',
+    'by_program',
+    JSON.stringify({ assembled: cleanSide(data.assembled), rta: cleanSide(data.rta) }),
+  );
+}
+
 // A summary row per collection for the admin Collections table.
 export interface CollectionRow {
   id: number;

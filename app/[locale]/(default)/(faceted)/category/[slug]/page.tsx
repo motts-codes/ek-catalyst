@@ -8,6 +8,7 @@ import { cache } from 'react';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { createCompareLoader } from '@/vibes/soul/primitives/compare-drawer/loader';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
+import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { getSessionCustomerAccessToken } from '~/auth';
@@ -25,6 +26,7 @@ import { fetchFacetedSearch } from '../../fetch-faceted-search';
 import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import {
+  getCabinetCollectionFaq,
   getCabinetCollectionHeader,
   isCabinetCollection,
   parseCabinetProgram,
@@ -294,6 +296,13 @@ export default async function Category(props: Props) {
       ? await getCabinetCollectionHeader(categoryId, cabinetProgram)
       : null;
 
+  // Per-collection FAQ (Avon's Assembled FAQ, etc.), shown below the grid. Program-aware; null when
+  // this collection has no FAQ authored for the current program.
+  const cabinetFaq =
+    isCabinet && cabinetProgram
+      ? await getCabinetCollectionFaq(categoryId, cabinetProgram)
+      : null;
+
   return (
     <>
       <Slot
@@ -346,6 +355,7 @@ export default async function Category(props: Props) {
         label={`${category.name} bottom content`}
         snapshotId={`category-${categoryId}-bottom-content`}
       />
+      {cabinetFaq && <CabinetFaq data={cabinetFaq} />}
       <Stream value={streamableFacetedSearch}>
         {(search) => (
           <CategoryViewed

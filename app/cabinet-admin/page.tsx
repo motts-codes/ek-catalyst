@@ -1,14 +1,19 @@
 import { Metadata } from 'next';
 
 import { getAdminEmail } from '~/lib/cabinet-admin/admin-auth';
-import { listCollectionRows, readCollectionMetafields } from '~/lib/cabinet-admin/collection-shape';
+import {
+  listCollectionRows,
+  readCollectionMetafields,
+  readProgramFaq,
+} from '~/lib/cabinet-admin/collection-shape';
 import { listCabinetCollections } from '~/lib/cabinet-admin/metafields-api';
 import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
 
-import { AdminShell } from './_components/admin-shell';
+import { AdminShell, type AdminTab } from './_components/admin-shell';
 import { CollectionsTable } from './_components/collections-table';
 import { LoginForm } from './_components/login-form';
 import { ProductsTable } from './_components/products-table';
+import { ProgramFaqEditor } from './_components/program-faq-editor';
 
 export const metadata: Metadata = {
   title: 'Cabinet Admin',
@@ -36,17 +41,26 @@ export default async function CabinetAdminPage(props: Props) {
   }
 
   const sp = await props.searchParams;
-  const tab = sp.tab === 'products' ? 'products' : 'collections';
+  const tab: AdminTab =
+    sp.tab === 'products' ? 'products' : sp.tab === 'program-faq' ? 'program-faq' : 'collections';
 
   return (
     <AdminShell adminEmail={adminEmail} tab={tab}>
-      {tab === 'collections' ? (
+      {tab === 'collections' && (
         <CollectionsContent editId={sp.edit ? Number(sp.edit) : undefined} />
-      ) : (
+      )}
+      {tab === 'products' && (
         <ProductsContent page={sp.page ? Number(sp.page) : 1} search={sp.q ?? ''} />
       )}
+      {tab === 'program-faq' && <ProgramFaqContent />}
     </AdminShell>
   );
+}
+
+async function ProgramFaqContent() {
+  const initial = await readProgramFaq();
+
+  return <ProgramFaqEditor initial={initial} />;
 }
 
 async function CollectionsContent({ editId }: { editId?: number }) {

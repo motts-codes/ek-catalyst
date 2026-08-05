@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
+import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
-import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
+import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -21,14 +22,17 @@ export default async function RtaCabinets({ params }: Props) {
 
   setRequestLocale(locale);
 
-  const lines = await getCabinetLines('rta');
+  const [lines, faq] = await Promise.all([getCabinetLines('rta'), getCabinetProgramFaq('rta')]);
 
   return (
-    <CabinetLines
-      description="Ready-to-assemble cabinets in a range of door styles and finishes — the same quality and soft-close hardware, shipped flat at a lower price point."
-      lines={lines}
-      program="rta"
-      title="RTA Kitchen Cabinets"
-    />
+    <>
+      <CabinetLines
+        description="Ready-to-assemble cabinets in a range of door styles and finishes — the same quality and soft-close hardware, shipped flat at a lower price point."
+        lines={lines}
+        program="rta"
+        title="RTA Kitchen Cabinets"
+      />
+      <CabinetFaq data={faq} />
+    </>
   );
 }

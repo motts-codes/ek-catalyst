@@ -1,6 +1,7 @@
 import { cache } from 'react';
 
 import { CabinetLine } from '@/vibes/soul/sections/cabinet-lines';
+import { CabinetFaqData } from '@/vibes/soul/sections/cabinet-faq';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
@@ -138,5 +139,54 @@ export const getCabinetLines = cache(
     );
 
     return lines;
+  },
+);
+
+// Program-wide FAQ shown on the /cabinets/shop/* listing pages (one FAQ per program, not per
+// collection). Stored on the Cabinets parent (863) as faq.by_program = { assembled, rta } — the
+// same shape the per-collection editor uses, but authored on the parent category.
+const CabinetProgramFaqQuery = graphql(`
+  query CabinetProgramFaqQuery($entityId: Int!) {
+    site {
+      category(entityId: $entityId) {
+        faq: metafields(namespace: "faq") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
+interface FaqSide {
+  headline?: string;
+  items?: Array<{ q?: string; a?: string }>;
+}
+
+/** The program-wide FAQ (Assembled or RTA) for the cabinet shop pages, or null when none authored. */
+export const getCabinetProgramFaq = cache(
+  async (program: CabinetProgram): Promise<CabinetFaqData | null> => {
+    const { data } = await client.fetch({
+      document: CabinetProgramFaqQuery,
+      variables: { entityId: CABINETS_CATEGORY_ID },
+      fetchOptions: { next: { revalidate } },
+    });
+
+    const raw = data.site.category?.faq.edges?.find((e) => e.node.key === 'by_program')?.node.value;
+    const side = parseJson<Partial<Record<CabinetProgram, FaqSide>>>(raw)?.[program];
+
+    if (!side) return null;
+
+    const items = (side.items ?? [])
+      .map((it) => ({ q: (it.q ?? '').trim(), a: (it.a ?? '').trim() }))
+      .filter((it) => it.q !== '' || it.a !== '');
+
+    if (items.length === 0) return null;
+
+    return { headline: side.headline?.trim() || 'Frequently Asked Questions', items };
   },
 );
