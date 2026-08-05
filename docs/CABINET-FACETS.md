@@ -101,10 +101,10 @@ The code was confirmed **inert** before setup (the grid is unchanged). But nothi
 4. **Value casing:** confirm the facet value BC exposes matches `Assembled`/`RTA` exactly. If BC
    normalizes casing, `cabinetProgramAttributeValue()` is the single knob to adjust.
 
-> **Behavior change once live:** a bare `/cabinets/avon` (no `?program`) filters to **Assembled**
-> (the default program) — there's no longer an "all products" view of a collection. This matches the
-> program-scoped model (and the header already defaults to Assembled). If you want a true unfiltered
-> view, that needs a separate decision.
+> **Bare vs filtered:** a bare `/cabinets/avon` (no `?program`) shows **ALL** products (both
+> programs) — the grid filters only when `?program=assembled` / `?program=rta` is explicitly present
+> (`selectedCabinetProgram()` returns null when absent). The header/pricing still defaults to
+> Assembled on the bare view, since the pricing card needs a concrete program to display.
 
 ## Deferred (separate from facets — need data seeded, not facet config)
 

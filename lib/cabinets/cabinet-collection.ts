@@ -66,11 +66,25 @@ export function productMatchesProgram(
   return program === 'rta' ? hasRta : hasAssembled;
 }
 
-/** Parse the ?program= search param, defaulting to Assembled. */
+/** Parse the ?program= search param, defaulting to Assembled. Used for the header/pricing, which
+ *  always needs a concrete program to show. */
 export function parseCabinetProgram(value: string | string[] | undefined): CabinetProgram {
   const v = Array.isArray(value) ? value[0] : value;
 
   return v === 'rta' ? 'rta' : 'assembled';
+}
+
+/** The EXPLICITLY-selected program, or null when ?program= is absent/invalid. Used for the grid
+ *  filter: no param -> null -> show ALL products (both programs). */
+export function selectedCabinetProgram(
+  value: string | string[] | undefined,
+): CabinetProgram | null {
+  const v = Array.isArray(value) ? value[0] : value;
+
+  if (v === 'rta') return 'rta';
+  if (v === 'assembled') return 'assembled';
+
+  return null;
 }
 
 // The BigCommerce product custom field + faceted-search filter that carries the program (must match

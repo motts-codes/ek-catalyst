@@ -35,6 +35,7 @@ import {
   getCabinetCollectionHeader,
   isCabinetCollection,
   parseCabinetProgram,
+  selectedCabinetProgram,
 } from '~/lib/cabinets/cabinet-collection';
 
 import { CategoryViewed } from './_components/category-viewed';
@@ -132,13 +133,15 @@ export default async function Category(props: Props) {
     customerAccessToken,
   );
 
-  // Cabinet collection pages (Avon, Dover) scope their grid + header to a program (Assembled / RTA)
-  // carried in ?program=. The RTA/Assembled split is by product name; accessories (neither) show
-  // under both.
+  // Cabinet collection pages (Avon, Dover). Two program notions:
+  //  - cabinetProgram: always concrete (defaults to Assembled) — drives the header/pricing/FAQ,
+  //    which must show something.
+  //  - selectedProgram: the EXPLICIT ?program= selection, or null when absent — drives the GRID
+  //    filter, so a bare /cabinets/avon (no ?program) shows ALL products (both programs).
   const isCabinet = await isCabinetCollection(categoryId);
-  const cabinetProgram = isCabinet
-    ? parseCabinetProgram((await props.searchParams).program)
-    : undefined;
+  const programParam = (await props.searchParams).program;
+  const cabinetProgram = isCabinet ? parseCabinetProgram(programParam) : undefined;
+  const selectedProgram = isCabinet ? selectedCabinetProgram(programParam) : null;
 
   if (!category) {
     return notFound();
@@ -169,11 +172,10 @@ export default async function Category(props: Props) {
     );
     const parsedSearchParams = loadSearchParams?.(searchParams) ?? {};
 
-    // On cabinet collection pages, scope the grid to the program via the Program facet
-    // (attr_Program=Assembled/RTA). Inert until the facet is configured in BigCommerce; then it
-    // filters server-side, correctly paginated. See docs/CABINET-FACETS.md.
-    const programFilter =
-      isCabinet && cabinetProgram ? cabinetProgramSearchParam(cabinetProgram) : {};
+    // Scope the grid to the program via the Program facet (attr_Program=Assembled/RTA) ONLY when a
+    // program is explicitly selected via ?program=. A bare /cabinets/avon (selectedProgram null)
+    // shows all products. See docs/CABINET-FACETS.md.
+    const programFilter = selectedProgram ? cabinetProgramSearchParam(selectedProgram) : {};
 
     const search = await fetchFacetedSearch(
       {
