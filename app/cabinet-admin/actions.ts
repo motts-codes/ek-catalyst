@@ -3,11 +3,11 @@
 import { revalidatePath } from 'next/cache';
 
 import {
-  clearAdminSession,
+  adminSignIn,
+  adminSignOut,
+  getAdminEmail,
   isAdminAuthenticated,
-  passwordMatches,
-  setAdminSession,
-} from '~/lib/cabinet-admin/auth';
+} from '~/lib/cabinet-admin/admin-auth';
 import { type CollectionMetafields, writeCollectionMetafields } from '~/lib/cabinet-admin/collection-shape';
 
 export interface ActionResult {
@@ -15,38 +15,34 @@ export interface ActionResult {
   error?: string;
 }
 
-/** Login: verify the shared password, set the session cookie. */
-export async function loginAction(_prev: ActionResult | null, formData: FormData): Promise<ActionResult> {
-  const password = String(formData.get('password') ?? '');
-
-  if (!passwordMatches(password)) {
-    return { ok: false, error: 'Incorrect password.' };
-  }
-
-  await setAdminSession();
-  revalidatePath('/cabinet-admin');
-
-  return { ok: true };
+/** Start Google sign-in (redirects to Google). Allowlist is enforced in the signIn callback. */
+export async function googleSignInAction(): Promise<void> {
+  await adminSignIn('google', { redirectTo: '/cabinet-admin' });
 }
 
-export async function logoutAction(): Promise<void> {
-  await clearAdminSession();
-  revalidatePath('/cabinet-admin');
+export async function signOutAction(): Promise<void> {
+  await adminSignOut({ redirectTo: '/cabinet-admin' });
 }
 
-/** Save a collection's metafields. Re-checks auth server-side (never trust the client). */
+/**
+ * Save a collection's metafields. Re-checks auth server-side (never trust the client). The admin's
+ * email is captured here so the change log can attribute the edit once logging is added.
+ */
 export async function saveCollectionAction(
   categoryId: number,
   data: CollectionMetafields,
 ): Promise<ActionResult> {
-  if (!(await isAdminAuthenticated())) {
+  const adminEmail = await getAdminEmail();
+
+  if (!adminEmail || !(await isAdminAuthenticated())) {
     return { ok: false, error: 'Not authenticated.' };
   }
 
   try {
+    // TODO(change-log): record { adminEmail, ts, categoryId, field, old -> new } once log storage
+    // is chosen. The per-user identity is already available here via adminEmail.
     await writeCollectionMetafields(categoryId, data);
     revalidatePath('/cabinet-admin');
-    // The storefront cabinet pages read these metafields — revalidate their caches too.
     revalidatePath('/cabinets/shop/assembled-cabinets');
     revalidatePath('/cabinets/shop/rta-cabinets');
 

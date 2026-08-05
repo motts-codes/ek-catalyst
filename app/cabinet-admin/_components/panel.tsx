@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 
 import { type CollectionMetafields } from '~/lib/cabinet-admin/collection-shape';
 
-import { logoutAction, saveCollectionAction } from '../actions';
+import { saveCollectionAction, signOutAction } from '../actions';
 
 interface CollectionData {
   id: number;
@@ -12,7 +12,13 @@ interface CollectionData {
   metafields: CollectionMetafields;
 }
 
-export function CabinetAdminPanel({ collections }: { collections: CollectionData[] }) {
+export function CabinetAdminPanel({
+  adminEmail,
+  collections,
+}: {
+  adminEmail: string;
+  collections: CollectionData[];
+}) {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b border-gray-200 bg-white">
@@ -21,14 +27,17 @@ export function CabinetAdminPanel({ collections }: { collections: CollectionData
             <h1 className="text-lg font-semibold text-gray-900">Cabinet Admin</h1>
             <p className="text-sm text-gray-500">Edit the metafields for each cabinet collection.</p>
           </div>
-          <form action={logoutAction}>
-            <button
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
-              type="submit"
-            >
-              Sign out
-            </button>
-          </form>
+          <div className="flex items-center gap-3">
+            <span className="hidden text-sm text-gray-500 sm:inline">{adminEmail}</span>
+            <form action={signOutAction}>
+              <button
+                className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+                type="submit"
+              >
+                Sign out
+              </button>
+            </form>
+          </div>
         </div>
       </header>
 
