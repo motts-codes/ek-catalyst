@@ -8,6 +8,7 @@ import {
   readProgramFaq,
 } from '~/lib/cabinet-admin/collection-shape';
 import { listCabinetCollections } from '~/lib/cabinet-admin/metafields-api';
+import { readProduct } from '~/lib/cabinet-admin/product-shape';
 import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
 
 import { AdminShell, type AdminTab } from './_components/admin-shell';
@@ -54,7 +55,11 @@ export default async function CabinetAdminPage(props: Props) {
         <CollectionsContent editId={sp.edit ? Number(sp.edit) : undefined} />
       )}
       {tab === 'products' && (
-        <ProductsContent page={sp.page ? Number(sp.page) : 1} search={sp.q ?? ''} />
+        <ProductsContent
+          editId={sp.edit ? Number(sp.edit) : undefined}
+          page={sp.page ? Number(sp.page) : 1}
+          search={sp.q ?? ''}
+        />
       )}
       {tab === 'attributes' && <AttributesContent />}
       {tab === 'program-faq' && <ProgramFaqContent />}
@@ -101,7 +106,26 @@ async function CollectionsContent({ editId }: { editId?: number }) {
   return <CollectionsTable rows={rows} />;
 }
 
-async function ProductsContent({ page, search }: { page: number; search: string }) {
+async function ProductsContent({
+  page,
+  search,
+  editId,
+}: {
+  page: number;
+  search: string;
+  editId?: number;
+}) {
+  // When editing one product, load its view fields + editable content metafields.
+  if (editId) {
+    const product = await readProduct(editId);
+
+    if (product) {
+      const { ProductEditor } = await import('./_components/product-editor');
+
+      return <ProductEditor product={product} />;
+    }
+  }
+
   const data = await getAdminProducts({ page, perPage: 25, search });
 
   return <ProductsTable data={data} search={search} />;

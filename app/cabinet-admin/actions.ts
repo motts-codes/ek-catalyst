@@ -9,6 +9,7 @@ import {
   isAdminAuthenticated,
 } from '~/lib/cabinet-admin/admin-auth';
 import { type CabinetAttributes, writeCabinetAttributes } from '~/lib/cabinet-admin/attributes-shape';
+import { type ProductContent, writeProductContent } from '~/lib/cabinet-admin/product-shape';
 import {
   type CollectionMetafields,
   type ProgramFaq,
@@ -77,6 +78,32 @@ export async function saveAttributesAction(data: CabinetAttributes): Promise<Act
     // Attribute changes (e.g. a hex fix) propagate to every collection page (both journeys).
     revalidatePath('/cabinets', 'layout');
     revalidatePath('/mykitchen', 'layout');
+
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Save failed.' };
+  }
+}
+
+/**
+ * Save a product's editable CONTENT metafields (features grid, FAQ, product-info). View-only fields
+ * (name/SKU/visibility/categories/sibling) are never written here — those stay in BC admin.
+ */
+export async function saveProductAction(
+  productId: number,
+  content: ProductContent,
+): Promise<ActionResult> {
+  const adminEmail = await getAdminEmail();
+
+  if (!adminEmail || !(await isAdminAuthenticated())) {
+    return { ok: false, error: 'Not authenticated.' };
+  }
+
+  try {
+    await writeProductContent(productId, content);
+    revalidatePath('/cabinet-admin');
+    // Product content renders on the PDP; revalidate all product pages (slug not handy here).
+    revalidatePath('/product', 'layout');
 
     return { ok: true };
   } catch (error) {
