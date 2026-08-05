@@ -11,6 +11,7 @@ See [docs/CABINET-METAFIELDS.md](../docs/CABINET-METAFIELDS.md) for the field sc
 |---|---|---|
 | [seed-cabinet-metafields.py](seed-cabinet-metafields.py) | **Category** metafields (newer): attribute master-lists + program FAQ on the parent; pricing/delivery/spec/FAQ/content/gallery on a collection | Yes — `--category <id>`, idempotent, `--dry-run` |
 | [cabinets_pilot.py](cabinets_pilot.py) | **Original bootstrap**: category basics **by name** (Avon/Dover) + **product** metafields (`merch.program_sibling`, `pdp.features`) with real pilot data | Partly — collections looked up by name; edit the `LARAVEL` block for a new catalog |
+| [set-program-custom-field.py](set-program-custom-field.py) | Sets the **`Program` product CUSTOM FIELD** (Assembled/RTA, both for accessories) from each product's name — the data half of the Program faceted-search filter. Custom fields ≠ metafields. See [docs/CABINET-FACETS.md](../docs/CABINET-FACETS.md). | Yes — `--category <id>`, idempotent, `--dry-run` |
 
 **Which to use when**
 - New channel / fresh rebuild: run `seed-cabinet-metafields.py` for the category-level structure

@@ -73,6 +73,27 @@ export function parseCabinetProgram(value: string | string[] | undefined): Cabin
   return v === 'rta' ? 'rta' : 'assembled';
 }
 
+// The BigCommerce product custom field + faceted-search filter that carries the program (must match
+// the "Program" custom field set on products — see docs/CABINET-FACETS.md). The faceted search reads
+// URL params prefixed `attr_`, so ?program=assembled is injected as attr_Program=Assembled. Until the
+// facet is configured in BC (custom field on products + Faceted Search filter enabled), this filter
+// simply matches nothing extra — the grid is unaffected. Once configured, it filters server-side
+// (correctly paginated).
+export const CABINET_PROGRAM_ATTRIBUTE = 'Program';
+
+/** The custom-field value for a program, e.g. 'assembled' -> 'Assembled'. */
+export function cabinetProgramAttributeValue(program: CabinetProgram): string {
+  return program === 'rta' ? 'RTA' : 'Assembled';
+}
+
+/**
+ * Build the faceted-search URL param that filters the grid to a program, e.g.
+ * { attr_Program: ['Assembled'] }. Spread into the searchParams passed to fetchFacetedSearch.
+ */
+export function cabinetProgramSearchParam(program: CabinetProgram): Record<string, string[]> {
+  return { [`attr_${CABINET_PROGRAM_ATTRIBUTE}`]: [cabinetProgramAttributeValue(program)] };
+}
+
 const CabinetCollectionQuery = graphql(`
   query CabinetCollectionQuery($entityId: Int!) {
     site {

@@ -28,6 +28,7 @@ import { fetchFacetedSearch } from '../../fetch-faceted-search';
 import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import {
+  cabinetProgramSearchParam,
   getCabinetAssemblyVideos,
   getCabinetCollectionContent,
   getCabinetCollectionFaq,
@@ -168,10 +169,17 @@ export default async function Category(props: Props) {
     );
     const parsedSearchParams = loadSearchParams?.(searchParams) ?? {};
 
+    // On cabinet collection pages, scope the grid to the program via the Program facet
+    // (attr_Program=Assembled/RTA). Inert until the facet is configured in BigCommerce; then it
+    // filters server-side, correctly paginated. See docs/CABINET-FACETS.md.
+    const programFilter =
+      isCabinet && cabinetProgram ? cabinetProgramSearchParam(cabinetProgram) : {};
+
     const search = await fetchFacetedSearch(
       {
         ...searchParams,
         ...parsedSearchParams,
+        ...programFilter,
         category: categoryId,
       },
       currencyCode,
@@ -187,10 +195,11 @@ export default async function Category(props: Props) {
     const search = await streamableFacetedSearch;
     const products = search.products.items;
 
-    // NOTE: program (Assembled/RTA) filtering is intentionally NOT applied here. The split lives in
-    // the product name, and filtering the already-paginated result yields an incomplete grid. The
-    // correct fix is a "Program" search facet in BigCommerce — see docs/CABINET-FACETS.md. The
-    // header is still program-aware via ?program.
+    // Program (Assembled/RTA) filtering is applied via the Program facet, injected into the faceted
+    // search above (attr_Program). This filters BEFORE pagination — the correct, complete result —
+    // once the "Program" facet is configured in BigCommerce (custom field on products + Faceted
+    // Search filter enabled). Until then it's inert and the grid shows all products. Name-based
+    // filtering was deliberately removed because it can't paginate correctly. See docs/CABINET-FACETS.md.
 
     const { defaultOutOfStockMessage, showOutOfStockMessage, showBackorderMessage } =
       settings?.inventory ?? {};

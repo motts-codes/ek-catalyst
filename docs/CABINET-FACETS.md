@@ -40,17 +40,71 @@ If you only do one, do **Program**. It:
    `?program=rta` the correct 66 — server-side, paginated.
 2. Is the same mechanism that unlocks all the other filters.
 
-## After the facets exist — what changes in code
+## Setting up the Program facet — exact steps
 
-The pieces are already staged:
-- `lib/cabinets/cabinet-collection.ts` — `parseCabinetProgram()` reads `?program`; the header is
-  already program-aware. `productMatchesProgram()` (name-based) can be **deleted** once the facet
-  exists.
-- `app/[locale]/(default)/(faceted)/category/[slug]/page.tsx` — currently does NOT filter the grid
-  by program (name-based filtering was removed because it can't paginate). Once **Program** is a
-  facet, the `?program=` value maps to that facet in the faceted-search request
-  (`fetchFacetedSearch`), and the grid filters correctly. This is a small change to inject the
-  Program facet selection into the search params.
+Two steps in the **BigCommerce control panel** (not Catalyst, not code). Do them in order.
+
+### Step 1 — Put the `Program` value on each product (Custom Field)
+
+BigCommerce faceted search filters on **product Custom Fields**. Each cabinet product needs a custom
+field named exactly **`Program`** with value **`Assembled`** or **`RTA`**.
+
+- **Manually (one product):** Products → View → open a product → **Custom Fields** tab → add
+  `Name = Program`, `Value = Assembled` (or `RTA`). Accessories (moldings, panels, fillers, samples —
+  no "RTA"/"Assembled" in the name) get the field **twice**: `Program = Assembled` AND `Program = RTA`,
+  so they show under both listings.
+- **In bulk (recommended):** run
+  [`scripts/set-program-custom-field.py`](../scripts/set-program-custom-field.py) — it reads each
+  cabinet product's name, sets `Program = RTA`/`Assembled` accordingly, and gives accessories BOTH.
+  Idempotent (safe to re-run). `--dry-run` to preview, `--category <id>` to scope to one collection.
+
+  ```bash
+  python scripts/set-program-custom-field.py --dry-run      # preview
+  python scripts/set-program-custom-field.py                # all cabinet products
+  ```
+
+### Step 2 — Expose `Program` as a Faceted Search filter
+
+- **Settings → Faceted Search** (Storefront settings). Make sure faceted search is **enabled for the
+  channel** this storefront uses.
+- Add a **Product Filter** for the **`Program`** custom field → Save.
+- Facets only appear once at least one product carries the value, so do Step 1 first.
+
+## Code status — already wired
+
+The `?program=` → grid-filter wiring is **done and shipped** (it was inert until the facet exists):
+
+- `lib/cabinets/cabinet-collection.ts` — `cabinetProgramSearchParam(program)` builds the facet param
+  `{ attr_Program: ['Assembled'|'RTA'] }` (constant `CABINET_PROGRAM_ATTRIBUTE = 'Program'`).
+- `app/[locale]/(default)/(faceted)/category/[slug]/page.tsx` — injects that param into
+  `fetchFacetedSearch` for cabinet collection pages. BigCommerce ignores an unknown attribute filter,
+  so before the facet is configured the grid is unchanged; after Steps 1–2 it filters server-side,
+  correctly paginated. The old name-based `productMatchesProgram()` is unused and can be deleted.
+
+> ⚠️ The custom-field name (`Program`) and values (`Assembled` / `RTA`) must match exactly what the
+> code injects. If you use different values in BC, update `cabinetProgramAttributeValue()`.
+
+## Verify AFTER the facet is live (the active path is untestable until then)
+
+The code was confirmed **inert** before setup (the grid is unchanged). But nothing downstream of
+"enable the facet" can be verified until Steps 1–2 are done. Once live, check:
+
+1. **It filters:** `?program=assembled` shows fewer products than unfiltered, and no RTA-named
+   products appear in the grid (and vice-versa for `?program=rta`).
+2. **⚠️ Accessories appear under BOTH** — open an accessory (e.g. a molding) and confirm it shows
+   under both `?program=assembled` and `?program=rta`. **This is the load-bearing assumption:** that
+   BigCommerce faceted search treats a product with two `Program` values (`RTA` + `Assembled`) as
+   matching either filter. If BC dedupes or exposes only one value, accessories could vanish from
+   both listings — this is the most likely surprise, so check it first.
+3. **Complete across pagination:** page through the grid and confirm no short pages (the whole point
+   over the old name-filter, which broke on pagination).
+4. **Value casing:** confirm the facet value BC exposes matches `Assembled`/`RTA` exactly. If BC
+   normalizes casing, `cabinetProgramAttributeValue()` is the single knob to adjust.
+
+> **Behavior change once live:** a bare `/cabinets/avon` (no `?program`) filters to **Assembled**
+> (the default program) — there's no longer an "all products" view of a collection. This matches the
+> program-scoped model (and the header already defaults to Assembled). If you want a true unfiltered
+> view, that needs a separate decision.
 
 ## Deferred (separate from facets — need data seeded, not facet config)
 
