@@ -9,7 +9,8 @@ import { type FaqItem } from '~/lib/cabinet-admin/collection-shape';
 export function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mt-6 border-t border-gray-100 pt-4">
-      <h3 className="mb-3 text-sm font-semibold text-gray-800">{title}</h3>
+      {/* Brand red (#d90716) — matches the storefront layouts (SALE pill etc.). */}
+      <h3 className="mb-3 text-sm font-semibold text-[#d90716]">{title}</h3>
       <div className="space-y-3">{children}</div>
     </div>
   );
