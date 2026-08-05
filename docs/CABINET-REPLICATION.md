@@ -56,7 +56,7 @@ separately (to avoid a circular import) but must be the same number.
 The collection ids (Avon/Dover) are **not** hardcoded — the app discovers them as children of the
 Cabinets parent via `categoryTree`. So only the parent id matters in code.
 
-The storefront routes (`/cabinets/shop/assembled-cabinets`, `/cabinets/shop/rta-cabinets`) are
+The storefront routes (`/cabinets/assembled-cabinets`, `/cabinets/rta-cabinets`) are
 static app routes and need no change. The collection detail pages resolve by URL like any category.
 
 ---
@@ -133,7 +133,7 @@ For each collection, load `/<collection-path>?program=assembled` and `?program=r
 - Overview HTML renders (formatted), **not** the native category description.
 - Specifications section + Assembly videos + FAQ (program-specific) + Disclaimer footer.
 
-And the shop pages `/cabinets/shop/assembled-cabinets` + `/rta-cabinets`: collection cards + the
+And the shop pages `/cabinets/assembled-cabinets` + `/rta-cabinets`: collection cards + the
 program-wide FAQ.
 
 Admin: sign in at `/cabinet-admin` with an allowlisted Google account; confirm all four tabs

@@ -49,11 +49,13 @@ export async function saveCollectionAction(
     // is chosen. The per-user identity is already available here via adminEmail.
     await writeCollectionMetafields(categoryId, data);
     revalidatePath('/cabinet-admin');
-    revalidatePath('/cabinets/shop/assembled-cabinets');
-    revalidatePath('/cabinets/shop/rta-cabinets');
+    revalidatePath('/cabinets/assembled-cabinets');
+    revalidatePath('/cabinets/rta-cabinets');
     // Refresh the collection detail pages (Avon, Dover…) where the header, overview, gallery,
-    // specifications, disclaimer, FAQ and assembly videos render.
+    // specifications, disclaimer, FAQ and assembly videos render — on both the shopping route
+    // (/cabinets/*) and the education route (/mykitchen/cabinets/*).
     revalidatePath('/cabinets', 'layout');
+    revalidatePath('/mykitchen', 'layout');
 
     return { ok: true };
   } catch (error) {
@@ -72,8 +74,9 @@ export async function saveAttributesAction(data: CabinetAttributes): Promise<Act
   try {
     await writeCabinetAttributes(data);
     revalidatePath('/cabinet-admin');
-    // Attribute changes (e.g. a hex fix) propagate to every collection page.
+    // Attribute changes (e.g. a hex fix) propagate to every collection page (both journeys).
     revalidatePath('/cabinets', 'layout');
+    revalidatePath('/mykitchen', 'layout');
 
     return { ok: true };
   } catch (error) {
@@ -81,7 +84,7 @@ export async function saveAttributesAction(data: CabinetAttributes): Promise<Act
   }
 }
 
-/** Save the program-wide FAQ (category 863), shown on the /cabinets/shop/* pages. */
+/** Save the program-wide FAQ (category 863), shown on the /cabinets/* pages. */
 export async function saveProgramFaqAction(data: ProgramFaq): Promise<ActionResult> {
   const adminEmail = await getAdminEmail();
 
@@ -92,8 +95,9 @@ export async function saveProgramFaqAction(data: ProgramFaq): Promise<ActionResu
   try {
     await writeProgramFaq(data);
     revalidatePath('/cabinet-admin');
-    revalidatePath('/cabinets/shop/assembled-cabinets');
-    revalidatePath('/cabinets/shop/rta-cabinets');
+    revalidatePath('/cabinets/assembled-cabinets');
+    revalidatePath('/cabinets/rta-cabinets');
+    revalidatePath('/mykitchen', 'layout');
 
     return { ok: true };
   } catch (error) {

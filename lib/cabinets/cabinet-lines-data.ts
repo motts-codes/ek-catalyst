@@ -12,6 +12,47 @@ export const CABINETS_CATEGORY_ID = 863;
 
 export type CabinetProgram = 'assembled' | 'rta';
 
+/** Last non-empty path segment as a slug: "/cabinets/avon/" -> "avon" (trailing-slash safe). */
+export function slugFromPath(path: string): string {
+  return path.split('/').filter(Boolean).pop() ?? '';
+}
+
+export interface CabinetCollectionRef {
+  entityId: number;
+  name: string;
+  slug: string;
+  path: string;
+  image?: { src: string; alt: string };
+}
+
+/** All cabinet collections (children of Cabinets) as light refs — for slug resolution + listings. */
+export const getCabinetCollectionRefs = cache(async (): Promise<CabinetCollectionRef[]> => {
+  const { data } = await client.fetch({
+    document: CabinetLinesQuery,
+    variables: { rootEntityId: CABINETS_CATEGORY_ID },
+    fetchOptions: { next: { revalidate } },
+  });
+
+  const root = data.site.categoryTree.find((c) => c.entityId === CABINETS_CATEGORY_ID);
+
+  return (root?.children ?? []).map((c) => ({
+    entityId: c.entityId,
+    name: c.name,
+    slug: slugFromPath(c.path),
+    path: c.path,
+    image: c.image ? { src: c.image.url, alt: c.image.altText } : undefined,
+  }));
+});
+
+/** Resolve a collection slug (e.g. "avon") to its category ref, or null when unknown. */
+export async function resolveCabinetCollectionBySlug(
+  slug: string,
+): Promise<CabinetCollectionRef | null> {
+  const refs = await getCabinetCollectionRefs();
+
+  return refs.find((r) => r.slug === slug.toLowerCase()) ?? null;
+}
+
 // One query: the Cabinets subtree (child ids/names/paths/images) + each child's metafields. The
 // storefront Category type has no `children`, so children come from categoryTree; metafields are
 // read per-child via `category(entityId:)`.
@@ -142,7 +183,7 @@ export const getCabinetLines = cache(
   },
 );
 
-// Program-wide FAQ shown on the /cabinets/shop/* listing pages (one FAQ per program, not per
+// Program-wide FAQ shown on the /cabinets/* listing listing pages (one FAQ per program, not per
 // collection). Stored on the Cabinets parent (863) as faq.by_program = { assembled, rta } — the
 // same shape the per-collection editor uses, but authored on the parent category.
 const CabinetProgramFaqQuery = graphql(`

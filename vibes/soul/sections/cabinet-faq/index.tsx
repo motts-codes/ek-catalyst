@@ -22,7 +22,7 @@ interface Props {
 
 /**
  * Collapsible FAQ section for cabinet pages. Used for both the per-collection FAQ (on Avon/Dover
- * collection detail pages) and the program-wide FAQ (on the /cabinets/shop/* listing pages) — the
+ * collection detail pages) and the program-wide FAQ (on the /cabinets/* listing pages) — the
  * data source differs, the presentation is the same. Program awareness lives in the caller: it
  * passes in the already-resolved list for the current program.
  *

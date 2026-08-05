@@ -29,7 +29,7 @@ Two category "levels" hold metafields:
 | `attributes` | `product_lines` | `[{id, name}]` | Master list: Star / Prism / Euro Max / Euro Value | Attributes tab |
 | `attributes` | `constructions` | `[{id, name}]` | Master list: Framed / Frameless / Slab | Attributes tab |
 | `attributes` | `colors` | `[{id, name, hex, image}]` | Master color palette (image = swatch URL) | Attributes tab |
-| `faq` | `by_program` | `{assembled:{headline,items:[{q,a}]}, rta:{…}}` | **Program-wide** FAQ (shown on `/cabinets/shop/*`) | "Cabinet Assembly" tab |
+| `faq` | `by_program` | `{assembled:{headline,items:[{q,a}]}, rta:{…}}` | **Program-wide** FAQ (shown on `/cabinets/* listing`) | "Cabinet Assembly" tab |
 
 `id` values are stable UUIDs generated when an option is added. Collections reference options by
 these ids (see `spec.info` below). Deleting an option leaves dangling references, which the

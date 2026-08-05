@@ -9,7 +9,7 @@ import { saveProgramFaqAction } from '../actions';
 import { FaqEditor, Group } from './faq-editor';
 
 // Editor for the program-wide FAQ (Cabinets parent category 863), shown on the
-// /cabinets/shop/assembled-cabinets and /rta-cabinets listing pages. One FAQ per program.
+// /cabinets/assembled-cabinets and /rta-cabinets listing pages. One FAQ per program.
 export function ProgramFaqEditor({ initial }: { initial: ProgramFaq }) {
   const [data, setData] = useState<ProgramFaq>(initial);
   const [pending, startTransition] = useTransition();

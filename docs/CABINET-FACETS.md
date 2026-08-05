@@ -1,6 +1,6 @@
 # Cabinet collection facets — BigCommerce setup (for the Catalyst cabinet pages)
 
-The Catalyst cabinet pages (`/cabinets/shop/assembled-cabinets`, `/cabinets/shop/rta-cabinets`, and
+The Catalyst cabinet pages (`/cabinets/assembled-cabinets`, `/cabinets/rta-cabinets`, and
 the collection detail pages `/cabinets/avon/`, `/cabinets/dover/`) can only *filter* products by a
 dimension if that dimension is a **BigCommerce search facet**. Right now the cabinet categories only
 expose **Brand** and **Price** as facets — so none of the Stencil-style filtering works yet.

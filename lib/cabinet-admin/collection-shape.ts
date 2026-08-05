@@ -303,7 +303,7 @@ export async function writeCollectionMetafields(
 }
 
 // ── Program-wide FAQ ────────────────────────────────────────────────────────────────────────────
-// The Cabinets parent category (863) stores a faq.by_program metafield shown on the /cabinets/shop/*
+// The Cabinets parent category (863) stores a faq.by_program metafield shown on the /cabinets/* listing
 // listing pages — one FAQ per program, distinct from the per-collection FAQ above (same JSON shape,
 // different category). Edited on the "Program FAQ" admin tab.
 
