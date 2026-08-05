@@ -20,20 +20,32 @@ export function Field({
   label,
   value,
   onChange,
+  error,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  // When set (non-null), the field shows a red hint + red border. Callers derive this from a
+  // validator so the inline warning and the save-block stay in sync.
+  error?: string | null;
+  placeholder?: string;
 }) {
   return (
     <label className="block">
       <span className="mb-1 block text-xs font-medium text-gray-600">{label}</span>
       <input
-        className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+        className={`w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none ${
+          error ? 'border-red-400 focus:border-red-500' : 'border-gray-300 focus:border-gray-900'
+        }`}
         onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
         type="text"
         value={value}
       />
+      {error != null && error !== '' && (
+        <span className="mt-1 block text-xs text-red-600">{error}</span>
+      )}
     </label>
   );
 }
@@ -48,6 +60,7 @@ export function FaqEditor({
 }) {
   const setItem = (i: number, patch: Partial<FaqItem>) => {
     const items = value.items.map((it, idx) => (idx === i ? { ...it, ...patch } : it));
+
     onChange({ ...value, items });
   };
   const addItem = () => onChange({ ...value, items: [...value.items, { q: '', a: '' }] });

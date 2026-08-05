@@ -13,6 +13,7 @@ import {
 import { saveProductAction } from '../actions';
 
 import { FaqEditor, Field, Group } from './faq-editor';
+import { validateUrl } from './validators';
 
 interface ProductData {
   view: ProductView;
@@ -33,6 +34,9 @@ export function ProductEditor({ product }: { product: ProductData }) {
       setStatus({ ok: res.ok, msg: res.ok ? 'Saved.' : (res.error ?? 'Save failed.') });
     });
   };
+
+  // Block save when any feature-cell image URL is malformed (empty allowed).
+  const hasErrors = content.features.cells.some((c) => validateUrl(c.image) != null);
 
   return (
     <div>
@@ -127,13 +131,16 @@ export function ProductEditor({ product }: { product: ProductData }) {
         <div className="mt-6 flex items-center gap-3">
           <button
             className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-            disabled={pending}
+            disabled={pending || hasErrors}
             onClick={save}
             type="button"
           >
             {pending ? 'Saving…' : 'Save changes'}
           </button>
-          {status && (
+          {hasErrors && (
+            <span className="text-sm text-red-600">Fix the highlighted fields to save.</span>
+          )}
+          {status && !hasErrors && (
             <span className={status.ok ? 'text-sm text-green-600' : 'text-sm text-red-600'}>
               {status.msg}
             </span>
@@ -188,7 +195,12 @@ function FeatureCells({
             <Field label="Text" onChange={(v) => patch(i, { text: v })} value={cell.text} />
           </div>
           <div className="mt-2">
-            <Field label="Image URL" onChange={(v) => patch(i, { image: v })} value={cell.image} />
+            <Field
+              error={validateUrl(cell.image)}
+              label="Image URL"
+              onChange={(v) => patch(i, { image: v })}
+              value={cell.image}
+            />
           </div>
         </div>
       ))}

@@ -12,6 +12,7 @@ import {
 import { saveAttributesAction } from '../actions';
 
 import { Group } from './faq-editor';
+import { validateHex, validateUrl } from './validators';
 
 // Master-list editor for the reusable cabinet attributes (category 863). Product lines and
 // constructions are simple named options; colors carry name + hex + image URL. Each option gets a
@@ -33,6 +34,11 @@ export function AttributesEditor({ initial }: { initial: CabinetAttributes }) {
       setStatus({ ok: res.ok, msg: res.ok ? 'Saved.' : (res.error ?? 'Save failed.') });
     });
   };
+
+  // Block save when any color has a malformed hex or image URL (empty allowed).
+  const hasErrors = data.colors.some(
+    (c) => validateHex(c.hex) != null || validateUrl(c.image) != null,
+  );
 
   return (
     <div>
@@ -73,13 +79,16 @@ export function AttributesEditor({ initial }: { initial: CabinetAttributes }) {
         <div className="mt-6 flex items-center gap-3">
           <button
             className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-            disabled={pending}
+            disabled={pending || hasErrors}
             onClick={save}
             type="button"
           >
             {pending ? 'Saving…' : 'Save changes'}
           </button>
-          {status && (
+          {hasErrors && (
+            <span className="text-sm text-red-600">Fix the highlighted fields to save.</span>
+          )}
+          {status && !hasErrors && (
             <span className={status.ok ? 'text-sm text-green-600' : 'text-sm text-red-600'}>
               {status.msg}
             </span>
@@ -189,12 +198,14 @@ function ColorList({
               value={o.name}
             />
             <LabeledInput
+              error={validateHex(o.hex)}
               label="Hex"
               onChange={(v) => patch(i, { hex: v })}
               placeholder="#E3D9C6"
               value={o.hex}
             />
             <LabeledInput
+              error={validateUrl(o.image)}
               label="Image URL"
               onChange={(v) => patch(i, { image: v })}
               placeholder="https://…/swatch.jpg"
@@ -219,22 +230,29 @@ function LabeledInput({
   value,
   onChange,
   placeholder,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  error?: string | null;
 }) {
   return (
     <label className="block">
       <span className="mb-1 block text-xs font-medium text-gray-600">{label}</span>
       <input
-        className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+        className={`w-full rounded-lg border px-3 py-1.5 text-sm focus:outline-none ${
+          error ? 'border-red-400 focus:border-red-500' : 'border-gray-300 focus:border-gray-900'
+        }`}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         type="text"
         value={value}
       />
+      {error != null && error !== '' && (
+        <span className="mt-1 block text-xs text-red-600">{error}</span>
+      )}
     </label>
   );
 }

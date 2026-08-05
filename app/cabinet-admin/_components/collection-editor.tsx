@@ -12,6 +12,7 @@ import {
 import { saveCollectionAction } from '../actions';
 
 import { FaqEditor, Field, Group } from './faq-editor';
+import { validatePrice, validateProductId, validateUrl } from './validators';
 
 interface CollectionData {
   id: number;
@@ -39,6 +40,21 @@ export function CollectionEditor({
     });
   };
 
+  // Save is blocked when any critical field is malformed. Derived from the STATE object so fields in
+  // sub-components can't slip past (empty is always allowed — see validators).
+  const hasErrors =
+    (['assembled', 'rta'] as const).some(
+      (p) =>
+        validatePrice(data.pricing[p].price) != null ||
+        validatePrice(data.pricing[p].strike_price) != null,
+    ) ||
+    validateProductId(data.sample.product_id) != null ||
+    validatePrice(data.sample.price) != null ||
+    validateUrl(data.specSheets.assembled) != null ||
+    validateUrl(data.specSheets.rta) != null ||
+    data.images.some((u) => validateUrl(u) != null) ||
+    data.assembly.videos.some((v) => validateUrl(v.url) != null);
+
   return (
     <div>
       <Link
@@ -59,9 +75,7 @@ export function CollectionEditor({
             {(['assembled', 'rta'] as const).map((prog) => (
               <div
                 className={`rounded-lg border p-4 ${
-                  prog === 'assembled'
-                    ? 'border-green-100 bg-green-50'
-                    : 'border-red-100 bg-red-50'
+                  prog === 'assembled' ? 'border-green-100 bg-green-50' : 'border-red-100 bg-red-50'
                 }`}
                 key={prog}
               >
@@ -69,11 +83,13 @@ export function CollectionEditor({
                   {prog}
                 </p>
                 <Field
+                  error={validatePrice(data.pricing[prog].price)}
                   label="Price"
                   onChange={(v) => setData((d) => set(d, ['pricing', prog, 'price'], v))}
                   value={data.pricing[prog].price}
                 />
                 <Field
+                  error={validatePrice(data.pricing[prog].strike_price)}
                   label="Strike price"
                   onChange={(v) => setData((d) => set(d, ['pricing', prog, 'strike_price'], v))}
                   value={data.pricing[prog].strike_price}
@@ -120,11 +136,10 @@ export function CollectionEditor({
         </Group>
 
         <Group title="Gallery Images">
-          <p className="text-xs text-gray-500">
-            Up to 5 image URLs. The first is the main image.
-          </p>
+          <p className="text-xs text-gray-500">Up to 5 image URLs. The first is the main image.</p>
           {data.images.map((url, i) => (
             <Field
+              error={validateUrl(url)}
               key={i}
               label={i === 0 ? 'Main image URL' : `Image ${i + 1} URL`}
               onChange={(v) =>
@@ -180,11 +195,13 @@ export function CollectionEditor({
 
         <Group title="Spec Sheet URLs">
           <Field
+            error={validateUrl(data.specSheets.assembled)}
             label="Assembled"
             onChange={(v) => setData((d) => set(d, ['specSheets', 'assembled'], v))}
             value={data.specSheets.assembled}
           />
           <Field
+            error={validateUrl(data.specSheets.rta)}
             label="RTA"
             onChange={(v) => setData((d) => set(d, ['specSheets', 'rta'], v))}
             value={data.specSheets.rta}
@@ -193,11 +210,13 @@ export function CollectionEditor({
 
         <Group title="Order Sample">
           <Field
+            error={validateProductId(data.sample.product_id)}
             label="Sample product ID"
             onChange={(v) => setData((d) => set(d, ['sample', 'product_id'], v))}
             value={data.sample.product_id}
           />
           <Field
+            error={validatePrice(data.sample.price)}
             label="Sample price"
             onChange={(v) => setData((d) => set(d, ['sample', 'price'], v))}
             value={data.sample.price}
@@ -217,13 +236,16 @@ export function CollectionEditor({
         <div className="mt-6 flex items-center gap-3">
           <button
             className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-            disabled={pending}
+            disabled={pending || hasErrors}
             onClick={save}
             type="button"
           >
             {pending ? 'Saving…' : 'Save changes'}
           </button>
-          {status && (
+          {hasErrors && (
+            <span className="text-sm text-red-600">Fix the highlighted fields to save.</span>
+          )}
+          {status && !hasErrors && (
             <span className={status.ok ? 'text-sm text-green-600' : 'text-sm text-red-600'}>
               {status.msg}
             </span>
@@ -416,7 +438,12 @@ function AssemblyEditor({
           </div>
           <Field label="Title" onChange={(val) => patch(i, { name: val })} value={v.name} />
           <div className="mt-2">
-            <Field label="YouTube URL" onChange={(val) => patch(i, { url: val })} value={v.url} />
+            <Field
+              error={validateUrl(v.url)}
+              label="YouTube URL"
+              onChange={(val) => patch(i, { url: val })}
+              value={v.url}
+            />
           </div>
         </div>
       ))}
