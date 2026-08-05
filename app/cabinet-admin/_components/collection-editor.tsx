@@ -57,7 +57,14 @@ export function CollectionEditor({
         <Group title="10×10 Kitchen Pricing">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {(['assembled', 'rta'] as const).map((prog) => (
-              <div className="rounded-lg border border-gray-100 p-4" key={prog}>
+              <div
+                className={`rounded-lg border p-4 ${
+                  prog === 'assembled'
+                    ? 'border-green-100 bg-green-50'
+                    : 'border-red-100 bg-red-50'
+                }`}
+                key={prog}
+              >
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
                   {prog}
                 </p>
