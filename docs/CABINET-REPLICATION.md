@@ -97,6 +97,12 @@ python scripts/seed-cabinet-metafields.py parent --category <cabinets-parent-id>
 python scripts/seed-cabinet-metafields.py collection --category <avon-id> --preset avon
 ```
 
+> **Product-level metafields** (`merch.program_sibling` — the RTA↔Assembled twin used by the PDP
+> toggle — and `pdp.features`) are seeded by the original bootstrap
+> [scripts/cabinets_pilot.py](../scripts/cabinets_pilot.py), which looks collections up by name and
+> carries the pilot's real data. Edit its `LARAVEL` block + collection names for the live catalog.
+> See [scripts/README.md](../scripts/README.md) for which script covers what.
+
 The script writes demo/example values — **replace them with real content**, or (recommended for a
 live launch) seed only the *structure* and let the client author real values in the admin panel:
 

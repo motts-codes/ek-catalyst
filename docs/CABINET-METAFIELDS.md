@@ -54,6 +54,21 @@ storefront drops silently.
 | `content` | `disclaimer` | **raw HTML string** | Small print | Bottom of collection content |
 | `media` | `images` | `[url, …]` (max 5, `[0]` = main) | Collection gallery | Header image gallery |
 
+---
+
+## On PRODUCTS (not categories)
+
+Two metafields live on **product** resources (`/v3/catalog/products/{id}/metafields`), seeded by
+[scripts/cabinets_pilot.py](../scripts/cabinets_pilot.py):
+
+| namespace | key | value shape | Purpose |
+|---|---|---|---|
+| `merch` | `program_sibling` | `{product_id, name}` | The other-program twin (RTA product ↔ its Assembled product) for the PDP program toggle |
+| `pdp` | `features` | `{layout, features:[{image,title,text}]}` | PDP feature tiles (demo 3×2) |
+
+These are the product-level counterpart to the category metafields above; the category seeder does
+not touch them.
+
 ### Field-source map (code)
 
 - Read/write on collections: [lib/cabinet-admin/collection-shape.ts](../lib/cabinet-admin/collection-shape.ts)
