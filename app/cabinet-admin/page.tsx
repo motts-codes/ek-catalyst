@@ -1,20 +1,30 @@
 import { Metadata } from 'next';
 
 import { getAdminEmail } from '~/lib/cabinet-admin/admin-auth';
-import { readCollectionMetafields } from '~/lib/cabinet-admin/collection-shape';
+import { listCollectionRows, readCollectionMetafields } from '~/lib/cabinet-admin/collection-shape';
 import { listCabinetCollections } from '~/lib/cabinet-admin/metafields-api';
+import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
 
-import { CabinetAdminPanel } from './_components/panel';
+import { AdminShell } from './_components/admin-shell';
+import { CollectionsTable } from './_components/collections-table';
 import { LoginForm } from './_components/login-form';
+import { ProductsTable } from './_components/products-table';
 
-// Internal admin panel for editing the cabinet collections' metafields. Google sign-in restricted to
-// an allowlist of EK staff emails (see lib/cabinet-admin/admin-auth.ts). Not indexed.
 export const metadata: Metadata = {
   title: 'Cabinet Admin',
   robots: { index: false, follow: false },
 };
 
-export default async function CabinetAdminPage() {
+interface Props {
+  searchParams: Promise<{
+    tab?: string;
+    edit?: string; // collection id being edited (Collections tab)
+    page?: string;
+    q?: string;
+  }>;
+}
+
+export default async function CabinetAdminPage(props: Props) {
   const adminEmail = await getAdminEmail();
 
   if (!adminEmail) {
@@ -25,14 +35,41 @@ export default async function CabinetAdminPage() {
     );
   }
 
-  const collections = await listCabinetCollections();
-  const withData = await Promise.all(
-    collections.map(async (c) => ({
-      id: c.id,
-      name: c.name,
-      metafields: await readCollectionMetafields(c.id),
-    })),
-  );
+  const sp = await props.searchParams;
+  const tab = sp.tab === 'products' ? 'products' : 'collections';
 
-  return <CabinetAdminPanel adminEmail={adminEmail} collections={withData} />;
+  return (
+    <AdminShell adminEmail={adminEmail} tab={tab}>
+      {tab === 'collections' ? (
+        <CollectionsContent editId={sp.edit ? Number(sp.edit) : undefined} />
+      ) : (
+        <ProductsContent page={sp.page ? Number(sp.page) : 1} search={sp.q ?? ''} />
+      )}
+    </AdminShell>
+  );
+}
+
+async function CollectionsContent({ editId }: { editId?: number }) {
+  // When editing one collection, load its full structured metafields for the form.
+  if (editId) {
+    const collections = await listCabinetCollections();
+    const target = collections.find((c) => c.id === editId);
+
+    if (target) {
+      const metafields = await readCollectionMetafields(editId);
+      const { CollectionEditor } = await import('./_components/collection-editor');
+
+      return <CollectionEditor collection={{ id: target.id, name: target.name, metafields }} />;
+    }
+  }
+
+  const rows = await listCollectionRows();
+
+  return <CollectionsTable rows={rows} />;
+}
+
+async function ProductsContent({ page, search }: { page: number; search: string }) {
+  const data = await getAdminProducts({ page, perPage: 25, search });
+
+  return <ProductsTable data={data} search={search} />;
 }

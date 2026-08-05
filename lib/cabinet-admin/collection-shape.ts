@@ -1,4 +1,4 @@
-import { listMetafields, type Metafield, upsertMetafield } from './metafields-api';
+import { listCabinetCollections, listMetafields, type Metafield, upsertMetafield } from './metafields-api';
 
 // Structured shape of a cabinet collection's editable metafields. The panel edits these fields; the
 // helpers below convert to/from the stored JSON-string metafields (namespace.key = value).
@@ -7,6 +7,11 @@ export interface ProgramPricing {
   price: string;
   strike_price: string;
   emi_text: string;
+}
+
+export interface FaqItem {
+  q: string;
+  a: string;
 }
 
 export interface CollectionMetafields {
@@ -20,9 +25,17 @@ export interface CollectionMetafields {
   specSheets: { rta: string; assembled: string };
   // sample.order_sample
   sample: { product_id: string; price: string };
+  // faq.by_program = { assembled: {headline, items[]}, rta: {headline, items[]} } — collection FAQ
+  // split by program (RTA and Assembled have different questions).
+  faq: {
+    assembled: { headline: string; items: FaqItem[] };
+    rta: { headline: string; items: FaqItem[] };
+  };
 }
 
 const emptyPricing = (): ProgramPricing => ({ price: '', strike_price: '', emi_text: '' });
+
+const DEFAULT_FAQ_HEADLINE = 'Frequently Asked Questions';
 
 export function emptyCollectionMetafields(): CollectionMetafields {
   return {
@@ -31,6 +44,10 @@ export function emptyCollectionMetafields(): CollectionMetafields {
     delivery: { rta: '', assembled: '' },
     specSheets: { rta: '', assembled: '' },
     sample: { product_id: '', price: '' },
+    faq: {
+      assembled: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
+      rta: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
+    },
   };
 }
 
@@ -66,6 +83,17 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
   const sample = findValue(mfs, 'sample', 'order_sample') as
     | { product_id?: number | string; price?: string }
     | undefined;
+  const faq = findValue(mfs, 'faq', 'by_program') as
+    | Partial<CollectionMetafields['faq']>
+    | undefined;
+
+  const normalizeFaqSide = (
+    side: { headline?: string; items?: FaqItem[] } | undefined,
+    fallback: { headline: string; items: FaqItem[] },
+  ) => ({
+    headline: side?.headline ?? fallback.headline,
+    items: Array.isArray(side?.items) ? side.items : fallback.items,
+  });
 
   return {
     pricing: {
@@ -78,6 +106,10 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
     sample: {
       product_id: sample?.product_id != null ? String(sample.product_id) : '',
       price: sample?.price ?? '',
+    },
+    faq: {
+      assembled: normalizeFaqSide(faq?.assembled, base.faq.assembled),
+      rta: normalizeFaqSide(faq?.rta, base.faq.rta),
     },
   };
 }
@@ -120,6 +152,49 @@ export async function writeCollectionMetafields(
         ? Number(data.sample.product_id)
         : data.sample.product_id,
       price: data.sample.price,
+    }),
+  );
+  // Collection FAQ, split by program. Drop empty Q&A rows on save so the stored list is clean.
+  const cleanSide = (side: { headline: string; items: FaqItem[] }) => ({
+    headline: side.headline,
+    items: side.items.filter((it) => it.q.trim() !== '' || it.a.trim() !== ''),
+  });
+
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'faq',
+    'by_program',
+    JSON.stringify({
+      assembled: cleanSide(data.faq.assembled),
+      rta: cleanSide(data.faq.rta),
+    }),
+  );
+}
+
+// A summary row per collection for the admin Collections table.
+export interface CollectionRow {
+  id: number;
+  name: string;
+  line: string;
+  doorStyle: string;
+  defaultFinish: string;
+}
+
+export async function listCollectionRows(): Promise<CollectionRow[]> {
+  const collections = await listCabinetCollections();
+
+  return Promise.all(
+    collections.map(async (c) => {
+      const mf = await readCollectionMetafields(c.id);
+
+      return {
+        id: c.id,
+        name: c.name,
+        line: mf.merch.line,
+        doorStyle: mf.merch.door_style,
+        defaultFinish: mf.merch.default_finish,
+      };
     }),
   );
 }
