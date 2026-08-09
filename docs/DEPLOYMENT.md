@@ -112,6 +112,29 @@ can iterate on preview deploys without touching what customers see.
 
 ---
 
+## 6. PREVIEW-ONLY policy (enforced)
+
+This project is **preview-only** — we deliberately never deploy to Vercel **production**. All deploys
+use `vercel deploy` (Preview environment); a stable alias is re-pointed at the latest preview so the
+share link stays constant. Git is disconnected from Vercel, so no push can trigger a production
+deploy.
+
+**Enforcement:** a `PreToolUse` hook in [.claude/settings.json](../.claude/settings.json) **blocks**
+any Bash command that combines `vercel` with `--prod` / `--production`. `vercel deploy` and
+`vercel alias …` remain allowed. This makes an accidental production deploy impossible from this
+tooling, not just a convention.
+
+The deploy loop we use:
+```bash
+vercel deploy --yes                                   # Preview only (never --prod)
+vercel alias set <new-deploy-url> <stable-alias>      # re-point the share link
+```
+
+If production is ever genuinely wanted, remove the hook in `.claude/settings.json` first — that's the
+intentional, visible gate.
+
+---
+
 ## 6. Other useful commands
 
 ```bash
