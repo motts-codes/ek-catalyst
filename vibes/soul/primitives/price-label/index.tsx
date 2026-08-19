@@ -66,7 +66,8 @@ function discountPercent(previous: string, current: string): number | null {
 // Render a formatted price (e.g. "$708.99") with the currency symbol and cents as superscript
 // and the period dropped: $⁷⁰⁸ with a raised ⁹⁹. Falls back to the raw string if it doesn't match
 // the expected <symbol><whole>.<cents> shape (e.g. ranges, unusual formats), so nothing breaks.
-function SuperscriptPrice({ formatted }: { formatted: string }) {
+// Exported so other surfaces (e.g. cabinet line cards) render the identical PDP price style.
+export function SuperscriptPrice({ formatted }: { formatted: string }) {
   const match = formatted.match(/^(\D*)(\d[\d,]*)(?:[.,](\d+))?(\D*)$/);
 
   if (!match) {
