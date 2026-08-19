@@ -5,6 +5,7 @@ import { CabinetFaqData } from '@/vibes/soul/sections/cabinet-faq';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
+import { getAudienceMode } from '~/lib/navigation/audience-mode';
 
 // The "Cabinets" category (parent). When the category page resolves this id, it renders the
 // cabinet-lines view (a card per child line/finish) instead of the normal product grid.
@@ -133,12 +134,32 @@ interface ProgramPricing {
   emi_text?: string;
 }
 
+// Audience-aware card imagery. Gallery order is [door-sample, …, kitchen] (image 1 = door sample,
+// last image = kitchen). Homeowners get the aspirational kitchen as the cover with the door sample
+// revealed on hover; contractors get the door sample straight up with no hover flourish.
+function pickCardImages(
+  gallery: string[],
+  audience: 'homeowner' | 'pro',
+): { cover?: string; hover?: string } {
+  const doorSample = gallery[0];
+  const kitchen = gallery.length > 1 ? gallery[gallery.length - 1] : undefined;
+
+  if (audience === 'homeowner' && kitchen) {
+    return { cover: kitchen, hover: doorSample };
+  }
+
+  // Contractor (or homeowner with no kitchen image): door sample cover, no hover.
+  return { cover: doorSample, hover: undefined };
+}
+
 /**
  * Fetch the cabinet lines (child categories of Cabinets) with the pricing/delivery/sample data for
- * the given program (Assembled or RTA), shaped for the CabinetLines section.
+ * the given program (Assembled or RTA), shaped for the CabinetLines section. Card imagery is
+ * audience-aware (see pickCardImages).
  */
 export const getCabinetLines = cache(
   async (program: CabinetProgram): Promise<CabinetLine[]> => {
+    const audience = await getAudienceMode();
     const { data } = await client.fetch({
       document: CabinetLinesQuery,
       variables: { rootEntityId: CABINETS_CATEGORY_ID },
@@ -171,15 +192,15 @@ export const getCabinetLines = cache(
         // the same program (Assembled / RTA) the visitor came from.
         const href = `${child.path}?program=${program}`;
 
-        // media.images = [kitchen, door-sample, …]. Card uses image[0]; image[1] is the hover
-        // reveal. Fall back to the native BC category image for image[0] when no gallery is set.
+        // media.images = [door-sample, …, kitchen]. Cover + hover are chosen by audience.
         const galleryRaw = cat?.media?.edges?.find((e) => e.node.key === 'images')?.node.value;
         const gallery = (parseJson<string[]>(galleryRaw) ?? []).filter(
           (u): u is string => typeof u === 'string' && u !== '',
         );
-        const mainSrc = gallery[0] ?? child.image?.url;
+        const { cover, hover } = pickCardImages(gallery, audience);
+        const mainSrc = cover ?? child.image?.url; // fall back to native BC category image
         const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
-        const hoverImage = gallery[1] ? { src: gallery[1], alt: `${child.name} door sample` } : undefined;
+        const hoverImage = hover ? { src: hover, alt: `${child.name} door sample` } : undefined;
 
         // sample.order_sample = { product_id, price } — for now the card links to the category page
         // (add-to-cart of a specific sample product is a later step).

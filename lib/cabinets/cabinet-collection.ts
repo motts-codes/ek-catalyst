@@ -6,6 +6,7 @@ import { CabinetFaqData } from '@/vibes/soul/sections/cabinet-faq';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
+import { getAudienceMode } from '~/lib/navigation/audience-mode';
 
 import { CABINETS_CATEGORY_ID, type CabinetProgram } from './cabinet-lines-data';
 
@@ -371,11 +372,20 @@ export const getCabinetCollectionHeader = cache(
       .map((c) => ({ id: c.id, name: c.name, hex: c.hex, image: c.image }));
 
     // Overview (staff-authored HTML metafield) replaces the native BC category description for
-    // cabinet collections. Gallery images come from media.images (images[0] = main).
+    // cabinet collections. Gallery images come from media.images (order: [door-sample, …, kitchen]).
     const overview = cat.content.edges?.find((e) => e.node.key === 'overview')?.node.value ?? '';
-    const images = (parseJson<string[]>(
+    const rawImages = (parseJson<string[]>(
       cat.media.edges?.find((e) => e.node.key === 'images')?.node.value,
     ) ?? []).filter((u): u is string => typeof u === 'string' && u !== '');
+
+    // Audience-aware lead image (Gallery shows images[0] as the main): homeowners lead with the
+    // kitchen (last image) moved to the front; contractors keep the door sample (first) as-is.
+    const audience = await getAudienceMode();
+    const kitchen = rawImages.at(-1);
+    const images =
+      audience === 'homeowner' && rawImages.length > 1 && kitchen
+        ? [kitchen, ...rawImages.slice(0, -1)]
+        : rawImages;
 
     return {
       name: cat.name,
