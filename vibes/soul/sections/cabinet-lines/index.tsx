@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+import { DeliveryTruckIcon } from '@/vibes/soul/primitives/icons/delivery-truck';
 import { SuperscriptPrice } from '@/vibes/soul/primitives/price-label';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -123,8 +124,11 @@ function CabinetLineCard({ line }: { line: CabinetLine }) {
         )}
 
         {line.deliveryTime != null && line.deliveryTime !== '' && (
-          <p className="mt-2 text-sm text-contrast-500">
-            Ships: <span className="font-medium text-foreground">{line.deliveryTime}</span>
+          <p className="mt-2 flex items-center gap-1.5 text-sm text-contrast-500">
+            <DeliveryTruckIcon />
+            <span>
+              Ships: <span className="font-medium text-foreground">{line.deliveryTime}</span>
+            </span>
           </p>
         )}
 

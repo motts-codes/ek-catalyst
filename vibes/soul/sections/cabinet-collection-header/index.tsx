@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+import { DeliveryTruckIcon } from '@/vibes/soul/primitives/icons/delivery-truck';
 
 import { Gallery } from './gallery';
 
@@ -161,9 +162,12 @@ export function CabinetCollectionHeader({ data, className }: Props) {
                     <p className="mt-0.5 text-xs text-contrast-500">{data.emiText}</p>
                   )}
                   {data.deliveryTime != null && data.deliveryTime !== '' && (
-                    <p className="mt-2 text-sm text-contrast-500">
-                      Ships:{' '}
-                      <span className="font-medium text-foreground">{data.deliveryTime}</span>
+                    <p className="mt-2 flex items-center gap-1.5 text-sm text-contrast-500">
+                      <DeliveryTruckIcon />
+                      <span>
+                        Ships:{' '}
+                        <span className="font-medium text-foreground">{data.deliveryTime}</span>
+                      </span>
                     </p>
                   )}
                 </>
