@@ -17,6 +17,8 @@ export interface CabinetLine {
   /** Category page URL, e.g. /cabinets/avon/ */
   href: string;
   image?: { src: string; alt: string };
+  /** Second gallery image (e.g. door sample) — revealed on hover, bottom-right, sliding up. */
+  hoverImage?: { src: string; alt: string };
   /** "Basic Kitchen Starting" price for the selected program. */
   price?: string;
   /** Strikethrough / was-price. */
@@ -85,12 +87,29 @@ function CabinetLineCard({ line }: { line: CabinetLine }) {
             fill
             sizes="(min-width: 56rem) 33vw, (min-width: 36rem) 50vw, 100vw"
             src={line.image.src}
+            unoptimized
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
             <span className="px-4 text-center text-2xl font-bold leading-snug tracking-tighter text-foreground opacity-10 @xs:text-4xl">
               {line.name}
             </span>
+          </div>
+        )}
+
+        {/* Door-sample reveal: hidden bottom-right, slides up + fades in on card hover. */}
+        {line.hoverImage && (
+          <div className="pointer-events-none absolute bottom-3 right-3 w-1/3 max-w-[8rem] translate-y-[130%] overflow-hidden rounded-lg border-2 border-white opacity-0 shadow-lg transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="relative aspect-square">
+              <Image
+                alt={line.hoverImage.alt}
+                className="h-full w-full object-cover"
+                fill
+                sizes="128px"
+                src={line.hoverImage.src}
+                unoptimized
+              />
+            </div>
           </div>
         )}
       </Link>

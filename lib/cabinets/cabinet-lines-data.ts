@@ -105,6 +105,14 @@ const CabinetLineMetafieldsQuery = graphql(`
             }
           }
         }
+        media: metafields(namespace: "media") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
       }
     }
   }
@@ -163,13 +171,24 @@ export const getCabinetLines = cache(
         // the same program (Assembled / RTA) the visitor came from.
         const href = `${child.path}?program=${program}`;
 
+        // media.images = [kitchen, door-sample, …]. Card uses image[0]; image[1] is the hover
+        // reveal. Fall back to the native BC category image for image[0] when no gallery is set.
+        const galleryRaw = cat?.media?.edges?.find((e) => e.node.key === 'images')?.node.value;
+        const gallery = (parseJson<string[]>(galleryRaw) ?? []).filter(
+          (u): u is string => typeof u === 'string' && u !== '',
+        );
+        const mainSrc = gallery[0] ?? child.image?.url;
+        const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
+        const hoverImage = gallery[1] ? { src: gallery[1], alt: `${child.name} door sample` } : undefined;
+
         // sample.order_sample = { product_id, price } — for now the card links to the category page
         // (add-to-cart of a specific sample product is a later step).
         return {
           entityId: child.entityId,
           name: child.name,
           href,
-          image: child.image ? { src: child.image.url, alt: child.image.altText } : undefined,
+          image,
+          hoverImage,
           price: pricing?.price,
           strikePrice: pricing?.strike_price,
           emiText: pricing?.emi_text,
