@@ -14,7 +14,7 @@ import { routing } from '~/i18n/routing';
 import { getCartId } from '~/lib/cart';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getAudienceMode } from '~/lib/navigation/audience-mode';
-import { getMenu } from '~/lib/navigation/menu-config';
+import { AUDIENCE_CTA, getMenu } from '~/lib/navigation/menu-config';
 import { switchAudienceMode } from '~/lib/navigation/switch-audience-action';
 import { SiteHeader as HeaderSection } from '~/lib/makeswift/components/site-header';
 
@@ -154,9 +154,14 @@ export const Header = async () => {
         audienceMode,
         audienceToggle: <AudienceToggle mode={audienceMode} />,
         ctaButton: (
-          // Same red as the PDP "Buy now" (tertiary = #96050f); compact height via x-small.
-          <ButtonLink href="#" size="x-small" variant="tertiary">
-            Free Design Consult
+          // Audience-aware label (Free Design Consult / Free Design & Quote), brand blue (#2162a1).
+          <ButtonLink
+            className="border-[#2162a1] bg-[#2162a1] text-white [&_span]:!text-white [&:hover]:bg-[#1b5288] [&:hover]:border-[#1b5288]"
+            href={AUDIENCE_CTA[audienceMode].href}
+            size="x-small"
+            variant="tertiary"
+          >
+            {AUDIENCE_CTA[audienceMode].label}
           </ButtonLink>
         ),
         logo,

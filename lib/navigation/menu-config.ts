@@ -340,10 +340,10 @@ export const AUDIENCE_MENUS: Record<AudienceMode, MenuItem[]> = {
   pro: proMenu,
 };
 
-/** The persistent header CTA differs per audience (Free Design Consult vs Get a Quote). */
+/** The persistent header CTA differs per audience (label only; both share the brand-blue style). */
 export const AUDIENCE_CTA: Record<AudienceMode, { label: string; href: string }> = {
   homeowner: { label: 'Free Design Consult', href: '#' },
-  pro: { label: 'Get a Quote', href: '#' },
+  pro: { label: 'Free Design & Quote', href: '#' },
 };
 
 export function getMenu(mode: AudienceMode): MenuItem[] {
