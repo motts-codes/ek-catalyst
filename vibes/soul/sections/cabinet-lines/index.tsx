@@ -106,10 +106,13 @@ function CabinetLineCard({ line }: { line: CabinetLine }) {
         </p>
         <div className="mt-1 flex items-baseline gap-2">
           {line.price != null && line.price !== '' && (
-            <span className="text-2xl font-semibold">${line.price}</span>
+            <SuperscriptPrice className="text-2xl font-bold" value={line.price} />
           )}
           {line.strikePrice != null && line.strikePrice !== '' && (
-            <span className="text-sm text-contrast-400 line-through">${line.strikePrice}</span>
+            <SuperscriptPrice
+              className="text-sm text-contrast-400 line-through"
+              value={line.strikePrice}
+            />
           )}
         </div>
         {line.emiText != null && line.emiText !== '' && (
@@ -138,5 +141,23 @@ function CabinetLineCard({ line }: { line: CabinetLine }) {
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * Price with the cents rendered as a smaller superscript, e.g. $3289⁵⁵. Splits on the decimal;
+ * whole-dollar amounts render without a superscript. The className sets the base size/weight; the
+ * cents inherit and shrink relative to it.
+ */
+function SuperscriptPrice({ value, className }: { value: string; className?: string }) {
+  const [dollars, cents] = value.split('.');
+
+  return (
+    <span className={className}>
+      ${dollars}
+      {cents != null && cents !== '' && (
+        <sup className="ml-0.5 align-super text-[0.6em] font-bold">{cents.padEnd(2, '0').slice(0, 2)}</sup>
+      )}
+    </span>
   );
 }
