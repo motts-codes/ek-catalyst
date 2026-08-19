@@ -31,6 +31,10 @@ export function isAllowedAdminEmail(email: string | null | undefined): boolean {
 const config: NextAuthConfig = {
   basePath: '/api/admin-auth',
   secret: process.env.AUTH_SECRET,
+  // Trust the request host to build callback URLs. Required for the OAuth flow to work without an
+  // explicit AUTH_URL per environment (localhost dev + Vercel preview). This is an internal,
+  // allowlist-gated staff tool, so trusting the host is appropriate.
+  trustHost: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
