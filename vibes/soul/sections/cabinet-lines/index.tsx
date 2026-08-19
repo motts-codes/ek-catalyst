@@ -108,12 +108,13 @@ function CabinetLineCard({ line }: { line: CabinetLine }) {
         <div className="mt-1 flex items-baseline gap-2">
           {line.price != null && line.price !== '' && (
             <span className="text-xl font-bold leading-none">
-              <SuperscriptPrice formatted={`$${line.price}`} />
+              <SuperscriptPrice formatted={`$${withCommas(line.price)}`} />
             </span>
           )}
+          {/* Strike / was-price: plain formatted price, struck through (no superscript). */}
           {line.strikePrice != null && line.strikePrice !== '' && (
             <span className="text-sm text-contrast-400 line-through">
-              <SuperscriptPrice formatted={`$${line.strikePrice}`} />
+              ${withCommas(line.strikePrice)}
             </span>
           )}
         </div>
@@ -144,4 +145,13 @@ function CabinetLineCard({ line }: { line: CabinetLine }) {
       </div>
     </article>
   );
+}
+
+// Add thousands separators to a raw price string ("3289.55" -> "3,289.55"). Preserves the cents and
+// is a no-op if the value already has commas.
+function withCommas(value: string): string {
+  const [whole = '', cents] = value.split('.');
+  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  return cents != null ? `${grouped}.${cents}` : grouped;
 }
