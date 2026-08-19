@@ -302,9 +302,18 @@ const proMenu: MenuItem[] = [
     ],
   },
   {
-    label: 'Clearance',
+    label: 'Inspiration',
     href: '#',
     group: 'content',
+    groups: [
+      {
+        links: [
+          { label: 'Gallery / Featured Projects', href: '#' },
+          { label: 'Best-Selling Designs', href: '#' },
+          { label: 'Reviews', href: '#' },
+        ],
+      },
+    ],
   },
   {
     label: 'Pro Program',
@@ -324,7 +333,6 @@ const proMenu: MenuItem[] = [
       },
     ],
   },
-  { label: 'Blog', href: '#', group: 'content' },
 ];
 
 export const AUDIENCE_MENUS: Record<AudienceMode, MenuItem[]> = {
