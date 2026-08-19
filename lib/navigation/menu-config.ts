@@ -71,46 +71,8 @@ const homeownerMenu: MenuItem[] = [
       },
     ],
   },
-  {
-    label: 'Appliances',
-    href: '#',
-    group: 'shop',
-    groups: [
-      {
-        links: [
-          { label: 'Ranges & Cooktops', href: '#' },
-          { label: 'Fridges', href: '#' },
-          { label: 'Dishwashers', href: '#' },
-          { label: 'Microwaves', href: '#' },
-          { label: 'Range Hoods', href: '#' },
-          { label: 'Wall Ovens', href: '#' },
-          { label: 'Washers & Dryers', href: '#' },
-          { label: 'All Appliances', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Windows',
-    href: '#',
-    group: 'shop',
-    groups: [
-      {
-        label: 'Replacement',
-        links: [
-          { label: 'Double Hung', href: '#' },
-          { label: 'Slider', href: '#' },
-          { label: 'Hopper', href: '#' },
-        ],
-      },
-      {
-        links: [
-          { label: 'New Construction', href: '#' },
-          { label: 'Accessories', href: '#' },
-        ],
-      },
-    ],
-  },
+  // Closets — simple link for now (dropdown to be designed later).
+  { label: 'Closets', href: '#', group: 'shop' },
   {
     label: 'Kitchen & Bath',
     href: '#',
@@ -153,6 +115,46 @@ const homeownerMenu: MenuItem[] = [
     ],
   },
   {
+    label: 'Appliances',
+    href: '#',
+    group: 'shop',
+    groups: [
+      {
+        links: [
+          { label: 'Ranges & Cooktops', href: '#' },
+          { label: 'Fridges', href: '#' },
+          { label: 'Dishwashers', href: '#' },
+          { label: 'Microwaves', href: '#' },
+          { label: 'Range Hoods', href: '#' },
+          { label: 'Wall Ovens', href: '#' },
+          { label: 'Washers & Dryers', href: '#' },
+          { label: 'All Appliances', href: '#' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Windows',
+    href: '#',
+    group: 'shop',
+    groups: [
+      {
+        label: 'Replacement',
+        links: [
+          { label: 'Double Hung', href: '#' },
+          { label: 'Slider', href: '#' },
+          { label: 'Hopper', href: '#' },
+        ],
+      },
+      {
+        links: [
+          { label: 'New Construction', href: '#' },
+          { label: 'Accessories', href: '#' },
+        ],
+      },
+    ],
+  },
+  {
     label: 'Inspiration',
     href: '#',
     group: 'content',
@@ -184,22 +186,7 @@ const homeownerMenu: MenuItem[] = [
       },
     ],
   },
-  {
-    label: 'Company',
-    href: '#',
-    group: 'content',
-    groups: [
-      {
-        links: [
-          { label: 'About Us', href: '#' },
-          { label: 'Our Story', href: '#' },
-          { label: 'Showrooms', href: '#' },
-          { label: 'Careers', href: '#' },
-          { label: 'Contact', href: '#' },
-        ],
-      },
-    ],
-  },
+  // Company moved to the footer (About/Story/Showrooms/Careers/Contact) — not a nav item.
 ];
 
 // ---------------------------------------------------------------------------
@@ -254,6 +241,32 @@ const proMenu: MenuItem[] = [
       },
     ],
   },
+  // Closets — simple link for now (dropdown to be designed later).
+  { label: 'Closets', href: '#', group: 'shop' },
+  {
+    label: 'Kitchen & Bath',
+    href: '#',
+    group: 'shop',
+    groups: [
+      {
+        // Countertops is call-to-order (not shoppable online) — see the homeowner menu note.
+        label: 'Countertops',
+        links: [
+          { label: 'Granite', href: '#' },
+          { label: 'Quartz', href: '#' },
+          { label: 'Laminate', href: '#' },
+          { label: 'Prefabricated', href: '#' },
+        ],
+      },
+      {
+        links: [
+          { label: 'Sinks', href: '#' },
+          { label: 'Faucets', href: '#' },
+          { label: 'Bath', href: '#' },
+        ],
+      },
+    ],
+  },
   {
     label: 'Appliances',
     href: '#',
@@ -285,30 +298,6 @@ const proMenu: MenuItem[] = [
       },
       {
         links: [{ label: 'New Construction', href: '#' }],
-      },
-    ],
-  },
-  {
-    label: 'Kitchen & Bath',
-    href: '#',
-    group: 'shop',
-    groups: [
-      {
-        // Countertops is call-to-order (not shoppable online) — see the homeowner menu note.
-        label: 'Countertops',
-        links: [
-          { label: 'Granite', href: '#' },
-          { label: 'Quartz', href: '#' },
-          { label: 'Laminate', href: '#' },
-          { label: 'Prefabricated', href: '#' },
-        ],
-      },
-      {
-        links: [
-          { label: 'Sinks', href: '#' },
-          { label: 'Faucets', href: '#' },
-          { label: 'Bath', href: '#' },
-        ],
       },
     ],
   },
