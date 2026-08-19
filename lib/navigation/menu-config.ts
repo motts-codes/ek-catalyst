@@ -195,52 +195,9 @@ const homeownerMenu: MenuItem[] = [
 // category pages (no landing pages). All `#` for now.
 // ---------------------------------------------------------------------------
 const proMenu: MenuItem[] = [
-  {
-    label: 'RTA',
-    href: '#',
-    group: 'shop',
-    groups: [
-      {
-        label: 'Shop RTA',
-        links: [
-          { label: 'By Door Style', href: '#' },
-          { label: 'By Color', href: '#' },
-          { label: 'In-Stock / Quick-Ship', href: '#' },
-        ],
-      },
-      {
-        label: 'Hardware & Accessories',
-        links: [
-          { label: 'Handles', href: '#' },
-          { label: 'Tiles', href: '#' },
-          { label: 'Accessories', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Assembled',
-    href: '#',
-    group: 'shop',
-    groups: [
-      {
-        label: 'Shop Assembled',
-        links: [
-          { label: 'By Door Style', href: '#' },
-          { label: 'By Color', href: '#' },
-          { label: 'In-Stock / Quick-Ship', href: '#' },
-        ],
-      },
-      {
-        label: 'Hardware & Accessories',
-        links: [
-          { label: 'Handles', href: '#' },
-          { label: 'Tiles', href: '#' },
-          { label: 'Accessories', href: '#' },
-        ],
-      },
-    ],
-  },
+  // RTA / Assembled are direct links to their listing pages (no dropdown) for contractors.
+  { label: 'RTA', href: '/cabinets/rta-cabinets', group: 'shop' },
+  { label: 'Assembled', href: '/cabinets/assembled-cabinets', group: 'shop' },
   // Closets — simple link for now (dropdown to be designed later).
   { label: 'Closets', href: '#', group: 'shop' },
   {
