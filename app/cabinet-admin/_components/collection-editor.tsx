@@ -52,8 +52,12 @@ export function CollectionEditor({
     validatePrice(data.sample.price) != null ||
     validateUrl(data.specSheets.assembled) != null ||
     validateUrl(data.specSheets.rta) != null ||
+    validateUrl(data.shopNowUrl.assembled) != null ||
+    validateUrl(data.shopNowUrl.rta) != null ||
     data.images.some((u) => validateUrl(u) != null) ||
-    data.assembly.videos.some((v) => validateUrl(v.url) != null);
+    [...data.assembly.rta, ...data.assembly.assembled].some(
+      (v) => validateUrl(v.url) != null,
+    );
 
   return (
     <div>
@@ -158,13 +162,30 @@ export function CollectionEditor({
             value={data.content.overview}
           />
           <Textarea
-            label="Specifications (HTML)"
+            label="Short description (HTML)"
             onChange={(v) =>
-              setData((d) => ({ ...d, content: { ...d.content, specifications: v } }))
+              setData((d) => ({ ...d, content: { ...d.content, short_description: v } }))
             }
-            rows={6}
-            value={data.content.specifications}
+            rows={3}
+            value={data.content.short_description}
           />
+          {(['assembled', 'rta'] as const).map((prog) => (
+            <Textarea
+              key={prog}
+              label={`Specifications — ${prog === 'assembled' ? 'Assembled' : 'RTA'} (HTML)`}
+              onChange={(v) =>
+                setData((d) => ({
+                  ...d,
+                  content: {
+                    ...d.content,
+                    specifications: { ...d.content.specifications, [prog]: v },
+                  },
+                }))
+              }
+              rows={5}
+              value={data.content.specifications[prog]}
+            />
+          ))}
           <Textarea
             label="Disclaimer (HTML) — small print shown at the bottom"
             onChange={(v) => setData((d) => ({ ...d, content: { ...d.content, disclaimer: v } }))}
@@ -173,10 +194,32 @@ export function CollectionEditor({
           />
         </Group>
 
-        <Group title="Assembly Instructions">
-          <AssemblyEditor
-            onChange={(videos) => setData((d) => ({ ...d, assembly: { videos } }))}
-            videos={data.assembly.videos}
+        {(['assembled', 'rta'] as const).map((prog) => (
+          <Group
+            key={prog}
+            title={`Assembly Instructions — ${prog === 'assembled' ? 'Assembled' : 'RTA'}`}
+          >
+            <AssemblyEditor
+              onChange={(videos) =>
+                setData((d) => ({ ...d, assembly: { ...d.assembly, [prog]: videos } }))
+              }
+              videos={data.assembly[prog]}
+            />
+          </Group>
+        ))}
+
+        <Group title="Shop-now URLs (reference)">
+          <Field
+            error={validateUrl(data.shopNowUrl.assembled)}
+            label="Assembled"
+            onChange={(v) => setData((d) => ({ ...d, shopNowUrl: { ...d.shopNowUrl, assembled: v } }))}
+            value={data.shopNowUrl.assembled}
+          />
+          <Field
+            error={validateUrl(data.shopNowUrl.rta)}
+            label="RTA"
+            onChange={(v) => setData((d) => ({ ...d, shopNowUrl: { ...d.shopNowUrl, rta: v } }))}
+            value={data.shopNowUrl.rta}
           />
         </Group>
 

@@ -53,12 +53,21 @@ export interface CollectionMetafields {
   // the attribute master-lists on 863. Product Line replaces the old free-text merch.line;
   // Construction replaces merch.door_style; the default color supersedes merch.default_finish.
   spec: CollectionSpec;
-  // assembly.videos = [{ name, url }] — per-collection assembly instruction videos (YouTube links).
-  assembly: { videos: AssemblyVideo[] };
-  // content.* — HTML rich text authored by staff (rendered directly; same trust boundary as the
-  // native BC category description). Overview REPLACES the native category-description render for
-  // cabinets. Disclaimer is small print at the bottom. Specifications is its own section.
-  content: { overview: string; disclaimer: string; specifications: string };
+  // assembly.videos = { rta: [{name,url}], assembled: [...] } — PER-PROGRAM assembly videos. RTA
+  // ships flat (has videos); Assembled ships built (usually none). Matches the Laravel source.
+  assembly: { rta: AssemblyVideo[]; assembled: AssemblyVideo[] };
+  // content.* — HTML rich text. overview REPLACES the native category description; disclaimer is
+  // small print; short_description is a brief blurb; specifications is PER-PROGRAM (RTA/Assembled
+  // spec lists differ). All staff-authored HTML rendered directly.
+  content: {
+    overview: string;
+    disclaimer: string;
+    short_description: string;
+    specifications: { rta: string; assembled: string };
+  };
+  // assets.shop_now_url = { rta, assembled } — the original expresskitchens.com URL per program
+  // (from Laravel; useful for reference/redirects).
+  shopNowUrl: { rta: string; assembled: string };
   // media.images = [url×5] — collection gallery; images[0] is the main image.
   images: string[];
 }
@@ -81,8 +90,14 @@ export function emptyCollectionMetafields(): CollectionMetafields {
       rta: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
     },
     spec: { productLineId: '', constructionId: '', colorIds: [], defaultColorId: '' },
-    assembly: { videos: [] },
-    content: { overview: '', disclaimer: '', specifications: '' },
+    assembly: { rta: [], assembled: [] },
+    content: {
+      overview: '',
+      disclaimer: '',
+      short_description: '',
+      specifications: { rta: '', assembled: '' },
+    },
+    shopNowUrl: { rta: '', assembled: '' },
     images: Array.from({ length: IMAGE_SLOTS }, () => ''),
   };
 }
@@ -135,7 +150,18 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
         default_color_id?: string;
       }
     | undefined;
-  const assembly = findValue(mfs, 'assembly', 'videos') as AssemblyVideo[] | undefined;
+  // Assembly is now per-program (assembly.by_program). Fall back to the legacy flat assembly.videos
+  // (put under RTA) so pre-migration collections still read.
+  const assemblyByProgram = findValue(mfs, 'assembly', 'by_program') as
+    | { rta?: AssemblyVideo[]; assembled?: AssemblyVideo[] }
+    | undefined;
+  const legacyAssembly = findValue(mfs, 'assembly', 'videos') as AssemblyVideo[] | undefined;
+  const specByProgram = findValue(mfs, 'content', 'spec_by_program') as
+    | { rta?: string; assembled?: string }
+    | undefined;
+  const shopNow = findValue(mfs, 'assets', 'shop_now_url') as
+    | { rta?: string; assembled?: string }
+    | undefined;
   const imagesRaw = findValue(mfs, 'media', 'images') as string[] | undefined;
   const images = Array.from({ length: IMAGE_SLOTS }, (_, i) =>
     Array.isArray(imagesRaw) && typeof imagesRaw[i] === 'string' ? imagesRaw[i] : '',
@@ -172,17 +198,26 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
       defaultColorId: spec?.default_color_id ?? '',
     },
     assembly: {
-      videos: Array.isArray(assembly)
-        ? assembly.map((v) => ({ name: v.name ?? '', url: v.url ?? '' }))
-        : [],
+      rta: normalizeVideos(assemblyByProgram?.rta ?? legacyAssembly),
+      assembled: normalizeVideos(assemblyByProgram?.assembled),
     },
     content: {
       overview: findRaw(mfs, 'content', 'overview'),
       disclaimer: findRaw(mfs, 'content', 'disclaimer'),
-      specifications: findRaw(mfs, 'content', 'specifications'),
+      short_description: findRaw(mfs, 'content', 'short_description'),
+      specifications: {
+        // Prefer per-program; fall back to the legacy single content.specifications for both.
+        rta: specByProgram?.rta ?? findRaw(mfs, 'content', 'specifications'),
+        assembled: specByProgram?.assembled ?? findRaw(mfs, 'content', 'specifications'),
+      },
     },
+    shopNowUrl: { rta: shopNow?.rta ?? '', assembled: shopNow?.assembled ?? '' },
     images,
   };
+}
+
+function normalizeVideos(v: AssemblyVideo[] | undefined): AssemblyVideo[] {
+  return Array.isArray(v) ? v.map((x) => ({ name: x.name ?? '', url: x.url ?? '' })) : [];
 }
 
 /** Write the structured shape back to the collection's metafields (only writes the 5 namespaces). */
@@ -262,32 +297,49 @@ export async function writeCollectionMetafields(
     }),
   );
 
-  // Assembly videos — drop rows with no name AND no url.
+  // Assembly videos — PER-PROGRAM (assembly.by_program). Drop rows with no name AND no url.
+  const cleanVideos = (vs: AssemblyVideo[]) =>
+    vs.filter((v) => v.name.trim() !== '' || v.url.trim() !== '');
   await upsertMetafield(
     'categories',
     categoryId,
     'assembly',
-    'videos',
-    JSON.stringify(
-      data.assembly.videos.filter((v) => v.name.trim() !== '' || v.url.trim() !== ''),
-    ),
+    'by_program',
+    JSON.stringify({
+      rta: cleanVideos(data.assembly.rta),
+      assembled: cleanVideos(data.assembly.assembled),
+    }),
   );
 
-  // Rich-text content — stored as raw HTML strings (rendered verbatim on the storefront).
+  // Rich-text content — raw HTML strings rendered verbatim. specifications is PER-PROGRAM (JSON under
+  // content.spec_by_program); overview / disclaimer / short_description are single raw strings.
   await upsertMetafield('categories', categoryId, 'content', 'overview', data.content.overview);
+  await upsertMetafield('categories', categoryId, 'content', 'disclaimer', data.content.disclaimer);
   await upsertMetafield(
     'categories',
     categoryId,
     'content',
-    'disclaimer',
-    data.content.disclaimer,
+    'short_description',
+    data.content.short_description,
   );
   await upsertMetafield(
     'categories',
     categoryId,
     'content',
-    'specifications',
-    data.content.specifications,
+    'spec_by_program',
+    JSON.stringify({
+      rta: data.content.specifications.rta,
+      assembled: data.content.specifications.assembled,
+    }),
+  );
+
+  // Shop-now URL per program (assets.shop_now_url) — reference URLs from the old site.
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'assets',
+    'shop_now_url',
+    JSON.stringify({ rta: data.shopNowUrl.rta, assembled: data.shopNowUrl.assembled }),
   );
 
   // Gallery images — fixed 5 slots (images[0] = main); trailing blanks preserved so slot order is

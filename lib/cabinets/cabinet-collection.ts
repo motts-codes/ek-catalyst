@@ -405,28 +405,42 @@ export interface CabinetCollectionContent {
   disclaimer: string;
 }
 
-/** Specifications + disclaimer HTML for a collection (staff-authored; rendered verbatim). */
+/**
+ * Specifications (PER-PROGRAM) + disclaimer HTML for a collection. Specifications come from
+ * content.spec_by_program[program], falling back to the legacy single content.specifications.
+ */
 export const getCabinetCollectionContent = cache(
-  async (categoryId: number): Promise<CabinetCollectionContent> => {
+  async (categoryId: number, program: CabinetProgram): Promise<CabinetCollectionContent> => {
     const cat = await fetchCabinetCollection(categoryId);
 
     const val = (key: string) =>
       cat?.content.edges?.find((e) => e.node.key === key)?.node.value ?? '';
 
-    return { specifications: val('specifications'), disclaimer: val('disclaimer') };
+    const specByProgram = parseJson<{ rta?: string; assembled?: string }>(val('spec_by_program'));
+    const specifications = specByProgram?.[program] ?? val('specifications');
+
+    return { specifications, disclaimer: val('disclaimer') };
   },
 );
 
-/** Assembly-instruction videos for a collection (name + YouTube url), with the video id parsed. */
+/**
+ * Assembly-instruction videos for a collection + PROGRAM (name + YouTube url, id parsed). Reads
+ * assembly.by_program[program], falling back to the legacy flat assembly.videos.
+ */
 export const getCabinetAssemblyVideos = cache(
-  async (categoryId: number): Promise<CabinetAssemblyVideo[]> => {
+  async (categoryId: number, program: CabinetProgram): Promise<CabinetAssemblyVideo[]> => {
     const cat = await fetchCabinetCollection(categoryId);
 
     if (!cat) return [];
 
-    const raw = parseJson<Array<{ name?: string; url?: string }>>(
-      cat.assembly.edges?.find((e) => e.node.key === 'videos')?.node.value,
-    );
+    const value = cat.assembly.edges?.find((e) => e.node.key === 'by_program')?.node.value;
+    const byProgram = parseJson<{ rta?: unknown; assembled?: unknown }>(value);
+    const raw = Array.isArray(byProgram?.[program])
+      ? (byProgram[program] as Array<{ name?: string; url?: string }>)
+      : // Legacy fallback: flat assembly.videos list (treated as the program's list).
+        parseJson<Array<{ name?: string; url?: string }>>(
+          cat.assembly.edges?.find((e) => e.node.key === 'videos')?.node.value,
+        );
 
     if (!Array.isArray(raw)) return [];
 

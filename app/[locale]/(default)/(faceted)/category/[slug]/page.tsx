@@ -318,10 +318,14 @@ export default async function Category(props: Props) {
       ? await getCabinetCollectionFaq(categoryId, cabinetProgram)
       : null;
 
-  // Assembly-instruction videos (per collection, not program-specific).
-  const cabinetAssembly = isCabinet ? await getCabinetAssemblyVideos(categoryId) : [];
-  // Specifications + disclaimer (per collection).
-  const cabinetContent = isCabinet ? await getCabinetCollectionContent(categoryId) : null;
+  // Assembly-instruction videos + specifications are PER-PROGRAM — scoped to the current program
+  // (defaults to Assembled via cabinetProgram, matching the header/pricing).
+  const cabinetAssembly =
+    isCabinet && cabinetProgram ? await getCabinetAssemblyVideos(categoryId, cabinetProgram) : [];
+  const cabinetContent =
+    isCabinet && cabinetProgram
+      ? await getCabinetCollectionContent(categoryId, cabinetProgram)
+      : null;
 
   return (
     <>
