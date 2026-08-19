@@ -67,13 +67,16 @@ export function CabinetCollectionHeader({ data, className }: Props) {
             </h1>
 
             {(() => {
-              // Prefer the attribute selections (Product Line / Construction); fall back to the
-              // legacy free-text merch fields for collections not yet migrated.
+              // Product Line, Construction and Door Style are three DISTINCT dimensions (Laravel
+              // treats door style — e.g. "Shaker Full Overlay" — separately from construction —
+              // Framed/Frameless/Slab). Prefer the attribute selection; fall back to legacy merch.
               const line = data.productLine || data.line;
-              const construction = data.construction || data.doorStyle;
+              const construction = data.construction; // Framed / Frameless / Slab
+              const doorStyle = data.doorStyle; // e.g. Shaker Full Overlay
               const meta = [
                 line,
                 construction,
+                doorStyle,
                 data.colors?.length ? undefined : data.defaultFinish,
               ]
                 .filter(Boolean)
