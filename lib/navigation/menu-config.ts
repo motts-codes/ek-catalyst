@@ -72,7 +72,7 @@ const homeownerMenu: MenuItem[] = [
     ],
   },
   // Closets — simple link for now (dropdown to be designed later).
-  { label: 'Closets', href: '#', group: 'shop' },
+  { label: 'Closets', href: '/closets', group: 'shop' },
   {
     label: 'Kitchen & Bath',
     href: '#',
@@ -116,7 +116,7 @@ const homeownerMenu: MenuItem[] = [
   },
   {
     label: 'Appliances',
-    href: '#',
+    href: '/appliances',
     group: 'shop',
     groups: [
       {
@@ -135,7 +135,7 @@ const homeownerMenu: MenuItem[] = [
   },
   {
     label: 'Windows',
-    href: '#',
+    href: '/windows',
     group: 'shop',
     groups: [
       {
@@ -199,7 +199,7 @@ const proMenu: MenuItem[] = [
   { label: 'RTA', href: '/cabinets/rta-cabinets', group: 'shop' },
   { label: 'Assembled', href: '/cabinets/assembled-cabinets', group: 'shop' },
   // Closets — simple link for now (dropdown to be designed later).
-  { label: 'Closets', href: '#', group: 'shop' },
+  { label: 'Closets', href: '/closets', group: 'shop' },
   {
     label: 'Kitchen & Bath',
     href: '#',
@@ -226,7 +226,7 @@ const proMenu: MenuItem[] = [
   },
   {
     label: 'Appliances',
-    href: '#',
+    href: '/appliances',
     group: 'shop',
     groups: [
       {
@@ -242,7 +242,7 @@ const proMenu: MenuItem[] = [
   },
   {
     label: 'Windows',
-    href: '#',
+    href: '/windows',
     group: 'shop',
     groups: [
       {
