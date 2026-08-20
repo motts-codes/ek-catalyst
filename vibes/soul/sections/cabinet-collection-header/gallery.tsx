@@ -25,7 +25,9 @@ export function Gallery({
         {main != null && (
           <Image
             alt={name}
-            className={`size-full ${containMain ? 'object-contain p-4' : 'object-cover'}`}
+            // Contractor door-sample lead is contained and scaled to 0.75x so it sits smaller in the
+            // frame; homeowner kitchen fills (object-cover).
+            className={`size-full ${containMain ? 'scale-75 object-contain' : 'object-cover'}`}
             height={900}
             sizes="(min-width: 48rem) 40vw, 100vw"
             src={main}
