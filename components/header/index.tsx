@@ -154,9 +154,11 @@ export const Header = async () => {
         audienceMode,
         audienceToggle: <AudienceToggle mode={audienceMode} />,
         ctaButton: (
-          // Audience-aware label (Free Design Consult / Free Design & Quote), brand blue (#2162a1).
+          // Audience-aware label (Free Design Consult / Free Design & Quote): brand blue (#2162a1)
+          // base, BLACK on hover. The tertiary variant animates its hover via an ::after overlay,
+          // so the hover color is set on after:bg (not the base bg).
           <ButtonLink
-            className="border-[#2162a1] bg-[#2162a1] text-white [&_span]:!text-white [&:hover]:bg-[#1b5288] [&:hover]:border-[#1b5288]"
+            className="border-[#2162a1] bg-[#2162a1] text-white after:!bg-black hover:!text-white [&_span]:!text-white"
             href={AUDIENCE_CTA[audienceMode].href}
             size="x-small"
             variant="tertiary"

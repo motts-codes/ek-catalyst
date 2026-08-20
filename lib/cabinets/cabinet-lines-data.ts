@@ -140,16 +140,18 @@ interface ProgramPricing {
 function pickCardImages(
   gallery: string[],
   audience: 'homeowner' | 'pro',
-): { cover?: string; hover?: string } {
+): { cover?: string; hover?: string; containCover?: boolean } {
   const doorSample = gallery[0];
   const kitchen = gallery.length > 1 ? gallery[gallery.length - 1] : undefined;
 
   if (audience === 'homeowner' && kitchen) {
+    // Kitchen is a lifestyle shot — fill the card (object-cover).
     return { cover: kitchen, hover: doorSample };
   }
 
-  // Contractor (or homeowner with no kitchen image): door sample cover, no hover.
-  return { cover: doorSample, hover: undefined };
+  // Contractor (or homeowner with no kitchen image): door-sample cover — contain it so the whole
+  // sample is visible (not cropped).
+  return { cover: doorSample, hover: undefined, containCover: true };
 }
 
 /**
@@ -197,7 +199,7 @@ export const getCabinetLines = cache(
         const gallery = (parseJson<string[]>(galleryRaw) ?? []).filter(
           (u): u is string => typeof u === 'string' && u !== '',
         );
-        const { cover, hover } = pickCardImages(gallery, audience);
+        const { cover, hover, containCover } = pickCardImages(gallery, audience);
         const mainSrc = cover ?? child.image?.url; // fall back to native BC category image
         const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
         const hoverImage = hover ? { src: hover, alt: `${child.name} door sample` } : undefined;
@@ -209,6 +211,7 @@ export const getCabinetLines = cache(
           name: child.name,
           href,
           image,
+          containCover: containCover ?? false,
           hoverImage,
           price: pricing?.price,
           strikePrice: pricing?.strike_price,

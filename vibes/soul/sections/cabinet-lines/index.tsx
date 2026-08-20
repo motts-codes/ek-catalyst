@@ -17,6 +17,9 @@ export interface CabinetLine {
   /** Category page URL, e.g. /cabinets/avon/ */
   href: string;
   image?: { src: string; alt: string };
+  /** Fit the cover with object-contain instead of object-cover (used for the contractor door-sample
+   *  cover, which shouldn't be cropped). */
+  containCover?: boolean;
   /** Second gallery image (e.g. door sample) — revealed on hover, bottom-right, sliding up. */
   hoverImage?: { src: string; alt: string };
   /** "Basic Kitchen Starting" price for the selected program. */
@@ -83,7 +86,9 @@ function CabinetLineCard({ line }: { line: CabinetLine }) {
         {line.image ? (
           <Image
             alt={line.image.alt}
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className={`h-full w-full transition-transform duration-500 ease-out group-hover:scale-105 ${
+              line.containCover ? 'object-contain p-4' : 'object-cover'
+            }`}
             fill
             sizes="(min-width: 56rem) 33vw, (min-width: 36rem) 50vw, 100vw"
             src={line.image.src}
