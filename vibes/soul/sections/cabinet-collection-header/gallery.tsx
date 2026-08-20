@@ -19,15 +19,17 @@ export function Gallery({
   const [active, setActive] = useState(0);
   const main = images[active] ?? images[0];
 
+  // Only the contractor door-sample lead (the first image) is scaled/contained. Once the visitor
+  // clicks a thumbnail to view any other image, it renders full (object-cover).
+  const scaleThis = containMain && active === 0;
+
   return (
     <div className="mb-6">
       <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-contrast-100">
         {main != null && (
           <Image
             alt={name}
-            // Contractor door-sample lead is contained and scaled to 0.75x so it sits smaller in the
-            // frame; homeowner kitchen fills (object-cover).
-            className={`size-full ${containMain ? 'scale-75 object-contain' : 'object-cover'}`}
+            className={`size-full ${scaleThis ? 'scale-75 object-contain' : 'object-cover'}`}
             height={900}
             sizes="(min-width: 48rem) 40vw, 100vw"
             src={main}
