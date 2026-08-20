@@ -24,6 +24,8 @@ export interface CabinetCollectionHeaderData {
   overview?: string;
   /** Gallery image URLs; images[0] is the main image. */
   images?: string[];
+  /** Contain (not crop) the main gallery image — used for the contractor door-sample lead. */
+  containMainImage?: boolean;
   /** Merch info: line / door style / default finish. */
   line?: string;
   doorStyle?: string;
@@ -61,7 +63,9 @@ export function CabinetCollectionHeader({ data, className }: Props) {
         <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-[1fr_auto] @3xl:items-start">
           {/* Left: gallery, name, merch line, overview, spec sheet. */}
           <div className="max-w-2xl">
-            {images.length > 0 && <Gallery images={images} name={data.name} />}
+            {images.length > 0 && (
+              <Gallery containMain={data.containMainImage} images={images} name={data.name} />
+            )}
 
             <h1 className="font-heading text-3xl font-medium leading-tight @lg:text-4xl">
               {data.name}

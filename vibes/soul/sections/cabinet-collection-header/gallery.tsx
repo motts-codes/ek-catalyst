@@ -6,7 +6,16 @@ import { Image } from '~/components/image';
 
 // Collection image gallery for the header: a large main image + a thumbnail strip. images[0] is the
 // initial main image; clicking a thumbnail swaps it. Client component so the swap is interactive.
-export function Gallery({ images, name }: { images: string[]; name: string }) {
+export function Gallery({
+  images,
+  name,
+  containMain = false,
+}: {
+  images: string[];
+  name: string;
+  // Contain (not crop) the MAIN image — for the contractor door-sample lead. Thumbnails always cover.
+  containMain?: boolean;
+}) {
   const [active, setActive] = useState(0);
   const main = images[active] ?? images[0];
 
@@ -16,7 +25,7 @@ export function Gallery({ images, name }: { images: string[]; name: string }) {
         {main != null && (
           <Image
             alt={name}
-            className="size-full object-cover"
+            className={`size-full ${containMain ? 'object-contain p-4' : 'object-cover'}`}
             height={900}
             sizes="(min-width: 48rem) 40vw, 100vw"
             src={main}

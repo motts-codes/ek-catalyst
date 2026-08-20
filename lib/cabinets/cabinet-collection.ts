@@ -387,10 +387,14 @@ export const getCabinetCollectionHeader = cache(
         ? [kitchen, ...rawImages.slice(0, -1)]
         : rawImages;
 
+    // Contractors lead with the door sample — contain it (not crop) so it's fully visible.
+    const containMainImage = audience === 'pro';
+
     return {
       name: cat.name,
       overview: overview !== '' ? overview : undefined,
       images: images.length > 0 ? images : undefined,
+      containMainImage,
       line: merch?.line,
       doorStyle: merch?.door_style,
       defaultFinish: merch?.default_finish,
