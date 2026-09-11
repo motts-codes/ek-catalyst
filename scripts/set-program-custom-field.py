@@ -57,6 +57,23 @@ class Client:
             "Accept": "application/json",
         }
         self.dry_run = dry_run
+        self.sku_map = self._load_map()
+
+    @staticmethod
+    def _load_map():
+        """Load the SKU -> Program map (derived from live category IDs). Reliable source;
+        the name heuristic below is only a fallback for SKUs missing from the map."""
+        path = os.path.join(os.path.dirname(__file__), "sku_program_map.csv")
+        m = {}
+        if os.path.exists(path):
+            import csv
+            with open(path, newline="", encoding="utf-8") as f:
+                for row in csv.DictReader(f):
+                    sku = (row.get("SKU") or "").strip()
+                    prog = (row.get("Program") or "").strip()
+                    if sku and prog:
+                        m[sku] = prog
+        return m
 
     def _req(self, method, path, body=None):
         data = json.dumps(body).encode() if body is not None else None
@@ -75,17 +92,17 @@ class Client:
         else:
             cat_ids = [category_id]
 
-        ids = {}  # id -> name
+        ids = {}  # id -> (name, sku)
         for cid in cat_ids:
             page = 1
             while True:
                 resp = self._req(
                     "GET",
                     f"/catalog/products?categories:in={cid}&limit=250&page={page}"
-                    "&include_fields=name",
+                    "&include_fields=name,sku",
                 )
                 for p in resp.get("data", []):
-                    ids[p["id"]] = p["name"]
+                    ids[p["id"]] = (p["name"], p.get("sku", ""))
                 pag = resp.get("meta", {}).get("pagination", {})
                 if page >= pag.get("total_pages", 1):
                     break
@@ -93,17 +110,33 @@ class Client:
 
         return ids
 
-    def programs_for(self, name):
-        """The Program value(s) a product should have, from its name."""
-        if " RTA " in f" {name} ":
+    def programs_for(self, name, sku=""):
+        """The Program value(s) a product should have.
+
+        1) Prefer the SKU -> Program map (derived from the original live category IDs —
+           the reliable signal). 'Both' means an accessory shared by both programs.
+        2) Fall back to the product name. Handles both the super-SKU page names
+           ("… - Assembled" / "… - RTA") and the raw flat catalogue, where RTA names
+           read "Ready to Assemble" (NOT "RTA"). Neither present -> accessory -> both.
+        """
+        mapped = self.sku_map.get((sku or "").strip())
+        if mapped == "Both":
+            return ["RTA", "Assembled"]
+        if mapped in ("RTA", "Assembled"):
+            return [mapped]
+
+        padded = f" {name} "
+        is_rta = (" RTA " in padded) or ("Ready to Assemble" in name) or padded.rstrip().endswith("- RTA")
+        is_asm = (" Assembled " in padded) or padded.rstrip().endswith("- Assembled")
+        if is_rta and not is_asm:
             return ["RTA"]
-        if " Assembled " in f" {name} ":
+        if is_asm and not is_rta:
             return ["Assembled"]
 
         return ["RTA", "Assembled"]  # accessory -> both
 
-    def set_program(self, product_id, name):
-        want = self.programs_for(name)
+    def set_program(self, product_id, name, sku=""):
+        want = self.programs_for(name, sku)
         existing = [
             cf
             for cf in self._req("GET", f"/catalog/products/{product_id}/custom-fields").get(
@@ -144,10 +177,11 @@ def main():
     client = Client(hash_, token, dry_run=args.dry_run)
 
     products = client.cabinet_product_ids(args.category)
-    print(f"{len(products)} cabinet products found. Setting Program custom field…")
+    src = f"{len(client.sku_map)} SKUs in sku_program_map.csv" if client.sku_map else "no map found — using name fallback"
+    print(f"{len(products)} cabinet products found ({src}). Setting Program custom field…")
     try:
-        for pid, name in sorted(products.items()):
-            client.set_program(pid, name)
+        for pid, (name, sku) in sorted(products.items()):
+            client.set_program(pid, name, sku)
     except urllib.error.HTTPError as e:
         sys.exit(f"HTTP {e.code}: {e.read().decode()[:400]}")
 
