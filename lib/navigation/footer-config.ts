@@ -1,0 +1,115 @@
+// Footer link columns, per the wireframe. Developer-edited (like menu-config.ts); Makeswift can
+// append links to a column (same title) or add columns via the Site Footer component.
+// A link without `href` renders as a sub-heading inside the column ("Offers", "Industries").
+// `href: '#'` = page not built yet.
+
+import { type Section } from '@/vibes/soul/sections/footer';
+
+export const FOOTER_SECTIONS: Section[] = [
+  {
+    title: 'Shop',
+    links: [
+      { label: 'Cabinets', href: '/cabinets' },
+      { label: 'Closets', href: '/closets' },
+      { label: 'Countertops', href: '#' },
+      { label: 'Appliances', href: '/appliances' },
+      { label: 'Windows', href: '/windows' },
+      { label: 'Doors', href: '#' },
+      { label: 'Siding', href: '#' },
+      { label: 'Bath', href: '#' },
+      { label: 'Cabinet hardware', href: '#' },
+      { label: 'Sinks & faucets', href: '#' },
+      { label: 'Offers' },
+      { label: 'Quick Ship', href: '#' },
+      { label: 'Sale', href: '#' },
+      { label: 'Clearance', href: '#' },
+      { label: 'Promotions', href: '#' },
+    ],
+  },
+  {
+    title: 'Inspiration',
+    links: [
+      { label: 'Best-selling designs', href: '#' },
+      { label: 'Finished kitchens', href: '#' },
+      { label: 'Projects', href: '#' },
+      { label: 'Reviews', href: '#' },
+      { label: 'Testimonials', href: '#' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Free design consult', href: '#' },
+      { label: 'Kitchen estimator', href: '#' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Order samples', href: '#' },
+      { label: 'Financing', href: '#' },
+      { label: 'Download brochure', href: '#' },
+      { label: 'Measuring guide', href: '#' },
+      { label: 'What is a 10×10 kitchen', href: '#' },
+      { label: 'How-to videos', href: '#' },
+      { label: 'Cabinet care', href: '#' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '#' },
+      { label: 'Why Express Kitchens', href: '#' },
+      { label: 'Showrooms', href: '#' },
+      { label: 'Pro Program', href: '/pro' },
+      { label: 'Refer a friend', href: '#' },
+      { label: 'Careers', href: '#' },
+      { label: 'Industries' },
+      { label: 'Commercial', href: '#' },
+      { label: 'Multifamily', href: '#' },
+      {
+        label: 'Factory outlet ↗',
+        href: 'https://expresskitchensfactoryoutlet.com/',
+        target: '_blank',
+      },
+      { label: 'Wholesale ↗', href: 'https://kunalkitchens.com/', target: '_blank' },
+    ],
+  },
+  {
+    title: 'Support',
+    links: [
+      { label: 'Contact', href: '#' },
+      { label: 'FAQ', href: '#' },
+      { label: 'Shipping & pickup', href: '#' },
+      { label: 'Returns', href: '#' },
+      { label: 'Warranty', href: '#' },
+      { label: 'Price match', href: '#' },
+      {
+        label: 'Find an installer ↗',
+        href: 'https://www.contractors.com/g/contractor-search/?category=Additions+and+Remodels&subcategory=Remodel%20-%20Multiple%20Rooms',
+        target: '_blank',
+      },
+    ],
+  },
+];
+
+export const FOOTER_CONTACT = {
+  title: 'Have a question? Call or text us 24/7',
+  phone: { label: '860-247-1000', href: 'tel:+18602471000' },
+  hoursTitle: 'Working hours',
+  hours: ['Vary by showroom', 'Mon – Sat: 9 AM to 6 PM (Eastern)', 'Sunday: Closed'],
+  showroomsTitle: 'Find a showroom',
+};
+
+export const FOOTER_LEGAL_LINKS = [
+  { label: 'Privacy', href: '#' },
+  { label: 'Terms', href: '#' },
+  { label: 'Accessibility', href: '#' },
+];
+
+export const FOOTER_NEWSLETTER = {
+  title: 'Subscribe to our newsletter',
+  description:
+    'Design trends, new collections, showroom events and offers — once a month, in one email.',
+  placeholder: 'Your email',
+  submitLabel: 'Subscribe',
+};
+
+export const FOOTER_BRAND_DESCRIPTION =
+  'Express Kitchens excels at delivering affordable kitchen remodeling solutions for residential and commercial clients.';

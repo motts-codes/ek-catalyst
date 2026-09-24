@@ -1,9 +1,13 @@
+import { SubmissionResult } from '@conform-to/react';
 import { clsx } from 'clsx';
+import { Phone } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
+import { InlineEmailForm } from '@/vibes/soul/primitives/inline-email-form';
 import { Logo } from '@/vibes/soul/primitives/logo';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
+import { ShowroomSelect } from '@/vibes/soul/sections/closing-band/showroom-select';
 import { Link } from '~/components/link';
 
 interface Image {
@@ -11,15 +15,16 @@ interface Image {
   alt: string;
 }
 
-interface Link {
-  href: string;
+interface FooterLink {
+  /** Omit to render the label as a sub-heading inside the column (e.g. "Offers"). */
+  href?: string;
   label: string;
   target?: string;
 }
 
 export interface Section {
   title?: string;
-  links: Link[];
+  links: FooterLink[];
 }
 
 interface SocialMediaLink {
@@ -32,10 +37,30 @@ interface ContactInformation {
   phone?: string;
 }
 
+type Action<State, Payload> = (state: Awaited<State>, payload: Payload) => State | Promise<State>;
+
+export interface NewsletterBand {
+  title: string;
+  description?: string;
+  placeholder?: string;
+  submitLabel?: string;
+  action: Action<{ lastResult: SubmissionResult | null; successMessage?: string }, FormData>;
+}
+
+export interface ContactPanel {
+  title: string;
+  phone: { label: string; href: string };
+  hoursTitle?: string;
+  hours?: string[];
+  showroomsTitle?: string;
+  showrooms?: Array<{ name: string; href: string }>;
+}
+
 export interface FooterProps {
   logo: Streamable<string | Image | null>;
   sections: Streamable<Section[]>;
   copyright?: Streamable<string>;
+  /** Legacy address/phone block — superseded by `contactPanel` when both are given. */
   contactInformation?: Streamable<ContactInformation>;
   paymentIcons?: Streamable<ReactNode[]>;
   socialMediaLinks?: Streamable<SocialMediaLink[]>;
@@ -45,30 +70,28 @@ export interface FooterProps {
   logoLabel?: string;
   logoWidth?: number;
   logoHeight?: number;
+  /** "Subscribe to our newsletter" band above the footer. */
+  newsletter?: NewsletterBand;
+  /** One-line brand blurb under the logo. */
+  description?: string;
+  /** Call/text · working hours · find-a-showroom column (last column of the link grid). */
+  contactPanel?: ContactPanel;
+  /** Privacy · Terms · Accessibility, shown after the copyright in the legal strip. */
+  legalLinks?: FooterLink[];
 }
 
-// eslint-disable-next-line valid-jsdoc
-/**
- * This component supports various CSS variables for theming. Here's a comprehensive list, along
- * with their default values:
- *
- * ```css
- * :root {
- *   --footer-focus: hsl(var(--primary));
- *   --footer-background: hsl(var(--background));
- *   --footer-border-top: hsl(var(--contrast-100));
- *   --footer-border-bottom: hsl(var(--primary));
- *   --footer-contact-title: hsl(var(--contrast-500));
- *   --footer-contact-text: hsl(var(--foreground));
- *   --footer-social-icon: hsl(var(--contrast-400));
- *   --footer-social-icon-hover: hsl(var(--foreground));
- *   --footer-section-title: hsl(var(--foreground));
- *   --footer-link: hsl(var(--contrast-500));
- *   --footer-link-hover: hsl(var(--foreground));
- *   --footer-copyright: hsl(var(--contrast-500));
- * }
- * ```
- */
+const footerLinkClassName =
+  'block rounded-lg py-1.5 text-sm text-[var(--footer-link,hsl(var(--contrast-500)))] ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 hover:text-[var(--footer-link-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
+
+// Site footer, per the wireframe: newsletter band → brand row (logo, blurb, social) → link columns
+// + the contact column → legal strip with payment badges.
+//
+// Supports these CSS variables (defaults shown):
+//   --footer-focus: hsl(var(--primary)); --footer-background: hsl(var(--background));
+//   --footer-border-top: hsl(var(--contrast-100)); --footer-social-icon: hsl(var(--contrast-400));
+//   --footer-social-icon-hover: hsl(var(--foreground)); --footer-section-title: hsl(var(--foreground));
+//   --footer-link: hsl(var(--contrast-500)); --footer-link-hover: hsl(var(--foreground));
+//   --footer-copyright: hsl(var(--contrast-500));
 export const Footer = ({
   logo,
   sections: streamableSections,
@@ -82,139 +105,196 @@ export const Footer = ({
   logoLabel = 'Home',
   logoWidth = 200,
   logoHeight = 40,
+  newsletter,
+  description,
+  contactPanel,
+  legalLinks = [],
 }: FooterProps) => {
   return (
     <footer
       className={clsx(
-        'group/footer border-b-4 border-t border-b-[var(--footer-border-bottom,hsl(var(--primary)))] border-t-[var(--footer-border-top,hsl(var(--contrast-100)))] bg-[var(--footer-background,hsl(var(--background)))] @container',
+        'group/footer border-t border-t-[var(--footer-border-top,hsl(var(--contrast-100)))] bg-[var(--footer-background,hsl(var(--background)))] @container',
         className,
       )}
     >
-      <div className="mx-auto max-w-screen-2xl px-4 py-6 @xl:px-6 @xl:py-10 @4xl:px-8 @4xl:py-12">
-        <div className="flex flex-col justify-between gap-x-16 gap-y-12 @3xl:flex-row">
-          <div className="flex flex-col gap-4 @3xl:w-1/3 @3xl:gap-6">
-            {/* Logo Information */}
-            <div className="flex items-center justify-start self-stretch">
-              <Logo
-                className="flex"
-                height={logoHeight}
-                href={logoHref}
-                label={logoLabel}
-                logo={logo}
-                width={logoWidth}
-              />
+      {/* Newsletter band */}
+      {newsletter && (
+        <div className="border-b border-[var(--footer-border-top,hsl(var(--contrast-100)))] bg-[#f9fafd]">
+          <div className="mx-auto flex max-w-screen-2xl flex-col gap-5 px-4 py-8 @xl:px-6 @3xl:flex-row @3xl:items-center @3xl:justify-between @4xl:px-8">
+            <div className="max-w-xl">
+              <h3 className="font-heading text-xl font-medium leading-tight @xl:text-2xl">
+                {newsletter.title}
+              </h3>
+              {Boolean(newsletter.description) && (
+                <p className="mt-1.5 text-sm text-contrast-500">{newsletter.description}</p>
+              )}
             </div>
+            <InlineEmailForm
+              action={newsletter.action}
+              className="w-full @3xl:max-w-md"
+              placeholder={newsletter.placeholder}
+              submitLabel={newsletter.submitLabel}
+            />
+          </div>
+        </div>
+      )}
 
-            {/* Contact Information */}
-            <Stream fallback={<FooterContactSkeleton />} value={streamableContactInformation}>
-              {(contactInformation) => {
-                if (contactInformation?.address != null || contactInformation?.phone != null) {
-                  return (
-                    <div className="mb-4 text-lg font-medium @lg:text-xl">
-                      <h3 className="text-[var(--footer-contact-title,hsl(var(--contrast-500)))]">
-                        {contactTitle}
-                      </h3>
-                      <div className="text-[var(--footer-contact-text,hsl(var(--foreground)))]">
-                        {contactInformation.address != null &&
-                          contactInformation.address !== '' && <p>{contactInformation.address}</p>}
-                        {contactInformation.phone != null && contactInformation.phone !== '' && (
-                          <p>{contactInformation.phone}</p>
-                        )}
+      <div className="mx-auto max-w-screen-2xl px-4 py-10 @xl:px-6 @4xl:px-8 @4xl:py-12">
+        {/* Brand row: logo + blurb on the left, social icons on the right */}
+        <div className="flex flex-col gap-6 @3xl:flex-row @3xl:items-start @3xl:justify-between">
+          <div className="max-w-xl">
+            <Logo
+              className="flex"
+              height={logoHeight}
+              href={logoHref}
+              label={logoLabel}
+              logo={logo}
+              width={logoWidth}
+            />
+            {Boolean(description) && (
+              <p className="mt-3 text-sm leading-relaxed text-contrast-500">{description}</p>
+            )}
+            {/* Legacy contact block (only when no contact panel is provided) */}
+            {!contactPanel && (
+              <Stream fallback={null} value={streamableContactInformation}>
+                {(contactInformation) => {
+                  if (contactInformation?.address != null || contactInformation?.phone != null) {
+                    return (
+                      <div className="mt-4 text-sm">
+                        <h3 className="font-semibold text-[var(--footer-contact-title,hsl(var(--contrast-500)))]">
+                          {contactTitle}
+                        </h3>
+                        {Boolean(contactInformation.address) && <p>{contactInformation.address}</p>}
+                        {Boolean(contactInformation.phone) && <p>{contactInformation.phone}</p>}
                       </div>
-                    </div>
-                  );
-                }
-              }}
-            </Stream>
+                    );
+                  }
 
-            {/* Social Media Links */}
-            <Stream fallback={<SocialMediaLinksSkeleton />} value={streamableSocialMediaLinks}>
-              {(socialMediaLinks) => {
-                if (socialMediaLinks != null) {
-                  return (
-                    <div className="flex items-center gap-3">
-                      {socialMediaLinks.map(({ href, icon }, i) => {
-                        return (
-                          <Link
-                            className="flex items-center justify-center rounded-lg fill-[var(--footer-social-icon,hsl(var(--contrast-400)))] p-1 ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 ease-out hover:fill-[var(--footer-social-icon-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2"
-                            href={href}
-                            key={i}
-                          >
-                            {icon}
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  );
-                }
-              }}
-            </Stream>
+                  return null;
+                }}
+              </Stream>
+            )}
           </div>
 
-          {/* Footer Columns of Links */}
-          <Stream fallback={<FooterColumnsSkeleton />} value={streamableSections}>
-            {(sections) => {
-              if (sections.length > 0) {
-                return (
-                  <div
-                    className={clsx(
-                      'grid max-w-5xl grid-cols-1 gap-y-8 @sm:grid-cols-2 @xl:gap-y-10 @2xl:grid-cols-3 @6xl:[grid-template-columns:_repeat(auto-fill,_minmax(220px,_1fr))]',
-                    )}
-                  >
-                    {sections.map(({ title, links }, i) => (
-                      <div className="pr-8" key={i}>
-                        {title != null && (
-                          <span className="mb-3 block font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
-                            {title}
-                          </span>
-                        )}
-
-                        <ul>
-                          {links.map((link, idx) => {
-                            return (
-                              <li key={idx}>
-                                <Link
-                                  className="block rounded-lg py-2 text-sm font-medium text-[var(--footer-link,hsl(var(--contrast-500)))] ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 hover:text-[var(--footer-link-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2"
-                                  href={link.href}
-                                  rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
-                                  target={link.target}
-                                >
-                                  {link.label}
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                );
-              }
-            }}
+          <Stream fallback={<SocialMediaLinksSkeleton />} value={streamableSocialMediaLinks}>
+            {(socialMediaLinks) =>
+              socialMediaLinks != null && socialMediaLinks.length > 0 ? (
+                <div className="flex items-center gap-2">
+                  {socialMediaLinks.map(({ href, icon }, i) => (
+                    <Link
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-contrast-200 fill-[var(--footer-social-icon,hsl(var(--contrast-400)))] p-2 ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 ease-out hover:border-foreground hover:fill-[var(--footer-social-icon-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 [&_svg]:h-4 [&_svg]:w-4"
+                      href={href}
+                      key={i}
+                    >
+                      {icon}
+                    </Link>
+                  ))}
+                </div>
+              ) : null
+            }
           </Stream>
         </div>
 
-        <div className="flex flex-col-reverse items-start gap-y-8 pt-16 @3xl:flex-row @3xl:items-center @3xl:pt-20">
-          {/* Copyright */}
-          <Stream fallback={<CopyrightSkeleton />} value={streamableCopyright}>
-            {(copyright) => {
-              if (copyright != null) {
-                return (
-                  <p className="flex-1 text-sm text-[var(--footer-copyright,hsl(var(--contrast-500)))]">
-                    {copyright}
-                  </p>
-                );
-              }
-            }}
-          </Stream>
+        {/* Link columns + contact column */}
+        <Stream fallback={<FooterColumnsSkeleton />} value={streamableSections}>
+          {(sections) => (
+            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 @2xl:grid-cols-3 @5xl:grid-cols-6">
+              {sections.map(({ title, links }, i) => (
+                <div key={i}>
+                  {title != null && (
+                    <span className="mb-2 block text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
+                      {title}
+                    </span>
+                  )}
+                  <ul>
+                    {links.map((link, idx) => (
+                      <li key={idx}>
+                        {link.href != null && link.href !== '' ? (
+                          <Link
+                            className={footerLinkClassName}
+                            href={link.href}
+                            rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
+                            target={link.target}
+                          >
+                            {link.label}
+                          </Link>
+                        ) : (
+                          <span className="mb-1 mt-3 block text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                            {link.label}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
 
-          {/* Payment Icons */}
+              {contactPanel && (
+                <div className="col-span-2 @2xl:col-span-1">
+                  <span className="mb-2 block text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
+                    {contactPanel.title}
+                  </span>
+                  <Link
+                    className="inline-flex items-center gap-1.5 text-lg font-bold text-foreground hover:text-[var(--button-primary-background,#d90716)]"
+                    href={contactPanel.phone.href}
+                  >
+                    <Phone size={16} strokeWidth={2} />
+                    {contactPanel.phone.label}
+                  </Link>
+                  {contactPanel.hours && contactPanel.hours.length > 0 && (
+                    <div className="mt-4 text-sm text-contrast-500">
+                      {Boolean(contactPanel.hoursTitle) && (
+                        <span className="block font-semibold text-foreground">
+                          {contactPanel.hoursTitle}
+                        </span>
+                      )}
+                      {contactPanel.hours.map((line) => (
+                        <span className="block" key={line}>
+                          {line}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {contactPanel.showrooms && contactPanel.showrooms.length > 0 && (
+                    <div className="mt-4">
+                      {Boolean(contactPanel.showroomsTitle) && (
+                        <span className="mb-2 block text-sm font-semibold text-foreground">
+                          {contactPanel.showroomsTitle}
+                        </span>
+                      )}
+                      <ShowroomSelect label="Select showroom" showrooms={contactPanel.showrooms} />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </Stream>
+      </div>
+
+      {/* Legal strip */}
+      <div className="border-t border-[var(--footer-border-top,hsl(var(--contrast-100)))]">
+        <div className="mx-auto flex max-w-screen-2xl flex-col-reverse gap-4 px-4 py-4 @xl:px-6 @3xl:flex-row @3xl:items-center @3xl:justify-between @4xl:px-8">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--footer-copyright,hsl(var(--contrast-500)))]">
+            <Stream fallback={<CopyrightSkeleton />} value={streamableCopyright}>
+              {(copyright) => (copyright != null ? <span>{copyright}</span> : null)}
+            </Stream>
+            {legalLinks.map((link) =>
+              link.href != null && link.href !== '' ? (
+                <Link className="hover:text-foreground" href={link.href} key={link.label}>
+                  {link.label}
+                </Link>
+              ) : (
+                <span key={link.label}>{link.label}</span>
+              ),
+            )}
+          </div>
           <Stream fallback={<PaymentIconsSkeleton />} value={streamablePaymentIcons}>
-            {(paymentIcons) => {
-              if (paymentIcons != null) {
-                return <div className="flex flex-wrap gap-2">{paymentIcons}</div>;
-              }
-            }}
+            {(paymentIcons) =>
+              paymentIcons != null ? (
+                <div className="flex flex-wrap items-center gap-2">{paymentIcons}</div>
+              ) : null
+            }
           </Stream>
         </div>
       </div>
@@ -222,25 +302,12 @@ export const Footer = ({
   );
 };
 
-function FooterContactSkeleton() {
-  return (
-    <Skeleton.Root
-      className="mb-4 text-lg group-has-[[data-pending]]/footer:animate-pulse @lg:text-xl"
-      pending
-    >
-      <Skeleton.Text characterCount={10} className="rounded" data-pending />
-      <Skeleton.Text characterCount={15} className="rounded" data-pending />
-      <Skeleton.Text characterCount={12} className="rounded" data-pending />
-    </Skeleton.Root>
-  );
-}
-
 function SocialMediaLinksSkeleton() {
   return (
     <Skeleton.Root className="group-has-[[data-pending]]/footer:animate-pulse" pending>
-      <div className="flex items-center gap-3" data-pending>
-        {Array.from({ length: 4 }).map((_, idx) => (
-          <Skeleton.Box className="h-8 w-8 rounded-full" key={idx} />
+      <div className="flex items-center gap-2" data-pending>
+        {Array.from({ length: 5 }).map((_, idx) => (
+          <Skeleton.Box className="h-9 w-9 rounded-full" key={idx} />
         ))}
       </div>
     </Skeleton.Root>
@@ -250,40 +317,34 @@ function SocialMediaLinksSkeleton() {
 function FooterColumnsSkeleton() {
   return (
     <Skeleton.Root
-      className="grid max-w-5xl grid-cols-1 gap-y-8 @container-normal group-has-[[data-pending]]/footer:animate-pulse @sm:grid-cols-2 @xl:gap-y-10 @2xl:grid-cols-3 @6xl:[grid-template-columns:_repeat(auto-fill,_minmax(220px,_1fr))]"
+      className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 @container-normal group-has-[[data-pending]]/footer:animate-pulse @2xl:grid-cols-3 @5xl:grid-cols-6"
       pending
     >
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <div className="pr-8" data-pending key={idx}>
+      {Array.from({ length: 6 }).map((_, idx) => (
+        <div data-pending key={idx}>
           <div className="mb-3 flex items-center">
             <Skeleton.Text characterCount={10} className="rounded" />
           </div>
-          <FooterColumnSkeleton />
+          <ul>
+            {Array.from({ length: 5 }).map((_row, row) => (
+              <li className="py-1.5 text-sm" key={row}>
+                <Skeleton.Text characterCount={12} className="rounded" />
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </Skeleton.Root>
   );
 }
 
-function FooterColumnSkeleton() {
-  return (
-    <ul>
-      {Array.from({ length: 4 }).map((_, idx) => (
-        <li className="py-2 text-sm" key={idx}>
-          <Skeleton.Text characterCount={10} className="rounded" />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 function CopyrightSkeleton() {
   return (
     <Skeleton.Root
-      className="flex-1 text-sm @container-normal group-has-[[data-pending]]/footer:animate-pulse"
+      className="text-xs @container-normal group-has-[[data-pending]]/footer:animate-pulse"
       pending
     >
-      <Skeleton.Text characterCount={40} className="rounded" data-pending />
+      <Skeleton.Text characterCount={24} className="rounded" data-pending />
     </Skeleton.Root>
   );
 }

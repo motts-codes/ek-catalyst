@@ -53,12 +53,16 @@ function combineSections(
   passedSections: ContextProps['sections'],
   makeswiftSections: Props['sections'],
 ): ContextProps['sections'] {
+  // Ignore empty Makeswift sections (a freshly added "Section" with no links yet) so they don't
+  // render as blank columns.
   return mergeSections(
     passedSections,
-    makeswiftSections.map(({ title, links }) => ({
-      title,
-      links: links.map(({ label, link }) => ({ label, href: link.href, target: link.target })),
-    })),
+    makeswiftSections
+      .filter(({ links }) => links.length > 0)
+      .map(({ title, links }) => ({
+        title,
+        links: links.map(({ label, link }) => ({ label, href: link.href, target: link.target })),
+      })),
     (left, right) => ({ ...left, links: [...left.links, ...right.links] }),
   );
 }
