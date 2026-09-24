@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { Check } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -29,9 +30,12 @@ interface Props {
   className?: string;
 }
 
-// "Assembled or RTA?" — the program decision as two side-by-side cards: photo, tag, title, one
-// paragraph, two proofs and a shop button. Used on the home page and the Cabinets landing so the
-// decision looks identical wherever it appears.
+// Alternating soft tints so the two programs read as a pair, not a duplicate.
+const CARD_TINTS = ['bg-[#fbf4ef]', 'bg-[#eef3fb]'];
+
+// "Assembled or RTA?" — the program decision as two generous cards: inset photo, tag pill, title,
+// one paragraph, ticked proofs and a shop button. Used on the home page, the Cabinets landing and
+// the Pro page so the decision looks identical wherever it appears.
 export function ProgramCards({
   kicker = 'Make the right call for your timeline',
   title = 'Assembled or RTA?',
@@ -62,60 +66,62 @@ export function ProgramCards({
         )}
       </div>
 
-      <div className="grid gap-5 @3xl:grid-cols-2">
-        {cards.map((card) => (
+      <div className="grid gap-6 @3xl:grid-cols-2">
+        {cards.map((card, index) => (
           <article
-            className="grid overflow-hidden rounded-2xl border border-contrast-100 bg-white @md:grid-cols-[38%_1fr]"
+            className={clsx(
+              'flex flex-col rounded-3xl p-6 @xl:p-8',
+              CARD_TINTS[index % CARD_TINTS.length],
+            )}
             key={card.title}
           >
-            <div className="relative aspect-[4/3] @md:aspect-auto @md:min-h-[260px]">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-2xl bg-white/60">
               {card.image ? (
                 <Image
                   alt={card.image.alt}
                   className="object-cover"
                   fill
-                  sizes="(min-width: 56rem) 20vw, 100vw"
+                  sizes="(min-width: 56rem) 45vw, 100vw"
                   src={card.image.src}
                 />
               ) : (
                 <MediaPlaceholder label={card.title} />
               )}
-            </div>
-            <div className="flex flex-col p-5 @xl:p-6">
               {Boolean(card.tag) && (
-                <span className="self-start rounded-full border border-contrast-200 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-contrast-500">
+                <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-foreground shadow-sm">
                   {card.tag}
                 </span>
               )}
-              <h3 className="mt-3 font-heading text-xl font-semibold leading-tight @xl:text-2xl">
-                {card.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-contrast-500">{card.description}</p>
-              <ul className="mt-3 space-y-1.5 text-sm">
+            </div>
+            <h3 className="mt-6 font-heading text-2xl font-semibold leading-tight @xl:text-3xl">
+              {card.title}
+            </h3>
+            <p className="mt-3 max-w-prose text-sm leading-relaxed text-contrast-500 @xl:text-base">
+              {card.description}
+            </p>
+            {card.points.length > 0 && (
+              <ul className="mt-5 space-y-2.5 text-sm">
                 {card.points.map((point) => (
-                  <li className="flex items-start gap-2" key={point}>
-                    <Check
-                      aria-hidden
-                      className="mt-0.5 shrink-0 text-[var(--button-primary-background,#d90716)]"
-                      size={16}
-                      strokeWidth={2.5}
-                    />
+                  <li className="flex items-start gap-3" key={point}>
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--button-primary-background,#d90716)] text-white">
+                      <Check aria-hidden size={12} strokeWidth={3} />
+                    </span>
                     <span>{point}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-auto pt-5">
-                <ButtonLink href={card.href} shape="pill" size="small" variant="primary">
-                  {card.ctaLabel}
-                </ButtonLink>
-              </div>
+            )}
+            <div className="mt-auto pt-7">
+              <ButtonLink href={card.href} shape="pill" size="small" variant="primary">
+                {card.ctaLabel}
+              </ButtonLink>
             </div>
           </article>
         ))}
       </div>
 
       {Boolean(footnote) && (
-        <p className="mt-5 max-w-3xl text-sm leading-relaxed text-contrast-500">{footnote}</p>
+        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-contrast-500">{footnote}</p>
       )}
     </HomeSection>
   );

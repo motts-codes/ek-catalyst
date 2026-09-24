@@ -118,7 +118,6 @@ function Dots({
     : 'bg-white/50 hover:bg-white/80';
 
   return (
-    // Dots sit bottom-right on phones, centered from @xl up.
     // Dots: bottom-right on phones, top-right from @xl (keeps the bottom row free for the button).
     <div className="absolute inset-x-0 bottom-3 z-10 flex justify-end gap-1.5 pr-4 @xl:bottom-auto @xl:top-4 @xl:pr-5">
       {Array.from({ length: count }).map((_, index) => (
@@ -154,7 +153,7 @@ export function HomeHeroSplit({
       <div className="mx-auto max-w-screen-2xl px-4 pb-6 pt-3 @xl:px-6 @4xl:px-8">
         <div className="grid gap-3.5 @3xl:grid-cols-[65fr_35fr]">
           {/* Left: photo slideshow */}
-          <div className="relative h-[325px] overflow-hidden rounded-2xl bg-contrast-100 @xl:h-[320px] @3xl:h-[350px]">
+          <div className="relative h-[325px] overflow-hidden rounded-3xl bg-contrast-100 @xl:h-[320px] @3xl:h-[350px]">
             <div className="h-full overflow-hidden" ref={photos.ref}>
               <div className="flex h-full">
                 {slides.map((slide, index) => {
@@ -228,15 +227,15 @@ export function HomeHeroSplit({
 
           {/* Right: offer cards */}
           {/* Auto height on phones (the offer copy + button set it); fixed heights from @xl. */}
-          <div className="relative h-auto overflow-hidden rounded-2xl border border-contrast-100 bg-[#f9fafd] @xl:h-[320px] @3xl:h-[350px]">
+          <div className="relative h-auto overflow-hidden rounded-3xl border border-contrast-100 bg-[#f9fafd] @xl:h-[320px] @3xl:h-[350px]">
             <div className="h-full overflow-hidden" ref={promos.ref}>
               <div className="flex h-full">
                 {offers.map((offer, index) => (
                   <div className="relative h-full min-w-0 shrink-0 grow-0 basis-full" key={index}>
                     {/* Bottom padding matches the photo banner's (@xl:pb-8) so both buttons sit
                         on the same line across the two banners. */}
-                    <div className="flex h-full flex-col gap-1.5 p-5 pb-7 @xl:p-6 @xl:pb-8">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                    <div className="flex h-full flex-col gap-2 p-6 pb-8 @xl:p-8 @xl:pb-8">
+                      <p className="self-start rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-contrast-500 ring-1 ring-contrast-100">
                         {offer.kicker}
                       </p>
                       <p className="font-heading text-xl font-bold leading-tight @xl:text-2xl">

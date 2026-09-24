@@ -47,12 +47,12 @@ export function DeliveryLadder({
       tint={tint}
       title={title}
     >
-      <div className="overflow-x-auto rounded-2xl border border-contrast-100 bg-white">
+      <div className="overflow-x-auto rounded-3xl border border-contrast-100 bg-white">
         <table className="w-full min-w-[40rem] text-left text-sm">
           <thead>
             <tr className="border-b border-contrast-100 text-xs uppercase tracking-wide text-contrast-400">
               {columns.map((column) => (
-                <th className="px-4 py-3 font-semibold" key={column} scope="col">
+                <th className="px-5 py-3.5 font-semibold" key={column} scope="col">
                   {column}
                 </th>
               ))}
@@ -69,8 +69,8 @@ export function DeliveryLadder({
                     <td
                       className={
                         cellIndex === 0 || bold
-                          ? 'px-4 py-3 font-semibold text-foreground'
-                          : 'px-4 py-3 text-contrast-500'
+                          ? 'px-5 py-4 font-semibold text-foreground'
+                          : 'px-5 py-4 text-contrast-500'
                       }
                       key={cellIndex}
                     >
@@ -88,7 +88,7 @@ export function DeliveryLadder({
         <div className="mt-6 grid gap-4 @lg:grid-cols-2 @3xl:grid-cols-4">
           {tiles.map((tile) => (
             <Link
-              className="group flex items-center gap-3 rounded-2xl border border-contrast-100 bg-white p-3 transition-colors hover:border-contrast-200"
+              className="group flex items-center gap-3 rounded-3xl border border-contrast-100 bg-white p-4 transition-colors hover:border-contrast-200"
               href={tile.href}
               key={tile.name}
             >

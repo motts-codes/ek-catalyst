@@ -59,7 +59,7 @@ export function ProgramTiers({
         {tiers.map((tier) => (
           <article
             className={clsx(
-              'flex flex-col rounded-2xl border bg-white p-5 @xl:p-6',
+              'flex flex-col rounded-3xl border bg-white p-6 @xl:p-8',
               tier.highlighted ? 'border-foreground ring-1 ring-foreground' : 'border-contrast-100',
             )}
             key={tier.name}

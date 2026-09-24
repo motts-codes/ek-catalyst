@@ -124,7 +124,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-6">
         <h2 className="font-heading text-xl font-medium leading-tight">
           <Link className="hover:text-[#2162a1]" href={line.href}>
             {line.name}

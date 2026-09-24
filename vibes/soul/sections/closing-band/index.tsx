@@ -1,5 +1,6 @@
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
+import { Link } from '~/components/link';
 
 import { ShowroomSelect } from './showroom-select';
 
@@ -15,8 +16,11 @@ interface Props {
   className?: string;
 }
 
-// The last ask on a page — "Ready to design your kitchen?" — with three ways to say yes at equal
-// weight: book the consult, visit a showroom (dropdown), or call.
+const ghostButtonClassName =
+  'inline-flex min-h-10 items-center justify-center rounded-full border border-white/30 px-5 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10';
+
+// The last ask on a page — "Ready to design your kitchen?" — as a dark panel with three ways to
+// say yes at equal weight: book the consult, visit a showroom (dropdown), or call.
 export function ClosingBand({
   title = 'Ready to design your kitchen?',
   description = 'Bring a photo, a rough sketch, or nothing at all. A designer draws it with you — at home, in a showroom or on a call — and you leave with a plan and a price.',
@@ -24,31 +28,36 @@ export function ClosingBand({
   secondary,
   showrooms = [],
   phone = { label: 'Call 860-247-1000', href: 'tel:+18602471000' },
-  tint = true,
+  tint = false,
   className,
 }: Props) {
   return (
     <HomeSection className={className} tint={tint}>
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="font-heading text-2xl font-medium leading-tight @xl:text-3xl @4xl:text-4xl">
-          {title}
-        </h2>
-        <p className="mt-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
-          {description}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <ButtonLink href={primary.href} shape="pill" size="small" variant="primary">
-            {primary.label}
-          </ButtonLink>
-          {secondary && (
-            <ButtonLink href={secondary.href} shape="pill" size="small" variant="secondary">
-              {secondary.label}
+      <div className="relative overflow-hidden rounded-3xl bg-foreground px-6 py-12 text-center text-white @xl:px-12 @xl:py-16 @4xl:py-20">
+        {/* Soft brand-red glow, top-right */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[var(--button-primary-background,#d90716)] opacity-30 blur-3xl"
+        />
+        <div className="relative mx-auto max-w-2xl">
+          <h2 className="font-heading text-2xl font-medium leading-tight @xl:text-3xl @4xl:text-4xl">
+            {title}
+          </h2>
+          <p className="mt-4 text-sm leading-relaxed text-white/70 @xl:text-base">{description}</p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <ButtonLink href={primary.href} shape="pill" size="small" variant="primary">
+              {primary.label}
             </ButtonLink>
-          )}
-          {showrooms.length > 0 && <ShowroomSelect showrooms={showrooms} />}
-          <ButtonLink href={phone.href} shape="pill" size="small" variant="secondary">
-            {phone.label}
-          </ButtonLink>
+            {secondary && (
+              <Link className={ghostButtonClassName} href={secondary.href}>
+                {secondary.label}
+              </Link>
+            )}
+            {showrooms.length > 0 && <ShowroomSelect showrooms={showrooms} />}
+            <Link className={ghostButtonClassName} href={phone.href}>
+              {phone.label}
+            </Link>
+          </div>
         </div>
       </div>
     </HomeSection>

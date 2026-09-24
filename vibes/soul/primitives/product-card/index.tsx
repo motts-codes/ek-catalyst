@@ -108,7 +108,7 @@ export function ProductCard({
         // White card with a border wrapping the whole thing, inner padding so content doesn't
         // touch the edge (stands out against the tinted listing-page background). Border darkens
         // slightly on hover.
-        'group flex h-full min-w-0 max-w-md flex-col gap-3 rounded-2xl border border-contrast-100 bg-white p-3 font-[family-name:var(--card-font-family,var(--font-family-body))] transition-colors duration-200 hover:border-contrast-200 @container @md:p-4',
+        'group flex h-full min-w-0 max-w-md flex-col gap-3 rounded-2xl border border-contrast-100 bg-white p-4 font-[family-name:var(--card-font-family,var(--font-family-body))] transition-colors duration-200 @container hover:border-contrast-200 @md:p-5',
         className,
       )}
     >
@@ -223,7 +223,7 @@ export function ProductCard({
             <hr className="mb-3 mt-2 border-t border-contrast-100" />
             {price != null && (
               <PriceLabel
-                className="mt-0.5 text-base [&_abbr]:cursor-default [&_abbr]:no-underline @[16rem]:text-lg"
+                className="mt-0.5 text-base @[16rem]:text-lg [&_abbr]:cursor-default [&_abbr]:no-underline"
                 colorScheme={colorScheme}
                 price={price}
                 superscript

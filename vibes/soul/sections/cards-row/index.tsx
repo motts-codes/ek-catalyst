@@ -22,14 +22,15 @@ interface Props {
   description?: string;
   cards: RowCard[];
   columns?: 3 | 4 | 5;
-  /** Hide the image area (text-only reasons-to-believe cards). */
+  /** Hide the image area (text-only reasons-to-believe cards get an accent bar instead). */
   hideImages?: boolean;
   tint?: boolean;
   className?: string;
 }
 
-// A row of equal cards — photo, heading, one line, a button. Used for "Three ways to be sure",
-// "Start wherever you are", and the reasons-to-believe band.
+// A row of equal cards — inset photo (or an accent bar), heading, one line, a button — with a
+// gentle lift on hover. Used for "Three ways to be sure", the Pro audience cards, the spec shelf,
+// the four lines and the quality grid.
 export function CardsRow({
   kicker,
   title,
@@ -50,7 +51,7 @@ export function CardsRow({
     >
       <div
         className={clsx(
-          'grid gap-5',
+          'grid gap-6',
           {
             3: '@lg:grid-cols-2 @3xl:grid-cols-3',
             4: '@lg:grid-cols-2 @3xl:grid-cols-4',
@@ -60,11 +61,16 @@ export function CardsRow({
       >
         {cards.map((card) => (
           <article
-            className="flex h-full flex-col overflow-hidden rounded-2xl border border-contrast-100 bg-white"
+            className="flex h-full flex-col rounded-3xl border border-contrast-100 bg-white p-6 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] @xl:p-7"
             key={card.title}
           >
-            {!hideImages && (
-              <div className="relative aspect-[16/9] bg-contrast-100">
+            {hideImages ? (
+              <span
+                aria-hidden
+                className="mb-5 block h-1 w-10 rounded-full bg-[var(--button-primary-background,#d90716)]"
+              />
+            ) : (
+              <div className="relative mb-6 aspect-[16/10] overflow-hidden rounded-2xl bg-contrast-100">
                 {card.image ? (
                   <Image
                     alt={card.image.alt}
@@ -78,24 +84,24 @@ export function CardsRow({
                 )}
               </div>
             )}
-            <div className="flex flex-1 flex-col p-5">
-              <h3 className="font-heading text-lg font-semibold leading-tight">{card.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-contrast-500">
-                {card.description}
-              </p>
-              {Boolean(card.ctaLabel) && Boolean(card.href) && (
-                <div className="mt-4">
-                  <ButtonLink
-                    href={card.href ?? '#'}
-                    shape="pill"
-                    size="small"
-                    variant={card.primary ? 'primary' : 'secondary'}
-                  >
-                    {card.ctaLabel}
-                  </ButtonLink>
-                </div>
-              )}
-            </div>
+            <h3 className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
+              {card.title}
+            </h3>
+            <p className="mt-2.5 flex-1 text-sm leading-relaxed text-contrast-500">
+              {card.description}
+            </p>
+            {Boolean(card.ctaLabel) && Boolean(card.href) && (
+              <div className="mt-6">
+                <ButtonLink
+                  href={card.href ?? '#'}
+                  shape="pill"
+                  size="small"
+                  variant={card.primary ? 'primary' : 'secondary'}
+                >
+                  {card.ctaLabel}
+                </ButtonLink>
+              </div>
+            )}
           </article>
         ))}
       </div>

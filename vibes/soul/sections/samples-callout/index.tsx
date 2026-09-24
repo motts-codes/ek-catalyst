@@ -19,7 +19,7 @@ export function SamplesCallout({
   return (
     <div
       className={clsx(
-        'flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-dashed border-contrast-200 bg-white px-5 py-4',
+        'flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-dashed border-contrast-200 bg-white px-6 py-5 @xl:px-8',
         className,
       )}
     >

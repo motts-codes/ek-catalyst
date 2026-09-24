@@ -15,7 +15,10 @@ interface State {
   successMessage?: ReactNode;
 }
 
-export type ProductCardAddToCartAction = (state: State, payload: FormData) => State | Promise<State>;
+export type ProductCardAddToCartAction = (
+  state: State,
+  payload: FormData,
+) => State | Promise<State>;
 
 interface Props {
   id: string;

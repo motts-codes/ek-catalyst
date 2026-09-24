@@ -37,7 +37,7 @@ function initials(name: string): string {
 
 function ReviewCard({ review }: { review: CustomerReview }) {
   return (
-    <figure className="flex flex-col gap-3 rounded-2xl border border-contrast-100 bg-white p-5 shadow-[0_8px_24px_-12px_rgb(0_0_0/0.12)]">
+    <figure className="flex flex-col gap-3 rounded-3xl border border-contrast-100 bg-white p-6 shadow-[0_8px_24px_-12px_rgb(0_0_0/0.12)]">
       <div className="flex items-center justify-between">
         <div
           aria-label={`${review.stars} out of 5 stars`}
