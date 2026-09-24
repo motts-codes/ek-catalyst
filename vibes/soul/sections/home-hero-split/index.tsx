@@ -173,9 +173,10 @@ export function HomeHeroSplit({
                           Photo — {slide.image?.alt ?? 'kitchen'}
                         </div>
                       )}
-                      {/* Dark tint behind the bottom row: headline left, button right. The button
-                          is a styled span because the whole slide is already the link. */}
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 pb-10 pt-16 @xl:px-8 @xl:pb-8">
+                      {/* Bottom row: headline left, button right. No tint here — any darkening for
+                          legibility is baked into the photo itself. The button is a styled span
+                          because the whole slide is already the link. */}
+                      <div className="absolute inset-x-0 bottom-0 px-4 pb-10 pt-16 @xl:px-8 @xl:pb-8">
                         <div className="flex flex-wrap items-end justify-between gap-x-2 gap-y-3 @xl:gap-x-6">
                           <h1 className="m-0 max-w-xl font-heading text-[22px] font-bold leading-tight text-white @xl:text-3xl @4xl:text-4xl">
                             {slide.title.split('\n').map((line, lineIndex) => (
