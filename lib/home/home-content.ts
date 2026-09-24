@@ -66,7 +66,7 @@ const CATEGORY_BASE: Array<{ name: string; href: string; homeowner: string; pro:
   {
     name: 'Closets',
     href: '/closets',
-    homeowner: '12 pieces, 3 colors',
+    homeowner: 'Newly launched',
     pro: 'Ships from stock',
   },
   {
