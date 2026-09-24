@@ -1,20 +1,27 @@
-// Audience-mode navigation menus (Homeowner / Pro).
+// Main navigation menu — ONE shared tree for both audience modes (Homeowner / Pro).
 //
-// This is a DEVELOPER-EDITED config — the nav is intentionally decoupled from the BigCommerce
-// category tree, so it does NOT auto-populate. Edit the trees below to change the menu.
+// Source of truth: the interactive wireframe (CatalystSandbox/wireframe-mockup.html, `MENU`,
+// Sept 2026 client menu flow). Same L1/L2 structure for both audiences; the only per-audience
+// differences are (a) links tagged `audience` (e.g. the homeowner-only "All Cabinets" guided
+// link) and (b) the header CTA label (AUDIENCE_CTA below). RTA and Assembled go STRAIGHT to
+// their listing pages for everyone — no guided-first routing.
 //
-// All `href` values are placeholders (`#`) for now. Swap them for real category/page paths
-// (e.g. '/cabinets/', '/windows/replacement/') as those pages come online. See docs/AUDIENCE-MODE-SPEC.md.
+// This is a DEVELOPER-EDITED config, intentionally decoupled from the BigCommerce category tree;
+// it does not auto-populate. `href: '#'` marks a page that does not exist yet — swap it for the
+// real category/page path as each page comes online.
 //
 // Shape matches the Navigation primitive's `Link` type:
-//   { label, href, groups?: [{ label?, href?, links: [{ label, href }] }] }
-//   L1 item ─────────┘        └─ dropdown column header  └─ dropdown link
+//   { label, href, group, groups?: [{ label?, href?, links: [{ label, href }] }] }
+//   L1 item ───────────┘         └─ dropdown column header    └─ dropdown link
+// `group: 'shop' | 'content'` splits the nav row into two clusters (the "│" in the wireframe).
 
 export type AudienceMode = 'homeowner' | 'pro';
 
 export interface MenuLink {
   label: string;
   href: string;
+  /** Show this link to ONE audience only. Omit for both. */
+  audience?: AudienceMode;
 }
 
 export interface MenuGroup {
@@ -24,7 +31,7 @@ export interface MenuGroup {
 }
 
 // Visual grouping in the nav bar: 'shop' items (categories) and 'content' items (Inspiration,
-// Resources, Blog) render as separate clusters with space between them.
+// Resources) render as separate clusters with space between them.
 export type MenuItemGroup = 'shop' | 'content';
 
 export interface MenuItem {
@@ -34,268 +41,186 @@ export interface MenuItem {
   groups?: MenuGroup[];
 }
 
-// ---------------------------------------------------------------------------
-// HOMEOWNER (default) — discovery-led. L1 clicks eventually route to landing
-// pages; for now everything is `#`.
-// ---------------------------------------------------------------------------
-const homeownerMenu: MenuItem[] = [
+// Pages that exist today (used more than once below).
+const CABINETS = '/cabinets';
+const RTA_LISTING = '/cabinets/rta-cabinets';
+const ASSEMBLED_LISTING = '/cabinets/assembled-cabinets';
+
+const menu: MenuItem[] = [
+  // ── Kitchen: exactly three columns. Cabinets is the hero — it carries the two programs,
+  //    hardware, tiles and clearance. ─────────────────────────────────────────────────────────
   {
-    label: 'Cabinets',
+    label: 'Kitchen',
     href: '#',
     group: 'shop',
     groups: [
       {
-        label: 'Shop by Construction',
+        label: 'Cabinets',
+        href: CABINETS,
         links: [
-          { label: 'RTA', href: '#' },
-          { label: 'Assembled', href: '#' },
-          { label: "What's the difference?", href: '#' },
-        ],
-      },
-      {
-        label: 'Shop by',
-        links: [
-          { label: 'Color', href: '#' },
-          { label: 'Style', href: '#' },
-          { label: 'Best Sellers', href: '#' },
-        ],
-      },
-      {
-        label: 'More',
-        links: [
-          { label: 'Hardware & Handles', href: '#' },
-          { label: 'Tiles & Backsplash', href: '#' },
+          // Guided landing (styles → lines → RTA-or-assembled). Homeowner only; pros skip it.
+          { label: 'All Cabinets', href: CABINETS, audience: 'homeowner' },
+          { label: 'Ready to Assemble (RTA)', href: RTA_LISTING },
+          { label: 'Assembled Cabinets', href: ASSEMBLED_LISTING },
+          { label: 'Quick Ship', href: '#' },
+          { label: 'Handles', href: '#' },
+          { label: 'Tiles', href: '#' },
           { label: 'Accessories', href: '#' },
-          { label: 'Clearance', href: '#' },
+          { label: 'Clearance Sale', href: '#' },
         ],
       },
-    ],
-  },
-  // Closets — simple link for now (dropdown to be designed later).
-  { label: 'Closets', href: '/closets', group: 'shop' },
-  {
-    label: 'Kitchen & Bath',
-    href: '#',
-    group: 'shop',
-    groups: [
       {
-        // Countertops is call-to-order (not shoppable online), so it lives here rather than as a
-        // shop L1. Its pages/PDP will use a "Call to place order" CTA instead of Add to Cart.
+        // Countertops are quote-only (templated and fitted by EK) — no Add to Cart.
         label: 'Countertops',
+        href: '#',
         links: [
           { label: 'Granite', href: '#' },
-          { label: 'Quartz', href: '#' },
           { label: 'Laminate', href: '#' },
+          { label: 'Quartz', href: '#' },
           { label: 'Prefabricated', href: '#' },
         ],
       },
       {
-        label: 'Sinks',
+        label: 'Kitchen Accessories',
         links: [
-          { label: 'Single', href: '#' },
-          { label: 'Double', href: '#' },
-          { label: 'Farmhouse', href: '#' },
-          { label: 'Workstation', href: '#' },
-        ],
-      },
-      {
-        label: 'Bath',
-        links: [
-          { label: 'Vanity Tops', href: '#' },
-          { label: 'Basins', href: '#' },
-          { label: 'Bath Faucets', href: '#' },
-        ],
-      },
-      {
-        links: [
+          { label: 'Sinks', href: '#' },
           { label: 'Faucets', href: '#' },
-          { label: 'Garbage Disposals', href: '#' },
         ],
       },
     ],
   },
   {
+    label: 'Bath',
+    href: '#',
+    group: 'shop',
+    groups: [
+      {
+        links: [
+          { label: 'Vanities', href: '#' },
+          { label: 'Tops & Sinks / Basins & Bowls', href: '#' },
+          { label: 'Bathroom Faucet', href: '#' },
+          { label: 'Side Splash', href: '#' },
+        ],
+      },
+    ],
+  },
+  // Closets — plain link, no dropdown.
+  { label: 'Closets', href: '/closets', group: 'shop' },
+  {
+    // Ordered by turnover. Pickup-only category — stated on the landing, not at checkout.
     label: 'Appliances',
     href: '/appliances',
     group: 'shop',
     groups: [
       {
         links: [
+          { label: 'Fridges & Freezers', href: '#' },
           { label: 'Ranges & Cooktops', href: '#' },
-          { label: 'Fridges', href: '#' },
           { label: 'Dishwashers', href: '#' },
           { label: 'Microwaves', href: '#' },
-          { label: 'Range Hoods', href: '#' },
           { label: 'Wall Ovens', href: '#' },
+        ],
+      },
+      {
+        links: [
+          { label: 'Range Hoods', href: '#' },
           { label: 'Washers & Dryers', href: '#' },
-          { label: 'All Appliances', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Windows',
-    href: '/windows',
-    group: 'shop',
-    groups: [
-      {
-        label: 'Replacement',
-        links: [
-          { label: 'Double Hung', href: '#' },
-          { label: 'Slider', href: '#' },
-          { label: 'Hopper', href: '#' },
-        ],
-      },
-      {
-        links: [
-          { label: 'New Construction', href: '#' },
+          { label: 'Garbage Disposals', href: '#' },
+          { label: 'Air Conditioning', href: '#' },
           { label: 'Accessories', href: '#' },
         ],
       },
     ],
   },
   {
+    // "Building Materials" for both audiences, per the client. Siding and Doors are new lines,
+    // live from site launch. Windows carries the $179.99 / 101 united-inch offer.
+    label: 'Building Materials',
+    href: '#',
+    group: 'shop',
+    groups: [
+      {
+        label: 'Windows',
+        href: '/windows',
+        links: [
+          { label: 'Replacement', href: '#' },
+          { label: 'New Construction', href: '#' },
+          { label: 'Accessories', href: '#' },
+        ],
+      },
+      {
+        label: 'Siding',
+        href: '#',
+        links: [{ label: 'All Siding', href: '#' }],
+      },
+      {
+        label: 'Doors',
+        href: '#',
+        links: [{ label: 'All Doors', href: '#' }],
+      },
+    ],
+  },
+  // ── Content cluster (rendered after the "│" divider) ─────────────────────────────────────
+  {
     label: 'Inspiration',
     href: '#',
     group: 'content',
     groups: [
       {
+        label: 'See it',
         links: [
-          { label: 'Gallery / Featured Projects', href: '#' },
           { label: 'Best-Selling Designs', href: '#' },
+          { label: 'Finished Kitchens', href: '#' },
+          { label: 'Projects', href: '#' },
+        ],
+      },
+      {
+        label: 'Hear it',
+        links: [
           { label: 'Reviews', href: '#' },
+          { label: 'Video Testimonials', href: '#' },
         ],
       },
     ],
   },
   {
+    // Every guide is also linked from the page where the question comes up — this menu is the
+    // index, not the only door.
     label: 'Resources',
     href: '#',
     group: 'content',
     groups: [
       {
+        label: 'Getting Started',
         links: [
-          { label: 'How It Works', href: '#' },
-          { label: 'Free Samples', href: '#' },
-          { label: 'Financing', href: '#' },
           { label: 'Measuring Guide', href: '#' },
-          { label: 'FAQs', href: '#' },
-          { label: 'Guarantee', href: '#' },
-          { label: 'Blog', href: '#' },
+          { label: 'What Is a 10×10 Kitchen', href: '#' },
+          { label: 'Order Samples', href: '#' },
+          { label: 'Kitchen Estimator', href: '#' },
+        ],
+      },
+      {
+        label: 'Guides',
+        links: [
+          { label: 'Cabinet Care', href: '#' },
+          { label: 'How-To Videos', href: '#' },
+          { label: 'Blog', href: '/blog' },
+        ],
+      },
+      {
+        label: 'Downloads & Policies',
+        links: [
+          { label: 'Download Brochure', href: '#' },
+          { label: 'Financing', href: '#' },
+          { label: 'Warranty', href: '#' },
+          { label: 'FAQ', href: '#' },
         ],
       },
     ],
   },
-  // Company moved to the footer (About/Story/Showrooms/Careers/Contact) — not a nav item.
+  // Pro Program is NOT a nav item — the /pro homepage carries the details and the join button.
+  // Company (About / Showrooms / Careers / Contact) lives in the footer.
 ];
-
-// ---------------------------------------------------------------------------
-// PRO — transactional. RTA & Assembled promoted to L1 (replacing Cabinets);
-// Inspiration → Clearance; Resources → Pro Program. L1 clicks go straight to
-// category pages (no landing pages). All `#` for now.
-// ---------------------------------------------------------------------------
-const proMenu: MenuItem[] = [
-  // RTA / Assembled are direct links to their listing pages (no dropdown) for contractors.
-  { label: 'RTA', href: '/cabinets/rta-cabinets', group: 'shop' },
-  { label: 'Assembled', href: '/cabinets/assembled-cabinets', group: 'shop' },
-  // Closets — simple link for now (dropdown to be designed later).
-  { label: 'Closets', href: '/closets', group: 'shop' },
-  {
-    label: 'Kitchen & Bath',
-    href: '#',
-    group: 'shop',
-    groups: [
-      {
-        // Countertops is call-to-order (not shoppable online) — see the homeowner menu note.
-        label: 'Countertops',
-        links: [
-          { label: 'Granite', href: '#' },
-          { label: 'Quartz', href: '#' },
-          { label: 'Laminate', href: '#' },
-          { label: 'Prefabricated', href: '#' },
-        ],
-      },
-      {
-        links: [
-          { label: 'Sinks', href: '#' },
-          { label: 'Faucets', href: '#' },
-          { label: 'Bath', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Appliances',
-    href: '/appliances',
-    group: 'shop',
-    groups: [
-      {
-        links: [
-          { label: 'Ranges & Cooktops', href: '#' },
-          { label: 'Fridges', href: '#' },
-          { label: 'Dishwashers', href: '#' },
-          { label: 'Range Hoods', href: '#' },
-          { label: 'All Appliances', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Windows',
-    href: '/windows',
-    group: 'shop',
-    groups: [
-      {
-        label: 'Replacement',
-        links: [
-          { label: 'Double Hung', href: '#' },
-          { label: 'Slider', href: '#' },
-          { label: 'Hopper', href: '#' },
-        ],
-      },
-      {
-        links: [{ label: 'New Construction', href: '#' }],
-      },
-    ],
-  },
-  {
-    label: 'Inspiration',
-    href: '#',
-    group: 'content',
-    groups: [
-      {
-        links: [
-          { label: 'Gallery / Featured Projects', href: '#' },
-          { label: 'Best-Selling Designs', href: '#' },
-          { label: 'Reviews', href: '#' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Pro Program',
-    href: '#',
-    group: 'content',
-    groups: [
-      {
-        links: [
-          { label: 'Program & Tiers', href: '#' },
-          { label: 'Spec Sheets & Downloads', href: '#' },
-          { label: 'Catalogs', href: '#' },
-          { label: 'Delivery & Lead Times', href: '#' },
-          { label: 'Purchase Orders', href: '#' },
-          { label: 'Showrooms', href: '#' },
-          { label: 'Support', href: '#' },
-        ],
-      },
-    ],
-  },
-];
-
-export const AUDIENCE_MENUS: Record<AudienceMode, MenuItem[]> = {
-  homeowner: homeownerMenu,
-  pro: proMenu,
-};
 
 /** The persistent header CTA differs per audience (label only; both share the brand-blue style). */
 export const AUDIENCE_CTA: Record<AudienceMode, { label: string; href: string }> = {
@@ -303,6 +228,24 @@ export const AUDIENCE_CTA: Record<AudienceMode, { label: string; href: string }>
   pro: { label: 'Free Design & Quote', href: '#' },
 };
 
+// The menu for one audience: the shared tree with audience-tagged links filtered to `mode`
+// (read from the ek_audience cookie), and the `audience` tag stripped so the result matches the
+// Navigation primitive's `Link` shape. Groups left with no links are dropped.
 export function getMenu(mode: AudienceMode): MenuItem[] {
-  return AUDIENCE_MENUS[mode];
+  return menu.map((item) => {
+    if (!item.groups) {
+      return item;
+    }
+
+    const groups = item.groups
+      .map((group) => ({
+        ...group,
+        links: group.links
+          .filter((link) => link.audience === undefined || link.audience === mode)
+          .map(({ label, href }) => ({ label, href })),
+      }))
+      .filter((group) => group.links.length > 0);
+
+    return { ...item, groups };
+  });
 }

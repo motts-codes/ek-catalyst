@@ -10,10 +10,12 @@ import {
   ArrowRight,
   ChevronDown,
   GiftIcon,
+  MoreHorizontal,
   Search,
   SearchIcon,
   ShoppingBag,
   User,
+  X,
 } from 'lucide-react';
 import { useParams, useSearchParams } from 'next/navigation';
 import React, {
@@ -23,11 +25,13 @@ import React, {
   useActionState,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   useTransition,
 } from 'react';
-import { useFormStatus } from 'react-dom';
+import { createPortal, useFormStatus } from 'react-dom';
 
 import { FormStatus } from '@/vibes/soul/form/form-status';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
@@ -214,7 +218,7 @@ function MobileMenuItem({ item, onNavigate }: { item: Link; onNavigate: () => vo
   const [open, setOpen] = useState(false);
 
   const rowClassName =
-    'flex w-full items-center justify-between gap-2 rounded-lg bg-[var(--nav-mobile-link-background,transparent)] px-3 py-2 text-left font-[family-name:var(--nav-mobile-link-font-family,var(--font-family-body))] font-semibold text-[var(--nav-mobile-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4';
+    'flex w-full items-center justify-between gap-2 rounded-lg bg-[var(--nav-mobile-link-background,transparent)] px-3 py-2 text-left font-[family-name:var(--nav-mobile-link-font-family,var(--font-family-body))] text-[15px] font-semibold text-[var(--nav-mobile-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4';
 
   return (
     <ul className="flex flex-col p-2 @4xl:gap-2 @4xl:p-5">
@@ -246,7 +250,7 @@ function MobileMenuItem({ item, onNavigate }: { item: Link; onNavigate: () => vo
         subLinks.map((link, j) => (
           <li key={j}>
             <Link
-              className="block rounded-lg bg-[var(--nav-mobile-sub-link-background,transparent)] px-3 py-2 font-[family-name:var(--nav-mobile-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-mobile-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4"
+              className="block rounded-lg bg-[var(--nav-mobile-sub-link-background,transparent)] px-3 py-2 font-[family-name:var(--nav-mobile-sub-link-font-family,var(--font-family-body))] text-[13px] font-medium text-[var(--nav-mobile-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4"
               href={link.href}
               onClick={onNavigate}
             >
@@ -258,6 +262,10 @@ function MobileMenuItem({ item, onNavigate }: { item: Link; onNavigate: () => vo
   );
 }
 
+const navLinkClassName =
+  'hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @[900px]:inline-flex';
+const navSubLinkClassName =
+  'block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 const navGroupClassName =
   'block rounded-lg bg-[var(--nav-group-background,transparent)] px-3 py-2 font-[family-name:var(--nav-group-font-family,var(--font-family-body))] font-medium text-[var(--nav-group-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-group-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-group-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 const navButtonClassName =
@@ -396,6 +404,125 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     return () => window.removeEventListener('scroll', handleScroll);
   }, [setIsSearchOpen]);
 
+  // Full-screen mobile menu: close on Escape and lock page scroll while it is open.
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+
+    document.addEventListener('keydown', onKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMobileMenuOpen]);
+
+  // ── "Priority+" overflow for the desktop links ────────────────────────────────────────────
+  // Every top-level item stays mounted (its mega-menu must keep working); the ones that don't fit
+  // the row are display:none'd, last first, and listed under a "…" item. Each item's width is
+  // captured while it is visible and reused afterwards, so a resize is a pure calculation — no
+  // network, no re-render of the items themselves, and it runs before paint (useLayoutEffect).
+  const linksWrapRef = useRef<HTMLDivElement | null>(null);
+  const moreItemRef = useRef<HTMLLIElement | null>(null);
+  const itemElsRef = useRef(new Map<number, HTMLLIElement>());
+  const itemWidthsRef = useRef(new Map<number, number>());
+  const itemRefCallbacksRef = useRef(new Map<number, (el: HTMLLIElement | null) => void>());
+  const [visibleCount, setVisibleCount] = useState<number | null>(null);
+
+  const measureOverflow = useCallback(() => {
+    const wrap = linksWrapRef.current;
+
+    // Hidden (phone layout) → nothing to measure; the observer re-runs this when it shows again.
+    if (!wrap || wrap.clientWidth === 0) return;
+
+    const ITEM_GAP = 4; // ul gap-1
+    const CLUSTER_GAP = 40; // wrapper gap-10 between the shop and content clusters
+    const positions = [...itemElsRef.current.keys()].sort((a, b) => a - b);
+
+    positions.forEach((position) => {
+      const el = itemElsRef.current.get(position);
+
+      // offsetParent is null while display:none — keep the width captured when it was visible.
+      if (el && el.offsetParent !== null) {
+        itemWidthsRef.current.set(position, el.getBoundingClientRect().width);
+      }
+    });
+
+    const total = positions.length;
+
+    if (total === 0) return;
+
+    const widths = positions.map((position) => itemWidthsRef.current.get(position) ?? 0);
+    const available = wrap.clientWidth - CLUSTER_GAP;
+    const moreWidth = moreItemRef.current?.getBoundingClientRect().width ?? 48;
+    const allWidth = widths.reduce((sum, width) => sum + width + ITEM_GAP, 0);
+    let next = total;
+
+    if (allWidth > available) {
+      let used = moreWidth + ITEM_GAP;
+
+      // Index of the first item that no longer fits (−1 = they all fit next to the "…").
+      const firstOverflow = widths.findIndex((width) => {
+        if (used + width + ITEM_GAP > available) return true;
+
+        used += width + ITEM_GAP;
+
+        return false;
+      });
+
+      next = firstOverflow === -1 ? widths.length : firstOverflow;
+    }
+
+    setVisibleCount((current) => (current === next ? current : next));
+
+    // An item that has never been visible has no width yet (e.g. first render on a phone, then
+    // resized up) — measure once more after it paints.
+    if (widths.some((width) => width === 0)) requestAnimationFrame(measureOverflow);
+  }, []);
+
+  // One stable callback ref per item position (created lazily) so React doesn't re-register
+  // every render. Items mount after the links stream resolves, so measure when they appear.
+  const getItemRef = useCallback(
+    (position: number) => {
+      let callback = itemRefCallbacksRef.current.get(position);
+
+      if (!callback) {
+        callback = (el: HTMLLIElement | null) => {
+          if (el) {
+            itemElsRef.current.set(position, el);
+            requestAnimationFrame(measureOverflow);
+          } else {
+            itemElsRef.current.delete(position);
+          }
+        };
+
+        itemRefCallbacksRef.current.set(position, callback);
+      }
+
+      return callback;
+    },
+    [measureOverflow],
+  );
+
+  useLayoutEffect(() => {
+    const wrap = linksWrapRef.current;
+
+    if (!wrap) return;
+
+    measureOverflow();
+
+    const observer = new ResizeObserver(() => measureOverflow());
+
+    observer.observe(wrap);
+
+    return () => observer.disconnect();
+  }, [measureOverflow]);
+
   return (
     <NavigationMenu.Root
       className={clsx('relative mx-auto w-full max-w-screen-2xl @container', className)}
@@ -405,35 +532,41 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     >
       <div
         className={clsx(
-          'flex items-center justify-between gap-1 border-b border-contrast-100 bg-[var(--nav-background,hsl(var(--background)))] py-2 pl-3 pr-2 transition-shadow @4xl:rounded-2xl @4xl:px-2 @4xl:pl-6 @4xl:pr-2.5',
+          // Always the "floating card" look (rounded, ring, shadow) — the same treatment at rest as
+          // when the header is pinned on scroll; the shadow just deepens a little while floating.
+          'flex items-center justify-between gap-1 rounded-2xl border-b border-contrast-100 bg-[var(--nav-background,hsl(var(--background)))] py-[11px] pl-3 pr-2 ring-1 transition-shadow @4xl:px-2 @4xl:pl-6 @4xl:pr-2.5',
+          // At rest: a soft, low-opacity shadow (shadow-lg geometry at half its opacity) and a
+          // lighter ring. Floating (pinned on scroll): the full shadow-xl + 10% ring.
           isFloating
-            ? 'shadow-xl ring-1 ring-[var(--nav-floating-border,hsl(var(--foreground)/10%))]'
-            : 'shadow-none ring-0',
+            ? 'shadow-xl ring-[var(--nav-floating-border,hsl(var(--foreground)/10%))]'
+            : 'shadow-[0_10px_15px_-3px_rgb(0_0_0/0.05),0_4px_6px_-4px_rgb(0_0_0/0.04)] ring-[hsl(var(--foreground)/6%)]',
         )}
       >
-        {/* Mobile Menu */}
-        <Popover.Root onOpenChange={setIsMobileMenuOpen} open={isMobileMenuOpen}>
-          <Popover.Trigger asChild>
-            <MobileMenuButton
+        {/* Mobile Menu — a full-screen white overlay (portaled to <body> so the header's
+            transform/positioning can't clip it): close X top-right, the menu items below, and
+            the Free Design Consult CTA pinned to the bottom. The hamburger that opens it sits at
+            the right end of the icon cluster (below). */}
+        {isMobileMenuOpen &&
+          typeof document !== 'undefined' &&
+          createPortal(
+            <div
               aria-label={mobileMenuTriggerLabel}
-              className="mr-1 @[1050px]:hidden"
-              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              open={isMobileMenuOpen}
-            />
-          </Popover.Trigger>
-          <Popover.Portal>
-            {/* Full-width panel dropped below the header. sideOffset is large enough to clear the
-                mobile action row (Free Consult + toggle) that sits below the nav, so the first
-                menu item (Cabinets) isn't hidden behind it. Explicit width instead of the nav-width
-                anchor variable, which measures 0px here. */}
-            <Popover.Content
-              align="start"
-              className="max-h-[var(--radix-popover-content-available-height)] w-screen @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
-              collisionPadding={0}
-              side="bottom"
-              sideOffset={64}
+              aria-modal="true"
+              className="fixed inset-0 z-[100] flex flex-col bg-[var(--nav-mobile-background,hsl(var(--background)))] @container"
+              role="dialog"
             >
-              <div className="max-h-[inherit] divide-y divide-[var(--nav-mobile-divider,hsl(var(--contrast-100)))] overflow-y-auto bg-[var(--nav-mobile-background,hsl(var(--background)))]">
+              <div className="flex items-center justify-end border-b border-[var(--nav-mobile-divider,hsl(var(--contrast-100)))] px-4 py-3">
+                <button
+                  aria-label="Close menu"
+                  className={navButtonClassName}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  type="button"
+                >
+                  <X size={22} strokeWidth={1.5} />
+                </button>
+              </div>
+
+              <div className="flex-1 divide-y divide-[var(--nav-mobile-divider,hsl(var(--contrast-100)))] overflow-y-auto">
                 <Stream
                   fallback={
                     <ul className="flex animate-pulse flex-col gap-4 p-5 @4xl:gap-2 @4xl:p-5">
@@ -496,19 +629,26 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   </div>
                 )}
               </div>
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
+
+              {/* Bottom: the CTA, full width, 1.25× its usual height (x-small is 32px → 40px). */}
+              {ctaButton != null && (
+                <div className="border-t border-[var(--nav-mobile-divider,hsl(var(--contrast-100)))] p-4 [&_a]:flex [&_a]:!min-h-10 [&_a]:w-full [&_a]:justify-center [&_a]:!text-sm">
+                  {ctaButton}
+                </div>
+              )}
+            </div>,
+            document.body,
+          )}
 
         {/* Logo */}
         <div
           className={clsx(
             'flex items-center justify-start self-stretch',
-            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[1050px]:flex-none',
+            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[900px]:flex-none',
           )}
         >
           <Logo
-            className={clsx(streamableMobileLogo != null ? 'hidden @[1050px]:flex' : 'flex')}
+            className={clsx(streamableMobileLogo != null ? 'hidden @[900px]:flex' : 'flex')}
             height={logoHeight}
             href={logoHref}
             label={logoLabel}
@@ -517,7 +657,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           />
           {streamableMobileLogo != null && (
             <Logo
-              className="flex @[1050px]:hidden"
+              className="flex @[900px]:hidden"
               height={mobileLogoHeight}
               href={logoHref}
               label={logoLabel}
@@ -527,108 +667,161 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           )}
         </div>
 
-        {/* Top Level Nav Links — split into two <ul>s (shop group, content group). With the row's
-            justify-between, the four blocks (logo · shop · content · icons) spread evenly across
-            the width. Items keep their original index (i) as the NavigationMenu.Item value so the
-            mega-menu still works across both lists. */}
-        <Stream
-          fallback={
-            <ul className="hidden min-h-[41px] animate-pulse flex-row items-center @4xl:flex @4xl:gap-6 @4xl:p-2.5">
-              <li>
-                <span className="block h-4 w-10 rounded-md bg-contrast-100" />
-              </li>
-              <li>
-                <span className="block h-4 w-14 rounded-md bg-contrast-100" />
-              </li>
-              <li>
-                <span className="block h-4 w-24 rounded-md bg-contrast-100" />
-              </li>
-              <li>
-                <span className="block h-4 w-16 rounded-md bg-contrast-100" />
-              </li>
-            </ul>
-          }
-          value={streamableLinks}
+        {/* Top Level Nav Links — two clusters (shop group, content group) inside one measured
+            wrapper. Items keep their original index (i) as the NavigationMenu.Item value so the
+            mega-menu still works across both lists. Items that don't fit the wrapper are hidden
+            (last first) and collected under the "…" item at the end of the content cluster. */}
+        <div
+          className="hidden min-w-0 flex-1 items-center justify-evenly gap-10 @[900px]:flex"
+          ref={linksWrapRef}
         >
-          {(links) => {
-            const renderItem = (item: Link, i: number) => (
-              <NavigationMenu.Item key={i} value={i.toString()}>
-                <NavigationMenu.Trigger asChild>
-                  <Link
-                    className="hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @[1050px]:inline-flex"
-                    href={item.href}
-                  >
-                    {item.label}
-                  </Link>
-                </NavigationMenu.Trigger>
-                {item.groups != null && item.groups.length > 0 && (
-                  <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
-                    <div className="m-auto grid w-full max-w-screen-lg grid-cols-5 justify-center gap-5 px-5 pb-8 pt-5">
-                      {item.groups.map((group, columnIndex) => (
-                        <ul className="flex flex-col" key={columnIndex}>
-                          {/* Second Level Links */}
-                          {group.label != null && group.label !== '' && (
-                            <li>
-                              {group.href != null && group.href !== '' ? (
-                                <Link className={navGroupClassName} href={group.href}>
-                                  {group.label}
+          <Stream
+            fallback={
+              <ul className="hidden min-h-[41px] animate-pulse flex-row items-center @4xl:flex @4xl:gap-6 @4xl:p-2.5">
+                <li>
+                  <span className="block h-4 w-10 rounded-md bg-contrast-100" />
+                </li>
+                <li>
+                  <span className="block h-4 w-14 rounded-md bg-contrast-100" />
+                </li>
+                <li>
+                  <span className="block h-4 w-24 rounded-md bg-contrast-100" />
+                </li>
+                <li>
+                  <span className="block h-4 w-16 rounded-md bg-contrast-100" />
+                </li>
+              </ul>
+            }
+            value={streamableLinks}
+          >
+            {(links) => {
+              const shownCount = visibleCount ?? links.length;
+              const renderItem = (item: Link, i: number, position: number) => (
+                <NavigationMenu.Item
+                  key={i}
+                  ref={getItemRef(position)}
+                  style={position >= shownCount ? { display: 'none' } : undefined}
+                  value={i.toString()}
+                >
+                  <NavigationMenu.Trigger asChild>
+                    <Link className={navLinkClassName} href={item.href}>
+                      {item.label}
+                    </Link>
+                  </NavigationMenu.Trigger>
+                  {item.groups != null && item.groups.length > 0 && (
+                    <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
+                      <div className="m-auto grid w-full max-w-screen-lg grid-cols-5 justify-center gap-5 px-5 pb-8 pt-5">
+                        {item.groups.map((group, columnIndex) => (
+                          <ul className="flex flex-col" key={columnIndex}>
+                            {/* Second Level Links */}
+                            {group.label != null && group.label !== '' && (
+                              <li>
+                                {group.href != null && group.href !== '' ? (
+                                  <Link className={navGroupClassName} href={group.href}>
+                                    {group.label}
+                                  </Link>
+                                ) : (
+                                  <span className={navGroupClassName}>{group.label}</span>
+                                )}
+                              </li>
+                            )}
+
+                            {group.links.map((link, idx) => (
+                              // Third Level Links
+                              <li key={idx}>
+                                <Link className={navSubLinkClassName} href={link.href}>
+                                  {link.label}
                                 </Link>
-                              ) : (
-                                <span className={navGroupClassName}>{group.label}</span>
-                              )}
-                            </li>
-                          )}
+                              </li>
+                            ))}
+                          </ul>
+                        ))}
+                      </div>
+                    </NavigationMenu.Content>
+                  )}
+                </NavigationMenu.Item>
+              );
 
-                          {group.links.map((link, idx) => (
-                            // Third Level Links
-                            <li key={idx}>
-                              <Link
-                                className="block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2"
-                                href={link.href}
-                              >
-                                {link.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      ))}
-                    </div>
-                  </NavigationMenu.Content>
-                )}
-              </NavigationMenu.Item>
-            );
+              // Preserve original indices when filtering so each item's mega-menu value is stable.
+              // `position` is the item's place in row order (shop cluster first) — overflow hides
+              // from the highest position down.
+              const shop = links.filter((item) => item.group !== 'content');
+              const content = links.filter((item) => item.group === 'content');
+              const ordered = [...shop, ...content].map((item, position) => ({
+                item,
+                i: links.indexOf(item),
+                position,
+              }));
+              const hidden = ordered.slice(shownCount);
 
-            // Preserve original indices when filtering so each item's mega-menu value is stable.
-            const withIndex = links.map((item, i) => ({ item, i }));
-            const shop = withIndex.filter(({ item }) => item.group !== 'content');
-            const content = withIndex.filter(({ item }) => item.group === 'content');
-
-            return (
-              <>
-                <ul className="hidden gap-1 @[1050px]:flex">
-                  {shop.map(({ item, i }) => renderItem(item, i))}
-                </ul>
-                <ul className="hidden gap-1 @[1050px]:flex">
-                  {content.map(({ item, i }) => renderItem(item, i))}
-                </ul>
-              </>
-            );
-          }}
-        </Stream>
+              return (
+                <>
+                  <ul className="hidden gap-1 @[900px]:flex">
+                    {ordered
+                      .filter(({ item }) => item.group !== 'content')
+                      .map(({ item, i, position }) => renderItem(item, i, position))}
+                  </ul>
+                  <ul className="hidden gap-1 @[900px]:flex">
+                    {ordered
+                      .filter(({ item }) => item.group === 'content')
+                      .map(({ item, i, position }) => renderItem(item, i, position))}
+                    {/* "…" — the items that didn't fit, with their sub-links. */}
+                    {hidden.length > 0 && (
+                      <NavigationMenu.Item ref={moreItemRef} value="more">
+                        <NavigationMenu.Trigger
+                          aria-label="More menu items"
+                          className={clsx(navLinkClassName, 'px-2.5')}
+                        >
+                          <MoreHorizontal size={20} strokeWidth={1.5} />
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
+                          <div className="m-auto grid w-full max-w-screen-lg grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-5 px-5 pb-8 pt-5">
+                            {hidden.map(({ item, i }) => (
+                              <ul className="flex flex-col" key={i}>
+                                <li>
+                                  <Link className={navGroupClassName} href={item.href}>
+                                    {item.label}
+                                  </Link>
+                                </li>
+                                {(item.groups ?? []).map((group, groupIndex) => (
+                                  <React.Fragment key={groupIndex}>
+                                    {group.label != null && group.label !== '' && (
+                                      <li className="mt-2 px-3 text-[11px] font-semibold uppercase tracking-wide text-contrast-400">
+                                        {group.label}
+                                      </li>
+                                    )}
+                                    {group.links.map((link, idx) => (
+                                      <li key={idx}>
+                                        <Link className={navSubLinkClassName} href={link.href}>
+                                          {link.label}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </React.Fragment>
+                                ))}
+                              </ul>
+                            ))}
+                          </div>
+                        </NavigationMenu.Content>
+                      </NavigationMenu.Item>
+                    )}
+                  </ul>
+                </>
+              );
+            }}
+          </Stream>
+        </div>
 
         {/* Icon Buttons */}
         <div
           className={clsx(
             'flex items-center justify-end gap-0.5 transition-colors duration-300',
-            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[1050px]:flex-none',
+            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[900px]:flex-none',
           )}
         >
-          {/* CTA + toggle in the main nav row only on wide desktop (>=1400px, where the full nav
-              fits). Below that they're hidden here and instead surface in the mobile utility row
-              rendered below the nav (see the parent component). */}
-          {ctaButton != null && (
-            <div className="mr-3 hidden @[1400px]:block">{ctaButton}</div>
-          )}
+          {/* CTA stays in the row at every desktop width — the links overflow into "…" before it
+              ever goes. On phones it moves to the bottom of the mobile menu instead. */}
+          {ctaButton != null && <div className="mr-3 hidden @[900px]:block">{ctaButton}</div>}
           {audienceToggle != null && (
             <div className="mr-4 hidden @[1400px]:ml-2 @[1400px]:block">{audienceToggle}</div>
           )}
@@ -710,6 +903,15 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
               )
             }
           </Stream>
+
+          {/* Hamburger — last in the icon cluster, after the cart, with a little extra room to
+              its left. Opens the full-screen mobile menu (portaled above). */}
+          <MobileMenuButton
+            aria-label={mobileMenuTriggerLabel}
+            className="ml-3 @[900px]:hidden"
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            open={isMobileMenuOpen}
+          />
 
           {/* Locale / Language Dropdown */}
           {locales && locales.length > 1 ? (

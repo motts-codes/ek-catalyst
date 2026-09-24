@@ -36,26 +36,28 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       };
     }, [bannerElement]);
 
+    // The Homeowner/Pro switch lives in the utility strip (per the wireframe), not the nav row —
+    // pull it out of the navigation props so the Navigation primitive doesn't render it too.
+    const { audienceToggle, ...navigationProps } = navigation;
+
     return (
-      <div ref={ref}>
+      // `@container` so the width classes below resolve exactly like the page sections do — the
+      // utility strip and the nav card share the hero's container: max-w-screen-2xl with the same
+      // responsive side padding (px-4 / @xl:px-6 / @4xl:px-8).
+      <div className="@container" ref={ref}>
         {banner && <Banner ref={setBannerElement} {...banner} />}
         {/* Thin utility strip — sits above the sticky nav and scrolls away with the page. */}
-        <UtilityBar mode={navigation.audienceMode} />
+        <UtilityBar audienceToggle={audienceToggle} mode={navigation.audienceMode} />
         <Headroom
           onUnfix={() => setIsFloating(false)}
           onUnpin={() => setIsFloating(true)}
           pinStart={bannerHeight}
         >
-          <div className="p-2 pb-0">
-            <Navigation {...navigation} isFloating={isFloating} />
+          <div className="mx-auto max-w-screen-2xl px-4 pt-1 @xl:px-6 @4xl:px-8">
+            {/* On narrow screens the CTA moves into the mobile menu (first row) — no extra row
+                under the nav. Call + the audience switch live in the utility bar. */}
+            <Navigation {...navigationProps} isFloating={isFloating} />
           </div>
-          {/* Mobile-only action row below the nav (the CTA + toggle are hidden in the main nav row
-              below 1400px). Spread edge-to-edge: Free Design Consult · toggle · Call us. Hidden at
-              >=1050px where the desktop nav has room for these. */}
-          <MobileActionRow
-            audienceToggle={navigation.audienceToggle}
-            ctaButton={navigation.ctaButton}
-          />
         </Headroom>
       </div>
     );
@@ -63,22 +65,3 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 );
 
 HeaderSection.displayName = 'HeaderSection';
-
-// Mobile-only row below the nav: Free Design Consult · toggle, spread edge-to-edge. Shown below
-// 1050px, where the CTA + toggle don't fit in the main nav row. (Call lives in the utility bar.)
-function MobileActionRow({
-  ctaButton,
-  audienceToggle,
-}: {
-  ctaButton?: React.ReactNode;
-  audienceToggle?: React.ReactNode;
-}) {
-  if (ctaButton == null && audienceToggle == null) return null;
-
-  return (
-    <div className="flex items-center justify-between gap-3 border-t border-contrast-100 px-4 py-2 min-[1050px]:hidden">
-      {ctaButton}
-      {audienceToggle}
-    </div>
-  );
-}
