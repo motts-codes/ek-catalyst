@@ -69,3 +69,6 @@ __pycache__/
 # Cabinet script scratch / working data (not part of the repo)
 scripts/_cat_*.json
 scripts/avon-test/
+
+# Claude Code personal settings
+.claude/settings.local.json
