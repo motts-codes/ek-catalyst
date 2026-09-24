@@ -30,8 +30,8 @@ interface Props {
   scrollbarLabel?: string;
 }
 
-// "Shop by category." — portrait photo tiles in a carousel, five visible on desktop. The name,
-// hook and an arrow chip sit on a gradient at the foot of the photo; the tile lifts on hover.
+// "Shop by category." — photo tiles in a carousel, five visible on desktop: photo on top, then the
+// name, the hook line and a "Shop now →" text link; the tile lifts on hover.
 export function CategoryCarousel({
   title = 'Shop by category.',
   kicker,
@@ -52,32 +52,36 @@ export function CategoryCarousel({
               key={category.href + category.name}
             >
               <Link
-                className="group relative block aspect-[4/5] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgb(0_0_0/0.35)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
                 href={category.href}
               >
-                {category.image ? (
-                  <Image
-                    alt={category.image.alt}
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    fill
-                    sizes="(min-width: 64rem) 20vw, (min-width: 42rem) 33vw, 70vw"
-                    src={category.image.src}
-                  />
-                ) : (
-                  <MediaPlaceholder label={category.name} />
-                )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 pt-20 text-white">
+                <div className="relative aspect-[4/3] overflow-hidden bg-contrast-100">
+                  {category.image ? (
+                    <Image
+                      alt={category.image.alt}
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      fill
+                      sizes="(min-width: 64rem) 20vw, (min-width: 42rem) 33vw, 70vw"
+                      src={category.image.src}
+                    />
+                  ) : (
+                    <MediaPlaceholder label={category.name} />
+                  )}
+                </div>
+                <div className="flex flex-1 flex-col p-6">
                   <h3 className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
                     {category.name}
                   </h3>
                   {Boolean(category.subtitle) && (
-                    <p className="mt-1 text-xs text-white/80">{category.subtitle}</p>
+                    <p className="mt-1.5 text-sm text-contrast-500">{category.subtitle}</p>
                   )}
-                  <span className="mt-4 inline-flex h-9 items-center gap-2 rounded-full bg-white pl-4 pr-1.5 text-xs font-semibold text-foreground transition-transform duration-300 group-hover:translate-x-1">
+                  <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-[var(--button-primary-background,#d90716)]">
                     Shop now
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-foreground text-white">
-                      <ArrowRight size={13} strokeWidth={2.5} />
-                    </span>
+                    <ArrowRight
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                      size={15}
+                      strokeWidth={2.5}
+                    />
                   </span>
                 </div>
               </Link>

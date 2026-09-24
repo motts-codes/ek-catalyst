@@ -43,6 +43,7 @@ export const PRO_AUDIENCES: RowCard[] = [
     ctaLabel: 'Contractor Program',
     href: '#pro-program',
     primary: true,
+    imageLabel: 'A contractor at will-call',
   },
   {
     title: 'I furnish whole buildings',
@@ -50,6 +51,7 @@ export const PRO_AUDIENCES: RowCard[] = [
       'Apartments, condos and senior living — one spec per unit type, priced per unit, delivered floor by floor on your schedule.',
     ctaLabel: 'Multifamily',
     href: '#',
+    imageLabel: 'An apartment kitchen, one of many',
   },
   {
     title: 'I fit out commercial spaces',
@@ -57,6 +59,7 @@ export const PRO_AUDIENCES: RowCard[] = [
       'Offices, medical, hospitality and institutional — spec-sheet ready, delivery dates locked to your build, WBE/MBE certified.',
     ctaLabel: 'Commercial',
     href: '#',
+    imageLabel: 'A commercial break room fit-out',
   },
   {
     title: 'I buy by the pallet',
@@ -64,6 +67,7 @@ export const PRO_AUDIENCES: RowCard[] = [
       'Wholesale supply for dealers and distributors — full-line pricing, container and pallet quantities, through Kunal Kitchens.',
     ctaLabel: 'Wholesale ↗',
     href: WHOLESALE_URL,
+    imageLabel: 'Pallets of cabinets in the warehouse',
   },
 ];
 
