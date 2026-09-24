@@ -48,14 +48,14 @@ export function CabinetLines({ title, description, lines, className }: Props) {
   return (
     <div className={clsx('bg-[#f9fafd] @container', className)}>
       <div className="mx-auto max-w-screen-2xl px-4 pb-12 pt-6 @xl:px-6 @4xl:px-8">
-        {(title || description) && (
+        {(Boolean(title) || Boolean(description)) && (
           <div className="mb-8 max-w-3xl">
-            {title && (
+            {Boolean(title) && (
               <h1 className="font-heading text-3xl font-medium leading-tight @lg:text-4xl @2xl:text-5xl">
                 {title}
               </h1>
             )}
-            {description && (
+            {Boolean(description) && (
               <p className="mt-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
                 {description}
               </p>
@@ -77,12 +77,17 @@ export function CabinetLines({ title, description, lines, className }: Props) {
   );
 }
 
-function CabinetLineCard({ line }: { line: CabinetLine }) {
+// Exported so other sections (e.g. the home page's best-sellers grid) can reuse the exact card.
+export function CabinetLineCard({ line }: { line: CabinetLine }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-contrast-100 bg-white transition-colors duration-200 hover:border-contrast-200">
       {/* Image (whole card links to the category page). Neutral placeholder when the category has no
           image (Avon/Dover currently don't). */}
-      <Link aria-label={line.name} className="relative block aspect-[4/3] overflow-hidden bg-contrast-100" href={line.href}>
+      <Link
+        aria-label={line.name}
+        className="relative block aspect-[4/3] overflow-hidden bg-contrast-100"
+        href={line.href}
+      >
         {line.image ? (
           <Image
             alt={line.image.alt}

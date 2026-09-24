@@ -92,6 +92,14 @@ const useProgressButton = (
   };
 };
 
+// Embla 9 no longer starts autoplay on init — start it explicitly when the slideshow asks for it
+// and there is more than one slide to rotate.
+function startAutoplayIfRequested(emblaApi: EmblaCarouselType, playOnInit: boolean) {
+  const autoplay = emblaApi.plugins().autoplay;
+
+  if (playOnInit && !autoplay.isPlaying() && emblaApi.snapList().length > 1) autoplay.play();
+}
+
 // eslint-disable-next-line valid-jsdoc
 /**
  * This component supports various CSS variables for theming. Here's a comprehensive list, along
@@ -147,6 +155,8 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
 
     if (!autoplay) return;
 
+    startAutoplayIfRequested(emblaApi, playOnInit);
+
     setIsPlaying(autoplay.isPlaying());
     emblaApi
       .on('autoplay:play', () => {
@@ -159,7 +169,7 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
       .on('reinit', () => {
         setIsPlaying(autoplay.isPlaying());
       });
-  }, [emblaApi, playCount]);
+  }, [emblaApi, playCount, playOnInit]);
 
   return (
     <section

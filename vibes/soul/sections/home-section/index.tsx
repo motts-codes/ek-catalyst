@@ -1,0 +1,98 @@
+import { clsx } from 'clsx';
+import { ReactNode } from 'react';
+
+import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+
+export interface HomeSectionAction {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  /** Anchor id for in-page jump links (e.g. "pro-program"). */
+  id?: string;
+  /** Small uppercase line above the title (e.g. "Best sellers"). */
+  kicker?: string;
+  title?: string;
+  description?: string;
+  /** Optional button rendered on the right of the heading row (e.g. "View all"). */
+  action?: HomeSectionAction;
+  /** Tinted background (the wireframe's alternating "alt" bands). */
+  tint?: boolean;
+  /** Tighter vertical padding (used for narrow bands). */
+  compact?: boolean;
+  className?: string;
+  children: ReactNode;
+}
+
+// Shared shell for the home-page bands: the page-width container, alternating tint, and the
+// kicker / title / description / action heading row. Every home section uses it so spacing and
+// typography match across the page.
+export function HomeSection({
+  id,
+  kicker,
+  title,
+  description,
+  action,
+  tint = false,
+  compact = false,
+  className,
+  children,
+}: Props) {
+  const hasHeading = Boolean(kicker || title || description || action);
+
+  return (
+    <section className={clsx('@container', tint && 'bg-[#f9fafd]', className)} id={id}>
+      <div
+        className={clsx(
+          'mx-auto max-w-screen-2xl px-4 @xl:px-6 @4xl:px-8',
+          compact ? 'py-8 @4xl:py-10' : 'py-10 @4xl:py-14',
+        )}
+      >
+        {hasHeading && (
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 @4xl:mb-8">
+            <div className="max-w-3xl">
+              {Boolean(kicker) && (
+                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                  {kicker}
+                </p>
+              )}
+              {Boolean(title) && (
+                <h2 className="font-heading text-2xl font-medium leading-tight @xl:text-3xl @4xl:text-4xl">
+                  {title}
+                </h2>
+              )}
+              {Boolean(description) && (
+                <p className="mt-2 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+                  {description}
+                </p>
+              )}
+            </div>
+            {action && (
+              <ButtonLink href={action.href} shape="pill" size="small" variant="secondary">
+                {action.label}
+              </ButtonLink>
+            )}
+          </div>
+        )}
+        {children}
+      </div>
+    </section>
+  );
+}
+
+// Neutral image placeholder used by home cards when no photo has been supplied yet.
+export function MediaPlaceholder({ label, className }: { label: string; className?: string }) {
+  return (
+    <div
+      className={clsx(
+        'flex h-full w-full items-center justify-center bg-contrast-100 p-4 text-center',
+        className,
+      )}
+    >
+      <span className="text-lg font-bold leading-snug tracking-tighter text-foreground opacity-10 @xs:text-2xl">
+        {label}
+      </span>
+    </div>
+  );
+}
