@@ -8,7 +8,7 @@ import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeHeroSplit } from '@/vibes/soul/sections/home-hero-split';
 import { ProgramCards } from '@/vibes/soul/sections/program-cards';
 import { ProgramTiers } from '@/vibes/soul/sections/program-tiers';
-import { ReviewCarousel } from '@/vibes/soul/sections/review-carousel';
+import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
 import { CATEGORY_TILES, HERO_OFFERS } from '~/lib/home/home-content';
@@ -210,7 +210,14 @@ export default async function Pro({ params }: Props) {
 
       {/* 12 · Contractors who order here */}
       <Slot
-        fallback={<ReviewCarousel reviews={PRO_REVIEWS} tint title="Contractors who order here" />}
+        fallback={
+          <ReviewMarquee
+            height={420}
+            reviews={PRO_REVIEWS}
+            tint
+            title="Contractors who order here"
+          />
+        }
         label="Pro testimonials"
         snapshotId="pro-testimonials"
       />

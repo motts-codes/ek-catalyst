@@ -4,6 +4,7 @@ import {
   Link,
   List,
   Number,
+  Select,
   Style,
   TextArea,
   TextInput,
@@ -40,5 +41,13 @@ runtime.registerComponent(MSReviewCarousel, {
     actionLabel: TextInput({ label: 'Button text', defaultValue: 'Read all reviews' }),
     actionLink: Link({ label: 'Button link' }),
     tint: Checkbox({ label: 'Tinted background', defaultValue: true }),
+    layout: Select({
+      label: 'Layout',
+      options: [
+        { value: 'marquee', label: 'Three drifting columns (pause on hover)' },
+        { value: 'carousel', label: 'Row carousel' },
+      ],
+      defaultValue: 'marquee',
+    }),
   },
 });

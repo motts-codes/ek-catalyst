@@ -11,7 +11,7 @@ import { HomeHeroSplit } from '@/vibes/soul/sections/home-hero-split';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { ProductTabs } from '@/vibes/soul/sections/product-tabs';
 import { ProgramCards } from '@/vibes/soul/sections/program-cards';
-import { ReviewCarousel } from '@/vibes/soul/sections/review-carousel';
+import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
@@ -218,7 +218,7 @@ export default async function Home({ params }: Props) {
       {/* 7 · Reviews */}
       <Slot
         fallback={
-          <ReviewCarousel
+          <ReviewMarquee
             action={{ label: 'Read all reviews', href: '#' }}
             reviews={HOME_REVIEWS}
             summary="4.5 · 360+ Google reviews"
