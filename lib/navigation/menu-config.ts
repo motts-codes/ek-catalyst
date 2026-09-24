@@ -70,7 +70,7 @@ const menu: MenuItem[] = [
         ],
       },
       {
-        // Countertops are quote-only (templated and fitted by EK) — no Add to Cart.
+        // Countertops are quote-only (call to order; EK does not install) — no Add to Cart.
         label: 'Countertops',
         href: '#',
         links: [

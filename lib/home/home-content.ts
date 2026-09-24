@@ -72,8 +72,8 @@ const CATEGORY_BASE: Array<{ name: string; href: string; homeowner: string; pro:
   {
     name: 'Countertops',
     href: '#',
-    homeowner: 'Granite, quartz, laminate',
-    pro: 'Templated and fitted by us',
+    homeowner: 'Granite from $49.99/sq ft',
+    pro: 'Granite $49.99 · Quartz $59.99/sq ft',
   },
   {
     name: 'Windows',
