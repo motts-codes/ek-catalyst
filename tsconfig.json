@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowArbitraryExtensions": true,
     "allowJs": true,
     "skipLibCheck": true,
@@ -35,8 +39,12 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/vibes/*": ["./vibes/*"],
-      "~/*": ["./*"]
+      "@/vibes/*": [
+        "./vibes/*"
+      ],
+      "~/*": [
+        "./*"
+      ]
     },
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
@@ -49,7 +57,11 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "tests/**/*"
+    "tests/**/*",
+    ".next/dev/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next"]
+  "exclude": [
+    "node_modules",
+    ".next"
+  ]
 }
