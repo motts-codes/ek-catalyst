@@ -11,7 +11,7 @@ import { ProgramTiers } from '@/vibes/soul/sections/program-tiers';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
-import { CATEGORY_TILES, HERO_OFFERS } from '~/lib/home/home-content';
+import { HERO_OFFERS, PRO_CATEGORY_TILES } from '~/lib/home/home-content';
 import {
   DELIVERY_COLUMNS,
   DELIVERY_ROWS,
@@ -102,7 +102,7 @@ export default async function Pro({ params }: Props) {
       {/* 4 · Everything for the job */}
       <Slot
         fallback={
-          <CategoryCarousel categories={CATEGORY_TILES} tint title="Everything for the job." />
+          <CategoryCarousel categories={PRO_CATEGORY_TILES} tint title="Everything for the job." />
         }
         label="Pro categories"
         snapshotId="pro-categories"

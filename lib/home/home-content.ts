@@ -54,18 +54,79 @@ export const HERO_OFFERS: HeroOffer[] = [
   },
 ];
 
-export const CATEGORY_TILES: CategoryTile[] = [
-  { name: 'Kitchen cabinets', subtitle: '50,000 in stock', href: '/cabinets' },
-  { name: 'Closets', subtitle: '12 components, 3 colors', href: '/closets' },
-  { name: 'Countertops', subtitle: 'Granite, quartz, laminate', href: '#' },
-  { name: 'Windows', subtitle: '$179.99 any size', href: '/windows' },
-  { name: 'Appliances', subtitle: 'Pick up in 2 days', href: '/appliances' },
-  { name: 'Sinks', subtitle: 'Sized for our sink bases', href: '#' },
-  { name: 'Faucets', subtitle: 'In the finishes we make handles in', href: '#' },
-  { name: 'Handles', subtitle: 'Every finish we make doors in', href: '#' },
-  { name: 'Accessories', subtitle: 'Fillers, trim, organizers', href: '#' },
-  { name: 'Doors', subtitle: 'New — entry & patio', href: '#' },
+// One base list; the hook line under each category differs per audience (homeowner: choice and
+// ease, pro: stock, price and speed). Photos and links are shared.
+const CATEGORY_BASE: Array<{ name: string; href: string; homeowner: string; pro: string }> = [
+  {
+    name: 'Kitchen cabinets',
+    href: '/cabinets',
+    homeowner: '100+ styles, 30+ colors',
+    pro: '50,000 in stock',
+  },
+  {
+    name: 'Closets',
+    href: '/closets',
+    homeowner: '12 pieces, 3 colors, one build',
+    pro: 'Ships from stock in Connecticut',
+  },
+  {
+    name: 'Countertops',
+    href: '#',
+    homeowner: 'Granite, quartz, laminate',
+    pro: 'Templated and fitted by us',
+  },
+  {
+    name: 'Windows',
+    href: '/windows',
+    homeowner: 'Best price, any size',
+    pro: 'Factory-direct pricing, pick up in 2 days',
+  },
+  {
+    name: 'Appliances',
+    href: '/appliances',
+    homeowner: 'Pick up in 2 days',
+    pro: 'Priced below retail, in stock in Bristol',
+  },
+  { name: 'Sinks', href: '#', homeowner: 'Sized for our sink bases', pro: 'Ships in 2 days' },
+  {
+    name: 'Faucets',
+    href: '#',
+    homeowner: 'Finishes that match your handles',
+    pro: 'Ships in 2 days',
+  },
+  {
+    name: 'Handles',
+    href: '#',
+    homeowner: 'Every finish we make doors in',
+    pro: 'Ships next day, by the box',
+  },
+  {
+    name: 'Accessories',
+    href: '#',
+    homeowner: 'Fillers, trim, organizers',
+    pro: 'Trim, fillers and moldings by the box',
+  },
+  {
+    name: 'Doors',
+    href: '#',
+    homeowner: 'New: entry and patio',
+    pro: 'Primed and in stock, ships in 2 days',
+  },
 ];
+
+/** Homeowner home page tiles. */
+export const CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(({ name, href, homeowner }) => ({
+  name,
+  href,
+  subtitle: homeowner,
+}));
+
+/** Pro home page tiles ("Everything for the job."). */
+export const PRO_CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(({ name, href, pro }) => ({
+  name,
+  href,
+  subtitle: pro,
+}));
 
 export const PROGRAM_CARDS: ProgramCard[] = [
   {
