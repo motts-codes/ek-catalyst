@@ -1,7 +1,11 @@
 import { clsx } from 'clsx';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import {
+  homeHeadingClassName,
+  HomeSection,
+  MediaPlaceholder,
+} from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 
 interface Props {
@@ -38,9 +42,7 @@ export function StoryBand({
               {kicker}
             </p>
           )}
-          <h2 className="font-heading text-2xl font-medium leading-tight @xl:text-3xl @4xl:text-4xl">
-            {title}
-          </h2>
+          <h2 className={homeHeadingClassName}>{title}</h2>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
             {description}
           </p>

@@ -150,7 +150,7 @@ export function HomeHeroSplit({
 
   return (
     <section className={clsx('@container', className)}>
-      <div className="mx-auto max-w-screen-2xl px-4 pb-6 pt-3 @xl:px-6 @4xl:px-8">
+      <div className="mx-auto max-w-screen-2xl px-4 pb-2 pt-3 @xl:px-6 @4xl:px-8">
         <div className="grid gap-3.5 @3xl:grid-cols-[65fr_35fr]">
           {/* Left: photo slideshow */}
           <div className="relative h-[325px] overflow-hidden rounded-3xl bg-contrast-100 @xl:h-[320px] @3xl:h-[350px]">

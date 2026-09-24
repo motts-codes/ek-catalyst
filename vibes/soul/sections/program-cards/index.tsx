@@ -2,7 +2,11 @@ import { clsx } from 'clsx';
 import { Check } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import {
+  homeHeadingClassName,
+  HomeSection,
+  MediaPlaceholder,
+} from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -52,9 +56,7 @@ export function ProgramCards({
           <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-400">
             {kicker}
           </p>
-          <h2 className="font-heading text-2xl font-medium leading-tight @xl:text-3xl @4xl:text-4xl">
-            {title}
-          </h2>
+          <h2 className={homeHeadingClassName}>{title}</h2>
         </div>
         {helper && (
           <Link

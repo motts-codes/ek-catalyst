@@ -8,6 +8,10 @@ export interface HomeSectionAction {
   href: string;
 }
 
+/** Section heading (h2) style shared by every home/Pro band: smaller and bold. */
+export const homeHeadingClassName =
+  'font-heading text-xl font-bold leading-tight @xl:text-2xl @4xl:text-[28px]';
+
 interface Props {
   /** Anchor id for in-page jump links (e.g. "pro-program"). */
   id?: string;
@@ -21,6 +25,8 @@ interface Props {
   tint?: boolean;
   /** Tighter vertical padding (used for narrow bands). */
   compact?: boolean;
+  /** Minimal top padding — for a band that should sit right under the hero. */
+  tightTop?: boolean;
   className?: string;
   children: ReactNode;
 }
@@ -36,32 +42,29 @@ export function HomeSection({
   action,
   tint = false,
   compact = false,
+  tightTop = false,
   className,
   children,
 }: Props) {
+  let verticalPadding = 'py-10 @4xl:py-14';
+
+  if (compact) verticalPadding = 'py-8 @4xl:py-10';
+  if (tightTop) verticalPadding = 'pb-10 pt-2 @4xl:pb-14 @4xl:pt-3';
+
   const hasHeading = Boolean(kicker || title || description || action);
 
   return (
     <section className={clsx('@container', tint && 'bg-[#f9fafd]', className)} id={id}>
-      <div
-        className={clsx(
-          'mx-auto max-w-screen-2xl px-4 @xl:px-6 @4xl:px-8',
-          compact ? 'py-8 @4xl:py-10' : 'py-10 @4xl:py-14',
-        )}
-      >
+      <div className={clsx('mx-auto max-w-screen-2xl px-4 @xl:px-6 @4xl:px-8', verticalPadding)}>
         {hasHeading && (
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 @4xl:mb-8">
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 @4xl:mb-6">
             <div className="max-w-3xl">
               {Boolean(kicker) && (
                 <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-400">
                   {kicker}
                 </p>
               )}
-              {Boolean(title) && (
-                <h2 className="font-heading text-2xl font-medium leading-tight @xl:text-3xl @4xl:text-4xl">
-                  {title}
-                </h2>
-              )}
+              {Boolean(title) && <h2 className={homeHeadingClassName}>{title}</h2>}
               {Boolean(description) && (
                 <p className="mt-2 text-sm leading-relaxed text-contrast-500 @xl:text-base">
                   {description}

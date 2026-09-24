@@ -150,7 +150,7 @@ export default async function Home({ params }: Props) {
 
       {/* 2 · Shop by category */}
       <Slot
-        fallback={<CategoryCarousel categories={CATEGORY_TILES} tint />}
+        fallback={<CategoryCarousel categories={CATEGORY_TILES} tightTop tint />}
         label="Home categories"
         snapshotId="home-categories"
       />

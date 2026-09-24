@@ -24,6 +24,8 @@ interface Props {
   kicker?: string;
   categories: CategoryTile[];
   tint?: boolean;
+  /** Sit right under the hero (minimal top padding). */
+  tightTop?: boolean;
   className?: string;
   previousLabel?: string;
   nextLabel?: string;
@@ -37,13 +39,20 @@ export function CategoryCarousel({
   kicker,
   categories,
   tint = false,
+  tightTop = false,
   className,
   previousLabel = 'Previous',
   nextLabel = 'Next',
   scrollbarLabel = 'Scroll categories',
 }: Props) {
   return (
-    <HomeSection className={className} kicker={kicker} tint={tint} title={title}>
+    <HomeSection
+      className={className}
+      kicker={kicker}
+      tightTop={tightTop}
+      tint={tint}
+      title={title}
+    >
       <Carousel>
         <CarouselContent className="-ml-4 pb-2 pt-1 @2xl:-ml-5">
           {categories.map((category) => (
@@ -55,7 +64,7 @@ export function CategoryCarousel({
                 className="group flex h-full flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
                 href={category.href}
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-contrast-100">
+                <div className="relative aspect-[16/9] overflow-hidden bg-contrast-100">
                   {category.image ? (
                     <Image
                       alt={category.image.alt}
@@ -68,14 +77,14 @@ export function CategoryCarousel({
                     <MediaPlaceholder label={category.name} />
                   )}
                 </div>
-                <div className="flex flex-1 flex-col p-6">
+                <div className="flex flex-1 flex-col p-5 pb-4">
                   <h3 className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
                     {category.name}
                   </h3>
                   {Boolean(category.subtitle) && (
-                    <p className="mt-1.5 text-sm text-contrast-500">{category.subtitle}</p>
+                    <p className="mt-1 text-sm text-contrast-500">{category.subtitle}</p>
                   )}
-                  <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-[var(--button-primary-background,#d90716)]">
+                  <span className="mt-auto inline-flex items-center gap-1.5 pt-2.5 text-sm font-semibold text-[var(--button-primary-background,#d90716)]">
                     Shop now
                     <ArrowRight
                       className="transition-transform duration-300 group-hover:translate-x-1"

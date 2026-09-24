@@ -1,5 +1,5 @@
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
+import { homeHeadingClassName, HomeSection } from '@/vibes/soul/sections/home-section';
 import { Link } from '~/components/link';
 
 import { ShowroomSelect } from './showroom-select';
@@ -40,9 +40,7 @@ export function ClosingBand({
           className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[var(--button-primary-background,#d90716)] opacity-30 blur-3xl"
         />
         <div className="relative mx-auto max-w-2xl">
-          <h2 className="font-heading text-2xl font-medium leading-tight @xl:text-3xl @4xl:text-4xl">
-            {title}
-          </h2>
+          <h2 className={homeHeadingClassName}>{title}</h2>
           <p className="mt-4 text-sm leading-relaxed text-white/70 @xl:text-base">{description}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <ButtonLink href={primary.href} shape="pill" size="small" variant="primary">
