@@ -66,8 +66,8 @@ const CATEGORY_BASE: Array<{ name: string; href: string; homeowner: string; pro:
   {
     name: 'Closets',
     href: '/closets',
-    homeowner: '12 pieces, 3 colors, one build',
-    pro: 'Ships from stock in Connecticut',
+    homeowner: '12 pieces, 3 colors',
+    pro: 'Ships from stock',
   },
   {
     name: 'Countertops',
@@ -79,38 +79,38 @@ const CATEGORY_BASE: Array<{ name: string; href: string; homeowner: string; pro:
     name: 'Windows',
     href: '/windows',
     homeowner: 'Best price, any size',
-    pro: 'Factory-direct pricing, pick up in 2 days',
+    pro: 'Factory-direct pricing',
   },
   {
     name: 'Appliances',
     href: '/appliances',
     homeowner: 'Pick up in 2 days',
-    pro: 'Priced below retail, in stock in Bristol',
+    pro: 'Priced below retail',
   },
   { name: 'Sinks', href: '#', homeowner: 'Sized for our sink bases', pro: 'Ships in 2 days' },
   {
     name: 'Faucets',
     href: '#',
-    homeowner: 'Finishes that match your handles',
+    homeowner: 'Matches your handles',
     pro: 'Ships in 2 days',
   },
   {
     name: 'Handles',
     href: '#',
     homeowner: 'Every finish we make doors in',
-    pro: 'Ships next day, by the box',
+    pro: 'Ships next day',
   },
   {
     name: 'Accessories',
     href: '#',
     homeowner: 'Fillers, trim, organizers',
-    pro: 'Trim, fillers and moldings by the box',
+    pro: 'Sold by the box',
   },
   {
     name: 'Doors',
     href: '#',
     homeowner: 'New: entry and patio',
-    pro: 'Primed and in stock, ships in 2 days',
+    pro: 'Primed, ships in 2 days',
   },
 ];
 
