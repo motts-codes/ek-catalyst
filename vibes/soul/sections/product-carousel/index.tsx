@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ReactNode } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import {
@@ -34,6 +35,11 @@ export interface ProductCarouselProps {
   hideOverflow?: boolean;
   /** `compact` fits five cards per row on desktop instead of four (cards at 0.8×). */
   density?: 'default' | 'compact';
+  /**
+   * Replaces the scrollbar + arrows row under the cards. Rendered inside the carousel, so it can
+   * use the carousel primitives (e.g. arrows portalled into a tab row).
+   */
+  controls?: ReactNode;
 }
 
 const ITEM_CLASS = {
@@ -72,6 +78,7 @@ export function ProductCarousel({
   showScrollbar = true,
   hideOverflow = true,
   density = 'default',
+  controls,
 }: ProductCarouselProps) {
   return (
     <Stream
@@ -79,6 +86,7 @@ export function ProductCarousel({
         <ProductsCarouselSkeleton
           className={className}
           density={density}
+          hideControls={controls != null}
           hideOverflow={hideOverflow}
           placeholderCount={placeholderCount}
         />
@@ -102,7 +110,7 @@ export function ProductCarousel({
 
         return (
           <Carousel className={className} hideOverflow={hideOverflow}>
-            <CarouselContent className="-ml-3 mb-10 @2xl:-ml-5">
+            <CarouselContent className={clsx('-ml-3 @2xl:-ml-5', controls == null && 'mb-10')}>
               {products.map(({ id, ...product }) => (
                 <CarouselItem className={ITEM_CLASS[density]} key={id}>
                   <ProductCard
@@ -114,7 +122,8 @@ export function ProductCarousel({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            {(showButtons || showScrollbar) && (
+            {controls}
+            {controls == null && (showButtons || showScrollbar) && (
               <div className="mt-10 flex w-full items-center justify-between gap-8">
                 <CarouselScrollbar
                   className={clsx(!showScrollbar && 'pointer-events-none invisible')}
@@ -141,7 +150,10 @@ export function ProductsCarouselSkeleton({
   placeholderCount = 8,
   hideOverflow,
   density = 'default',
-}: Pick<ProductCarouselProps, 'className' | 'placeholderCount' | 'hideOverflow' | 'density'>) {
+  hideControls = false,
+}: Pick<ProductCarouselProps, 'className' | 'placeholderCount' | 'hideOverflow' | 'density'> & {
+  hideControls?: boolean;
+}) {
   return (
     <Skeleton.Root
       className={clsx('group-has-data-pending/product-carousel:animate-pulse', className)}
@@ -157,13 +169,17 @@ export function ProductsCarouselSkeleton({
           ))}
         </div>
       </div>
-      <div className="mt-10 flex w-full items-center justify-between gap-8">
-        <Skeleton.Box className="h-1 w-56 rounded" />
-        <div className="flex gap-2">
-          <Skeleton.Icon icon={<ArrowLeft aria-hidden className="h-6 w-6" strokeWidth={1.5} />} />
-          <Skeleton.Icon icon={<ArrowRight aria-hidden className="h-6 w-6" strokeWidth={1.5} />} />
+      {!hideControls && (
+        <div className="mt-10 flex w-full items-center justify-between gap-8">
+          <Skeleton.Box className="h-1 w-56 rounded" />
+          <div className="flex gap-2">
+            <Skeleton.Icon icon={<ArrowLeft aria-hidden className="h-6 w-6" strokeWidth={1.5} />} />
+            <Skeleton.Icon
+              icon={<ArrowRight aria-hidden className="h-6 w-6" strokeWidth={1.5} />}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </Skeleton.Root>
   );
 }

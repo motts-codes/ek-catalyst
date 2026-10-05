@@ -2,7 +2,7 @@
 
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { ProductCarousel, ProductsCarouselSkeleton } from '@/vibes/soul/sections/product-carousel';
-import { ProductTabsShell } from '@/vibes/soul/sections/product-tabs';
+import { ProductTabsShell, TabRowArrows } from '@/vibes/soul/sections/product-tabs';
 
 import { useProducts } from '../../utils/use-products';
 
@@ -38,15 +38,15 @@ function TabPanel({ tab, aspectRatio }: { tab: Tab; aspectRatio: Props['aspectRa
   });
 
   if (isLoading || products == null) {
-    return <ProductsCarouselSkeleton density="compact" />;
+    return <ProductsCarouselSkeleton density="compact" hideControls />;
   }
 
   return (
     <ProductCarousel
       aspectRatio={aspectRatio}
+      controls={<TabRowArrows />}
       density="compact"
       products={products}
-      showScrollbar={false}
     />
   );
 }
