@@ -1,15 +1,18 @@
 import { clsx } from 'clsx';
+import { ArrowDown, Download, Plus, Repeat } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { DeliveryTruckIcon } from '@/vibes/soul/primitives/icons/delivery-truck';
+import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
 
 /**
  * Collection detail header shown ABOVE the product grid on a cabinet collection category page
- * (Avon, Dover). Everything here comes from the category's BigCommerce metafields — see
- * lib/cabinets/cabinet-collection.ts. Deferred (Laravel-fed in Stencil, not seeded here): image
- * carousel, badges, specifications, assembly instructions, category color swatches.
+ * (Avon, Dover). Fifty-fifty: the gallery on the left, the decision column on the right — name and
+ * program, the overview, the 10×10 price, an expandable Specification, then Shop products beside
+ * Order sample. Everything comes from the category's BigCommerce metafields — see
+ * lib/cabinets/cabinet-collection.ts.
  */
 export interface CabinetSwatch {
   id: string;
@@ -46,152 +49,281 @@ export interface CabinetCollectionHeaderData {
   orderSamplePrice?: string;
 }
 
+// Expandable Specification with the spec-sheet download on the same row. With no specification
+// copy, just the download link; with neither, nothing.
+function SpecRow({
+  specifications = '',
+  specSheetUrl = '',
+}: {
+  specifications?: string;
+  specSheetUrl?: string;
+}) {
+  const specSheetLink = specSheetUrl !== '' && (
+    <a
+      className="inline-flex items-center gap-1.5 text-sm font-semibold underline underline-offset-4 hover:text-[var(--button-primary-background,#d90716)]"
+      href={specSheetUrl}
+      rel="noreferrer"
+      target="_blank"
+    >
+      <Download size={15} strokeWidth={2} />
+      Download spec sheet
+    </a>
+  );
+
+  if (specifications === '') return specSheetLink || null;
+
+  return (
+    <details className="group border-y border-contrast-100">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center gap-2.5 font-heading text-lg font-semibold">
+          <Plus
+            className="transition-transform duration-300 group-open:rotate-45"
+            size={18}
+            strokeWidth={2}
+          />
+          Specification
+        </span>
+        {specSheetLink}
+      </summary>
+      <div
+        className="prose prose-sm max-w-none pb-5 text-contrast-500 [&_a]:text-[#2162a1] [&_li]:my-1 [&_table]:w-full [&_td]:border [&_td]:border-contrast-100 [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-contrast-100 [&_th]:px-3 [&_th]:py-1.5 [&_ul]:list-disc [&_ul]:pl-5"
+
+        dangerouslySetInnerHTML={{ __html: specifications }}
+      />
+    </details>
+  );
+}
+
+// Shop products (70%) beside Order sample (30%), with the free-samples note beneath.
+function Actions({
+  data,
+  productsHref,
+}: {
+  data: CabinetCollectionHeaderData;
+  productsHref: string;
+}) {
+  const sampleHref = data.orderSampleHref ?? '';
+  const samplePrice = data.orderSamplePrice ?? '';
+  const hasSample = sampleHref !== '';
+
+  return (
+    <div>
+      <div className={clsx('grid gap-2.5', hasSample && '@md:grid-cols-[7fr_3fr]')}>
+        <ButtonLink
+          className="w-full [&>span]:w-full [&>span]:justify-center"
+          href={productsHref}
+          shape="pill"
+          size="medium"
+          variant="primary"
+        >
+          <span className="inline-flex items-center gap-2">
+            Shop products
+            <ArrowDown size={17} strokeWidth={2.25} />
+          </span>
+        </ButtonLink>
+        {hasSample && (
+          <ButtonLink
+            className="w-full [&>span]:w-full [&>span]:justify-center"
+            href={sampleHref}
+            shape="pill"
+            size="medium"
+            variant="secondary"
+          >
+            {samplePrice === '' ? 'Order sample' : `Order sample $${samplePrice}`}
+          </ButtonLink>
+        )}
+      </div>
+      <p className="mt-2.5 text-xs text-contrast-400">
+        First two quarter-door samples free with code FREESAMPLES.
+      </p>
+    </div>
+  );
+}
+
 interface Props {
   data: CabinetCollectionHeaderData;
   program?: 'assembled' | 'rta';
+  /** Specifications HTML (staff-authored) for the expandable Specification row. */
+  specifications?: string;
+  /** The same collection in the other program ("Switch to RTA"). */
+  switchHref?: string;
+  /** Where "Shop products" scrolls to. */
+  productsHref?: string;
   className?: string;
 }
 
-export function CabinetCollectionHeader({ data, className }: Props) {
+const PROGRAM_LABEL = { assembled: 'Assembled', rta: 'RTA' };
+
+// Metafield prices arrive as plain numbers ("3289.55"); show them with thousands separators.
+const formatPrice = (value = '') => value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+function Finishes({ colors = [] }: { colors?: CabinetSwatch[] }) {
+  if (colors.length === 0) return null;
+
+  return (
+    <div>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+        Available finishes
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {colors.map((c) => (
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full border border-contrast-100 py-1 pl-1 pr-3 text-xs text-contrast-500"
+            key={c.id}
+          >
+            <span
+              className="inline-block size-5 rounded-full border border-contrast-100 bg-cover bg-center"
+              style={{
+                backgroundColor: c.hex || undefined,
+                backgroundImage: c.image ? `url(${c.image})` : undefined,
+              }}
+              title={c.name}
+            />
+            {c.name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// The 10×10 "basic kitchen" price for the shown program, with its fixed-list disclaimer.
+function PriceCard({
+  data,
+  program,
+}: {
+  data: CabinetCollectionHeaderData;
+  program: 'assembled' | 'rta';
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-4 rounded-3xl border border-contrast-100 bg-[#f9fafd] p-5 @xl:p-6">
+      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-[11px] font-bold leading-none ring-1 ring-contrast-100">
+        10×10
+      </span>
+      <div className="min-w-[12rem] flex-1">
+        <p className="font-heading text-lg font-semibold leading-tight">
+          {data.name} 10×10 kitchen
+        </p>
+        <p className="mt-1 text-xs leading-relaxed text-contrast-400">
+          The price is based on a fixed list of cabinets that cannot be modified.
+        </p>
+      </div>
+      <div className="@xl:text-right">
+        <p className="flex items-baseline gap-2 @xl:justify-end">
+          <span className="font-heading text-3xl font-bold leading-none">
+            ${formatPrice(data.price)}
+          </span>
+          {data.strikePrice != null && data.strikePrice !== '' && (
+            <span className="text-sm text-contrast-400 line-through">
+              ${formatPrice(data.strikePrice)}
+            </span>
+          )}
+        </p>
+        {data.emiText != null && data.emiText !== '' && (
+          <p className="mt-1 text-xs text-contrast-500">{data.emiText}</p>
+        )}
+        {data.deliveryTime != null && data.deliveryTime !== '' && (
+          <p className="mt-1.5 flex items-center gap-1.5 text-sm text-contrast-500 @xl:justify-end">
+            <DeliveryTruckIcon />
+            <span>
+              {PROGRAM_LABEL[program]} · ships in{' '}
+              <span className="font-medium text-foreground">{data.deliveryTime}</span>
+            </span>
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function CabinetCollectionHeader({
+  data,
+  program = 'assembled',
+  specifications,
+  switchHref,
+  productsHref = '#products',
+  className,
+}: Props) {
   const hasPricing = data.price != null && data.price !== '';
 
   const images = (data.images ?? []).filter((u) => u !== '');
+  const other = program === 'rta' ? 'assembled' : 'rta';
+
+  // Product Line, Construction and Door Style are three DISTINCT dimensions (Laravel treats door
+  // style — e.g. "Shaker Full Overlay" — separately from construction — Framed/Frameless/Slab).
+  // Prefer the attribute selection; fall back to legacy merch.
+  const chips = [
+    data.doorStyle,
+    data.construction,
+    data.productLine || data.line,
+    data.colors?.length ? undefined : data.defaultFinish,
+  ].filter((chip): chip is string => Boolean(chip));
 
   return (
-    <div className={clsx('border-b border-contrast-100 bg-white @container', className)}>
-      <div className="mx-auto max-w-screen-2xl px-4 py-8 @xl:px-6 @4xl:px-8">
-        <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-[1fr_auto] @3xl:items-start">
-          {/* Left: gallery, name, merch line, overview, spec sheet. */}
-          <div className="max-w-2xl">
-            {images.length > 0 && (
-              <Gallery containMain={data.containMainImage} images={images} name={data.name} />
-            )}
+    <div className={clsx('bg-white @container', className)}>
+      <div className="mx-auto max-w-screen-2xl px-4 pb-10 pt-4 @xl:px-6 @4xl:px-8 @4xl:pb-14">
+        <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-2 @3xl:items-start @4xl:gap-12">
+          {/* Left: gallery */}
+          {images.length > 0 ? (
+            <Gallery containMain={data.containMainImage} images={images} name={data.name} />
+          ) : (
+            <div className="flex aspect-[4/3] items-center justify-center rounded-3xl bg-contrast-100 p-6 text-center text-2xl font-bold tracking-tighter text-foreground/10">
+              {data.name} kitchen
+            </div>
+          )}
 
-            <h1 className="font-heading text-3xl font-medium leading-tight @lg:text-4xl">
-              {data.name}
-            </h1>
-
-            {(() => {
-              // Product Line, Construction and Door Style are three DISTINCT dimensions (Laravel
-              // treats door style — e.g. "Shaker Full Overlay" — separately from construction —
-              // Framed/Frameless/Slab). Prefer the attribute selection; fall back to legacy merch.
-              const line = data.productLine || data.line;
-              const construction = data.construction; // Framed / Frameless / Slab
-              const doorStyle = data.doorStyle; // e.g. Shaker Full Overlay
-              const meta = [
-                line,
-                construction,
-                doorStyle,
-                data.colors?.length ? undefined : data.defaultFinish,
-              ]
-                .filter(Boolean)
-                .join(' · ');
-
-              return meta ? <p className="mt-2 text-sm text-contrast-400">{meta}</p> : null;
-            })()}
-
-            {data.colors != null && data.colors.length > 0 && (
-              <div className="mt-4">
-                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-contrast-400">
-                  Available Finishes
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {data.colors.map((c) => (
-                    <span
-                      className="inline-flex items-center gap-1.5 rounded-full border border-contrast-100 py-1 pl-1 pr-3 text-xs text-contrast-500"
-                      key={c.id}
-                    >
-                      <span
-                        className="inline-block size-5 rounded-full border border-contrast-100 bg-cover bg-center"
-                        style={{
-                          backgroundColor: c.hex || undefined,
-                          backgroundImage: c.image ? `url(${c.image})` : undefined,
-                        }}
-                        title={c.name}
-                      />
-                      {c.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+          {/* Right: the decision column */}
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="m-0 font-heading text-3xl font-bold leading-tight @xl:text-4xl">
+                {data.name}
+              </h1>
+              <span className="rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+                {PROGRAM_LABEL[program]}
+              </span>
+            </div>
 
             {data.overview != null && data.overview !== '' && (
               // Staff-authored HTML (same trust boundary as the native BC category description).
               <div
-                className="prose prose-sm mt-4 max-w-none text-contrast-500 @xl:prose-base [&_a]:text-[#2162a1] [&_li]:my-1 [&_ul]:list-disc [&_ul]:pl-5"
-                // eslint-disable-next-line react/no-danger
+                className="prose prose-sm max-w-none text-contrast-500 @xl:prose-base [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_a]:text-[#2162a1] [&_li]:my-1 [&_ul]:list-disc [&_ul]:pl-5"
+
                 dangerouslySetInnerHTML={{ __html: data.overview }}
               />
             )}
 
-            {data.specSheetUrl != null && data.specSheetUrl !== '' && (
-              <a
-                className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#2162a1] underline-offset-2 hover:underline"
-                href={data.specSheetUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <svg
-                  className="size-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
-                </svg>
-                Specification Sheet
-              </a>
+            {(chips.length > 0 || Boolean(switchHref)) && (
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap gap-2">
+                  {chips.map((chip) => (
+                    <span
+                      className="rounded-full border border-contrast-200 bg-white px-3.5 py-1.5 text-xs font-medium text-contrast-500"
+                      key={chip}
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+                {Boolean(switchHref) && (
+                  <Link
+                    className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3.5 py-1.5 text-xs font-semibold transition-colors hover:bg-foreground hover:text-white"
+                    href={switchHref ?? '#'}
+                  >
+                    <Repeat size={13} strokeWidth={2.25} />
+                    Switch to {PROGRAM_LABEL[other]}
+                  </Link>
+                )}
+              </div>
             )}
+
+            <Finishes colors={data.colors} />
+
+            {hasPricing && <PriceCard data={data} program={program} />}
+
+            <SpecRow specSheetUrl={data.specSheetUrl} specifications={specifications} />
+
+            <Actions data={data} productsHref={productsHref} />
           </div>
-
-          {/* Right: pricing + order-sample card. */}
-          {(hasPricing || data.orderSampleHref) && (
-            <div className="w-full max-w-sm rounded-2xl border border-contrast-100 bg-[#f9fafd] p-5 @3xl:w-80">
-              {hasPricing && (
-                <>
-                  <p className="text-xs font-medium uppercase tracking-wide text-contrast-400">
-                    Basic Kitchen Starting
-                  </p>
-                  <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-2xl font-semibold">${data.price}</span>
-                    {data.strikePrice != null && data.strikePrice !== '' && (
-                      <span className="text-sm text-contrast-400 line-through">
-                        ${data.strikePrice}
-                      </span>
-                    )}
-                  </div>
-                  {data.emiText != null && data.emiText !== '' && (
-                    <p className="mt-0.5 text-xs text-contrast-500">{data.emiText}</p>
-                  )}
-                  {data.deliveryTime != null && data.deliveryTime !== '' && (
-                    <p className="mt-2 flex items-center gap-1.5 text-sm text-contrast-500">
-                      <DeliveryTruckIcon />
-                      <span>
-                        Ships:{' '}
-                        <span className="font-medium text-foreground">{data.deliveryTime}</span>
-                      </span>
-                    </p>
-                  )}
-                </>
-              )}
-
-              {data.orderSampleHref != null && data.orderSampleHref !== '' && (
-                <ButtonLink
-                  className="mt-4 w-full [&>span]:w-full [&>span]:justify-center"
-                  href={data.orderSampleHref}
-                  shape="pill"
-                  size="small"
-                  variant="secondary"
-                >
-                  {data.orderSamplePrice != null && data.orderSamplePrice !== ''
-                    ? `Order Sample $${data.orderSamplePrice}`
-                    : 'Order Sample'}
-                </ButtonLink>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>

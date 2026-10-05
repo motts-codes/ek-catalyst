@@ -21,6 +21,8 @@ interface Props {
   title?: Streamable<string | null>;
   /** Hide the page heading (title + product count); the sort control moves to the left. */
   hideHeader?: boolean;
+  /** 2 when the page already has its own h1 above the grid (smaller, section-sized heading). */
+  headingLevel?: 1 | 2;
   totalCount: Streamable<string>;
   products: Streamable<Product[]>;
   filters: Streamable<Filter[]>;
@@ -53,6 +55,7 @@ export function ProductsListSection({
   breadcrumbs: streamableBreadcrumbs,
   title = 'Products',
   hideHeader = false,
+  headingLevel = 1,
   totalCount,
   products,
   showRating,
@@ -80,6 +83,8 @@ export function ProductsListSection({
   maxItems,
   maxCompareLimitMessage,
 }: Props) {
+  const Heading = headingLevel === 2 ? 'h2' : 'h1';
+
   return (
     <div className="group/products-list-section bg-[#f9fafd] @container">
       <div className="mx-auto max-w-screen-2xl px-4 pb-10 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-12">
@@ -105,7 +110,14 @@ export function ProductsListSection({
             )}
           >
             {!hideHeader && (
-              <h1 className="flex items-center gap-2 font-heading text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl">
+              <Heading
+                className={clsx(
+                  'flex items-center gap-2 font-heading',
+                  headingLevel === 2
+                    ? 'text-xl font-bold leading-tight @xl:text-2xl @4xl:text-[28px]'
+                    : 'text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl',
+                )}
+              >
                 <Suspense
                   fallback={
                     <span className="inline-flex h-[1lh] w-[6ch] animate-pulse rounded-lg bg-contrast-100" />
@@ -120,7 +132,7 @@ export function ProductsListSection({
                 >
                   <span className="text-contrast-300">{totalCount}</span>
                 </Suspense>
-              </h1>
+              </Heading>
             )}
             <div className="flex gap-2">
               <Stream
@@ -171,7 +183,7 @@ export function ProductsListSection({
           </div>
         </div>
         <div className="flex items-stretch gap-8 @4xl:gap-10">
-          <aside className="hidden w-52 @3xl:block @4xl:w-60 @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:pr-10">
+          <aside className="hidden w-52 @3xl:block @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:w-60 @4xl:pr-10">
             <Stream value={streamableFiltersPanelTitle}>
               {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
             </Stream>

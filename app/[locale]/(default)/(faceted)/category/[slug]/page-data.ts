@@ -13,6 +13,11 @@ const CategoryPageQuery = graphql(
           entityId
           name
           path
+          description
+          defaultImage {
+            altText
+            url: urlTemplate(lossy: true)
+          }
           ...BreadcrumbsFragment
           seo {
             pageTitle
@@ -28,6 +33,10 @@ const CategoryPageQuery = graphql(
             entityId
             name
             path
+            image {
+              altText
+              url: urlTemplate(lossy: true)
+            }
             children {
               entityId
               name

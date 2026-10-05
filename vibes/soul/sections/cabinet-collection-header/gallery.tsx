@@ -24,8 +24,8 @@ export function Gallery({
   const scaleThis = containMain && active === 0;
 
   return (
-    <div className="mb-6">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-contrast-100">
+    <div>
+      <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100">
         {main != null && (
           <Image
             alt={name}
@@ -44,7 +44,7 @@ export function Gallery({
           {images.map((src, i) => (
             <button
               aria-label={`View image ${i + 1}`}
-              className={`relative size-16 overflow-hidden rounded-lg border-2 transition-colors ${
+              className={`relative size-16 overflow-hidden rounded-xl border-2 transition-colors ${
                 i === active ? 'border-foreground' : 'border-transparent hover:border-contrast-200'
               }`}
               key={i}

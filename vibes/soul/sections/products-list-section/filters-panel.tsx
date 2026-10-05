@@ -244,36 +244,36 @@ export function FiltersPanelInner({
                       input wrappers are flex-1 by default; cap them so the fields stay compact. */}
                   <div className="[&>div>div]:!max-w-20 [&_button>span]:!size-7 [&_button>span]:!min-h-0 [&_button>span]:!min-w-0 [&_input]:!px-2 [&_input]:!py-1.5 [&_input]:!text-xs [&_svg]:!size-3.5">
                     <RangeInput
-                    applyLabel={rangeFilterApplyLabel}
-                    disabled={filter.disabled}
-                    max={filter.max}
-                    maxLabel={filter.maxLabel}
-                    maxName={filter.maxParamName}
-                    maxPlaceholder={filter.maxPlaceholder}
-                    maxPrepend={filter.maxPrepend}
-                    min={filter.min}
-                    minLabel={filter.minLabel}
-                    minName={filter.minParamName}
-                    minPlaceholder={filter.minPlaceholder}
-                    minPrepend={filter.minPrepend}
-                    onChange={({ min, max }) => {
-                      startTransition(async () => {
-                        const nextParams = {
-                          ...optimisticParams,
-                          [filter.minParamName]: min,
-                          [filter.maxParamName]: max,
-                          [startCursorParamName]: null,
-                          [endCursorParamName]: null,
-                        };
+                      applyLabel={rangeFilterApplyLabel}
+                      disabled={filter.disabled}
+                      max={filter.max}
+                      maxLabel={filter.maxLabel}
+                      maxName={filter.maxParamName}
+                      maxPlaceholder={filter.maxPlaceholder}
+                      maxPrepend={filter.maxPrepend}
+                      min={filter.min}
+                      minLabel={filter.minLabel}
+                      minName={filter.minParamName}
+                      minPlaceholder={filter.minPlaceholder}
+                      minPrepend={filter.minPrepend}
+                      onChange={({ min, max }) => {
+                        startTransition(async () => {
+                          const nextParams = {
+                            ...optimisticParams,
+                            [filter.minParamName]: min,
+                            [filter.maxParamName]: max,
+                            [startCursorParamName]: null,
+                            [endCursorParamName]: null,
+                          };
 
-                        setOptimisticParams(nextParams);
-                        await setParams(nextParams);
-                      });
-                    }}
-                    value={{
-                      min: optimisticParams[filter.minParamName] ?? null,
-                      max: optimisticParams[filter.maxParamName] ?? null,
-                    }}
+                          setOptimisticParams(nextParams);
+                          await setParams(nextParams);
+                        });
+                      }}
+                      value={{
+                        min: optimisticParams[filter.minParamName] ?? null,
+                        max: optimisticParams[filter.maxParamName] ?? null,
+                      }}
                     />
                   </div>
                 </FilterSection>

@@ -17,6 +17,16 @@ import { getSessionCustomerAccessToken } from '~/auth';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { pageInfoTransformer } from '~/data-transformers/page-info-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
+import {
+  cabinetProgramSearchParam,
+  getCabinetAssemblyVideos,
+  getCabinetCollectionContent,
+  getCabinetCollectionFaq,
+  getCabinetCollectionHeader,
+  isCabinetCollection,
+  parseCabinetProgram,
+  selectedCabinetProgram,
+} from '~/lib/cabinets/cabinet-collection';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { Slot } from '~/lib/makeswift/slot';
@@ -28,16 +38,10 @@ import { fetchFacetedSearch } from '../../fetch-faceted-search';
 import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import {
-  cabinetProgramSearchParam,
-  getCabinetAssemblyVideos,
-  getCabinetCollectionContent,
-  getCabinetCollectionFaq,
-  getCabinetCollectionHeader,
-  isCabinetCollection,
-  parseCabinetProgram,
-  selectedCabinetProgram,
-} from '~/lib/cabinets/cabinet-collection';
-
+  CategoryBreadcrumbs,
+  CategoryHeader,
+  CollectionConsult,
+} from './_components/category-header';
 import { CategoryViewed } from './_components/category-viewed';
 import { getCategoryPageData } from './page-data';
 
@@ -48,6 +52,22 @@ const getCachedCategory = cache((categoryId: number) => {
 });
 
 const compareLoader = createCompareLoader();
+
+type Program = 'assembled' | 'rta';
+
+const PROGRAM_WORD = { assembled: 'assembled', rta: 'RTA' };
+
+// On a collection page the grid heading names the program being shown ("Avon assembled cabinets").
+function getGridTitle(name: string, isCabinet: boolean, program: Program | null) {
+  if (!isCabinet) return name;
+
+  return program ? `${name} ${PROGRAM_WORD[program]} cabinets` : `${name} cabinets`;
+}
+
+// The same collection in the other program ("Switch to RTA").
+function getSwitchHref(path: string, program: Program) {
+  return `${path}?program=${program === 'rta' ? 'assembled' : 'rta'}`;
+}
 
 const createCategorySearchParamsLoader = cache(
   async (categoryId: number, customerAccessToken?: string) => {
@@ -314,9 +334,7 @@ export default async function Category(props: Props) {
   // Per-collection FAQ (Avon's Assembled FAQ, etc.), shown below the grid. Program-aware; null when
   // this collection has no FAQ authored for the current program.
   const cabinetFaq =
-    isCabinet && cabinetProgram
-      ? await getCabinetCollectionFaq(categoryId, cabinetProgram)
-      : null;
+    isCabinet && cabinetProgram ? await getCabinetCollectionFaq(categoryId, cabinetProgram) : null;
 
   // Assembly-instruction videos + specifications are PER-PROGRAM — scoped to the current program
   // (defaults to Assembled via cabinetProgram, matching the header/pricing).
@@ -329,64 +347,73 @@ export default async function Category(props: Props) {
 
   return (
     <>
+      <CategoryBreadcrumbs breadcrumbs={breadcrumbs} />
+      {!isCabinet && (
+        <CategoryHeader category={category} subcategories={categoryTree[0]?.children} />
+      )}
       <Slot
         label={`${category.name} top content`}
         snapshotId={`category-${categoryId}-top-content`}
       />
-      {cabinetHeader && cabinetProgram && (
-        <CabinetCollectionHeader data={cabinetHeader} program={cabinetProgram} />
+      {cabinetHeader != null && cabinetProgram != null && (
+        <CabinetCollectionHeader
+          data={cabinetHeader}
+          program={cabinetProgram}
+          specifications={cabinetContent?.specifications}
+          switchHref={getSwitchHref(category.path, cabinetProgram)}
+        />
       )}
-      <ProductsListSection
-        breadcrumbs={breadcrumbs}
-        // Hide the category name + count so the Makeswift "top content" (images/banner) leads the
-        // page; the sort control moves to the left.
-        hideHeader
-        addToCartAction={productCardAddToCartAction}
-        compareLabel={t('Compare.compare')}
-        compareProducts={streamableCompareProducts}
-        emptyStateSubtitle={t('Category.Empty.subtitle')}
-        emptyStateTitle={t('Category.Empty.title')}
-        filterLabel={t('FacetedSearch.filters')}
-        filters={streamableFilters}
-        filtersPanelTitle={t('FacetedSearch.filters')}
-        maxCompareLimitMessage={t('Compare.maxCompareLimit')}
-        maxItems={MAX_COMPARE_LIMIT}
-        paginationInfo={streamablePagination}
-        products={streamableProducts}
-        rangeFilterApplyLabel={t('FacetedSearch.Range.apply')}
-        removeLabel={t('Compare.remove')}
-        resetFiltersLabel={t('FacetedSearch.resetFilters')}
-        showCompare={productComparisonsEnabled}
-        showRating={showRating}
-        sortDefaultValue="featured"
-        sortLabel={t('SortBy.sortBy')}
-        sortOptions={[
-          { value: 'featured', label: t('SortBy.featuredItems') },
-          { value: 'newest', label: t('SortBy.newestItems') },
-          { value: 'best_selling', label: t('SortBy.bestSellingItems') },
-          { value: 'a_to_z', label: t('SortBy.aToZ') },
-          { value: 'z_to_a', label: t('SortBy.zToA') },
-          { value: 'best_reviewed', label: t('SortBy.byReview') },
-          { value: 'lowest_price', label: t('SortBy.priceAscending') },
-          { value: 'highest_price', label: t('SortBy.priceDescending') },
-          { value: 'relevance', label: t('SortBy.relevance') },
-        ]}
-        sortParamName="sort"
-        title={category.name}
-        totalCount={streamableTotalCount}
-      />
+      <div className="scroll-mt-24" id="products">
+        <ProductsListSection
+          // The breadcrumb and the category header sit above; only collection pages keep a grid
+          // heading ("Avon assembled cabinets" + count). Elsewhere the sort control moves left.
+          addToCartAction={productCardAddToCartAction}
+          compareLabel={t('Compare.compare')}
+          compareProducts={streamableCompareProducts}
+          emptyStateSubtitle={t('Category.Empty.subtitle')}
+          emptyStateTitle={t('Category.Empty.title')}
+          filterLabel={t('FacetedSearch.filters')}
+          filters={streamableFilters}
+          filtersPanelTitle={t('FacetedSearch.filters')}
+          headingLevel={2}
+          hideHeader={!isCabinet}
+          maxCompareLimitMessage={t('Compare.maxCompareLimit')}
+          maxItems={MAX_COMPARE_LIMIT}
+          paginationInfo={streamablePagination}
+          products={streamableProducts}
+          rangeFilterApplyLabel={t('FacetedSearch.Range.apply')}
+          removeLabel={t('Compare.remove')}
+          resetFiltersLabel={t('FacetedSearch.resetFilters')}
+          showCompare={productComparisonsEnabled}
+          showRating={showRating}
+          sortDefaultValue="featured"
+          sortLabel={t('SortBy.sortBy')}
+          sortOptions={[
+            { value: 'featured', label: t('SortBy.featuredItems') },
+            { value: 'newest', label: t('SortBy.newestItems') },
+            { value: 'best_selling', label: t('SortBy.bestSellingItems') },
+            { value: 'a_to_z', label: t('SortBy.aToZ') },
+            { value: 'z_to_a', label: t('SortBy.zToA') },
+            { value: 'best_reviewed', label: t('SortBy.byReview') },
+            { value: 'lowest_price', label: t('SortBy.priceAscending') },
+            { value: 'highest_price', label: t('SortBy.priceDescending') },
+            { value: 'relevance', label: t('SortBy.relevance') },
+          ]}
+          sortParamName="sort"
+          title={getGridTitle(category.name, isCabinet, selectedProgram)}
+          totalCount={streamableTotalCount}
+        />
+      </div>
       <Slot
         label={`${category.name} bottom content`}
         snapshotId={`category-${categoryId}-bottom-content`}
       />
-      {Boolean(cabinetContent?.specifications) && (
-        <CabinetSpecs specifications={cabinetContent?.specifications} />
-      )}
       {cabinetAssembly.length > 0 && <CabinetAssembly videos={cabinetAssembly} />}
       {cabinetFaq && <CabinetFaq data={cabinetFaq} />}
       {Boolean(cabinetContent?.disclaimer) && (
         <CabinetSpecs disclaimer={cabinetContent?.disclaimer} />
       )}
+      <CollectionConsult name={category.name} show={isCabinet} />
       <Stream value={streamableFacetedSearch}>
         {(search) => (
           <CategoryViewed
