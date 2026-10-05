@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 import { getFormatter, setRequestLocale } from 'next-intl/server';
 
-import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
+import { Streamable } from '@/vibes/soul/lib/streamable';
 import { BlogPostCarousel } from '@/vibes/soul/sections/blog-post-carousel';
-import { CabinetLineCard } from '@/vibes/soul/sections/cabinet-lines';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
+import { CollectionCarousel } from '@/vibes/soul/sections/collection-carousel';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { ProductTabs } from '@/vibes/soul/sections/product-tabs';
 import { ProgramCards } from '@/vibes/soul/sections/program-cards';
@@ -130,7 +130,7 @@ export default async function Home({ params }: Props) {
   // Best-seller collection cards: the assembled program's 10×10 price + ship time, same card as
   // the listing pages.
   const streamableCollections = Streamable.from(async () =>
-    (await getCabinetLines('assembled')).slice(0, 6),
+    (await getCabinetLines('assembled')).slice(0, 12),
   );
 
   const streamablePosts = Streamable.from(async () => {
@@ -175,36 +175,14 @@ export default async function Home({ params }: Props) {
         snapshotId="home-programs"
       />
 
-      {/* 5 · Best sellers — six collection cards with the 10×10 price, then the samples strip */}
+      {/* 5 · Best sellers — collection cards with the 10×10 price in a carousel, then the samples strip */}
       <HomeSection
         action={{ label: 'All door styles', href: '/cabinets/assembled-cabinets' }}
         kicker="Best sellers"
         tint
         title="The kitchens people order most — with the price."
       >
-        <Stream
-          fallback={
-            <div className="grid gap-6 @xl:grid-cols-2 @4xl:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  className="aspect-[4/5] animate-pulse rounded-2xl bg-contrast-100"
-                  key={index}
-                />
-              ))}
-            </div>
-          }
-          value={streamableCollections}
-        >
-          {(lines) =>
-            lines.length === 0 ? null : (
-              <div className="grid gap-6 @xl:grid-cols-2 @4xl:grid-cols-3">
-                {lines.map((line) => (
-                  <CabinetLineCard key={line.entityId} line={line} />
-                ))}
-              </div>
-            )
-          }
-        </Stream>
+        <CollectionCarousel lines={streamableCollections} />
         <SamplesCallout className="mt-6" cta={{ label: 'Order samples', href: SAMPLES_HREF }} />
       </HomeSection>
 
