@@ -38,10 +38,17 @@ function TabPanel({ tab, aspectRatio }: { tab: Tab; aspectRatio: Props['aspectRa
   });
 
   if (isLoading || products == null) {
-    return <ProductsCarouselSkeleton />;
+    return <ProductsCarouselSkeleton density="compact" />;
   }
 
-  return <ProductCarousel aspectRatio={aspectRatio} products={products} showScrollbar={false} />;
+  return (
+    <ProductCarousel
+      aspectRatio={aspectRatio}
+      density="compact"
+      products={products}
+      showScrollbar={false}
+    />
+  );
 }
 
 export function MSProductTabs({ className, title, tabs, aspectRatio }: Props) {

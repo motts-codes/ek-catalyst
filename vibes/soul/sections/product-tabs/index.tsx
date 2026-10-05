@@ -82,6 +82,7 @@ export function ProductTabs({ tabs, aspectRatio = '1:1', className }: Props) {
       renderPanel={(tab) => (
         <ProductCarousel
           aspectRatio={aspectRatio}
+          density="compact"
           emptyStateSubtitle="Nothing here yet — check the other tabs."
           emptyStateTitle="No products in this tab"
           products={tab.products}

@@ -32,7 +32,14 @@ export interface ProductCarouselProps {
   showButtons?: boolean;
   showScrollbar?: boolean;
   hideOverflow?: boolean;
+  /** `compact` fits five cards per row on desktop instead of four (cards at 0.8×). */
+  density?: 'default' | 'compact';
 }
+
+const ITEM_CLASS = {
+  default: 'basis-1/2 pl-3 @md:basis-1/3 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5',
+  compact: 'basis-1/2 pl-3 @md:basis-1/3 @2xl:basis-1/4 @2xl:pl-5 @4xl:basis-1/5',
+};
 
 // eslint-disable-next-line valid-jsdoc
 /**
@@ -64,12 +71,14 @@ export function ProductCarousel({
   showButtons = true,
   showScrollbar = true,
   hideOverflow = true,
+  density = 'default',
 }: ProductCarouselProps) {
   return (
     <Stream
       fallback={
         <ProductsCarouselSkeleton
           className={className}
+          density={density}
           hideOverflow={hideOverflow}
           placeholderCount={placeholderCount}
         />
@@ -82,6 +91,7 @@ export function ProductCarousel({
             <ProductsCarouselEmptyState
               className={className}
               colorScheme={colorScheme}
+              density={density}
               emptyStateSubtitle={emptyStateSubtitle}
               emptyStateTitle={emptyStateTitle}
               hideOverflow={hideOverflow}
@@ -94,10 +104,7 @@ export function ProductCarousel({
           <Carousel className={className} hideOverflow={hideOverflow}>
             <CarouselContent className="-ml-3 mb-10 @2xl:-ml-5">
               {products.map(({ id, ...product }) => (
-                <CarouselItem
-                  className="basis-1/2 pl-3 @md:basis-1/3 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
-                  key={id}
-                >
+                <CarouselItem className={ITEM_CLASS[density]} key={id}>
                   <ProductCard
                     aspectRatio={aspectRatio}
                     colorScheme={colorScheme}
@@ -133,7 +140,8 @@ export function ProductsCarouselSkeleton({
   className,
   placeholderCount = 8,
   hideOverflow,
-}: Pick<ProductCarouselProps, 'className' | 'placeholderCount' | 'hideOverflow'>) {
+  density = 'default',
+}: Pick<ProductCarouselProps, 'className' | 'placeholderCount' | 'hideOverflow' | 'density'>) {
   return (
     <Skeleton.Root
       className={clsx('group-has-data-pending/product-carousel:animate-pulse', className)}
@@ -143,10 +151,7 @@ export function ProductsCarouselSkeleton({
       <div className="w-full">
         <div className="-ml-4 flex @2xl:-ml-5">
           {Array.from({ length: placeholderCount }).map((_, index) => (
-            <div
-              className="min-w-0 shrink-0 grow-0 basis-1/2 pl-3 @md:basis-1/3 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
-              key={index}
-            >
+            <div className={clsx('min-w-0 shrink-0 grow-0', ITEM_CLASS[density])} key={index}>
               <ProductCardSkeleton />
             </div>
           ))}
@@ -170,6 +175,7 @@ export function ProductsCarouselEmptyState({
   emptyStateSubtitle,
   hideOverflow,
   colorScheme = 'light',
+  density = 'default',
 }: Pick<
   ProductCarouselProps,
   | 'className'
@@ -178,16 +184,14 @@ export function ProductsCarouselEmptyState({
   | 'emptyStateSubtitle'
   | 'hideOverflow'
   | 'colorScheme'
+  | 'density'
 >) {
   return (
     <Skeleton.Root className={clsx('relative', className)} hideOverflow={hideOverflow}>
       <div className="w-full">
         <div className="-ml-4 flex [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)] @2xl:-ml-5">
           {Array.from({ length: placeholderCount }).map((_, index) => (
-            <div
-              className="min-w-0 shrink-0 grow-0 basis-1/2 pl-3 @md:basis-1/3 @lg:basis-1/3 @2xl:basis-1/4 @2xl:pl-5"
-              key={index}
-            >
+            <div className={clsx('min-w-0 shrink-0 grow-0', ITEM_CLASS[density])} key={index}>
               <ProductCardSkeleton />
             </div>
           ))}
