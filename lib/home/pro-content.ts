@@ -92,7 +92,7 @@ export const PRO_PROGRAM_CARDS: ProgramCard[] = [
 
 export const WINDOWS_OFFER = {
   kicker: 'Windows offer',
-  title: 'Replacement windows — $179.99, any size up to 101 united inches.',
+  title: 'Replacement windows — $179.99, any size up to 101 united inches',
   description:
     "Double hung, sliders and hoppers, in stock in Bristol. Measure the opening, add width and height; if it's 101 or under, it's $179.99. Ready for pickup in 2 days. Contractor pricing applies on top for orders of five or more.",
   actions: [

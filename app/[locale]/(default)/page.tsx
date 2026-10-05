@@ -158,7 +158,7 @@ export default async function Home({ params }: Props) {
       />
 
       {/* 3 · Shop what's moving — tabs by reason to buy now, fed by store data */}
-      <HomeSection title="Shop what's moving.">
+      <HomeSection title="Shop what's moving">
         <ProductTabs tabs={productTabs} />
       </HomeSection>
 
@@ -180,7 +180,7 @@ export default async function Home({ params }: Props) {
         action={{ label: 'All door styles', href: '/cabinets/assembled-cabinets' }}
         kicker="Best sellers"
         tint
-        title="The kitchens people order most — with the price."
+        title="The kitchens people order most — with the price"
       >
         <CollectionCarousel lines={streamableCollections} />
         <SamplesCallout className="mt-6" cta={{ label: 'Order samples', href: SAMPLES_HREF }} />
@@ -189,7 +189,7 @@ export default async function Home({ params }: Props) {
       {/* 6 · Not sure yet? Three ways to be sure. */}
       <Slot
         fallback={
-          <CardsRow cards={THREE_WAYS} kicker="Not sure yet?" title="Three ways to be sure." />
+          <CardsRow cards={THREE_WAYS} kicker="Not sure yet?" title="Three ways to be sure" />
         }
         label="Home three ways"
         snapshotId="home-three-ways"

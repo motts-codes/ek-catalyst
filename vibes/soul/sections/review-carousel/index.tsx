@@ -33,10 +33,10 @@ interface Props {
   scrollbarLabel?: string;
 }
 
-// "What it was like, in their words." — real customer reviews in a carousel, three visible on
+// "What it was like, in their words" — real customer reviews in a carousel, three visible on
 // desktop. Each card: stars, the quote, then name · town · source.
 export function ReviewCarousel({
-  title = 'What it was like, in their words.',
+  title = 'What it was like, in their words',
   summary,
   reviews,
   action,

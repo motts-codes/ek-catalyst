@@ -21,10 +21,10 @@ interface Props {
   scrollbarLabel?: string;
 }
 
-// "Inspiration and insights." — the latest blog posts, four at a time, dots left and arrows right.
+// "Inspiration and insights" — the latest blog posts, four at a time, dots left and arrows right.
 // Renders nothing when the blog has no posts.
 export function BlogPostCarousel({
-  title = 'Inspiration and insights.',
+  title = 'Inspiration and insights',
   action,
   posts,
   tint = false,

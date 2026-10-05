@@ -20,7 +20,7 @@ runtime.registerComponent(MSReviewCarousel, {
   icon: 'carousel',
   props: {
     className: Style(),
-    title: TextInput({ label: 'Title', defaultValue: 'What it was like, in their words.' }),
+    title: TextInput({ label: 'Title', defaultValue: 'What it was like, in their words' }),
     summary: TextInput({ label: 'Summary line', defaultValue: '4.5 · 360+ Google reviews' }),
     reviews: List({
       label: 'Reviews',

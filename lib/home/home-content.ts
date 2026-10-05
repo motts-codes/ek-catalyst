@@ -121,7 +121,7 @@ export const CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(({ name, href, h
   subtitle: homeowner,
 }));
 
-/** Pro home page tiles ("Everything for the job."). */
+/** Pro home page tiles ("Everything for the job"). */
 export const PRO_CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(({ name, href, pro }) => ({
   name,
   href,

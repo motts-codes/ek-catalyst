@@ -102,7 +102,7 @@ export default async function Pro({ params }: Props) {
 
       {/* 4 · Everything for the job */}
       <EditableSection
-        defaults={{ categories: PRO_CATEGORY_TILES, categoriesTitle: 'Everything for the job.' }}
+        defaults={{ categories: PRO_CATEGORY_TILES, categoriesTitle: 'Everything for the job' }}
         label="Pro categories"
         snapshotId="pro-category-carousel"
         type={CATEGORY_CAROUSEL_TYPE}
@@ -187,7 +187,7 @@ export default async function Pro({ params }: Props) {
             description="The construction is the same across every line and every collection — what changes is the door and the finish."
             hideImages
             tint
-            title="Quality you can see and touch."
+            title="Quality you can see and touch"
           />
         }
         label="Pro quality"

@@ -98,7 +98,7 @@ interface Props {
   className?: string;
 }
 
-// "Shop what's moving." — tabs by reason to buy now (Trending, New, Best selling, On sale…), each a
+// "Shop what's moving" — tabs by reason to buy now (Trending, New, Best selling, On sale…), each a
 // product carousel fed by store data.
 export function ProductTabs({ tabs, aspectRatio = '1:1', className }: Props) {
   return (

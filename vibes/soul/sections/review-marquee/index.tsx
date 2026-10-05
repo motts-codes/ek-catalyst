@@ -71,11 +71,11 @@ function ReviewCard({ review }: { review: CustomerReview }) {
   );
 }
 
-// "What it was like, in their words." — three columns of review cards drifting vertically, the
+// "What it was like, in their words" — three columns of review cards drifting vertically, the
 // middle one the other way and each at its own pace; hover a column to pause it. Columns fade at
 // the top and bottom. Reduced-motion users get a static grid. Below tablet width it is one column.
 export function ReviewMarquee({
-  title = 'What it was like, in their words.',
+  title = 'What it was like, in their words',
   summary,
   reviews,
   action,

@@ -10,7 +10,7 @@ runtime.registerComponent(MSProductTabs, {
   icon: 'carousel',
   props: {
     className: Style(),
-    title: TextInput({ label: 'Title', defaultValue: "Shop what's moving." }),
+    title: TextInput({ label: 'Title', defaultValue: "Shop what's moving" }),
     tabs: List({
       label: 'Tabs',
       type: Group({

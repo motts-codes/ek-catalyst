@@ -9,9 +9,9 @@ interface Props {
   className?: string;
 }
 
-// "Hold the real door first." — the free-samples strip under the best-seller cards.
+// "Hold the real door first" — the free-samples strip under the best-seller cards.
 export function SamplesCallout({
-  title = 'Hold the real door first.',
+  title = 'Hold the real door first',
   description = 'First two quarter-door samples are free with code FREESAMPLES.',
   cta = { label: 'Order samples', href: '#' },
   className,

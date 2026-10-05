@@ -31,12 +31,12 @@ interface Props {
   className?: string;
 }
 
-// "Six showrooms across Connecticut." — a list of showroom pills with a progress line that times
+// "Six showrooms across Connecticut" — a list of showroom pills with a progress line that times
 // the auto-cycle; the photo on the right crossfades to the active showroom and carries its name
 // as a caption chip. Hover a pill to hold it, click to open the showroom page.
 export function ShowroomBand({
   kicker = 'Your local design studio',
-  title = 'Six showrooms across Connecticut.',
+  title = 'Six showrooms across Connecticut',
   description,
   showrooms,
   interval = 3500,

@@ -21,7 +21,7 @@ runtime.registerComponent(MSShowroomBand, {
   props: {
     className: Style(),
     kicker: TextInput({ label: 'Kicker', defaultValue: 'Your local design studio' }),
-    title: TextInput({ label: 'Title', defaultValue: 'Six showrooms across Connecticut.' }),
+    title: TextInput({ label: 'Title', defaultValue: 'Six showrooms across Connecticut' }),
     description: TextArea({
       label: 'Description',
       defaultValue:
