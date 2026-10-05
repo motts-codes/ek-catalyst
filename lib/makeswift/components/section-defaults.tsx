@@ -1,0 +1,30 @@
+'use client';
+
+import { createContext, type PropsWithChildren, useContext } from 'react';
+
+import { type CategoryTile } from '@/vibes/soul/sections/category-carousel';
+import { type HeroOffer, type HeroSlide } from '@/vibes/soul/sections/home-hero-split';
+
+// Page-level defaults for a directly-editable Makeswift section. The page (server) supplies the
+// content to show until marketing edits the component in the builder; the registered component
+// (client) reads it here whenever its own lists are still empty. This is how the same "Home /
+// Hero Split" component can start with homeowner slides on `/` and trade slides on `/pro`.
+export interface SectionDefaults {
+  slides?: HeroSlide[];
+  offers?: HeroOffer[];
+  categories?: CategoryTile[];
+  categoriesTitle?: string;
+  /** Category row sits right under the hero (minimal top padding). */
+  tightTop?: boolean;
+}
+
+const SectionDefaultsContext = createContext<SectionDefaults>({});
+
+export const SectionDefaultsProvider = ({
+  value,
+  children,
+}: PropsWithChildren<{ value: SectionDefaults }>) => (
+  <SectionDefaultsContext.Provider value={value}>{children}</SectionDefaultsContext.Provider>
+);
+
+export const useSectionDefaults = () => useContext(SectionDefaultsContext);

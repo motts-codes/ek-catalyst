@@ -2,10 +2,8 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
-import { CategoryCarousel } from '@/vibes/soul/sections/category-carousel';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { HomeHeroSplit } from '@/vibes/soul/sections/home-hero-split';
 import { ProgramCards } from '@/vibes/soul/sections/program-cards';
 import { ProgramTiers } from '@/vibes/soul/sections/program-tiers';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
@@ -30,6 +28,8 @@ import {
   SPEC_SHELF,
   WINDOWS_OFFER,
 } from '~/lib/home/pro-content';
+import { EditableSection } from '~/lib/makeswift/components/editable-section';
+import { CATEGORY_CAROUSEL_TYPE, HERO_SPLIT_TYPE } from '~/lib/makeswift/components/section-types';
 import { Slot } from '~/lib/makeswift/slot';
 
 interface Params {
@@ -64,10 +64,11 @@ export default async function Pro({ params }: Props) {
   return (
     <>
       {/* 1 · Hero — trade welcome slides + the homepage's offer cards */}
-      <Slot
-        fallback={<HomeHeroSplit offers={HERO_OFFERS} slides={PRO_HERO_SLIDES} />}
+      <EditableSection
+        defaults={{ slides: PRO_HERO_SLIDES, offers: HERO_OFFERS }}
         label="Pro hero"
-        snapshotId="pro-hero"
+        snapshotId="pro-hero-split"
+        type={HERO_SPLIT_TYPE}
       />
 
       {/* 2 · Which one sounds like your business? */}
@@ -100,12 +101,11 @@ export default async function Pro({ params }: Props) {
       />
 
       {/* 4 · Everything for the job */}
-      <Slot
-        fallback={
-          <CategoryCarousel categories={PRO_CATEGORY_TILES} tint title="Everything for the job." />
-        }
+      <EditableSection
+        defaults={{ categories: PRO_CATEGORY_TILES, categoriesTitle: 'Everything for the job.' }}
         label="Pro categories"
-        snapshotId="pro-categories"
+        snapshotId="pro-category-carousel"
+        type={CATEGORY_CAROUSEL_TYPE}
       />
 
       {/* 5 · Windows offer */}

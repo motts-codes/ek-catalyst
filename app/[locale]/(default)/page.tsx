@@ -5,9 +5,7 @@ import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { BlogPostCarousel } from '@/vibes/soul/sections/blog-post-carousel';
 import { CabinetLineCard } from '@/vibes/soul/sections/cabinet-lines';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
-import { CategoryCarousel } from '@/vibes/soul/sections/category-carousel';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { HomeHeroSplit } from '@/vibes/soul/sections/home-hero-split';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { ProductTabs } from '@/vibes/soul/sections/product-tabs';
 import { ProgramCards } from '@/vibes/soul/sections/program-cards';
@@ -38,6 +36,8 @@ import {
   THREE_WAYS,
 } from '~/lib/home/home-content';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
+import { EditableSection } from '~/lib/makeswift/components/editable-section';
+import { CATEGORY_CAROUSEL_TYPE, HERO_SPLIT_TYPE } from '~/lib/makeswift/components/section-types';
 import { Slot } from '~/lib/makeswift/slot';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
@@ -142,17 +142,19 @@ export default async function Home({ params }: Props) {
   return (
     <>
       {/* 1 · Hero — 65/35: rotating photos + the offers. Editable in Makeswift ("Home / Hero Split"). */}
-      <Slot
-        fallback={<HomeHeroSplit offers={HERO_OFFERS} slides={HERO_SLIDES} />}
+      <EditableSection
+        defaults={{ slides: HERO_SLIDES, offers: HERO_OFFERS }}
         label="Home hero"
-        snapshotId="home-hero"
+        snapshotId="home-hero-split"
+        type={HERO_SPLIT_TYPE}
       />
 
       {/* 2 · Shop by category */}
-      <Slot
-        fallback={<CategoryCarousel categories={CATEGORY_TILES} tightTop tint />}
+      <EditableSection
+        defaults={{ categories: CATEGORY_TILES, tightTop: true }}
         label="Home categories"
-        snapshotId="home-categories"
+        snapshotId="home-category-carousel"
+        type={CATEGORY_CAROUSEL_TYPE}
       />
 
       {/* 3 · Shop what's moving — tabs by reason to buy now, fed by store data */}

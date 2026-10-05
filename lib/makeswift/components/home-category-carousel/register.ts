@@ -2,15 +2,18 @@ import { Checkbox, Group, Image, Link, List, Style, TextInput } from '@makeswift
 
 import { runtime } from '~/lib/makeswift/runtime';
 
+import { CATEGORY_CAROUSEL_TYPE } from '../section-types';
+
 import { MSCategoryCarousel } from './client';
 
 runtime.registerComponent(MSCategoryCarousel, {
-  type: 'home-category-carousel',
+  type: CATEGORY_CAROUSEL_TYPE,
   label: 'Home / Category Carousel',
   icon: 'carousel',
   props: {
     className: Style(),
-    title: TextInput({ label: 'Title', defaultValue: 'Shop by category.' }),
+    // No default: an empty title falls back to the page's own heading (home vs Pro differ).
+    title: TextInput({ label: 'Title' }),
     categories: List({
       label: 'Categories',
       type: Group({

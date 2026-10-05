@@ -3,6 +3,8 @@
 import { type HeroCtaColor, HomeHeroSplit } from '@/vibes/soul/sections/home-hero-split';
 import { HERO_OFFERS, HERO_SLIDES } from '~/lib/home/home-content';
 
+import { useSectionDefaults } from '../section-defaults';
+
 interface Slide {
   title: string;
   imageSrc?: string;
@@ -31,8 +33,8 @@ interface Props {
   offerInterval: number;
 }
 
-// Empty lists (a freshly dropped component) show the wireframe defaults so the builder never
-// renders an empty hero.
+// Empty lists (not edited yet, or freshly dropped) show the page's defaults — or the homeowner
+// wireframe content when there is no page context — so the builder never renders an empty hero.
 export function MSHomeHeroSplit({
   className,
   slides,
@@ -40,6 +42,8 @@ export function MSHomeHeroSplit({
   slideInterval,
   offerInterval,
 }: Props) {
+  const defaults = useSectionDefaults();
+
   return (
     <HomeHeroSplit
       className={className}
@@ -55,7 +59,7 @@ export function MSHomeHeroSplit({
               showCta,
               ctaColor,
             }))
-          : HERO_OFFERS
+          : (defaults.offers ?? HERO_OFFERS)
       }
       slideInterval={slideInterval * 1000}
       slides={
@@ -68,7 +72,7 @@ export function MSHomeHeroSplit({
               showCta,
               ctaColor,
             }))
-          : HERO_SLIDES
+          : (defaults.slides ?? HERO_SLIDES)
       }
     />
   );

@@ -13,6 +13,8 @@ import {
 
 import { runtime } from '~/lib/makeswift/runtime';
 
+import { HERO_SPLIT_TYPE } from '../section-types';
+
 import { MSHomeHeroSplit } from './client';
 
 // Button colors — chosen per slide/offer to suit whatever background marketing sets.
@@ -23,7 +25,7 @@ const CTA_COLOR_OPTIONS = [
 ] as const;
 
 runtime.registerComponent(MSHomeHeroSplit, {
-  type: 'home-hero-split',
+  type: HERO_SPLIT_TYPE,
   label: 'Home / Hero Split',
   icon: 'carousel',
   props: {
