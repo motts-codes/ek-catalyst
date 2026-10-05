@@ -5,36 +5,25 @@ import { CATEGORY_TILES } from '~/lib/home/home-content';
 
 import { useSectionDefaults } from '../section-defaults';
 
-interface Tile {
-  name: string;
-  subtitle: string;
-  link?: { href?: string; target?: string };
-  imageSrc?: string;
-  imageAlt: string;
-}
+import { type CategoryOverride, mergeCategoryTiles } from './merge-tiles';
 
 interface Props {
   className: string;
   title?: string;
-  categories: Tile[];
+  categories: CategoryOverride[];
   tint: boolean;
 }
 
+// The row always starts from the page's default tiles (homeowner and Pro have different hook
+// lines). Items added in the builder override individual categories — see merge-tiles.ts — so
+// adding one never wipes the rest.
 export function MSCategoryCarousel({ className, title, categories, tint }: Props) {
   const defaults = useSectionDefaults();
+  const base = defaults.categories ?? CATEGORY_TILES;
 
   return (
     <CategoryCarousel
-      categories={
-        categories.length > 0
-          ? categories.map(({ name, subtitle, link, imageSrc, imageAlt }) => ({
-              name,
-              subtitle,
-              href: link?.href ?? '#',
-              image: imageSrc ? { src: imageSrc, alt: imageAlt || name } : undefined,
-            }))
-          : (defaults.categories ?? CATEGORY_TILES)
-      }
+      categories={mergeCategoryTiles(base, categories)}
       className={className}
       tightTop={defaults.tightTop}
       tint={tint}
