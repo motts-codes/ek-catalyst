@@ -80,8 +80,10 @@ function useRotator(interval: number, active: boolean) {
 
     // Embla 9 no longer starts autoplay on init — start it explicitly, and again after a reinit
     // (e.g. a resize). Only when there is something to rotate.
+    // Respect "reduce motion": the slides still work by the dots, they just don't auto-rotate.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const startAutoplay = () => {
-      if (api.snapList().length > 1) api.plugins().autoplay.play();
+      if (!reduceMotion && api.snapList().length > 1) api.plugins().autoplay.play();
     };
 
     startAutoplay();
@@ -119,18 +121,24 @@ function Dots({
 
   return (
     // Dots: bottom-right on phones, top-right from @xl (keeps the bottom row free for the button).
-    <div className="absolute inset-x-0 bottom-3 z-10 flex justify-end gap-1.5 pr-4 @xl:bottom-auto @xl:top-4 @xl:pr-5">
+    <div className="absolute inset-x-0 bottom-1 z-10 flex justify-end pr-2 @xl:bottom-auto @xl:top-2 @xl:pr-3">
       {Array.from({ length: count }).map((_, index) => (
+        // 24px hit area (WCAG target size) around an 8px dot.
         <button
+          aria-current={index === selected ? 'true' : undefined}
           aria-label={`${label} ${index + 1} of ${count}`}
-          className={clsx(
-            'h-2 w-2 rounded-full transition-colors',
-            index === selected ? activeClass : inactiveClass,
-          )}
+          className="flex h-6 w-6 items-center justify-center rounded-full focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white"
           key={index}
           onClick={() => onSelect(index)}
           type="button"
-        />
+        >
+          <span
+            className={clsx(
+              'h-2 w-2 rounded-full transition-colors',
+              index === selected ? activeClass : inactiveClass,
+            )}
+          />
+        </button>
       ))}
     </div>
   );
@@ -169,7 +177,10 @@ export function HomeHeroSplit({
                           src={slide.image.src}
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-contrast-200 p-6 text-center text-sm text-contrast-500">
+                        <div
+                          aria-hidden
+                          className="flex h-full w-full items-center justify-center bg-neutral-600 p-6 text-center text-sm text-white/70"
+                        >
                           Photo — {slide.image?.alt ?? 'kitchen'}
                         </div>
                       )}

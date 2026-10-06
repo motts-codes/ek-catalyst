@@ -87,13 +87,15 @@ export function HomeSection({
 // Neutral image placeholder used by home cards when no photo has been supplied yet.
 export function MediaPlaceholder({ label, className }: { label: string; className?: string }) {
   return (
+    // Decorative until a real image replaces it — hidden from assistive tech.
     <div
+      aria-hidden
       className={clsx(
         'flex h-full w-full items-center justify-center bg-contrast-100 p-4 text-center',
         className,
       )}
     >
-      <span className="text-lg font-bold leading-snug tracking-tighter text-foreground opacity-10 @xs:text-2xl">
+      <span className="text-lg font-bold leading-snug tracking-tighter text-contrast-400 @xs:text-2xl">
         {label}
       </span>
     </div>

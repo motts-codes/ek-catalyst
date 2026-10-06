@@ -100,7 +100,7 @@ export function ShowroomBand({
                     <MapPin aria-hidden size={14} strokeWidth={2} />
                     {showroom.name}
                     {Boolean(showroom.badge) && (
-                      <span className="text-[11px] font-normal opacity-75">· {showroom.badge}</span>
+                      <span className="text-[11px] font-normal">· {showroom.badge}</span>
                     )}
                     {/* Progress line: fills over one interval while this pill is the active one. */}
                     {isActive && cycling && (

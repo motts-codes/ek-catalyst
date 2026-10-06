@@ -97,7 +97,12 @@ const useProgressButton = (
 function startAutoplayIfRequested(emblaApi: EmblaCarouselType, playOnInit: boolean) {
   const autoplay = emblaApi.plugins().autoplay;
 
-  if (playOnInit && !autoplay.isPlaying() && emblaApi.snapList().length > 1) autoplay.play();
+  // Respect "reduce motion": no auto-rotation, the arrows and dots still work.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (playOnInit && !reduceMotion && !autoplay.isPlaying() && emblaApi.snapList().length > 1) {
+    autoplay.play();
+  }
 }
 
 // eslint-disable-next-line valid-jsdoc

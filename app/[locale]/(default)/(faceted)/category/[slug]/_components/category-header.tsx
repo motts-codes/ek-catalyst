@@ -56,7 +56,7 @@ export function getCategoryHeaderDefaults({
   };
 }
 
-// Breadcrumb above the header. Matches the PDP treatment: 10px, light grey.
+// Breadcrumb above the header. Small and grey like the PDP's, but at a grey/size that passes AA.
 export function CategoryBreadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) {
   if (breadcrumbs.length < 2) return null;
 
@@ -65,7 +65,7 @@ export function CategoryBreadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[]
       <div className="mx-auto max-w-screen-2xl px-4 pt-[15px] @xl:px-6 @4xl:px-8">
         <Breadcrumbs
           breadcrumbs={breadcrumbs}
-          className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
+          className="[&_a]:!text-contrast-400 [&_ol]:!text-[11px] [&_span]:!text-contrast-400 [&_svg]:!text-contrast-400"
         />
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const schema = ({
-  requiredMessage = 'Email is required',
-  invalidMessage = 'Please enter a valid email address',
+  requiredMessage,
+  invalidMessage,
 }: {
   requiredMessage: string;
   invalidMessage: string;

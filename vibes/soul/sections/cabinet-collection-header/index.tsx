@@ -60,7 +60,7 @@ function SpecRow({
 }) {
   const specSheetLink = specSheetUrl !== '' && (
     <a
-      className="inline-flex items-center gap-1.5 text-sm font-semibold underline underline-offset-4 hover:text-[var(--button-primary-background,#d90716)]"
+      className="inline-flex min-h-6 items-center gap-1.5 py-1 text-sm font-semibold underline underline-offset-4 hover:text-[var(--button-primary-background,#d90716)]"
       href={specSheetUrl}
       rel="noreferrer"
       target="_blank"
@@ -72,25 +72,27 @@ function SpecRow({
 
   if (specifications === '') return specSheetLink || null;
 
+  // The download link sits beside the summary visually but outside <details>, so the summary has
+  // no focusable descendant.
   return (
-    <details className="group border-y border-contrast-100">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
-        <span className="flex items-center gap-2.5 font-heading text-lg font-semibold">
+    <div className="relative border-y border-contrast-100">
+      <details className="group">
+        <summary className="flex cursor-pointer list-none items-center gap-2.5 py-4 pr-48 font-heading text-lg font-semibold [&::-webkit-details-marker]:hidden">
           <Plus
             className="transition-transform duration-300 group-open:rotate-45"
             size={18}
             strokeWidth={2}
           />
           Specification
-        </span>
-        {specSheetLink}
-      </summary>
-      <div
-        className="prose prose-sm max-w-none pb-5 text-contrast-500 [&_a]:text-[#2162a1] [&_li]:my-1 [&_table]:w-full [&_td]:border [&_td]:border-contrast-100 [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-contrast-100 [&_th]:px-3 [&_th]:py-1.5 [&_ul]:list-disc [&_ul]:pl-5"
+        </summary>
+        <div
+          className="prose prose-sm max-w-none pb-5 text-contrast-500 [&_a]:text-[#2162a1] [&_li]:my-1 [&_table]:w-full [&_td]:border [&_td]:border-contrast-100 [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-contrast-100 [&_th]:px-3 [&_th]:py-1.5 [&_ul]:list-disc [&_ul]:pl-5"
 
-        dangerouslySetInnerHTML={{ __html: specifications }}
-      />
-    </details>
+          dangerouslySetInnerHTML={{ __html: specifications }}
+        />
+      </details>
+      {Boolean(specSheetLink) && <div className="absolute right-0 top-3.5">{specSheetLink}</div>}
+    </div>
   );
 }
 

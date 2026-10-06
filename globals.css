@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Placeholder text: the preflight grey (#9ca3af) is 2.5:1 on white and fails WCAG AA. Use the
+   darkest body grey instead; themed `placeholder:` utilities still win over this base rule. */
+@layer base {
+  input::placeholder,
+  textarea::placeholder,
+  input:placeholder-shown,
+  textarea:placeholder-shown {
+    color: hsl(var(--contrast-500));
+  }
+}
+
 :root {
   --primary: 356 89% 57%;
   --accent: 96 100% 88%;
@@ -14,7 +25,9 @@
   --contrast-100: 0 0% 93%;
   --contrast-200: 0 0% 82%;
   --contrast-300: 0 0% 70%;
-  --contrast-400: 0 0% 54%;
+  /* 45% (#737373) is the lightest grey that passes WCAG AA (4.5:1) for small text on white and
+     on the #f9fafd tint; the default 54% did not. */
+  --contrast-400: 0 0% 45%;
   --contrast-500: 0 0% 34%;
   /* Section heading color (Product Information, Features, FAQ, etc.) */
   --secondary-heading-color: #d90716;

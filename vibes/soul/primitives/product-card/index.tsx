@@ -209,9 +209,9 @@ export function ProductCard({
               <span
                 className={clsx(
                   'block text-xs font-normal',
-                  // Brand name in light grey, matching the PDP.
+                  // Brand name in grey (contrast-400 is the lightest grey that passes AA at 12px).
                   {
-                    light: 'text-contrast-300',
+                    light: 'text-contrast-400',
                     dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
                   }[colorScheme],
                 )}

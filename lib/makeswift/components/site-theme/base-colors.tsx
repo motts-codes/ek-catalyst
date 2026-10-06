@@ -13,7 +13,8 @@ export const colors = {
     100: '0 0% 93%',
     200: '0 0% 82%',
     300: '0 0% 70%',
-    400: '0 0% 54%',
+    // 45% (#737373) is the lightest grey that passes WCAG AA for small text on white / the tint.
+    400: '0 0% 45%',
     500: '0 0% 34%',
   },
   primaryMix: {

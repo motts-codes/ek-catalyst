@@ -44,7 +44,7 @@ export function CategoryHero({
               {title}
             </h1>
             {Boolean(description) && (
-              <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-white/90 @xl:text-base">
+              <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-white @xl:text-base">
                 {description}
               </p>
             )}
