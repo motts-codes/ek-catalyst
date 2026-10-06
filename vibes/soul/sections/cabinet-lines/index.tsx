@@ -41,24 +41,44 @@ interface Props {
    *  this section with the same shape. */
   program?: 'assembled' | 'rta';
   lines: CabinetLine[];
+  /** "New to RTA? Watch the explainer" — the guided page for this program. */
+  explainerHref?: string;
   className?: string;
 }
 
-export function CabinetLines({ title, description, lines, className }: Props) {
+export function CabinetLines({
+  title,
+  description,
+  program = 'assembled',
+  lines,
+  explainerHref,
+  className,
+}: Props) {
   return (
     <div className={clsx('bg-[#f9fafd] @container', className)}>
       <div className="mx-auto max-w-screen-2xl px-4 pb-12 pt-6 @xl:px-6 @4xl:px-8">
         {(Boolean(title) || Boolean(description)) && (
-          <div className="mb-8 max-w-3xl">
-            {Boolean(title) && (
-              <h1 className="font-heading text-3xl font-medium leading-tight @lg:text-4xl @2xl:text-5xl">
-                {title}
-              </h1>
-            )}
-            {Boolean(description) && (
-              <p className="mt-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
-                {description}
-              </p>
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+            <div className="max-w-3xl">
+              {Boolean(title) && (
+                <h1 className="font-heading text-3xl font-medium leading-tight @lg:text-4xl @2xl:text-5xl">
+                  {title}
+                </h1>
+              )}
+              {Boolean(description) && (
+                <p className="mt-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+                  {description}
+                </p>
+              )}
+            </div>
+            {Boolean(explainerHref) && (
+              <Link
+                className="inline-flex items-center gap-1.5 rounded-full border border-contrast-200 bg-white px-4 py-2 text-sm text-contrast-500 transition-colors hover:border-foreground hover:text-foreground"
+                href={explainerHref ?? '#'}
+              >
+                New to {program === 'rta' ? 'RTA' : 'assembled'}?
+                <span className="font-semibold text-foreground">Watch the explainer ▶</span>
+              </Link>
             )}
           </div>
         )}

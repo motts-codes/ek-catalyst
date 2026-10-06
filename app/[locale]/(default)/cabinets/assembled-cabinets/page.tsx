@@ -32,6 +32,7 @@ export default async function AssembledCabinets({ params }: Props) {
     <>
       <CabinetLines
         description="Premium, ready-to-install cabinets in a range of door styles and finishes — soft-close doors and drawers, customizable storage, and quality materials, in both framed and frameless designs."
+        explainerHref="/mykitchen/cabinets/assembled"
         lines={lines}
         program="assembled"
         title="Assembled Kitchen Cabinets"

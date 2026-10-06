@@ -28,6 +28,7 @@ export default async function RtaCabinets({ params }: Props) {
     <>
       <CabinetLines
         description="Ready-to-assemble cabinets in a range of door styles and finishes — the same quality and soft-close hardware, shipped flat at a lower price point."
+        explainerHref="/mykitchen/cabinets/rta"
         lines={lines}
         program="rta"
         title="RTA Kitchen Cabinets"
