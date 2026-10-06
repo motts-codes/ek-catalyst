@@ -16,6 +16,10 @@ interface Props {
   image?: { src: string; alt: string };
   imageLabel?: string;
   imagePosition?: 'left' | 'right';
+  /** 1 when the band opens a page (bigger title, h1). */
+  headingLevel?: 1 | 2;
+  /** Small line under the paragraph, e.g. a stock/line count. */
+  note?: string;
   tint?: boolean;
   className?: string;
 }
@@ -30,6 +34,8 @@ export function StoryBand({
   image,
   imageLabel,
   imagePosition = 'right',
+  headingLevel = 2,
+  note,
   tint = false,
   className,
 }: Props) {
@@ -42,10 +48,17 @@ export function StoryBand({
               {kicker}
             </p>
           )}
-          <h2 className={homeHeadingClassName}>{title}</h2>
+          {headingLevel === 1 ? (
+            <h1 className="font-heading text-3xl font-bold leading-tight @xl:text-4xl @4xl:text-[44px]">
+              {title}
+            </h1>
+          ) : (
+            <h2 className={homeHeadingClassName}>{title}</h2>
+          )}
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
             {description}
           </p>
+          {Boolean(note) && <p className="mt-3 max-w-2xl text-sm text-contrast-400">{note}</p>}
           {actions.length > 0 && (
             <div className="mt-7 flex flex-wrap gap-3">
               {actions.map((action) => (

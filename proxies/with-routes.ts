@@ -308,12 +308,34 @@ const getRouteInfo = async (
   }
 };
 
+// Paths whose page is code (app/[locale]/(default)/<path>/page.tsx) even though BigCommerce also
+// has a category at that URL. The Cabinets hub masks the "/cabinets/" category, which lives on as
+// the parent of the collection categories; its listing is reachable through the program pages.
+const CODE_OWNED_PATHS = ['/cabinets'];
+
+const isCodeOwnedPath = (pathname: string, locale: string) => {
+  const path = clearLocaleFromPath(pathname, locale).replace(/\/+$/, '') || '/';
+
+  return CODE_OWNED_PATHS.includes(path);
+};
+
 export const withRoutes: ProxyFactory = () => {
   return (request, event) =>
     // eslint-disable-next-line complexity
     auth(async (req) => {
       const locale = req.headers.get('x-bc-locale') ?? '';
       const customerAccessToken = req.auth?.user?.customerAccessToken;
+
+      if (isCodeOwnedPath(req.nextUrl.pathname, locale)) {
+        const codeUrl = new URL(
+          `/${locale}${clearLocaleFromPath(req.nextUrl.pathname, locale)}`,
+          req.url,
+        );
+
+        codeUrl.search = req.nextUrl.search;
+
+        return NextResponse.rewrite(codeUrl);
+      }
 
       const { route, status } = await getRouteInfo(req, event, customerAccessToken);
 

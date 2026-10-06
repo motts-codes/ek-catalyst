@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
@@ -21,6 +23,8 @@ interface Props {
   /** Optional strip of quick-ship door tiles under the table. */
   tiles?: QuickShipTile[];
   cta?: { label: string; href: string };
+  /** Small print under the table (may include a link). */
+  footnote?: ReactNode;
   tint?: boolean;
   className?: string;
 }
@@ -36,6 +40,7 @@ export function DeliveryLadder({
   rows,
   tiles = [],
   cta,
+  footnote,
   tint = false,
   className,
 }: Props) {
@@ -114,6 +119,11 @@ export function DeliveryLadder({
         </div>
       )}
 
+      {footnote != null && (
+        <p className="mt-5 max-w-3xl text-xs leading-relaxed text-contrast-400 [&_a]:underline [&_a]:underline-offset-2">
+          {footnote}
+        </p>
+      )}
       {cta && (
         <div className="mt-6">
           <ButtonLink href={cta.href} shape="pill" size="small" variant="secondary">
