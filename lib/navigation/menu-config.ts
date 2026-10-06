@@ -82,10 +82,11 @@ const menu: MenuItem[] = [
         ],
       },
       {
-        label: 'Kitchen Accessories',
+        label: 'Sinks & Faucets',
         links: [
-          { label: 'Sinks', href: '#' },
-          { label: 'Faucets', href: '#' },
+          { label: 'Kitchen Sinks', href: '#' },
+          { label: 'Kitchen Faucets', href: '#' },
+          { label: 'Sink & Faucet Accessories', href: '#' },
         ],
       },
     ],
@@ -97,10 +98,11 @@ const menu: MenuItem[] = [
     groups: [
       {
         links: [
-          { label: 'Vanities', href: '#' },
-          { label: 'Tops & Sinks / Basins & Bowls', href: '#' },
-          { label: 'Bathroom Faucet', href: '#' },
-          { label: 'Side Splash', href: '#' },
+          { label: 'Vanity Tops', href: '#' },
+          { label: 'Side Splashes', href: '#' },
+          { label: 'Bathroom Sinks', href: '#' },
+          { label: 'Bathroom Faucets', href: '#' },
+          { label: 'Drains & Accessories', href: '#' },
         ],
       },
     ],
