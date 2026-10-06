@@ -57,6 +57,8 @@ interface Link {
     links: Array<{
       label: string;
       href: string;
+      // Extra space above — starts a new cluster inside the column.
+      spaceBefore?: boolean;
     }>;
   }>;
 }
@@ -728,7 +730,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
 
                             {group.links.map((link, idx) => (
                               // Third Level Links
-                              <li key={idx}>
+                              <li className={clsx(link.spaceBefore && 'mt-3')} key={idx}>
                                 <Link className={navSubLinkClassName} href={link.href}>
                                   {link.label}
                                 </Link>
@@ -791,7 +793,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                                       </li>
                                     )}
                                     {group.links.map((link, idx) => (
-                                      <li key={idx}>
+                                      <li className={clsx(link.spaceBefore && 'mt-3')} key={idx}>
                                         <Link className={navSubLinkClassName} href={link.href}>
                                           {link.label}
                                         </Link>

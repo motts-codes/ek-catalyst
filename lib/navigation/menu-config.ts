@@ -22,6 +22,8 @@ export interface MenuLink {
   href: string;
   /** Show this link to ONE audience only. Omit for both. */
   audience?: AudienceMode;
+  /** Extra space above this link — starts a new cluster inside the column. */
+  spaceBefore?: boolean;
 }
 
 export interface MenuGroup {
@@ -62,11 +64,11 @@ const menu: MenuItem[] = [
           { label: 'All Cabinets', href: CABINETS, audience: 'homeowner' },
           { label: 'Ready to Assemble (RTA)', href: RTA_LISTING },
           { label: 'Assembled Cabinets', href: ASSEMBLED_LISTING },
-          { label: 'Quick Ship', href: '#' },
-          { label: 'Handles', href: '#' },
+          { label: 'Quick Ship Cabinets', href: '#' },
+          { label: 'Handles', href: '#', spaceBefore: true },
           { label: 'Tiles', href: '#' },
           { label: 'Accessories', href: '#' },
-          { label: 'Clearance Sale', href: '#' },
+          { label: 'Clearance Sale', href: '#', spaceBefore: true },
         ],
       },
       {
@@ -245,7 +247,7 @@ export function getMenu(mode: AudienceMode): MenuItem[] {
         ...group,
         links: group.links
           .filter((link) => link.audience === undefined || link.audience === mode)
-          .map(({ label, href }) => ({ label, href })),
+          .map(({ label, href, spaceBefore }) => ({ label, href, spaceBefore })),
       }))
       .filter((group) => group.links.length > 0);
 
