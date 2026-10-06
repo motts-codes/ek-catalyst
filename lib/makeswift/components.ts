@@ -3,6 +3,8 @@ import './components/button-link/register';
 import './components/card/register';
 import './components/card-carousel/register';
 import './components/carousel/register';
+import './components/category-header/register';
+import './components/category-rows/register';
 import './components/customer-group-slot/register';
 import './components/home-category-carousel/register';
 import './components/home-hero-split/register';

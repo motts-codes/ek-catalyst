@@ -29,6 +29,8 @@ import {
 } from '~/lib/cabinets/cabinet-collection';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
+import { EditableSection } from '~/lib/makeswift/components/editable-section';
+import { CATEGORY_HEADER_TYPE } from '~/lib/makeswift/components/section-types';
 import { Slot } from '~/lib/makeswift/slot';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
@@ -39,8 +41,8 @@ import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import {
   CategoryBreadcrumbs,
-  CategoryHeader,
   CollectionConsult,
+  getCategoryHeaderDefaults,
 } from './_components/category-header';
 import { CategoryViewed } from './_components/category-viewed';
 import { getCategoryPageData } from './page-data';
@@ -349,7 +351,17 @@ export default async function Category(props: Props) {
     <>
       <CategoryBreadcrumbs breadcrumbs={breadcrumbs} />
       {!isCabinet && (
-        <CategoryHeader category={category} subcategories={categoryTree[0]?.children} />
+        <EditableSection
+          defaults={{
+            categoryHeader: getCategoryHeaderDefaults({
+              category,
+              subcategories: categoryTree[0]?.children,
+            }),
+          }}
+          label={`${category.name} header`}
+          snapshotId={`category-${categoryId}-header`}
+          type={CATEGORY_HEADER_TYPE}
+        />
       )}
       <Slot
         label={`${category.name} top content`}

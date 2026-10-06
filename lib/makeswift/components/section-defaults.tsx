@@ -3,7 +3,9 @@
 import { createContext, type PropsWithChildren, useContext } from 'react';
 
 import { type CategoryTile } from '@/vibes/soul/sections/category-carousel';
+import { type SubcategoryTile } from '@/vibes/soul/sections/category-hero';
 import { type HeroOffer, type HeroSlide } from '@/vibes/soul/sections/home-hero-split';
+import { type CategoryPoint } from '~/lib/category/category-content';
 
 // Page-level defaults for a directly-editable Makeswift section. The page (server) supplies the
 // content to show until marketing edits the component in the builder; the registered component
@@ -16,6 +18,20 @@ export interface SectionDefaults {
   categoriesTitle?: string;
   /** Category row sits right under the hero (minimal top padding). */
   tightTop?: boolean;
+  /** Category page header: hero copy from BigCommerce / category-content.ts, points, subcategories. */
+  categoryHeader?: CategoryHeaderDefaults;
+}
+
+export interface CategoryHeaderDefaults {
+  title: string;
+  description?: string;
+  image?: { src: string; alt: string };
+  imageLabel?: string;
+  ctaLabel: string;
+  points: CategoryPoint[];
+  fine?: string;
+  subTitle: string;
+  subcategories: SubcategoryTile[];
 }
 
 const SectionDefaultsContext = createContext<SectionDefaults>({});

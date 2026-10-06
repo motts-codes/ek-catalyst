@@ -1,12 +1,8 @@
 import { type Breadcrumb, Breadcrumbs } from '@/vibes/soul/sections/breadcrumbs';
-import {
-  CategoryHero,
-  CategoryPoints,
-  SubcategoryTiles,
-} from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DEFAULT_CATEGORY_CONTENT, getCategoryContent } from '~/lib/category/category-content';
 import { FREE_DESIGN_HREF } from '~/lib/home/home-content';
+import { type CategoryHeaderDefaults } from '~/lib/makeswift/components/section-defaults';
 
 interface CategoryImage {
   url: string;
@@ -35,36 +31,29 @@ const toPlainText = (html: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
-// Category page header: name + description on the red panel with the category image beside it,
-// then the points row and the subcategories as tiles. Copy can be overridden per category in
-// lib/category/category-content.ts; otherwise it is the BigCommerce name and description.
-export function CategoryHeader({ category, subcategories = [] }: Props) {
+// Defaults for the editable category header (Makeswift "Category / Header"): name, description
+// and image from BigCommerce, overridable per category in lib/category/category-content.ts.
+export function getCategoryHeaderDefaults({
+  category,
+  subcategories = [],
+}: Props): CategoryHeaderDefaults {
   const content = getCategoryContent(category.path);
-  const description = content.lede ?? (toPlainText(category.description) || undefined);
 
-  return (
-    <>
-      <CategoryHero
-        actions={[{ label: `Shop all ${category.name.toLowerCase()}`, href: '#products' }]}
-        description={description}
-        image={toImage(category.defaultImage, category.name)}
-        imageLabel={content.imageLabel}
-        title={content.heading ?? category.name}
-      />
-      <CategoryPoints
-        fine={'fine' in content ? content.fine : DEFAULT_CATEGORY_CONTENT.fine}
-        points={content.points ?? DEFAULT_CATEGORY_CONTENT.points}
-      />
-      <SubcategoryTiles
-        items={subcategories.map((child) => ({
-          name: child.name,
-          href: child.path,
-          image: toImage(child.image, child.name),
-        }))}
-        title={content.subTitle ?? DEFAULT_CATEGORY_CONTENT.subTitle}
-      />
-    </>
-  );
+  return {
+    title: content.heading ?? category.name,
+    description: content.lede ?? (toPlainText(category.description) || undefined),
+    image: toImage(category.defaultImage, category.name),
+    imageLabel: content.imageLabel,
+    ctaLabel: `Shop all ${category.name.toLowerCase()}`,
+    points: content.points ?? DEFAULT_CATEGORY_CONTENT.points,
+    fine: 'fine' in content ? content.fine : DEFAULT_CATEGORY_CONTENT.fine,
+    subTitle: content.subTitle ?? DEFAULT_CATEGORY_CONTENT.subTitle,
+    subcategories: subcategories.map((child) => ({
+      name: child.name,
+      href: child.path,
+      image: toImage(child.image, child.name),
+    })),
+  };
 }
 
 // Breadcrumb above the header. Matches the PDP treatment: 10px, light grey.
