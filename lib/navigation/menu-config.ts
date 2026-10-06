@@ -60,8 +60,7 @@ const menu: MenuItem[] = [
         label: 'Cabinets',
         href: CABINETS,
         links: [
-          // Guided landing (styles → lines → RTA-or-assembled). Homeowner only; pros skip it.
-          { label: 'All Cabinets', href: CABINETS, audience: 'homeowner' },
+          // The column heading links to the Cabinets hub (/cabinets); no separate "All" row.
           { label: 'Ready to Assemble (RTA)', href: RTA_LISTING },
           { label: 'Assembled Cabinets', href: ASSEMBLED_LISTING },
           { label: 'Quick Ship Cabinets', href: '#' },

@@ -789,7 +789,18 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                                   <React.Fragment key={groupIndex}>
                                     {group.label != null && group.label !== '' && (
                                       <li className="mt-2 px-3 text-[11px] font-semibold uppercase tracking-wide text-contrast-400">
-                                        {group.label}
+                                        {group.href ? (
+                                          // A group with its own page (e.g. Cabinets → /cabinets)
+                                          // is tappable here, as its heading is on desktop.
+                                          <Link
+                                            className="underline-offset-2 hover:underline"
+                                            href={group.href}
+                                          >
+                                            {group.label}
+                                          </Link>
+                                        ) : (
+                                          group.label
+                                        )}
                                       </li>
                                     )}
                                     {group.links.map((link, idx) => (
