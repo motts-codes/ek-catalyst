@@ -174,7 +174,7 @@ const menu: MenuItem[] = [
         ],
       },
       {
-        label: 'More Appliances',
+        // No heading on the second row — the slot stays empty so the tiles line up.
         fullRow: true,
         links: [
           { label: 'Range Hoods', href: '#', image: nav('range-hoods', 'Range hood') },
@@ -214,7 +214,11 @@ const menu: MenuItem[] = [
             href: '#',
             image: nav('windows-replacement', 'Replacement window'),
           },
-          { label: 'New Construction', href: '#' },
+          {
+            label: 'New Construction',
+            href: '#',
+            image: nav('windows-new-construction', 'New-construction window in a framed wall'),
+          },
           {
             label: 'Accessories',
             href: '#',

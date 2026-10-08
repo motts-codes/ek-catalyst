@@ -793,8 +793,15 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                             key={groupIndex}
                             style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
                           >
-                            {group.label != null && group.label !== '' && (
+                            {group.label != null && group.label !== '' ? (
                               <GroupTile href={group.href} label={group.label} />
+                            ) : (
+                              // Unlabelled group: keep an empty slot so its tiles line up with the
+                              // row above.
+                              <span
+                                aria-hidden
+                                className="w-20 shrink-0 @[1100px]:w-[100px] @[1360px]:w-[120px]"
+                              />
                             )}
                             <ul className="flex min-w-0 flex-1 flex-wrap gap-x-3.5 gap-y-4">
                               {group.links.map((link, idx) => (
