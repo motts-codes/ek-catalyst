@@ -10,6 +10,7 @@ import {
   ArrowRight,
   ChevronDown,
   GiftIcon,
+  ImageIcon,
   MoreHorizontal,
   Search,
   SearchIcon,
@@ -39,6 +40,7 @@ import { Button } from '@/vibes/soul/primitives/button';
 import { Logo } from '@/vibes/soul/primitives/logo';
 import { Price } from '@/vibes/soul/primitives/price-label';
 import { ProductCard } from '@/vibes/soul/primitives/product-card';
+import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import { usePathname, useRouter } from '~/i18n/routing';
 import { useSearch } from '~/lib/search';
@@ -57,8 +59,10 @@ interface Link {
     links: Array<{
       label: string;
       href: string;
-      // Extra space above — starts a new cluster inside the column.
+      // Extra space before — starts a new cluster inside the row.
       spaceBefore?: boolean;
+      // Square tile photo in the desktop mega menu.
+      image?: { src: string; alt: string };
     }>;
   }>;
 }
@@ -270,6 +274,48 @@ const navSubLinkClassName =
   'block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 const navGroupClassName =
   'block rounded-lg bg-[var(--nav-group-background,transparent)] px-3 py-2 font-[family-name:var(--nav-group-font-family,var(--font-family-body))] font-medium text-[var(--nav-group-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-group-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-group-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
+
+// Square photo tile in the desktop mega menu: the photo lifts and zooms a little on hover, the
+// label sits beneath. A soft placeholder (image icon) shows until a photo is set in menu-config.
+function MenuTile({
+  label,
+  href,
+  image,
+}: {
+  label: string;
+  href: string;
+  image?: { src: string; alt: string };
+}) {
+  return (
+    <Link
+      className="group/tile flex w-24 flex-col gap-1.5 rounded-2xl ring-[var(--nav-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
+      href={href}
+    >
+      <span className="relative block aspect-square overflow-hidden rounded-2xl bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-[transform,box-shadow] duration-300 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:shadow-[0_14px_28px_-16px_rgb(0_0_0/0.35)]">
+        {image ? (
+          <Image
+            alt={image.alt}
+            className="object-cover transition-transform duration-500 ease-out group-hover/tile:scale-105"
+            fill
+            sizes="96px"
+            src={image.src}
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="flex h-full w-full items-center justify-center text-contrast-300"
+          >
+            <ImageIcon size={26} strokeWidth={1.25} />
+          </span>
+        )}
+      </span>
+      <span className="px-0.5 text-center text-xs font-medium leading-snug text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] transition-colors group-hover/tile:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))]">
+        {label}
+      </span>
+    </Link>
+  );
+}
+
 const navButtonClassName =
   'relative rounded-lg bg-[var(--nav-button-background,transparent)] p-1.5 text-[var(--nav-button-icon,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors focus-visible:outline-0 focus-visible:ring-2 @4xl:hover:bg-[var(--nav-button-background-hover,hsl(var(--contrast-100)))] @4xl:hover:text-[var(--nav-button-icon-hover,hsl(var(--foreground)))]';
 
@@ -711,13 +757,13 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                     </Link>
                   </NavigationMenu.Trigger>
                   {item.groups != null && item.groups.length > 0 && (
-                    <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
-                      <div className="m-auto grid w-full max-w-screen-lg grid-cols-5 justify-center gap-5 px-5 pb-8 pt-5">
-                        {item.groups.map((group, columnIndex) => (
-                          <ul className="flex flex-col" key={columnIndex}>
-                            {/* Second Level Links */}
+                    <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))] duration-300 data-[motion=from-end]:animate-in data-[motion=from-start]:animate-in data-[motion=to-end]:animate-out data-[motion=to-start]:animate-out data-[motion=from-end]:fade-in data-[motion=from-start]:fade-in data-[motion=to-end]:fade-out data-[motion=to-start]:fade-out data-[motion=from-end]:slide-in-from-right-6 data-[motion=from-start]:slide-in-from-left-6 data-[motion=to-end]:slide-out-to-right-6 data-[motion=to-start]:slide-out-to-left-6">
+                      {/* One row per group: heading, then the links as square photo tiles. */}
+                      <div className="mx-auto flex w-full max-w-screen-xl flex-col gap-5 px-8 pb-7 pt-5">
+                        {item.groups.map((group, rowIndex) => (
+                          <div key={rowIndex}>
                             {group.label != null && group.label !== '' && (
-                              <li>
+                              <div className="mb-2">
                                 {group.href != null && group.href !== '' ? (
                                   <Link className={navGroupClassName} href={group.href}>
                                     {group.label}
@@ -725,18 +771,20 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                                 ) : (
                                   <span className={navGroupClassName}>{group.label}</span>
                                 )}
-                              </li>
+                              </div>
                             )}
-
-                            {group.links.map((link, idx) => (
-                              // Third Level Links
-                              <li className={clsx(link.spaceBefore && 'mt-3')} key={idx}>
-                                <Link className={navSubLinkClassName} href={link.href}>
-                                  {link.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
+                            <ul className="flex flex-wrap gap-x-3.5 gap-y-4">
+                              {group.links.map((link, idx) => (
+                                <li className={clsx(link.spaceBefore && 'ml-6')} key={idx}>
+                                  <MenuTile
+                                    href={link.href}
+                                    image={link.image}
+                                    label={link.label}
+                                  />
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         ))}
                       </div>
                     </NavigationMenu.Content>

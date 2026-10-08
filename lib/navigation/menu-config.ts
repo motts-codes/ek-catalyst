@@ -22,8 +22,10 @@ export interface MenuLink {
   href: string;
   /** Show this link to ONE audience only. Omit for both. */
   audience?: AudienceMode;
-  /** Extra space above this link — starts a new cluster inside the column. */
+  /** Extra space before this link — starts a new cluster inside the row. */
   spaceBefore?: boolean;
+  /** Square tile photo in the desktop mega menu (a soft placeholder shows until set). */
+  image?: { src: string; alt: string };
 }
 
 export interface MenuGroup {
@@ -246,7 +248,7 @@ export function getMenu(mode: AudienceMode): MenuItem[] {
         ...group,
         links: group.links
           .filter((link) => link.audience === undefined || link.audience === mode)
-          .map(({ label, href, spaceBefore }) => ({ label, href, spaceBefore })),
+          .map(({ label, href, spaceBefore, image }) => ({ label, href, spaceBefore, image })),
       }))
       .filter((group) => group.links.length > 0);
 
