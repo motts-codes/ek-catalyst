@@ -66,10 +66,16 @@ const menu: MenuItem[] = [
           { label: 'Assembled Cabinets', href: ASSEMBLED_LISTING },
           { label: 'RTA Cabinets', href: RTA_LISTING },
           { label: 'Quick Ship Cabinets', href: '#' },
-          { label: 'Handles', href: '#', spaceBefore: true },
+          { label: 'Clearance Sale', href: '#', spaceBefore: true },
+        ],
+      },
+      {
+        label: 'Cabinet Hardware',
+        href: '#',
+        links: [
+          { label: 'Handles', href: '#' },
           { label: 'Tiles', href: '#' },
           { label: 'Accessories', href: '#' },
-          { label: 'Clearance Sale', href: '#', spaceBefore: true },
         ],
       },
       {
