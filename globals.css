@@ -9,10 +9,15 @@
   from { opacity: 0; transform: translateY(12px) scale(0.96); }
   to { opacity: 1; transform: none; }
 }
+/* Row by row: the Cabinets row (heading + tiles) comes in first, then the next row, then the next. */
+[data-state='open'] .ek-menu-row {
+  animation: ek-tile-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 [data-state='open'] .ek-menu-tile {
-  animation: ek-tile-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: ek-tile-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @media (prefers-reduced-motion: reduce) {
+  [data-state='open'] .ek-menu-row,
   [data-state='open'] .ek-menu-tile { animation: none; }
 }
 

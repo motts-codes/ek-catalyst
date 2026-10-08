@@ -761,7 +761,11 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                       {/* One row per group: heading, then the links as square photo tiles. */}
                       <div className="mx-auto flex w-full max-w-screen-xl flex-col gap-5 px-8 pb-7 pt-5">
                         {item.groups.map((group, rowIndex) => (
-                          <div key={rowIndex}>
+                          <div
+                            className="ek-menu-row"
+                            key={rowIndex}
+                            style={{ animationDelay: `${rowIndex * 240}ms` }}
+                          >
                             {group.label != null && group.label !== '' && (
                               <div className="mb-2">
                                 {group.href != null && group.href !== '' ? (
@@ -780,7 +784,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                                   className={clsx('ek-menu-tile', link.spaceBefore && 'ml-6')}
                                   key={idx}
                                   style={{
-                                    animationDelay: `${Math.min(idx, 10) * 40 + rowIndex * 60}ms`,
+                                    animationDelay: `${rowIndex * 240 + Math.min(idx, 12) * 30}ms`,
                                   }}
                                 >
                                   <MenuTile
