@@ -275,6 +275,23 @@ const navSubLinkClassName =
 const navGroupClassName =
   'block rounded-lg bg-[var(--nav-group-background,transparent)] px-3 py-2 font-[family-name:var(--nav-group-font-family,var(--font-family-body))] font-medium text-[var(--nav-group-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-group-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-group-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 
+// The group's name as a grey square at the start of its row (links to the group page when it
+// has one), the same size as the photo tiles beside it.
+function GroupTile({ label, href }: { label: string; href?: string }) {
+  const className =
+    'flex h-[120px] w-[120px] items-center justify-center rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] px-3 text-center text-[15px] font-semibold leading-snug text-[var(--nav-group-text,hsl(var(--foreground)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]';
+
+  if (href != null && href !== '') {
+    return (
+      <Link className={clsx(className, 'hover:bg-[hsl(var(--contrast-200))]')} href={href}>
+        {label}
+      </Link>
+    );
+  }
+
+  return <span className={className}>{label}</span>;
+}
+
 // Square photo tile in the desktop mega menu: the photo lifts and zooms a little on hover, the
 // label sits beneath. A soft placeholder (image icon) shows until a photo is set in menu-config.
 function MenuTile({
@@ -288,7 +305,7 @@ function MenuTile({
 }) {
   return (
     <Link
-      className="group/tile flex w-24 flex-col gap-1.5 rounded-lg ring-[var(--nav-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
+      className="group/tile flex w-[120px] flex-col gap-2 rounded-lg ring-[var(--nav-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
       href={href}
     >
       <span className="relative block aspect-square overflow-hidden rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-[transform,box-shadow] duration-300 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:shadow-[0_14px_28px_-16px_rgb(0_0_0/0.35)]">
@@ -297,7 +314,9 @@ function MenuTile({
             alt={image.alt}
             className="object-cover transition-transform duration-500 ease-out group-hover/tile:scale-105"
             fill
-            sizes="96px"
+            // The tiles are tiny (2–10 KB); load them with the page so the menu opens complete.
+            loading="eager"
+            sizes="120px"
             src={image.src}
           />
         ) : (
@@ -309,7 +328,7 @@ function MenuTile({
           </span>
         )}
       </span>
-      <span className="px-0.5 text-center text-xs font-medium leading-snug text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] transition-colors group-hover/tile:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))]">
+      <span className="px-0.5 text-center text-[13px] font-medium leading-snug text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] transition-colors group-hover/tile:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))]">
         {label}
       </span>
     </Link>
@@ -758,24 +777,18 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   </NavigationMenu.Trigger>
                   {item.groups != null && item.groups.length > 0 && (
                     <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))] duration-300 data-[motion=from-end]:animate-in data-[motion=from-start]:animate-in data-[motion=to-end]:animate-out data-[motion=to-start]:animate-out data-[motion=from-end]:fade-in data-[motion=from-start]:fade-in data-[motion=to-end]:fade-out data-[motion=to-start]:fade-out data-[motion=from-end]:slide-in-from-right-6 data-[motion=from-start]:slide-in-from-left-6 data-[motion=to-end]:slide-out-to-right-6 data-[motion=to-start]:slide-out-to-left-6">
-                      {/* One row per group: heading, then the links as square photo tiles. */}
-                      <div className="mx-auto flex w-full max-w-screen-xl flex-col gap-5 px-8 pb-7 pt-5">
+                      {/* Each group is a block: a grey heading tile, then the links as square photo
+                          tiles. Blocks sit side by side and wrap, so Cabinets and Cabinet Hardware
+                          share a line when there is room. */}
+                      <div className="flex w-full flex-wrap gap-x-14 gap-y-8 px-8 pb-8 pt-6">
                         {item.groups.map((group, rowIndex) => (
                           <div
-                            className="ek-menu-row"
+                            className="ek-menu-row flex items-start gap-3.5"
                             key={rowIndex}
                             style={{ animationDelay: `${rowIndex * 240}ms` }}
                           >
                             {group.label != null && group.label !== '' && (
-                              <div className="mb-2">
-                                {group.href != null && group.href !== '' ? (
-                                  <Link className={navGroupClassName} href={group.href}>
-                                    {group.label}
-                                  </Link>
-                                ) : (
-                                  <span className={navGroupClassName}>{group.label}</span>
-                                )}
-                              </div>
+                              <GroupTile href={group.href} label={group.label} />
                             )}
                             <ul className="flex flex-wrap gap-x-3.5 gap-y-4">
                               {group.links.map((link, idx) => (

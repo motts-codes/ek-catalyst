@@ -72,3 +72,6 @@ scripts/avon-test/
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Source artwork (originals for the resized assets in public/images)
+/design-assets/

@@ -17,6 +17,9 @@
 
 export type AudienceMode = 'homeowner' | 'pro';
 
+// Mega-menu tile photos: 320×320 webp files in public/images/nav (originals in design-assets/).
+const nav = (file: string, alt: string) => ({ src: `/images/nav/${file}.webp`, alt });
+
 export interface MenuLink {
   label: string;
   href: string;
@@ -63,19 +66,28 @@ const menu: MenuItem[] = [
         href: CABINETS,
         links: [
           // The column heading links to the Cabinets hub (/cabinets); no separate "All" row.
-          { label: 'Assembled Cabinets', href: ASSEMBLED_LISTING },
-          { label: 'RTA Cabinets', href: RTA_LISTING },
-          { label: 'Quick Ship Cabinets', href: '#' },
-          { label: 'Clearance Sale', href: '#', spaceBefore: true },
+          {
+            label: 'Assembled',
+            href: ASSEMBLED_LISTING,
+            image: nav('assembled', 'Assembled kitchen cabinets'),
+          },
+          { label: 'RTA', href: RTA_LISTING, image: nav('rta', 'Ready-to-assemble cabinets') },
+          { label: 'Quick Ship', href: '#', image: nav('quick-ship', 'Quick-ship cabinets') },
+          {
+            label: 'Clearance',
+            href: '#',
+            spaceBefore: true,
+            image: nav('clearance', 'Clearance cabinets'),
+          },
         ],
       },
       {
         label: 'Cabinet Hardware',
         href: '#',
         links: [
-          { label: 'Handles', href: '#' },
-          { label: 'Tiles', href: '#' },
-          { label: 'Accessories', href: '#' },
+          { label: 'Handles', href: '#', image: nav('handles', 'Cabinet door with a handle') },
+          { label: 'Tiles', href: '#', image: nav('tiles', 'Backsplash tiles') },
+          { label: 'Accessories', href: '#', image: nav('accessories', 'Drawer organizer') },
         ],
       },
       {
@@ -84,18 +96,26 @@ const menu: MenuItem[] = [
         label: 'Countertops',
         href: '#',
         links: [
-          { label: 'Granite', href: '#' },
-          { label: 'Laminate', href: '#' },
-          { label: 'Quartz', href: '#' },
-          { label: 'Prefabricated', href: '#' },
+          { label: 'Granite', href: '#', image: nav('granite', 'Granite countertop') },
+          { label: 'Laminate', href: '#', image: nav('laminate', 'Laminate countertop') },
+          { label: 'Quartz', href: '#', image: nav('quartz', 'Quartz countertop') },
+          {
+            label: 'Prefabricated',
+            href: '#',
+            image: nav('prefabricated', 'Prefabricated countertop'),
+          },
         ],
       },
       {
         label: 'Sinks & Faucets',
         links: [
-          { label: 'Kitchen Sinks', href: '#' },
-          { label: 'Kitchen Faucets', href: '#' },
-          { label: 'Sink & Faucet Accessories', href: '#' },
+          { label: 'Kitchen Sinks', href: '#', image: nav('kitchen-sinks', 'Kitchen sink') },
+          { label: 'Kitchen Faucets', href: '#', image: nav('kitchen-faucets', 'Kitchen faucet') },
+          {
+            label: 'Sink & Faucet Accessories',
+            href: '#',
+            image: nav('sink-faucet-accessories', 'Sink and faucet accessories'),
+          },
         ],
       },
     ],
