@@ -279,7 +279,7 @@ const navGroupClassName =
 // has one), the same size as the photo tiles beside it.
 function GroupTile({ label, href }: { label: string; href?: string }) {
   const className =
-    'flex h-[120px] w-[120px] items-center justify-center rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] px-3 text-center text-[15px] font-semibold leading-snug text-[var(--nav-group-text,hsl(var(--foreground)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]';
+    'flex aspect-square w-20 items-center justify-center rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] px-2 text-center text-[13px] font-semibold leading-snug @[1100px]:w-[100px] @[1100px]:text-sm @[1360px]:w-[120px] @[1360px]:px-3 @[1360px]:text-[15px] text-[var(--nav-group-text,hsl(var(--foreground)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]';
 
   if (href != null && href !== '') {
     return (
@@ -305,7 +305,7 @@ function MenuTile({
 }) {
   return (
     <Link
-      className="group/tile flex w-[120px] flex-col gap-2 rounded-lg ring-[var(--nav-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
+      className="group/tile flex w-20 flex-col gap-2 rounded-lg ring-[var(--nav-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2 @[1100px]:w-[100px] @[1360px]:w-[120px]"
       href={href}
     >
       <span className="relative block aspect-square overflow-hidden rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-[transform,box-shadow] duration-300 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:shadow-[0_14px_28px_-16px_rgb(0_0_0/0.35)]">
@@ -778,19 +778,20 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   {item.groups != null && item.groups.length > 0 && (
                     <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))] duration-300 data-[motion=from-end]:animate-in data-[motion=from-start]:animate-in data-[motion=to-end]:animate-out data-[motion=to-start]:animate-out data-[motion=from-end]:fade-in data-[motion=from-start]:fade-in data-[motion=to-end]:fade-out data-[motion=to-start]:fade-out data-[motion=from-end]:slide-in-from-right-6 data-[motion=from-start]:slide-in-from-left-6 data-[motion=to-end]:slide-out-to-right-6 data-[motion=to-start]:slide-out-to-left-6">
                       {/* Each group is a block: a grey heading tile, then the links as square photo
-                          tiles. Blocks fill a two-column grid in config order — Cabinets beside
-                          Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own. */}
-                      <div className="grid w-full grid-cols-[max-content_max-content] justify-start gap-x-24 gap-y-8 px-8 pb-8 pt-6">
+                          tiles. The blocks fill a two-column grid in config order — Cabinets beside
+                          Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own.
+                          Tiles scale with the nav width (80 → 100 → 120px) so nothing overflows. */}
+                      <div className="grid w-full grid-cols-[max-content_max-content] justify-start gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
                         {item.groups.map((group, groupIndex) => (
                           <div
-                            className="ek-menu-row flex items-start gap-3.5"
+                            className="ek-menu-row flex min-w-0 items-start gap-3.5"
                             key={groupIndex}
                             style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
                           >
                             {group.label != null && group.label !== '' && (
                               <GroupTile href={group.href} label={group.label} />
                             )}
-                            <ul className="flex flex-wrap gap-x-3.5 gap-y-4">
+                            <ul className="flex min-w-0 flex-1 flex-wrap gap-x-3.5 gap-y-4">
                               {group.links.map((link, idx) => (
                                 // Each tile rises in turn when the panel opens (see ek-tile-in in globals.css).
                                 <li
