@@ -34,8 +34,6 @@ export interface MenuLink {
 export interface MenuGroup {
   label?: string;
   href?: string;
-  /** Start this group on a new line in the mega menu instead of beside the previous group. */
-  newRow?: boolean;
   links: MenuLink[];
 }
 
@@ -75,12 +73,6 @@ const menu: MenuItem[] = [
           },
           { label: 'RTA', href: RTA_LISTING, image: nav('rta', 'Ready-to-assemble cabinets') },
           { label: 'Quick Ship', href: '#', image: nav('quick-ship', 'Quick-ship cabinets') },
-          {
-            label: 'Clearance',
-            href: '#',
-            spaceBefore: true,
-            image: nav('clearance', 'Clearance cabinets'),
-          },
         ],
       },
       {
@@ -109,13 +101,20 @@ const menu: MenuItem[] = [
         ],
       },
       {
+        label: 'Sale',
+        href: '#',
+        links: [
+          { label: 'Clearance', href: '#', image: nav('clearance', 'Clearance cabinets') },
+          { label: 'Promotions', href: '#', image: nav('promo', 'Current promotions') },
+        ],
+      },
+      {
         label: 'Sinks & Faucets',
-        newRow: true,
         links: [
           { label: 'Kitchen Sinks', href: '#', image: nav('kitchen-sinks', 'Kitchen sink') },
           { label: 'Kitchen Faucets', href: '#', image: nav('kitchen-faucets', 'Kitchen faucet') },
           {
-            label: 'Sink & Faucet Accessories',
+            label: 'Accessories',
             href: '#',
             image: nav('sink-faucet-accessories', 'Sink and faucet accessories'),
           },

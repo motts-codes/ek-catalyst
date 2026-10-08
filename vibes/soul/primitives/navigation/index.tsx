@@ -56,8 +56,6 @@ interface Link {
   groups?: Array<{
     label?: string;
     href?: string;
-    // Start this group on a new line instead of beside the previous group.
-    newRow?: boolean;
     links: Array<{
       label: string;
       href: string;
@@ -780,17 +778,14 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   {item.groups != null && item.groups.length > 0 && (
                     <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))] duration-300 data-[motion=from-end]:animate-in data-[motion=from-start]:animate-in data-[motion=to-end]:animate-out data-[motion=to-start]:animate-out data-[motion=from-end]:fade-in data-[motion=from-start]:fade-in data-[motion=to-end]:fade-out data-[motion=to-start]:fade-out data-[motion=from-end]:slide-in-from-right-6 data-[motion=from-start]:slide-in-from-left-6 data-[motion=to-end]:slide-out-to-right-6 data-[motion=to-start]:slide-out-to-left-6">
                       {/* Each group is a block: a grey heading tile, then the links as square photo
-                          tiles. Blocks sit side by side and wrap, so Cabinets and Cabinet Hardware
-                          share a line when there is room. */}
-                      <div className="flex w-full flex-wrap gap-x-14 gap-y-8 px-8 pb-8 pt-6">
-                        {item.groups.map((group, rowIndex) => (
+                          tiles. Blocks fill a two-column grid in config order — Cabinets beside
+                          Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own. */}
+                      <div className="grid w-full grid-cols-[max-content_max-content] justify-start gap-x-24 gap-y-8 px-8 pb-8 pt-6">
+                        {item.groups.map((group, groupIndex) => (
                           <div
-                            className={clsx(
-                              'ek-menu-row flex items-start gap-3.5',
-                              group.newRow && 'basis-full',
-                            )}
-                            key={rowIndex}
-                            style={{ animationDelay: `${rowIndex * 240}ms` }}
+                            className="ek-menu-row flex items-start gap-3.5"
+                            key={groupIndex}
+                            style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
                           >
                             {group.label != null && group.label !== '' && (
                               <GroupTile href={group.href} label={group.label} />
@@ -802,7 +797,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                                   className={clsx('ek-menu-tile', link.spaceBefore && 'ml-6')}
                                   key={idx}
                                   style={{
-                                    animationDelay: `${rowIndex * 240 + Math.min(idx, 12) * 30}ms`,
+                                    animationDelay: `${Math.floor(groupIndex / 2) * 240 + Math.min(idx, 12) * 30}ms`,
                                   }}
                                 >
                                   <MenuTile
