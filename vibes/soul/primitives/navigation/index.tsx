@@ -56,6 +56,8 @@ interface Link {
   groups?: Array<{
     label?: string;
     href?: string;
+    // Take the whole line (both columns) — for groups with many tiles.
+    fullRow?: boolean;
     links: Array<{
       label: string;
       href: string;
@@ -781,10 +783,13 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                           tiles. The blocks fill a two-column grid in config order — Cabinets beside
                           Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own.
                           Tiles scale with the nav width (80 → 100 → 120px) so nothing overflows. */}
-                      <div className="grid w-full grid-cols-[max-content_max-content] justify-start gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
+                      <div className="grid w-full grid-cols-[minmax(0,max-content)_minmax(0,max-content)] justify-start gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
                         {item.groups.map((group, groupIndex) => (
                           <div
-                            className="ek-menu-row flex min-w-0 items-start gap-3.5"
+                            className={clsx(
+                              'ek-menu-row flex min-w-0 items-start gap-3.5',
+                              group.fullRow && 'col-span-2',
+                            )}
                             key={groupIndex}
                             style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
                           >

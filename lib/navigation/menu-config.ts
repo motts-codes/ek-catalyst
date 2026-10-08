@@ -34,6 +34,8 @@ export interface MenuLink {
 export interface MenuGroup {
   label?: string;
   href?: string;
+  /** Take the whole line in the mega menu (both columns) — for groups with many tiles. */
+  fullRow?: boolean;
   links: MenuLink[];
 }
 
@@ -156,21 +158,42 @@ const menu: MenuItem[] = [
     group: 'shop',
     groups: [
       {
+        label: 'Appliances',
+        href: '/appliances',
+        fullRow: true,
         links: [
-          { label: 'Fridges & Freezers', href: '#' },
-          { label: 'Ranges & Cooktops', href: '#' },
-          { label: 'Dishwashers', href: '#' },
-          { label: 'Microwaves', href: '#' },
-          { label: 'Wall Ovens', href: '#' },
+          {
+            label: 'Fridges & Freezers',
+            href: '#',
+            image: nav('fridges-freezers', 'Refrigerator'),
+          },
+          { label: 'Ranges & Cooktops', href: '#', image: nav('ranges-cooktops', 'Range') },
+          { label: 'Dishwashers', href: '#', image: nav('dishwashers', 'Dishwasher') },
+          { label: 'Microwaves', href: '#', image: nav('microwaves', 'Microwave') },
+          { label: 'Wall Ovens', href: '#', image: nav('wall-ovens', 'Wall oven') },
         ],
       },
       {
+        label: 'More Appliances',
+        fullRow: true,
         links: [
-          { label: 'Range Hoods', href: '#' },
-          { label: 'Washers & Dryers', href: '#' },
-          { label: 'Garbage Disposals', href: '#' },
+          { label: 'Range Hoods', href: '#', image: nav('range-hoods', 'Range hood') },
+          {
+            label: 'Washers & Dryers',
+            href: '#',
+            image: nav('washers-dryers', 'Washer and dryer'),
+          },
+          {
+            label: 'Garbage Disposals',
+            href: '#',
+            image: nav('garbage-disposals', 'Garbage disposal'),
+          },
           { label: 'Air Conditioning', href: '#' },
-          { label: 'Accessories', href: '#' },
+          {
+            label: 'Accessories',
+            href: '#',
+            image: nav('appliance-accessories', 'Appliance accessories'),
+          },
         ],
       },
     ],
@@ -186,20 +209,28 @@ const menu: MenuItem[] = [
         label: 'Windows',
         href: '/windows',
         links: [
-          { label: 'Replacement', href: '#' },
+          {
+            label: 'Replacement',
+            href: '#',
+            image: nav('windows-replacement', 'Replacement window'),
+          },
           { label: 'New Construction', href: '#' },
-          { label: 'Accessories', href: '#' },
+          {
+            label: 'Accessories',
+            href: '#',
+            image: nav('windows-accessories', 'Window accessories'),
+          },
         ],
       },
       {
         label: 'Siding',
         href: '#',
-        links: [{ label: 'All Siding', href: '#' }],
+        links: [{ label: 'All Siding', href: '#', image: nav('siding', 'House siding') }],
       },
       {
         label: 'Doors',
         href: '#',
-        links: [{ label: 'All Doors', href: '#' }],
+        links: [{ label: 'All Doors', href: '#', image: nav('doors', 'Entry door') }],
       },
     ],
   },
