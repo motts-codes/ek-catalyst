@@ -52,6 +52,9 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
           onUnfix={() => setIsFloating(false)}
           onUnpin={() => setIsFloating(true)}
           pinStart={bannerHeight}
+          // Headroom's wrapper is a stacking context at z-index 1, which let positioned page
+          // content (the hero's slide dots) show through the open mega menu. Lift the whole header.
+          style={{ zIndex: 40 }}
         >
           <div className="mx-auto max-w-screen-2xl px-4 pt-1 @xl:px-6 @4xl:px-8">
             {/* On narrow screens the CTA moves into the mobile menu (first row) — no extra row

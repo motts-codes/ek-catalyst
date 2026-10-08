@@ -121,7 +121,7 @@ function Dots({
 
   return (
     // Dots: bottom-right on phones, top-right from @xl (keeps the bottom row free for the button).
-    <div className="absolute inset-x-0 bottom-1 z-10 flex justify-end pr-2 @xl:bottom-auto @xl:top-2 @xl:pr-3">
+    <div className="absolute inset-x-0 bottom-1 z-[1] flex justify-end pr-2 @xl:bottom-auto @xl:top-2 @xl:pr-3">
       {Array.from({ length: count }).map((_, index) => (
         // 24px hit area (WCAG target size) around an 8px dot.
         <button
