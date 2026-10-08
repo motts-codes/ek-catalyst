@@ -34,6 +34,8 @@ export interface MenuLink {
 export interface MenuGroup {
   label?: string;
   href?: string;
+  /** Start this group on a new line in the mega menu instead of beside the previous group. */
+  newRow?: boolean;
   links: MenuLink[];
 }
 
@@ -108,6 +110,7 @@ const menu: MenuItem[] = [
       },
       {
         label: 'Sinks & Faucets',
+        newRow: true,
         links: [
           { label: 'Kitchen Sinks', href: '#', image: nav('kitchen-sinks', 'Kitchen sink') },
           { label: 'Kitchen Faucets', href: '#', image: nav('kitchen-faucets', 'Kitchen faucet') },
@@ -126,12 +129,21 @@ const menu: MenuItem[] = [
     group: 'shop',
     groups: [
       {
+        label: 'Bath',
         links: [
-          { label: 'Vanity Tops', href: '#' },
-          { label: 'Side Splashes', href: '#' },
-          { label: 'Bathroom Sinks', href: '#' },
-          { label: 'Bathroom Faucets', href: '#' },
-          { label: 'Drains & Accessories', href: '#' },
+          { label: 'Vanity Tops', href: '#', image: nav('vanity-tops', 'Bathroom vanity top') },
+          { label: 'Side Splashes', href: '#', image: nav('side-splashes', 'Vanity side splash') },
+          { label: 'Bathroom Sinks', href: '#', image: nav('bathroom-sinks', 'Bathroom sink') },
+          {
+            label: 'Bathroom Faucets',
+            href: '#',
+            image: nav('bathroom-faucets', 'Bathroom faucet'),
+          },
+          {
+            label: 'Drains & Accessories',
+            href: '#',
+            image: nav('drains-accessories', 'Drain and accessories'),
+          },
         ],
       },
     ],

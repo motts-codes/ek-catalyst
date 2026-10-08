@@ -56,6 +56,8 @@ interface Link {
   groups?: Array<{
     label?: string;
     href?: string;
+    // Start this group on a new line instead of beside the previous group.
+    newRow?: boolean;
     links: Array<{
       label: string;
       href: string;
@@ -283,7 +285,7 @@ function GroupTile({ label, href }: { label: string; href?: string }) {
 
   if (href != null && href !== '') {
     return (
-      <Link className={clsx(className, 'hover:bg-[hsl(var(--contrast-200))]')} href={href}>
+      <Link className={className} href={href}>
         {label}
       </Link>
     );
@@ -783,7 +785,10 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                       <div className="flex w-full flex-wrap gap-x-14 gap-y-8 px-8 pb-8 pt-6">
                         {item.groups.map((group, rowIndex) => (
                           <div
-                            className="ek-menu-row flex items-start gap-3.5"
+                            className={clsx(
+                              'ek-menu-row flex items-start gap-3.5',
+                              group.newRow && 'basis-full',
+                            )}
                             key={rowIndex}
                             style={{ animationDelay: `${rowIndex * 240}ms` }}
                           >
