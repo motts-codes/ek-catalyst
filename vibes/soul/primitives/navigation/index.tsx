@@ -288,10 +288,10 @@ function MenuTile({
 }) {
   return (
     <Link
-      className="group/tile flex w-24 flex-col gap-1.5 rounded-2xl ring-[var(--nav-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
+      className="group/tile flex w-24 flex-col gap-1.5 rounded-lg ring-[var(--nav-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
       href={href}
     >
-      <span className="relative block aspect-square overflow-hidden rounded-2xl bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-[transform,box-shadow] duration-300 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:shadow-[0_14px_28px_-16px_rgb(0_0_0/0.35)]">
+      <span className="relative block aspect-square overflow-hidden rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-[transform,box-shadow] duration-300 ease-out group-hover/tile:-translate-y-0.5 group-hover/tile:shadow-[0_14px_28px_-16px_rgb(0_0_0/0.35)]">
         {image ? (
           <Image
             alt={image.alt}
@@ -775,7 +775,14 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                             )}
                             <ul className="flex flex-wrap gap-x-3.5 gap-y-4">
                               {group.links.map((link, idx) => (
-                                <li className={clsx(link.spaceBefore && 'ml-6')} key={idx}>
+                                // Each tile rises in turn when the panel opens (see ek-tile-in in globals.css).
+                                <li
+                                  className={clsx('ek-menu-tile', link.spaceBefore && 'ml-6')}
+                                  key={idx}
+                                  style={{
+                                    animationDelay: `${Math.min(idx, 10) * 40 + rowIndex * 60}ms`,
+                                  }}
+                                >
                                   <MenuTile
                                     href={link.href}
                                     image={link.image}

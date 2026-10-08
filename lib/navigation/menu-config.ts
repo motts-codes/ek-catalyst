@@ -63,8 +63,8 @@ const menu: MenuItem[] = [
         href: CABINETS,
         links: [
           // The column heading links to the Cabinets hub (/cabinets); no separate "All" row.
-          { label: 'Ready to Assemble (RTA)', href: RTA_LISTING },
           { label: 'Assembled Cabinets', href: ASSEMBLED_LISTING },
+          { label: 'RTA Cabinets', href: RTA_LISTING },
           { label: 'Quick Ship Cabinets', href: '#' },
           { label: 'Handles', href: '#', spaceBefore: true },
           { label: 'Tiles', href: '#' },
