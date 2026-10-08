@@ -130,7 +130,6 @@ const menu: MenuItem[] = [
     group: 'shop',
     groups: [
       {
-        label: 'Bath',
         links: [
           { label: 'Vanity Tops', href: '#', image: nav('vanity-tops', 'Bathroom vanity top') },
           { label: 'Side Splashes', href: '#', image: nav('side-splashes', 'Vanity side splash') },
@@ -158,8 +157,7 @@ const menu: MenuItem[] = [
     group: 'shop',
     groups: [
       {
-        label: 'Appliances',
-        href: '/appliances',
+        // Single-category menu: no heading tiles, the rows stand on their own.
         fullRow: true,
         links: [
           {
@@ -188,7 +186,11 @@ const menu: MenuItem[] = [
             href: '#',
             image: nav('garbage-disposals', 'Garbage disposal'),
           },
-          { label: 'Air Conditioning', href: '#' },
+          {
+            label: 'Air Conditioning',
+            href: '#',
+            image: nav('air-conditioning', 'Air conditioner'),
+          },
           {
             label: 'Accessories',
             href: '#',

@@ -271,7 +271,7 @@ function MobileMenuItem({ item, onNavigate }: { item: Link; onNavigate: () => vo
 }
 
 const navLinkClassName =
-  'hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:bg-[var(--nav-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @[900px]:inline-flex';
+  'hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 data-[state=open]:text-[var(--button-primary-background,#d90716)] @[900px]:inline-flex';
 const navSubLinkClassName =
   'block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 const navGroupClassName =
@@ -783,7 +783,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                           tiles. The blocks fill a two-column grid in config order — Cabinets beside
                           Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own.
                           Tiles scale with the nav width (80 → 100 → 120px) so nothing overflows. */}
-                      <div className="grid w-full grid-cols-[minmax(0,max-content)_minmax(0,max-content)] justify-start gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
+                      <div className="grid w-full grid-cols-[minmax(0,max-content)_minmax(0,max-content)] justify-center gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
                         {item.groups.map((group, groupIndex) => (
                           <div
                             className={clsx(
@@ -793,16 +793,18 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                             key={groupIndex}
                             style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
                           >
-                            {group.label != null && group.label !== '' ? (
+                            {group.label != null && group.label !== '' && (
                               <GroupTile href={group.href} label={group.label} />
-                            ) : (
-                              // Unlabelled group: keep an empty slot so its tiles line up with the
-                              // row above.
-                              <span
-                                aria-hidden
-                                className="w-20 shrink-0 @[1100px]:w-[100px] @[1360px]:w-[120px]"
-                              />
                             )}
+                            {(group.label == null || group.label === '') &&
+                              item.groups?.some((g) => g.label) && (
+                                // Unlabelled group in a menu that has headings: keep an empty slot
+                                // so its tiles line up with the row above.
+                                <span
+                                  aria-hidden
+                                  className="w-20 shrink-0 @[1100px]:w-[100px] @[1360px]:w-[120px]"
+                                />
+                              )}
                             <ul className="flex min-w-0 flex-1 flex-wrap gap-x-3.5 gap-y-4">
                               {group.links.map((link, idx) => (
                                 // Each tile rises in turn when the panel opens (see ek-tile-in in globals.css).
