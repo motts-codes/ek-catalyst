@@ -2,7 +2,8 @@
 // over the subcategory tiles). Keyed by the category's storefront path. Everything is optional: a
 // category with no entry uses its BigCommerce name + description and the default points.
 
-export type CategoryPointIcon = 'truck' | 'returns' | 'stock' | 'clock' | 'pickup' | 'price';
+export type CategoryPointIcon =
+  'truck' | 'returns' | 'stock' | 'clock' | 'pickup' | 'price' | 'gift' | 'tag' | 'phone' | 'zap';
 
 export interface CategoryPoint {
   icon: CategoryPointIcon;

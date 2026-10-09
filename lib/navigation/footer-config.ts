@@ -39,11 +39,11 @@ export const FOOTER_SECTIONS: Section[] = [
   {
     title: 'Resources',
     links: [
-      { label: 'Free design consult', href: '#' },
+      { label: 'Free design consult', href: '/free-design' },
       { label: 'Kitchen estimator', href: '#' },
       { label: 'Blog', href: '/blog' },
-      { label: 'Order samples', href: '#' },
-      { label: 'Financing', href: '#' },
+      { label: 'Order samples', href: '/samples' },
+      { label: 'Financing', href: '/financing' },
       { label: 'Download brochure', href: '#' },
       { label: 'Measuring guide', href: '#' },
       { label: 'What is a 10×10 kitchen', href: '#' },
@@ -54,9 +54,9 @@ export const FOOTER_SECTIONS: Section[] = [
   {
     title: 'Company',
     links: [
-      { label: 'About', href: '#' },
-      { label: 'Why Express Kitchens', href: '#' },
-      { label: 'Showrooms', href: '#' },
+      { label: 'About', href: '/about' },
+      { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
+      { label: 'Showrooms', href: '/showrooms' },
       { label: 'Pro Program', href: '/pro' },
       { label: 'Refer a friend', href: '#' },
       { label: 'Careers', href: '#' },
@@ -74,7 +74,7 @@ export const FOOTER_SECTIONS: Section[] = [
   {
     title: 'Support',
     links: [
-      { label: 'Contact', href: '#' },
+      { label: 'Contact', href: '/contact' },
       { label: 'FAQ', href: '#' },
       { label: 'Shipping & pickup', href: '#' },
       { label: 'Returns', href: '#' },

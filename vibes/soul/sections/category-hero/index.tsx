@@ -3,10 +3,14 @@ import {
   ArrowRight,
   BadgeDollarSign,
   Clock,
+  Gift,
   MapPin,
   PackageCheck,
+  Phone,
+  Tag,
   Truck,
   Undo2,
+  Zap,
 } from 'lucide-react';
 
 import { homeHeadingClassName, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
@@ -94,6 +98,10 @@ const POINT_ICONS = {
   clock: Clock,
   pickup: MapPin,
   price: BadgeDollarSign,
+  gift: Gift,
+  tag: Tag,
+  phone: Phone,
+  zap: Zap,
 };
 
 interface PointsProps {

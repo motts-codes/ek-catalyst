@@ -12,8 +12,8 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 import { type Showroom } from '@/vibes/soul/sections/showroom-band';
 
-export const FREE_DESIGN_HREF = '#';
-export const SAMPLES_HREF = '#';
+export const FREE_DESIGN_HREF = '/free-design';
+export const SAMPLES_HREF = '/samples';
 export const ESTIMATOR_HREF = '#';
 
 export const HERO_SLIDES: HeroSlide[] = [
@@ -255,12 +255,12 @@ export const HOME_REVIEWS: CustomerReview[] = [
 ];
 
 export const SHOWROOMS: Showroom[] = [
-  { name: 'Brookfield', href: '#' },
-  { name: 'New London', href: '#' },
-  { name: 'Newington', href: '#' },
-  { name: 'Orange', href: '#' },
-  { name: 'Stamford', href: '#' },
-  { name: 'Bristol', href: '#', badge: 'factory outlet' },
+  { name: 'Brookfield', href: '/showrooms/brookfield' },
+  { name: 'New London', href: '/showrooms/new-london' },
+  { name: 'Newington', href: '/showrooms/newington' },
+  { name: 'Orange', href: '/showrooms/orange' },
+  { name: 'Stamford', href: '/showrooms/stamford' },
+  { name: 'Bristol', href: '/showrooms/bristol', badge: 'factory outlet' },
 ];
 
 export const STORY = {
@@ -269,8 +269,8 @@ export const STORY = {
   description:
     'We build the cabinets in our own Bristol factory, cut the countertops in Hartford and sell it all in six showrooms — so the price is manufacturer-direct and two weeks means two weeks. 110 years, 100,000+ kitchens.',
   actions: [
-    { label: 'Why Express Kitchens', href: '#' },
-    { label: 'Our story', href: '#' },
+    { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
+    { label: 'Our story', href: '/about' },
   ],
   imageLabel: 'The Bristol factory line',
 };

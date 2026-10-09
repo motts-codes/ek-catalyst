@@ -18,9 +18,9 @@ const PHONE = { label: '860-247-1000', href: 'tel:+18602471000' };
 // HO/Pro switch). `highlight: true` renders a link in brand red.
 const UTILITY_LINKS: Array<{ label: string; href: string; highlight?: boolean; mobile?: boolean }> =
   [
-    { label: 'Free Samples', href: '#' },
-    { label: '0% Financing', href: '#' },
-    { label: 'Showrooms', href: '#', mobile: true },
+    { label: 'Free Samples', href: '/samples' },
+    { label: '0% Financing', href: '/financing' },
+    { label: 'Showrooms', href: '/showrooms', mobile: true },
   ];
 
 // Top color of the fade per mode (the pink tint for Homeowner, the Pro blue tint for Pro). Colors

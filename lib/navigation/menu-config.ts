@@ -275,7 +275,7 @@ const menu: MenuItem[] = [
         links: [
           { label: 'Measuring Guide', href: '#' },
           { label: 'What Is a 10×10 Kitchen', href: '#' },
-          { label: 'Order Samples', href: '#' },
+          { label: 'Order Samples', href: '/samples' },
           { label: 'Kitchen Estimator', href: '#' },
         ],
       },
@@ -291,7 +291,7 @@ const menu: MenuItem[] = [
         label: 'Downloads & Policies',
         links: [
           { label: 'Download Brochure', href: '#' },
-          { label: 'Financing', href: '#' },
+          { label: 'Financing', href: '/financing' },
           { label: 'Warranty', href: '#' },
           { label: 'FAQ', href: '#' },
         ],
@@ -304,8 +304,8 @@ const menu: MenuItem[] = [
 
 /** The persistent header CTA differs per audience (label only; both share the brand-blue style). */
 export const AUDIENCE_CTA: Record<AudienceMode, { label: string; href: string }> = {
-  homeowner: { label: 'Free Design Consult', href: '#' },
-  pro: { label: 'Free Design & Quote', href: '#' },
+  homeowner: { label: 'Free Design Consult', href: '/free-design' },
+  pro: { label: 'Free Design & Quote', href: '/free-design' },
 };
 
 // The menu for one audience: the shared tree with audience-tagged links filtered to `mode`
