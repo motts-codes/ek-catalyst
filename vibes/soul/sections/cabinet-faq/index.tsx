@@ -3,6 +3,7 @@
 import { clsx } from 'clsx';
 import { useState } from 'react';
 
+import { FaqSchema } from '@/vibes/soul/sections/faq/faq-schema';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 
 export interface CabinetFaqItem {
@@ -20,15 +21,9 @@ interface Props {
   className?: string;
 }
 
-/**
- * Collapsible FAQ section for cabinet pages. Used for both the per-collection FAQ (on Avon/Dover
- * collection detail pages) and the program-wide FAQ (on the /cabinets/* listing pages) — the
- * data source differs, the presentation is the same. Program awareness lives in the caller: it
- * passes in the already-resolved list for the current program.
- *
- * Renders nothing when there is no FAQ (no headline, or no non-empty rows), so pages/programs
- * without an authored FAQ don't show an empty section.
- */
+// Collapsible FAQ section for category and cabinet pages (per-collection, per-program and the
+// generic `faq.list`); the data source differs, the presentation is the same. The first row opens
+// by default; FAQPage JSON-LD is emitted from the same items. Renders nothing without rows.
 export function CabinetFaq({ data, className }: Props) {
   const items = (data?.items ?? []).filter((i) => i.q.trim() !== '' || i.a.trim() !== '');
 
@@ -38,13 +33,14 @@ export function CabinetFaq({ data, className }: Props) {
 
   return (
     <SectionLayout className={className} containerSize="2xl">
+      <FaqSchema faq={{ headline: data.headline, items }} />
       <h2 className="mb-6 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
         {data.headline || 'Frequently Asked Questions'}
       </h2>
 
       <dl className="divide-y divide-contrast-100 border-t border-contrast-100">
         {items.map((item, index) => (
-          <FaqRow a={item.a} key={index} q={item.q} />
+          <FaqRow a={item.a} defaultOpen={index === 0} key={index} q={item.q} />
         ))}
       </dl>
     </SectionLayout>
@@ -52,8 +48,8 @@ export function CabinetFaq({ data, className }: Props) {
 }
 
 // One question row. Collapsed by default; the first row opens so the section reads as populated.
-function FaqRow({ q, a }: CabinetFaqItem) {
-  const [open, setOpen] = useState(false);
+function FaqRow({ q, a, defaultOpen = false }: CabinetFaqItem & { defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <div>
