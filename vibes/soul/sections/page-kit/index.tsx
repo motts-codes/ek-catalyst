@@ -456,7 +456,7 @@ export function LinkCards({
               className="group flex h-full flex-col rounded-3xl border border-contrast-100 bg-white p-6 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
               href={card.href}
             >
-              <span className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
+              <span className="font-heading text-lg font-semibold leading-tight transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @xl:text-xl">
                 {card.title}
               </span>
               <span className="mt-2 text-sm leading-relaxed text-contrast-500">

@@ -78,7 +78,7 @@ export function CategoryCarousel({
                   )}
                 </div>
                 <div className="flex flex-1 flex-col p-5 pb-4">
-                  <h3 className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
+                  <h3 className="font-heading text-lg font-semibold leading-tight transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @xl:text-xl">
                     {category.name}
                   </h3>
                   {Boolean(category.subtitle) && (
