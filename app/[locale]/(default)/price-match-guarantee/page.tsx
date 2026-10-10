@@ -138,7 +138,7 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
       />
       <Prose
         actions={[
-          { label: "What's in a 10×10", href: '#' },
+          { label: "What's in a 10×10", href: '/resources/ten-by-ten-kitchen' },
           { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
         ]}
         body={[

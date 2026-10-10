@@ -21,7 +21,7 @@ interface Props {
   title?: string;
   description?: string;
   cards: RowCard[];
-  columns?: 3 | 4 | 5;
+  columns?: 2 | 3 | 4 | 5;
   /** Hide the image area (text-only reasons-to-believe cards get an accent bar instead). */
   hideImages?: boolean;
   /** 'inset' (default) keeps the photo inside the card padding; 'bleed' runs it edge to edge. */
@@ -58,6 +58,7 @@ export function CardsRow({
         className={clsx(
           'grid gap-6',
           {
+            2: '@xl:grid-cols-2',
             3: '@lg:grid-cols-2 @3xl:grid-cols-3',
             4: '@lg:grid-cols-2 @3xl:grid-cols-4',
             5: '@lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-5',

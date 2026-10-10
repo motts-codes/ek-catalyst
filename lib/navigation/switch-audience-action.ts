@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { AudienceMode } from './menu-config';
 import { setAudienceMode } from './audience-mode';
+import { AudienceMode } from './menu-config';
 
 /**
  * Toggle the audience mode: persist the cookie and revalidate so the header (and page) re-render

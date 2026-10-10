@@ -4,6 +4,7 @@ import { AudienceMode } from './menu-config';
 
 // Audience-mode cookie. Homeowner is the default; Pro persists for repeat (contractor) visitors.
 export const AUDIENCE_COOKIE = 'ek_audience';
+
 const AUDIENCE_MAX_AGE = 60 * 60 * 24 * 90; // 90 days
 
 /** Read the current audience mode from the cookie (server-side). Defaults to homeowner. */

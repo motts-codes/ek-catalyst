@@ -25,7 +25,7 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: 'Resources', href: '#' },
+          { label: 'Resources', href: '/resources' },
           { label: 'Financing', href: '/financing' },
         ]}
       />

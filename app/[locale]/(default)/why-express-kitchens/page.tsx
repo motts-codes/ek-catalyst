@@ -124,7 +124,7 @@ export default async function WhyExpressKitchens({
         title="How we compare"
       />
       <ReviewMarquee
-        action={{ label: 'Read all reviews', href: '#' }}
+        action={{ label: 'Read all reviews', href: '/reviews' }}
         reviews={HOME_REVIEWS}
         summary="4.5 · 360+ Google reviews"
         tint

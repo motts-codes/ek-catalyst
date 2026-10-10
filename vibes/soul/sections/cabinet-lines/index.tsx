@@ -121,7 +121,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <span className="px-4 text-center text-2xl font-bold leading-snug tracking-tighter text-foreground opacity-10 @xs:text-4xl">
+            <span className="px-4 text-center text-2xl font-bold leading-snug tracking-tighter text-contrast-400 @xs:text-4xl">
               {line.name}
             </span>
           </div>

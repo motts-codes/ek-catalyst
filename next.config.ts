@@ -86,6 +86,12 @@ export default async (): Promise<NextConfig> => {
           permanent: false,
         },
         {
+          // The wireframe's URL for the 10×10 guide; the route folder cannot start with a digit.
+          source: '/resources/10x10-kitchen',
+          destination: '/resources/ten-by-ten-kitchen',
+          permanent: true,
+        },
+        {
           source: '/cabinets/shop/rta-cabinets',
           destination: '/cabinets/rta-cabinets',
           // 307 (temporary) while the cabinet URL structure is still settling — flip to

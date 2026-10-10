@@ -71,7 +71,7 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: 'Resources', href: '#' },
+          { label: 'Resources', href: '/resources' },
           { label: 'Samples', href: '/samples' },
         ]}
       />

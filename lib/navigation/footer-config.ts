@@ -29,11 +29,11 @@ export const FOOTER_SECTIONS: Section[] = [
   {
     title: 'Inspiration',
     links: [
-      { label: 'Best-selling designs', href: '#' },
-      { label: 'Finished kitchens', href: '#' },
-      { label: 'Projects', href: '#' },
-      { label: 'Reviews', href: '#' },
-      { label: 'Testimonials', href: '#' },
+      { label: 'Best-selling designs', href: '/inspiration/best-sellers' },
+      { label: 'Finished kitchens', href: '/inspiration' },
+      { label: 'Projects', href: '/inspiration/projects' },
+      { label: 'Reviews', href: '/reviews' },
+      { label: 'Testimonials', href: '/testimonials' },
     ],
   },
   {
@@ -45,10 +45,10 @@ export const FOOTER_SECTIONS: Section[] = [
       { label: 'Order samples', href: '/samples' },
       { label: 'Financing', href: '/financing' },
       { label: 'Download brochure', href: '#' },
-      { label: 'Measuring guide', href: '#' },
-      { label: 'What is a 10×10 kitchen', href: '#' },
-      { label: 'How-to videos', href: '#' },
-      { label: 'Cabinet care', href: '#' },
+      { label: 'Measuring guide', href: '/resources/measuring-guide' },
+      { label: 'What is a 10×10 kitchen', href: '/resources/ten-by-ten-kitchen' },
+      { label: 'How-to videos', href: '/resources/how-to-videos' },
+      { label: 'Cabinet care', href: '/resources/cabinet-care' },
     ],
   },
   {

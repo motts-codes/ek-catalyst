@@ -243,22 +243,22 @@ const menu: MenuItem[] = [
   // ── Content cluster (rendered after the "│" divider) ─────────────────────────────────────
   {
     label: 'Inspiration',
-    href: '#',
+    href: '/inspiration',
     group: 'content',
     groups: [
       {
         label: 'See it',
         links: [
-          { label: 'Best-Selling Designs', href: '#' },
-          { label: 'Finished Kitchens', href: '#' },
-          { label: 'Projects', href: '#' },
+          { label: 'Best-Selling Designs', href: '/inspiration/best-sellers' },
+          { label: 'Finished Kitchens', href: '/inspiration' },
+          { label: 'Projects', href: '/inspiration/projects' },
         ],
       },
       {
         label: 'Hear it',
         links: [
-          { label: 'Reviews', href: '#' },
-          { label: 'Video Testimonials', href: '#' },
+          { label: 'Reviews', href: '/reviews' },
+          { label: 'Video Testimonials', href: '/testimonials' },
         ],
       },
     ],
@@ -267,14 +267,14 @@ const menu: MenuItem[] = [
     // Every guide is also linked from the page where the question comes up — this menu is the
     // index, not the only door.
     label: 'Resources',
-    href: '#',
+    href: '/resources',
     group: 'content',
     groups: [
       {
         label: 'Getting Started',
         links: [
-          { label: 'Measuring Guide', href: '#' },
-          { label: 'What Is a 10×10 Kitchen', href: '#' },
+          { label: 'Measuring Guide', href: '/resources/measuring-guide' },
+          { label: 'What Is a 10×10 Kitchen', href: '/resources/ten-by-ten-kitchen' },
           { label: 'Order Samples', href: '/samples' },
           { label: 'Kitchen Estimator', href: '#' },
         ],
@@ -282,8 +282,8 @@ const menu: MenuItem[] = [
       {
         label: 'Guides',
         links: [
-          { label: 'Cabinet Care', href: '#' },
-          { label: 'How-To Videos', href: '#' },
+          { label: 'Cabinet Care', href: '/resources/cabinet-care' },
+          { label: 'How-To Videos', href: '/resources/how-to-videos' },
           { label: 'Blog', href: '/blog' },
         ],
       },
@@ -292,8 +292,8 @@ const menu: MenuItem[] = [
         links: [
           { label: 'Download Brochure', href: '#' },
           { label: 'Financing', href: '/financing' },
-          { label: 'Warranty', href: '#' },
-          { label: 'FAQ', href: '#' },
+          { label: 'Warranty', href: '/warranty' },
+          { label: 'FAQ', href: '/faq' },
         ],
       },
     ],

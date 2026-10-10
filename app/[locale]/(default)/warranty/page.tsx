@@ -24,7 +24,7 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: 'Resources', href: '#' },
+          { label: 'Resources', href: '/resources' },
           { label: 'Warranty', href: '/warranty' },
         ]}
       />
