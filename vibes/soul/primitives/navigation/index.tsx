@@ -271,7 +271,7 @@ function MobileMenuItem({ item, onNavigate }: { item: Link; onNavigate: () => vo
 }
 
 const navLinkClassName =
-  'hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 data-[state=open]:text-[var(--button-primary-background,#d90716)] @[900px]:inline-flex';
+  'hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 data-[state=open]:text-[var(--button-primary-background,#d90716)] @[700px]:inline-flex';
 const navSubLinkClassName =
   'block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 const navGroupClassName =
@@ -296,7 +296,7 @@ function GroupTile({ label, href }: { label: string; href?: string }) {
         {label}
         <ArrowRight
           aria-hidden
-          className="mt-1 h-0 -translate-y-1 opacity-0 transition-[height,opacity,transform] duration-300 group-hover/tile:h-4 group-hover/tile:translate-y-0 group-hover/tile:opacity-100 group-focus-visible/tile:h-4 group-focus-visible/tile:translate-y-0 group-focus-visible/tile:opacity-100"
+          className="mt-1 h-0 -translate-y-3 opacity-0 transition-[height,opacity,transform] duration-300 group-hover/tile:h-4 group-hover/tile:translate-y-0 group-hover/tile:opacity-100 group-focus-visible/tile:h-4 group-focus-visible/tile:translate-y-0 group-focus-visible/tile:opacity-100"
           size={16}
           strokeWidth={2.5}
         />
@@ -728,11 +728,11 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
         <div
           className={clsx(
             'flex items-center justify-start self-stretch',
-            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[900px]:flex-none',
+            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[700px]:flex-none',
           )}
         >
           <Logo
-            className={clsx(streamableMobileLogo != null ? 'hidden @[900px]:flex' : 'flex')}
+            className={clsx(streamableMobileLogo != null ? 'hidden @[700px]:flex' : 'flex')}
             height={logoHeight}
             href={logoHref}
             label={logoLabel}
@@ -741,7 +741,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           />
           {streamableMobileLogo != null && (
             <Logo
-              className="flex @[900px]:hidden"
+              className="flex @[700px]:hidden"
               height={mobileLogoHeight}
               href={logoHref}
               label={logoLabel}
@@ -756,7 +756,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             mega-menu still works across both lists. Items that don't fit the wrapper are hidden
             (last first) and collected under the "…" item at the end of the content cluster. */}
         <div
-          className="hidden min-w-0 flex-1 items-center justify-evenly gap-10 @[900px]:flex"
+          className="hidden min-w-0 flex-1 items-center justify-evenly gap-10 @[700px]:flex"
           ref={linksWrapRef}
         >
           <Stream
@@ -797,13 +797,14 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                       {/* Each group is a block: a grey heading tile, then the links as square photo
                           tiles. The blocks fill a two-column grid in config order — Cabinets beside
                           Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own.
-                          Tiles scale with the nav width (80 → 100 → 120px) so nothing overflows. */}
-                      <div className="grid w-full grid-cols-[minmax(0,max-content)_minmax(0,max-content)] justify-center gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
+                          Tiles scale with the nav width (80 → 100 → 120px) so nothing overflows;
+                          below 900px the grid drops to one column so the row still fits. */}
+                      <div className="grid w-full grid-cols-[minmax(0,max-content)] justify-center gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[900px]:grid-cols-[minmax(0,max-content)_minmax(0,max-content)] @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
                         {item.groups.map((group, groupIndex) => (
                           <div
                             className={clsx(
                               'ek-menu-row flex min-w-0 items-start gap-3.5',
-                              group.fullRow && 'col-span-2',
+                              group.fullRow && '@[900px]:col-span-2',
                             )}
                             key={groupIndex}
                             style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
@@ -860,12 +861,12 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
 
               return (
                 <>
-                  <ul className="hidden gap-1 @[900px]:flex">
+                  <ul className="hidden gap-1 @[700px]:flex">
                     {ordered
                       .filter(({ item }) => item.group !== 'content')
                       .map(({ item, i, position }) => renderItem(item, i, position))}
                   </ul>
-                  <ul className="hidden gap-1 @[900px]:flex">
+                  <ul className="hidden gap-1 @[700px]:flex">
                     {ordered
                       .filter(({ item }) => item.group === 'content')
                       .map(({ item, i, position }) => renderItem(item, i, position))}
@@ -931,12 +932,12 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
         <div
           className={clsx(
             'flex items-center justify-end gap-0.5 transition-colors duration-300',
-            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[900px]:flex-none',
+            linksPosition === 'center' ? 'flex-1' : 'flex-1 @[700px]:flex-none',
           )}
         >
           {/* CTA stays in the row at every desktop width — the links overflow into "…" before it
               ever goes. On phones it moves to the bottom of the mobile menu instead. */}
-          {ctaButton != null && <div className="mr-3 hidden @[900px]:block">{ctaButton}</div>}
+          {ctaButton != null && <div className="mr-3 hidden @[700px]:block">{ctaButton}</div>}
           {audienceToggle != null && (
             <div className="mr-4 hidden @[1400px]:ml-2 @[1400px]:block">{audienceToggle}</div>
           )}
@@ -1023,7 +1024,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
               its left. Opens the full-screen mobile menu (portaled above). */}
           <MobileMenuButton
             aria-label={mobileMenuTriggerLabel}
-            className="ml-3 @[900px]:hidden"
+            className="ml-3 @[700px]:hidden"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             open={isMobileMenuOpen}
           />
