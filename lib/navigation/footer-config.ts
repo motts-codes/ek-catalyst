@@ -58,8 +58,8 @@ export const FOOTER_SECTIONS: Section[] = [
       { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
       { label: 'Showrooms', href: '/showrooms' },
       { label: 'Pro Program', href: '/pro' },
-      { label: 'Refer a friend', href: '#' },
-      { label: 'Careers', href: '#' },
+      { label: 'Refer a friend', href: '/refer-a-friend' },
+      { label: 'Careers', href: '/careers' },
       { label: 'Industries' },
       { label: 'Commercial', href: '#' },
       { label: 'Multifamily', href: '#' },
@@ -75,11 +75,11 @@ export const FOOTER_SECTIONS: Section[] = [
     title: 'Support',
     links: [
       { label: 'Contact', href: '/contact' },
-      { label: 'FAQ', href: '#' },
-      { label: 'Shipping & pickup', href: '#' },
-      { label: 'Returns', href: '#' },
-      { label: 'Warranty', href: '#' },
-      { label: 'Price match', href: '#' },
+      { label: 'FAQ', href: '/faq' },
+      { label: 'Shipping & pickup', href: '/shipping-policy' },
+      { label: 'Returns', href: '/returns-policy' },
+      { label: 'Warranty', href: '/warranty' },
+      { label: 'Price match', href: '/price-match-guarantee' },
       {
         label: 'Find an installer ↗',
         href: 'https://www.contractors.com/g/contractor-search/?category=Additions+and+Remodels&subcategory=Remodel%20-%20Multiple%20Rooms',
@@ -98,9 +98,9 @@ export const FOOTER_CONTACT = {
 };
 
 export const FOOTER_LEGAL_LINKS = [
-  { label: 'Privacy', href: '#' },
-  { label: 'Terms', href: '#' },
-  { label: 'Accessibility', href: '#' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
+  { label: 'Accessibility', href: '/accessibility' },
 ];
 
 export const FOOTER_NEWSLETTER = {

@@ -248,7 +248,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       />
       <Prose
         actions={[
-          { label: 'Careers', href: '#' },
+          { label: 'Careers', href: '/careers' },
           { label: 'Press', href: '#' },
         ]}
         body={[

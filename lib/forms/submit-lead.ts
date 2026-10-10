@@ -70,3 +70,31 @@ export async function submitDesignLead<F extends Field>(
     formData,
   );
 }
+
+// Support-type forms (returns, price match, general support, careers, referrals). A "use server"
+// module may only export plain async functions, so each is written out rather than generated.
+type LeadArgs<F extends Field> = [
+  DynamicFormActionArgs<F>,
+  { lastResult: SubmissionResult | null },
+  FormData,
+];
+
+export async function submitReturnLead<F extends Field>(...a: LeadArgs<F>) {
+  return submitLead({ form: 'return-authorization', confirmPath: '/contact/confirmed' }, ...a);
+}
+
+export async function submitPriceMatchLead<F extends Field>(...a: LeadArgs<F>) {
+  return submitLead({ form: 'price-match', confirmPath: '/contact/confirmed' }, ...a);
+}
+
+export async function submitSupportLead<F extends Field>(...a: LeadArgs<F>) {
+  return submitLead({ form: 'support', confirmPath: '/contact/confirmed' }, ...a);
+}
+
+export async function submitCareersLead<F extends Field>(...a: LeadArgs<F>) {
+  return submitLead({ form: 'careers', confirmPath: '/contact/confirmed' }, ...a);
+}
+
+export async function submitReferralLead<F extends Field>(...a: LeadArgs<F>) {
+  return submitLead({ form: 'refer-a-friend', confirmPath: '/refer-a-friend/confirmed' }, ...a);
+}

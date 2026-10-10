@@ -57,7 +57,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
       <PageHero
         actions={[
           { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
-          { label: 'Read the FAQ', href: '#' },
+          { label: 'Read the FAQ', href: '/faq' },
         ]}
         description="Whether it's a question about an order, a product you're weighing up or a project you're planning, send it here and the right person will reply within one business day. If it can't wait, call or text us any time, day or night. And if you're wondering about delivery, returns or how samples work, the FAQ may already have your answer."
         imageLabel="The Bristol factory and outlet, wide"
