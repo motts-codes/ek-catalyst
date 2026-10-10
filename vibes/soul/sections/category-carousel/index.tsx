@@ -87,7 +87,7 @@ export function CategoryCarousel({
                   <span className="mt-auto inline-flex items-center gap-1.5 pt-2.5 text-sm font-semibold text-[var(--button-primary-background,#d90716)]">
                     Shop now
                     <ArrowRight
-                      className="transition-transform duration-300 group-hover:translate-x-1"
+                      className="transition-transform duration-300 group-hover:-translate-x-1"
                       size={15}
                       strokeWidth={2.5}
                     />

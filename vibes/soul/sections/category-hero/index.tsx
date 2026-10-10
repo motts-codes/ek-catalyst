@@ -181,7 +181,7 @@ export function SubcategoryTiles({ title = 'Shop by type', items, className }: T
               <span className="flex items-center justify-between gap-2 px-4 py-3.5 text-sm font-semibold">
                 {item.name}
                 <ArrowRight
-                  className="shrink-0 text-[var(--button-primary-background,#d90716)] transition-transform duration-300 group-hover:translate-x-1"
+                  className="shrink-0 text-[var(--button-primary-background,#d90716)] transition-transform duration-300 group-hover:-translate-x-1"
                   size={15}
                   strokeWidth={2.5}
                 />

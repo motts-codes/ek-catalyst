@@ -465,7 +465,7 @@ export function LinkCards({
               <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-[var(--button-primary-background,#d90716)]">
                 {card.linkLabel ?? card.title}
                 <ArrowRight
-                  className="transition-transform group-hover:translate-x-1"
+                  className="transition-transform group-hover:-translate-x-1"
                   size={15}
                   strokeWidth={2.5}
                 />
