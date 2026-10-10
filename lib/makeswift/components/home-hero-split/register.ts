@@ -81,6 +81,5 @@ runtime.registerComponent(MSHomeHeroSplit, {
       },
     }),
     slideInterval: Number({ label: 'Photo rotation', defaultValue: 15, suffix: 's' }),
-    offerInterval: Number({ label: 'Offer rotation', defaultValue: 8, suffix: 's' }),
   },
 });

@@ -5,6 +5,7 @@ import { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import Fade from 'embla-carousel-fade';
 import useEmblaCarousel from 'embla-carousel-react';
+import { Pause, Play } from 'lucide-react';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 
 import { Image } from '~/components/image';
@@ -49,16 +50,16 @@ const CTA_COLOR: Record<HeroCtaColor, string> = {
 
 interface Props {
   slides: HeroSlide[];
+  /** The offer card is stationary: the first offer is shown, so it is always on screen. */
   offers: HeroOffer[];
   /** Photo rotation, ms (wireframe: 15 s). */
   slideInterval?: number;
-  /** Offer rotation, ms (wireframe: 8 s). */
-  offerInterval?: number;
   className?: string;
 }
 
-// Minimal embla wrapper shared by both columns: loop + autoplay + fade, exposing the selected
-// index so each column can draw its own dots.
+// Embla wrapper for the photo column: loop + autoplay + fade. Autoplay runs by default, pauses
+// while the pointer or keyboard focus is on the banner, and the visitor can stop/start it with the
+// button (WCAG 2.2.2). `playing` follows the plugin; `held` is the visitor's own choice to stop.
 function useRotator(interval: number, active: boolean) {
   const [ref, api] = useEmblaCarousel({ loop: true, duration: 20 }, [
     Autoplay({ delay: interval, active }),
@@ -66,6 +67,10 @@ function useRotator(interval: number, active: boolean) {
   ]);
   const [selected, setSelected] = useState(0);
   const [count, setCount] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [held, setHeld] = useState(false);
+  // Bumped whenever playback (re)starts so the progress line's animation restarts in step.
+  const [playCount, setPlayCount] = useState(0);
 
   const onSelect = useCallback((embla: EmblaCarouselType) => {
     setSelected(embla.selectedSnap());
@@ -76,11 +81,21 @@ function useRotator(interval: number, active: boolean) {
     if (!api) return;
 
     onSelect(api);
-    api.on('select', onSelect).on('reinit', onSelect);
+
+    const onPlay = () => {
+      setPlaying(true);
+      setPlayCount((n) => n + 1);
+    };
+    const onStop = () => setPlaying(false);
+
+    api
+      .on('select', onSelect)
+      .on('reinit', onSelect)
+      .on('autoplay:play', onPlay)
+      .on('autoplay:stop', onStop);
 
     // Embla 9 no longer starts autoplay on init — start it explicitly, and again after a reinit
-    // (e.g. a resize). Only when there is something to rotate.
-    // Respect "reduce motion": the slides still work by the dots, they just don't auto-rotate.
+    // (e.g. a resize). Only when there is something to rotate, and never under "reduce motion".
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const startAutoplay = () => {
       if (!reduceMotion && api.snapList().length > 1) api.plugins().autoplay.play();
@@ -90,78 +105,148 @@ function useRotator(interval: number, active: boolean) {
     api.on('reinit', startAutoplay);
 
     return () => {
-      api.off('select', onSelect).off('reinit', onSelect).off('reinit', startAutoplay);
+      api
+        .off('select', onSelect)
+        .off('reinit', onSelect)
+        .off('autoplay:play', onPlay)
+        .off('autoplay:stop', onStop)
+        .off('reinit', startAutoplay);
     };
   }, [api, onSelect]);
 
-  const goTo = useCallback((index: number) => api?.goTo(index), [api]);
+  const goTo = useCallback(
+    (index: number) => {
+      api?.goTo(index);
+      // Picking a slide restarts the timer so the new slide gets its full stay.
+      if (api && !held) api.plugins().autoplay.play();
+    },
+    [api, held],
+  );
 
-  return { ref, selected, count, goTo };
+  // The visitor's stop/start button. Acts on their choice (`held`), not on the plugin's momentary
+  // state — the pointer is over the banner when they click, so autoplay is already suspended.
+  const toggle = useCallback(() => {
+    if (!api) return;
+
+    if (held) {
+      api.plugins().autoplay.play();
+      setHeld(false);
+    } else {
+      api.plugins().autoplay.stop();
+      setHeld(true);
+    }
+  }, [api, held]);
+
+  // Pointer / focus on the banner pauses it; leaving resumes unless the visitor stopped it.
+  const suspend = useCallback(() => api?.plugins().autoplay.stop(), [api]);
+  const resume = useCallback(() => {
+    if (api && !held) api.plugins().autoplay.play();
+  }, [api, held]);
+
+  return {
+    ref,
+    selected,
+    count,
+    goTo,
+    playing,
+    held,
+    playCount,
+    toggle,
+    suspend,
+    resume,
+    interval,
+  };
 }
 
-function Dots({
+// Slide controls, top-right of the photo: one progress line per slide (the active one fills over
+// the slide's stay, so you can see when it will change) and the stop/start button.
+function SlideControls({
   count,
   selected,
+  playing,
+  held,
+  playCount,
+  interval,
   onSelect,
-  dark = false,
-  label,
+  onToggle,
 }: {
   count: number;
   selected: number;
+  /** Autoplay timer currently running (false while hovered / focused / stopped). */
+  playing: boolean;
+  /** The visitor pressed stop; drives the button's label and icon. */
+  held: boolean;
+  playCount: number;
+  interval: number;
   onSelect: (index: number) => void;
-  dark?: boolean;
-  label: string;
+  onToggle: () => void;
 }) {
   if (count < 2) return null;
 
-  const activeClass = dark ? 'bg-foreground' : 'bg-white';
-  const inactiveClass = dark
-    ? 'bg-foreground/25 hover:bg-foreground/50'
-    : 'bg-white/50 hover:bg-white/80';
-
   return (
-    // Dots: bottom-right on phones, top-right from @xl (keeps the bottom row free for the button).
-    <div className="absolute inset-x-0 bottom-1 z-[1] flex justify-end pr-2 @xl:bottom-auto @xl:top-2 @xl:pr-3">
-      {Array.from({ length: count }).map((_, index) => (
-        // 24px hit area (WCAG target size) around an 8px dot.
-        <button
-          aria-current={index === selected ? 'true' : undefined}
-          aria-label={`${label} ${index + 1} of ${count}`}
-          className="flex h-6 w-6 items-center justify-center rounded-full focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white"
-          key={index}
-          onClick={() => onSelect(index)}
-          type="button"
-        >
-          <span
-            className={clsx(
-              'h-2 w-2 rounded-full transition-colors',
-              index === selected ? activeClass : inactiveClass,
-            )}
-          />
-        </button>
-      ))}
+    <div className="absolute right-2 top-2 z-[1] flex items-center gap-1 @xl:right-3 @xl:top-3">
+      <div aria-label="Slides" className="flex items-center" role="group">
+        {Array.from({ length: count }).map((_, index) => (
+          // 24px-tall hit area (target size) around a 2px line.
+          <button
+            aria-current={index === selected ? 'true' : undefined}
+            aria-label={`Slide ${index + 1} of ${count}`}
+            className="flex h-6 items-center px-1 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white"
+            key={index}
+            onClick={() => onSelect(index)}
+            type="button"
+          >
+            <span className="relative block h-0.5 w-7 overflow-hidden rounded-full bg-white/40 @xl:w-9">
+              {index === selected && (
+                <span
+                  className="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-white motion-reduce:animate-none"
+                  key={`fill-${playCount}`}
+                  style={{
+                    animation: `ek-hero-progress ${interval}ms linear forwards`,
+                    animationPlayState: playing ? 'running' : 'paused',
+                    transform: playing ? undefined : 'scaleX(1)',
+                  }}
+                />
+              )}
+            </span>
+          </button>
+        ))}
+      </div>
+      <button
+        aria-label={held ? 'Play slideshow' : 'Pause slideshow'}
+        aria-pressed={held}
+        className="ml-1 flex h-7 w-7 items-center justify-center rounded-lg border border-white/50 bg-black/20 text-white backdrop-blur-sm transition-colors hover:bg-black/40 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white"
+        onClick={onToggle}
+        type="button"
+      >
+        {held ? (
+          <Play aria-hidden size={14} strokeWidth={2} />
+        ) : (
+          <Pause aria-hidden size={14} strokeWidth={2} />
+        )}
+      </button>
     </div>
   );
 }
 
-// Home hero, 65 / 35: a rotating photo slideshow with a two-line headline bottom-left, beside a
-// rotating stack of offer cards. Stacks on narrow screens.
-export function HomeHeroSplit({
-  slides,
-  offers,
-  slideInterval = 15000,
-  offerInterval = 8000,
-  className,
-}: Props) {
+// Home hero, 65 / 35: a rotating photo slideshow with a two-line headline bottom-left, beside one
+// stationary offer card. One moving thing on the screen; the offer is always readable.
+export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className }: Props) {
   const photos = useRotator(slideInterval, slides.length > 1);
-  const promos = useRotator(offerInterval, offers.length > 1);
+  const offer = offers[0];
 
   return (
     <section className={clsx('@container', className)}>
       <div className="mx-auto max-w-screen-2xl px-6 pb-2 pt-3 @xl:px-9 @4xl:px-14">
         <div className="grid gap-3.5 @3xl:grid-cols-[65fr_35fr]">
           {/* Left: photo slideshow */}
-          <div className="relative h-[325px] overflow-hidden rounded-3xl bg-contrast-100 @xl:h-[320px] @3xl:h-[350px]">
+          <div
+            className="relative h-[325px] overflow-hidden rounded-3xl bg-contrast-100 @xl:h-[320px] @3xl:h-[350px]"
+            onBlur={photos.resume}
+            onFocus={photos.suspend}
+            onMouseEnter={photos.suspend}
+            onMouseLeave={photos.resume}
+          >
             <div className="h-full overflow-hidden" ref={photos.ref}>
               <div className="flex h-full">
                 {slides.map((slide, index) => {
@@ -229,56 +314,47 @@ export function HomeHeroSplit({
                 })}
               </div>
             </div>
-            <Dots
+            <SlideControls
               count={photos.count}
-              label="Slide"
+              held={photos.held}
+              interval={photos.interval}
               onSelect={photos.goTo}
+              onToggle={photos.toggle}
+              playCount={photos.playCount}
+              playing={photos.playing}
               selected={photos.selected}
             />
           </div>
 
-          {/* Right: offer cards */}
+          {/* Right: the offer card, stationary */}
           {/* Auto height on phones (the offer copy + button set it); fixed heights from @xl. */}
-          <div className="relative h-auto overflow-hidden rounded-3xl border border-contrast-100 bg-[#f9fafd] @xl:h-[320px] @3xl:h-[350px]">
-            <div className="h-full overflow-hidden" ref={promos.ref}>
-              <div className="flex h-full">
-                {offers.map((offer, index) => (
-                  <div className="relative h-full min-w-0 shrink-0 grow-0 basis-full" key={index}>
-                    {/* Bottom padding matches the photo banner's (@xl:pb-8) so both buttons sit
-                        on the same line across the two banners. */}
-                    <div className="flex h-full flex-col gap-2 p-6 pb-8 @xl:p-8 @xl:pb-8">
-                      <p className="self-start rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-contrast-500 ring-1 ring-contrast-100">
-                        {offer.kicker}
-                      </p>
-                      <p className="font-heading text-xl font-bold leading-tight @xl:text-2xl">
-                        {offer.headline}
-                      </p>
-                      {Boolean(offer.description) && (
-                        <p className="text-sm text-contrast-500">{offer.description}</p>
-                      )}
-                      {offer.showCta !== false && (
-                        <div className="mt-auto pt-3">
-                          <Link
-                            className={clsx(CTA_BASE, CTA_COLOR[offer.ctaColor ?? 'red'])}
-                            href={offer.href}
-                          >
-                            {offer.ctaLabel ?? 'See the offer'}
-                          </Link>
-                        </div>
-                      )}
-                    </div>
+          {offer && (
+            <div className="relative h-auto overflow-hidden rounded-3xl border border-contrast-100 bg-[#f9fafd] @xl:h-[320px] @3xl:h-[350px]">
+              {/* Bottom padding matches the photo banner's (@xl:pb-8) so both buttons sit on the
+                  same line across the two banners. */}
+              <div className="flex h-full flex-col gap-2 p-6 pb-8 @xl:p-8 @xl:pb-8">
+                <p className="self-start rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-contrast-500 ring-1 ring-contrast-100">
+                  {offer.kicker}
+                </p>
+                <p className="font-heading text-xl font-bold leading-tight @xl:text-2xl">
+                  {offer.headline}
+                </p>
+                {Boolean(offer.description) && (
+                  <p className="text-sm text-contrast-500">{offer.description}</p>
+                )}
+                {offer.showCta !== false && (
+                  <div className="mt-auto pt-3">
+                    <Link
+                      className={clsx(CTA_BASE, CTA_COLOR[offer.ctaColor ?? 'red'])}
+                      href={offer.href}
+                    >
+                      {offer.ctaLabel ?? 'See the offer'}
+                    </Link>
                   </div>
-                ))}
+                )}
               </div>
             </div>
-            <Dots
-              count={promos.count}
-              dark
-              label="Offer"
-              onSelect={promos.goTo}
-              selected={promos.selected}
-            />
-          </div>
+          )}
         </div>
       </div>
     </section>

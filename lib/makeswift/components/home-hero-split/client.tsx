@@ -30,24 +30,16 @@ interface Props {
   slides: Slide[];
   offers: Offer[];
   slideInterval: number;
-  offerInterval: number;
 }
 
 // Empty lists (not edited yet, or freshly dropped) show the page's defaults — or the homeowner
 // wireframe content when there is no page context — so the builder never renders an empty hero.
-export function MSHomeHeroSplit({
-  className,
-  slides,
-  offers,
-  slideInterval,
-  offerInterval,
-}: Props) {
+export function MSHomeHeroSplit({ className, slides, offers, slideInterval }: Props) {
   const defaults = useSectionDefaults();
 
   return (
     <HomeHeroSplit
       className={className}
-      offerInterval={offerInterval * 1000}
       offers={
         offers.length > 0
           ? offers.map(({ kicker, headline, description, link, ctaLabel, showCta, ctaColor }) => ({
