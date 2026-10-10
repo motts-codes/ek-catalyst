@@ -1,7 +1,6 @@
-import { Image } from '~/components/image';
-
-import { FeaturesGrid as FeaturesGridData } from '~/data-transformers/features-grid-transformer';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
+import { Image } from '~/components/image';
+import { FeaturesGrid as FeaturesGridData } from '~/data-transformers/features-grid-transformer';
 
 interface Props {
   featuresGrid: FeaturesGridData | null;

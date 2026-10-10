@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
 
+import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Image } from '~/components/image';
 import { Faq as FaqData } from '~/data-transformers/faq-transformer';
-import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 
 import { FaqSchema } from './faq-schema';
 

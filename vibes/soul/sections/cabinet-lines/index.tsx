@@ -56,7 +56,7 @@ export function CabinetLines({
 }: Props) {
   return (
     <div className={clsx('bg-[#f9fafd] @container', className)}>
-      <div className="mx-auto max-w-screen-2xl px-4 pb-12 pt-6 @xl:px-6 @4xl:px-8">
+      <div className="mx-auto max-w-screen-2xl px-6 pb-12 pt-6 @xl:px-9 @4xl:px-14">
         {(Boolean(title) || Boolean(description)) && (
           <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
             <div className="max-w-3xl">

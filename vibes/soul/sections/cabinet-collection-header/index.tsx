@@ -263,7 +263,7 @@ export function CabinetCollectionHeader({
 
   return (
     <div className={clsx('bg-white @container', className)}>
-      <div className="mx-auto max-w-screen-2xl px-4 pb-10 pt-4 @xl:px-6 @4xl:px-8 @4xl:pb-14">
+      <div className="mx-auto max-w-screen-2xl px-6 pb-10 pt-4 @xl:px-9 @4xl:px-14 @4xl:pb-14">
         <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-2 @3xl:items-start @4xl:gap-12">
           {/* Left: gallery */}
           {images.length > 0 ? (

@@ -90,7 +90,7 @@ export default async function CabinetEducationPage(props: Props) {
       />
 
       {/* Product teaser + Shop CTA into the shopping journey. */}
-      <section className="mx-auto max-w-screen-2xl px-4 py-10 @xl:px-6 @4xl:px-8">
+      <section className="mx-auto max-w-screen-2xl px-6 py-10 @xl:px-9 @4xl:px-14">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <h2 className="font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight @xl:text-3xl">
             From the {ref.name} collection
@@ -107,7 +107,7 @@ export default async function CabinetEducationPage(props: Props) {
 
 function PlaceholderSection({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <section className="mx-auto max-w-screen-2xl px-4 py-8 @xl:px-6 @4xl:px-8">
+    <section className="mx-auto max-w-screen-2xl px-6 py-8 @xl:px-9 @4xl:px-14">
       <h2 className="font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
         {title}
       </h2>

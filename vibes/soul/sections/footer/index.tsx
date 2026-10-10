@@ -120,7 +120,7 @@ export const Footer = ({
       {/* Newsletter band */}
       {newsletter && (
         <div className="border-b border-[var(--footer-border-top,hsl(var(--contrast-100)))] bg-[#f9fafd]">
-          <div className="mx-auto flex max-w-screen-2xl flex-col gap-5 px-4 py-8 @xl:px-6 @3xl:flex-row @3xl:items-center @3xl:justify-between @4xl:px-8">
+          <div className="mx-auto flex max-w-screen-2xl flex-col gap-5 px-6 py-8 @xl:px-9 @3xl:flex-row @3xl:items-center @3xl:justify-between @4xl:px-14">
             <div className="max-w-xl">
               <h3 className="font-heading text-xl font-medium leading-tight @xl:text-2xl">
                 {newsletter.title}
@@ -139,7 +139,7 @@ export const Footer = ({
         </div>
       )}
 
-      <div className="mx-auto max-w-screen-2xl px-4 py-10 @xl:px-6 @4xl:px-8 @4xl:py-12">
+      <div className="mx-auto max-w-screen-2xl px-6 py-10 @xl:px-9 @4xl:px-14 @4xl:py-12">
         {/* Brand row: logo + blurb on the left, social icons on the right */}
         <div className="flex flex-col gap-6 @3xl:flex-row @3xl:items-start @3xl:justify-between">
           <div className="max-w-xl">
@@ -274,7 +274,7 @@ export const Footer = ({
 
       {/* Legal strip */}
       <div className="border-t border-[var(--footer-border-top,hsl(var(--contrast-100)))]">
-        <div className="mx-auto flex max-w-screen-2xl flex-col-reverse gap-4 px-4 py-4 @xl:px-6 @3xl:flex-row @3xl:items-center @3xl:justify-between @4xl:px-8">
+        <div className="mx-auto flex max-w-screen-2xl flex-col-reverse gap-4 px-6 py-4 @xl:px-9 @3xl:flex-row @3xl:items-center @3xl:justify-between @4xl:px-14">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--footer-copyright,hsl(var(--contrast-500)))]">
             <Stream fallback={<CopyrightSkeleton />} value={streamableCopyright}>
               {(copyright) => (copyright != null ? <span>{copyright}</span> : null)}

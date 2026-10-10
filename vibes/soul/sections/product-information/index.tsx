@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
-import { ProductInfoFeatures } from '~/data-transformers/product-info-features-transformer';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
+import { ProductInfoFeatures } from '~/data-transformers/product-info-features-transformer';
 
 interface SpecRow {
   name: string;

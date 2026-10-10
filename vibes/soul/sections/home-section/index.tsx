@@ -55,7 +55,7 @@ export function HomeSection({
 
   return (
     <section className={clsx('@container', tint && 'bg-[#f9fafd]', className)} id={id}>
-      <div className={clsx('mx-auto max-w-screen-2xl px-4 @xl:px-6 @4xl:px-8', verticalPadding)}>
+      <div className={clsx('mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14', verticalPadding)}>
         {hasHeading && (
           <div className="mb-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 @4xl:mb-6">
             <div className="max-w-3xl">

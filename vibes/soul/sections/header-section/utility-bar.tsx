@@ -44,7 +44,7 @@ export function UtilityBar({
       className="text-[var(--utility-bar-text,#d1d1d1)]"
       style={{ background: `linear-gradient(to bottom, ${FADE_FROM[mode]}, transparent)` }}
     >
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-7 py-1.5 text-xs @xl:px-9 @4xl:px-14">
+      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-1.5 text-xs @xl:px-9 @4xl:px-14">
         {/* Left: call number */}
         <Link
           className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-medium transition-colors hover:text-[var(--utility-bar-text-hover,#fff)]"

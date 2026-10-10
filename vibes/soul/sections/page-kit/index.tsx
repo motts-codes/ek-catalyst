@@ -32,7 +32,7 @@ export function PageBreadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) 
 
   return (
     <div className="bg-white @container">
-      <div className="mx-auto max-w-screen-2xl px-4 pt-[15px] @xl:px-6 @4xl:px-8">
+      <div className="mx-auto max-w-screen-2xl px-6 pt-[15px] @xl:px-9 @4xl:px-14">
         <Breadcrumbs
           breadcrumbs={trail}
           className="[&_a]:!text-contrast-400 [&_ol]:!text-[11px] [&_span]:!text-contrast-400 [&_svg]:!text-contrast-400"

@@ -114,10 +114,7 @@ export type Field =
 
 export interface SchemaRawShape {
   [key: string]:
-    | z.ZodString
-    | z.ZodOptional<z.ZodString>
-    | z.ZodNumber
-    | z.ZodOptional<z.ZodNumber>;
+    z.ZodString | z.ZodOptional<z.ZodString> | z.ZodNumber | z.ZodOptional<z.ZodNumber>;
   id: z.ZodString;
   quantity: z.ZodNumber;
 }

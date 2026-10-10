@@ -17,7 +17,7 @@ import { homeHeadingClassName, MediaPlaceholder } from '@/vibes/soul/sections/ho
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
-const containerClassName = 'mx-auto max-w-screen-2xl px-4 @xl:px-6 @4xl:px-8';
+const containerClassName = 'mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14';
 
 interface HeroProps {
   title: string;

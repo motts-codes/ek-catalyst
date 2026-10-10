@@ -67,10 +67,7 @@ function FaqRow({ q, a }: CabinetFaqItem) {
           <span className="font-[family-name:var(--font-family-heading)] text-base font-semibold leading-snug @xl:text-lg">
             {q}
           </span>
-          <span
-            aria-hidden
-            className="relative size-5 shrink-0 text-contrast-400"
-          >
+          <span aria-hidden className="relative size-5 shrink-0 text-contrast-400">
             {/* +/- toggle */}
             <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current" />
             <span

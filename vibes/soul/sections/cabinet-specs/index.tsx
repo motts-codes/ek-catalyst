@@ -28,7 +28,7 @@ export function CabinetSpecs({ specifications, disclaimer, className }: Props) {
           </h2>
           <div
             className="prose prose-sm max-w-none text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))] @xl:prose-base [&_a]:text-[#2162a1] [&_li]:my-1 [&_table]:w-full [&_td]:border [&_td]:border-contrast-100 [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-contrast-100 [&_th]:px-3 [&_th]:py-1.5 [&_ul]:list-disc [&_ul]:pl-5"
-            // eslint-disable-next-line react/no-danger
+
             dangerouslySetInnerHTML={{ __html: specifications }}
           />
         </>
@@ -37,7 +37,7 @@ export function CabinetSpecs({ specifications, disclaimer, className }: Props) {
       {hasDisclaimer && (
         <div
           className="mt-8 border-t border-contrast-100 pt-4 text-xs leading-relaxed text-contrast-400 [&_a]:underline"
-          // eslint-disable-next-line react/no-danger
+
           dangerouslySetInnerHTML={{ __html: disclaimer }}
         />
       )}

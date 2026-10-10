@@ -99,7 +99,7 @@ export function CompareSection({
 
         return (
           <div className={clsx('overflow-hidden @container', className)}>
-            <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-20">
+            <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 @xl:px-9 @xl:py-14 @4xl:px-14 @4xl:py-20">
               <Carousel>
                 <div className="mb-8 flex w-full items-end justify-between gap-10 @xl:mb-10">
                   <h1 className="font-[family-name:var(--compare-section-title-font-family,var(--font-family-heading))] text-2xl leading-none text-[var(--compare-section-title,hsl(var(--foreground)))] @xl:text-3xl @4xl:text-4xl">
@@ -156,7 +156,7 @@ export function CompareSectionSkeleton({
 }: Pick<CompareSectionProps, 'className' | 'title' | 'placeholderCount'>) {
   return (
     <Skeleton.Root className={clsx('group/compare-section', className)} hideOverflow>
-      <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-20">
+      <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 @xl:px-9 @xl:py-14 @4xl:px-14 @4xl:py-20">
         <div className="relative @container">
           <div className="mb-8 flex w-full items-end justify-between gap-10 @xl:mb-10">
             <h1 className="font-[family-name:var(--compare-section-title-font-family,var(--font-family-heading))] text-2xl leading-none text-[var(--compare-section-title,hsl(var(--foreground)))] @xl:text-3xl @4xl:text-4xl">
@@ -206,7 +206,7 @@ export function CompareSectionEmptyState({
 >) {
   return (
     <div className={clsx('overflow-hidden @container', className)}>
-      <div className="mx-auto w-full max-w-screen-2xl px-4 py-10 @xl:px-6 @xl:py-14 @4xl:px-8 @4xl:py-20">
+      <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 @xl:px-9 @xl:py-14 @4xl:px-14 @4xl:py-20">
         <div className="@container">
           <div className="relative w-full">
             <div className="-ml-4 flex [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)] @2xl:-ml-5">

@@ -616,7 +616,9 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
         className={clsx(
           // Always the "floating card" look (rounded, ring, shadow) — the same treatment at rest as
           // when the header is pinned on scroll; the shadow just deepens a little while floating.
-          'flex items-center justify-between gap-1 rounded-2xl border-b border-contrast-100 bg-[var(--nav-background,hsl(var(--background)))] py-[11px] pl-3 pr-2 ring-1 transition-shadow @4xl:px-2 @4xl:pl-6 @4xl:pr-2.5',
+          // Inner inset is tuned so the logo lands on the page's content gutter (24 / 36 / 56px):
+          // card edge (16 / 24 / 32) + inset (8 / 12 / 24).
+          'flex items-center justify-between gap-1 rounded-2xl border-b border-contrast-100 bg-[var(--nav-background,hsl(var(--background)))] py-[11px] pl-2 pr-2 ring-1 transition-shadow @xl:pl-3 @4xl:px-2 @4xl:pl-6 @4xl:pr-2.5',
           // At rest: a soft, low-opacity shadow (shadow-lg geometry at half its opacity) and a
           // lighter ring. Floating (pinned on scroll): the full shadow-xl + 10% ring.
           isFloating

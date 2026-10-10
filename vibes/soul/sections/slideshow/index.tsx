@@ -206,7 +206,7 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
                   key={idx}
                 >
                   <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[var(--slideshow-mask,hsl(var(--foreground)/80%))] to-transparent">
-                    <div className="mx-auto w-full max-w-screen-2xl text-balance px-4 pb-16 pt-12 @xl:px-6 @xl:pb-20 @xl:pt-16 @4xl:px-8 @4xl:pt-20">
+                    <div className="mx-auto w-full max-w-screen-2xl text-balance px-6 pb-16 pt-12 @xl:px-9 @xl:pb-20 @xl:pt-16 @4xl:px-14 @4xl:pt-20">
                       {/* Reduced heading size (was text-4xl → 6xl, which read as too large).
                           Per-slide `redTitle` swaps the default white for brand red. */}
                       <h1
@@ -277,7 +277,7 @@ export function Slideshow({ slides, playOnInit = true, interval = 5000, classNam
       </div>
 
       {/* Controls */}
-      <div className="absolute bottom-4 left-1/2 flex w-full max-w-screen-2xl -translate-x-1/2 flex-wrap items-center px-4 @xl:bottom-6 @xl:px-6 @4xl:px-8">
+      <div className="absolute bottom-4 left-1/2 flex w-full max-w-screen-2xl -translate-x-1/2 flex-wrap items-center px-6 @xl:bottom-6 @xl:px-9 @4xl:px-14">
         {/* Progress Buttons */}
         {scrollSnaps.map((_: number, index: number) => {
           return (

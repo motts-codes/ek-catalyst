@@ -1,7 +1,6 @@
 import { clsx } from 'clsx';
 import { ReactNode } from 'react';
 
-import { Link } from '~/components/link';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Accordion, AccordionItem } from '@/vibes/soul/primitives/accordion';
 import {
@@ -17,6 +16,7 @@ import {
   ProductGalleryLoadMoreAction,
 } from '@/vibes/soul/sections/product-detail/product-gallery';
 import { ReviewForm, SubmitReviewAction } from '@/vibes/soul/sections/reviews/review-form';
+import { Link } from '~/components/link';
 
 import {
   BackorderDisplayData,
@@ -103,7 +103,6 @@ export interface ProductDetailProps<F extends Field> {
   deliveryMessage?: string;
 }
 
-// eslint-disable-next-line valid-jsdoc
 /**
  * This component supports various CSS variables for theming. Here's a comprehensive list, along
  * with their default values:
@@ -169,7 +168,7 @@ export function ProductDetail<F extends Field>({
 }: ProductDetailProps<F>) {
   return (
     <section className="@container">
-      <div className="group/product-detail mx-auto w-full max-w-screen-2xl px-4 pb-24 pt-[15px] @xl:px-6 @xl:pb-14 @4xl:px-8 @4xl:pb-20">
+      <div className="group/product-detail mx-auto w-full max-w-screen-2xl px-6 pb-24 pt-[15px] @xl:px-9 @xl:pb-14 @4xl:px-14 @4xl:pb-20">
         {breadcrumbs && (
           // Smaller gap below the breadcrumb on mobile (name sits right below it there); larger on
           // desktop where the gap separates the breadcrumb from the gallery/details row.
@@ -187,7 +186,7 @@ export function ProductDetail<F extends Field>({
                 {/* Mobile gallery: shown FIRST (image above all details). Forced to a shorter 4:3
                     frame so it isn't full-width-tall on phones. Hidden at @2xl where the gallery
                     lives in its own grid column instead. */}
-                <div className="group/product-gallery -mt-1 mb-2 [&_.aspect-square]:!aspect-[4/3] @2xl:hidden">
+                <div className="group/product-gallery -mt-1 mb-2 @2xl:hidden [&_.aspect-square]:!aspect-[4/3]">
                   <Stream fallback={<ProductGallerySkeleton />} value={product.images}>
                     {(imagesData) => (
                       <ProductGallery
@@ -246,8 +245,7 @@ export function ProductDetail<F extends Field>({
                           ctaDisabled={ctaDisabled ?? undefined}
                           ctaLabel={ctaLabel ?? undefined}
                           decrementLabel={decrementLabel}
-                          stockStatus={stockStatus ?? undefined}
-                          emptySelectPlaceholder={emptySelectPlaceholder}
+                          deliveryMessage={deliveryMessage}
                           descriptionSlot={
                             <Stream
                               fallback={<ProductDescriptionSkeleton />}
@@ -263,10 +261,9 @@ export function ProductDetail<F extends Field>({
                               }
                             </Stream>
                           }
+                          emptySelectPlaceholder={emptySelectPlaceholder}
                           fields={fields}
                           fulfillmentMessage={fulfillmentMessage}
-                          deliveryMessage={deliveryMessage}
-                          optionDependencyMap={optionDependencyMap}
                           header={
                             <>
                               <div className="flex items-start justify-between gap-3">
@@ -361,10 +358,7 @@ export function ProductDetail<F extends Field>({
                                       />
                                     )}
                                   </Stream>
-                                  <span
-                                    aria-hidden="true"
-                                    className="h-4 w-px bg-contrast-200"
-                                  />
+                                  <span aria-hidden="true" className="h-4 w-px bg-contrast-200" />
                                   <ReviewForm
                                     action={reviewFormAction}
                                     formEmailLabel={reviewFormEmailLabel}
@@ -434,10 +428,12 @@ export function ProductDetail<F extends Field>({
                           incrementLabel={incrementLabel}
                           maxQuantity={maxQuantity ?? undefined}
                           minQuantity={minQuantity ?? undefined}
+                          optionDependencyMap={optionDependencyMap}
                           prefetch={prefetch}
                           productId={product.id}
                           quantityLabel={quantityLabel}
                           stockDisplayData={stockDisplayData ?? undefined}
+                          stockStatus={stockStatus ?? undefined}
                         />
                       )}
                     </Stream>
