@@ -112,7 +112,96 @@ const APPLIANCE_TILES: SubcategoryOverride[] = [
   },
 ];
 
+const STOCKED_POINTS: CategoryPoint[] = [
+  { icon: 'stock', label: 'Stocked in Bristol' },
+  { icon: 'truck', label: 'Ships in 2 days' },
+  { icon: 'pickup', label: 'Free pickup, any order' },
+];
+
+// Bath, Sinks & faucets and Cabinet hardware are code pages (app/…/bath etc.) until their
+// BigCommerce categories exist at the same URLs; the proxy then routes to the category template,
+// which reads the same entries below, so the handover changes nothing the visitor sees.
 const CATEGORY_CONTENT: Record<string, CategoryContent> = {
+  '/bath': {
+    lede: "Everything that goes on and around a vanity: tops in granite and quartz, matching side splashes, undermount and vessel sinks, faucets in the finishes people actually ask for, and the drains and accessories that finish the job. It's all stocked in Bristol and sized to go with our vanities, so it fits the first time.",
+    imageLabel: 'A bathroom vanity with a quartz top, undermount sink and brushed-nickel faucet',
+    points: STOCKED_POINTS,
+    fine: 'Lead times to be confirmed.',
+    subcategories: [
+      {
+        name: 'Vanity Tops',
+        fallbackHref: search('vanity top'),
+        image: navImage('vanity-tops', 'Bathroom vanity top'),
+      },
+      {
+        name: 'Side Splashes',
+        fallbackHref: search('side splash'),
+        image: navImage('side-splashes', 'Vanity side splash'),
+      },
+      {
+        name: 'Bathroom Sinks',
+        fallbackHref: search('bathroom sink'),
+        image: navImage('bathroom-sinks', 'Bathroom sink'),
+      },
+      {
+        name: 'Bathroom Faucets',
+        fallbackHref: search('bathroom faucet'),
+        image: navImage('bathroom-faucets', 'Bathroom faucet'),
+      },
+      {
+        name: 'Drains & Accessories',
+        fallbackHref: search('drain'),
+        image: navImage('drains-accessories', 'Drain and accessories'),
+      },
+    ],
+  },
+  '/sinks-faucets': {
+    heading: 'Kitchen sinks & faucets',
+    lede: "A sink that fits the base cabinet, a faucet that reaches the bowl, and the strainer, grid and soap dispenser that finish it off. Every sink here is sized to our sink bases, so if you're buying cabinets from us you won't be guessing at the cut-out. It all ships from Bristol in two days, or you can collect it free with your order.",
+    imageLabel: 'A stainless double-bowl sink with a pull-down faucet, in a white shaker kitchen',
+    points: STOCKED_POINTS,
+    fine: 'Lead times to be confirmed.',
+    subcategories: [
+      {
+        name: 'Kitchen Sinks',
+        fallbackHref: search('kitchen sink'),
+        image: navImage('kitchen-sinks', 'Kitchen sink'),
+      },
+      {
+        name: 'Kitchen Faucets',
+        fallbackHref: search('kitchen faucet'),
+        image: navImage('kitchen-faucets', 'Kitchen faucet'),
+      },
+      {
+        name: 'Accessories',
+        fallbackHref: search('sink accessories'),
+        image: navImage('sink-faucet-accessories', 'Sink and faucet accessories'),
+      },
+    ],
+  },
+  '/cabinet-hardware': {
+    lede: 'The small things that change how a kitchen feels: handles and knobs in the finishes that go with our doors, backsplash tiles to carry the color up the wall, and the organizers that make a drawer earn its keep. Everything is stocked in Bristol and ships next business day, or you can collect it free. Handles are included with our Premium cabinets; here is where you choose them.',
+    imageLabel: 'Brass handles on a navy shaker door, with a marble backsplash behind',
+    points: [
+      { icon: 'stock', label: 'Stocked in Bristol' },
+      { icon: 'zap', label: 'Ships next business day' },
+      { icon: 'pickup', label: 'Free pickup, any order' },
+    ],
+    fine: 'Lead times to be confirmed.',
+    subcategories: [
+      {
+        name: 'Handles & Knobs',
+        fallbackHref: search('cabinet handle'),
+        image: navImage('handles', 'Cabinet door with a handle'),
+      },
+      { name: 'Tiles', fallbackHref: search('tile'), image: navImage('tiles', 'Backsplash tiles') },
+      {
+        name: 'Accessories',
+        fallbackHref: search('drawer organizer'),
+        image: navImage('accessories', 'Drawer organizer'),
+      },
+    ],
+  },
   '/appliances': {
     subcategories: APPLIANCE_TILES,
     lede: 'Fridges, ranges, hoods, dishwashers and laundry. In stock in Bristol and priced below retail, because you collect.',
