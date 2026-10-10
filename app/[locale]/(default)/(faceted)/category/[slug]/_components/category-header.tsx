@@ -48,12 +48,29 @@ export function getCategoryHeaderDefaults({
     points: content.points ?? DEFAULT_CATEGORY_CONTENT.points,
     fine: 'fine' in content ? content.fine : DEFAULT_CATEGORY_CONTENT.fine,
     subTitle: content.subTitle ?? DEFAULT_CATEGORY_CONTENT.subTitle,
-    subcategories: subcategories.map((child) => ({
-      name: child.name,
-      href: child.path,
-      image: toImage(child.image, child.name),
-    })),
+    subcategories: content.subcategories
+      ? content.subcategories.map((tile) => ({
+          name: tile.name,
+          href: findChild(subcategories, tile.name)?.path ?? tile.fallbackHref,
+          image: tile.image,
+        }))
+      : subcategories.map((child) => ({
+          name: child.name,
+          href: child.path,
+          image: toImage(child.image, child.name),
+        })),
   };
+}
+
+const slug = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/&amp;/g, '&')
+    .replace(/[^a-z0-9]+/g, '');
+
+// The BigCommerce child category whose name matches an overridden tile ("Fridges & Freezers").
+function findChild(children: NonNullable<Props['subcategories']>, name: string) {
+  return children.find((child) => slug(child.name) === slug(name));
 }
 
 // Breadcrumb above the header. Small and grey like the PDP's, but at a grey/size that passes AA.

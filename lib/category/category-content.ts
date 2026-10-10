@@ -10,7 +10,20 @@ export interface CategoryPoint {
   label: string;
 }
 
+export interface SubcategoryOverride {
+  name: string;
+  /** Used when BigCommerce has no matching child category yet (e.g. a search). */
+  fallbackHref: string;
+  image: { src: string; alt: string };
+}
+
 export interface CategoryContent {
+  /**
+   * The "shop by" tiles, in order, with their photos. Each one links to the BigCommerce child
+   * category of the same name when it exists, otherwise to `fallbackHref`. Without this the tiles
+   * are the BigCommerce children with their own images.
+   */
+  subcategories?: SubcategoryOverride[];
   /** Overrides the BigCommerce category name in the hero. */
   heading?: string;
   /** Overrides the BigCommerce category description in the hero. */
@@ -43,8 +56,65 @@ export const DEFAULT_CATEGORY_CONTENT: Required<Pick<CategoryContent, 'subTitle'
   fine: '*Free shipping on orders over $2,500. Conditions apply.',
 };
 
+const navImage = (file: string, alt: string) => ({ src: `/images/nav/${file}.webp`, alt });
+const search = (term: string) => `/search?term=${encodeURIComponent(term)}`;
+
+const APPLIANCE_TILES: SubcategoryOverride[] = [
+  {
+    name: 'Fridges & Freezers',
+    fallbackHref: search('refrigerator'),
+    image: navImage('fridges-freezers', 'Refrigerator'),
+  },
+  {
+    name: 'Ranges & Cooktops',
+    fallbackHref: search('range'),
+    image: navImage('ranges-cooktops', 'Range'),
+  },
+  {
+    name: 'Dishwashers',
+    fallbackHref: search('dishwasher'),
+    image: navImage('dishwashers', 'Dishwasher'),
+  },
+  {
+    name: 'Microwaves',
+    fallbackHref: search('microwave'),
+    image: navImage('microwaves', 'Microwave'),
+  },
+  {
+    name: 'Wall Ovens',
+    fallbackHref: search('wall oven'),
+    image: navImage('wall-ovens', 'Wall oven'),
+  },
+  {
+    name: 'Range Hoods',
+    fallbackHref: search('range hood'),
+    image: navImage('range-hoods', 'Range hood'),
+  },
+  {
+    name: 'Washers & Dryers',
+    fallbackHref: search('washer'),
+    image: navImage('washers-dryers', 'Washer and dryer'),
+  },
+  {
+    name: 'Garbage Disposals',
+    fallbackHref: search('garbage disposal'),
+    image: navImage('garbage-disposals', 'Garbage disposal'),
+  },
+  {
+    name: 'Air Conditioning',
+    fallbackHref: search('air conditioner'),
+    image: navImage('air-conditioning', 'Air conditioner'),
+  },
+  {
+    name: 'Accessories',
+    fallbackHref: search('appliance accessories'),
+    image: navImage('appliance-accessories', 'Appliance accessories'),
+  },
+];
+
 const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   '/appliances': {
+    subcategories: APPLIANCE_TILES,
     lede: 'Fridges, ranges, hoods, dishwashers and laundry. In stock in Bristol and priced below retail, because you collect.',
     imageLabel: 'A range and hood in a finished kitchen',
     subTitle: 'Shop by appliance',
