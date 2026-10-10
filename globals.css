@@ -22,12 +22,31 @@
 }
 
 @layer base {
+  body {
+    font-family: var(--font-family-body);
+  }
+
   input::placeholder,
   textarea::placeholder,
   input:placeholder-shown,
   textarea:placeholder-shown {
     color: hsl(var(--contrast-500));
   }
+}
+
+/* Brand type: every headline is Gilroy Bold, everything else is Open Sans. `!important` on
+   purpose: Tailwind 3 utilities (font-medium / font-semibold) are plain classes that outrank an
+   element selector, and Gilroy must never be asked for a weight it doesn't ship (there is no 600
+   file; the browser would fake it). */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: var(--font-family-heading) !important;
+  font-weight: 700 !important;
 }
 
 :root {
