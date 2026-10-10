@@ -277,15 +277,22 @@ const navSubLinkClassName =
 const navGroupClassName =
   'block rounded-lg bg-[var(--nav-group-background,transparent)] px-3 py-2 font-[family-name:var(--nav-group-font-family,var(--font-family-body))] font-medium text-[var(--nav-group-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-group-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-group-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 
-// The group's name as a grey square at the start of its row (links to the group page when it
-// has one), the same size as the photo tiles beside it.
+// The group's name as a grey square at the start of its row, the same size as the photo tiles
+// beside it. When the group has a landing page the tile is a link and says so on hover (dark red
+// with white text); a plain heading has no hover at all.
 function GroupTile({ label, href }: { label: string; href?: string }) {
   const className =
-    'flex aspect-square w-20 items-center justify-center rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] px-2 text-center text-[13px] font-semibold leading-snug @[1100px]:w-[100px] @[1100px]:text-sm @[1360px]:w-[120px] @[1360px]:px-3 @[1360px]:text-[15px] text-[var(--nav-group-text,hsl(var(--foreground)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]';
+    'flex aspect-square w-20 items-center justify-center rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] px-2 text-center text-[13px] font-semibold leading-snug @[1100px]:w-[100px] @[1100px]:text-sm @[1360px]:w-[120px] @[1360px]:px-3 @[1360px]:text-[15px] text-[var(--nav-group-text,hsl(var(--foreground)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-colors duration-200 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]';
 
-  if (href != null && href !== '') {
+  if (href != null && href !== '' && href !== '#') {
     return (
-      <Link className={className} href={href}>
+      <Link
+        className={clsx(
+          className,
+          'hover:bg-[#96050f] hover:text-white focus-visible:bg-[#96050f] focus-visible:text-white',
+        )}
+        href={href}
+      >
         {label}
       </Link>
     );
