@@ -87,13 +87,17 @@ const menu: MenuItem[] = [
         links: [
           {
             label: 'Handles',
-            href: '/search?term=cabinet+handle',
+            href: '/cabinet-hardware/handles-knobs',
             image: nav('handles', 'Cabinet door with a handle'),
           },
-          { label: 'Tiles', href: '/search?term=tile', image: nav('tiles', 'Backsplash tiles') },
+          {
+            label: 'Tiles',
+            href: '/cabinet-hardware/tiles',
+            image: nav('tiles', 'Backsplash tiles'),
+          },
           {
             label: 'Accessories',
-            href: '/search?term=drawer+organizer',
+            href: '/cabinet-hardware/accessories',
             image: nav('accessories', 'Drawer organizer'),
           },
         ],
@@ -104,12 +108,24 @@ const menu: MenuItem[] = [
         label: 'Countertops',
         href: '/countertops',
         links: [
-          { label: 'Granite', href: '#', image: nav('granite', 'Granite countertop') },
-          { label: 'Laminate', href: '#', image: nav('laminate', 'Laminate countertop') },
-          { label: 'Quartz', href: '#', image: nav('quartz', 'Quartz countertop') },
+          {
+            label: 'Granite',
+            href: '/countertops/granite',
+            image: nav('granite', 'Granite countertop'),
+          },
+          {
+            label: 'Laminate',
+            href: '/countertops/laminate',
+            image: nav('laminate', 'Laminate countertop'),
+          },
+          {
+            label: 'Quartz',
+            href: '/countertops/quartz',
+            image: nav('quartz', 'Quartz countertop'),
+          },
           {
             label: 'Prefabricated',
-            href: '#',
+            href: '/countertops/prefabricated',
             image: nav('prefabricated', 'Prefabricated countertop'),
           },
         ],
@@ -132,17 +148,17 @@ const menu: MenuItem[] = [
         links: [
           {
             label: 'Kitchen Sinks',
-            href: '/search?term=kitchen+sink',
+            href: '/sinks-faucets/kitchen-sinks',
             image: nav('kitchen-sinks', 'Kitchen sink'),
           },
           {
             label: 'Kitchen Faucets',
-            href: '/search?term=kitchen+faucet',
+            href: '/sinks-faucets/kitchen-faucets',
             image: nav('kitchen-faucets', 'Kitchen faucet'),
           },
           {
             label: 'Accessories',
-            href: '/search?term=sink+accessories',
+            href: '/sinks-faucets/accessories',
             image: nav('sink-faucet-accessories', 'Sink and faucet accessories'),
           },
         ],
@@ -161,27 +177,27 @@ const menu: MenuItem[] = [
         links: [
           {
             label: 'Vanity Tops',
-            href: '/search?term=vanity+top',
+            href: '/bath/vanity-tops',
             image: nav('vanity-tops', 'Bathroom vanity top'),
           },
           {
             label: 'Side Splashes',
-            href: '/search?term=side+splash',
+            href: '/bath/side-splashes',
             image: nav('side-splashes', 'Vanity side splash'),
           },
           {
             label: 'Bathroom Sinks',
-            href: '/search?term=bathroom+sink',
+            href: '/bath/bathroom-sinks',
             image: nav('bathroom-sinks', 'Bathroom sink'),
           },
           {
             label: 'Bathroom Faucets',
-            href: '/search?term=bathroom+faucet',
+            href: '/bath/bathroom-faucets',
             image: nav('bathroom-faucets', 'Bathroom faucet'),
           },
           {
             label: 'Drains & Accessories',
-            href: '/search?term=drain',
+            href: '/bath/drains-accessories',
             image: nav('drains-accessories', 'Drain and accessories'),
           },
         ],
@@ -204,38 +220,58 @@ const menu: MenuItem[] = [
         links: [
           {
             label: 'Fridges & Freezers',
-            href: '#',
+            href: '/appliances/fridges-freezers',
             image: nav('fridges-freezers', 'Refrigerator'),
           },
-          { label: 'Ranges & Cooktops', href: '#', image: nav('ranges-cooktops', 'Range') },
-          { label: 'Dishwashers', href: '#', image: nav('dishwashers', 'Dishwasher') },
-          { label: 'Microwaves', href: '#', image: nav('microwaves', 'Microwave') },
-          { label: 'Wall Ovens', href: '#', image: nav('wall-ovens', 'Wall oven') },
+          {
+            label: 'Ranges & Cooktops',
+            href: '/appliances/ranges-cooktops',
+            image: nav('ranges-cooktops', 'Range'),
+          },
+          {
+            label: 'Dishwashers',
+            href: '/appliances/dishwashers',
+            image: nav('dishwashers', 'Dishwasher'),
+          },
+          {
+            label: 'Microwaves',
+            href: '/appliances/microwaves',
+            image: nav('microwaves', 'Microwave'),
+          },
+          {
+            label: 'Wall Ovens',
+            href: '/appliances/wall-ovens',
+            image: nav('wall-ovens', 'Wall oven'),
+          },
         ],
       },
       {
         // No heading on the second row — the slot stays empty so the tiles line up.
         fullRow: true,
         links: [
-          { label: 'Range Hoods', href: '#', image: nav('range-hoods', 'Range hood') },
+          {
+            label: 'Range Hoods',
+            href: '/appliances/range-hoods',
+            image: nav('range-hoods', 'Range hood'),
+          },
           {
             label: 'Washers & Dryers',
-            href: '#',
+            href: '/appliances/washers-dryers',
             image: nav('washers-dryers', 'Washer and dryer'),
           },
           {
             label: 'Garbage Disposals',
-            href: '#',
+            href: '/appliances/garbage-disposals',
             image: nav('garbage-disposals', 'Garbage disposal'),
           },
           {
             label: 'Air Conditioning',
-            href: '#',
+            href: '/appliances/air-conditioning',
             image: nav('air-conditioning', 'Air conditioner'),
           },
           {
             label: 'Accessories',
-            href: '#',
+            href: '/appliances/accessories',
             image: nav('appliance-accessories', 'Appliance accessories'),
           },
         ],
@@ -255,12 +291,12 @@ const menu: MenuItem[] = [
         links: [
           {
             label: 'Replacement',
-            href: '#',
+            href: '/windows/replacement',
             image: nav('windows-replacement', 'Replacement window'),
           },
           {
             label: 'New Construction',
-            href: '#',
+            href: '/windows/new-construction',
             image: nav('windows-new-construction', 'New-construction window in a framed wall'),
           },
           {

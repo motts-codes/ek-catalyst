@@ -209,6 +209,6 @@ export const ACCESSORIES_BAND = {
   imageLabel: 'A pull, a knob, a backsplash tile',
   actions: [
     { label: 'Cabinet accessories', href: '/cabinet-hardware' },
-    { label: 'Handles', href: '/search?term=cabinet+handle' },
+    { label: 'Handles', href: '/cabinet-hardware/handles-knobs' },
   ],
 };

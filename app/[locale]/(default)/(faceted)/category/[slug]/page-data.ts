@@ -24,6 +24,14 @@ const CategoryPageQuery = graphql(
             metaDescription
             metaKeywords
           }
+          faq: metafields(namespace: "faq") {
+            edges {
+              node {
+                key
+                value
+              }
+            }
+          }
         }
         categoryTree(rootEntityId: $entityId) {
           entityId

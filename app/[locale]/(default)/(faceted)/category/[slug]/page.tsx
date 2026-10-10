@@ -27,6 +27,7 @@ import {
   parseCabinetProgram,
   selectedCabinetProgram,
 } from '~/lib/cabinets/cabinet-collection';
+import { pickFaq } from '~/lib/category/category-faq';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { EditableSection } from '~/lib/makeswift/components/editable-section';
@@ -338,6 +339,10 @@ export default async function Category(props: Props) {
   const cabinetFaq =
     isCabinet && cabinetProgram ? await getCabinetCollectionFaq(categoryId, cabinetProgram) : null;
 
+  // Every other category: the generic FAQ authored as the `faq.list` metafield (seeded by
+  // scripts/seed-categories-and-faqs.py). Same accordion as the cabinet pages.
+  const faq = pickFaq(cabinetFaq, category.faq.edges);
+
   // Assembly-instruction videos + specifications are PER-PROGRAM — scoped to the current program
   // (defaults to Assembled via cabinetProgram, matching the header/pricing).
   const cabinetAssembly =
@@ -421,7 +426,7 @@ export default async function Category(props: Props) {
         snapshotId={`category-${categoryId}-bottom-content`}
       />
       {cabinetAssembly.length > 0 && <CabinetAssembly videos={cabinetAssembly} />}
-      {cabinetFaq && <CabinetFaq data={cabinetFaq} />}
+      {faq && <CabinetFaq data={faq} />}
       {Boolean(cabinetContent?.disclaimer) && (
         <CabinetSpecs disclaimer={cabinetContent?.disclaimer} />
       )}

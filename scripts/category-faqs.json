@@ -1,0 +1,206 @@
+{
+ "/bath/": {
+  "headline": "Bath — frequently asked questions",
+  "items": [
+   {
+    "q": "How much does a bathroom renovation cost?",
+    "a": "Bathroom renovation costs depend on the size of the space, the fixtures selected, and whether any plumbing work is required. Visit your nearest Express Kitchens showroom for a personalised consultation."
+   },
+   {
+    "q": "What is the most popular bathroom vanity size?",
+    "a": "The most popular sizes are 36 inches for single-sink vanities and 60 inches for double-sink vanities. For small bathrooms under 50 sq ft, a 24–30 inch vanity is recommended."
+   },
+   {
+    "q": "Do bathroom vanities come with mirrors?",
+    "a": "Most bathroom vanities do not include a mirror. Mirrors and medicine cabinets are usually purchased separately."
+   },
+   {
+    "q": "Can I visit a showroom to see vanities and get design help?",
+    "a": "Yes. Our showrooms carry a wide selection of bathroom vanities, tops, and fixtures on display. Our team can help with in-showroom design consultations — advising on vanity sizing, fixture placement, and finish combinations."
+   },
+   {
+    "q": "What vanity top materials does Express Kitchens carry? Can I get a custom size?",
+    "a": "We offer vanity tops in cultured marble (affordable, seamless) and quartz (natural stone-like aesthetic). Both are non-porous and easy to maintain. For a 36-inch vanity, the top should be 37–38 inches wide and 22 inches deep. Custom sizes are available — 7–14 business days fabrication."
+   },
+   {
+    "q": "What types of bathroom sinks does Express Kitchens carry?",
+    "a": "We carry vessel (bowl) sinks, undermount sinks, and integrated vanity tops with built-in bowls, in ceramic, stone, and composite options. Visit our basins and bowls page to browse the full range."
+   }
+  ]
+ },
+ "/bath/bathroom-faucets/": {
+  "headline": "Bathroom faucets — frequently asked questions",
+  "items": [
+   {
+    "q": "How do I know what size bathroom faucet I need?",
+    "a": "Bathroom faucets come in single-hole, 3-hole 4-inch centerset, and 3-hole 8-inch widespread configurations. Match the faucet configuration to your sink's pre-drilled holes."
+   },
+   {
+    "q": "How much does bathroom faucet installation cost?",
+    "a": "Installation costs vary depending on your location and the complexity of the job. We recommend speaking with a licensed plumber for an accurate quote."
+   }
+  ]
+ },
+ "/sinks-faucets/": {
+  "headline": "Sinks & faucets — frequently asked questions",
+  "items": [
+   {
+    "q": "What is the most durable kitchen sink? What's the difference between top-mount and undermount?",
+    "a": "Stainless steel (16-gauge) is the most durable — lasts 20+ years. Fireclay and granite composite also offer excellent durability. Top-mount (drop-in) sinks rest on the countertop rim — easiest to install. Undermount sinks mount below the countertop for a seamless look and require a solid surface countertop."
+   },
+   {
+    "q": "What size kitchen sink do I need?",
+    "a": "For a 30-inch base cabinet, a 27–29 inch single-bowl sink is standard. A 28–29 inch double-bowl also fits a 30-inch base. Standard sink depth is 8–10 inches."
+   },
+   {
+    "q": "Do you carry farmhouse (apron-front) kitchen sinks?",
+    "a": "Yes, Express Kitchens carries farmhouse and apron-front sinks in fireclay, stainless steel, and granite composite. These sinks require cabinet modification for installation. Visit our sink page or showroom to view available styles."
+   },
+   {
+    "q": "Can I install a kitchen sink myself?",
+    "a": "Yes, drop-in sinks are DIY-friendly and require basic plumbing skills. Undermount sinks require adhesive and support during installation. Farmhouse sinks need cabinet modification and are best installed by a professional."
+   },
+   {
+    "q": "What styles of kitchen faucets are available?",
+    "a": "Express Kitchens carries single-handle, double-handle, pull-down, and pull-out kitchen faucets in brushed nickel, matte black, chrome, and stainless finishes. Pull-down single-handle faucets are currently the most popular choice."
+   },
+   {
+    "q": "What is the difference between a pull-down and pull-out kitchen faucet?",
+    "a": "Pull-down faucets have a high-arc spout with a head that extends downward into the sink — ideal for filling large pots. Pull-out faucets have a lower profile with a head that extends outward, better suited for smaller sinks or cabinets with low clearance."
+   },
+   {
+    "q": "How much does a kitchen faucet replacement cost?",
+    "a": "Kitchen faucet prices vary depending on style, finish, and features. Visit expresskitchens.com or stop by your nearest showroom to explore our range and speak with our team about the best option for your project."
+   },
+   {
+    "q": "What is the most popular faucet finish, and which is easiest to maintain?",
+    "a": "Brushed nickel is the overall volume leader — it resists fingerprints and water spots and only needs a damp microfibre cloth. Matte black is the fastest-growing finish for contemporary styles. Chrome remains popular for traditional designs. Avoid abrasive cleaners on all finishes."
+   }
+  ]
+ },
+ "/sinks-faucets/kitchen-sinks/": {
+  "headline": "Kitchen sinks — frequently asked questions",
+  "items": [
+   {
+    "q": "What is the most durable kitchen sink? What's the difference between top-mount and undermount?",
+    "a": "Stainless steel (16-gauge) is the most durable — lasts 20+ years. Fireclay and granite composite also offer excellent durability. Top-mount (drop-in) sinks rest on the countertop rim — easiest to install. Undermount sinks mount below the countertop for a seamless look and require a solid surface countertop."
+   },
+   {
+    "q": "What size kitchen sink do I need?",
+    "a": "For a 30-inch base cabinet, a 27–29 inch single-bowl sink is standard. A 28–29 inch double-bowl also fits a 30-inch base. Standard sink depth is 8–10 inches."
+   },
+   {
+    "q": "Do you carry farmhouse (apron-front) kitchen sinks?",
+    "a": "Yes, Express Kitchens carries farmhouse and apron-front sinks in fireclay, stainless steel, and granite composite. These sinks require cabinet modification for installation. Visit our sink page or showroom to view available styles."
+   },
+   {
+    "q": "Can I install a kitchen sink myself?",
+    "a": "Yes, drop-in sinks are DIY-friendly and require basic plumbing skills. Undermount sinks require adhesive and support during installation. Farmhouse sinks need cabinet modification and are best installed by a professional."
+   }
+  ]
+ },
+ "/sinks-faucets/kitchen-faucets/": {
+  "headline": "Kitchen faucets — frequently asked questions",
+  "items": [
+   {
+    "q": "What styles of kitchen faucets are available?",
+    "a": "Express Kitchens carries single-handle, double-handle, pull-down, and pull-out kitchen faucets in brushed nickel, matte black, chrome, and stainless finishes. Pull-down single-handle faucets are currently the most popular choice."
+   },
+   {
+    "q": "What is the difference between a pull-down and pull-out kitchen faucet?",
+    "a": "Pull-down faucets have a high-arc spout with a head that extends downward into the sink — ideal for filling large pots. Pull-out faucets have a lower profile with a head that extends outward, better suited for smaller sinks or cabinets with low clearance."
+   },
+   {
+    "q": "How much does a kitchen faucet replacement cost?",
+    "a": "Kitchen faucet prices vary depending on style, finish, and features. Visit expresskitchens.com or stop by your nearest showroom to explore our range and speak with our team about the best option for your project."
+   },
+   {
+    "q": "What is the most popular faucet finish, and which is easiest to maintain?",
+    "a": "Brushed nickel is the overall volume leader — it resists fingerprints and water spots and only needs a damp microfibre cloth. Matte black is the fastest-growing finish for contemporary styles. Chrome remains popular for traditional designs. Avoid abrasive cleaners on all finishes."
+   },
+   {
+    "q": "How do I know what size bathroom faucet I need?",
+    "a": "Bathroom faucets come in single-hole, 3-hole 4-inch centerset, and 3-hole 8-inch widespread configurations. Match the faucet configuration to your sink's pre-drilled holes."
+   },
+   {
+    "q": "How much does bathroom faucet installation cost?",
+    "a": "Installation costs vary depending on your location and the complexity of the job. We recommend speaking with a licensed plumber for an accurate quote."
+   }
+  ]
+ },
+ "/countertops/": {
+  "headline": "Countertops — frequently asked questions",
+  "items": [
+   {
+    "q": "Which kitchen countertops are budget-friendly?",
+    "a": "Laminate is commonly considered a budget-conscious countertop option and is available in many colors and patterns. Prefabricated products may also be worth comparing when their standard dimensions match your needs. Review current product prices and specifications to determine which option offers the best value for your project."
+   },
+   {
+    "q": "What should I check before ordering a countertop?",
+    "a": "Confirm the material, dimensions, thickness, edge configuration, finish, included components and care instructions. Check that the product works with your intended layout, and review its delivery, return and warranty information before placing the order."
+   },
+   {
+    "q": "Will my countertop look exactly like the online image?",
+    "a": "Not always. Screens and lighting can affect how colors appear, and natural granite can vary in pattern and tone. Product photographs should be used as a guide. Review all available images and product descriptions, and ask about samples or additional information when appearance is especially important."
+   },
+   {
+    "q": "How should I care for a kitchen countertop?",
+    "a": "Care depends on the material and product. Follow the supplied manufacturer instructions, clean spills promptly, use cutting boards and protect the surface from hot cookware with trivets. Avoid using harsh cleaners unless they are specifically approved for the selected countertop."
+   },
+   {
+    "q": "What return and warranty terms apply to countertops?",
+    "a": "Return eligibility and warranty coverage depend on the product and circumstances. Express Kitchens' published return policy requires prior authorization and excludes special-order items. Review the Shipping & Returns Policy, individual product details and the Warranty before ordering."
+   }
+  ]
+ },
+ "/appliances/": {
+  "headline": "Appliances — frequently asked questions",
+  "items": [
+   {
+    "q": "What are integrated kitchen appliances, and what are their advantages?",
+    "a": "Integrated appliances are built-in units concealed behind matching cabinet panels — including refrigerators, dishwashers, microwaves, and ovens. They create a uniform aesthetic, increase perceived kitchen space, and can improve resale value."
+   },
+   {
+    "q": "Should appliances be chosen before or after kitchen cabinets?",
+    "a": "Choose appliances before finalizing cabinet plans. Appliance dimensions dictate cabinet openings, heights, and ventilation requirements."
+   },
+   {
+    "q": "What kitchen appliances does Express Kitchens carry?",
+    "a": "We carry GE appliances including: Refrigerators, Gas & Electric Ranges, Wall Ovens, Cooktops (Gas/Electric/Induction), Range Hoods, Microwaves, Dishwashers, Trash Compactors, Washing Machines, Dryers, Beverage Centers, Wine Coolers, Ice Makers, Air Conditioners, Water Heaters, and Disposers."
+   },
+   {
+    "q": "How do you measure for a built-in oven?",
+    "a": "Measure the cabinet opening width (typically 24 or 30 inches), height (28–30 inches), and depth (minimum 20–24 inches). Subtract 1/4 inch from each dimension for clearance. Confirm the electrical connection type before purchasing."
+   }
+  ]
+ },
+ "/windows/": {
+  "headline": "Windows — frequently asked questions",
+  "items": [
+   {
+    "q": "What are the benefits of sliding kitchen windows? Are they energy efficient?",
+    "a": "Sliding kitchen windows offer easy ventilation control, no cranks or hinges to maintain, and a clean modern profile — ideal above countertops. Modern sliding windows with double or triple-pane glass and low-E coating are highly energy efficient (U-values 0.25–0.35). Look for ENERGY STAR certification."
+   },
+   {
+    "q": "How do I measure a kitchen window for replacement?",
+    "a": "Measure width at three points and height on both sides. Use the smallest measurement for each dimension. Subtract 1/4 inch for frame clearance. Always measure the rough opening, not the existing frame."
+   },
+   {
+    "q": "How much does kitchen window replacement cost?",
+    "a": "Window replacement pricing varies based on size, frame material, and glazing options. We have 60+ sizes available starting from $179.99. Contact your nearest Express Kitchens location or visit expresskitchens.com."
+   },
+   {
+    "q": "What factors should I consider before replacing a kitchen window?",
+    "a": "Consider frame condition, ventilation needs, energy efficiency ratings, privacy requirements, and exterior aesthetics. If frames are rotted, full-frame replacement is necessary."
+   },
+   {
+    "q": "What types of windows are available at Express Kitchens?",
+    "a": "We offer vinyl, aluminum, and energy-efficient windows in styles such as double-hung, casement, sliding, picture, and awning windows to suit different home designs."
+   },
+   {
+    "q": "How long do windows typically last?",
+    "a": "Most modern windows last 20–30 years or more, depending on material, installation quality, and maintenance."
+   }
+  ]
+ }
+}

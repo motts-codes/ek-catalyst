@@ -17,9 +17,9 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 | Assembled cabinets listing | http://localhost:3000/cabinets/assembled-cabinets | live |
 | RTA cabinets listing | http://localhost:3000/cabinets/rta-cabinets | live |
 | Quick Ship cabinets | http://localhost:3000/quick-ship-cabinets | |
-| Cabinet hardware | http://localhost:3000/cabinet-hardware | Shop landing; tiles link to search until BC categories exist |
-| Sinks & faucets | http://localhost:3000/sinks-faucets | Shop landing |
-| Bath | http://localhost:3000/bath | Shop landing |
+| Cabinet hardware | http://localhost:3000/cabinet-hardware | BigCommerce category (created 10 Oct) + 3 subcategories; FAQ metafield |
+| Sinks & faucets | http://localhost:3000/sinks-faucets | BigCommerce category + Kitchen Sinks / Kitchen Faucets / Accessories; FAQs |
+| Bath | http://localhost:3000/bath | BigCommerce category + 5 subcategories; FAQ metafield |
 | Countertops | http://localhost:3000/countertops | Quote form / phone; no cart (EK doesn't install) |
 | Doors | http://localhost:3000/doors | |
 | Siding | http://localhost:3000/siding | |
@@ -127,6 +127,9 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 
 ## Still pointing at `#`
 
-Subcategories that need BigCommerce categories first: Countertop types (Granite / Laminate /
-Quartz / Prefabricated), Appliances and Windows subcategories; and the "Download brochure" PDF.
-Bath, Cabinet hardware and Sinks & faucets subcategory tiles link to site search in the meantime.
+Countertop types in the mega menu (Granite / Laminate / Quartz / Prefabricated — the categories
+exist, the menu links just need pointing), Windows subcategories, Appliances → Accessories in the
+menu, and the "Download brochure" PDF.
+
+Category FAQs: seeded as `faq.list` metafields by `scripts/seed-categories-and-faqs.py` from
+`docs/category-faqs-source.md` (live-site text, re-mapped to this site's category tree).
