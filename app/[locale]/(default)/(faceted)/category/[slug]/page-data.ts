@@ -32,6 +32,14 @@ const CategoryPageQuery = graphql(
               }
             }
           }
+          seoContent: metafields(namespace: "seo") {
+            edges {
+              node {
+                key
+                value
+              }
+            }
+          }
         }
         categoryTree(rootEntityId: $entityId) {
           entityId

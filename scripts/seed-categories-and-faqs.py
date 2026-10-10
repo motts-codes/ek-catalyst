@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Create the storefront categories the site already links to, and seed each category's FAQ.
+Create the storefront categories the site already links to, and seed each category's FAQ and
+SEO copy (`faq.list`, `seo.content`).
 
   python scripts/seed-categories-and-faqs.py --dry-run
   python scripts/seed-categories-and-faqs.py
@@ -109,6 +110,23 @@ class Client:
             print(f"  created faq.list on {category_id} ({len(items)} items)")
 
 
+    def upsert_json(self, category_id, namespace, key, value, label):
+        body = json.dumps(value, ensure_ascii=False)
+        if self.dry_run:
+            print(f"  [dry-run] {namespace}.{key} on {category_id}: {label}")
+            return
+        existing = [
+            m for m in self.req("GET", f"/catalog/categories/{category_id}/metafields?namespace={namespace}&limit=250")["data"]
+            if m["key"] == key
+        ]
+        url = f"/catalog/categories/{category_id}/metafields"
+        if existing:
+            self.req("PUT", f"{url}/{existing[0]['id']}", {"value": body})
+            print(f"  updated {namespace}.{key} on {category_id} ({label})")
+        else:
+            self.req("POST", url, {"permission_set": "write_and_sf_access", "namespace": namespace, "key": key, "value": body})
+            print(f"  created {namespace}.{key} on {category_id} ({label})")
+
     def upsert_program_faq(self, category_id, program, faq):
         existing = [
             m for m in self.req("GET", f"/catalog/categories/{category_id}/metafields?namespace=faq&limit=250")["data"]
@@ -205,6 +223,16 @@ def main():
             print(f"  skip {path}: category not found")
             continue
         client.upsert_faq(category_id, faq["headline"], faq["items"])
+
+    print("SEO content")
+    with open(os.path.join(os.path.dirname(__file__), "category-seo.json")) as f:
+        seo = json.load(f)
+    for path, content in seo.items():
+        category_id = by_path.get(path)
+        if category_id is None:
+            print(f"  skip {path}: category not found")
+            continue
+        client.upsert_json(category_id, "seo", "content", content, f"{len(content['blocks'])} blocks")
 
     # Cabinets keep their per-program FAQ (faq.by_program on the parent); only the RTA side is
     # replaced, the Assembled side is left as authored.

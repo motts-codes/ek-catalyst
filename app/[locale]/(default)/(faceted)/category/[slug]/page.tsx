@@ -13,6 +13,7 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetSpecs } from '@/vibes/soul/sections/cabinet-specs';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
+import { SeoContentSection } from '@/vibes/soul/sections/seo-content';
 import { getSessionCustomerAccessToken } from '~/auth';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { pageInfoTransformer } from '~/data-transformers/page-info-transformer';
@@ -28,6 +29,7 @@ import {
   selectedCabinetProgram,
 } from '~/lib/cabinets/cabinet-collection';
 import { pickFaq } from '~/lib/category/category-faq';
+import { parseSeoContent } from '~/lib/category/category-seo';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { EditableSection } from '~/lib/makeswift/components/editable-section';
@@ -427,6 +429,7 @@ export default async function Category(props: Props) {
       />
       {cabinetAssembly.length > 0 && <CabinetAssembly videos={cabinetAssembly} />}
       {faq && <CabinetFaq data={faq} />}
+      <SeoContentSection content={parseSeoContent(category.seoContent.edges)} />
       {Boolean(cabinetContent?.disclaimer) && (
         <CabinetSpecs disclaimer={cabinetContent?.disclaimer} />
       )}
