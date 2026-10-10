@@ -47,6 +47,7 @@ h6,
 .font-heading {
   font-family: var(--font-family-heading) !important;
   font-weight: 700 !important;
+  letter-spacing: -0.015em;
 }
 
 :root {
