@@ -205,7 +205,7 @@ export function ProductsListSection({
             </div>
           </div>
           <div className="flex items-stretch gap-8 @4xl:gap-10">
-            <FiltersAside className="hidden w-52 @3xl:block @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:w-60 @4xl:pr-10">
+            <FiltersAside>
               <Stream value={streamableFiltersPanelTitle}>
                 {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
               </Stream>

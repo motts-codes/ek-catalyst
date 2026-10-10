@@ -64,12 +64,24 @@ export function FiltersToggle({ showLabel, hideLabel }: { showLabel: string; hid
   );
 }
 
-export function FiltersAside({ children, className }: { children: ReactNode; className?: string }) {
+// The sidebar slides shut and open: the outer box animates its width (and the gap beside it)
+// while the inner column keeps its full width so the filters never reflow mid-motion. Hidden, it
+// is `inert` so nothing inside can be tabbed to or read out.
+export function FiltersAside({ children }: { children: ReactNode }) {
   const { visible } = useContext(FiltersVisibility);
 
   return (
-    <aside className={clsx(className, !visible && '!hidden')} id={ASIDE_ID}>
-      {children}
+    <aside
+      className={clsx(
+        'hidden shrink-0 overflow-hidden transition-[width,opacity,margin,transform] duration-300 ease-smooth @3xl:block',
+        visible
+          ? 'w-52 translate-x-0 opacity-100 @4xl:w-60'
+          : 'w-0 -translate-x-4 opacity-0 @3xl:-mr-8 @4xl:-mr-10',
+      )}
+      id={ASIDE_ID}
+      inert={!visible}
+    >
+      <div className="w-52 border-r border-contrast-100 pr-8 @4xl:w-60 @4xl:pr-10">{children}</div>
     </aside>
   );
 }
