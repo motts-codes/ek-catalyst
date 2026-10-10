@@ -11,6 +11,11 @@ import { Breadcrumb, Breadcrumbs, BreadcrumbsSkeleton } from '@/vibes/soul/secti
 import { ProductList } from '@/vibes/soul/sections/product-list';
 import { Filter, FiltersPanel } from '@/vibes/soul/sections/products-list-section/filters-panel';
 import {
+  FiltersAside,
+  FiltersToggle,
+  FiltersVisibilityProvider,
+} from '@/vibes/soul/sections/products-list-section/filters-visibility';
+import {
   Sorting,
   SortingSkeleton,
   Option as SortOption,
@@ -33,6 +38,8 @@ interface Props {
   compareLabel?: Streamable<string>;
   showCompare?: Streamable<boolean>;
   filterLabel?: string;
+  showFiltersLabel?: string;
+  hideFiltersLabel?: string;
   filtersPanelTitle?: Streamable<string>;
   resetFiltersLabel?: Streamable<string>;
   showRating?: boolean;
@@ -68,6 +75,8 @@ export function ProductsListSection({
   showCompare,
   paginationInfo,
   filterLabel = 'Filters',
+  showFiltersLabel = 'Show filters',
+  hideFiltersLabel = 'Hide filters',
   filtersPanelTitle: streamableFiltersPanelTitle = 'Filters',
   resetFiltersLabel,
   rangeFilterApplyLabel,
@@ -86,138 +95,152 @@ export function ProductsListSection({
   const Heading = headingLevel === 2 ? 'h2' : 'h1';
 
   return (
-    <div className="group/products-list-section bg-[#f9fafd] @container">
-      <div className="mx-auto max-w-screen-2xl px-6 pb-10 pt-[15px] @xl:px-9 @xl:pb-14 @4xl:px-14 @4xl:pb-12">
-        <div>
-          <Stream fallback={<BreadcrumbsSkeleton />} value={streamableBreadcrumbs}>
-            {(breadcrumbs) =>
-              breadcrumbs &&
-              breadcrumbs.length > 1 && (
-                // Match the PDP breadcrumb treatment: 10px, light grey.
-                <Breadcrumbs
-                  breadcrumbs={breadcrumbs}
-                  className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
-                />
-              )
-            }
-          </Stream>
-          <div
-            className={clsx(
-              'flex flex-wrap items-center gap-4 text-foreground',
-              // With the big heading hidden, the row holds only the compact sort control, so it
-              // needs far less vertical padding above the grid.
-              hideHeader ? 'justify-start pb-4 pt-2' : 'justify-between pb-8 pt-6',
-            )}
-          >
-            {!hideHeader && (
-              <Heading
-                className={clsx(
-                  'flex items-center gap-2 font-heading',
-                  headingLevel === 2
-                    ? 'text-xl font-bold leading-tight @xl:text-2xl @4xl:text-[28px]'
-                    : 'text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl',
-                )}
-              >
-                <Suspense
-                  fallback={
-                    <span className="inline-flex h-[1lh] w-[6ch] animate-pulse rounded-lg bg-contrast-100" />
-                  }
-                >
-                  {title}
-                </Suspense>
-                <Suspense
-                  fallback={
-                    <span className="inline-flex h-[1lh] w-[2ch] animate-pulse rounded-lg bg-contrast-100" />
-                  }
-                >
-                  <span className="text-contrast-400">{totalCount}</span>
-                </Suspense>
-              </Heading>
-            )}
-            <div className="flex gap-2">
-              <Stream
-                fallback={<SortingSkeleton />}
-                value={Streamable.all([
-                  streamableSortLabel,
-                  streamableSortOptions,
-                  streamableSortPlaceholder,
-                ])}
-              >
-                {([label, options, placeholder]) => (
-                  <Sorting
-                    defaultValue={sortDefaultValue}
-                    label={label}
-                    options={options}
-                    paramName={sortParamName}
-                    placeholder={placeholder}
+    <FiltersVisibilityProvider>
+      <div className="group/products-list-section bg-[#f9fafd] @container">
+        <div className="mx-auto max-w-screen-2xl px-6 pb-10 pt-[15px] @xl:px-9 @xl:pb-14 @4xl:px-14 @4xl:pb-12">
+          <div>
+            <Stream fallback={<BreadcrumbsSkeleton />} value={streamableBreadcrumbs}>
+              {(breadcrumbs) =>
+                breadcrumbs &&
+                breadcrumbs.length > 1 && (
+                  // Match the PDP breadcrumb treatment: 10px, light grey.
+                  <Breadcrumbs
+                    breadcrumbs={breadcrumbs}
+                    className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
                   />
+                )
+              }
+            </Stream>
+            <div
+              className={clsx(
+                'flex flex-wrap items-center gap-4 text-foreground',
+                // With the big heading hidden, the row holds only the compact sort control, so it
+                // needs far less vertical padding above the grid.
+                hideHeader ? 'justify-between pb-4 pt-2' : 'justify-between pb-8 pt-6',
+              )}
+            >
+              {!hideHeader && (
+                <Heading
+                  className={clsx(
+                    'flex items-center gap-2 font-heading',
+                    headingLevel === 2
+                      ? 'text-xl font-bold leading-tight @xl:text-2xl @4xl:text-[28px]'
+                      : 'text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl',
+                  )}
+                >
+                  <Suspense
+                    fallback={
+                      <span className="inline-flex h-[1lh] w-[6ch] animate-pulse rounded-lg bg-contrast-100" />
+                    }
+                  >
+                    {title}
+                  </Suspense>
+                  <Suspense
+                    fallback={
+                      <span className="inline-flex h-[1lh] w-[2ch] animate-pulse rounded-lg bg-contrast-100" />
+                    }
+                  >
+                    <span className="text-contrast-400">{totalCount}</span>
+                  </Suspense>
+                </Heading>
+              )}
+              <div
+                className={clsx(
+                  'flex items-center gap-2',
+                  // With the heading hidden the sort and the toggle are the whole row: ends apart.
+                  hideHeader && 'w-full justify-between',
                 )}
-              </Stream>
-              <div className="block @3xl:hidden">
-                <SidePanel.Root>
-                  <SidePanel.Trigger asChild>
-                    <Button
-                      className="!h-8 text-xs [&>span]:!min-h-0"
-                      size="x-small"
-                      variant="secondary"
-                    >
-                      {filterLabel}
-                      <Sliders size={15} />
-                    </Button>
-                  </SidePanel.Trigger>
-                  <Stream value={streamableFiltersPanelTitle}>
-                    {(filtersPanelTitle) => (
-                      <SidePanel.Content title={filtersPanelTitle}>
-                        <FiltersPanel
-                          filters={filters}
-                          paginationInfo={paginationInfo}
-                          rangeFilterApplyLabel={rangeFilterApplyLabel}
-                          resetFiltersLabel={resetFiltersLabel}
-                        />
-                      </SidePanel.Content>
+              >
+                <div className="flex items-center gap-2">
+                  <Stream
+                    fallback={<SortingSkeleton />}
+                    value={Streamable.all([
+                      streamableSortLabel,
+                      streamableSortOptions,
+                      streamableSortPlaceholder,
+                    ])}
+                  >
+                    {([label, options, placeholder]) => (
+                      <Sorting
+                        defaultValue={sortDefaultValue}
+                        label={label}
+                        options={options}
+                        paramName={sortParamName}
+                        placeholder={placeholder}
+                      />
                     )}
                   </Stream>
-                </SidePanel.Root>
+                  <div className="block @3xl:hidden">
+                    <SidePanel.Root>
+                      <SidePanel.Trigger asChild>
+                        <Button
+                          className="!h-8 text-xs [&>span]:!min-h-0"
+                          size="x-small"
+                          variant="secondary"
+                        >
+                          {filterLabel}
+                          <Sliders size={15} />
+                        </Button>
+                      </SidePanel.Trigger>
+                      <Stream value={streamableFiltersPanelTitle}>
+                        {(filtersPanelTitle) => (
+                          <SidePanel.Content title={filtersPanelTitle}>
+                            <FiltersPanel
+                              filters={filters}
+                              paginationInfo={paginationInfo}
+                              rangeFilterApplyLabel={rangeFilterApplyLabel}
+                              resetFiltersLabel={resetFiltersLabel}
+                            />
+                          </SidePanel.Content>
+                        )}
+                      </Stream>
+                    </SidePanel.Root>
+                  </div>
+                </div>
+                {/* Desktop: show / hide the sidebar, far right of the row. */}
+                <div className="hidden @3xl:block">
+                  <FiltersToggle hideLabel={hideFiltersLabel} showLabel={showFiltersLabel} />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex items-stretch gap-8 @4xl:gap-10">
-          <aside className="hidden w-52 @3xl:block @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:w-60 @4xl:pr-10">
-            <Stream value={streamableFiltersPanelTitle}>
-              {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
-            </Stream>
-            <FiltersPanel
-              className="sticky top-4"
-              filters={filters}
-              paginationInfo={paginationInfo}
-              rangeFilterApplyLabel={rangeFilterApplyLabel}
-              resetFiltersLabel={resetFiltersLabel}
-            />
-          </aside>
+          <div className="flex items-stretch gap-8 @4xl:gap-10">
+            <FiltersAside className="hidden w-52 @3xl:block @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:w-60 @4xl:pr-10">
+              <Stream value={streamableFiltersPanelTitle}>
+                {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
+              </Stream>
+              <FiltersPanel
+                className="sticky top-4"
+                filters={filters}
+                paginationInfo={paginationInfo}
+                rangeFilterApplyLabel={rangeFilterApplyLabel}
+                resetFiltersLabel={resetFiltersLabel}
+              />
+            </FiltersAside>
 
-          <div className="group-has-data-pending/products-list-section:animate-pulse flex-1">
-            <ProductList
-              addToCartAction={addToCartAction}
-              compareHref={compareHref}
-              compareLabel={compareLabel}
-              compareParamName={compareParamName}
-              compareProducts={compareProducts}
-              emptyStateSubtitle={emptyStateSubtitle}
-              emptyStateTitle={emptyStateTitle}
-              maxCompareLimitMessage={maxCompareLimitMessage}
-              maxItems={maxItems}
-              placeholderCount={placeholderCount}
-              products={products}
-              removeLabel={removeLabel}
-              showCompare={showCompare}
-              showRating={showRating}
-            />
+            <div className="group-has-data-pending/products-list-section:animate-pulse flex-1">
+              <ProductList
+                addToCartAction={addToCartAction}
+                compareHref={compareHref}
+                compareLabel={compareLabel}
+                compareParamName={compareParamName}
+                compareProducts={compareProducts}
+                emptyStateSubtitle={emptyStateSubtitle}
+                emptyStateTitle={emptyStateTitle}
+                maxCompareLimitMessage={maxCompareLimitMessage}
+                maxItems={maxItems}
+                placeholderCount={placeholderCount}
+                products={products}
+                removeLabel={removeLabel}
+                showCompare={showCompare}
+                showRating={showRating}
+              />
 
-            {paginationInfo && <CursorPagination info={paginationInfo} />}
+              {paginationInfo && <CursorPagination info={paginationInfo} />}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </FiltersVisibilityProvider>
   );
 }
