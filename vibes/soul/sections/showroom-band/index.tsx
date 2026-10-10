@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { MapPin } from 'lucide-react';
+import { MapPin, Pause, Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import {
@@ -45,7 +45,9 @@ export function ShowroomBand({
 }: Props) {
   const [active, setActive] = useState(0);
   const [held, setHeld] = useState(false);
-  const cycling = !held && interval > 0 && showrooms.length > 1;
+  // The visitor's stop/start button (WCAG 2.2.2); `held` is only the pointer resting on the pills.
+  const [stopped, setStopped] = useState(false);
+  const cycling = !held && !stopped && interval > 0 && showrooms.length > 1;
 
   useEffect(() => {
     if (!cycling) return;
@@ -115,6 +117,23 @@ export function ShowroomBand({
                 </li>
               );
             })}
+            {showrooms.length > 1 && interval > 0 && (
+              <li className="flex items-center">
+                <button
+                  aria-label={stopped ? 'Play showroom rotation' : 'Pause showroom rotation'}
+                  aria-pressed={stopped}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-contrast-200 bg-white text-foreground transition-colors hover:border-foreground focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                  onClick={() => setStopped((value) => !value)}
+                  type="button"
+                >
+                  {stopped ? (
+                    <Play aria-hidden size={14} strokeWidth={2} />
+                  ) : (
+                    <Pause aria-hidden size={14} strokeWidth={2} />
+                  )}
+                </button>
+              </li>
+            )}
           </ul>
         </div>
 

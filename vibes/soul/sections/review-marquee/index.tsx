@@ -4,6 +4,8 @@ import { Quote, Star } from 'lucide-react';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 
+import { MarqueeFrame } from './marquee-frame';
+
 interface Props {
   title?: string;
   /** Right of the title, e.g. "4.5 · 360+ Google reviews". */
@@ -94,45 +96,49 @@ export function ReviewMarquee({
       <style>{`
         @keyframes ek-marquee-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
         @keyframes ek-marquee-down { from { transform: translateY(-50%); } to { transform: translateY(0); } }
-        .ek-marquee-column:hover .ek-marquee-track { animation-play-state: paused !important; }
+        .ek-marquee-column:hover .ek-marquee-track,
+        .ek-marquee-column:focus-within .ek-marquee-track,
+        [data-paused='true'] .ek-marquee-track { animation-play-state: paused !important; }
         @media (prefers-reduced-motion: reduce) { .ek-marquee-track { animation: none !important; } }
       `}</style>
-      <div
-        className="grid gap-5 @lg:grid-cols-2 @3xl:grid-cols-3"
-        style={{ height: `${height}px` }}
-      >
-        {columns.map((column, columnIndex) => {
-          const down = columnIndex % 2 === 1;
-          // Slightly different pace per column so they never move in lockstep.
-          const duration = speed * (1 + columnIndex * 0.18);
+      <MarqueeFrame>
+        <div
+          className="grid gap-5 @lg:grid-cols-2 @3xl:grid-cols-3"
+          style={{ height: `${height}px` }}
+        >
+          {columns.map((column, columnIndex) => {
+            const down = columnIndex % 2 === 1;
+            // Slightly different pace per column so they never move in lockstep.
+            const duration = speed * (1 + columnIndex * 0.18);
 
-          return (
-            <div
-              className={clsx(
-                'ek-marquee-column relative h-full overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]',
-                columnIndex === 1 && 'hidden @lg:block',
-                columnIndex === 2 && 'hidden @3xl:block',
-              )}
-              key={columnIndex}
-            >
+            return (
               <div
-                // The pause-on-hover and reduced-motion rules live in the <style> block above
-                // because the inline `animation` shorthand would otherwise override utility classes.
-                className="ek-marquee-track flex flex-col gap-5 will-change-transform"
-                style={{
-                  animation: `${down ? 'ek-marquee-down' : 'ek-marquee-up'} ${duration}s linear infinite`,
-                }}
+                className={clsx(
+                  'ek-marquee-column relative h-full overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)]',
+                  columnIndex === 1 && 'hidden @lg:block',
+                  columnIndex === 2 && 'hidden @3xl:block',
+                )}
+                key={columnIndex}
               >
-                {[...column, ...column].map((review, index) => (
-                  <div aria-hidden={index >= column.length ? true : undefined} key={index}>
-                    <ReviewCard review={review} />
-                  </div>
-                ))}
+                <div
+                  // The pause-on-hover and reduced-motion rules live in the <style> block above
+                  // because the inline `animation` shorthand would otherwise override utility classes.
+                  className="ek-marquee-track flex flex-col gap-5 will-change-transform"
+                  style={{
+                    animation: `${down ? 'ek-marquee-down' : 'ek-marquee-up'} ${duration}s linear infinite`,
+                  }}
+                >
+                  {[...column, ...column].map((review, index) => (
+                    <div aria-hidden={index >= column.length ? true : undefined} key={index}>
+                      <ReviewCard review={review} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      </MarqueeFrame>
     </HomeSection>
   );
 }
