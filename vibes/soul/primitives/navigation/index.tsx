@@ -289,11 +289,17 @@ function GroupTile({ label, href }: { label: string; href?: string }) {
       <Link
         className={clsx(
           className,
-          'hover:bg-[#96050f] hover:text-white focus-visible:bg-[#96050f] focus-visible:text-white',
+          'group/tile flex-col gap-1 hover:bg-[#96050f] hover:text-white focus-visible:bg-[#96050f] focus-visible:text-white',
         )}
         href={href}
       >
         {label}
+        <span
+          aria-hidden
+          className="text-[10px] font-medium leading-none text-contrast-500 transition-colors duration-200 group-hover/tile:text-white group-focus-visible/tile:text-white @[1360px]:text-[11px]"
+        >
+          Shop all →
+        </span>
       </Link>
     );
   }
