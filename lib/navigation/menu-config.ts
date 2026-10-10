@@ -130,6 +130,8 @@ const menu: MenuItem[] = [
     group: 'shop',
     groups: [
       {
+        // Heading tile kept even on a single-group menu, for consistency with Kitchen.
+        label: 'Bath',
         links: [
           { label: 'Vanity Tops', href: '#', image: nav('vanity-tops', 'Bathroom vanity top') },
           { label: 'Side Splashes', href: '#', image: nav('side-splashes', 'Vanity side splash') },
@@ -157,7 +159,9 @@ const menu: MenuItem[] = [
     group: 'shop',
     groups: [
       {
-        // Single-category menu: no heading tiles, the rows stand on their own.
+        // Heading tile on the first row only; the second row's slot stays empty so tiles align.
+        label: 'Appliances',
+        href: '/appliances',
         fullRow: true,
         links: [
           {
