@@ -282,7 +282,7 @@ const navGroupClassName =
 // white text and an arrow slides in under the name. A plain heading has no hover at all.
 function GroupTile({ label, href }: { label: string; href?: string }) {
   const className =
-    'flex aspect-square w-20 items-center justify-center rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] px-2 text-center text-[13px] font-semibold leading-snug @[1100px]:w-[100px] @[1100px]:text-sm @[1360px]:w-[120px] @[1360px]:px-3 @[1360px]:text-[15px] text-[var(--nav-group-text,hsl(var(--foreground)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-colors duration-200 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]';
+    'flex aspect-square w-20 items-center justify-center rounded-lg bg-[var(--nav-tile-background,hsl(var(--contrast-100)))] px-2 text-center text-[13px] font-semibold leading-snug @[1100px]:w-[100px] @[1100px]:text-sm @[1360px]:w-[120px] @[1360px]:px-3 @[1360px]:text-[15px] text-[var(--nav-group-text,hsl(var(--foreground)))] ring-1 ring-[hsl(var(--foreground)/6%)] transition-colors duration-300 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]';
 
   if (href != null && href !== '' && href !== '#') {
     return (
@@ -296,7 +296,7 @@ function GroupTile({ label, href }: { label: string; href?: string }) {
         {label}
         <ArrowRight
           aria-hidden
-          className="mt-1 h-0 opacity-0 transition-[height,opacity] duration-200 group-hover/tile:h-4 group-hover/tile:opacity-100 group-focus-visible/tile:h-4 group-focus-visible/tile:opacity-100 motion-reduce:transition-none"
+          className="mt-1 h-0 -translate-y-1 opacity-0 transition-[height,opacity,transform] duration-300 group-hover/tile:h-4 group-hover/tile:translate-y-0 group-hover/tile:opacity-100 group-focus-visible/tile:h-4 group-focus-visible/tile:translate-y-0 group-focus-visible/tile:opacity-100"
           size={16}
           strokeWidth={2.5}
         />

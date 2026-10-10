@@ -11,10 +11,10 @@
 }
 /* Row by row: the Cabinets row (heading + tiles) comes in first, then the next row, then the next. */
 [data-state='open'] .ek-menu-row {
-  animation: ek-tile-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: ek-tile-in 0.4s var(--ease-smooth) both;
 }
 [data-state='open'] .ek-menu-tile {
-  animation: ek-tile-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: ek-tile-in 0.45s var(--ease-smooth) both;
 }
 @media (prefers-reduced-motion: reduce) {
   [data-state='open'] .ek-menu-row,
@@ -22,8 +22,42 @@
 }
 
 @layer base {
+  :root {
+    /* ease-out-quint: fast start, long soft landing. The one curve for every micro-interaction. */
+    --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   body {
     font-family: var(--font-family-body);
+  }
+
+  /* Every interactive element eases between states by default, so a hover or focus change never
+     snaps. Component-level `transition-*` utilities still take precedence when they're present. */
+  a,
+  button,
+  summary,
+  input,
+  select,
+  textarea,
+  [role='button'],
+  [role='tab'],
+  [role='switch'] {
+    transition-property: color, background-color, border-color, text-decoration-color, fill,
+      stroke, opacity, box-shadow, transform;
+    transition-timing-function: var(--ease-smooth);
+    transition-duration: 300ms;
+  }
+
+  /* Honour the OS setting: keep state changes instant, no movement. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   input::placeholder,

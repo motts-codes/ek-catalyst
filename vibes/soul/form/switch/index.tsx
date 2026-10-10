@@ -49,7 +49,7 @@ export const Switch = ({
         aria-busy={loading}
         checked={checked}
         className={clsx(
-          'w-12 rounded-full border border-contrast-200 p-[3px] transition-colors duration-100 focus-visible:outline-none focus-visible:ring-2 data-[disabled]:cursor-not-allowed [&:not([data-loading])]:data-[disabled]:bg-contrast-100',
+          'w-12 rounded-full border border-contrast-200 p-[3px] transition-colors focus-visible:outline-none focus-visible:ring-2 data-[disabled]:cursor-not-allowed [&:not([data-loading])]:data-[disabled]:bg-contrast-100',
         )}
         data-loading={loading ? '' : undefined}
         disabled={disabled || loading}
@@ -59,7 +59,7 @@ export const Switch = ({
       >
         <SwitchPrimitive.Thumb
           className={clsx(
-            'relative block h-5 w-5 overflow-hidden rounded-full transition-transform duration-100 data-[state=checked]:translate-x-full data-[disabled]:bg-contrast-200 data-[state=unchecked]:bg-contrast-200',
+            'relative block h-5 w-5 overflow-hidden rounded-full transition-transform duration-200 data-[state=checked]:translate-x-full data-[disabled]:bg-contrast-200 data-[state=unchecked]:bg-contrast-200',
             {
               primary: 'bg-[var(--toggle-primary-background,hsl(var(--primary)))]',
               secondary: 'bg-[var(--toggle-secondary-background,hsl(var(--foreground)))]',
@@ -102,7 +102,7 @@ interface LabelProps {
   loading?: boolean;
 }
 
-function SwitchLabel({ id, label, size = 'medium', state, loading }: LabelProps) {
+function SwitchLabel({ id, label, size, state, loading }: LabelProps) {
   const baseClass =
     'group-data-[disabled]/switch:[&:not([data-loading])]:text-contrast-400 font-semibold select-none';
   const sizeClass = {

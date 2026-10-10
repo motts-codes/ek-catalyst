@@ -163,6 +163,17 @@ const config = {
         lg: 'var(--shadow-lg)',
         xl: 'var(--shadow-xl)',
       },
+      // Site-wide motion standard: one decelerating curve (ease-out-quint) and a 300ms default, so
+      // every `transition` / `ease-out` utility feels the same — light, airy, never snappy.
+      transitionTimingFunction: {
+        DEFAULT: 'var(--ease-smooth)',
+        out: 'var(--ease-smooth)',
+        'in-out': 'var(--ease-smooth)',
+        smooth: 'var(--ease-smooth)',
+      },
+      transitionDuration: {
+        DEFAULT: '300ms',
+      },
       keyframes: {
         collapse: {
           from: { height: 'var(--radix-accordion-content-height)' },
@@ -217,8 +228,8 @@ const config = {
         },
       },
       animation: {
-        collapse: 'collapse 400ms cubic-bezier(1, 0, 0.25, 1)',
-        expand: 'expand 400ms cubic-bezier(1, 0, 0.25, 1)',
+        collapse: 'collapse 400ms var(--ease-smooth)',
+        expand: 'expand 400ms var(--ease-smooth)',
         marching: 'marching-ants 10s linear infinite',
         rotate: 'rotate 2000ms linear infinite',
         scroll: 'scroll 200ms infinite linear both',

@@ -92,7 +92,7 @@ export function AudienceToggle({ mode }: Props) {
       >
         <span
           className={clsx(
-            'absolute top-0.5 h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-[left] duration-150',
+            'absolute top-0.5 h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-[left] duration-200',
             isPro ? 'left-[18px]' : 'left-0.5',
           )}
         />

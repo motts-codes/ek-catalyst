@@ -74,7 +74,7 @@ export function Checkbox({
           {...props}
           aria-labelledby={id !== undefined ? `${id}-label` : `${generatedId}-label`}
           className={clsx(
-            'peer flex h-5 w-5 items-center justify-center rounded-md border transition-colors duration-150 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--checkbox-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
+            'peer flex h-5 w-5 items-center justify-center rounded-md border transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--checkbox-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
             {
               light:
                 errors && errors.length > 0
