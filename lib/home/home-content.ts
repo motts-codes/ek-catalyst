@@ -14,7 +14,7 @@ import { type Showroom } from '@/vibes/soul/sections/showroom-band';
 
 export const FREE_DESIGN_HREF = '/free-design';
 export const SAMPLES_HREF = '/samples';
-export const ESTIMATOR_HREF = '#';
+export const ESTIMATOR_HREF = '/mykitchen/calculator';
 
 export const HERO_SLIDES: HeroSlide[] = [
   {

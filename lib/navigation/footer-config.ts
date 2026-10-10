@@ -40,7 +40,7 @@ export const FOOTER_SECTIONS: Section[] = [
     title: 'Resources',
     links: [
       { label: 'Free design consult', href: '/free-design' },
-      { label: 'Kitchen estimator', href: '#' },
+      { label: 'Kitchen estimator', href: '/mykitchen/calculator' },
       { label: 'Blog', href: '/blog' },
       { label: 'Order samples', href: '/samples' },
       { label: 'Financing', href: '/financing' },

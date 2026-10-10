@@ -115,3 +115,26 @@ export async function submitIndustryLead<F extends Field>(...a: LeadArgs<F>) {
 export async function submitQuoteLead<F extends Field>(...a: LeadArgs<F>) {
   return submitLead({ form: 'quote', confirmPath: '/quote/confirmed' }, a[0], a[1], a[2]);
 }
+
+// The estimator's "email me this estimate": stays on the page and confirms inline rather than
+// redirecting, so the number never leaves the screen.
+export async function submitEstimateLead<F extends Field>(
+  { fields }: DynamicFormActionArgs<F>,
+  _prevState: { lastResult: SubmissionResult | null },
+  formData: FormData,
+) {
+  await Promise.resolve();
+
+  const submission = parseWithZod(formData, { schema: schema(fields) });
+
+  if (submission.status !== 'success') {
+    return { lastResult: submission.reply() };
+  }
+
+  deliverLead('estimate', submission.value);
+
+  return {
+    lastResult: submission.reply({ resetForm: true }),
+    successMessage: 'Sent. Check your inbox in a minute; the estimate stays on screen too.',
+  };
+}
