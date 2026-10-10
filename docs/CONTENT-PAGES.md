@@ -17,6 +17,9 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 | Assembled cabinets listing | http://localhost:3000/cabinets/assembled-cabinets | live |
 | RTA cabinets listing | http://localhost:3000/cabinets/rta-cabinets | live |
 | Quick Ship cabinets | http://localhost:3000/quick-ship-cabinets | |
+| Cabinet hardware | http://localhost:3000/cabinet-hardware | Shop landing; tiles link to search until BC categories exist |
+| Sinks & faucets | http://localhost:3000/sinks-faucets | Shop landing |
+| Bath | http://localhost:3000/bath | Shop landing |
 | Countertops | http://localhost:3000/countertops | Quote form / phone; no cart (EK doesn't install) |
 | Doors | http://localhost:3000/doors | |
 | Siding | http://localhost:3000/siding | |
@@ -124,5 +127,6 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 
 ## Still pointing at `#`
 
-Catalog categories that need BigCommerce categories first: Bath, Cabinet hardware (Handles /
-Tiles / Accessories), Sinks & faucets, Appliances subcategories; and the "Download brochure" PDF.
+Subcategories that need BigCommerce categories first: Countertop types (Granite / Laminate /
+Quartz / Prefabricated), Appliances and Windows subcategories; and the "Download brochure" PDF.
+Bath, Cabinet hardware and Sinks & faucets subcategory tiles link to site search in the meantime.

@@ -74,16 +74,28 @@ const menu: MenuItem[] = [
             image: nav('assembled', 'Assembled kitchen cabinets'),
           },
           { label: 'RTA', href: RTA_LISTING, image: nav('rta', 'Ready-to-assemble cabinets') },
-          { label: 'Quick Ship', href: '/quick-ship-cabinets', image: nav('quick-ship', 'Quick-ship cabinets') },
+          {
+            label: 'Quick Ship',
+            href: '/quick-ship-cabinets',
+            image: nav('quick-ship', 'Quick-ship cabinets'),
+          },
         ],
       },
       {
         label: 'Cabinet Hardware',
-        href: '#',
+        href: '/cabinet-hardware',
         links: [
-          { label: 'Handles', href: '#', image: nav('handles', 'Cabinet door with a handle') },
-          { label: 'Tiles', href: '#', image: nav('tiles', 'Backsplash tiles') },
-          { label: 'Accessories', href: '#', image: nav('accessories', 'Drawer organizer') },
+          {
+            label: 'Handles',
+            href: '/search?term=cabinet+handle',
+            image: nav('handles', 'Cabinet door with a handle'),
+          },
+          { label: 'Tiles', href: '/search?term=tile', image: nav('tiles', 'Backsplash tiles') },
+          {
+            label: 'Accessories',
+            href: '/search?term=drawer+organizer',
+            image: nav('accessories', 'Drawer organizer'),
+          },
         ],
       },
       {
@@ -106,18 +118,31 @@ const menu: MenuItem[] = [
         label: 'Sale',
         href: '/sale',
         links: [
-          { label: 'Clearance', href: '/clearance-sale', image: nav('clearance', 'Clearance cabinets') },
+          {
+            label: 'Clearance',
+            href: '/clearance-sale',
+            image: nav('clearance', 'Clearance cabinets'),
+          },
           { label: 'Promotions', href: '/promotions', image: nav('promo', 'Current promotions') },
         ],
       },
       {
         label: 'Sinks & Faucets',
+        href: '/sinks-faucets',
         links: [
-          { label: 'Kitchen Sinks', href: '#', image: nav('kitchen-sinks', 'Kitchen sink') },
-          { label: 'Kitchen Faucets', href: '#', image: nav('kitchen-faucets', 'Kitchen faucet') },
+          {
+            label: 'Kitchen Sinks',
+            href: '/search?term=kitchen+sink',
+            image: nav('kitchen-sinks', 'Kitchen sink'),
+          },
+          {
+            label: 'Kitchen Faucets',
+            href: '/search?term=kitchen+faucet',
+            image: nav('kitchen-faucets', 'Kitchen faucet'),
+          },
           {
             label: 'Accessories',
-            href: '#',
+            href: '/search?term=sink+accessories',
             image: nav('sink-faucet-accessories', 'Sink and faucet accessories'),
           },
         ],
@@ -126,24 +151,37 @@ const menu: MenuItem[] = [
   },
   {
     label: 'Bath',
-    href: '#',
+    href: '/bath',
     group: 'shop',
     groups: [
       {
         // Heading tile kept even on a single-group menu, for consistency with Kitchen.
         label: 'Bath',
+        href: '/bath',
         links: [
-          { label: 'Vanity Tops', href: '#', image: nav('vanity-tops', 'Bathroom vanity top') },
-          { label: 'Side Splashes', href: '#', image: nav('side-splashes', 'Vanity side splash') },
-          { label: 'Bathroom Sinks', href: '#', image: nav('bathroom-sinks', 'Bathroom sink') },
+          {
+            label: 'Vanity Tops',
+            href: '/search?term=vanity+top',
+            image: nav('vanity-tops', 'Bathroom vanity top'),
+          },
+          {
+            label: 'Side Splashes',
+            href: '/search?term=side+splash',
+            image: nav('side-splashes', 'Vanity side splash'),
+          },
+          {
+            label: 'Bathroom Sinks',
+            href: '/search?term=bathroom+sink',
+            image: nav('bathroom-sinks', 'Bathroom sink'),
+          },
           {
             label: 'Bathroom Faucets',
-            href: '#',
+            href: '/search?term=bathroom+faucet',
             image: nav('bathroom-faucets', 'Bathroom faucet'),
           },
           {
             label: 'Drains & Accessories',
-            href: '#',
+            href: '/search?term=drain',
             image: nav('drains-accessories', 'Drain and accessories'),
           },
         ],
@@ -280,7 +318,7 @@ const menu: MenuItem[] = [
           { label: 'Measuring Guide', href: '/resources/measuring-guide' },
           { label: 'What Is a 10×10 Kitchen', href: '/resources/ten-by-ten-kitchen' },
           { label: 'Order Samples', href: '/samples' },
-          { label: 'Kitchen Estimator', href: '#' },
+          { label: 'Kitchen Estimator', href: '/mykitchen/calculator' },
         ],
       },
       {

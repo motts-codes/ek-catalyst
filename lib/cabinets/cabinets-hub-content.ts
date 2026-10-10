@@ -208,7 +208,7 @@ export const ACCESSORIES_BAND = {
     'Matched to each collection. Handles are the deepest part of the catalog — knobs and pulls in every finish we make doors in.',
   imageLabel: 'A pull, a knob, a backsplash tile',
   actions: [
-    { label: 'Cabinet accessories', href: '#' },
-    { label: 'Handles', href: '#' },
+    { label: 'Cabinet accessories', href: '/cabinet-hardware' },
+    { label: 'Handles', href: '/search?term=cabinet+handle' },
   ],
 };

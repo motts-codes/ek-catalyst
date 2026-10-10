@@ -87,7 +87,12 @@ const CATEGORY_BASE: Array<{ name: string; href: string; homeowner: string; pro:
     homeowner: 'Pick up in 2 days',
     pro: 'Priced below retail',
   },
-  { name: 'Sinks', href: '#', homeowner: 'Sized for our sink bases', pro: 'Ships in 2 days' },
+  {
+    name: 'Sinks',
+    href: '/sinks-faucets',
+    homeowner: 'Sized for our sink bases',
+    pro: 'Ships in 2 days',
+  },
   {
     name: 'Faucets',
     href: '#',
