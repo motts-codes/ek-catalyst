@@ -407,3 +407,23 @@ export function getMenu(mode: AudienceMode): MenuItem[] {
     return { ...item, groups };
   });
 }
+
+const key = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/&amp;/g, '&')
+    .replace(/[^a-z0-9]+/g, '');
+
+// Every mega-menu tile photo, keyed by its label ("granite", "rangehoods"…). Category pages use
+// this as the fallback for subcategory tiles that have no image of their own in BigCommerce, so
+// the same photo serves the menu and the "shop by" row until the category gets its own.
+const NAV_IMAGES = new Map(
+  menu
+    .flatMap((item) => item.groups ?? [])
+    .flatMap((group) => group.links)
+    .filter((link) => link.image != null)
+    .map((link) => [key(link.label), link.image] as const),
+);
+
+// The nav tile photo whose label matches `name` (case/punctuation-insensitive), if any.
+export const navImageFor = (name: string) => NAV_IMAGES.get(key(name));

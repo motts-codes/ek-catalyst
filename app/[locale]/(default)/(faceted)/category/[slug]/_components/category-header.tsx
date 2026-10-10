@@ -3,6 +3,7 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DEFAULT_CATEGORY_CONTENT, getCategoryContent } from '~/lib/category/category-content';
 import { FREE_DESIGN_HREF } from '~/lib/home/home-content';
 import { type CategoryHeaderDefaults } from '~/lib/makeswift/components/section-defaults';
+import { navImageFor } from '~/lib/navigation/menu-config';
 
 interface CategoryImage {
   url: string;
@@ -57,7 +58,8 @@ export function getCategoryHeaderDefaults({
       : subcategories.map((child) => ({
           name: child.name,
           href: child.path,
-          image: toImage(child.image, child.name),
+          // BigCommerce image first, else the mega-menu tile with the same name.
+          image: toImage(child.image, child.name) ?? navImageFor(child.name),
         })),
   };
 }
