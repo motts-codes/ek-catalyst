@@ -112,6 +112,10 @@ export async function submitIndustryLead<F extends Field>(...a: LeadArgs<F>) {
   return submitLead({ form: 'industry', confirmPath: '/quote/confirmed' }, a[0], a[1], a[2]);
 }
 
+export async function submitBookingLead<F extends Field>(...a: LeadArgs<F>) {
+  return submitLead({ form: 'booking', confirmPath: '/book/confirmed' }, a[0], a[1], a[2]);
+}
+
 export async function submitQuoteLead<F extends Field>(...a: LeadArgs<F>) {
   return submitLead({ form: 'quote', confirmPath: '/quote/confirmed' }, a[0], a[1], a[2]);
 }

@@ -101,6 +101,7 @@ export const FOOTER_LEGAL_LINKS = [
   { label: 'Privacy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },
   { label: 'Accessibility', href: '/accessibility' },
+  { label: 'Sitemap', href: '/sitemap' },
 ];
 
 export const FOOTER_NEWSLETTER = {

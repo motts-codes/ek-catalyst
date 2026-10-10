@@ -97,7 +97,12 @@ export function ShowroomCards({
                 >
                   Visit the showroom page
                 </ButtonLink>
-                <ButtonLink href={bookHref} shape="pill" size="small" variant="primary">
+                <ButtonLink
+                  href={`${bookHref}?showroom=${showroom.slug}`}
+                  shape="pill"
+                  size="small"
+                  variant="primary"
+                >
                   Book a visit
                 </ButtonLink>
               </div>
@@ -218,7 +223,10 @@ export function ShowroomDetails({ showroom }: { showroom: Showroom }) {
           </a>
           <p className="mt-1">
             Or the main line, 24/7:{' '}
-            <a className="text-foreground" href="tel:+18602471000">
+            <a
+              className="font-semibold text-foreground underline underline-offset-4"
+              href="tel:+18602471000"
+            >
               860-247-1000
             </a>
           </p>

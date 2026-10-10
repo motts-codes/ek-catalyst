@@ -27,7 +27,7 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
       <PageBreadcrumbs breadcrumbs={[{ label: 'Showrooms', href: '/showrooms' }]} />
       <PageHero
         actions={[
-          { label: 'Schedule a visit', href: FREE_DESIGN_HREF, primary: true },
+          { label: 'Schedule a visit', href: '/book', primary: true },
           { label: 'See the locations', href: '#locations' },
         ]}
         description="There's a difference between scrolling past a kitchen and standing in one. In every showroom you can walk through complete, installed kitchens, open the drawers, hold a door in your hand and sit down with a Project Manager who will lay out your room and price it while you're there. It's free, with no deposit and no obligation. Walk in whenever suits you, or book a time so someone is ready for you."
@@ -44,11 +44,7 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
         tint
         title="Walk through real kitchens, not samples on a wall"
       />
-      <ShowroomCards
-        bookHref={FREE_DESIGN_HREF}
-        showrooms={SHOWROOMS}
-        title="Find the showroom nearest you"
-      />
+      <ShowroomCards bookHref="/book" showrooms={SHOWROOMS} title="Find the showroom nearest you" />
       <Prose
         actions={[
           { label: 'Book a virtual consult', href: FREE_DESIGN_HREF, primary: true },

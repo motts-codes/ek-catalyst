@@ -8,7 +8,7 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 
 export const ASSEMBLED_LISTING_HREF = '/cabinets/assembled-cabinets';
 export const RTA_LISTING_HREF = '/cabinets/rta-cabinets';
-export const INSTALLER_HREF = '#';
+export const INSTALLER_HREF = '/find-a-pro';
 
 export const HUB_HERO = {
   kicker: 'Made for the room you live in',

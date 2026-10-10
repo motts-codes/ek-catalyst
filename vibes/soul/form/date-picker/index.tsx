@@ -54,6 +54,9 @@ const DatePicker = forwardRef<ComponentRef<typeof Input>, Props>(
             readOnly={true}
             ref={ref}
             required={required}
+            // Radix sets aria-expanded/aria-haspopup on the trigger; those are only valid on a
+            // combobox, not a plain textbox (axe aria-allowed-attr).
+            role="combobox"
             type="text"
             // We control the value of the input based on the selected date or the default date
             value={formattedSelected ?? formattedDate ?? ''}

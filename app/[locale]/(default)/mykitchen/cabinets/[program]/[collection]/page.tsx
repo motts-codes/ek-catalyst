@@ -7,12 +7,12 @@ import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
 import { ProductList } from '@/vibes/soul/sections/product-list';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
-import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getCabinetCollectionHeader } from '~/lib/cabinets/cabinet-collection';
 import {
   type CabinetProgram,
   resolveCabinetCollectionBySlug,
 } from '~/lib/cabinets/cabinet-lines-data';
+import { getPreferredCurrencyCode } from '~/lib/currency';
 
 import { fetchFacetedSearch } from '../../../../(faceted)/fetch-faceted-search';
 

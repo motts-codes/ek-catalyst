@@ -10,7 +10,7 @@ import {
   ShowroomDetails,
 } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
-import { FREE_DESIGN_HREF, HOME_REVIEWS, SAMPLES_HREF } from '~/lib/home/home-content';
+import { HOME_REVIEWS, SAMPLES_HREF } from '~/lib/home/home-content';
 import { getShowroom, SHOWROOMS } from '~/lib/pages/showrooms';
 
 interface Props {
@@ -56,7 +56,7 @@ export default async function ShowroomPage({ params }: Props) {
       />
       <PageHero
         actions={[
-          { label: 'Book a visit', href: FREE_DESIGN_HREF, primary: true },
+          { label: 'Book a visit', href: `/book?showroom=${showroom.slug}`, primary: true },
           { label: 'Order a sample door', href: SAMPLES_HREF },
         ]}
         chips={[
@@ -71,7 +71,7 @@ export default async function ShowroomPage({ params }: Props) {
         title={`Your kitchen starts in ${showroom.name}`}
       />
       <ShowroomDetails showroom={showroom} />
-      <ProjectManagerPanel bookHref={FREE_DESIGN_HREF} showroom={showroom} />
+      <ProjectManagerPanel bookHref={`/book?showroom=${showroom.slug}`} showroom={showroom} />
       <Prose
         body={[
           `People come to us in ${showroom.name} from ${showroom.towns.slice(0, -1).join(', ')} and ${showroom.towns[showroom.towns.length - 1]}. If you're anywhere nearby, we're an easy visit, and if you'd rather we came to you, ask about an at-home appointment when you book.`,
@@ -90,7 +90,7 @@ export default async function ShowroomPage({ params }: Props) {
       )}
       <OtherShowrooms showrooms={others} />
       <ClosingBand
-        primary={{ label: 'Book a visit', href: FREE_DESIGN_HREF }}
+        primary={{ label: 'Book a visit', href: `/book?showroom=${showroom.slug}` }}
         tint
         title={`Ready to plan your kitchen in ${showroom.name}?`}
       />
