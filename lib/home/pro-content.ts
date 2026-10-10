@@ -9,7 +9,7 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type ProgramTier } from '@/vibes/soul/sections/program-tiers';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 
-export const PRO_PROGRAM_HREF = '#';
+export const PRO_PROGRAM_HREF = '/pro-program';
 export const FACTORY_OUTLET_URL = 'https://expresskitchensfactoryoutlet.com/';
 export const WHOLESALE_URL = 'https://kunalkitchens.com/';
 
@@ -50,7 +50,7 @@ export const PRO_AUDIENCES: RowCard[] = [
     description:
       'Apartments, condos and senior living — one spec per unit type, priced per unit, delivered floor by floor on your schedule.',
     ctaLabel: 'Multifamily',
-    href: '#',
+    href: '/industry/multifamily',
     imageLabel: 'An apartment kitchen, one of many',
   },
   {
@@ -58,7 +58,7 @@ export const PRO_AUDIENCES: RowCard[] = [
     description:
       'Offices, medical, hospitality and institutional — spec-sheet ready, delivery dates locked to your build, WBE/MBE certified.',
     ctaLabel: 'Commercial',
-    href: '#',
+    href: '/industry/commercial',
     imageLabel: 'A commercial break room fit-out',
   },
   {
@@ -178,7 +178,7 @@ export const SPEC_SHELF: RowCard[] = [
     title: 'Door samples',
     description: 'First two quarter doors free.',
     ctaLabel: 'Order samples',
-    href: '#',
+    href: '/samples',
     imageLabel: 'Sample doors',
   },
 ];
@@ -236,7 +236,7 @@ export const DESIGN_BAND = {
   title: 'We design, you win the job',
   description:
     'Send us your homeowner. We do the layout, the renderings and the itemized quote for free — under your name if you want. You close the job, we supply it.',
-  actions: [{ label: 'Book a design for your client', href: '#', primary: true }],
+  actions: [{ label: 'Book a design for your client', href: '/free-design', primary: true }],
   imageLabel: "A rendering with the contractor's name on the title block",
 };
 

@@ -74,7 +74,7 @@ const menu: MenuItem[] = [
             image: nav('assembled', 'Assembled kitchen cabinets'),
           },
           { label: 'RTA', href: RTA_LISTING, image: nav('rta', 'Ready-to-assemble cabinets') },
-          { label: 'Quick Ship', href: '#', image: nav('quick-ship', 'Quick-ship cabinets') },
+          { label: 'Quick Ship', href: '/quick-ship-cabinets', image: nav('quick-ship', 'Quick-ship cabinets') },
         ],
       },
       {
@@ -90,7 +90,7 @@ const menu: MenuItem[] = [
         // Countertops: no Add to Cart — customers request a quote (form) or phone to order.
         // EK supplies only; it does not fit or install.
         label: 'Countertops',
-        href: '#',
+        href: '/countertops',
         links: [
           { label: 'Granite', href: '#', image: nav('granite', 'Granite countertop') },
           { label: 'Laminate', href: '#', image: nav('laminate', 'Laminate countertop') },
@@ -104,10 +104,10 @@ const menu: MenuItem[] = [
       },
       {
         label: 'Sale',
-        href: '#',
+        href: '/sale',
         links: [
-          { label: 'Clearance', href: '#', image: nav('clearance', 'Clearance cabinets') },
-          { label: 'Promotions', href: '#', image: nav('promo', 'Current promotions') },
+          { label: 'Clearance', href: '/clearance-sale', image: nav('clearance', 'Clearance cabinets') },
+          { label: 'Promotions', href: '/promotions', image: nav('promo', 'Current promotions') },
         ],
       },
       {
@@ -230,13 +230,13 @@ const menu: MenuItem[] = [
       },
       {
         label: 'Siding',
-        href: '#',
-        links: [{ label: 'All Siding', href: '#', image: nav('siding', 'House siding') }],
+        href: '/siding',
+        links: [{ label: 'All Siding', href: '/siding', image: nav('siding', 'House siding') }],
       },
       {
         label: 'Doors',
-        href: '#',
-        links: [{ label: 'All Doors', href: '#', image: nav('doors', 'Entry door') }],
+        href: '/doors',
+        links: [{ label: 'All Doors', href: '/doors', image: nav('doors', 'Entry door') }],
       },
     ],
   },
