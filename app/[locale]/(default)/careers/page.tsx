@@ -43,10 +43,10 @@ const ROLES: string[][] = [
   ['!Project Manager & Design Consultant', 'Showroom & design', 'Orange', 'Full-time'],
   ['!Cabinet Assembler', 'Factory', 'Bristol', 'Full-time · 2 shifts'],
   ['!CNC Operator', 'Factory', 'Bristol', 'Full-time'],
-  ['!Stone Fabricator / Polisher', 'Countertops', 'Hartford', 'Full-time'],
+  ['!Stone Fabricator / Polisher', 'Countertops', 'Bristol', 'Full-time'],
   ['!Delivery Driver — CDL B', 'Warehouse & delivery', 'Bristol', 'Full-time'],
   ['!Showroom Associate', 'Showroom & design', 'Stamford', 'Part-time'],
-  ['!Trade Account Manager', 'Office', 'Hartford', 'Full-time'],
+  ['!Trade Account Manager', 'Office', 'Bristol', 'Full-time'],
 ];
 
 export default async function Careers({ params }: { params: Promise<{ locale: string }> }) {
@@ -62,7 +62,7 @@ export default async function Careers({ params }: { params: Promise<{ locale: st
           { label: 'See open roles', href: '#roles', primary: true },
           { label: 'Send us your details', href: '#apply' },
         ]}
-        description="Every job here touches a real kitchen that a family will cook in for the next twenty years. We design kitchens with people in six showrooms, build the cabinets in our own Bristol factory, cut the countertops in Hartford and deliver it all ourselves, and we've been doing it in Connecticut since 1916. If you'd like work you can point to, this is it."
+        description="Every job here touches a real kitchen that a family will cook in for the next twenty years. We design kitchens with people in six showrooms, build the cabinets and cut the countertops in our own Bristol factory and deliver it all ourselves, and we've been doing it in Connecticut since 1916. If you'd like work you can point to, this is it."
         imageLabel="The team on the factory floor"
         kicker="Careers"
         title="Build a career making kitchens people live in"

@@ -69,7 +69,7 @@ export default async function Countertops({ params }: { params: Promise<{ locale
           { label: 'Get a countertop quote', href: '#quote' },
           { label: 'Call 860-247-1000', href: 'tel:+18602471000' },
         ]}
-        description="Granite from $49.99 and quartz from $59.99 a square foot: some of the lowest prices per square foot you'll find anywhere, on stone from quarries around the world, cut and polished at our own facility in Hartford. Because every countertop is sized to your kitchen, the price is a quote rather than a cart. Tell us the rough size and we'll price it, usually the same day — or simply call and order over the phone."
+        description="Granite from $49.99 and quartz from $59.99 a square foot: some of the lowest prices per square foot you'll find anywhere, on stone from quarries around the world, cut and polished at our own facility in Bristol. Because every countertop is sized to your kitchen, the price is a quote rather than a cart. Tell us the rough size and we'll price it, usually the same day — or simply call and order over the phone."
         imageLabel="A quartz countertop in a finished kitchen"
         title="Countertops at prices other shops can't match"
       />

@@ -34,7 +34,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           { label: 'Free design consult', href: FREE_DESIGN_HREF, primary: true },
           { label: 'Visit a showroom', href: '/showrooms' },
         ]}
-        description="We've been Connecticut's kitchen company since 1916. Based in Hartford, we build our own cabinetry — Star Cabinetry, made right here — cut and polish our own stone countertops, and sell it all from six showrooms you can walk into. That's the difference between us and a website with a warehouse somewhere: when you buy from us, you're buying from the people who made it, at a manufacturer-direct price, with the cabinets already on the shelf."
+        description="We've been Connecticut's kitchen company since 1916. Based in Bristol, we build our own cabinetry — Star Cabinetry, made right here — cut and polish our own stone countertops, and sell it all from six showrooms you can walk into. That's the difference between us and a website with a warehouse somewhere: when you buy from us, you're buying from the people who made it, at a manufacturer-direct price, with the cabinets already on the shelf."
         imageLabel="The factory floor, cabinets on the line"
         kicker="About Express Kitchens"
         title="Made in Connecticut. Sold by the people who make it."
@@ -159,7 +159,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'Countertops, cut and polished here',
             description:
-              'Granite and quartz from quarries around the world, templated, cut and hand-polished at our own facility in Hartford, in a wide choice of colours and at a price to fit your budget.',
+              'Granite and quartz from quarries around the world, templated, cut and hand-polished at our own facility in Bristol, in a wide choice of colours and at a price to fit your budget.',
             imageLabel: 'Stone polishing',
           },
           {

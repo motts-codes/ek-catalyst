@@ -272,7 +272,7 @@ export const STORY = {
   kicker: 'Since 1916',
   title: 'Made in Connecticut. In stock in Connecticut.',
   description:
-    'We build the cabinets in our own Bristol factory, cut the countertops in Hartford and sell it all in six showrooms — so the price is manufacturer-direct and two weeks means two weeks. 110 years, 100,000+ kitchens.',
+    'We build the cabinets and cut the countertops in our own Bristol factory and sell it all in six showrooms — so the price is manufacturer-direct and two weeks means two weeks. 110 years, 100,000+ kitchens.',
   actions: [
     { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
     { label: 'Our story', href: '/about' },

@@ -40,7 +40,7 @@ const rows = (lowest: { assembled: string | null; rta: string | null; collection
   ['!Showrooms', `${SHOWROOMS.length} in Connecticut`, 'Aisle displays', 'None', 'Usually one'],
   [
     '!Who manufactures',
-    'We do, in Hartford (Star Cabinetry)',
+    'We do, in Bristol (Star Cabinetry)',
     'Third party',
     'Third party',
     'They do',
@@ -111,7 +111,7 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
           "Big-box stores sell cabinets made by someone else, usually to order, with lead times set by that supplier. The in-store displays are good for getting a feel for a door style, and the prices on the entry lines are hard to beat on paper. Where it tends to go wrong is after the order: a damaged box means waiting on a third party, and the person who designed your kitchen isn't the person who built it.",
           "Online-only sellers are often the cheapest ready-to-assemble option you'll find, and for a confident builder with a simple layout they can be a perfectly good choice. You won't be able to see or hold the cabinet first, assembled is rarely an option, and support is a ticket rather than a person.",
           'Custom shops make beautiful work and will build to any size. You pay for that, both in money and in time, and a true custom kitchen is usually a different budget conversation entirely.',
-          "Our position is the one in between: we design and build the cabinet ourselves in Hartford, stock it in Bristol, show it in six Connecticut showrooms and sell it priced openly, ready-to-assemble or factory-assembled. If you want it faster or cheaper than that, we'd rather tell you who to call.",
+          "Our position is the one in between: we design and build the cabinet ourselves in Bristol, stock it there, show it in six Connecticut showrooms and sell it priced openly, ready-to-assemble or factory-assembled. If you want it faster or cheaper than that, we'd rather tell you who to call.",
         ]}
         kicker="By seller type"
         title="The honest version of each"
