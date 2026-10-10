@@ -29,7 +29,7 @@ interface HeroProps {
   className?: string;
 }
 
-// Category page header, 60 / 40: the headline and one paragraph on a brand-red panel, the category
+// Category page header, 50 / 50: the headline and one paragraph on a brand-red panel, the category
 // photo beside it. Same rounded panel as the home hero. Stacks on narrow screens (text first).
 export function CategoryHero({
   title,
@@ -42,7 +42,7 @@ export function CategoryHero({
   return (
     <section className={clsx('@container', className)}>
       <div className={clsx(containerClassName, 'pt-3')}>
-        <div className="grid overflow-hidden rounded-3xl @3xl:grid-cols-[60fr_40fr]">
+        <div className="grid overflow-hidden rounded-3xl @3xl:grid-cols-2">
           <div className="flex flex-col justify-center bg-[var(--button-primary-background,#d90716)] px-6 py-9 text-white @xl:px-10 @xl:py-12 @4xl:px-14">
             <h1 className="m-0 max-w-[26ch] font-heading text-[26px] font-bold leading-tight @xl:text-4xl">
               {title}
