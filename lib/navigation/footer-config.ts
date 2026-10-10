@@ -59,7 +59,6 @@ export const FOOTER_SECTIONS: Section[] = [
       { label: 'Showrooms', href: '/showrooms' },
       { label: 'Pro Program', href: '/pro' },
       { label: 'Refer a friend', href: '/refer-a-friend' },
-      { label: 'Careers', href: '/careers' },
       { label: 'Industries' },
       { label: 'Commercial', href: '/industry/commercial' },
       { label: 'Multifamily', href: '/industry/multifamily' },

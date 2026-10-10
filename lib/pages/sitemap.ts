@@ -81,7 +81,6 @@ export const SITEMAP: SitemapGroup[] = [
       { label: 'About', href: '/about' },
       { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
       { label: 'Showrooms', href: '/showrooms' },
-      { label: 'Careers', href: '/careers' },
       { label: 'Refer a friend', href: '/refer-a-friend' },
       { label: 'Contact', href: '/contact' },
     ],

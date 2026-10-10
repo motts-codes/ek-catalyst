@@ -7,7 +7,6 @@ import {
   LinkCards,
   PageBreadcrumbs,
   PageHero,
-  Prose,
   StatsRow,
   TeamRow,
   Timeline,
@@ -245,17 +244,6 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         showrooms={SHOWROOMS}
         tint
         title="Six showrooms across Connecticut"
-      />
-      <Prose
-        actions={[
-          { label: 'Careers', href: '/careers' },
-          { label: 'Press', href: '#' },
-        ]}
-        body={[
-          "If you'd like to be part of this, we're usually hiring in the factory, the showrooms and the trade team. And if you're writing about us, the press page has what you need.",
-        ]}
-        kicker="Join us"
-        title="Work with us"
       />
       <ClosingBand
         primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}

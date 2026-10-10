@@ -377,7 +377,7 @@ const menu: MenuItem[] = [
     ],
   },
   // Pro Program is NOT a nav item — the /pro homepage carries the details and the join button.
-  // Company (About / Showrooms / Careers / Contact) lives in the footer.
+  // Company (About / Showrooms / Contact) lives in the footer.
 ];
 
 /** The persistent header CTA differs per audience (label only; both share the brand-blue style). */
