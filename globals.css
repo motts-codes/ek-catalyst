@@ -122,8 +122,9 @@ h6,
   /* Quantity stepper (+/-) hover: black background with reversed (white) icon */
   /* Forms, after the live site's contact card: white fields with a pink-red border on a pale
      rose card, red focus, red radios/checkboxes. The border is the lightest pink that still gives
-     the field a 3:1 boundary against white (WCAG 1.4.11); the reference's #ff9c9c is only 2:1. */
-  --form-border: #e86a6a;
+     a 3:1 boundary against BOTH the rose card (#fdf8f8) and the rose panel (#fff2f2), per
+     WCAG 1.4.11; the reference's #ff9c9c is only 2:1. Measured: 3.15 / 3.03. */
+  --form-border: #e56464;
   --form-border-focus: #d90716;
   --form-panel: #fff2f2;
   --form-card: #fdf8f8;
