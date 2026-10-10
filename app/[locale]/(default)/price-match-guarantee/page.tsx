@@ -7,7 +7,13 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FinePrint, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import {
+  FinePrint,
+  FormCard,
+  PageBreadcrumbs,
+  PageHero,
+  Prose,
+} from '@/vibes/soul/sections/page-kit';
 import { CONTACT_FIELDS } from '~/lib/forms/fields';
 import { submitPriceMatchLead } from '~/lib/forms/submit-lead';
 
@@ -155,13 +161,13 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
         tint
         title="Send us the competitor's quote"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitPriceMatchLead}
             fields={FIELDS}
             submitLabel="Submit for price match"
           />
-        </div>
+        </FormCard>
       </HomeSection>
       <CabinetFaq
         data={{

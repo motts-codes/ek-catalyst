@@ -64,10 +64,8 @@ export const NumberInput = React.forwardRef<
     const currentValue = Number(rest.value);
     const maxValue = rest.max != null ? Number(rest.max) : undefined;
     const minValue = rest.min != null ? Number(rest.min) : undefined;
-    const atMax =
-      maxValue != null && !Number.isNaN(currentValue) && currentValue >= maxValue;
-    const atMin =
-      minValue != null && !Number.isNaN(currentValue) && currentValue <= minValue;
+    const atMax = maxValue != null && !Number.isNaN(currentValue) && currentValue >= maxValue;
+    const atMin = minValue != null && !Number.isNaN(currentValue) && currentValue <= minValue;
 
     return (
       <div className={clsx('space-y-2', className)}>

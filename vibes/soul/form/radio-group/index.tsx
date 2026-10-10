@@ -47,7 +47,10 @@ export const RadioGroup = React.forwardRef<
         <RadioGroupPrimitive.Root
           {...rest}
           aria-labelledby={id}
-          className="flex flex-wrap items-center gap-x-6 gap-y-2"
+          className={clsx(
+            'flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg px-5 py-3.5',
+            colorScheme === 'light' && 'bg-[var(--radio-group-light-panel,transparent)]',
+          )}
           ref={ref}
           required={required}
         >

@@ -5,7 +5,7 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ShowroomCards } from '@/vibes/soul/sections/page-kit/showrooms';
 import { CONTACT_FIELDS, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitBookingLead } from '~/lib/forms/submit-lead';
@@ -69,7 +69,7 @@ function fields(showroom: string | undefined): Field[] {
     {
       type: 'textarea',
       name: 'notes',
-      label: 'Anything your Project Manager should know? (optional)',
+      label: 'Anything your Project Manager should know?',
     },
   ];
 }
@@ -117,7 +117,7 @@ export default async function Book({
         tint
         title="Pick a day and a time"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitBookingLead}
             fields={fields(chosen?.slug)}
@@ -127,7 +127,7 @@ export default async function Book({
             Showrooms are closed on Sundays, and some on Mondays. If the slot you choose turns out
             to be taken, your Project Manager will offer the nearest one when they confirm.
           </p>
-        </div>
+        </FormCard>
       </HomeSection>
       <CardsRow
         cards={[

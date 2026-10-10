@@ -8,7 +8,13 @@ import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FinePrint, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import {
+  FinePrint,
+  FormCard,
+  PageBreadcrumbs,
+  PageHero,
+  Prose,
+} from '@/vibes/soul/sections/page-kit';
 import { submitReferralLead } from '~/lib/forms/submit-lead';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
@@ -24,7 +30,7 @@ const FIELDS: Field[] = [
   {
     type: 'email',
     name: 'friendEmail',
-    label: "Your friend's email, if you'd like us to send the link for you (optional)",
+    label: "Your friend's email, if you'd like us to send the link for you",
   },
 ];
 
@@ -83,13 +89,13 @@ export default async function ReferAFriend({ params }: { params: Promise<{ local
         kicker="Get your link"
         title="Start referring"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitReferralLead}
             fields={FIELDS}
             submitLabel="Get my link"
           />
-        </div>
+        </FormCard>
       </HomeSection>
       <Prose
         actions={[{ label: 'Pro Program', href: '/pro' }]}

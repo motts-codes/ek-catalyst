@@ -7,7 +7,7 @@ import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitProProgramLead } from '~/lib/forms/submit-lead';
 
@@ -141,13 +141,13 @@ export default async function ProProgram({ params }: { params: Promise<{ locale:
         kicker="Join"
         title="Send your application"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitProProgramLead}
             fields={FIELDS}
             submitLabel="Send my application"
           />
-        </div>
+        </FormCard>
       </HomeSection>
     </>
   );

@@ -10,7 +10,7 @@ import {
 } from '@/vibes/soul/sections/category-hero';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ const FIELDS: Field[] = [
       { label: 'None', value: 'none' },
     ],
   },
-  { type: 'textarea', name: 'notes', label: 'Anything else — colour, edge, timing (optional)' },
+  { type: 'textarea', name: 'notes', label: 'Anything else — colour, edge, timing' },
 ];
 
 export default async function Countertops({ params }: { params: Promise<{ locale: string }> }) {
@@ -117,13 +117,13 @@ export default async function Countertops({ params }: { params: Promise<{ locale
         tint
         title="Request your quote"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitQuoteLead}
             fields={FIELDS}
             submitLabel="Request my quote"
           />
-        </div>
+        </FormCard>
       </HomeSection>
       <Prose
         body={[

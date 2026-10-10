@@ -5,18 +5,18 @@ import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/serve
 import { SearchParams } from 'nuqs/server';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
-import { FeaturedProductCarousel } from '@/vibes/soul/sections/featured-product-carousel';
 import { Faq } from '@/vibes/soul/sections/faq';
+import { FeaturedProductCarousel } from '@/vibes/soul/sections/featured-product-carousel';
 import { FeaturesGrid } from '@/vibes/soul/sections/features-grid';
 import { ProductInformation } from '@/vibes/soul/sections/product-information';
 import { auth, getSessionCustomerAccessToken } from '~/auth';
-import { rewriteWysiwygContentUrls } from '~/data-transformers/html-content-transformer';
-import { pricesTransformer } from '~/data-transformers/prices-transformer';
-import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { faqTransformer } from '~/data-transformers/faq-transformer';
 import { featuresGridTransformer } from '~/data-transformers/features-grid-transformer';
-import { productInfoFeaturesTransformer } from '~/data-transformers/product-info-features-transformer';
+import { rewriteWysiwygContentUrls } from '~/data-transformers/html-content-transformer';
 import { buildOptionDependencyMap } from '~/data-transformers/option-dependency-transformer';
+import { pricesTransformer } from '~/data-transformers/prices-transformer';
+import { productCardTransformer } from '~/data-transformers/product-card-transformer';
+import { productInfoFeaturesTransformer } from '~/data-transformers/product-info-features-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
@@ -168,7 +168,10 @@ export default async function Product({ params, searchParams }: Props) {
   // filters out all __-prefixed fields).
   const productFlags = removeEdgesAndNodes(baseProduct.customFields);
   const isFlagYes = (name: string) =>
-    productFlags.find((field) => field.name === name)?.value?.trim().toLowerCase() === 'yes';
+    productFlags
+      .find((field) => field.name === name)
+      ?.value?.trim()
+      .toLowerCase() === 'yes';
   const badges = [
     isFlagYes('__is_new') && { label: 'New', color: 'var(--pill-new-background)' },
     isFlagYes('__is_bestseller') && {
@@ -569,22 +572,24 @@ export default async function Product({ params, searchParams }: Props) {
 
     const customFields = removeEdgesAndNodes(product.customFields);
 
-    return [
-      { name: t('ProductDetails.Accordions.sku'), value: product.sku },
-      {
-        name: t('ProductDetails.Accordions.weight'),
-        value:
-          product.weight?.value != null ? `${product.weight.value} ${product.weight.unit}` : '',
-      },
-      { name: t('ProductDetails.Accordions.condition'), value: product.condition },
-      ...customFields
-        // Exclude all __-prefixed fields — they drive UI (fulfillment box, marketing pills), not
-        // spec rows.
-        .filter((field) => !field.name.startsWith('__'))
-        .map((field) => ({ name: field.name, value: field.value })),
-    ]
-      // Drop any spec row without a value (empty SKU/condition, missing custom fields, etc.).
-      .filter((spec) => spec.value != null && spec.value.trim() !== '');
+    return (
+      [
+        { name: t('ProductDetails.Accordions.sku'), value: product.sku },
+        {
+          name: t('ProductDetails.Accordions.weight'),
+          value:
+            product.weight?.value != null ? `${product.weight.value} ${product.weight.unit}` : '',
+        },
+        { name: t('ProductDetails.Accordions.condition'), value: product.condition },
+        ...customFields
+          // Exclude all __-prefixed fields — they drive UI (fulfillment box, marketing pills), not
+          // spec rows.
+          .filter((field) => !field.name.startsWith('__'))
+          .map((field) => ({ name: field.name, value: field.value })),
+      ]
+        // Drop any spec row without a value (empty SKU/condition, missing custom fields, etc.).
+        .filter((spec) => spec.value != null && spec.value.trim() !== '')
+    );
   });
 
   const streameableAccordions = Streamable.from(async () => {
@@ -684,7 +689,6 @@ export default async function Product({ params, searchParams }: Props) {
       <ProductAnalyticsProvider data={streamableAnalyticsData}>
         <ProductDetail
           action={addToCart}
-          breadcrumbs={breadcrumbs}
           additionalActions={
             <WishlistButton
               formId={detachedWishlistFormId}
@@ -693,17 +697,17 @@ export default async function Product({ params, searchParams }: Props) {
             />
           }
           additionalInformationTitle={t('ProductDetails.additionalInformation')}
+          breadcrumbs={breadcrumbs}
           ctaDisabled={streameableCtaDisabled}
           ctaLabel={streameableCtaLabel}
-          stockStatus={streamableStockStatus}
           decrementLabel={t('ProductDetails.decreaseQuantity')}
+          deliveryMessage={deliveryMessage}
           emptySelectPlaceholder={t('ProductDetails.emptySelectPlaceholder')}
           fields={productOptionsTransformer(baseProduct.productOptions)}
-          optionDependencyMap={buildOptionDependencyMap(baseProduct.variants?.edges)}
           fulfillmentMessage={fulfillmentMessage}
-          deliveryMessage={deliveryMessage}
           incrementLabel={t('ProductDetails.increaseQuantity')}
           loadMoreImagesAction={getMoreProductImages}
+          optionDependencyMap={buildOptionDependencyMap(baseProduct.variants?.edges)}
           prefetch={true}
           product={{
             id: baseProduct.entityId.toString(),
@@ -737,6 +741,7 @@ export default async function Product({ params, searchParams }: Props) {
           quantityLabel={t('ProductDetails.quantity')}
           recaptchaSiteKey={recaptchaSiteKey}
           reviewFormAction={submitReview}
+          stockStatus={streamableStockStatus}
           thumbnailLabel={t('ProductDetails.thumbnail')}
           user={streamableUser}
         />

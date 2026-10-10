@@ -120,6 +120,33 @@ h6,
   --pill-sale-background: #d90716;
   --pill-sale-text: #ffffff;
   /* Quantity stepper (+/-) hover: black background with reversed (white) icon */
+  /* Forms, after the live site's contact card: white fields with a pink-red border on a pale
+     rose card, red focus, red radios/checkboxes. The border is the lightest pink that still gives
+     the field a 3:1 boundary against white (WCAG 1.4.11); the reference's #ff9c9c is only 2:1. */
+  --form-border: #e86a6a;
+  --form-border-focus: #d90716;
+  --form-panel: #fff2f2;
+  --form-card: #fdf8f8;
+  --input-light-border: var(--form-border);
+  --input-light-focus: var(--form-border-focus);
+  --textarea-light-border: var(--form-border);
+  --textarea-light-border-focus: var(--form-border-focus);
+  --select-light-trigger-border: var(--form-border);
+  --select-light-trigger-border-hover: var(--form-border-focus);
+  --select-light-trigger-focus: var(--form-border-focus);
+  --radio-group-light-border: var(--form-border);
+  --radio-group-light-border-hover: var(--form-border-focus);
+  --radio-group-light-border-focus: var(--form-border-focus);
+  --radio-group-light-indicator-background: var(--form-border-focus);
+  --radio-group-light-label: #404040;
+  --radio-group-light-panel: var(--form-panel);
+  --checkbox-light-unchecked-border: var(--form-border);
+  --checkbox-light-unchecked-border-hover: var(--form-border-focus);
+  --checkbox-light-checked-background: var(--form-border-focus);
+  --checkbox-light-checked-border: var(--form-border-focus);
+  --checkbox-light-checked-border-hover: var(--form-border-focus);
+  --checkbox-light-label: #404040;
+  --checkbox-group-light-panel: var(--form-panel);
   --number-input-light-button-background-hover: #000000;
   --number-input-light-icon-hover: #ffffff;
   /* PDP gallery: transparent image backdrop instead of the default grey (--contrast-100) */

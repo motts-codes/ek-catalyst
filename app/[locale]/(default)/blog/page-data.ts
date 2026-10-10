@@ -82,7 +82,7 @@ export const getBlog = cache(async () => {
 });
 
 export const getBlogPosts = cache(
-  async ({ tag, limit = 9, before, after }: BlogPostsFiltersInput & Pagination) => {
+  async ({ tag, limit, before, after }: BlogPostsFiltersInput & Pagination) => {
     const filterArgs = tag ? { filters: { tags: [tag] } } : {};
     const paginationArgs = before ? { last: limit, before } : { first: limit, after };
 

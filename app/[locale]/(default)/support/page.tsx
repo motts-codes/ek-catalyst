@@ -4,7 +4,13 @@ import { setRequestLocale } from 'next-intl/server';
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { LinkCards, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import {
+  FormCard,
+  LinkCards,
+  PageBreadcrumbs,
+  PageHero,
+  Prose,
+} from '@/vibes/soul/sections/page-kit';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
 import { submitSupportLead } from '~/lib/forms/submit-lead';
 import { SHOWROOMS } from '~/lib/home/home-content';
@@ -93,9 +99,9 @@ export default async function Support({ params }: { params: Promise<{ locale: st
         title="Status, changes and pickups"
       />
       <HomeSection id="message" kicker="Send a message" tint title="Tell us what you need">
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection action={submitSupportLead} fields={FIELDS} submitLabel="Send" />
-        </div>
+        </FormCard>
       </HomeSection>
       <ShowroomBand
         kicker="Or talk to someone in person"

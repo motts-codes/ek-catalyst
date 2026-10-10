@@ -5,7 +5,7 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { CONTACT_FIELDS, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitDesignLead } from '~/lib/forms/submit-lead';
@@ -58,7 +58,7 @@ const FIELDS: Field[] = [
   {
     type: 'select',
     name: 'budget',
-    label: 'Budget, if you have one in mind (optional)',
+    label: 'Budget, if you have one in mind',
     options: [
       { label: "I'd rather not say", value: 'na' },
       { label: 'Under $5,000', value: 'lt5' },
@@ -70,7 +70,7 @@ const FIELDS: Field[] = [
   {
     type: 'textarea',
     name: 'notes',
-    label: 'Anything else you want the designer to know? (optional)',
+    label: 'Anything else you want the designer to know?',
   },
   {
     type: 'radio-group',
@@ -160,7 +160,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         tint
         title="Tell us about your project"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitDesignLead}
             fields={pro ? PRO_FIELDS : FIELDS}
@@ -170,7 +170,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             A designer will call within one business day to confirm the day, time and format.
             You&apos;ll speak to a designer, not a call center. No deposit, no obligation.
           </p>
-        </div>
+        </FormCard>
       </HomeSection>
       <CardsRow
         cards={[

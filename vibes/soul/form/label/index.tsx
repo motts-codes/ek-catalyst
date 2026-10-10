@@ -33,16 +33,16 @@ export function Label({
     <LabelPrimitive.Root
       {...rest}
       className={clsx(
-        'block font-mono text-xs uppercase',
+        'block text-sm font-medium',
         {
-          light: 'text-[var(--label-light-text,hsl(var(--contrast-500)))]',
+          light: 'text-[var(--label-light-text,hsl(var(--foreground)))]',
           dark: 'text-[var(--label-dark-text,hsl(var(--contrast-100)))]',
         }[colorScheme],
         className,
       )}
     >
       {children}
-      {!required && <span className="ml-1 normal-case">({t('optional')})</span>}
+      {!required && <span className="ml-1 font-normal text-contrast-500">({t('optional')})</span>}
     </LabelPrimitive.Root>
   );
 }

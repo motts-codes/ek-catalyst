@@ -71,13 +71,13 @@ export const Input = React.forwardRef<
         <input
           {...rest}
           className={clsx(
-            'w-full px-6 py-3 text-sm [appearance:textfield] placeholder:font-normal placeholder:text-contrast-500 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+            'w-full px-5 py-3.5 text-[15px] [appearance:textfield] placeholder:font-normal placeholder:text-contrast-500 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
             {
               light:
                 'bg-[var(--input-light-background,hsl(var(--background)))] text-[var(--input-light-text,hsl(var(--foreground)))] placeholder:text-[var(--input-light-placeholder,hsl(var(--contrast-500)))]',
               dark: 'bg-[var(--input-dark-background,hsl(var(--foreground)))] text-[var(--input-dark-text,hsl(var(--background)))] placeholder:text-[var(--input-dark-placeholder,hsl(var(--contrast-100)))]',
             }[colorScheme],
-            { 'py-2.5 pe-4 ps-12': prepend },
+            { 'pe-4 ps-12': prepend },
           )}
           id={id ?? generatedId}
           ref={ref}

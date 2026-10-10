@@ -6,7 +6,13 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero, Prose, StatsRow } from '@/vibes/soul/sections/page-kit';
+import {
+  FormCard,
+  PageBreadcrumbs,
+  PageHero,
+  Prose,
+  StatsRow,
+} from '@/vibes/soul/sections/page-kit';
 import { ProjectGrid } from '@/vibes/soul/sections/page-kit/media';
 import { industryFields } from '~/lib/forms/industry-fields';
 import { submitIndustryLead } from '~/lib/forms/submit-lead';
@@ -134,13 +140,13 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         tint
         title="Request portfolio pricing"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitIndustryLead}
             fields={industryFields('Project — number of units')}
             submitLabel="Send"
           />
-        </div>
+        </FormCard>
       </HomeSection>
     </>
   );

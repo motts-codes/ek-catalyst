@@ -74,7 +74,7 @@ export const SwatchRadioGroup = React.forwardRef<
 
     // Show the selected swatch's name next to the label (e.g. "FINISH: Bisque"). The group is
     // controlled, so the current value arrives via `rest.value` (falls back to defaultValue).
-    const selectedValue = (rest.value ?? rest.defaultValue) as string | undefined;
+    const selectedValue = rest.value ?? rest.defaultValue;
     const selectedLabel = options.find((o) => o.value === selectedValue)?.label;
 
     return (

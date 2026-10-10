@@ -488,3 +488,20 @@ export function FinePrint({ children, className }: { children: ReactNode; classN
     </HomeSection>
   );
 }
+
+// The card every lead form sits in: pale rose, red rule top and bottom, soft shadow, with the
+// privacy line underneath. Pass the form as children; anything after it (notes) goes in `after`.
+export function FormCard({ children, after }: { children: ReactNode; after?: ReactNode }) {
+  return (
+    <div className="rounded-xl border-y-4 border-[var(--form-border-focus,#d90716)] bg-[var(--form-card,#fdf8f8)] p-6 shadow-[0_15px_40px_rgb(0_0_0/0.04)] @xl:p-10">
+      {children}
+      {after}
+      <p className="mt-5 text-center text-xs text-contrast-500">
+        *Your details stay with us. No spam, ever.{' '}
+        <Link className="underline underline-offset-4" href="/privacy">
+          View our privacy policy
+        </Link>
+      </p>
+    </div>
+  );
+}

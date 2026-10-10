@@ -103,8 +103,10 @@ export function Select({
         <SelectPrimitive.Trigger
           aria-label={label}
           className={clsx(
-            'flex h-9 w-full select-none items-center justify-between gap-2 border pl-4 pr-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
-            variant === 'rectangle' ? 'rounded-lg' : 'rounded-full',
+            'flex w-full select-none items-center justify-between gap-2 border pr-3 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
+            variant === 'rectangle'
+              ? 'h-[52px] rounded-lg pl-5 text-[15px]'
+              : 'h-9 rounded-full pl-4 text-sm',
             {
               light:
                 'bg-[var(--select-light-trigger-background,hsl(var(--white)))] text-[var(--select-light-trigger-text,hsl(var(--foreground)))] hover:border-[var(--select-light-trigger-border-hover,hsl(var(--contrast-300)))] hover:bg-[var(--select-light-trigger-background-hover,hsl(var(--contrast-100)))] focus-visible:ring-[var(--select-light-trigger-focus,hsl(var(--primary)))]',

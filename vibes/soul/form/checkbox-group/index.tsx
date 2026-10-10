@@ -32,7 +32,7 @@ export function CheckboxGroup({
   name,
   value,
   onValueChange,
-  colorScheme,
+  colorScheme = 'light',
   required,
 }: Props) {
   const id = React.useId();
@@ -44,7 +44,13 @@ export function CheckboxGroup({
           {label}
         </Label>
       )}
-      <div aria-labelledby={id} className="space-y-2">
+      <div
+        aria-labelledby={id}
+        className={clsx(
+          'space-y-3 rounded-lg px-5 py-3.5',
+          colorScheme === 'light' && 'bg-[var(--checkbox-group-light-panel,transparent)]',
+        )}
+      >
         {options.map((option) => (
           <Checkbox
             checked={value.includes(option.value)}

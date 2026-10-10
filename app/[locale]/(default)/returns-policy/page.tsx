@@ -8,7 +8,7 @@ import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { CONTACT_FIELDS } from '~/lib/forms/fields';
 import { submitReturnLead } from '~/lib/forms/submit-lead';
 import { SAMPLES_HREF } from '~/lib/home/home-content';
@@ -129,13 +129,13 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
         tint
         title="Tell us what's coming back"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitReturnLead}
             fields={FIELDS}
             submitLabel="Request authorization"
           />
-        </div>
+        </FormCard>
       </HomeSection>
       <CardsRow
         cards={[

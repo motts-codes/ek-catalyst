@@ -4,7 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
 import { AUDIENCE_OPTIONS } from '~/lib/forms/fields';
 import { submitContactLead } from '~/lib/forms/submit-lead';
@@ -65,7 +65,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
         title="Talk to Express Kitchens"
       />
       <HomeSection id="message" kicker="Send a message" tint title="Tell us what you need">
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitContactLead}
             fields={FIELDS}
@@ -83,7 +83,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
             , and to be contacted using the details you&apos;ve given. We reply within one business
             day.
           </p>
-        </div>
+        </FormCard>
       </HomeSection>
     </>
   );

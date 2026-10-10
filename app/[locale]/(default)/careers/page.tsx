@@ -6,7 +6,7 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { submitCareersLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -133,13 +133,13 @@ export default async function Careers({ params }: { params: Promise<{ locale: st
         kicker="Apply"
         title="Send us your details"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitCareersLead}
             fields={FIELDS}
             submitLabel="Send my details"
           />
-        </div>
+        </FormCard>
       </HomeSection>
     </>
   );

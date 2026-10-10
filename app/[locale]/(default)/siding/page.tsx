@@ -9,7 +9,7 @@ import {
 } from '@/vibes/soul/sections/category-hero';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ const FIELDS: Field[] = [
     ],
   },
   { type: 'text', name: 'squares', label: 'Approximate squares, or the house size' },
-  { type: 'textarea', name: 'notes', label: 'Colour, timing, anything else (optional)' },
+  { type: 'textarea', name: 'notes', label: 'Colour, timing, anything else' },
 ];
 
 export default async function Siding({ params }: { params: Promise<{ locale: string }> }) {
@@ -90,13 +90,13 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
         tint
         title="Tell us about the house"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection
             action={submitQuoteLead}
             fields={FIELDS}
             submitLabel="Request my quote"
           />
-        </div>
+        </FormCard>
       </HomeSection>
     </>
   );

@@ -6,7 +6,7 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { FormCard, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { submitSupportLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -108,9 +108,9 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         tint
         title="Report a barrier"
       >
-        <div className="rounded-3xl border border-contrast-100 bg-white p-6 @xl:p-10">
+        <FormCard>
           <DynamicFormSection action={submitSupportLead} fields={FIELDS} submitLabel="Send" />
-        </div>
+        </FormCard>
       </HomeSection>
     </>
   );
