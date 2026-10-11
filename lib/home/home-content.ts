@@ -118,8 +118,8 @@ const CATEGORY_BASE: Array<{
     ),
   },
   {
-    name: 'Cabinet hardware',
-    href: '/cabinet-hardware',
+    name: 'Handles',
+    href: '/cabinet-hardware/handles-knobs',
     homeowner: 'Every finish we make doors in',
     pro: 'Ships next day',
     image: tile('handles', 'A drawer cabinet with brass pulls against white tile'),
