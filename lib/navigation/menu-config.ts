@@ -327,16 +327,32 @@ const menu: MenuItem[] = [
       {
         label: 'See it',
         links: [
-          { label: 'Best-Selling Designs', href: '/inspiration/best-sellers' },
+          {
+            label: 'Best-Selling Designs',
+            href: '/inspiration/best-sellers',
+            image: nav('best-selling-designs', 'The most-ordered kitchen, Avon in white'),
+          },
           { label: 'Finished Kitchens', href: '/inspiration' },
-          { label: 'Projects', href: '/inspiration/projects' },
+          {
+            label: 'Projects',
+            href: '/inspiration/projects',
+            image: nav('projects', 'A finished customer kitchen'),
+          },
         ],
       },
       {
         label: 'Hear it',
         links: [
-          { label: 'Reviews', href: '/reviews' },
-          { label: 'Video Testimonials', href: '/testimonials' },
+          {
+            label: 'Reviews',
+            href: '/reviews',
+            image: nav('reviews', 'A customer in their new kitchen'),
+          },
+          {
+            label: 'Video Testimonials',
+            href: '/testimonials',
+            image: nav('video-testimonials', 'A customer on camera in their kitchen'),
+          },
         ],
       },
     ],
@@ -351,26 +367,54 @@ const menu: MenuItem[] = [
       {
         label: 'Getting Started',
         links: [
-          { label: 'Measuring Guide', href: '/resources/measuring-guide' },
+          {
+            label: 'Measuring Guide',
+            href: '/resources/measuring-guide',
+            image: nav('measuring-guide', 'A tape measure on a kitchen plan'),
+          },
           { label: 'What Is a 10×10 Kitchen', href: '/resources/ten-by-ten-kitchen' },
-          { label: 'Order Samples', href: '/samples' },
-          { label: 'Kitchen Estimator', href: '/mykitchen/calculator' },
+          {
+            label: 'Order Samples',
+            href: '/samples',
+            image: nav('order-samples', 'Quarter-door samples'),
+          },
+          {
+            label: 'Kitchen Estimator',
+            href: '/mykitchen/calculator',
+            image: nav('kitchen-estimator', 'The estimator on a phone'),
+          },
         ],
       },
       {
         label: 'Guides',
         links: [
-          { label: 'Cabinet Care', href: '/resources/cabinet-care' },
-          { label: 'How-To Videos', href: '/resources/how-to-videos' },
-          { label: 'Blog', href: '/blog' },
+          {
+            label: 'Cabinet Care',
+            href: '/resources/cabinet-care',
+            image: nav('cabinet-care', 'Wiping a cabinet door'),
+          },
+          {
+            label: 'How-To Videos',
+            href: '/resources/how-to-videos',
+            image: nav('how-to-videos', 'An installer fitting a cabinet'),
+          },
+          { label: 'Blog', href: '/blog', image: nav('blog', 'An open notebook on a countertop') },
         ],
       },
       {
         label: 'Downloads & Policies',
         links: [
-          { label: 'Download Brochure', href: '#' },
+          {
+            label: 'Download Brochure',
+            href: '#',
+            image: nav('brochure', 'The Express Kitchens brochure'),
+          },
           { label: 'Financing', href: '/financing' },
-          { label: 'Warranty', href: '/warranty' },
+          {
+            label: 'Warranty',
+            href: '/warranty',
+            image: nav('warranty', 'A cabinet door with a warranty seal'),
+          },
           { label: 'FAQ', href: '/faq' },
         ],
       },

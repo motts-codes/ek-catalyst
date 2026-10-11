@@ -5,6 +5,7 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { Link } from '~/components/link';
 import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
@@ -45,13 +46,18 @@ export default async function AssembledCabinets({ params }: Props) {
           src: '/images/home/programs/assembled.webp',
           alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
         }}
+        imageOverlay={
+          <Link
+            className="inline-flex items-center gap-1.5 rounded-full border border-contrast-200 bg-white px-4 py-2 text-sm text-contrast-500 shadow-sm transition-colors hover:border-foreground hover:text-foreground"
+            href="/mykitchen/cabinets/assembled"
+          >
+            New to assembled?
+            <span className="font-semibold text-foreground">Watch the explainer ▶</span>
+          </Link>
+        }
         title="Assembled Kitchen Cabinets"
       />
-      <CabinetLines
-        explainerHref="/mykitchen/cabinets/assembled"
-        lines={lines}
-        program="assembled"
-      />
+      <CabinetLines lines={lines} program="assembled" />
       <CabinetFaq data={faq} />
     </>
   );

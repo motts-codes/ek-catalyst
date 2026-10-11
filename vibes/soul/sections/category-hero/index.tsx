@@ -12,6 +12,7 @@ import {
   Undo2,
   Zap,
 } from 'lucide-react';
+import { type ReactNode } from 'react';
 
 import { homeHeadingClassName, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
@@ -31,6 +32,8 @@ interface HeroProps {
    * on the dark-grey panel rather than black.
    */
   compact?: boolean;
+  /** Rendered over the photo, top-right (e.g. the 'Watch the explainer' pill). */
+  imageOverlay?: ReactNode;
   className?: string;
 }
 
@@ -44,6 +47,7 @@ export function CategoryHero({
   imageLabel,
   actions = [],
   compact = false,
+  imageOverlay,
   className,
 }: HeroProps) {
   return (
@@ -107,6 +111,9 @@ export function CategoryHero({
               />
             ) : (
               <MediaPlaceholder className="absolute inset-0" label={imageLabel ?? title} />
+            )}
+            {imageOverlay != null && (
+              <div className="absolute right-4 top-4 @xl:right-5 @xl:top-5">{imageOverlay}</div>
             )}
           </div>
         </div>

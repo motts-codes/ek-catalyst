@@ -5,6 +5,7 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { Link } from '~/components/link';
 import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
@@ -41,9 +42,18 @@ export default async function RtaCabinets({ params }: Props) {
           src: '/images/home/programs/rta.webp',
           alt: 'A kitchen in dark grey shaker cabinets',
         }}
+        imageOverlay={
+          <Link
+            className="inline-flex items-center gap-1.5 rounded-full border border-contrast-200 bg-white px-4 py-2 text-sm text-contrast-500 shadow-sm transition-colors hover:border-foreground hover:text-foreground"
+            href="/mykitchen/cabinets/rta"
+          >
+            New to RTA?
+            <span className="font-semibold text-foreground">Watch the explainer ▶</span>
+          </Link>
+        }
         title="RTA Kitchen Cabinets"
       />
-      <CabinetLines explainerHref="/mykitchen/cabinets/rta" lines={lines} program="rta" />
+      <CabinetLines lines={lines} program="rta" />
       <CabinetFaq data={faq} />
     </>
   );
