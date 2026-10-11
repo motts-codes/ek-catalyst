@@ -3,6 +3,8 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
+import { CategoryHero } from '@/vibes/soul/sections/category-hero';
+import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
@@ -30,12 +32,25 @@ export default async function AssembledCabinets({ params }: Props) {
 
   return (
     <>
+      <PageBreadcrumbs
+        breadcrumbs={[
+          { label: 'Cabinets', href: '/cabinets' },
+          { label: 'Assembled', href: '/cabinets/assembled-cabinets' },
+        ]}
+      />
+      {/* The same black-panel hero as the category pages, with the home page's program photo. */}
+      <CategoryHero
+        description="Built and checked in Connecticut, delivered ready to hang in three weeks. Pick a collection and finish below."
+        image={{
+          src: '/images/home/programs/assembled.webp',
+          alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
+        }}
+        title="Assembled Kitchen Cabinets"
+      />
       <CabinetLines
-        description="Premium, ready-to-install cabinets in a range of door styles and finishes — soft-close doors and drawers, customizable storage, and quality materials, in both framed and frameless designs."
         explainerHref="/mykitchen/cabinets/assembled"
         lines={lines}
         program="assembled"
-        title="Assembled Kitchen Cabinets"
       />
       <CabinetFaq data={faq} />
     </>

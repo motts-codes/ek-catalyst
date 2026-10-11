@@ -3,6 +3,8 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
+import { CategoryHero } from '@/vibes/soul/sections/category-hero';
+import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
@@ -26,13 +28,22 @@ export default async function RtaCabinets({ params }: Props) {
 
   return (
     <>
-      <CabinetLines
-        description="Ready-to-assemble cabinets in a range of door styles and finishes — the same quality and soft-close hardware, shipped flat at a lower price point."
-        explainerHref="/mykitchen/cabinets/rta"
-        lines={lines}
-        program="rta"
+      <PageBreadcrumbs
+        breadcrumbs={[
+          { label: 'Cabinets', href: '/cabinets' },
+          { label: 'RTA', href: '/cabinets/rta-cabinets' },
+        ]}
+      />
+      {/* The same black-panel hero as the category pages, with the home page's program photo. */}
+      <CategoryHero
+        description="The same cabinets shipped flat from Bristol in two weeks, at a lower price. Pick a collection and finish below."
+        image={{
+          src: '/images/home/programs/rta.webp',
+          alt: 'A kitchen in dark grey shaker cabinets',
+        }}
         title="RTA Kitchen Cabinets"
       />
+      <CabinetLines explainerHref="/mykitchen/cabinets/rta" lines={lines} program="rta" />
       <CabinetFaq data={faq} />
     </>
   );

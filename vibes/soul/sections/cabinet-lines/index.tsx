@@ -56,9 +56,9 @@ export function CabinetLines({
   return (
     <div className={clsx('bg-[#f9fafd] @container', className)}>
       <div className="mx-auto max-w-screen-2xl px-6 pb-12 pt-6 @xl:px-9 @4xl:px-14">
-        {(Boolean(title) || Boolean(description)) && (
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-            <div className="max-w-3xl">
+        {(Boolean(title) || Boolean(description) || Boolean(explainerHref)) && (
+          <div className="mb-8 flex flex-wrap items-end justify-end gap-x-8 gap-y-4">
+            <div className="mr-auto max-w-3xl empty:hidden">
               {Boolean(title) && (
                 <h1 className="font-heading text-3xl font-medium leading-tight @lg:text-4xl @2xl:text-5xl">
                   {title}
