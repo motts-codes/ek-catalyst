@@ -56,7 +56,10 @@ export function WaitBand({ kicker, title, description, lanes, note }: Props) {
   return (
     <section className="bg-[#f9fafd] @container">
       <div className="mx-auto max-w-screen-2xl px-6 py-16 @xl:px-9 @xl:py-24 @4xl:px-14 @4xl:py-32">
-        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-500">
+        {/* Brand red rather than the lighter pink the client asked for: #F9858D is 2.3:1 on
+            this band, below the 4.5:1 small text needs; the nearest passing shade of that hue is
+            this red. */}
+        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
           {kicker}
         </p>
         <h2 className={clsx(homeHeadingClassName, '@4xl:text-4xl')}>{title}</h2>
