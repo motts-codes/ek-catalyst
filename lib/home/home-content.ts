@@ -27,24 +27,26 @@ export const HERO_SLIDES: HeroSlide[] = [
     ctaLabel: 'See how',
   },
   {
-    title: 'Your kitchen, designed free.\nIn a showroom or online.',
+    title: 'Your kitchen,\ndesigned free.\nIn a showroom\nor online.',
     image: {
       src: '/images/home/hero/designed-free.webp',
       alt: 'A designer and a homeowner on a red sofa, choosing cabinet styles on a screen',
     },
     href: FREE_DESIGN_HREF,
     ctaLabel: 'Book free consult',
-    // The photo's background is brand red, so the button is white; the sofa fills the lower
-    // half, so the words go top-left where the background is plain.
+    // The photo's background is brand red, so the button is white. The scene sits centre-right;
+    // keeping the left of the photo leaves the headline on plain red.
     ctaColor: 'white',
-    textPosition: 'top',
     imagePosition: 'left',
   },
   {
-    title: 'Designed with you.\nFree, in six showrooms.',
-    image: { src: '', alt: 'a natural oak galley, close and warm' },
-    href: FREE_DESIGN_HREF,
-    ctaLabel: 'Free design consult',
+    title: 'Made in Connecticut.\nDelivered across the US.',
+    image: {
+      src: '/images/home/hero/made-in-connecticut.webp',
+      alt: 'Robotic sprayers finishing navy cabinet doors on the factory line',
+    },
+    href: '/cabinets/assembled-cabinets',
+    ctaLabel: 'Shop cabinets',
   },
 ];
 
