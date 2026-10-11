@@ -50,7 +50,7 @@ export function CategoryCarousel({
       {/* The heading sits at the right with a curved arrow turning down toward the cards; small,
           so it doesn't compete with the hero above. Still the section's h2. */}
       {Boolean(title) && (
-        <div className="mb-1 flex items-end justify-end gap-1.5">
+        <div className="mb-3 flex items-end justify-end gap-1.5">
           <h2 className="ek-heading-light font-heading text-sm leading-tight @xl:text-base">
             {title}
           </h2>
