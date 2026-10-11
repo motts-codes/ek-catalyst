@@ -104,7 +104,7 @@ export function PageHero({
       >
         <div className={clsx(textOnly && 'max-w-3xl')}>
           {Boolean(kicker) && (
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
               {kicker}
             </p>
           )}
@@ -186,7 +186,7 @@ export function Prose({
   const copy = (
     <div className={clsx(!hasMedia && 'max-w-3xl')}>
       {Boolean(kicker) && (
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
           {kicker}
         </p>
       )}

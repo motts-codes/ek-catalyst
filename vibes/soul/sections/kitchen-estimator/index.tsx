@@ -268,7 +268,7 @@ export function KitchenEstimator({ book, emailAction, links }: Props) {
 
       {step === 3 && (
         <section aria-labelledby="est-step-4" aria-live="polite">
-          <p className="text-xs font-semibold uppercase tracking-wide text-contrast-400">
+          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
             Estimated cost — {PACKAGES[pack].label} package
           </p>
           <h2

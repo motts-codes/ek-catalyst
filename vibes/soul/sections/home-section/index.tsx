@@ -60,7 +60,7 @@ export function HomeSection({
           <div className="mb-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 @4xl:mb-6">
             <div className="max-w-3xl">
               {Boolean(kicker) && (
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
                   {kicker}
                 </p>
               )}

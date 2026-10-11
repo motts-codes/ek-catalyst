@@ -69,7 +69,7 @@ export function ShowroomBand({
       <style>{`@keyframes ek-showroom-progress { from { width: 0; } to { width: 100%; } }`}</style>
       <div className="grid items-center gap-8 @3xl:grid-cols-[1fr_1.15fr] @3xl:gap-14">
         <div>
-          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
             {kicker}
           </p>
           <h2 className={homeHeadingClassName}>{title}</h2>

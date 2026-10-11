@@ -64,7 +64,7 @@ export function ProgramTiers({
             )}
             key={tier.name}
           >
-            <p className="text-xs font-semibold uppercase tracking-wide text-contrast-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
               {tier.highlighted ? '◆ ' : ''}
               {tier.name}
             </p>

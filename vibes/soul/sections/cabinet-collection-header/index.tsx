@@ -164,7 +164,7 @@ function Finishes({ colors = [] }: { colors?: CabinetSwatch[] }) {
 
   return (
     <div>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
         Available finishes
       </p>
       <div className="flex flex-wrap gap-2">

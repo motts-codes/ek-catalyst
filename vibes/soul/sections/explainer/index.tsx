@@ -23,7 +23,7 @@ export function ExplainerHero({ kicker, title, description, actions, className }
     <HomeSection className={className} compact>
       <div className="max-w-3xl">
         {Boolean(kicker) && (
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
             {kicker}
           </p>
         )}
@@ -93,7 +93,7 @@ export function ExplainerSteps({
                   className="rounded-2xl border border-contrast-100 bg-white px-4 py-3.5"
                   key={step.label}
                 >
-                  <p className="text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
                     {step.label}
                   </p>
                   <p className="mt-1 text-sm font-semibold leading-snug">{step.value}</p>
@@ -162,7 +162,7 @@ export function ExplainerPair({ cards, tint, className }: PairProps) {
             )}
             key={card.title}
           >
-            <p className="text-xs font-semibold uppercase tracking-wide text-contrast-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
               {card.kicker}
             </p>
             <h3 className="mt-2 font-heading text-xl font-bold leading-tight @xl:text-2xl">

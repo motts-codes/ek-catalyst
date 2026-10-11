@@ -375,7 +375,7 @@ export function CabinetFilm({ kicker, title, features }: Props) {
           </div>
         </div>
         <div className="flex min-w-0 flex-col gap-4">
-          <p className="mb-0 text-xs font-semibold uppercase tracking-wide text-contrast-500">
+          <p className="mb-0 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
             {kicker}
           </p>
           <h2 className={clsx(homeHeadingClassName, 'hidden @3xl:block @4xl:text-4xl')}>{title}</h2>

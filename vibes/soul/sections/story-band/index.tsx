@@ -44,7 +44,7 @@ export function StoryBand({
       <div className="grid items-center gap-10 @3xl:grid-cols-[1.25fr_1fr] @3xl:gap-16">
         <div className={clsx('@3xl:py-6', imagePosition === 'left' && '@3xl:order-2')}>
           {Boolean(kicker) && (
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
               {kicker}
             </p>
           )}

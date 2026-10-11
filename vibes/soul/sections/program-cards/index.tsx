@@ -53,7 +53,7 @@ export function ProgramCards({
     <HomeSection className={className} tint={tint}>
       <div className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 @4xl:mb-8">
         <div>
-          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
             {kicker}
           </p>
           <h2 className={homeHeadingClassName}>{title}</h2>

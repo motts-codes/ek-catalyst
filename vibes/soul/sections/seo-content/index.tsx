@@ -18,7 +18,7 @@ export function SeoContentSection({ content, kicker = 'Good to know', className 
   return (
     <section className={clsx('border-t border-contrast-100 bg-[#f9fafd] @container', className)}>
       <div className="mx-auto max-w-screen-2xl px-6 py-10 @xl:px-9 @xl:py-12 @4xl:px-14">
-        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-contrast-500">
+        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
           {kicker}
         </p>
         {content.headline !== '' && (

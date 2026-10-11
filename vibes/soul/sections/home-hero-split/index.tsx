@@ -333,7 +333,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
               {/* Bottom padding matches the photo banner's (@xl:pb-8) so both buttons sit on the
                   same line across the two banners. */}
               <div className="flex h-full flex-col gap-2 p-6 pb-8 @xl:p-8 @xl:pb-8">
-                <p className="self-start rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-contrast-500 ring-1 ring-contrast-100">
+                <p className="self-start rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)] ring-1 ring-contrast-100">
                   {offer.kicker}
                 </p>
                 <p className="font-heading text-xl font-bold leading-tight @xl:text-2xl">

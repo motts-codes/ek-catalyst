@@ -85,7 +85,7 @@ export function FeatureRows({ id, kicker, title, description, rows, cta, tint, c
                 )}
               >
                 {Boolean(row.kicker) && (
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
                     {row.kicker}
                   </p>
                 )}
@@ -97,7 +97,7 @@ export function FeatureRows({ id, kicker, title, description, rows, cta, tint, c
                 </p>
                 {row.tiles != null && row.tiles.length > 0 && (
                   <div className="mt-5">
-                    <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                    <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
                       {row.tilesLabel ?? 'Collections'}
                     </p>
                     <div className="-mx-6 flex gap-3 overflow-x-auto px-6 pb-1 [scrollbar-width:none] @3xl:mx-0 @3xl:px-0 [&::-webkit-scrollbar]:hidden">

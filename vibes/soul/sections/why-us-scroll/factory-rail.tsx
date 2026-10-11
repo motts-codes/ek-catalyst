@@ -53,7 +53,7 @@ export function FactoryRail({ kicker, title, stations }: Props) {
       `}</style>
       <div className="ek-pin">
         <div className="mx-auto w-full max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14">
-          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/70">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[#F9858D]">
             {kicker}
           </p>
           <h2 className={clsx(homeHeadingClassName, 'text-white @4xl:text-4xl')}>{title}</h2>
