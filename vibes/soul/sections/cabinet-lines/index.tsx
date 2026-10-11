@@ -159,9 +159,9 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             <p className="mt-4 text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
               10x10 Kitchen starting
             </p>
-            <div className="mt-1.5 grid grid-cols-[1fr_auto] rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto_auto]">
+            <div className="mt-1.5 grid grid-cols-[auto_1fr] rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto_auto]">
               {line.price != null && line.price !== '' && (
-                <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-1 px-[13px] py-3">
+                <div className="col-span-2 flex min-w-0 flex-wrap items-baseline justify-center gap-x-2.5 gap-y-1 px-[13px] py-3 @md:col-span-1 @md:justify-start">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
                       cents={16}
@@ -184,12 +184,12 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                 </div>
               )}
               {line.emiText != null && line.emiText !== '' && (
-                <div className="flex flex-col items-center justify-center border-l border-[#fcb6bb] px-4 py-2.5 text-center text-[11px] font-medium leading-snug text-[var(--button-primary-background,#d90716)]">
+                <div className="flex flex-col items-center justify-center border-t border-[#fcb6bb] px-2 py-2.5 text-center text-[11px] font-medium leading-snug text-[var(--button-primary-background,#d90716)] @md:border-l @md:border-t-0 @md:px-4">
                   <Finance text={line.emiText} />
                 </div>
               )}
               {line.deliveryTime != null && line.deliveryTime !== '' && (
-                <div className="col-span-2 flex items-center justify-center gap-1.5 border-t border-[#fcb6bb] px-3 py-3 text-[13px] font-medium @md:col-span-1 @md:border-l @md:border-t-0">
+                <div className="flex items-center justify-center gap-1.5 whitespace-nowrap border-l border-t border-[#fcb6bb] px-2 py-3 text-[13px] font-medium @md:border-t-0 @md:px-3">
                   <Truck aria-hidden className="shrink-0" size={18} strokeWidth={1.5} />
                   <span>Ships {line.deliveryTime}</span>
                 </div>
