@@ -237,7 +237,9 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
 
   return (
     <section className={clsx('@container', className)}>
-      <div className="mx-auto max-w-screen-2xl px-6 pb-2 pt-3 @xl:px-9 @4xl:px-14">
+      {/* The hero alone sits on the nav card's edges (not the logo gutter the rest of the page
+          uses), so the banner and the floating nav read as one block. */}
+      <div className="mx-auto max-w-screen-2xl px-4 pb-2 pt-3 @xl:px-6 @4xl:px-8">
         <div className="grid gap-3.5 @3xl:grid-cols-[65fr_35fr]">
           {/* Left: photo slideshow */}
           <div

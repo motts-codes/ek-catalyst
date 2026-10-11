@@ -48,6 +48,7 @@ export function CategoryCarousel({
   return (
     <HomeSection
       className={className}
+      headingStyle="small"
       kicker={kicker}
       tightTop={tightTop}
       tint={tint}
