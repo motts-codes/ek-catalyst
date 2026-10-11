@@ -47,7 +47,7 @@ runtime.registerComponent(MSHomeHeroSplit, {
           ctaColor: Select({
             label: 'Button color',
             options: CTA_COLOR_OPTIONS,
-            defaultValue: 'white',
+            defaultValue: 'red',
           }),
         },
       }),
@@ -72,7 +72,7 @@ runtime.registerComponent(MSHomeHeroSplit, {
           ctaColor: Select({
             label: 'Button color',
             options: CTA_COLOR_OPTIONS,
-            defaultValue: 'red',
+            defaultValue: 'white',
           }),
         },
       }),

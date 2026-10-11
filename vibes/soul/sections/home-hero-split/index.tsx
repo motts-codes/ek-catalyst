@@ -23,7 +23,7 @@ export interface HeroSlide {
   ctaLabel?: string;
   /** Hide the button (default shown). */
   showCta?: boolean;
-  /** Default white (sits on the photo). */
+  /** Default red (sits on the photo). */
   ctaColor?: HeroCtaColor;
 }
 
@@ -35,7 +35,7 @@ export interface HeroOffer {
   ctaLabel?: string;
   /** Hide the button (default shown). */
   showCta?: boolean;
-  /** Default red (sits on the light card). */
+  /** Default white (sits on the light card). */
   ctaColor?: HeroCtaColor;
 }
 
@@ -276,7 +276,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                           because the whole slide is already the link. */}
                       <div className="absolute inset-x-0 bottom-0 px-4 pb-10 pt-16 @xl:px-8 @xl:pb-8">
                         <div className="flex flex-wrap items-end justify-between gap-x-2 gap-y-3 @xl:gap-x-6">
-                          <h1 className="m-0 max-w-xl font-heading text-[22px] font-bold leading-[1.05] text-white @xl:text-3xl @4xl:text-4xl">
+                          <h1 className="m-0 max-w-xl font-heading text-[22px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)] @xl:text-3xl @4xl:text-4xl">
                             {slide.title.split('\n').map((line, lineIndex) => (
                               <Fragment key={lineIndex}>
                                 {lineIndex > 0 && <br />}
@@ -291,7 +291,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                                 className={clsx(
                                   CTA_BASE,
                                   'shrink-0',
-                                  CTA_COLOR[slide.ctaColor ?? 'white'],
+                                  CTA_COLOR[slide.ctaColor ?? 'red'],
                                 )}
                               >
                                 {slide.ctaLabel}
@@ -347,7 +347,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                 {offer.showCta !== false && (
                   <div className="mt-auto pt-3">
                     <Link
-                      className={clsx(CTA_BASE, CTA_COLOR[offer.ctaColor ?? 'red'])}
+                      className={clsx(CTA_BASE, CTA_COLOR[offer.ctaColor ?? 'white'])}
                       href={offer.href}
                     >
                       {offer.ctaLabel ?? 'See the offer'}
