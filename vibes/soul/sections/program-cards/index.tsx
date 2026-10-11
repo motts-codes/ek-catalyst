@@ -14,7 +14,7 @@ export interface ProgramCard {
   title: string;
   /** Short badge above the title, e.g. "Most hands-off". */
   tag?: string;
-  description: string;
+  description?: string;
   /** Tick-list proof points. */
   points: string[];
   ctaLabel: string;

@@ -29,7 +29,8 @@ interface Props {
 // "Assembled or RTA?" as two photo panels side by side. One is open — title, a line, the proof
 // points and a button over the photo — and the other sits narrower showing just its name. Hover
 // (or keyboard focus, or a tap on touch) opens the other and the first slides narrower. On phones
-// both stack, open. Text sits on a dark scrim so it reads on any photo.
+// both stack, open. The copy sits on a bottom
+// scrim so it reads on any photo; the top of the photo stays clean.
 export function ProgramSplit({
   kicker = 'Make the right call for your timeline',
   title = 'Assembled or RTA?',
@@ -92,20 +93,38 @@ export function ProgramSplit({
               ) : (
                 <MediaPlaceholder className="absolute inset-0" label={`${card.title} kitchen`} />
               )}
-              {/* Scrim: heavy over the lower half for the open panel's copy, lighter at the top for
-                  the collapsed label. Measured against the photos' brightest patches so white text
-                  holds 4.5:1 (3:1 for the title) everywhere, not just on average. */}
+              {/* Scrim only through the bottom band, where the copy sits; the top of the photo
+                  stays clean. Measured against the photos' brightest patches so white text holds
+                  4.5:1 (3:1 for the title). */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 via-45% to-black/45"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 via-45% to-transparent to-90% @3xl:via-30% @3xl:to-60%"
+              />
+              {/* A short fade from the top edge, only while collapsed, for the name. */}
+              <div
+                aria-hidden
+                className={clsx(
+                  'pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/60 to-transparent transition-opacity duration-300',
+                  open ? 'opacity-0' : 'opacity-0 @3xl:opacity-100',
+                )}
               />
 
-              {/* Collapsed label, top-left. Fades out as the panel opens. */}
+              {/* Top-left: the eyebrow pill while open, the name while collapsed. */}
+              {Boolean(card.tag) && (
+                <span
+                  className={clsx(
+                    'absolute left-6 top-6 rounded-full bg-[var(--button-primary-background,#d90716)] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white transition-opacity duration-300 @xl:left-8 @xl:top-8',
+                    open ? 'opacity-100' : 'opacity-100 @3xl:opacity-0',
+                  )}
+                >
+                  {card.tag}
+                </span>
+              )}
               <p
                 aria-hidden
                 className={clsx(
-                  'absolute left-6 top-6 font-heading text-lg font-bold drop-shadow transition-opacity duration-300 @xl:text-xl',
-                  open ? 'opacity-0 @3xl:opacity-0' : 'opacity-0 @3xl:opacity-100',
+                  'absolute left-6 top-6 font-heading text-lg font-bold drop-shadow transition-opacity duration-300 @xl:left-8 @xl:top-8 @xl:text-xl',
+                  open ? 'opacity-0' : 'opacity-0 @3xl:opacity-100',
                 )}
               >
                 {card.title}
@@ -121,20 +140,18 @@ export function ProgramSplit({
                     : 'opacity-100 @3xl:translate-y-3 @3xl:opacity-0',
                 )}
               >
-                <div className="max-w-md">
-                  {Boolean(card.tag) && (
-                    <span className="mb-3 inline-block rounded-full bg-black/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/30">
-                      {card.tag}
-                    </span>
-                  )}
-                  <h3 className="font-heading text-2xl font-bold leading-tight [text-shadow:0_1px_2px_rgb(0_0_0/0.4)] @xl:text-3xl">
-                    {card.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white @xl:text-base">
+                <h3 className="font-heading text-2xl font-bold leading-tight [text-shadow:0_1px_2px_rgb(0_0_0/0.4)] @xl:text-3xl">
+                  {card.title}
+                </h3>
+                {Boolean(card.description) && (
+                  <p className="mt-2 max-w-md text-sm leading-relaxed text-white @xl:text-base">
                     {card.description}
                   </p>
+                )}
+                {/* The proof points on the left and the button on the right, bottoms level. */}
+                <div className="mt-3 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
                   {card.points.length > 0 && (
-                    <ul className="mt-3 space-y-1.5 text-sm">
+                    <ul className="max-w-md space-y-1.5 text-sm">
                       {card.points.map((point) => (
                         <li className="flex items-start gap-2" key={point}>
                           <Check
@@ -148,11 +165,9 @@ export function ProgramSplit({
                       ))}
                     </ul>
                   )}
-                  <div className="mt-5">
-                    <ButtonLink href={card.href} shape="pill" size="small" variant="primary">
-                      {card.ctaLabel}
-                    </ButtonLink>
-                  </div>
+                  <ButtonLink href={card.href} shape="pill" size="small" variant="primary">
+                    {card.ctaLabel}
+                  </ButtonLink>
                 </div>
               </div>
             </article>

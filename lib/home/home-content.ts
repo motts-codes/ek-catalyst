@@ -169,10 +169,12 @@ export const PRO_CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(
 export const PROGRAM_CARDS: ProgramCard[] = [
   {
     title: 'Assembled cabinets',
-    tag: 'Most hands-off',
-    description:
-      'Ready to install when they arrive. The smoother handoff and the faster path to finished.',
-    points: ['Built and checked in our Connecticut shop', 'Delivered ready to hang in three weeks'],
+    tag: 'We build them',
+    points: [
+      'Arrives built and ready to hang. No parts to sort, no lost weekend',
+      'Built and checked by our team in Connecticut',
+      'At your door in three weeks',
+    ],
     ctaLabel: 'Shop assembled',
     href: '/cabinets/assembled-cabinets',
     image: {
@@ -182,10 +184,12 @@ export const PROGRAM_CARDS: ProgramCard[] = [
   },
   {
     title: 'RTA cabinets',
-    tag: 'Built for flexibility',
-    description:
-      'Flat-packed for efficient delivery and value. The route for confident DIYers and trade crews.',
-    points: ['Ships from Bristol in two weeks', 'Lower price than the same cabinet assembled'],
+    tag: 'You build them',
+    points: [
+      'Shipped flat for you to put together',
+      'Same cabinet, lower price. You keep what assembly would cost',
+      'Ships in two weeks, a week sooner than assembled',
+    ],
     ctaLabel: 'Shop RTA',
     href: '/cabinets/rta-cabinets',
     image: {
