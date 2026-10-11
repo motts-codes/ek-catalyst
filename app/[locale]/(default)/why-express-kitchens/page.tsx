@@ -6,7 +6,13 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
-import { CabinetFilm, FactoryRail, HeroScrub, WaitBand } from '@/vibes/soul/sections/why-us-scroll';
+import {
+  CabinetFilm,
+  FactoryRail,
+  HeroScrub,
+  MetricsTicker,
+  WaitBand,
+} from '@/vibes/soul/sections/why-us-scroll';
 import {
   ESTIMATOR_HREF,
   FREE_DESIGN_HREF,
@@ -38,6 +44,15 @@ export default async function WhyExpressKitchens({
         signLine1="Simplifying Kitchens"
         signLine2="for 110+ years"
         title="Why Express Kitchens: simplifying kitchens for 110+ years"
+      />
+      <MetricsTicker
+        metrics={[
+          { icon: 'package', value: '50,000+', label: 'All-plywood cabinets, ready to ship' },
+          { icon: 'star', value: '5,000+', label: 'Happy customer reviews' },
+          { icon: 'design', value: '100K+', label: 'Kitchens designed' },
+          { icon: 'pin', value: '6', label: 'Showrooms to visit' },
+          { icon: 'shield', value: 'A+', label: 'BBB rating' },
+        ]}
       />
       <WaitBand
         description="A custom kitchen usually takes 14 weeks to arrive. Ours are already built, all-plywood, and sitting in stock in Connecticut."
