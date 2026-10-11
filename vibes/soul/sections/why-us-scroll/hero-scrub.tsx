@@ -195,18 +195,11 @@ export function HeroScrub({
       const H = canvas.height;
       const scale = W / Math.max(1, canvas.clientWidth);
       const { sw, sh, x0, y0 } = stage(W, H, gapAt(progress) * scale);
-      const fw = im.naturalWidth;
-      const fh = im.naturalHeight;
 
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, W, H);
-      // Extend the frame's edge pixels to the sides so the wall colour runs edge to edge.
-      if (y0 > 0) ctx.drawImage(im, 2, 2, 1, 1, 0, 0, W, y0 + 1);
-
-      if (x0 > 0) {
-        ctx.drawImage(im, 0, 0, 3, fh, 0, y0, x0 + 1, sh);
-        ctx.drawImage(im, fw - 3, 0, 3, fh, x0 + sw - 1, y0, x0 + 1, sh);
-      }
+      // Only the frame is drawn; the canvas around it (the strip under the header, and the sides
+      // on very wide screens) stays page-white rather than a bleed of the wall colour.
 
       ctx.drawImage(im, x0, y0, sw, sh);
       if (looping) fx(x0, y0, sw / 1600, performance.now());
