@@ -181,11 +181,6 @@ const menu: MenuItem[] = [
             image: nav('vanity-tops', 'Bathroom vanity top'),
           },
           {
-            label: 'Side Splashes',
-            href: '/bath/side-splashes',
-            image: nav('side-splashes', 'Vanity side splash'),
-          },
-          {
             label: 'Bathroom Sinks',
             href: '/bath/bathroom-sinks',
             image: nav('bathroom-sinks', 'Bathroom sink'),
@@ -194,6 +189,11 @@ const menu: MenuItem[] = [
             label: 'Bathroom Faucets',
             href: '/bath/bathroom-faucets',
             image: nav('bathroom-faucets', 'Bathroom faucet'),
+          },
+          {
+            label: 'Side Splashes',
+            href: '/bath/side-splashes',
+            image: nav('side-splashes', 'Vanity side splash'),
           },
           {
             label: 'Drains & Accessories',

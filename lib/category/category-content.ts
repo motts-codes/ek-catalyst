@@ -134,11 +134,6 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
         image: navImage('vanity-tops', 'Bathroom vanity top'),
       },
       {
-        name: 'Side Splashes',
-        fallbackHref: search('side splash'),
-        image: navImage('side-splashes', 'Vanity side splash'),
-      },
-      {
         name: 'Bathroom Sinks',
         fallbackHref: search('bathroom sink'),
         image: navImage('bathroom-sinks', 'Bathroom sink'),
@@ -147,6 +142,11 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
         name: 'Bathroom Faucets',
         fallbackHref: search('bathroom faucet'),
         image: navImage('bathroom-faucets', 'Bathroom faucet'),
+      },
+      {
+        name: 'Side Splashes',
+        fallbackHref: search('side splash'),
+        image: navImage('side-splashes', 'Vanity side splash'),
       },
       {
         name: 'Drains & Accessories',
