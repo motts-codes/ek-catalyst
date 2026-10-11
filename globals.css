@@ -89,6 +89,12 @@ h6,
   letter-spacing: -0.015em;
 }
 
+/* The one sanctioned exception: a quiet, medium-weight heading (e.g. the home category row's
+   "Shop what you're working on"). Declared after the rule above so it wins. */
+.ek-heading-light {
+  font-weight: 500 !important;
+}
+
 :root {
   --primary: 356 89% 57%;
   --accent: 96 100% 88%;

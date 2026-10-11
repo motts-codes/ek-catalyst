@@ -7,11 +7,7 @@ import {
   CarouselItem,
   CarouselScrollbar,
 } from '@/vibes/soul/primitives/carousel';
-import {
-  HomeSection,
-  MediaPlaceholder,
-  smallHeadingClassName,
-} from '@/vibes/soul/sections/home-section';
+import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -55,14 +51,16 @@ export function CategoryCarousel({
           so it doesn't compete with the hero above. Still the section's h2. */}
       {Boolean(title) && (
         <div className="mb-1 flex items-end justify-end gap-1.5">
-          <h2 className={smallHeadingClassName}>{title}</h2>
+          <h2 className="ek-heading-light font-heading text-base leading-tight @xl:text-lg">
+            {title}
+          </h2>
           {/* Redo2 turned a quarter clockwise: the curve leaves the heading and the head points
               down at the cards. */}
           <Redo2
             aria-hidden
-            className="mb-0.5 shrink-0 rotate-90 text-[var(--button-primary-background,#d90716)]"
-            size={22}
-            strokeWidth={2.25}
+            className="mb-px shrink-0 rotate-90 text-[var(--button-primary-background,#d90716)]"
+            size={18}
+            strokeWidth={1.5}
           />
         </div>
       )}
