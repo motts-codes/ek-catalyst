@@ -307,7 +307,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                               // Top-left copy shares the frame with the photo's subject, so a step smaller.
                               slide.textPosition === 'top'
                                 ? '@xl:text-2xl @4xl:text-[27px]'
-                                : '@xl:text-3xl @4xl:text-4xl',
+                                : '@xl:text-3xl @4xl:text-[2.5rem]',
                             )}
                           >
                             {slide.title.split('\n').map((line, lineIndex) => (
