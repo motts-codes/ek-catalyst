@@ -65,6 +65,6 @@ runtime.registerComponent(MSCategoryCarousel, {
         return option?.label ?? item?.name ?? 'Category';
       },
     }),
-    tint: Checkbox({ label: 'Tinted background', defaultValue: true }),
+    tint: Checkbox({ label: 'Tinted background', defaultValue: false }),
   },
 });

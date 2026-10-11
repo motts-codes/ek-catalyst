@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Redo2 } from 'lucide-react';
 
 import {
   Carousel,
@@ -7,7 +7,11 @@ import {
   CarouselItem,
   CarouselScrollbar,
 } from '@/vibes/soul/primitives/carousel';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import {
+  HomeSection,
+  MediaPlaceholder,
+  smallHeadingClassName,
+} from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -46,14 +50,22 @@ export function CategoryCarousel({
   scrollbarLabel = 'Scroll categories',
 }: Props) {
   return (
-    <HomeSection
-      className={className}
-      headingStyle="small"
-      kicker={kicker}
-      tightTop={tightTop}
-      tint={tint}
-      title={title}
-    >
+    <HomeSection className={className} kicker={kicker} tightTop={tightTop} tint={tint}>
+      {/* The heading sits at the right with a curved arrow turning down toward the cards; small,
+          so it doesn't compete with the hero above. Still the section's h2. */}
+      {Boolean(title) && (
+        <div className="mb-1 flex items-end justify-end gap-1.5">
+          <h2 className={smallHeadingClassName}>{title}</h2>
+          {/* Redo2 turned a quarter clockwise: the curve leaves the heading and the head points
+              down at the cards. */}
+          <Redo2
+            aria-hidden
+            className="mb-0.5 shrink-0 rotate-90 text-[var(--button-primary-background,#d90716)]"
+            size={22}
+            strokeWidth={2.25}
+          />
+        </div>
+      )}
       <Carousel>
         <CarouselContent className="-ml-4 pb-2 pt-1 @2xl:-ml-5">
           {categories.map((category) => (

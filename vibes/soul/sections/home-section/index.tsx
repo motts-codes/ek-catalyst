@@ -12,10 +12,9 @@ export interface HomeSectionAction {
 export const homeHeadingClassName =
   'font-heading text-xl font-bold leading-tight @xl:text-2xl @4xl:text-[28px]';
 
-// The quieter variant: h3-sized and brand red. Still an h2 in the outline, so heading order and
-// screen-reader navigation are unchanged.
-export const smallHeadingClassName =
-  'font-heading text-lg font-bold leading-tight text-[var(--button-primary-background,#d90716)] @xl:text-xl';
+// The quieter variant: h3-sized. Still an h2 in the outline, so heading order and screen-reader
+// navigation are unchanged.
+export const smallHeadingClassName = 'font-heading text-lg font-bold leading-tight @xl:text-xl';
 
 interface Props {
   /** Anchor id for in-page jump links (e.g. "pro-program"). */
@@ -32,7 +31,7 @@ interface Props {
   compact?: boolean;
   /** Minimal top padding — for a band that should sit right under the hero. */
   tightTop?: boolean;
-  /** `small`: an h3-sized red title, for a band that shouldn't compete with the hero. */
+  /** `small`: an h3-sized title, for a band that shouldn't compete with the hero. */
   headingStyle?: 'default' | 'small';
   className?: string;
   children: ReactNode;
