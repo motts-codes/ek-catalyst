@@ -332,7 +332,6 @@ const menu: MenuItem[] = [
             href: '/inspiration/best-sellers',
             image: nav('best-selling-designs', 'The most-ordered kitchen, Avon in white'),
           },
-          { label: 'Finished Kitchens', href: '/inspiration' },
           {
             label: 'Projects',
             href: '/inspiration/projects',
@@ -409,13 +408,17 @@ const menu: MenuItem[] = [
             href: '#',
             image: nav('brochure', 'The Express Kitchens brochure'),
           },
-          { label: 'Financing', href: '/financing' },
+          {
+            label: 'Financing',
+            href: '/financing',
+            image: nav('financing', 'A monthly payment plan'),
+          },
           {
             label: 'Warranty',
             href: '/warranty',
             image: nav('warranty', 'A cabinet door with a warranty seal'),
           },
-          { label: 'FAQ', href: '/faq' },
+          { label: 'FAQ', href: '/faq', image: nav('faq', 'Questions and answers') },
         ],
       },
     ],
