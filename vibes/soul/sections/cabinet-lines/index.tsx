@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { Truck } from 'lucide-react';
+import { Truck, WalletMinimal } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { Image } from '~/components/image';
@@ -104,7 +104,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
           image (Avon/Dover currently don't). */}
       <Link
         aria-label={line.name}
-        className="relative block aspect-[4/3] overflow-hidden bg-contrast-100"
+        className="relative block aspect-[16/11] overflow-hidden bg-contrast-100"
         href={line.href}
       >
         {line.image ? (
@@ -159,9 +159,11 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             <p className="mt-4 text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
               10x10 Kitchen starting
             </p>
-            <div className="mt-1.5 grid grid-cols-[auto_1fr] rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto_auto]">
+            {/* Two cells: the price (and was-price) on the left; on the right the finance line and
+                the ship line, stacked and left-aligned. Stacks top/bottom on narrow screens. */}
+            <div className="mt-1.5 grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto]">
               {line.price != null && line.price !== '' && (
-                <div className="col-span-2 flex min-w-0 flex-wrap items-baseline justify-center gap-x-2.5 gap-y-1 px-[13px] py-3 @md:col-span-1 @md:justify-start">
+                <div className="flex min-w-0 flex-wrap items-center justify-center gap-x-2.5 gap-y-1 px-[13px] py-3 @md:justify-start">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
                       cents={16}
@@ -183,17 +185,20 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                   )}
                 </div>
               )}
-              {line.emiText != null && line.emiText !== '' && (
-                <div className="flex flex-col items-center justify-center border-t border-[#fcb6bb] px-2 py-2.5 text-center text-[11px] font-medium leading-snug text-[var(--button-primary-background,#d90716)] @md:border-l @md:border-t-0 @md:px-4">
-                  <Finance text={line.emiText} />
-                </div>
-              )}
-              {line.deliveryTime != null && line.deliveryTime !== '' && (
-                <div className="flex items-center justify-center gap-1.5 whitespace-nowrap border-l border-t border-[#fcb6bb] px-2 py-3 text-[13px] font-medium @md:border-t-0 @md:px-3">
-                  <Truck aria-hidden className="shrink-0" size={18} strokeWidth={1.5} />
-                  <span>Ships {line.deliveryTime}</span>
-                </div>
-              )}
+              <div className="flex flex-col justify-center gap-1.5 border-t border-[#fcb6bb] px-3 py-2.5 @md:border-l @md:border-t-0 @md:px-4">
+                {line.emiText != null && line.emiText !== '' && (
+                  <div className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-none text-[var(--button-primary-background,#d90716)]">
+                    <WalletMinimal aria-hidden className="shrink-0" size={16} strokeWidth={1.5} />
+                    <Finance text={line.emiText} />
+                  </div>
+                )}
+                {line.deliveryTime != null && line.deliveryTime !== '' && (
+                  <div className="flex items-center gap-1.5 whitespace-nowrap text-[13px] font-medium leading-none">
+                    <Truck aria-hidden className="shrink-0" size={16} strokeWidth={1.5} />
+                    <span>Ships {line.deliveryTime}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}
@@ -296,13 +301,13 @@ function Finance({ text }: { text: string }) {
   const [, label, amount, suffix] = match;
 
   return (
-    <>
+    <span className="inline-flex items-baseline gap-1">
       {Boolean(label) && <span>{label}</span>}
       <span className="inline-flex items-start">
         <Amount cents={8} formatted={amount ?? ''} symbol={10} whole={11} />
         {suffix}
       </span>
-    </>
+    </span>
   );
 }
 
