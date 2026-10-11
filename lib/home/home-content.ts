@@ -56,82 +56,99 @@ export const HERO_OFFERS: HeroOffer[] = [
 
 // One base list; the hook line under each category differs per audience (homeowner: choice and
 // ease, pro: stock, price and speed). Photos and links are shared.
-const CATEGORY_BASE: Array<{ name: string; href: string; homeowner: string; pro: string }> = [
+const tile = (file: string, alt: string) => ({ src: `/images/home/categories/${file}.webp`, alt });
+
+const CATEGORY_BASE: Array<{
+  name: string;
+  href: string;
+  homeowner: string;
+  pro: string;
+  image: { src: string; alt: string };
+}> = [
   {
     name: 'Kitchen cabinets',
     href: '/cabinets',
     homeowner: '100+ styles, 30+ colors',
     pro: '50,000 in stock',
+    image: tile('cabinets', 'Grey shaker kitchen cabinets with brass handles'),
   },
   {
     name: 'Closets',
     href: '/closets',
     homeowner: 'Newly launched',
     pro: 'Ships from stock',
+    image: tile('closets', 'A white closet with hanging rail, shelves and a dressing table'),
   },
   {
     name: 'Countertops',
-    href: '#',
+    href: '/countertops',
     homeowner: 'Granite from $49.99/sq ft',
     pro: 'Granite $49.99 · Quartz $59.99/sq ft',
+    image: tile('countertops', 'A white quartz countertop on a green island'),
   },
   {
     name: 'Windows',
     href: '/windows',
     homeowner: 'Best price, any size',
     pro: 'Factory-direct pricing',
+    image: tile('windows', 'A double-hung window over a window seat'),
   },
   {
     name: 'Appliances',
     href: '/appliances',
     homeowner: 'Pick up in 2 days',
     pro: 'Priced below retail',
+    image: tile('appliances', 'A stainless refrigerator and wall ovens in oak cabinets'),
   },
   {
-    name: 'Sinks',
+    name: 'Sinks & faucets',
     href: '/sinks-faucets',
     homeowner: 'Sized for our sink bases',
     pro: 'Ships in 2 days',
+    image: tile('kitchen-sink', 'A farmhouse sink with a brass faucet'),
   },
   {
-    name: 'Faucets',
-    href: '#',
-    homeowner: 'Matches your handles',
+    name: 'Bath',
+    href: '/bath',
+    homeowner: 'Tops, sinks and faucets to match',
     pro: 'Ships in 2 days',
+    image: tile(
+      'bath-faucet-sink',
+      'An oak vanity with a white top, black faucet and round mirror',
+    ),
   },
   {
-    name: 'Handles',
-    href: '#',
+    name: 'Cabinet hardware',
+    href: '/cabinet-hardware',
     homeowner: 'Every finish we make doors in',
     pro: 'Ships next day',
-  },
-  {
-    name: 'Accessories',
-    href: '#',
-    homeowner: 'Fillers, trim, organizers',
-    pro: 'Sold by the box',
+    image: tile('handles', 'A drawer cabinet with brass pulls against white tile'),
   },
   {
     name: 'Doors',
-    href: '#',
-    homeowner: 'New: entry and patio',
+    href: '/doors',
+    homeowner: 'In stock in Bristol',
     pro: 'Primed, ships in 2 days',
+    image: tile('doors', 'A white interior door in a hallway'),
+  },
+  {
+    name: 'Siding',
+    href: '/siding',
+    homeowner: 'New: quoted by the square',
+    pro: 'Quote back in 24 hours',
+    image: tile('siding', 'Grey clapboard siding on a house with a porch'),
   },
 ];
 
 /** Homeowner home page tiles. */
-export const CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(({ name, href, homeowner }) => ({
-  name,
-  href,
-  subtitle: homeowner,
-}));
+export const CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(
+  ({ name, href, homeowner, image }) => ({ name, href, subtitle: homeowner, image }),
+);
 
 /** Pro home page tiles ("Everything for the job"). */
-export const PRO_CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(({ name, href, pro }) => ({
-  name,
-  href,
-  subtitle: pro,
-}));
+export const PRO_CATEGORY_TILES: CategoryTile[] = CATEGORY_BASE.map(
+  ({ name, href, pro, image }) => ({ name, href, subtitle: pro, image }),
+);
 
 export const PROGRAM_CARDS: ProgramCard[] = [
   {
