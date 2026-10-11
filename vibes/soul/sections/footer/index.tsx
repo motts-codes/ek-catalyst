@@ -220,7 +220,7 @@ export const Footer = ({
                             {link.label}
                           </Link>
                         ) : (
-                          <span className="mb-1 mt-3 block text-xs font-semibold uppercase tracking-wide text-contrast-400">
+                          <span className="mb-1 mt-3 block text-xs font-semibold uppercase tracking-wide text-foreground">
                             {link.label}
                           </span>
                         )}
