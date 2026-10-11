@@ -177,7 +177,7 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     href: '/cabinets/assembled-cabinets',
     image: {
       src: '/images/home/programs/assembled.webp',
-      alt: 'An assembled kitchen, cabinets installed and finished',
+      alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
     },
   },
   {
@@ -190,7 +190,7 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     href: '/cabinets/rta-cabinets',
     image: {
       src: '/images/home/programs/rta.webp',
-      alt: 'Ready-to-assemble cabinets, flat-packed and ready to build',
+      alt: 'A kitchen in warm cherry-stained cabinets with a wood range hood and white subway tile',
     },
   },
 ];
