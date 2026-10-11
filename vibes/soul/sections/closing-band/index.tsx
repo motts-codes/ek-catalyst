@@ -49,9 +49,9 @@ export function ClosingBand({
           <h2 className={homeHeadingClassName}>{title}</h2>
           <p className="mt-4 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            {/* The site's sliding button (black), sweeping to brand red on hover. */}
+            {/* The site's sliding button: black, sweeping to white with black text on hover. */}
             <ButtonLink
-              className="border-foreground bg-foreground text-white after:!bg-[var(--button-primary-background,#d90716)] hover:!text-white focus-visible:ring-white focus-visible:ring-offset-[#9f3632] [&_span]:!text-white"
+              className="border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground focus-visible:ring-white focus-visible:ring-offset-[#9f3632]"
               href={primary.href}
               shape="pill"
               size="small"
