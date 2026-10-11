@@ -8,7 +8,7 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { CollectionCarousel } from '@/vibes/soul/sections/collection-carousel';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { ProductTabs } from '@/vibes/soul/sections/product-tabs';
-import { ProgramCards } from '@/vibes/soul/sections/program-cards';
+import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
@@ -165,7 +165,7 @@ export default async function Home({ params }: Props) {
       {/* 4 · Assembled or RTA? */}
       <Slot
         fallback={
-          <ProgramCards
+          <ProgramSplit
             cards={PROGRAM_CARDS}
             footnote={PROGRAM_FOOTNOTE}
             helper={{ label: 'Not sure? Talk to a designer →', href: FREE_DESIGN_HREF }}
