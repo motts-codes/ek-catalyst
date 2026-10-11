@@ -276,7 +276,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                           because the whole slide is already the link. */}
                       <div className="absolute inset-x-0 bottom-0 px-4 pb-10 pt-16 @xl:px-8 @xl:pb-8">
                         <div className="flex flex-wrap items-end justify-between gap-x-2 gap-y-3 @xl:gap-x-6">
-                          <h1 className="m-0 max-w-xl font-heading text-[22px] font-bold leading-tight text-white @xl:text-3xl @4xl:text-4xl">
+                          <h1 className="m-0 max-w-xl font-heading text-[22px] font-bold leading-[1.05] text-white @xl:text-3xl @4xl:text-4xl">
                             {slide.title.split('\n').map((line, lineIndex) => (
                               <Fragment key={lineIndex}>
                                 {lineIndex > 0 && <br />}

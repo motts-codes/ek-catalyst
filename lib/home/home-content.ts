@@ -18,10 +18,13 @@ export const ESTIMATOR_HREF = '/mykitchen/calculator';
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
-    title: 'Your whole kitchen.\nMade in Connecticut.',
-    image: { src: '', alt: 'a bright white shaker kitchen, family at the island' },
-    href: '/cabinets/assembled-cabinets',
-    ctaLabel: 'Shop now',
+    title: 'A kitchen built\nright around you.',
+    image: {
+      src: '/images/home/hero/kitchen-built-around-you.webp',
+      alt: 'A white shaker kitchen with a dark stone island, in evening light',
+    },
+    href: '/why-express-kitchens',
+    ctaLabel: 'See how',
   },
   {
     title: 'Why wait 8 weeks\nfor your kitchen?',
