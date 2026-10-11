@@ -399,7 +399,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                   <div className="max-w-[30ch]">
                     <p
                       className={clsx(
-                        'font-heading text-xl font-bold leading-tight @xl:text-2xl',
+                        'font-heading text-xl font-bold leading-[1.1] @xl:text-2xl',
                         offer.image && '[text-shadow:0_1px_2px_rgb(0_0_0/0.35)]',
                       )}
                     >
