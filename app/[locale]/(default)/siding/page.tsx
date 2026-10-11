@@ -10,6 +10,7 @@ import {
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { FormCard, PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -54,6 +55,7 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
       />
       <CategoryHero
         description="Vinyl clapboard, Dutch lap, board and batten and shake, quoted by the square from your elevation."
+        image={CODE_PAGE_HERO_IMAGES.siding}
         imageLabel="Clapboard siding on a house, close"
         title="Siding"
       />

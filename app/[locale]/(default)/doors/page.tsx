@@ -9,6 +9,7 @@ import {
 } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default async function Doors({ params }: { params: Promise<{ locale: stri
       />
       <CategoryHero
         description="Interior doors in stock in Bristol: measure, order and collect without waiting weeks."
+        image={CODE_PAGE_HERO_IMAGES.doors}
         imageLabel="A white shaker interior door in a hallway"
         title="Doors that fit, the first time"
       />

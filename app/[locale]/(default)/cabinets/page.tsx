@@ -20,6 +20,7 @@ import {
   LINE_ROWS,
   STYLE_ROWS,
 } from '~/lib/cabinets/cabinets-hub-content';
+import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import {
   ESTIMATOR_HREF,
   FREE_DESIGN_HREF,
@@ -70,6 +71,7 @@ export default async function CabinetsHub({ params }: Props) {
             ]}
             description={HUB_HERO.description}
             headingLevel={1}
+            image={CODE_PAGE_HERO_IMAGES.cabinets}
             imageLabel={HUB_HERO.imageLabel}
             kicker={HUB_HERO.kicker}
             note={HUB_HERO.note}

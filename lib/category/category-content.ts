@@ -301,3 +301,65 @@ export function getCategoryContent(path: string): CategoryContent {
 
   return lede ? { ...content, lede } : content;
 }
+
+// Hero photos by category path (public/images/category/heroes; 1424×640 for a category, 1424×380
+// for a subcategory — both 2× of the hero panel). Used when BigCommerce has no category image.
+const heroImage = (file: string, alt: string) => ({
+  src: `/images/category/heroes/${file}.webp`,
+  alt,
+});
+
+const HERO_IMAGES: Record<string, { src: string; alt: string }> = {
+  '/appliances': heroImage('cat-appliances', 'Stainless appliances in a white kitchen'),
+  '/bath': heroImage('cat-bath', 'A vanity with a white top, sink and faucet'),
+  '/cabinets': heroImage('cat-cabinets', 'A finished shaker kitchen'),
+  '/closets': heroImage('cat-closets', 'A fitted closet with shelves and hanging rails'),
+  '/countertops': heroImage('cat-countertops', 'A stone countertop on an island'),
+  '/doors': heroImage('cat-doors', 'An interior door in a hallway'),
+  '/siding': heroImage('cat-siding', 'Siding on a house exterior'),
+  '/sinks-faucets': heroImage('cat-sinks-faucets', 'A kitchen sink with a pull-down faucet'),
+  '/windows': heroImage('cat-windows', 'Windows in a bright room'),
+  '/appliances/air-conditioning': heroImage('sub-air-conditioning', 'An air conditioner'),
+  '/appliances/accessories': heroImage('sub-appliance-accessories', 'Appliance accessories'),
+  '/appliances/dishwashers': heroImage('sub-dishwashers', 'A dishwasher'),
+  '/appliances/fridges-freezers': heroImage('sub-fridges-freezers', 'A refrigerator'),
+  '/appliances/garbage-disposals': heroImage('sub-garbage-disposals', 'A garbage disposal'),
+  '/appliances/microwaves': heroImage('sub-microwaves', 'A microwave'),
+  '/appliances/range-hoods': heroImage('sub-range-hoods', 'A range hood'),
+  '/appliances/ranges-cooktops': heroImage('sub-ranges-cooktops', 'A range and cooktop'),
+  '/appliances/wall-ovens': heroImage('sub-wall-ovens', 'A wall oven'),
+  '/appliances/washers-dryers': heroImage('sub-washers-dryers', 'A washer and dryer'),
+  '/bath/bathroom-faucets': heroImage('sub-bathroom-faucets', 'A bathroom faucet'),
+  '/bath/bathroom-sinks': heroImage('sub-bathroom-sinks', 'A bathroom sink'),
+  '/bath/drains-accessories': heroImage('sub-drains-accessories', 'A drain and accessories'),
+  '/bath/side-splashes': heroImage('sub-side-splashes', 'A vanity side splash'),
+  '/bath/vanity-tops': heroImage('sub-vanity-tops', 'A vanity top'),
+  '/cabinet-hardware/accessories': heroImage('sub-cabinet-accessories', 'Cabinet accessories'),
+  '/cabinet-hardware/handles-knobs': heroImage('sub-handles', 'Cabinet handles'),
+  '/cabinet-hardware/tiles': heroImage('sub-backsplash-tiles', 'Backsplash tiles'),
+  '/countertops/granite': heroImage('sub-granite', 'A granite countertop'),
+  '/countertops/laminate': heroImage('sub-laminate', 'A laminate countertop'),
+  '/countertops/prefabricated': heroImage('sub-prefabricated', 'A prefabricated countertop'),
+  '/countertops/quartz': heroImage('sub-quartz', 'A quartz countertop'),
+  '/sinks-faucets/accessories': heroImage('sub-sink-accessories', 'Sink accessories'),
+  '/sinks-faucets/kitchen-faucets': heroImage('sub-kitchen-faucets', 'A kitchen faucet'),
+  '/sinks-faucets/kitchen-sinks': heroImage('sub-kitchen-sinks', 'A kitchen sink'),
+  '/windows/new-construction': heroImage(
+    'sub-windows-new-construction',
+    'A new-construction window',
+  ),
+  '/windows/replacement': heroImage('sub-windows-replacement', 'A replacement window'),
+};
+
+// The hero photo for a category path ("/bath/", "/countertops/granite"), if one is supplied.
+export function heroImageFor(path: string): { src: string; alt: string } | undefined {
+  return HERO_IMAGES[`/${path.split('/').filter(Boolean).join('/')}`];
+}
+
+// Hero photos for the code-owned pages, keyed the same way.
+export const CODE_PAGE_HERO_IMAGES = {
+  cabinets: HERO_IMAGES['/cabinets'],
+  doors: HERO_IMAGES['/doors'],
+  siding: HERO_IMAGES['/siding'],
+  quickShip: heroImage('sub-quick-ship', 'Cabinets wrapped on a pallet, ready to ship'),
+} as const;

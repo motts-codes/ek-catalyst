@@ -1,6 +1,10 @@
 import { type Breadcrumb, Breadcrumbs } from '@/vibes/soul/sections/breadcrumbs';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { DEFAULT_CATEGORY_CONTENT, getCategoryContent } from '~/lib/category/category-content';
+import {
+  DEFAULT_CATEGORY_CONTENT,
+  getCategoryContent,
+  heroImageFor,
+} from '~/lib/category/category-content';
 import { FREE_DESIGN_HREF } from '~/lib/home/home-content';
 import { type CategoryHeaderDefaults } from '~/lib/makeswift/components/section-defaults';
 import { navImageFor } from '~/lib/navigation/menu-config';
@@ -59,7 +63,8 @@ export function getCategoryHeaderDefaults({
     title: content.heading ?? category.name,
     description,
     compact,
-    image: toImage(category.defaultImage, category.name),
+    // BigCommerce's category image first, else the supplied hero photo for this path.
+    image: toImage(category.defaultImage, category.name) ?? heroImageFor(category.path),
     imageLabel: content.imageLabel,
     ctaLabel: `Shop all ${category.name.toLowerCase()}`,
     points: content.points ?? DEFAULT_CATEGORY_CONTENT.points,

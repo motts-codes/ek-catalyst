@@ -6,6 +6,7 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
+import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
           { label: 'Shipping & pickup', href: '/shipping-policy' },
         ]}
         description="If your kitchen can't wait, start here. Everything on this page is stocked in Bristol and ships in two weeks or less: the quick-ship collections and all the ready-to-assemble lines. Order by [time] and it goes on the next run."
+        image={CODE_PAGE_HERO_IMAGES.quickShip}
         imageLabel="Cabinets wrapped on a pallet, ready to ship"
         kicker="Quick-ship"
         title="In a hurry? Everything here ships in 2 weeks or less"
