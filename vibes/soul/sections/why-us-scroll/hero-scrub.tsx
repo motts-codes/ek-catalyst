@@ -24,6 +24,10 @@ const E = 0.92;
 const WATER_AT = 0.714;
 const STEAM_AT = 0.67;
 const FX_SECONDS = 5; // WCAG 2.2.2: automatic motion stops within five seconds.
+// At rest the scene starts this far below the header (which sits above the section in flow),
+// so the kitchen never touches the rounded nav card; the gap closes over the first few percent
+// of scroll as the stage pins and the nav slides away.
+const TOP_GAP = 14;
 const FX = { water: [1075, 414, 453] as const, steam: [669, 426] as const };
 
 interface Props {
@@ -79,15 +83,17 @@ export function HeroScrub({
 
     // Stage geometry: the 16:9 frame is as wide as the viewport, or 1.85× its height, whichever
     // is smaller, sitting a little below the bottom edge so the floor runs off the page.
-    const stage = (W: number, H: number) => {
+    const stage = (W: number, H: number, gap: number) => {
       const mob = isMobile();
       const sw = mob ? 1.85 * W : Math.min(W, 1.85 * H);
       const sh = (sw * 9) / 16;
       const x0 = (W - sw) / 2;
-      const y0 = Math.min(H - (mob ? 0.09 * H : -0.045 * sw) - sh, 0);
+      const y0 = Math.min(H - (mob ? 0.09 * H : -0.045 * sw) - sh, gap);
 
       return { sw, sh, x0, y0, k: sw / 1600 };
     };
+
+    const gapAt = (p: number) => (reduce ? 0 : TOP_GAP * (1 - smooth(clamp01(p / 0.06))));
 
     const size = () => {
       const d = Math.min(window.devicePixelRatio || 1, 2);
@@ -97,11 +103,16 @@ export function HeroScrub({
       canvas.height = Math.round(r.height * d);
       shown = -1;
 
-      const { sw, y0, k } = stage(r.width, r.height);
+      // The cue shows at rest (gap open); the sign at the end (gap closed).
+      const start = stage(r.width, r.height, gapAt(0));
+      const end = stage(r.width, r.height, 0);
 
-      cue.style.top = `${y0 + 400 * k}px`;
-      sign.style.left = `${(r.width - sw) / 2 + 800 * k}px`;
-      sign.style.top = `${y0 + 655 * k}px`;
+      cue.style.top = `${start.y0 + 400 * start.k}px`;
+      sign.style.left = `${(r.width - end.sw) / 2 + 800 * end.k}px`;
+      sign.style.top = `${end.y0 + 655 * end.k}px`;
+
+      const { k } = end;
+
       sign.style.setProperty('--k', k.toFixed(4));
     };
 
@@ -182,7 +193,8 @@ export function HeroScrub({
 
       const W = canvas.width;
       const H = canvas.height;
-      const { sw, sh, x0, y0 } = stage(W, H);
+      const scale = W / Math.max(1, canvas.clientWidth);
+      const { sw, sh, x0, y0 } = stage(W, H, gapAt(progress) * scale);
       const fw = im.naturalWidth;
       const fh = im.naturalHeight;
 
@@ -221,6 +233,7 @@ export function HeroScrub({
       const P = reduce ? 1 : clamp01(span > 0 ? -rect.top / span : 1);
       const p = clamp01(P / E);
 
+      if (p < 0.08 && progress !== p) shown = -1; // the gap is still closing: redraw
       progress = p;
 
       const need = !reduce && p >= Math.min(WATER_AT, STEAM_AT) && rect.bottom > 0 && rect.top < vh;
@@ -288,9 +301,7 @@ export function HeroScrub({
       ref={sectionRef}
     >
       <style>{`
-        /* Pinned just below the floating nav card (--ek-hero-top), so the scene never touches it. */
-        .ek-why-hero { --ek-hero-top: 104px; }
-        .ek-why-hero .ek-pin { position: sticky; top: var(--ek-hero-top); height: calc(100vh - var(--ek-hero-top)); height: calc(100svh - var(--ek-hero-top)); overflow: hidden; background: #fff; }
+        .ek-why-hero .ek-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #fff; }
         .ek-why-hero .ek-pin::after { content: ""; position: absolute; inset: auto 0 0 0; height: 11vh; background: linear-gradient(transparent, #fff); z-index: 15; pointer-events: none; }
         .ek-why-hero .ek-cue { transition: opacity .3s; }
         .ek-why-hero .ek-mouse::after { content: ""; position: absolute; left: 50%; top: 7px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: currentColor; animation: ek-wheel 1.6s ease-in-out infinite; }
