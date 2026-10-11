@@ -70,7 +70,10 @@ const CATEGORY_BASE: Array<{
     href: '/cabinets',
     homeowner: '100+ styles, 30+ colors',
     pro: '50,000 in stock',
-    image: tile('cabinets', 'Grey shaker kitchen cabinets with brass handles'),
+    image: tile(
+      'cabinets',
+      'White shaker base cabinets with black handles under a grey countertop',
+    ),
   },
   {
     name: 'Closets',
