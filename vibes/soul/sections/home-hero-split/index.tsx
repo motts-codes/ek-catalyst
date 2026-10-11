@@ -45,9 +45,9 @@ export interface HeroOffer {
   /** Default white (sits on the light card). */
   ctaColor?: HeroCtaColor;
   /**
-   * Optional photo. With one, the card becomes a photo banner: the picture fills it, the copy
-   * sits top-left in white over a dark fade, so keep the subject to the right of the frame
-   * (the asset is 900×560 with the subject in the bottom-right 510×350; double that for retina).
+   * Optional photo. With one, the card becomes a photo banner: the picture fills it and the copy
+   * sits over it in white with no scrim, so bake any darkening the text needs into the photo
+   * (about 510×350 at 1×; double for retina).
    */
   image?: { src: string; alt: string };
 }
@@ -379,62 +379,57 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
               )}
             >
               {offer.image && (
-                <>
-                  <Image
-                    alt={offer.image.alt}
-                    className="object-cover object-right-bottom"
-                    fill
-                    preload
-                    sizes="(min-width: 56rem) 35vw, 100vw"
-                    src={offer.image.src}
-                  />
-                  {/* Dark fade on the left so the copy reads over the photo; measured against the
-                      photo's brightest patches (4.5:1 for body, 3:1 for the headline). */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 via-50% to-black/15"
-                  />
-                </>
+                <Image
+                  alt={offer.image.alt}
+                  className="object-cover"
+                  fill
+                  preload
+                  sizes="(min-width: 56rem) 35vw, 100vw"
+                  src={offer.image.src}
+                />
               )}
-              {/* Bottom padding matches the photo banner's (@xl:pb-8) so both buttons sit on the
-                  same line across the two banners. */}
-              <div className="relative flex h-full flex-col gap-2 p-6 pb-8 @xl:p-8 @xl:pb-8">
+              {/* Eyebrow top-left; headline and line bottom-left; button bottom-right. Bottom
+                  padding matches the photo banner's (@xl:pb-8) so both buttons sit on one line
+                  across the two banners. No scrim: any darkening is baked into the photo. */}
+              <div className="relative flex h-full flex-col p-6 pb-8 @xl:p-8 @xl:pb-8">
                 <p className="self-start rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)] ring-1 ring-contrast-100">
                   {offer.kicker}
                 </p>
-                <p
-                  className={clsx(
-                    'max-w-[16ch] font-heading text-xl font-bold leading-tight @xl:text-2xl',
-                    offer.image && '[text-shadow:0_1px_2px_rgb(0_0_0/0.35)]',
-                  )}
-                >
-                  {offer.headline.split('\n').map((line, lineIndex) => (
-                    <Fragment key={lineIndex}>
-                      {lineIndex > 0 && <br />}
-                      {line}
-                    </Fragment>
-                  ))}
-                </p>
-                {Boolean(offer.description) && (
-                  <p
-                    className={clsx(
-                      'max-w-[30ch] text-sm',
-                      offer.image ? 'text-white' : 'text-contrast-500',
+                <div className="mt-auto flex flex-wrap items-end justify-between gap-x-4 gap-y-3 pt-6">
+                  <div className="max-w-[30ch]">
+                    <p
+                      className={clsx(
+                        'font-heading text-xl font-bold leading-tight @xl:text-2xl',
+                        offer.image && '[text-shadow:0_1px_2px_rgb(0_0_0/0.35)]',
+                      )}
+                    >
+                      {offer.headline.split('\n').map((line, lineIndex) => (
+                        <Fragment key={lineIndex}>
+                          {lineIndex > 0 && <br />}
+                          {line}
+                        </Fragment>
+                      ))}
+                    </p>
+                    {Boolean(offer.description) && (
+                      <p
+                        className={clsx(
+                          'mt-2 text-sm',
+                          offer.image ? 'text-white' : 'text-contrast-500',
+                        )}
+                      >
+                        {offer.description}
+                      </p>
                     )}
-                  >
-                    {offer.description}
-                  </p>
-                )}
-                {offer.showCta !== false && (
-                  <div className="mt-auto pt-3">
+                  </div>
+                  {offer.showCta !== false && (
                     <Link
                       className={clsx(CTA_BASE, CTA_COLOR[offer.ctaColor ?? 'white'])}
                       href={offer.href}
                     >
                       {offer.ctaLabel ?? 'See the offer'}
                     </Link>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           )}

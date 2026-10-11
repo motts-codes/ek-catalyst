@@ -77,20 +77,20 @@ runtime.registerComponent(MSHomeHeroSplit, {
       type: Group({
         label: 'Offer',
         props: {
-          kicker: TextInput({ label: 'Kicker', defaultValue: 'Kitchens starting $299 a month' }),
+          kicker: TextInput({ label: 'Kicker', defaultValue: 'Kitchens @$299/month' }),
           headline: TextArea({
             label: 'Headline (one line per row)',
-            defaultValue: 'FREE Appliance\nWith every kitchen',
+            defaultValue: 'FREE APPLIANCE\nwith every kitchen',
           }),
           description: TextArea({
             label: 'Description',
-            defaultValue: 'And up to 4 Bonus gifts: Roll-out trays, organizers, handles, faucet',
+            defaultValue: '+ up to 4 Bonus gifts: Roll-out trays, organizers, handle, faucet',
           }),
-          imageSrc: Image({ label: 'Photo (optional; keep the subject to the right)' }),
+          imageSrc: Image({ label: 'Photo (optional; bake in any darkening the text needs)' }),
           imageAlt: TextInput({ label: 'Photo alt text', defaultValue: 'Offer' }),
           link: Link({ label: 'Link' }),
           showCta: Checkbox({ label: 'Show button', defaultValue: true }),
-          ctaLabel: TextInput({ label: 'Button text', defaultValue: 'See the offer' }),
+          ctaLabel: TextInput({ label: 'Button text', defaultValue: 'View details' }),
           ctaColor: Select({
             label: 'Button color',
             options: CTA_COLOR_OPTIONS,
