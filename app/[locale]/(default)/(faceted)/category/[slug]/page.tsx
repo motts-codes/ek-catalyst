@@ -11,6 +11,11 @@ import { CabinetAssembly } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetSpecs } from '@/vibes/soul/sections/cabinet-specs';
+import {
+  CABINET_TYPES,
+  CabinetTypeFilter,
+  type CabinetTypeValue,
+} from '@/vibes/soul/sections/cabinet-type-filter';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { SeoContentSection } from '@/vibes/soul/sections/seo-content';
@@ -72,6 +77,44 @@ function getGridTitle(name: string, isCabinet: boolean, program: Program | null)
 // The same collection in the other program ("Switch to RTA").
 function getSwitchHref(path: string, program: Program) {
   return `${path}?program=${program === 'rta' ? 'assembled' : 'rta'}`;
+}
+
+// "Filter by type" on collection pages uses the products' "Product Type" custom field, which is a
+// search facet (attr_Product Type) — the same mechanism as the Program facet, so it filters before
+// pagination. See docs/CABINET-FACETS.md.
+const CABINET_TYPE_PARAM = 'attr_Product Type';
+
+function selectedCabinetType(value: string | string[] | undefined): CabinetTypeValue | null {
+  const first = Array.isArray(value) ? value[0] : value;
+  const match = CABINET_TYPES.find((type) => type.value === first);
+
+  return match ? match.value : null;
+}
+
+// The facet filter for a selected type ({} when none), applied like the Program facet.
+function cabinetTypeSearchParam(value: CabinetTypeValue | null): Record<string, string[]> {
+  return value ? { [CABINET_TYPE_PARAM]: [value] } : {};
+}
+
+// The collection URL with the type set (or cleared), keeping the program and dropping the page.
+function getTypeHref(
+  path: string,
+  searchParams: Record<string, string | string[] | undefined>,
+  value: CabinetTypeValue | null,
+) {
+  const params = new URLSearchParams();
+
+  Object.entries(searchParams).forEach(([key, raw]) => {
+    if (key === CABINET_TYPE_PARAM || key === 'page' || raw == null) return;
+
+    (Array.isArray(raw) ? raw : [raw]).forEach((item) => params.append(key, item));
+  });
+
+  if (value) params.set(CABINET_TYPE_PARAM, value);
+
+  const query = params.toString();
+
+  return query ? `${path}?${query}` : path;
 }
 
 const createCategorySearchParamsLoader = cache(
@@ -167,6 +210,8 @@ export default async function Category(props: Props) {
   const programParam = (await props.searchParams).program;
   const cabinetProgram = isCabinet ? parseCabinetProgram(programParam) : undefined;
   const selectedProgram = isCabinet ? selectedCabinetProgram(programParam) : null;
+  const searchParamsForLinks = await props.searchParams;
+  const selectedType = selectedCabinetType(searchParamsForLinks[CABINET_TYPE_PARAM]);
 
   if (!category) {
     return notFound();
@@ -201,12 +246,14 @@ export default async function Category(props: Props) {
     // program is explicitly selected via ?program=. A bare /cabinets/avon (selectedProgram null)
     // shows all products. See docs/CABINET-FACETS.md.
     const programFilter = selectedProgram ? cabinetProgramSearchParam(selectedProgram) : {};
+    const typeFilter = cabinetTypeSearchParam(selectedType);
 
     const search = await fetchFacetedSearch(
       {
         ...searchParams,
         ...parsedSearchParams,
         ...programFilter,
+        ...typeFilter,
         category: categoryId,
       },
       currencyCode,
@@ -377,12 +424,19 @@ export default async function Category(props: Props) {
         snapshotId={`category-${categoryId}-top-content`}
       />
       {cabinetHeader != null && cabinetProgram != null && (
-        <CabinetCollectionHeader
-          data={cabinetHeader}
-          program={cabinetProgram}
-          specifications={cabinetContent?.specifications}
-          switchHref={getSwitchHref(category.path, cabinetProgram)}
-        />
+        <>
+          <CabinetCollectionHeader
+            data={cabinetHeader}
+            program={cabinetProgram}
+            specifications={cabinetContent?.specifications}
+            switchHref={getSwitchHref(category.path, cabinetProgram)}
+          />
+          <CabinetTypeFilter
+            className="pb-8 @4xl:pb-10"
+            hrefFor={(value) => getTypeHref(category.path, searchParamsForLinks, value)}
+            selected={selectedType}
+          />
+        </>
       )}
       <div className="scroll-mt-24" id="products">
         <ProductsListSection

@@ -120,3 +120,24 @@ These are Laravel-fed in Stencil and not yet in BigCommerce:
 4 closet products (Shelf 48", Side Panel 84", Tower with Shelf, Shelf and Rod) are assigned to BOTH
 Closets (861) and Avon (864), so they currently leak into the Avon listing. They should be removed
 from category 864.
+
+## Enabling a facet by API (what was done for Product Type, Oct 2026)
+
+The control-panel step has an API equivalent (Settings → Product Filtering):
+
+```bash
+GET  /v3/settings/search/filters/available?channel_id=<channel>   # custom fields BC can facet on
+GET  /v3/settings/search/filters?channel_id=<channel>              # the channel's filter config
+PUT  /v3/settings/search/filters?channel_id=<channel>              # same array back, is_enabled flipped
+```
+
+`Product Type` (values WALL CABINET, BASE CABINET, SINK BASE CABINET, TALL CABINET, TRIM & DECORATIVE,
+VANITY CABINET — already on every Avon product) was enabled this way for the sandbox channel. BC
+re-indexes asynchronously: the facet appears in the Storefront `searchProducts.filters` and the
+`attr_Product Type` filter starts narrowing results only after that finishes (Program took the same
+path). Per-category overrides live under `/v3/settings/search/filters/contexts` — none are set.
+
+The collection pages' **"Filter by type"** strip
+([vibes/soul/sections/cabinet-type-filter](../vibes/soul/sections/cabinet-type-filter/index.tsx))
+links to `?attr_Product Type=<value>` and the category page applies it exactly like the Program facet
+(before pagination). Icons: `public/images/cabinets/types/*.svg`.
