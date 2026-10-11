@@ -371,7 +371,11 @@ const menu: MenuItem[] = [
             href: '/resources/measuring-guide',
             image: nav('measuring-guide', 'A tape measure on a kitchen plan'),
           },
-          { label: 'What Is a 10×10 Kitchen', href: '/resources/ten-by-ten-kitchen' },
+          {
+            label: 'What Is a 10×10 Kitchen',
+            href: '/resources/ten-by-ten-kitchen',
+            image: nav('ten-by-ten-kitchen', 'A 10×10 kitchen drawn in plan'),
+          },
           {
             label: 'Order Samples',
             href: '/samples',
