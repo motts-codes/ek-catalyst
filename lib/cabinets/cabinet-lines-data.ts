@@ -222,7 +222,9 @@ export const getCabinetLines = cache(
       }),
     );
 
-    return lines;
+    // A collection with no price for this program isn't sold in it (e.g. Rochelle is Assembled
+    // only), so it stays off that program's listing rather than showing a card with no price.
+    return lines.filter((line) => line.price != null && line.price !== '');
   },
 );
 

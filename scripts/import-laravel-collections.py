@@ -21,6 +21,7 @@ Usage:
     python scripts/import-laravel-collections.py --file /path/to/laravel_category_details.json --dry-run
     python scripts/import-laravel-collections.py --file /path/to/laravel_category_details.json
     python scripts/import-laravel-collections.py --file ... --only avon    # one collection
+    python scripts/import-laravel-collections.py --file ... --only derry --alias "Derry Stratus=Derry"
 """
 import argparse
 import json
@@ -95,6 +96,28 @@ def base_name(card):
     return n.strip().lower()
 
 
+def normalize_delivery(value):
+    """'2 WEEKS' -> '2 Weeks' (the shape the storefront already holds for Avon/Dover)."""
+    return " ".join(w.capitalize() for w in str(value).strip().split())
+
+
+def resolve_attribute_ids(client, product_line, construction):
+    """Look up the 863 master-list ids for a product line / construction NAME. Unknown -> exit."""
+    out = {"product_line_id": "", "construction_id": ""}
+    if not product_line and not construction:
+        return out
+    mfs = client.list_metafields("categories", CABINETS_PARENT)
+    lists = {m["key"]: json.loads(m["value"]) for m in mfs if m["namespace"] == "attributes"}
+    for want, key, field in ((product_line, "product_lines", "product_line_id"), (construction, "constructions", "construction_id")):
+        if not want:
+            continue
+        hit = next((o for o in lists.get(key, []) if o.get("name", "").strip().lower() == want.strip().lower()), None)
+        if not hit:
+            sys.exit(f"{key}: no option named {want!r} on 863 (have {[o.get('name') for o in lists.get(key, [])]})")
+        out[field] = hit["id"]
+    return out
+
+
 def normalize_videos(items):
     """Laravel assembly_instructions use .title; our shape uses .name."""
     out = []
@@ -132,7 +155,9 @@ def sync_colors_to_master(client, color_names):
 
 
 # ── main import for one collection ──────────────────────────────────────────────────────────────
-def import_collection(client, cat_id, cat_name, rta, asm, color_id_map):
+def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery_by_id=None, attr_ids=None):
+    delivery_by_id = delivery_by_id or {}
+    attr_ids = attr_ids or {}
     print(f"\n=== {cat_name} (category {cat_id}) — RTA={'yes' if rta else 'NO'} Assembled={'yes' if asm else 'NO'}")
 
     def g(rec, key, default=""):
@@ -148,6 +173,15 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map):
 
     client.upsert("categories", cat_id, "pricing_10x10", "pricing",
                   json.dumps({"rta": pricing(rta), "assembled": pricing(asm)}))
+
+    # fulfillment.delivery = { rta, assembled } — from the collections list; program absent -> "".
+    def delivery(rec):
+        if not rec:
+            return ""
+        return delivery_by_id.get(str(rec.get("_laravel_id", "")), "")
+
+    client.upsert("categories", cat_id, "fulfillment", "delivery",
+                  json.dumps({"rta": delivery(rta), "assembled": delivery(asm)}))
 
     # assets.spec_sheets = { rta, assembled }
     client.upsert("categories", cat_id, "assets", "spec_sheets",
@@ -201,7 +235,8 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map):
     if color_ids and not default_color_id:
         default_color_id = color_ids[0]
     client.upsert("categories", cat_id, "spec", "info",
-                  json.dumps({"product_line_id": "", "construction_id": "",
+                  json.dumps({"product_line_id": attr_ids.get("product_line_id", ""),
+                              "construction_id": attr_ids.get("construction_id", ""),
                               "color_ids": color_ids, "default_color_id": default_color_id}))
 
 
@@ -210,11 +245,33 @@ def main():
     p.add_argument("--file", required=True, help="laravel_category_details.json")
     p.add_argument("--only", help="only import the collection whose name matches this (case-insensitive)")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--collections", help="laravel_collections.json — supplies delivery_time per program")
+    p.add_argument("--product-line", help='863 attributes.product_lines NAME to set in spec.info (e.g. "Star")')
+    p.add_argument("--construction", help='863 attributes.constructions NAME to set in spec.info (e.g. "Framed")')
+    p.add_argument("--alias", action="append", default=[], metavar="SANDBOX=LARAVEL",
+                   help='map a sandbox collection name to a Laravel base name, e.g. "Derry Stratus=Derry" (repeatable)')
     args = p.parse_args()
+    aliases = {}
+    for a in args.alias:
+        if "=" not in a:
+            sys.exit(f"--alias expects SANDBOX=LARAVEL, got {a!r}")
+        k, v = a.split("=", 1)
+        aliases[k.strip().lower()] = v.strip().lower()
 
     hash_, token = load_env()
     client = Client(hash_, token, dry_run=args.dry_run)
     laravel = json.load(open(args.file))
+
+    # delivery_time lives on the collections list (not the details), keyed by laravel id.
+    delivery_by_id = {}
+    if args.collections:
+        coll = json.load(open(args.collections)).get("collections", {})
+        for items in coll.values():
+            for it in items:
+                if it.get("id") is not None and it.get("delivery_time"):
+                    delivery_by_id[str(it["id"])] = normalize_delivery(it["delivery_time"])
+
+    attr_ids = resolve_attribute_ids(client, args.product_line, args.construction)
 
     # index laravel records by (base_name, type)
     by_key = {}
@@ -231,7 +288,7 @@ def main():
     # Pre-sync all colors that will be referenced into the 863 master list.
     color_names = set()
     for _, name in collections:
-        bn = name.strip().lower()
+        bn = aliases.get(name.strip().lower(), name.strip().lower())
         for rec in (by_key.get((bn, "1")), by_key.get((bn, "2"))):
             for c in (rec or {}).get("colors", []) or []:
                 if c.get("name"):
@@ -240,13 +297,14 @@ def main():
 
     try:
         for cid, name in collections:
-            bn = name.strip().lower()
+            bn = aliases.get(name.strip().lower(), name.strip().lower())
             rta = by_key.get((bn, "1"))
             asm = by_key.get((bn, "2"))
             if not rta and not asm:
                 print(f"\n=== {name} (category {cid}) — NO Laravel match for base name '{bn}', skipping")
                 continue
-            import_collection(client, cid, name, rta, asm, color_id_map)
+            import_collection(client, cid, name, rta, asm, color_id_map,
+                              delivery_by_id=delivery_by_id, attr_ids=attr_ids)
     except urllib.error.HTTPError as e:
         sys.exit(f"HTTP {e.code}: {e.read().decode()[:400]}")
 

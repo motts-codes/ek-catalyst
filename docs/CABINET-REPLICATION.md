@@ -85,6 +85,24 @@ resolved as a BigCommerce entity — no change needed.
 
 ## 4. Seed the metafields
 
+**Real collection data** comes from the old Laravel site's harvest (Desktop → `Catalyst Products/Laravel
+Harvest/`): `laravel_category_details.json` (per-collection RTA + Assembled records) and
+`laravel_collections.json` (delivery times). Import with
+[scripts/import-laravel-collections.py](../scripts/import-laravel-collections.py) — idempotent, `--dry-run`
+first. It matches a sandbox collection to Laravel by exact base name; use `--alias "Derry Stratus=Derry"`
+when the sandbox name carries the finish. `--product-line Star --construction Framed` fills `spec.info`
+from the 863 master lists; colours are added to the master list by name (hex/swatch left for the admin).
+
+```bash
+H="$HOME/Desktop/Catalyst Products/Laravel Harvest"
+python scripts/import-laravel-collections.py --file "$H/laravel_category_details.json" \
+  --collections "$H/laravel_collections.json" --only barcelona --product-line Star --construction Framed
+```
+
+A collection with no price for a program (Rochelle has no RTA) is left off that program's listing.
+
+### Demo / placeholder data
+
 Use [scripts/seed-cabinet-metafields.py](../scripts/seed-cabinet-metafields.py). It is **idempotent**
 (update-if-exists else create) and **parameterized by category id** — no hardcoded 863/864.
 
