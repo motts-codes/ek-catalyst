@@ -1,8 +1,7 @@
 import { clsx } from 'clsx';
-import { ShoppingCart, Truck } from 'lucide-react';
+import { Truck } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { SuperscriptPrice } from '@/vibes/soul/primitives/price-label';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -146,60 +145,71 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
 
       <div className="flex flex-1 flex-col p-6">
         {/* Collection in black, the finish (any words after the first) in brand red, all caps. */}
-        <h2 className="font-heading text-xl font-bold uppercase leading-tight">
+        <h2 className="font-heading text-[23px] font-bold uppercase leading-tight">
           <Link className="transition-colors hover:text-contrast-500" href={line.href}>
             <LineName name={line.name} />
           </Link>
         </h2>
 
-        {/* The facts strip: price (and was-price), finance, ship time, in one bordered row. */}
+        {/* The facts strip, sized from the live landing page's price grid: current price, was-price,
+            finance and lead time in one bordered row. Two of its colours failed WCAG on the pink
+            (was-price #d4d4d4, finance #f9858d) and are replaced with #6b6b6b and brand red. */}
         {hasFacts(line) && (
-          <div className="mt-4 grid grid-cols-[1fr_auto] rounded-xl border border-[#f0cfcf] bg-[#fff6f6] text-foreground @md:grid-cols-[1fr_auto_auto]">
-            {line.price != null && line.price !== '' && (
-              <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2 px-3.5 py-3">
-                <span className="text-lg font-bold leading-none text-[var(--button-primary-background,#d90716)]">
-                  <SuperscriptPrice formatted={`$${withCommas(line.price)}`} />
-                </span>
-                {line.strikePrice != null && line.strikePrice !== '' && (
-                  <span className="text-sm text-[#6b6b6b] line-through">
-                    ${withCommas(line.strikePrice)}
+          <>
+            <p className="mt-4 text-[0.667rem] font-semibold uppercase tracking-wide text-[#6b6b6b]">
+              10x10 kitchen starting
+            </p>
+            <div className="mt-1.5 grid grid-cols-[1fr_auto] rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto_auto]">
+              {line.price != null && line.price !== '' && (
+                <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-1 px-[13px] py-2">
+                  <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
+                    <Amount
+                      cents={16}
+                      formatted={`$${withCommas(line.price)}`}
+                      symbol={14}
+                      whole={24}
+                    />
                   </span>
-                )}
-              </div>
-            )}
-            {line.emiText != null && line.emiText !== '' && (
-              <div className="border-l border-[#f0cfcf] px-3.5 py-2.5 text-center text-xs leading-tight text-[var(--button-primary-background,#d90716)]">
-                <Finance text={line.emiText} />
-              </div>
-            )}
-            {line.deliveryTime != null && line.deliveryTime !== '' && (
-              <div className="col-span-2 flex items-center gap-1.5 border-t border-[#f0cfcf] px-3.5 py-2.5 text-sm font-semibold @md:col-span-1 @md:border-l @md:border-t-0">
-                <Truck
-                  aria-hidden
-                  className="shrink-0 text-[var(--button-primary-background,#d90716)]"
-                  size={18}
-                  strokeWidth={1.75}
-                />
-                <span className="sr-only">Ships in</span>
-                {line.deliveryTime}
-              </div>
-            )}
-          </div>
+                  {line.strikePrice != null && line.strikePrice !== '' && (
+                    <span className="leading-none text-[#6b6b6b]">
+                      <Amount
+                        cents={12}
+                        formatted={`$${withCommas(line.strikePrice)}`}
+                        strike
+                        symbol={12}
+                        whole={18}
+                      />
+                    </span>
+                  )}
+                </div>
+              )}
+              {line.emiText != null && line.emiText !== '' && (
+                <div className="flex flex-col items-center justify-center border-l border-[#fcb6bb] px-4 py-1.5 text-center text-[11px] font-medium leading-snug text-[var(--button-primary-background,#d90716)]">
+                  <Finance text={line.emiText} />
+                </div>
+              )}
+              {line.deliveryTime != null && line.deliveryTime !== '' && (
+                <div className="col-span-2 flex items-center justify-center gap-1.5 border-t border-[#fcb6bb] px-3 py-2 text-[13px] font-medium @md:col-span-1 @md:border-l @md:border-t-0">
+                  <Truck aria-hidden className="shrink-0" size={18} strokeWidth={1.5} />
+                  <span aria-label={`Ships in ${line.deliveryTime}`}>
+                    {abbreviateWeeks(line.deliveryTime)}
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
         )}
 
         {/* CTAs pinned to the card bottom so they align across the row. Shop is the brand red;
             Order sample is outlined black and fills black on hover (the same slide as every button). */}
         <div className="mt-auto flex flex-wrap gap-2 pt-5">
-          <ButtonLink href={line.href} shape="rounded" size="small" variant="primary">
-            <span className="inline-flex items-center gap-2">
-              <ShoppingCart aria-hidden size={16} strokeWidth={2} />
-              Shop Now
-            </span>
+          <ButtonLink href={line.href} shape="pill" size="small" variant="primary">
+            Shop Now
           </ButtonLink>
           <ButtonLink
             className="border-foreground bg-white text-foreground after:!bg-foreground hover:!text-white"
             href={line.orderSampleHref ?? line.href}
-            shape="rounded"
+            shape="pill"
             size="small"
             variant="tertiary"
           >
@@ -213,6 +223,54 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
 
 function hasFacts(line: CabinetLine): boolean {
   return [line.price, line.emiText, line.deliveryTime].some((v) => v != null && v !== '');
+}
+
+// "3 Weeks" → "3 Wks" (the landing page's short form); anything else is left alone.
+function abbreviateWeeks(value: string): string {
+  return value.replace(/\bweeks?\b/i, 'Wks');
+}
+
+// A price as the landing page sets it: small symbol, big dollars, raised cents, each at its own
+// pixel size. Falls back to the raw string when it isn't <symbol><whole>.<cents>.
+function Amount({
+  formatted,
+  symbol,
+  whole,
+  cents,
+  strike = false,
+}: {
+  formatted: string;
+  symbol: number;
+  whole: number;
+  cents: number;
+  /** Strike each piece (a decoration on the wrapper doesn't reach into an inline-flex). */
+  strike?: boolean;
+}) {
+  const match = /^(\D*)(\d[\d,]*)(?:[.,](\d+))?(\D*)$/.exec(formatted);
+
+  if (!match) return formatted;
+
+  const [, sym, dollars, cent, suffix] = match;
+  const piece = clsx('leading-none', strike && 'line-through');
+
+  return (
+    <span aria-label={formatted} className="inline-flex items-start">
+      {Boolean(sym) && (
+        <span className={piece} style={{ fontSize: symbol }}>
+          {sym}
+        </span>
+      )}
+      <span className={piece} style={{ fontSize: whole }}>
+        {dollars}
+      </span>
+      {Boolean(cent) && (
+        <span className={piece} style={{ fontSize: cents }}>
+          {cent}
+        </span>
+      )}
+      {suffix || null}
+    </span>
+  );
 }
 
 // "Avon" → AVON; "Derry Stratus" → DERRY + STRATUS in red. The first word is the collection, the
@@ -235,8 +293,8 @@ function LineName({ name }: { name: string }) {
   );
 }
 
-// "As Low As $50.73/Month" → the words on one line, the amount (superscript cents) and its suffix
-// on the next. Anything that doesn't fit that shape renders as given.
+// "As Low As $50.73/Month" → the words on one line, the amount and its suffix on the next, at the
+// landing page's sizes. Anything that doesn't fit that shape renders as given.
 function Finance({ text }: { text: string }) {
   const match = /^(.*?)\s*(\$[\d,]+(?:\.\d+)?)(.*)$/.exec(text);
 
@@ -246,16 +304,11 @@ function Finance({ text }: { text: string }) {
 
   return (
     <>
-      {Boolean(label) && (
-        <>
-          {label}
-          <br />
-        </>
-      )}
-      <span className="text-sm font-semibold">
-        <SuperscriptPrice formatted={amount ?? ''} />
+      {Boolean(label) && <span>{label}</span>}
+      <span className="inline-flex items-start">
+        <Amount cents={8} formatted={amount ?? ''} symbol={10} whole={11} />
+        {suffix}
       </span>
-      {suffix}
     </>
   );
 }

@@ -17,11 +17,12 @@ interface Props {
   scrollbarLabel?: string;
 }
 
-const itemClassName = 'basis-[85%] pl-4 @md:basis-1/2 @2xl:pl-5 @3xl:basis-[38%] @5xl:basis-[30%]';
+const itemClassName =
+  'basis-[85%] pl-4 @md:basis-[60%] @2xl:pl-5 @3xl:basis-[45%] @5xl:basis-[35%]';
 
 // Cabinet collection cards (the same card as the listing pages: 10×10 price, ship time, Shop +
-// Order sample) in a single-row carousel — a little over three visible on wide screens, so the next card
-// peeks in — with
+// Order sample) in a single-row carousel — a little under three visible on wide screens, so the next
+// card peeks in — with
 // the same scrollbar and arrows as the category row. Renders nothing when there are no collections.
 export function CollectionCarousel({
   lines,
@@ -37,7 +38,7 @@ export function CollectionCarousel({
         <div className="flex gap-5 overflow-hidden">
           {Array.from({ length: placeholderCount }).map((_, index) => (
             <div
-              className="aspect-[4/5] w-[85%] shrink-0 animate-pulse rounded-2xl bg-contrast-100 @md:w-1/2 @3xl:w-[38%] @5xl:w-[30%]"
+              className="aspect-[4/5] w-[85%] shrink-0 animate-pulse rounded-2xl bg-contrast-100 @md:w-[60%] @3xl:w-[45%] @5xl:w-[35%]"
               key={index}
             />
           ))}
