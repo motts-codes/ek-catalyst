@@ -102,6 +102,6 @@ runtime.registerComponent(MSHomeHeroSplit, {
         return offer?.kicker || 'Offer';
       },
     }),
-    slideInterval: Number({ label: 'Photo rotation', defaultValue: 8, suffix: 's' }),
+    slideInterval: Number({ label: 'Photo rotation', defaultValue: 6, suffix: 's' }),
   },
 });

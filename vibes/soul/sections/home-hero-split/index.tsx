@@ -65,7 +65,7 @@ interface Props {
   slides: HeroSlide[];
   /** The offer card is stationary: the first offer is shown, so it is always on screen. */
   offers: HeroOffer[];
-  /** Photo rotation, ms (8 s: three slides, the longest four lines). */
+  /** Photo rotation, ms (6 s: three slides, headline and button only). */
   slideInterval?: number;
   className?: string;
 }
@@ -244,7 +244,7 @@ function SlideControls({
 
 // Home hero, 65 / 35: a rotating photo slideshow with a two-line headline bottom-left, beside one
 // stationary offer card. One moving thing on the screen; the offer is always readable.
-export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className }: Props) {
+export function HomeHeroSplit({ slides, offers, slideInterval = 6000, className }: Props) {
   const photos = useRotator(slideInterval, slides.length > 1);
   const offer = offers[0];
 
