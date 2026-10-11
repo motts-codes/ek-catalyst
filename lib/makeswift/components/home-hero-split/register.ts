@@ -90,7 +90,7 @@ runtime.registerComponent(MSHomeHeroSplit, {
           imageAlt: TextInput({ label: 'Photo alt text', defaultValue: 'Offer' }),
           link: Link({ label: 'Link' }),
           showCta: Checkbox({ label: 'Show button', defaultValue: true }),
-          ctaLabel: TextInput({ label: 'Button text', defaultValue: 'View details' }),
+          ctaLabel: TextInput({ label: 'Button text', defaultValue: 'View offer' }),
           ctaColor: Select({
             label: 'Button color',
             options: CTA_COLOR_OPTIONS,

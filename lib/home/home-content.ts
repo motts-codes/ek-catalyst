@@ -56,7 +56,7 @@ export const HERO_OFFERS: HeroOffer[] = [
     headline: 'FREE APPLIANCE\nwith every kitchen',
     description: '+ up to 4 Bonus gifts: Roll-out trays, organizers, handle, faucet',
     href: '/promotions',
-    ctaLabel: 'View details',
+    ctaLabel: 'View offer',
     image: {
       src: '/images/home/offers/free-appliance.webp',
       alt: 'A stainless-steel refrigerator and gas range, each tied with a red gift bow',
