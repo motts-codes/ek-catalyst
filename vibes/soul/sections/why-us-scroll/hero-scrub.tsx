@@ -288,7 +288,9 @@ export function HeroScrub({
       ref={sectionRef}
     >
       <style>{`
-        .ek-why-hero .ek-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #fff; }
+        /* Pinned just below the floating nav card (--ek-hero-top), so the scene never touches it. */
+        .ek-why-hero { --ek-hero-top: 104px; }
+        .ek-why-hero .ek-pin { position: sticky; top: var(--ek-hero-top); height: calc(100vh - var(--ek-hero-top)); height: calc(100svh - var(--ek-hero-top)); overflow: hidden; background: #fff; }
         .ek-why-hero .ek-pin::after { content: ""; position: absolute; inset: auto 0 0 0; height: 11vh; background: linear-gradient(transparent, #fff); z-index: 15; pointer-events: none; }
         .ek-why-hero .ek-cue { transition: opacity .3s; }
         .ek-why-hero .ek-mouse::after { content: ""; position: absolute; left: 50%; top: 7px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: currentColor; animation: ek-wheel 1.6s ease-in-out infinite; }

@@ -44,9 +44,9 @@ export default async function WhyExpressKitchens({
         kicker="Why wait 14 weeks?"
         lanes={[
           { label: 'Industry average', value: '14 weeks', width: 100 },
-          { label: 'Express Kitchens', value: '5 days', width: 5.1, highlight: true },
+          { label: 'Express Kitchens', value: '3 weeks', width: 21.4, highlight: true },
         ]}
-        note="Bars are to scale: 5 days against 98."
+        note="Bars are to scale: 3 weeks against 14."
         title="The industry mistook waiting for quality."
       />
       <CabinetFilm
