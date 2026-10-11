@@ -54,7 +54,7 @@ export function WaitBand({ kicker, title, description, lanes, note }: Props) {
   }, []);
 
   return (
-    <section className="bg-[#f9fafd] @container">
+    <section className="bg-white @container">
       <div className="mx-auto max-w-screen-2xl px-6 py-16 @xl:px-9 @xl:py-24 @4xl:px-14 @4xl:py-32">
         {/* Brand red rather than the lighter pink the client asked for: #F9858D is 2.3:1 on
             this band, below the 4.5:1 small text needs; the nearest passing shade of that hue is
