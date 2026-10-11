@@ -81,7 +81,7 @@ export interface FooterProps {
 }
 
 const footerLinkClassName =
-  'block rounded-lg py-1.5 text-sm text-[var(--footer-link,hsl(var(--contrast-500)))] ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 hover:text-[var(--footer-link-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
+  'block rounded-lg py-1.5 text-sm text-[var(--footer-link,hsl(var(--contrast-500)))] ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 hover:text-[var(--footer-link-hover,var(--button-primary-background,#d90716))] focus-visible:outline-0 focus-visible:ring-2';
 
 // Site footer, per the wireframe: newsletter band → brand row (logo, blurb, social) → link columns
 // + the contact column → legal strip with payment badges.
@@ -90,7 +90,7 @@ const footerLinkClassName =
 //   --footer-focus: hsl(var(--primary)); --footer-background: hsl(var(--background));
 //   --footer-border-top: hsl(var(--contrast-100)); --footer-social-icon: hsl(var(--contrast-400));
 //   --footer-social-icon-hover: hsl(var(--foreground)); --footer-section-title: hsl(var(--foreground));
-//   --footer-link: hsl(var(--contrast-500)); --footer-link-hover: hsl(var(--foreground));
+//   --footer-link: hsl(var(--contrast-500)); --footer-link-hover: the brand red (as the main nav);
 //   --footer-copyright: hsl(var(--contrast-500));
 export const Footer = ({
   logo,
@@ -132,7 +132,7 @@ export const Footer = ({
             </div>
             <InlineEmailForm
               action={newsletter.action}
-              className="w-full @3xl:max-w-md"
+              className="w-full @3xl:max-w-[21rem]"
               placeholder={newsletter.placeholder}
               submitLabel={newsletter.submitLabel}
             />
@@ -282,7 +282,11 @@ export const Footer = ({
             </Stream>
             {legalLinks.map((link) =>
               link.href != null && link.href !== '' ? (
-                <Link className="hover:text-foreground" href={link.href} key={link.label}>
+                <Link
+                  className="transition-colors hover:text-[var(--button-primary-background,#d90716)]"
+                  href={link.href}
+                  key={link.label}
+                >
                   {link.label}
                 </Link>
               ) : (

@@ -65,7 +65,7 @@ export function InlineEmailForm({
           key={fields.email.id}
           placeholder={placeholder}
         />
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-1">
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-1.5">
           <Button
             aria-label={submitLabel}
             loading={isPending}

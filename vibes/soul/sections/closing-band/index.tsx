@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 
+import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { homeHeadingClassName, HomeSection } from '@/vibes/soul/sections/home-section';
 import { Link } from '~/components/link';
 
@@ -48,12 +49,16 @@ export function ClosingBand({
           <h2 className={homeHeadingClassName}>{title}</h2>
           <p className="mt-4 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-foreground px-5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#9f3632]"
+            {/* The site's sliding button (black), sweeping to brand red on hover. */}
+            <ButtonLink
+              className="border-foreground bg-foreground text-white after:!bg-[var(--button-primary-background,#d90716)] hover:!text-white focus-visible:ring-white focus-visible:ring-offset-[#9f3632] [&_span]:!text-white"
               href={primary.href}
+              shape="pill"
+              size="small"
+              variant="secondary"
             >
               {primary.label}
-            </Link>
+            </ButtonLink>
             {secondary && (
               <Link className={ghostButtonClassName} href={secondary.href}>
                 {secondary.label}
