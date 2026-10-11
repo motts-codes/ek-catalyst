@@ -32,7 +32,7 @@ export function ClosingBand({
 }: Props) {
   return (
     <HomeSection className={className} tint={tint}>
-      {/* Deep brand red (#9F3632): white text is 6.9:1 on it. The primary button is white here,
+      {/* Deep brand red (#9F3632): white text is 6.9:1 on it. The primary button is black here,
           since the brand-red button would sit at 1.3:1 against this panel. */}
       <div className="relative overflow-hidden rounded-3xl bg-[#9f3632] px-6 py-12 text-center text-white @xl:px-12 @xl:py-16 @4xl:py-20">
         {/* Soft lighter glow, top-right */}
@@ -45,7 +45,7 @@ export function ClosingBand({
           <p className="mt-4 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-foreground transition-colors hover:bg-neutral-200 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#9f3632]"
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-foreground px-5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#9f3632]"
               href={primary.href}
             >
               {primary.label}

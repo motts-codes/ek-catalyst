@@ -119,14 +119,15 @@ export const Footer = ({
     >
       {/* Newsletter band */}
       {newsletter && (
-        <div className="border-b border-[var(--footer-border-top,hsl(var(--contrast-100)))] bg-[#f9fafd]">
+        <div className="bg-foreground text-white">
           <div className="mx-auto flex max-w-screen-2xl flex-col gap-5 px-6 py-8 @xl:px-9 @3xl:flex-row @3xl:items-center @3xl:justify-between @4xl:px-14">
-            <div className="max-w-xl">
+            {/* Wide enough for the one-line description beside the form on a laptop. */}
+            <div className="max-w-2xl">
               <h3 className="font-heading text-xl font-medium leading-tight @xl:text-2xl">
                 {newsletter.title}
               </h3>
               {Boolean(newsletter.description) && (
-                <p className="mt-1.5 text-sm text-contrast-500">{newsletter.description}</p>
+                <p className="mt-1.5 text-sm text-white/85">{newsletter.description}</p>
               )}
             </div>
             <InlineEmailForm
