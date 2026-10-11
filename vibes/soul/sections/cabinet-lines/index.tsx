@@ -156,12 +156,12 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             (was-price #d4d4d4, finance #f9858d) and are replaced with #6b6b6b and brand red. */}
         {hasFacts(line) && (
           <>
-            <p className="mt-4 text-[0.667rem] font-semibold uppercase tracking-wide text-[#6b6b6b]">
-              10x10 kitchen starting
+            <p className="mt-4 text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
+              10x10 Kitchen starting
             </p>
             <div className="mt-1.5 grid grid-cols-[1fr_auto] rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto_auto]">
               {line.price != null && line.price !== '' && (
-                <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-1 px-[13px] py-2">
+                <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-1 px-[13px] py-3">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
                       cents={16}
@@ -184,16 +184,14 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                 </div>
               )}
               {line.emiText != null && line.emiText !== '' && (
-                <div className="flex flex-col items-center justify-center border-l border-[#fcb6bb] px-4 py-1.5 text-center text-[11px] font-medium leading-snug text-[var(--button-primary-background,#d90716)]">
+                <div className="flex flex-col items-center justify-center border-l border-[#fcb6bb] px-4 py-2.5 text-center text-[11px] font-medium leading-snug text-[var(--button-primary-background,#d90716)]">
                   <Finance text={line.emiText} />
                 </div>
               )}
               {line.deliveryTime != null && line.deliveryTime !== '' && (
-                <div className="col-span-2 flex items-center justify-center gap-1.5 border-t border-[#fcb6bb] px-3 py-2 text-[13px] font-medium @md:col-span-1 @md:border-l @md:border-t-0">
+                <div className="col-span-2 flex items-center justify-center gap-1.5 border-t border-[#fcb6bb] px-3 py-3 text-[13px] font-medium @md:col-span-1 @md:border-l @md:border-t-0">
                   <Truck aria-hidden className="shrink-0" size={18} strokeWidth={1.5} />
-                  <span aria-label={`Ships in ${line.deliveryTime}`}>
-                    {abbreviateWeeks(line.deliveryTime)}
-                  </span>
+                  <span>Ships {line.deliveryTime}</span>
                 </div>
               )}
             </div>
@@ -223,11 +221,6 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
 
 function hasFacts(line: CabinetLine): boolean {
   return [line.price, line.emiText, line.deliveryTime].some((v) => v != null && v !== '');
-}
-
-// "3 Weeks" → "3 Wks" (the landing page's short form); anything else is left alone.
-function abbreviateWeeks(value: string): string {
-  return value.replace(/\bweeks?\b/i, 'Wks');
 }
 
 // A price as the landing page sets it: small symbol, big dollars, raised cents, each at its own

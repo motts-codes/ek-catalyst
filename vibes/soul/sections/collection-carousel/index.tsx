@@ -18,7 +18,7 @@ interface Props {
 }
 
 const itemClassName =
-  'basis-[85%] pl-4 @md:basis-[60%] @2xl:pl-5 @3xl:basis-[45%] @5xl:basis-[35%]';
+  'basis-[85%] pl-4 @md:basis-[60%] @2xl:pl-5 @3xl:basis-[46%] @5xl:basis-[37%]';
 
 // Cabinet collection cards (the same card as the listing pages: 10×10 price, ship time, Shop +
 // Order sample) in a single-row carousel — a little under three visible on wide screens, so the next
@@ -38,7 +38,7 @@ export function CollectionCarousel({
         <div className="flex gap-5 overflow-hidden">
           {Array.from({ length: placeholderCount }).map((_, index) => (
             <div
-              className="aspect-[4/5] w-[85%] shrink-0 animate-pulse rounded-2xl bg-contrast-100 @md:w-[60%] @3xl:w-[45%] @5xl:w-[35%]"
+              className="aspect-[4/5] w-[85%] shrink-0 animate-pulse rounded-2xl bg-contrast-100 @md:w-[60%] @3xl:w-[46%] @5xl:w-[37%]"
               key={index}
             />
           ))}
