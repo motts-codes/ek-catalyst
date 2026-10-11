@@ -429,7 +429,10 @@ export default async function Category(props: Props) {
       />
       {cabinetAssembly.length > 0 && <CabinetAssembly videos={cabinetAssembly} />}
       {faq && <CabinetFaq data={faq} />}
-      <SeoContentSection content={parseSeoContent(category.seoContent.edges)} />
+      <SeoContentSection
+        content={parseSeoContent(category.seoContent.edges)}
+        kicker={`About ${category.name.toLowerCase()}`}
+      />
       {Boolean(cabinetContent?.disclaimer) && (
         <CabinetSpecs disclaimer={cabinetContent?.disclaimer} />
       )}
