@@ -92,11 +92,12 @@ export function ProgramSplit({
               ) : (
                 <MediaPlaceholder className="absolute inset-0" label={`${card.title} kitchen`} />
               )}
-              {/* Scrim: heavy at the bottom for the open panel's copy, lighter at the top for the
-                  collapsed label. Both always present so the crossfade is calm. */}
+              {/* Scrim: heavy over the lower half for the open panel's copy, lighter at the top for
+                  the collapsed label. Measured against the photos' brightest patches so white text
+                  holds 4.5:1 (3:1 for the title) everywhere, not just on average. */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/35"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 via-45% to-black/45"
               />
 
               {/* Collapsed label, top-left. Fades out as the panel opens. */}
@@ -122,14 +123,14 @@ export function ProgramSplit({
               >
                 <div className="max-w-md">
                   {Boolean(card.tag) && (
-                    <span className="mb-3 inline-block rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/30 backdrop-blur-sm">
+                    <span className="mb-3 inline-block rounded-full bg-black/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white ring-1 ring-white/30">
                       {card.tag}
                     </span>
                   )}
                   <h3 className="font-heading text-2xl font-bold leading-tight [text-shadow:0_1px_2px_rgb(0_0_0/0.4)] @xl:text-3xl">
                     {card.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/90 @xl:text-base">
+                  <p className="mt-2 text-sm leading-relaxed text-white @xl:text-base">
                     {card.description}
                   </p>
                   {card.points.length > 0 && (

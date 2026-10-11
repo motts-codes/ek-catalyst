@@ -190,7 +190,7 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     href: '/cabinets/rta-cabinets',
     image: {
       src: '/images/home/programs/rta.webp',
-      alt: 'A kitchen in warm cherry-stained cabinets with a wood range hood and white subway tile',
+      alt: 'A kitchen in dark grey shaker cabinets',
     },
   },
 ];
