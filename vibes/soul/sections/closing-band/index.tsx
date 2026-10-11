@@ -1,4 +1,3 @@
-import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { homeHeadingClassName, HomeSection } from '@/vibes/soul/sections/home-section';
 import { Link } from '~/components/link';
 
@@ -33,19 +32,24 @@ export function ClosingBand({
 }: Props) {
   return (
     <HomeSection className={className} tint={tint}>
-      <div className="relative overflow-hidden rounded-3xl bg-foreground px-6 py-12 text-center text-white @xl:px-12 @xl:py-16 @4xl:py-20">
-        {/* Soft brand-red glow, top-right */}
+      {/* Deep brand red (#9F3632): white text is 6.9:1 on it. The primary button is white here,
+          since the brand-red button would sit at 1.3:1 against this panel. */}
+      <div className="relative overflow-hidden rounded-3xl bg-[#9f3632] px-6 py-12 text-center text-white @xl:px-12 @xl:py-16 @4xl:py-20">
+        {/* Soft lighter glow, top-right */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[var(--button-primary-background,#d90716)] opacity-30 blur-3xl"
+          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white opacity-10 blur-3xl"
         />
         <div className="relative mx-auto max-w-2xl">
           <h2 className={homeHeadingClassName}>{title}</h2>
-          <p className="mt-4 text-sm leading-relaxed text-white/70 @xl:text-base">{description}</p>
+          <p className="mt-4 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <ButtonLink href={primary.href} shape="pill" size="small" variant="primary">
+            <Link
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-foreground transition-colors hover:bg-neutral-200 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#9f3632]"
+              href={primary.href}
+            >
               {primary.label}
-            </ButtonLink>
+            </Link>
             {secondary && (
               <Link className={ghostButtonClassName} href={secondary.href}>
                 {secondary.label}
