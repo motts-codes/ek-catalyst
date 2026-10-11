@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { Pause, Play } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   clamp01,
@@ -23,7 +24,6 @@ const E = 0.92;
 // Where the live water / steam touches start (0–1 progress), and how long they keep moving.
 const WATER_AT = 0.714;
 const STEAM_AT = 0.67;
-const FX_SECONDS = 5; // WCAG 2.2.2: automatic motion stops within five seconds.
 // At rest the scene starts this far below the header (which sits above the section in flow),
 // so the kitchen never touches the rounded nav card; the gap closes over the first few percent
 // of scroll as the stage pins and the nav slides away.
@@ -56,6 +56,10 @@ export function HeroScrub({
   const signRef = useRef<HTMLDivElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
+  const heldRef = useRef(false);
+  const holdRef = useRef<(next: boolean) => void>(() => undefined);
+  const [held, setHeldState] = useState(false);
+  const [showPause, setShowPause] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -76,7 +80,7 @@ export function HeroScrub({
     let want = reduce ? ASSEMBLY_FRAMES - 1 : 0;
     let progress = 0;
     let looping = false;
-    let fxStarted = 0;
+    let stopped = heldRef.current;
     const t0 = performance.now();
 
     const isMobile = () => window.innerWidth <= 760;
@@ -116,9 +120,9 @@ export function HeroScrub({
       sign.style.setProperty('--k', k.toFixed(4));
     };
 
-    // Live touches drawn over the frames: water at the faucet, steam from the kettle. They run
-    // for a few seconds after the scene reaches them, then rest (an automatic animation must stop
-    // within five seconds to meet WCAG 2.2.2).
+    // Live touches drawn over the frames: water at the faucet, steam from the kettle. They keep
+    // moving while the finished scene is on screen; the visitor can stop them with the button
+    // (WCAG 2.2.2), and `held` is that choice.
     const fx = (x0: number, y0: number, k: number, now: number) => {
       const t = (now - t0) / 1000;
 
@@ -180,6 +184,11 @@ export function HeroScrub({
       }
     };
 
+    // The effects' clock. It stops advancing while the visitor has paused them.
+    let frozenAt = 0;
+    let pausedFor = 0;
+    const fxClock = () => (stopped ? frozenAt : performance.now() - pausedFor);
+
     const draw = () => {
       const j = nearestLoaded(loaded, want);
 
@@ -202,22 +211,31 @@ export function HeroScrub({
       // on very wide screens) stays page-white rather than a bleed of the wall colour.
 
       ctx.drawImage(im, x0, y0, sw, sh);
-      if (looping) fx(x0, y0, sw / 1600, performance.now());
+      // Stopped: the water and steam are still drawn, just not moving.
+      if (progress >= Math.min(WATER_AT, STEAM_AT)) fx(x0, y0, sw / 1600, fxClock());
     };
 
     const loop = () => {
       if (!looping) return;
 
-      if (performance.now() - fxStarted > FX_SECONDS * 1000) {
-        looping = false;
-
-        return;
-      }
-
       shown = -1;
       draw();
       requestAnimationFrame(loop);
     };
+
+    const setHeld = (next: boolean) => {
+      if (next === stopped) return;
+
+      if (next) frozenAt = fxClock();
+      else pausedFor = performance.now() - frozenAt;
+
+      stopped = next;
+      heldRef.current = next;
+      shown = -1;
+      draw();
+    };
+
+    holdRef.current = setHeld;
 
     const update = () => {
       const rect = section.getBoundingClientRect();
@@ -228,13 +246,20 @@ export function HeroScrub({
 
       if (p < 0.08 && progress !== p) shown = -1; // the gap is still closing: redraw
       progress = p;
+      setShowPause(!reduce && p >= Math.min(WATER_AT, STEAM_AT));
 
-      const need = !reduce && p >= Math.min(WATER_AT, STEAM_AT) && rect.bottom > 0 && rect.top < vh;
+      const need =
+        !reduce &&
+        !stopped &&
+        p >= Math.min(WATER_AT, STEAM_AT) &&
+        rect.bottom > 0 &&
+        rect.top < vh;
 
-      if (need && !looping && fxStarted === 0) {
+      if (need && !looping) {
         looping = true;
-        fxStarted = performance.now();
         requestAnimationFrame(loop);
+      } else if (!need && looping) {
+        looping = false;
       }
 
       if (reduce) want = ASSEMBLY_FRAMES - 1;
@@ -286,6 +311,15 @@ export function HeroScrub({
       stop();
     };
   }, []);
+
+  const toggle = () => {
+    const next = !held;
+
+    setHeldState(next);
+    holdRef.current(next);
+    // Resuming: re-run the scroll handler so the effects loop restarts.
+    if (!next) window.dispatchEvent(new Event('scroll'));
+  };
 
   return (
     <section
@@ -341,6 +375,21 @@ export function HeroScrub({
             {signLine2}
           </span>
         </div>
+        {showPause && (
+          <button
+            aria-label={held ? 'Play the water and steam' : 'Pause the water and steam'}
+            aria-pressed={held}
+            className="absolute bottom-[13vh] right-4 z-20 flex h-8 w-8 items-center justify-center rounded-lg border border-white/50 bg-black/25 text-white backdrop-blur-sm transition-colors hover:bg-black/45 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white @xl:right-6"
+            onClick={toggle}
+            type="button"
+          >
+            {held ? (
+              <Play aria-hidden size={14} strokeWidth={2} />
+            ) : (
+              <Pause aria-hidden size={14} strokeWidth={2} />
+            )}
+          </button>
+        )}
       </div>
     </section>
   );
