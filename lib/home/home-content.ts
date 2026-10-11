@@ -175,6 +175,10 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     points: ['Built and checked in our Connecticut shop', 'Delivered ready to hang in three weeks'],
     ctaLabel: 'Shop assembled',
     href: '/cabinets/assembled-cabinets',
+    image: {
+      src: '/images/home/programs/assembled.webp',
+      alt: 'An assembled kitchen, cabinets installed and finished',
+    },
   },
   {
     title: 'RTA cabinets',
@@ -184,6 +188,10 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     points: ['Ships from Bristol in two weeks', 'Lower price than the same cabinet assembled'],
     ctaLabel: 'Shop RTA',
     href: '/cabinets/rta-cabinets',
+    image: {
+      src: '/images/home/programs/rta.webp',
+      alt: 'Ready-to-assemble cabinets, flat-packed and ready to build',
+    },
   },
 ];
 
