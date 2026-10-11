@@ -186,7 +186,7 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     title: 'RTA cabinets',
     tag: 'You build them',
     points: [
-      'Shipped flat for you to put together',
+      'For you to put together or a contractor',
       'Same cabinet, lower price. You keep what assembly would cost',
       'Ships in two weeks, a week sooner than assembled',
     ],
