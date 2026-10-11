@@ -6,6 +6,7 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
+import { CabinetFilm, FactoryRail, HeroScrub, WaitBand } from '@/vibes/soul/sections/why-us-scroll';
 import {
   ESTIMATOR_HREF,
   FREE_DESIGN_HREF,
@@ -31,6 +32,74 @@ export default async function WhyExpressKitchens({
 
   return (
     <>
+      {/* The scroll story from the client's mockup: a kitchen assembles as you scroll, then the
+          lead-time race, the cabinet turning on white, and the factory rail. Then the rest. */}
+      <HeroScrub
+        signLine1="Simplifying Kitchens"
+        signLine2="for 110+ years"
+        title="Why Express Kitchens: simplifying kitchens for 110+ years"
+      />
+      <WaitBand
+        description="A custom kitchen usually takes 14 weeks to arrive. Ours are already built, all-plywood, and sitting in stock in Connecticut."
+        kicker="Why wait 14 weeks?"
+        lanes={[
+          { label: 'Industry average', value: '14 weeks', width: 100 },
+          { label: 'Express Kitchens', value: '5 days', width: 5.1, highlight: true },
+        ]}
+        note="Bars are to scale: 5 days against 98."
+        title="The industry mistook waiting for quality."
+      />
+      <CabinetFilm
+        features={[
+          {
+            title: 'All-plywood construction',
+            description: 'No particleboard anywhere in the box.',
+          },
+          { title: 'Soft-close hinges', description: 'Every door settles shut on its own.' },
+          {
+            title: 'Dovetail drawer boxes',
+            description: 'Solid wood, joined the way furniture is.',
+          },
+          {
+            title: 'Undermount drawer glides',
+            description: 'Full extension, hidden under the drawer.',
+          },
+          { title: 'BBB A+ rating', description: 'And 5,000+ customer reviews behind it.' },
+        ]}
+        kicker="What makes an EK cabinet"
+        title="The same box, whether you pay showroom or outlet price."
+      />
+      <FactoryRail
+        kicker="The factory · Bristol, Connecticut"
+        stations={[
+          {
+            title: 'Cut',
+            description: 'AI-guided CNC machines cut every plywood panel.',
+            imageLabel: 'EK plant photo: CNC line',
+          },
+          {
+            title: 'Paint',
+            description: 'Robotic sprayers lay down the finish.',
+            imageLabel: 'EK plant photo: paint robots',
+          },
+          {
+            title: 'Assemble',
+            description: 'Boxes are built and checked by hand.',
+            imageLabel: 'EK plant photo: assembly',
+          },
+          {
+            title: 'Stock',
+            description: '50,000 finished cabinets wait on the racks.',
+            imageLabel: 'EK plant photo: warehouse racks',
+          },
+          {
+            title: 'Ship',
+            description: 'Your order leaves within days.',
+            imageLabel: 'EK plant photo: loading dock',
+          },
+        ]}
+        title="300,000 square feet. Run by robots, checked by people."
+      />
       <PageBreadcrumbs
         breadcrumbs={[{ label: 'Why Express Kitchens', href: '/why-express-kitchens' }]}
       />
@@ -40,6 +109,7 @@ export default async function WhyExpressKitchens({
           { label: 'Free design consult', href: FREE_DESIGN_HREF },
         ]}
         description="Would you rather save with ready-to-assemble, or have the building done for you? With us you don't have to choose between the two companies that offer each — it's the same cabinet, the same finish and the same warranty either way, and you decide. Every one of them is built in our own factory, kept in stock in Bristol and shipped in two weeks. That's what a website with a warehouse somewhere can't say to you."
+        headingLevel={2}
         imageLabel="A finished Connecticut kitchen, with the family in it"
         kicker="Why Express Kitchens"
         title="The kitchen you want, your way — made and stocked in Connecticut"

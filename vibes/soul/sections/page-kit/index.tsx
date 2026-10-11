@@ -73,6 +73,8 @@ interface HeroProps {
   imageLabel?: string;
   /** No photo column — the copy runs the full width. */
   textOnly?: boolean;
+  /** `2` when the page already has an h1 above (e.g. a scroll hero). */
+  headingLevel?: 1 | 2;
   className?: string;
 }
 
@@ -87,8 +89,11 @@ export function PageHero({
   image,
   imageLabel,
   textOnly = false,
+  headingLevel = 1,
   className,
 }: HeroProps) {
+  const Heading = headingLevel === 2 ? 'h2' : 'h1';
+
   return (
     <HomeSection className={className} compact>
       <div
@@ -103,9 +108,9 @@ export function PageHero({
               {kicker}
             </p>
           )}
-          <h1 className="font-heading text-3xl font-bold leading-tight @xl:text-4xl @4xl:text-[44px]">
+          <Heading className="font-heading text-3xl font-bold leading-tight @xl:text-4xl @4xl:text-[44px]">
             {title}
-          </h1>
+          </Heading>
           {Boolean(description) && (
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
               {description}
