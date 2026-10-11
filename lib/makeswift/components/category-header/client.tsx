@@ -20,8 +20,6 @@ interface Props {
   description?: string;
   imageSrc?: string;
   imageAlt?: string;
-  ctaLabel?: string;
-  link?: { href?: string };
   points: Point[];
   fine?: string;
   showPoints: boolean;
@@ -30,7 +28,7 @@ interface Props {
 }
 
 // Category page header as one editable component: the red hero, the points row and the
-// subcategory tiles. Every field falls back to the page's defaults (BigCommerce name, description
+// subcategory tiles (subcategory pages get the compact hero). Every field falls back to the page's defaults (BigCommerce name, description
 // and image; the per-category copy in lib/category/category-content.ts) when left empty.
 export function MSCategoryHeader({
   className,
@@ -38,8 +36,6 @@ export function MSCategoryHeader({
   description,
   imageSrc,
   imageAlt,
-  ctaLabel,
-  link,
   points,
   fine,
   showPoints,
@@ -56,7 +52,7 @@ export function MSCategoryHeader({
   return (
     <div className={className}>
       <CategoryHero
-        actions={[{ label: ctaLabel || defaults.ctaLabel, href: link?.href || '#products' }]}
+        compact={defaults.compact}
         description={description || defaults.description}
         image={image}
         imageLabel={defaults.imageLabel}

@@ -53,8 +53,7 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
         ]}
       />
       <CategoryHero
-        actions={[{ label: 'Get a siding quote', href: '#quote' }]}
-        description="Siding is new at Express Kitchens: vinyl clapboard, Dutch lap, board and batten and shake, in the colours people actually ask for. It's quoted by the square, so tell us the elevation or the house size and we'll price it within 24 hours, with a free elevation review if you'd like a second pair of eyes on the quantities."
+        description="Vinyl clapboard, Dutch lap, board and batten and shake, quoted by the square from your elevation."
         imageLabel="Clapboard siding on a house, close"
         title="Siding"
       />

@@ -25,8 +25,7 @@ export default async function Sale({ params }: { params: Promise<{ locale: strin
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'Sale', href: '/sale' }]} />
       <CategoryHero
-        actions={[{ label: 'Current offers', href: '/promotions' }]}
-        description="Everything with a sale price on it right now, across cabinets, closets, appliances, windows and accessories, with the same warranty as full price and free shipping over $2,500. Sale prices last while stock does, so if something here is the one, don't sit on it."
+        description="Everything with a sale price on it right now, across cabinets, closets, appliances, windows and accessories."
         imageLabel="A kitchen with sale-tagged cabinets"
         title="Sale"
       />

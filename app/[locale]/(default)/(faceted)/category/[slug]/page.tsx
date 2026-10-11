@@ -344,6 +344,7 @@ export default async function Category(props: Props) {
   // Every other category: the generic FAQ authored as the `faq.list` metafield (seeded by
   // scripts/seed-categories-and-faqs.py). Same accordion as the cabinet pages.
   const faq = pickFaq(cabinetFaq, category.faq.edges);
+  const seoContent = parseSeoContent(category.seoContent.edges);
 
   // Assembly-instruction videos + specifications are PER-PROGRAM — scoped to the current program
   // (defaults to Assembled via cabinetProgram, matching the header/pricing).
@@ -363,6 +364,7 @@ export default async function Category(props: Props) {
             categoryHeader: getCategoryHeaderDefaults({
               category,
               subcategories: categoryTree[0]?.children,
+              seoIntro: seoContent?.blocks.find((block) => block.type === 'p')?.text,
             }),
           }}
           label={`${category.name} header`}
@@ -429,10 +431,7 @@ export default async function Category(props: Props) {
       />
       {cabinetAssembly.length > 0 && <CabinetAssembly videos={cabinetAssembly} />}
       {faq && <CabinetFaq data={faq} />}
-      <SeoContentSection
-        content={parseSeoContent(category.seoContent.edges)}
-        kicker={`About ${category.name.toLowerCase()}`}
-      />
+      <SeoContentSection content={seoContent} kicker={`About ${category.name.toLowerCase()}`} />
       {Boolean(cabinetContent?.disclaimer) && (
         <CabinetSpecs disclaimer={cabinetContent?.disclaimer} />
       )}

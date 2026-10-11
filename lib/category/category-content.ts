@@ -231,8 +231,73 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   },
 };
 
+// The hero line under each category name: what to expect on the page, in two lines at most on a
+// main category and one on a subcategory. Plain ad copy about the products, not about us.
+const HERO_LEDES: Record<string, string> = {
+  '/countertops':
+    'Granite, quartz, laminate and prefabricated tops, measured to your cabinets and quoted to your kitchen.',
+  '/countertops/granite': 'Natural stone, every slab unique. From $49.99 a square foot.',
+  '/countertops/quartz':
+    'Engineered stone, consistent and never needs sealing. From $59.99 a square foot.',
+  '/countertops/laminate': 'The budget choice, in the widest range of colours and patterns.',
+  '/countertops/prefabricated': 'Granite and quartz in standard lengths with a finished edge.',
+  '/countertops/prefabricated/granite-prefabricated':
+    'Granite in standard lengths with a finished front edge.',
+  '/countertops/prefabricated/quartz-prefabricated':
+    'Quartz in standard lengths with a finished front edge.',
+  '/countertops/samples': 'Hold the real material in your own light before you decide.',
+  '/appliances':
+    'Fridges, ranges, hoods, dishwashers and laundry, in stock in Bristol and ready for pickup in two days.',
+  '/appliances/fridges-freezers':
+    'French door, side-by-side, top and bottom freezer and counter-depth.',
+  '/appliances/ranges-cooktops': 'Gas, electric and induction, in 30 and 36 inches.',
+  '/appliances/dishwashers': 'Built-in, sized to the standard 24-inch opening.',
+  '/appliances/microwaves': 'Countertop, over-the-range and built-in.',
+  '/appliances/wall-ovens': 'Single and double, in 24 and 30 inches.',
+  '/appliances/range-hoods': 'Under-cabinet, wall-mount and insert, matched to your cooktop.',
+  '/appliances/washers-dryers': 'Front-load, top-load and stackable pairs.',
+  '/appliances/garbage-disposals': 'Half to one horsepower, sized to your sink.',
+  '/appliances/air-conditioning': 'Window and portable units, sized by room.',
+  '/appliances/accessories': 'Trim kits, hoses, vents and filters.',
+  '/windows':
+    'Double hung, sliders and hoppers from stock in Bristol. One price for any replacement size up to 101 united inches.',
+  '/windows/replacement': '$179.99 in every size up to 101 united inches.',
+  '/windows/replacement/double-hung-windows':
+    'Vinyl, Low-E glass, tilt-in sashes. One price for any size.',
+  '/windows/replacement/slider-windows':
+    'Vinyl, Low-E glass, no cranks or hinges. One price for any size.',
+  '/windows/replacement/hopper-windows':
+    'Vinyl, Low-E glass, for basements and utility rooms. One price for any size.',
+  '/windows/new-construction': 'With a nailing fin, for a brand-new opening.',
+  '/closets':
+    'Twelve organizer pieces in three colours that fit together. Buy what your closet needs and put it up in an afternoon.',
+  '/bath':
+    'Vanity tops, side splashes, sinks, faucets and drains, sized to our vanities and stocked in Bristol.',
+  '/bath/vanity-tops': 'Cultured marble and quartz, sized to our vanities.',
+  '/bath/side-splashes': 'Sold by the piece to match your top.',
+  '/bath/bathroom-sinks': 'Vessel, undermount and integrated.',
+  '/bath/bathroom-faucets': 'Single-hole, centerset and widespread.',
+  '/bath/drains-accessories': 'Pop-up drains, traps, supply lines and more.',
+  '/sinks-faucets':
+    'Kitchen sinks sized to our sink bases, faucets to match, and the accessories that finish them.',
+  '/sinks-faucets/kitchen-sinks':
+    'Single, double, farmhouse and workstation, sized to our sink bases.',
+  '/sinks-faucets/kitchen-faucets': 'Pull-down, pull-out, single and double handle.',
+  '/sinks-faucets/accessories': 'Strainers, grids, soap dispensers and sprays.',
+  '/cabinet-hardware':
+    'Handles and knobs, backsplash tile and drawer organizers, in finishes that go with our doors.',
+  '/cabinet-hardware/handles-knobs': 'Knobs and pulls in every finish we make doors in.',
+  '/cabinet-hardware/tiles': 'Ceramic, porcelain, glass and stone, by the square foot.',
+  '/cabinet-hardware/accessories':
+    'Organizers, trim, fillers and end panels, sized to our cabinets.',
+};
+
 const normalize = (path: string) => `/${path.replace(/^\/+|\/+$/g, '')}`;
 
 export function getCategoryContent(path: string): CategoryContent {
-  return CATEGORY_CONTENT[normalize(path)] ?? {};
+  const key = normalize(path);
+  const content = CATEGORY_CONTENT[key] ?? {};
+  const lede = HERO_LEDES[key];
+
+  return lede ? { ...content, lede } : content;
 }

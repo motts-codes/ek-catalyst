@@ -31,8 +31,7 @@ export default async function Doors({ params }: { params: Promise<{ locale: stri
         ]}
       />
       <CategoryHero
-        actions={[{ label: 'Shop interior doors', href: '#products' }]}
-        description="Interior doors in stock in Bristol, so you can measure, order and have them in your hands without waiting weeks or making a second trip. Slab or prehung, hollow, solid or fire-rated core, all primed and ready to paint, in the standard sizes that fit most openings."
+        description="Interior doors in stock in Bristol: measure, order and collect without waiting weeks."
         imageLabel="A white shaker interior door in a hallway"
         title="Doors that fit, the first time"
       />

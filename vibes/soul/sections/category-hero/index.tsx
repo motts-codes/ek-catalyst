@@ -26,25 +26,44 @@ interface HeroProps {
   /** Placeholder label shown until the category has an image. */
   imageLabel?: string;
   actions?: Array<{ label: string; href: string }>;
+  /**
+   * Subcategory pages (Granite, Vanity Tops…): about 40% shorter, the heading and a short line,
+   * on the dark-grey panel rather than black.
+   */
+  compact?: boolean;
   className?: string;
 }
 
-// Category page header, 50 / 50: the headline and one paragraph on a brand-red panel, the category
+// Category page header, 50 / 50: the headline and one paragraph on a black panel, the category
 // photo beside it. Same rounded panel as the home hero. Stacks on narrow screens (text first).
+// Subcategories get the compact version: shorter, dark grey, heading plus a short line.
 export function CategoryHero({
   title,
   description,
   image,
   imageLabel,
   actions = [],
+  compact = false,
   className,
 }: HeroProps) {
   return (
     <section className={clsx('@container', className)}>
       <div className={clsx(containerClassName, 'pt-3')}>
         <div className="grid overflow-hidden rounded-3xl @3xl:grid-cols-2">
-          <div className="flex flex-col justify-center bg-[var(--button-primary-background,#d90716)] px-6 py-9 text-white @xl:px-10 @xl:py-12 @4xl:px-14">
-            <h1 className="m-0 max-w-[26ch] font-heading text-[26px] font-bold leading-tight @xl:text-4xl">
+          <div
+            className={clsx(
+              'flex flex-col justify-center text-white @4xl:px-14',
+              compact
+                ? 'bg-[#2a2a2a] px-6 py-6 @xl:px-10 @xl:py-7'
+                : 'bg-foreground px-6 py-9 @xl:px-10 @xl:py-12',
+            )}
+          >
+            <h1
+              className={clsx(
+                'm-0 max-w-[26ch] font-heading font-bold leading-tight',
+                compact ? 'text-[22px] @xl:text-3xl' : 'text-[26px] @xl:text-4xl',
+              )}
+            >
               {title}
             </h1>
             {Boolean(description) && (
@@ -53,13 +72,13 @@ export function CategoryHero({
               </p>
             )}
             {actions.length > 0 && (
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className={clsx('flex flex-wrap gap-3', compact ? 'mt-4' : 'mt-6')}>
                 {actions.map((action, index) => (
                   <Link
                     className={clsx(
                       'inline-flex min-h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors',
                       index === 0
-                        ? 'bg-white text-foreground hover:bg-neutral-100'
+                        ? 'bg-white text-foreground hover:bg-neutral-200'
                         : 'border border-white/40 text-white hover:border-white hover:bg-white/10',
                     )}
                     href={action.href}
@@ -71,7 +90,12 @@ export function CategoryHero({
               </div>
             )}
           </div>
-          <div className="relative min-h-[200px] bg-contrast-100 @3xl:min-h-[320px]">
+          <div
+            className={clsx(
+              'relative bg-contrast-100',
+              compact ? 'min-h-[140px] @3xl:min-h-[190px]' : 'min-h-[200px] @3xl:min-h-[320px]',
+            )}
+          >
             {image ? (
               <Image
                 alt={image.alt}

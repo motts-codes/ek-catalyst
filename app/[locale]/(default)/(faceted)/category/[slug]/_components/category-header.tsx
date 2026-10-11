@@ -18,6 +18,8 @@ interface Props {
     defaultImage: CategoryImage | null;
   };
   subcategories?: Array<{ name: string; path: string; image: CategoryImage | null }>;
+  /** The page's SEO copy (seo.content); its first paragraph stands in when there is no description. */
+  seoIntro?: string;
 }
 
 const toImage = (image: CategoryImage | null, fallbackAlt: string) =>
@@ -32,17 +34,31 @@ const toPlainText = (html: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
+const firstSentence = (text?: string) => {
+  if (!text) return undefined;
+
+  const match = /^(.+?[.!?])(\s|$)/.exec(text);
+
+  return match?.[1] ?? text;
+};
+
 // Defaults for the editable category header (Makeswift "Category / Header"): name, description
 // and image from BigCommerce, overridable per category in lib/category/category-content.ts.
 export function getCategoryHeaderDefaults({
   category,
   subcategories = [],
+  seoIntro,
 }: Props): CategoryHeaderDefaults {
   const content = getCategoryContent(category.path);
+  // A subcategory ("/countertops/granite/") gets the compact hero with just the first sentence.
+  const compact = category.path.split('/').filter(Boolean).length > 1;
+  // Authored line first; otherwise the first sentence of the BigCommerce description or SEO copy.
+  const description = content.lede ?? firstSentence(toPlainText(category.description) || seoIntro);
 
   return {
     title: content.heading ?? category.name,
-    description: content.lede ?? (toPlainText(category.description) || undefined),
+    description,
+    compact,
     image: toImage(category.defaultImage, category.name),
     imageLabel: content.imageLabel,
     ctaLabel: `Shop all ${category.name.toLowerCase()}`,

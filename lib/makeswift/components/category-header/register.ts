@@ -2,7 +2,6 @@ import {
   Checkbox,
   Group,
   Image,
-  Link,
   List,
   Select,
   Style,
@@ -36,8 +35,6 @@ runtime.registerComponent(MSCategoryHeader, {
     description: TextArea({ label: 'Paragraph (empty = category description)' }),
     imageSrc: Image({ label: 'Photo (empty = category image)' }),
     imageAlt: TextInput({ label: 'Photo alt text' }),
-    ctaLabel: TextInput({ label: 'Button text (empty = "Shop all …")' }),
-    link: Link({ label: 'Button link (empty = jump to products)' }),
     showPoints: Checkbox({ label: 'Show points row', defaultValue: true }),
     points: List({
       label: 'Points (empty = page default)',

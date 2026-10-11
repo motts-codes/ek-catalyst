@@ -25,6 +25,8 @@ export interface SectionDefaults {
 export interface CategoryHeaderDefaults {
   title: string;
   description?: string;
+  /** Subcategory page: the shorter, dark-grey hero. */
+  compact: boolean;
   image?: { src: string; alt: string };
   imageLabel?: string;
   ctaLabel: string;
