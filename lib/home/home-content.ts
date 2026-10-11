@@ -96,13 +96,6 @@ const CATEGORY_BASE: Array<{
     image: tile('closets', 'A white closet with hanging rail, shelves and a dressing table'),
   },
   {
-    name: 'Countertops',
-    href: '/countertops',
-    homeowner: 'Granite from $49.99/sq ft',
-    pro: 'Granite $49.99 · Quartz $59.99/sq ft',
-    image: tile('countertops', 'A white quartz countertop on a green island'),
-  },
-  {
     name: 'Windows',
     href: '/windows',
     homeowner: 'Best price, any size',
@@ -115,6 +108,20 @@ const CATEGORY_BASE: Array<{
     homeowner: 'Pick up in 2 days',
     pro: 'Priced below retail',
     image: tile('appliances', 'A stainless refrigerator and wall ovens in oak cabinets'),
+  },
+  {
+    name: 'Handles',
+    href: '/cabinet-hardware/handles-knobs',
+    homeowner: 'Every finish we make doors in',
+    pro: 'Ships next day',
+    image: tile('handles', 'A drawer cabinet with brass pulls against white tile'),
+  },
+  {
+    name: 'Countertops',
+    href: '/countertops',
+    homeowner: 'Granite from $49.99/sq ft',
+    pro: 'Granite $49.99 · Quartz $59.99/sq ft',
+    image: tile('countertops', 'A white quartz countertop on a green island'),
   },
   {
     name: 'Sinks & faucets',
@@ -132,13 +139,6 @@ const CATEGORY_BASE: Array<{
       'bath-faucet-sink',
       'An oak vanity with a white top, black faucet and round mirror',
     ),
-  },
-  {
-    name: 'Handles',
-    href: '/cabinet-hardware/handles-knobs',
-    homeowner: 'Every finish we make doors in',
-    pro: 'Ships next day',
-    image: tile('handles', 'A drawer cabinet with brass pulls against white tile'),
   },
   {
     name: 'Doors',
