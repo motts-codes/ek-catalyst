@@ -151,7 +151,7 @@ export function ProgramSplit({
                 {/* The proof points on the left and the button on the right, bottoms level. */}
                 <div className="mt-3 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
                   {card.points.length > 0 && (
-                    <ul className="max-w-md space-y-1.5 text-sm">
+                    <ul className="max-w-lg space-y-1.5 text-sm">
                       {card.points.map((point) => (
                         <li className="flex items-start gap-2" key={point}>
                           <Check
