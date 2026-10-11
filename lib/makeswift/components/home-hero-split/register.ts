@@ -77,12 +77,17 @@ runtime.registerComponent(MSHomeHeroSplit, {
       type: Group({
         label: 'Offer',
         props: {
-          kicker: TextInput({ label: 'Kicker', defaultValue: 'Replacement windows' }),
-          headline: TextInput({
-            label: 'Headline',
-            defaultValue: '$179.99 any size up to 101 united inches',
+          kicker: TextInput({ label: 'Kicker', defaultValue: 'Kitchens starting $299 a month' }),
+          headline: TextArea({
+            label: 'Headline (one line per row)',
+            defaultValue: 'FREE Appliance\nWith every kitchen',
           }),
-          description: TextArea({ label: 'Description', defaultValue: 'Pick up from Bristol.' }),
+          description: TextArea({
+            label: 'Description',
+            defaultValue: 'And up to 4 Bonus gifts: Roll-out trays, organizers, handles, faucet',
+          }),
+          imageSrc: Image({ label: 'Photo (optional; keep the subject to the right)' }),
+          imageAlt: TextInput({ label: 'Photo alt text', defaultValue: 'Offer' }),
           link: Link({ label: 'Link' }),
           showCta: Checkbox({ label: 'Show button', defaultValue: true }),
           ctaLabel: TextInput({ label: 'Button text', defaultValue: 'See the offer' }),

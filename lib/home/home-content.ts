@@ -52,6 +52,17 @@ export const HERO_SLIDES: HeroSlide[] = [
 
 export const HERO_OFFERS: HeroOffer[] = [
   {
+    kicker: 'Kitchens starting $299 a month',
+    headline: 'FREE Appliance\nWith every kitchen',
+    description: 'And up to 4 Bonus gifts: Roll-out trays, organizers, handles, faucet',
+    href: '/promotions',
+    ctaLabel: 'See the offer',
+    image: {
+      src: '/images/home/offers/free-appliance.webp',
+      alt: 'A stainless-steel refrigerator and gas range, each tied with a red gift bow',
+    },
+  },
+  {
     kicker: 'Replacement windows',
     headline: '$179.99 any size up to 101 united inches',
     description: 'Double hung, sliders and hoppers. Pick up from Bristol.',

@@ -21,6 +21,8 @@ interface Offer {
   kicker: string;
   headline: string;
   description: string;
+  imageSrc?: string;
+  imageAlt: string;
   link?: { href?: string; target?: string };
   ctaLabel: string;
   showCta: boolean;
@@ -44,15 +46,28 @@ export function MSHomeHeroSplit({ className, slides, offers, slideInterval }: Pr
       className={className}
       offers={
         offers.length > 0
-          ? offers.map(({ kicker, headline, description, link, ctaLabel, showCta, ctaColor }) => ({
-              kicker,
-              headline,
-              description,
-              href: link?.href ?? '#',
-              ctaLabel,
-              showCta,
-              ctaColor,
-            }))
+          ? offers.map(
+              ({
+                kicker,
+                headline,
+                description,
+                imageSrc,
+                imageAlt,
+                link,
+                ctaLabel,
+                showCta,
+                ctaColor,
+              }) => ({
+                kicker,
+                headline,
+                description,
+                image: imageSrc ? { src: imageSrc, alt: imageAlt } : undefined,
+                href: link?.href ?? '#',
+                ctaLabel,
+                showCta,
+                ctaColor,
+              }),
+            )
           : (defaults.offers ?? HERO_OFFERS)
       }
       slideInterval={slideInterval * 1000}

@@ -44,6 +44,12 @@ export interface HeroOffer {
   showCta?: boolean;
   /** Default white (sits on the light card). */
   ctaColor?: HeroCtaColor;
+  /**
+   * Optional photo. With one, the card becomes a photo banner: the picture fills it, the copy
+   * sits top-left in white over a dark fade, so keep the subject to the right of the frame
+   * (the asset is 900×560 with the subject in the bottom-right 510×350; double that for retina).
+   */
+  image?: { src: string; alt: string };
 }
 
 // Slightly smaller on phones so headline + button share one row at 390px wide.
@@ -364,18 +370,60 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
           {/* Right: the offer card, stationary */}
           {/* Auto height on phones (the offer copy + button set it); fixed heights from @xl. */}
           {offer && (
-            <div className="relative h-auto overflow-hidden rounded-3xl border border-contrast-100 bg-[#f9fafd] @xl:h-[320px] @3xl:h-[350px]">
+            <div
+              className={clsx(
+                'relative h-auto overflow-hidden rounded-3xl @xl:h-[320px] @3xl:h-[350px]',
+                offer.image
+                  ? 'min-h-[300px] bg-contrast-100 text-white'
+                  : 'border border-contrast-100 bg-[#f9fafd]',
+              )}
+            >
+              {offer.image && (
+                <>
+                  <Image
+                    alt={offer.image.alt}
+                    className="object-cover object-right-bottom"
+                    fill
+                    preload
+                    sizes="(min-width: 56rem) 35vw, 100vw"
+                    src={offer.image.src}
+                  />
+                  {/* Dark fade on the left so the copy reads over the photo; measured against the
+                      photo's brightest patches (4.5:1 for body, 3:1 for the headline). */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 via-50% to-black/15"
+                  />
+                </>
+              )}
               {/* Bottom padding matches the photo banner's (@xl:pb-8) so both buttons sit on the
                   same line across the two banners. */}
-              <div className="flex h-full flex-col gap-2 p-6 pb-8 @xl:p-8 @xl:pb-8">
+              <div className="relative flex h-full flex-col gap-2 p-6 pb-8 @xl:p-8 @xl:pb-8">
                 <p className="self-start rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)] ring-1 ring-contrast-100">
                   {offer.kicker}
                 </p>
-                <p className="font-heading text-xl font-bold leading-tight @xl:text-2xl">
-                  {offer.headline}
+                <p
+                  className={clsx(
+                    'max-w-[16ch] font-heading text-xl font-bold leading-tight @xl:text-2xl',
+                    offer.image && '[text-shadow:0_1px_2px_rgb(0_0_0/0.35)]',
+                  )}
+                >
+                  {offer.headline.split('\n').map((line, lineIndex) => (
+                    <Fragment key={lineIndex}>
+                      {lineIndex > 0 && <br />}
+                      {line}
+                    </Fragment>
+                  ))}
                 </p>
                 {Boolean(offer.description) && (
-                  <p className="text-sm text-contrast-500">{offer.description}</p>
+                  <p
+                    className={clsx(
+                      'max-w-[30ch] text-sm',
+                      offer.image ? 'text-white' : 'text-contrast-500',
+                    )}
+                  >
+                    {offer.description}
+                  </p>
                 )}
                 {offer.showCta !== false && (
                   <div className="mt-auto pt-3">
