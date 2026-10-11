@@ -75,7 +75,7 @@ export function CategoryCarousel({
                 className="group flex h-full flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
                 href={category.href}
               >
-                <div className="relative aspect-[5/4] overflow-hidden bg-contrast-100">
+                <div className="relative aspect-[25/18] overflow-hidden bg-contrast-100">
                   {category.image ? (
                     <Image
                       alt={category.image.alt}
