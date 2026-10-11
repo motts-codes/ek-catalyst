@@ -13,6 +13,8 @@ interface Slide {
   ctaLabel: string;
   showCta: boolean;
   ctaColor: HeroCtaColor;
+  textPosition?: 'bottom' | 'top';
+  imagePosition?: 'left' | 'center' | 'right';
 }
 
 interface Offer {
@@ -56,14 +58,28 @@ export function MSHomeHeroSplit({ className, slides, offers, slideInterval }: Pr
       slideInterval={slideInterval * 1000}
       slides={
         slides.length > 0
-          ? slides.map(({ title, imageSrc, imageAlt, link, ctaLabel, showCta, ctaColor }) => ({
-              title,
-              image: imageSrc ? { src: imageSrc, alt: imageAlt } : undefined,
-              href: link?.href,
-              ctaLabel,
-              showCta,
-              ctaColor,
-            }))
+          ? slides.map(
+              ({
+                title,
+                imageSrc,
+                imageAlt,
+                link,
+                ctaLabel,
+                showCta,
+                ctaColor,
+                textPosition,
+                imagePosition,
+              }) => ({
+                title,
+                image: imageSrc ? { src: imageSrc, alt: imageAlt } : undefined,
+                href: link?.href,
+                ctaLabel,
+                showCta,
+                ctaColor,
+                textPosition,
+                imagePosition,
+              }),
+            )
           : (defaults.slides ?? HERO_SLIDES)
       }
     />

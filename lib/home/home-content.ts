@@ -27,10 +27,18 @@ export const HERO_SLIDES: HeroSlide[] = [
     ctaLabel: 'See how',
   },
   {
-    title: 'Why wait 8 weeks\nfor your kitchen?',
-    image: { src: '', alt: 'a navy kitchen with brass handles, morning light' },
-    href: '/cabinets/rta-cabinets',
-    ctaLabel: 'Shop now',
+    title: 'Your kitchen, designed free.\nIn a showroom or online.',
+    image: {
+      src: '/images/home/hero/designed-free.webp',
+      alt: 'A designer and a homeowner on a red sofa, choosing cabinet styles on a screen',
+    },
+    href: FREE_DESIGN_HREF,
+    ctaLabel: 'Book free consult',
+    // The photo's background is brand red, so the button is white; the sofa fills the lower
+    // half, so the words go top-left where the background is plain.
+    ctaColor: 'white',
+    textPosition: 'top',
+    imagePosition: 'left',
   },
   {
     title: 'Designed with you.\nFree, in six showrooms.',

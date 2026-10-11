@@ -49,6 +49,23 @@ runtime.registerComponent(MSHomeHeroSplit, {
             options: CTA_COLOR_OPTIONS,
             defaultValue: 'red',
           }),
+          textPosition: Select({
+            label: 'Text position',
+            options: [
+              { label: 'Bottom (headline left, button right)', value: 'bottom' },
+              { label: 'Top (headline and button top-left)', value: 'top' },
+            ],
+            defaultValue: 'bottom',
+          }),
+          imagePosition: Select({
+            label: 'Photo anchor (when cropped)',
+            options: [
+              { label: 'Centre', value: 'center' },
+              { label: 'Left', value: 'left' },
+              { label: 'Right', value: 'right' },
+            ],
+            defaultValue: 'center',
+          }),
         },
       }),
       getItemLabel(slide) {

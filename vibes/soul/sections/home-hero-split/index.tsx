@@ -25,6 +25,13 @@ export interface HeroSlide {
   showCta?: boolean;
   /** Default red (sits on the photo). */
   ctaColor?: HeroCtaColor;
+  /**
+   * Where the words go. `bottom` (default): headline bottom-left, button bottom-right. `top`:
+   * headline top-left with the button under it, for a photo whose subject fills the lower half.
+   */
+  textPosition?: 'bottom' | 'top';
+  /** Which side of the photo to keep when the panel is narrower than the image (default centre). */
+  imagePosition?: 'left' | 'center' | 'right';
 }
 
 export interface HeroOffer {
@@ -257,7 +264,11 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                       {slide.image?.src ? (
                         <Image
                           alt={slide.image.alt}
-                          className="object-cover"
+                          className={clsx(
+                            'object-cover',
+                            slide.imagePosition === 'left' && 'object-left',
+                            slide.imagePosition === 'right' && 'object-right',
+                          )}
                           fill
                           preload={index === 0}
                           sizes="(min-width: 56rem) 65vw, 100vw"
@@ -274,9 +285,31 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 15000, className
                       {/* Bottom row: headline left, button right. No tint here — any darkening for
                           legibility is baked into the photo itself. The button is a styled span
                           because the whole slide is already the link. */}
-                      <div className="absolute inset-x-0 bottom-0 px-4 pb-10 pt-16 @xl:px-8 @xl:pb-8">
-                        <div className="flex flex-wrap items-end justify-between gap-x-2 gap-y-3 @xl:gap-x-6">
-                          <h1 className="m-0 max-w-xl font-heading text-[22px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)] @xl:text-3xl @4xl:text-4xl">
+                      <div
+                        className={clsx(
+                          'absolute inset-x-0 px-4 @xl:px-8',
+                          slide.textPosition === 'top'
+                            ? 'top-0 pb-10 pt-5 @xl:pt-7'
+                            : 'bottom-0 pb-10 pt-16 @xl:pb-8',
+                        )}
+                      >
+                        <div
+                          className={clsx(
+                            'flex gap-x-2 gap-y-3 @xl:gap-x-6',
+                            slide.textPosition === 'top'
+                              ? 'flex-col items-start pr-28 @xl:pr-36'
+                              : 'flex-wrap items-end justify-between',
+                          )}
+                        >
+                          <h1
+                            className={clsx(
+                              'm-0 max-w-xl font-heading text-[22px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)]',
+                              // Top-left copy shares the frame with the photo's subject, so a step smaller.
+                              slide.textPosition === 'top'
+                                ? '@xl:text-2xl @4xl:text-[27px]'
+                                : '@xl:text-3xl @4xl:text-4xl',
+                            )}
+                          >
                             {slide.title.split('\n').map((line, lineIndex) => (
                               <Fragment key={lineIndex}>
                                 {lineIndex > 0 && <br />}
