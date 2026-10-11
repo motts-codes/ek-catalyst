@@ -27,7 +27,7 @@ export function MSCategoryCarousel({ className, title, categories, tint }: Props
       className={className}
       tightTop={defaults.tightTop}
       tint={tint}
-      title={title || defaults.categoriesTitle || 'Shop by category'}
+      title={title || defaults.categoriesTitle || "Shop what you're working on"}
     />
   );
 }

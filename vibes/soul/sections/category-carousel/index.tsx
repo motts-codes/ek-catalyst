@@ -35,7 +35,7 @@ interface Props {
 // "Shop by category" — photo tiles in a carousel, five visible on desktop: photo on top, then the
 // name, the hook line and a "Shop now →" text link; the tile lifts on hover.
 export function CategoryCarousel({
-  title = 'Shop by category',
+  title = "Shop what you're working on",
   kicker,
   categories,
   tint = false,

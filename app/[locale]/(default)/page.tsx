@@ -149,7 +149,7 @@ export default async function Home({ params }: Props) {
         type={HERO_SPLIT_TYPE}
       />
 
-      {/* 2 · Shop by category */}
+      {/* 2 · Shop what you're working on (the category tiles) */}
       <EditableSection
         defaults={{ categories: CATEGORY_TILES, tightTop: true }}
         label="Home categories"
