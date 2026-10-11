@@ -51,7 +51,7 @@ export function CategoryCarousel({
           so it doesn't compete with the hero above. Still the section's h2. */}
       {Boolean(title) && (
         <div className="mb-1 flex items-end justify-end gap-1.5">
-          <h2 className="ek-heading-light font-heading text-base leading-tight @xl:text-lg">
+          <h2 className="ek-heading-light font-heading text-sm leading-tight @xl:text-base">
             {title}
           </h2>
           {/* Redo2 turned a quarter clockwise: the curve leaves the heading and the head points
