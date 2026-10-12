@@ -220,7 +220,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             Shop Now
           </ButtonLink>
           <ButtonLink
-            className="border-foreground bg-white text-foreground after:!bg-foreground hover:!text-white"
+            className="!border-[0.5px] border-foreground bg-white text-foreground after:!bg-foreground hover:!text-white"
             href={line.orderSampleHref ?? line.href}
             shape="pill"
             size="small"
