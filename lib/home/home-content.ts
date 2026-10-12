@@ -219,18 +219,6 @@ export const PROGRAM_FOOTNOTE =
 
 export const THREE_WAYS: RowCard[] = [
   {
-    title: 'I want a number',
-    description:
-      'Answer four quick questions and get a real price range for your kitchen. No email, no sales call.',
-    ctaLabel: 'Price my kitchen',
-    href: ESTIMATOR_HREF,
-    image: {
-      src: '/images/home/ways/estimator.webp',
-      alt: 'A couple at their kitchen island, checking a price range on a phone',
-    },
-    imageLabel: 'Estimator on a phone',
-  },
-  {
     title: 'I want to picture it',
     description:
       'Try door styles and colours on a kitchen like yours, and swap them until it looks right.',
@@ -241,6 +229,18 @@ export const THREE_WAYS: RowCard[] = [
       alt: 'A homeowner holding a tablet up to her kitchen, trying sage-green doors on it',
     },
     imageLabel: 'A kitchen on a tablet, swapping door colours',
+  },
+  {
+    title: 'I want a number',
+    description:
+      'Answer four quick questions and get a real price range for your kitchen. No email, no sales call.',
+    ctaLabel: 'Price my kitchen',
+    href: ESTIMATOR_HREF,
+    image: {
+      src: '/images/home/ways/estimator.webp',
+      alt: 'A couple at their kitchen island, checking a price range on a phone',
+    },
+    imageLabel: 'Estimator on a phone',
   },
   {
     title: 'I want a person',
