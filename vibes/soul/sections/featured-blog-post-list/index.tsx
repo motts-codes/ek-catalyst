@@ -40,7 +40,9 @@ export function FeaturedBlogPostList({
   placeholderCount,
 }: Props) {
   return (
-    <SectionLayout>
+    // The blog's wrapper sits as close under the header as the category pages (not the default
+    // section padding); the bottom keeps room above the footer band.
+    <SectionLayout className="[&>div]:pt-4 @xl:[&>div]:pt-4 @4xl:[&>div]:pt-4">
       {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
 
       <div className="pt-6">
