@@ -309,7 +309,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                         >
                           <h1
                             className={clsx(
-                              'm-0 max-w-xl font-heading text-[22px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)]',
+                              'm-0 max-w-xl font-heading text-[28px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)]',
                               // Top-left copy shares the frame with the photo's subject, so a step smaller.
                               slide.textPosition === 'top'
                                 ? '@xl:text-2xl @4xl:text-[27px]'
