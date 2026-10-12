@@ -26,7 +26,7 @@ interface Props {
   hideImages?: boolean;
   /**
    * 'inset' (default) keeps the photo inside the card padding; 'bleed' runs it edge to edge;
-   * 'plain' drops the card chrome: a taller rounded photo with the copy straight beneath it.
+   * 'plain' drops the card chrome: a taller (7:5) rounded photo with the copy straight beneath it.
    */
   imageStyle?: 'inset' | 'bleed' | 'plain';
   tint?: boolean;

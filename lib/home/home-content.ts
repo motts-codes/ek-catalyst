@@ -232,6 +232,10 @@ export const THREE_WAYS: RowCard[] = [
       'Try door styles and colours on a kitchen like yours, and swap them until it looks right.',
     ctaLabel: 'Visualize my kitchen',
     href: '/mykitchen/visualizer',
+    image: {
+      src: '/images/home/ways/visualizer.webp',
+      alt: 'A homeowner holding a tablet up to her kitchen, trying sage-green doors on it',
+    },
     imageLabel: 'A kitchen on a tablet, swapping door colours',
   },
   {
