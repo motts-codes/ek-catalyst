@@ -36,6 +36,8 @@ export interface CategoryHeaderDefaults {
   fine?: string;
   subTitle: string;
   subcategories: SubcategoryTile[];
+  /** Further tile rows under the first (e.g. "Shop by finish"). */
+  tileGroups?: Array<{ title: string; items: SubcategoryTile[] }>;
 }
 
 const SectionDefaultsContext = createContext<SectionDefaults>({});

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { type ReactNode } from 'react';
 
-import { homeHeadingClassName, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -188,18 +188,33 @@ export interface SubcategoryTile {
 interface TilesProps {
   title?: string;
   items: SubcategoryTile[];
+  /** A row that follows another tile row: trims the top padding so the two read as one block. */
+  stacked?: boolean;
   className?: string;
 }
 
 // "Shop by type" — the category's subcategories as photo tiles with the name beneath; the fastest
 // way to narrow before the filters. Renders nothing for a category with no subcategories.
-export function SubcategoryTiles({ title = 'Shop by type', items, className }: TilesProps) {
+export function SubcategoryTiles({
+  title = 'Shop by type',
+  items,
+  stacked = false,
+  className,
+}: TilesProps) {
   if (items.length === 0) return null;
 
   return (
     <section className={clsx('@container', className)}>
-      <div className={clsx(containerClassName, 'py-8 @4xl:py-10')}>
-        <h2 className={clsx(homeHeadingClassName, 'mb-5 @4xl:mb-6')}>{title}</h2>
+      <div
+        className={clsx(
+          containerClassName,
+          'pb-8 @4xl:pb-10',
+          stacked ? 'pt-0' : 'pt-8 @4xl:pt-10',
+        )}
+      >
+        <h2 className="mb-4 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
+          {title}
+        </h2>
         <div className="grid grid-cols-2 gap-4 @lg:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-6 @5xl:gap-5">
           {items.map((item) => (
             <Link

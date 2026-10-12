@@ -68,6 +68,10 @@ export function MSCategoryHeader({
       {showTiles && (
         <SubcategoryTiles items={defaults.subcategories} title={subTitle || defaults.subTitle} />
       )}
+      {showTiles &&
+        defaults.tileGroups?.map((group) => (
+          <SubcategoryTiles items={group.items} key={group.title} stacked title={group.title} />
+        ))}
     </div>
   );
 }

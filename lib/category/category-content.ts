@@ -24,6 +24,8 @@ export interface CategoryContent {
    * are the BigCommerce children with their own images.
    */
   subcategories?: SubcategoryOverride[];
+  /** More tile rows under the first (e.g. "Shop by finish"); same tile shape, links as given. */
+  tileGroups?: Array<{ title: string; items: SubcategoryOverride[] }>;
   /** Overrides the BigCommerce category name in the hero. */
   heading?: string;
   /** Hero panel colour for a top-level category: brand red (default) or black. */
@@ -59,6 +61,10 @@ export const DEFAULT_CATEGORY_CONTENT: Required<Pick<CategoryContent, 'subTitle'
 };
 
 const navImage = (file: string, alt: string) => ({ src: `/images/nav/${file}.webp`, alt });
+const handleImage = (file: string, alt: string) => ({
+  src: `/images/category/handles/${file}.webp`,
+  alt,
+});
 const search = (term: string) => `/search?term=${encodeURIComponent(term)}`;
 
 const APPLIANCE_TILES: SubcategoryOverride[] = [
@@ -182,7 +188,50 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     ],
   },
   '/cabinet-hardware/handles-knobs': {
-    fine: '*Free Shipping',
+    // No fine print: "Free & fast shipping" is already one of the icon points.
+    fine: '',
+    // Until the products land (and a Finish facet with them), the tiles filter the category by
+    // search term, which the category page already supports.
+    subTitle: 'Shop by type',
+    subcategories: [
+      {
+        name: 'Pulls',
+        fallbackHref: '/cabinet-hardware/handles-knobs?term=pull',
+        image: handleImage('pulls', 'Three bar pulls in nickel, brass and black'),
+      },
+      {
+        name: 'Knobs',
+        fallbackHref: '/cabinet-hardware/handles-knobs?term=knob',
+        image: handleImage('knobs', 'Three knobs in brass, nickel and black'),
+      },
+    ],
+    tileGroups: [
+      {
+        title: 'Shop by finish',
+        items: [
+          {
+            name: 'Brass',
+            fallbackHref: '/cabinet-hardware/handles-knobs?term=brass',
+            image: handleImage('brass', 'Brass pulls and a knob on marble'),
+          },
+          {
+            name: 'Nickel',
+            fallbackHref: '/cabinet-hardware/handles-knobs?term=nickel',
+            image: handleImage('nickel', 'Brushed nickel pulls and a knob on marble'),
+          },
+          {
+            name: 'Bronze',
+            fallbackHref: '/cabinet-hardware/handles-knobs?term=bronze',
+            image: handleImage('bronze', 'Champagne bronze pulls and a knob on marble'),
+          },
+          {
+            name: 'Black',
+            fallbackHref: '/cabinet-hardware/handles-knobs?term=black',
+            image: handleImage('black', 'Matte black pulls and a knob on marble'),
+          },
+        ],
+      },
+    ],
   },
   '/cabinet-hardware': {
     lede: 'The small things that change how a kitchen feels: handles and knobs in the finishes that go with our doors, backsplash tiles to carry the color up the wall, and the organizers that make a drawer earn its keep. Everything is stocked in Bristol and ships next business day, or you can collect it free. Handles are included with our Premium cabinets; here is where you choose them.',

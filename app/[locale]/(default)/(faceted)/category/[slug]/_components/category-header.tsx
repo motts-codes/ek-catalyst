@@ -83,6 +83,14 @@ export function getCategoryHeaderDefaults({
           // BigCommerce image first, else the mega-menu tile with the same name.
           image: toImage(child.image, child.name) ?? navImageFor(child.name),
         })),
+    tileGroups: content.tileGroups?.map((group) => ({
+      title: group.title,
+      items: group.items.map((tile) => ({
+        name: tile.name,
+        href: findChild(subcategories, tile.name)?.path ?? tile.fallbackHref,
+        image: tile.image,
+      })),
+    })),
   };
 }
 
