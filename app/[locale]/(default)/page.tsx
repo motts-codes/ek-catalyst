@@ -198,7 +198,11 @@ export default async function Home({ params }: Props) {
       {/* 6 · Not sure yet? Three ways to be sure. */}
       <Slot
         fallback={
-          <CardsRow cards={THREE_WAYS} kicker="Not sure yet?" title="Three ways to be sure" />
+          <CardsRow
+            cards={THREE_WAYS}
+            kicker="Not sure yet?"
+            title="Pick the way you like to decide."
+          />
         }
         label="Home three ways"
         snapshotId="home-three-ways"

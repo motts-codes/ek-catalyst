@@ -220,22 +220,25 @@ export const PROGRAM_FOOTNOTE =
 export const THREE_WAYS: RowCard[] = [
   {
     title: 'I want a number',
-    description: 'A real range for your room in four steps. Nothing gated.',
+    description:
+      'Answer four quick questions and get a real price range for your kitchen. No email, no sales call.',
     ctaLabel: 'Price my kitchen',
     href: ESTIMATOR_HREF,
     imageLabel: 'Estimator on a phone',
   },
   {
-    title: 'I want to hold it',
-    description: 'First two quarter-door samples are free.',
-    ctaLabel: 'Order free samples',
-    href: SAMPLES_HREF,
-    imageLabel: 'Two quarter-door samples',
+    title: 'I want to picture it',
+    description:
+      'Try door styles and colours on a kitchen like yours, and swap them until it looks right.',
+    ctaLabel: 'Visualize my kitchen',
+    href: '/mykitchen/visualizer',
+    imageLabel: 'A kitchen on a tablet, swapping door colours',
   },
   {
     title: 'I want a person',
-    description: 'A Project Manager plans it with you — at home, in a showroom or on a call.',
-    ctaLabel: 'Free design consult',
+    description:
+      'A designer plans your layout with you, in a showroom or on a video call. Free, with no obligation to buy.',
+    ctaLabel: 'Book a free consult',
     href: FREE_DESIGN_HREF,
     primary: true,
     imageLabel: 'Designer with a homeowner',
