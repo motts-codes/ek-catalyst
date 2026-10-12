@@ -6,6 +6,7 @@ import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 import { OnThisPage, type TocItem } from './on-this-page';
+import { ShareRow } from './share-row';
 
 interface Tag {
   label: string;
@@ -107,19 +108,20 @@ export function BlogPostContent({
               {/* Article: "On this page" on the left (sticky), prose on the right. */}
               <div className={clsx(containerClassName, 'py-10 @xl:py-14')}>
                 <div className="grid gap-10 @3xl:grid-cols-[260px_minmax(0,1fr)] @3xl:gap-16 @5xl:grid-cols-[300px_minmax(0,1fr)]">
-                  {toc.length > 0 && (
-                    <OnThisPage
-                      className="@3xl:sticky @3xl:top-28 @3xl:self-start @3xl:border-l @3xl:border-contrast-100 @3xl:pl-6"
-                      items={toc}
+                  <aside className="@3xl:sticky @3xl:top-28 @3xl:self-start @3xl:border-l @3xl:border-contrast-100 @3xl:pl-6">
+                    {toc.length > 0 && <OnThisPage items={toc} />}
+                    <ShareRow
+                      className={toc.length > 0 ? 'mt-8' : undefined}
+                      imageSrc={image?.src}
+                      title={title}
                     />
-                  )}
+                  </aside>
                   <article
                     className={clsx(
                       'prose prose-lg max-w-[68ch] text-[#404040] prose-p:leading-relaxed prose-a:text-[var(--button-primary-background,#d90716)] prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-[var(--button-primary-background,#d90716)] prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-foreground prose-strong:text-foreground prose-li:leading-relaxed prose-img:mx-auto prose-img:h-auto prose-img:w-auto prose-img:max-w-full prose-img:rounded-2xl prose-img:object-contain @3xl:prose-img:max-h-[360px]',
                       // Section titles: Gilroy bold, our size, with room to jump to from the list.
                       '[&_h2:first-child]:mt-0 [&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:scroll-mt-28 [&_h2]:font-heading [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:leading-tight [&_h2]:text-foreground @xl:[&_h2]:text-3xl',
                       '[&_h3]:mt-8 [&_h3]:font-heading [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-foreground',
-                      toc.length === 0 && '@3xl:col-span-2',
                     )}
                     dangerouslySetInnerHTML={{ __html: content }}
                   />
