@@ -8,6 +8,7 @@ import { useSectionDefaults } from '../section-defaults';
 interface Slide {
   title: string;
   imageSrc?: string;
+  mobileImageSrc?: string;
   imageAlt: string;
   link?: { href?: string; target?: string };
   ctaLabel: string;
@@ -77,6 +78,7 @@ export function MSHomeHeroSplit({ className, slides, offers, slideInterval }: Pr
               ({
                 title,
                 imageSrc,
+                mobileImageSrc,
                 imageAlt,
                 link,
                 ctaLabel,
@@ -87,6 +89,7 @@ export function MSHomeHeroSplit({ className, slides, offers, slideInterval }: Pr
               }) => ({
                 title,
                 image: imageSrc ? { src: imageSrc, alt: imageAlt } : undefined,
+                mobileImage: mobileImageSrc ? { src: mobileImageSrc, alt: imageAlt } : undefined,
                 href: link?.href,
                 ctaLabel,
                 showCta,

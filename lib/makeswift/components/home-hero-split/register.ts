@@ -40,6 +40,7 @@ runtime.registerComponent(MSHomeHeroSplit, {
             defaultValue: 'Your whole kitchen.\nMade in Connecticut.',
           }),
           imageSrc: Image({ label: 'Photo' }),
+          mobileImageSrc: Image({ label: 'Phone photo (optional, about 1200×800)' }),
           imageAlt: TextInput({ label: 'Photo alt text', defaultValue: 'Kitchen' }),
           link: Link({ label: 'Link' }),
           showCta: Checkbox({ label: 'Show button', defaultValue: true }),

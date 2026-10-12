@@ -18,6 +18,12 @@ export interface HeroSlide {
   /** Headline; use "\n" for a manual line break (the wireframe headlines are two lines). */
   title: string;
   image?: { src: string; alt: string };
+  /**
+   * Optional photo for phones (below the 36rem container width), where the banner is 325px tall
+   * and 320–576px wide. Supply about 1200×800 (3:2) with the subject in the middle; the desktop
+   * photo is used when absent.
+   */
+  mobileImage?: { src: string; alt: string };
   /** Whole slide links here when set. */
   href?: string;
   ctaLabel?: string;
@@ -268,19 +274,33 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                   const content = (
                     <>
                       {slide.image?.src ? (
-                        <Image
-                          alt={slide.image.alt}
-                          className={clsx(
-                            'object-cover',
-                            // On phones the anchor eases toward the centre so the subject isn't cut off at the edge.
-                            slide.imagePosition === 'left' && 'object-[35%_50%] @xl:object-left',
-                            slide.imagePosition === 'right' && 'object-right',
+                        <>
+                          <Image
+                            alt={slide.image.alt}
+                            className={clsx(
+                              'object-cover',
+                              // A phone photo, when supplied, replaces this one below @xl.
+                              Boolean(slide.mobileImage?.src) && 'hidden @xl:block',
+                              // On phones the anchor eases toward the centre so the subject isn't cut off at the edge.
+                              slide.imagePosition === 'left' && 'object-[35%_50%] @xl:object-left',
+                              slide.imagePosition === 'right' && 'object-right',
+                            )}
+                            fill
+                            preload={index === 0}
+                            sizes="(min-width: 56rem) 65vw, 100vw"
+                            src={slide.image.src}
+                          />
+                          {Boolean(slide.mobileImage?.src) && slide.mobileImage != null && (
+                            <Image
+                              alt={slide.mobileImage.alt}
+                              className="object-cover @xl:hidden"
+                              fill
+                              preload={index === 0}
+                              sizes="100vw"
+                              src={slide.mobileImage.src}
+                            />
                           )}
-                          fill
-                          preload={index === 0}
-                          sizes="(min-width: 56rem) 65vw, 100vw"
-                          src={slide.image.src}
-                        />
+                        </>
                       ) : (
                         <div
                           aria-hidden
@@ -297,7 +317,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                           'absolute inset-x-0 px-4 @xl:px-8',
                           slide.textPosition === 'top'
                             ? 'top-0 pb-10 pt-5 @xl:pt-7'
-                            : 'bottom-0 pb-10 pt-16 @xl:pb-8',
+                            : 'bottom-0 pb-5 pt-16 @xl:pb-8',
                         )}
                       >
                         <div
