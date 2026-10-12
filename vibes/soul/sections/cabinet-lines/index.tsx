@@ -163,7 +163,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                 the ship line, stacked and left-aligned. Stacks top/bottom on narrow screens. */}
             <div className="mt-1.5 grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto]">
               {line.price != null && line.price !== '' && (
-                <div className="flex min-w-0 flex-wrap items-center justify-center gap-x-2.5 gap-y-1 px-[13px] py-3 @md:justify-start">
+                <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 px-[13px] py-3 @md:px-[13px]">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
                       cents={16}
@@ -185,7 +185,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                   )}
                 </div>
               )}
-              <div className="flex flex-col justify-center gap-1.5 border-t border-[#fcb6bb] px-3 py-2.5 @md:border-l @md:border-t-0 @md:px-4">
+              <div className="flex flex-col justify-center gap-1.5 border-t border-[#fcb6bb] px-[13px] py-2.5 @md:border-l @md:border-t-0 @md:px-4">
                 {line.emiText != null && line.emiText !== '' && (
                   <div className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-none text-[var(--button-primary-background,#d90716)]">
                     <WalletMinimal aria-hidden className="shrink-0" size={16} strokeWidth={1.5} />
@@ -193,7 +193,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                   </div>
                 )}
                 {line.deliveryTime != null && line.deliveryTime !== '' && (
-                  <div className="flex items-center gap-1.5 whitespace-nowrap text-[13px] font-medium leading-none">
+                  <div className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-none">
                     <Truck aria-hidden className="shrink-0" size={16} strokeWidth={1.5} />
                     <span>Ships {line.deliveryTime}</span>
                   </div>
