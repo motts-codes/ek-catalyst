@@ -68,7 +68,7 @@ function discountPercent(previous: string, current: string): number | null {
 // the expected <symbol><whole>.<cents> shape (e.g. ranges, unusual formats), so nothing breaks.
 // Exported so other surfaces (e.g. cabinet line cards) render the identical PDP price style.
 export function SuperscriptPrice({ formatted }: { formatted: string }) {
-  const match = formatted.match(/^(\D*)(\d[\d,]*)(?:[.,](\d+))?(\D*)$/);
+  const match = /^(\D*)(\d[\d,]*)(?:[.,](\d+))?(\D*)$/.exec(formatted);
 
   if (!match) {
     return <>{formatted}</>;
@@ -80,9 +80,7 @@ export function SuperscriptPrice({ formatted }: { formatted: string }) {
   // align-super). The whole-number portion is 1.5x the base size so it reads as the dominant price.
   return (
     <span aria-label={formatted}>
-      {symbol ? (
-        <span className="align-[1em] text-[0.6em]">{symbol}</span>
-      ) : null}
+      {symbol ? <span className="align-[1em] text-[0.6em]">{symbol}</span> : null}
       <span className="text-[1.5em]">{whole}</span>
       {cents ? <span className="align-[1em] text-[0.6em]">{cents}</span> : null}
       {suffix || null}
@@ -222,6 +220,31 @@ export function PriceLabel({
         )}
       >
         <SuperscriptPrice formatted={price.money[tax]} />
+      </span>
+    );
+  }
+
+  // Superscript sale price for cards: the price you pay first, in the same bold style as any other
+  // card price, then the original struck through after it at ~60% size (like the kitchen cards).
+  if (superscript && price.type === 'sale') {
+    return (
+      <span
+        className={clsx(
+          'block font-[family-name:var(--font-family-heading)] font-bold',
+          baseColorClass,
+          className,
+        )}
+      >
+        <span className="sr-only">{t('currentPrice', { price: price.current[tax] })} </span>
+        <span aria-hidden>
+          <SuperscriptPrice formatted={price.current[tax]} />
+        </span>
+        <s
+          aria-label={t('originalPrice', { price: price.previous[tax] })}
+          className="ml-2 text-[0.8em] font-semibold text-contrast-400"
+        >
+          {price.previous[tax]}
+        </s>
       </span>
     );
   }
