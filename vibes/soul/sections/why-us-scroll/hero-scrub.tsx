@@ -336,7 +336,7 @@ export function HeroScrub({
         .ek-why-hero .ek-sign { --k: .9; }
         .ek-why-hero .ek-sign span { display: block; opacity: 0; will-change: transform, opacity; }
         .ek-why-hero .ek-s1 { font-size: max(15px, calc(30px * var(--k))); padding: .55em 1em .58em; }
-        .ek-why-hero .ek-s2 { font-size: max(11px, calc(18px * var(--k))); padding: .6em 1.1em .62em; margin: -.3em 0 0 3.6em; }
+        .ek-why-hero .ek-s2 { font-size: max(11px, calc(18px * var(--k))); padding: .6em 1.1em .62em; margin: -.3em 0 0 auto; }
         @media (prefers-reduced-motion: reduce) {
           .ek-why-hero .ek-pin { position: relative; }
           .ek-why-hero .ek-mouse::after { animation: none; }
@@ -359,7 +359,7 @@ export function HeroScrub({
         </div>
         <div
           aria-hidden
-          className="ek-sign pointer-events-none absolute left-1/2 top-[70%] z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-start whitespace-nowrap font-heading"
+          className="ek-sign pointer-events-none absolute left-1/2 top-[70%] z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-stretch whitespace-nowrap font-heading"
           ref={signRef}
         >
           <span
