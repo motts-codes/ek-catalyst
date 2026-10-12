@@ -181,6 +181,9 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
       },
     ],
   },
+  '/cabinet-hardware/handles-knobs': {
+    fine: '*Free Shipping',
+  },
   '/cabinet-hardware': {
     lede: 'The small things that change how a kitchen feels: handles and knobs in the finishes that go with our doors, backsplash tiles to carry the color up the wall, and the organizers that make a drawer earn its keep. Everything is stocked in Bristol and ships next business day, or you can collect it free. Handles are included with our Premium cabinets; here is where you choose them.',
     imageLabel: 'Brass handles on a navy shaker door, with a marble backsplash behind',
