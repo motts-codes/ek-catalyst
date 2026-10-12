@@ -73,7 +73,7 @@ export function SamplesCallout({
         <p className="max-w-[60ch] text-sm leading-relaxed @xl:text-base">{description}</p>
         <div className="mt-1">
           <ButtonLink
-            className="border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground"
+            className="border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground [&>span]:mix-blend-normal"
             href={cta.href}
             shape="pill"
             size="small"
