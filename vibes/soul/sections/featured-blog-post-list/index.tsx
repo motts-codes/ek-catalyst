@@ -4,10 +4,21 @@ import { CursorPagination, CursorPaginationInfo } from '@/vibes/soul/primitives/
 import { BlogPostList } from '@/vibes/soul/sections/blog-post-list';
 import { Breadcrumb, Breadcrumbs } from '@/vibes/soul/sections/breadcrumbs';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
+import { Link } from '~/components/link';
+
+export interface BlogFilterChip {
+  label: string;
+  href: string;
+  active?: boolean;
+}
 
 interface Props {
+  /** Small line above the headline, e.g. "Blog". */
+  kicker?: string;
   title: string;
   description?: string;
+  /** Topic chips under the intro (All, Guide, Trends…). */
+  filters?: BlogFilterChip[];
   posts: Streamable<BlogPostCardBlogPost[]>;
   paginationInfo?: Streamable<CursorPaginationInfo>;
   breadcrumbs?: Streamable<Breadcrumb[]>;
@@ -17,8 +28,10 @@ interface Props {
 }
 
 export function FeaturedBlogPostList({
+  kicker,
   title,
   description,
+  filters = [],
   posts,
   paginationInfo,
   breadcrumbs,
@@ -31,12 +44,43 @@ export function FeaturedBlogPostList({
       {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
 
       <div className="pt-6">
-        <h1 className="mb-3 font-heading text-4xl font-medium leading-none text-foreground @xl:text-5xl @4xl:text-6xl">
-          {title}
-        </h1>
+        {/* Headline left, intro right, then the topic chips. */}
+        <div className="grid gap-6 @3xl:grid-cols-[1.1fr_1fr] @3xl:items-end @3xl:gap-16">
+          <div>
+            {Boolean(kicker) && (
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+                {kicker}
+              </p>
+            )}
+            <h1 className="font-heading text-3xl font-bold leading-tight text-foreground @xl:text-4xl @4xl:text-[44px]">
+              {title}
+            </h1>
+          </div>
+          {description != null && description !== '' && (
+            <p className="max-w-xl text-base leading-relaxed text-contrast-500 @xl:text-lg">
+              {description}
+            </p>
+          )}
+        </div>
 
-        {description != null && description !== '' && (
-          <p className="max-w-lg text-lg text-contrast-500">{description}</p>
+        {filters.length > 0 && (
+          <ul className="mt-8 flex flex-wrap gap-2">
+            {filters.map((chip) => (
+              <li key={chip.label}>
+                <Link
+                  aria-current={chip.active ? 'page' : undefined}
+                  className={
+                    chip.active
+                      ? 'inline-flex items-center rounded-full border border-foreground bg-foreground px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white'
+                      : 'inline-flex items-center rounded-full border border-contrast-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-wide text-contrast-500 transition-colors hover:border-foreground hover:text-foreground'
+                  }
+                  href={chip.href}
+                >
+                  {chip.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         )}
 
         <BlogPostList

@@ -19,6 +19,9 @@ interface Props {
 
 const defaultPostLimit = 9;
 
+// The editorial topics a post can carry as a tag (the card label); shown as filter chips.
+const BLOG_TOPICS = ['Guide', 'Trends', 'Pricing', 'News'];
+
 const searchParamsCache = createSearchParamsCache({
   tag: parseAsString,
   before: parseAsString,
@@ -103,13 +106,25 @@ export default async function Blog(props: Props) {
         },
         ...tagCrumb,
       ]}
-      description={blog.description}
+      description={
+        blog.description ||
+        'Practical help with planning, pricing and living with a new kitchen, from the people who build the cabinets.'
+      }
       emptyStateSubtitle={Streamable.from(getEmptyStateSubtitle)}
       emptyStateTitle={Streamable.from(getEmptyStateTitle)}
+      filters={[
+        { label: 'All', href: blog.path, active: !tag },
+        ...BLOG_TOPICS.map((topic) => ({
+          label: topic,
+          href: `${blog.path}?tag=${topic}`,
+          active: tag === topic,
+        })),
+      ]}
+      kicker="Blog"
       paginationInfo={Streamable.from(() => getPaginationInfo(props.searchParams))}
       placeholderCount={6}
       posts={Streamable.from(() => listBlogPosts(props.searchParams))}
-      title={blog.name}
+      title="Ideas and guides for the kitchen you're planning"
     />
   );
 }

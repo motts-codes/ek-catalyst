@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { ArrowRight } from 'lucide-react';
 
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -22,15 +23,61 @@ interface Props {
   blogPost: BlogPostCardBlogPost;
   /**
    * `compact`: the home-page version — "Guide · date" over a two-line bold title, no summary
-   * or author.
+   * or author. `list`: the blog page card — bordered, red label eyebrow, bold title, summary and
+   * a "Read more" button.
    */
-  variant?: 'default' | 'compact';
+  variant?: 'default' | 'compact' | 'list';
   className?: string;
 }
 
 export function BlogPostCard({ blogPost, variant = 'default', className }: Props) {
   const { author, content, date, href, image, label, title } = blogPost;
   const compact = variant === 'compact';
+  const list = variant === 'list';
+
+  if (list) {
+    return (
+      <Link
+        className={clsx(
+          'group flex h-full max-w-full flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white text-foreground transition-[transform,box-shadow] duration-300 ease-out @container hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus:outline-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4',
+          className,
+        )}
+        href={href}
+      >
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-contrast-100">
+          {image?.src != null && image.src !== '' ? (
+            <Image
+              alt={image.alt}
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              fill
+              sizes="(min-width: 56rem) 33vw, (min-width: 28rem) 50vw, 100vw"
+              src={image.src}
+            />
+          ) : null}
+        </div>
+        <div className="flex flex-1 flex-col p-6 @xl:p-7">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--button-primary-background,#d90716)]">
+            {label ?? 'Guide'}
+          </p>
+          <h3 className="mt-3 font-heading text-xl font-bold leading-snug transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @xl:text-2xl">
+            {title}
+          </h3>
+          <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+            {content}
+          </p>
+          <div className="mt-auto flex items-center justify-between gap-4 pt-6">
+            <span className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-semibold text-white transition-colors group-hover:bg-[var(--button-primary-background,#d90716)]">
+              Read more
+              <ArrowRight aria-hidden size={16} strokeWidth={2} />
+            </span>
+            <time className="text-xs text-contrast-500" dateTime={date}>
+              {date}
+            </time>
+          </div>
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link
