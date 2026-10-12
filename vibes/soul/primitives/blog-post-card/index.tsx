@@ -14,6 +14,8 @@ export interface BlogPostCardBlogPost {
   };
   href: string;
   title: string;
+  /** Short label over the title on the compact card, e.g. Guide / Trends / Pricing (first tag). */
+  label?: string;
 }
 
 interface Props {
@@ -27,7 +29,7 @@ interface Props {
 }
 
 export function BlogPostCard({ blogPost, variant = 'default', className }: Props) {
-  const { author, content, date, href, image, title } = blogPost;
+  const { author, content, date, href, image, label, title } = blogPost;
   const compact = variant === 'compact';
 
   return (
@@ -57,7 +59,7 @@ export function BlogPostCard({ blogPost, variant = 'default', className }: Props
       {compact ? (
         <>
           <p className="text-xs font-semibold text-contrast-500">
-            Guide · <time dateTime={date}>{date}</time>
+            {label ?? 'Guide'} · <time dateTime={date}>{date}</time>
           </p>
           <h3 className="mt-1.5 line-clamp-2 font-heading text-lg font-bold leading-snug">
             {title}

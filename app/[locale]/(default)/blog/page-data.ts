@@ -7,6 +7,8 @@ import { PaginationFragment } from '~/client/fragments/pagination';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 
+const CARD_LABELS = new Set(['Guide', 'Trends', 'Pricing', 'News']);
+
 const BlogQuery = graphql(`
   query BlogQuery {
     site {
@@ -41,6 +43,7 @@ const BlogPostsPageQuery = graphql(
                   name
                   path
                   plainTextSummary
+                  tags
                   publishedDate {
                     utc
                   }
@@ -107,6 +110,9 @@ export const getBlogPosts = cache(
         author: post.author,
         content: post.plainTextSummary,
         date: format.dateTime(new Date(post.publishedDate.utc)),
+        // The card label is one of a few editorial tags on the post (Guide / Trends / Pricing); the
+        // topic tags are left alone.
+        label: post.tags.find((postTag) => CARD_LABELS.has(postTag)),
         image: post.thumbnailImage
           ? {
               src: post.thumbnailImage.url,
