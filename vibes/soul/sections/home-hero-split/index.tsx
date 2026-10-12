@@ -374,7 +374,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
               className={clsx(
                 'relative h-auto overflow-hidden rounded-3xl @xl:h-[320px] @3xl:h-[350px]',
                 offer.image
-                  ? 'min-h-[300px] bg-contrast-100 text-white'
+                  ? 'min-h-[240px] bg-contrast-100 text-white'
                   : 'border border-contrast-100 bg-[#f9fafd]',
               )}
             >
