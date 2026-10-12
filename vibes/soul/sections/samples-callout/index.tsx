@@ -27,7 +27,7 @@ interface Props {
 // button (WCAG 2.2.2). Stacks on phones.
 export function SamplesCallout({
   title = 'Try the finish at home. First two are on us.',
-  description = 'Screens get colours wrong. Order a real door sample to hold against your walls, floors and countertop in your own light. Your first two are free with code FREESAMPLES.',
+  description = 'Screens get colours wrong. Order a real door sample to hold against your walls, floors and countertop in your own light. Your first two (Quarter door samples) are free with code FREESAMPLES.',
   cta = { label: 'Order samples', href: '/samples' },
   video,
   className,
