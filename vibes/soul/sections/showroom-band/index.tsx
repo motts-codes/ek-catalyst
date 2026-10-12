@@ -28,7 +28,7 @@ interface Props {
   /** Auto-cycle interval, ms. 0 disables. */
   interval?: number;
   tint?: boolean;
-  /** Dark panel: near-black band with white copy and inverted chips. */
+  /** Dark panel: the closing-band red with white copy and inverted chips. */
   dark?: boolean;
   className?: string;
 }
@@ -69,7 +69,7 @@ export function ShowroomBand({
 
   return (
     <HomeSection
-      className={clsx(dark && 'bg-[#1a1a1a] text-white', className)}
+      className={clsx(dark && 'bg-[#9f3632] text-white', className)}
       tint={tint && !dark}
     >
       <style>{`@keyframes ek-showroom-progress { from { width: 0; } to { width: 100%; } }`}</style>
@@ -78,8 +78,8 @@ export function ShowroomBand({
           <p
             className={clsx(
               'mb-1.5 text-xs font-semibold uppercase tracking-wide',
-              // Brand red fails 4.5:1 on the dark panel; the pink used on the other dark bands passes.
-              dark ? 'text-[#F9858D]' : 'text-[var(--button-primary-background,#d90716)]',
+              // On the red panel the eyebrow is white (brand red would vanish into it).
+              dark ? 'text-white' : 'text-[var(--button-primary-background,#d90716)]',
             )}
           >
             {kicker}
@@ -114,7 +114,7 @@ export function ShowroomBand({
                           : 'border-foreground bg-foreground text-white'),
                       !isActive &&
                         (dark
-                          ? 'border-white/40 bg-transparent text-white hover:border-white'
+                          ? 'border-white/70 bg-transparent text-white hover:border-white'
                           : 'border-contrast-200 bg-white text-contrast-500 hover:border-foreground hover:text-foreground'),
                     )}
                     href={showroom.href}
@@ -147,7 +147,7 @@ export function ShowroomBand({
                   className={clsx(
                     'flex h-9 w-9 items-center justify-center rounded-full border transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
                     dark
-                      ? 'border-white/40 bg-transparent text-white hover:border-white'
+                      ? 'border-white/70 bg-transparent text-white hover:border-white'
                       : 'border-contrast-200 bg-white text-foreground hover:border-foreground',
                   )}
                   onClick={() => setStopped((value) => !value)}
