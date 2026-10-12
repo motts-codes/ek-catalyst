@@ -135,8 +135,8 @@ export function StoryFilm({
       </div>
 
       {/* The film, centred at 80% of the band on wide screens, chapters aligned under it. */}
-      <div className="mx-auto mt-8 w-full @3xl:w-4/5 @4xl:mt-10">
-        <div className="relative aspect-[49/20] overflow-hidden rounded-3xl bg-contrast-100">
+      <div className="mx-auto mt-10 w-full @3xl:w-4/5 @4xl:mt-14">
+        <div className="relative aspect-[35/18] overflow-hidden rounded-3xl bg-contrast-100">
           <video
             className="h-full w-full object-cover"
             controls={started}
@@ -166,7 +166,7 @@ export function StoryFilm({
         {chapters.length > 0 && (
           <div
             aria-label="Chapters"
-            className="mt-5 grid gap-x-4 gap-y-3 @lg:grid-cols-2 @3xl:grid-cols-4"
+            className="mt-8 grid gap-x-4 gap-y-3 @lg:grid-cols-2 @3xl:grid-cols-4"
             role="group"
           >
             {chapters.map((chapter, index) => {

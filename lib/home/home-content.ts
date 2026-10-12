@@ -360,8 +360,8 @@ export const STORY = {
   },
   chapters: [
     { label: '110+ years legacy', start: 0 },
-    { label: 'Robotic precision', start: 9 },
-    { label: "How it's made", start: 15 },
+    { label: "How it's made", start: 9 },
+    { label: 'Robotic precision', start: 15 },
     { label: '100K+ kitchens delivered', start: 21 },
   ],
 };
