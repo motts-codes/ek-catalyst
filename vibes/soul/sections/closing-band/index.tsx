@@ -24,8 +24,8 @@ const ghostButtonClassName =
 // The last ask on a page — "Ready to design your kitchen?" — as a dark panel with three ways to
 // say yes at equal weight: book the consult, visit a showroom (dropdown), or call.
 export function ClosingBand({
-  title = 'Ready to design your kitchen?',
-  description = 'Bring a photo, a rough sketch, or nothing at all. A designer draws it with you — at home, in a showroom or on a call — and you leave with a plan and a price.',
+  title = 'What would your kitchen actually cost?',
+  description = 'Get a real range in four quick questions. Rather talk it through? A designer will plan it with you on a video call, or see the cabinets in person at one of our six Connecticut showrooms.',
   primary = { label: 'Free design consult', href: '#' },
   secondary,
   showrooms = [],
