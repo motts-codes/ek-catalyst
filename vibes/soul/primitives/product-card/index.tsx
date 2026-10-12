@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { Truck } from 'lucide-react';
+import { MessageSquareQuote, Truck } from 'lucide-react';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
@@ -290,13 +290,16 @@ export function ProductCard({
   );
 }
 
-// Delivery/pickup message from the __delivery custom field, with the truck in brand red.
+// Delivery/pickup message from the __delivery custom field, with an icon in brand red: the truck,
+// or a quote bubble when the line is a "Request a quote" (countertops are quoted, not shipped).
 function DeliveryLine({ message }: { message?: string }) {
   if (message == null || message === '') return null;
 
+  const Icon = /quote/i.test(message) ? MessageSquareQuote : Truck;
+
   return (
     <span className="mt-1.5 flex items-center gap-1.5 text-xs text-foreground">
-      <Truck
+      <Icon
         aria-hidden
         className="shrink-0 text-[var(--button-primary-background,#d90716)]"
         size={16}
