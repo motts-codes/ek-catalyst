@@ -6,6 +6,7 @@ import { cache } from 'react';
 import { BlogPostContent, BlogPostContentBlogPost } from '@/vibes/soul/sections/blog-post-content';
 import { Breadcrumb } from '@/vibes/soul/sections/breadcrumbs';
 import { rewriteWysiwygContentUrls } from '~/data-transformers/html-content-transformer';
+import { prepareBlogPostHtml } from '~/lib/blog/post-html';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
@@ -61,10 +62,13 @@ async function getBlogPost(props: Props): Promise<BlogPostContentBlogPost> {
     return notFound();
   }
 
+  const { html, toc } = prepareBlogPostHtml(rewriteWysiwygContentUrls(blogPost.htmlBody));
+
   return {
     author: blogPost.author ?? undefined,
     title: blogPost.name,
-    content: rewriteWysiwygContentUrls(blogPost.htmlBody),
+    content: html,
+    toc,
     date: format.dateTime(new Date(blogPost.publishedDate.utc)),
     image: blogPost.thumbnailImage
       ? { alt: blogPost.thumbnailImage.altText, src: blogPost.thumbnailImage.url }
