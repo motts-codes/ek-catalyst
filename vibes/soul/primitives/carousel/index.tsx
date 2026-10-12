@@ -321,11 +321,32 @@ function CarouselScrollbar({
   );
 }
 
+// The scrollbar + arrows row under a carousel. Removed from layout entirely when every slide
+// already fits (nothing to scroll), so an empty row doesn't pad the section.
+function CarouselControls({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const { canScrollPrev, canScrollNext } = useCarousel();
+
+  if (!canScrollPrev && !canScrollNext) return null;
+
+  return (
+    <div className={clsx('mt-6 flex w-full items-center justify-between gap-8', className)}>
+      {children}
+    </div>
+  );
+}
+
 export {
   type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselButtons,
+  CarouselControls,
   CarouselScrollbar,
 };

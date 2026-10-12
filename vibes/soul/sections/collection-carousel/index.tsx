@@ -3,6 +3,7 @@ import {
   Carousel,
   CarouselButtons,
   CarouselContent,
+  CarouselControls,
   CarouselItem,
   CarouselScrollbar,
 } from '@/vibes/soul/primitives/carousel';
@@ -54,10 +55,10 @@ export function CollectionCarousel({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <div className="mt-6 flex w-full items-center justify-between gap-8">
+            <CarouselControls>
               <CarouselScrollbar label={scrollbarLabel} />
               <CarouselButtons nextLabel={nextLabel} previousLabel={previousLabel} />
-            </div>
+            </CarouselControls>
           </Carousel>
         )
       }

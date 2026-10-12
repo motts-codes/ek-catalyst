@@ -34,9 +34,9 @@ export function ClosingBand({
   className,
 }: Props) {
   return (
-    // The footer adds its own top padding below the panel, so the band carries extra padding on
-    // both sides to keep the space above the panel equal to the space below it.
-    <HomeSection className={clsx('pb-10 pt-[41px] lg:pb-14 lg:pt-[57px]', className)} tint={tint}>
+    // Extra bottom padding so the space to the footer's first content matches the space above
+    // (the previous section's bottom padding plus this band's top padding).
+    <HomeSection className={clsx('pb-10 lg:pb-14', className)} tint={tint}>
       {/* Deep brand red (#9F3632): white text is 6.9:1 on it. The primary button is black here,
           since the brand-red button would sit at 1.3:1 against this panel. */}
       <div className="relative overflow-hidden rounded-3xl bg-[#9f3632] px-6 py-12 text-center text-white @xl:px-12 @xl:py-16 @4xl:py-20">
