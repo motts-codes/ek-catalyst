@@ -24,27 +24,26 @@ export function StatementReveal({ lines, accentWords = [], className }: Props) {
     line.split(' ').map((word) => ({ word, lineIndex })),
   );
   const [shown, setShown] = useState(() => words.length);
+  // Server-rendered with every word (reduced motion / no JS); the effect takes over on mount.
 
   useEffect(() => {
     const section = ref.current;
 
     if (!section || prefersReducedMotion()) return;
 
-    setShown(0);
-
     return onScrollFrame(() => {
-      // The reveal runs over the first 80% of the pinned travel, so the finished statement holds
-      // for a beat before the section scrolls away.
-      const progress = clamp01(pinnedProgress(section) / 0.8);
+      // The first word is there the moment the stage pins (no empty screen after the hero); the
+      // rest arrive over the first 70% of the travel, so the finished statement holds for a beat.
+      const progress = clamp01(pinnedProgress(section) / 0.7);
 
-      setShown(Math.round(progress * words.length));
+      setShown(1 + Math.round(progress * (words.length - 1)));
     });
   }, [words.length]);
 
   let index = 0;
 
   return (
-    <section className={clsx('relative h-[220vh] bg-white @container', className)} ref={ref}>
+    <section className={clsx('relative h-[180vh] bg-white @container', className)} ref={ref}>
       <div className="sticky top-0 flex h-screen items-center justify-center px-6 @xl:px-9">
         <p className="max-w-5xl text-center font-heading text-[1.75rem] font-bold leading-[1.15] tracking-tight @md:text-4xl @3xl:text-[44px] @5xl:text-[52px]">
           {lines.map((line, lineIndex) => (

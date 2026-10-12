@@ -42,12 +42,13 @@ export default async function WhyExpressKitchens({
       {/* The scroll story from the client's mockup: a kitchen assembles as you scroll, then the
           lead-time race, the cabinet turning on white, and the factory rail. Then the rest. */}
       <HeroScrub
-        signLine1="Simplifying Kitchens"
-        signLine2="for 110+ years"
-        title="Why Express Kitchens: simplifying kitchens for 110+ years"
+        cueHint={'Every kitchen starts\nwith a dream'}
+        signLine1="We've made 100,000+ real"
+        signLine2="Since 1916"
+        title="Why Express Kitchens: 100,000+ kitchens since 1916"
       />
       <StatementReveal
-        accentWords={['wait', 'price']}
+        accentWords={['kitchen', 'wait', 'price']}
         lines={[
           "The kitchen you've been picturing.",
           'Without the wait.',

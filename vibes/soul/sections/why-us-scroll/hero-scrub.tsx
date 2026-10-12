@@ -18,12 +18,12 @@ const ASSEMBLY_FRAMES = 122;
 const NIGHT_FRAMES = 42;
 const TOTAL = ASSEMBLY_FRAMES + NIGHT_FRAMES;
 // Scroll-progress keyframes: assembly plays to A, holds to B, night plays to 1 (of the E-scaled span).
-const A = 0.82;
-const B = 0.86;
-const E = 0.92;
+const A = 0.86;
+const B = 0.9;
+const E = 1;
 // Where the live water / steam touches start (0–1 progress), and how long they keep moving.
-const WATER_AT = 0.714;
-const STEAM_AT = 0.67;
+const WATER_AT = 0.75;
+const STEAM_AT = 0.7;
 // At rest the scene starts this far below the header (which sits above the section in flow),
 // so the kitchen never touches the rounded nav card; the gap closes over the first few percent
 // of scroll as the stage pins and the nav slides away.
@@ -111,7 +111,7 @@ export function HeroScrub({
       const start = stage(r.width, r.height, gapAt(0));
       const end = stage(r.width, r.height, 0);
 
-      cue.style.top = `${start.y0 + 400 * start.k}px`;
+      cue.style.top = `${start.y0 + 400 * start.k - 100}px`;
       sign.style.left = `${(r.width - end.sw) / 2 + 800 * end.k}px`;
       sign.style.top = `${end.y0 + 655 * end.k}px`;
 
@@ -324,7 +324,7 @@ export function HeroScrub({
   return (
     <section
       aria-label="A kitchen assembles as you scroll"
-      className="ek-why-hero relative h-[718vh] bg-white motion-reduce:h-auto"
+      className="ek-why-hero relative h-[660vh] bg-white motion-reduce:h-auto"
       ref={sectionRef}
     >
       <style>{`
@@ -353,7 +353,7 @@ export function HeroScrub({
         >
           <span className="ek-mouse relative block h-[42px] w-[26px] rounded-[14px] border-2 border-current" />
           <span>{cueLabel}</span>
-          <small className="-mt-1.5 font-body text-[13px] font-medium normal-case tracking-normal opacity-75">
+          <small className="mt-0.5 whitespace-pre-line text-center font-heading text-lg font-bold normal-case leading-tight tracking-normal @xl:text-xl">
             {cueHint}
           </small>
         </div>
