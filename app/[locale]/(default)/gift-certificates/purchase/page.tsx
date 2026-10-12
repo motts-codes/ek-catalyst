@@ -7,6 +7,7 @@ import { GiftCertificatePurchaseSection } from '@/vibes/soul/sections/gift-certi
 import { GiftCertificateSettingsFragment } from '~/app/[locale]/(default)/gift-certificates/purchase/fragment';
 import { ExistingResultType } from '~/client/util';
 import { redirect } from '~/i18n/routing';
+import { BRAND_NAME } from '~/lib/brand';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
@@ -187,7 +188,7 @@ export default async function GiftCertificatePurchasePage({ params }: Props) {
             ? data.giftCertificateSettings.maximumAmount.value
             : undefined,
       }}
-      subtitle={data.storeName}
+      subtitle={BRAND_NAME}
       title={t('Purchase.title')}
     />
   );

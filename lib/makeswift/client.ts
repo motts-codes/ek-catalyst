@@ -45,8 +45,12 @@ export async function getMakeswiftPageMetadata({ path, locale }: { path: string;
 
   const { title, description } = pages[0];
 
+  // Makeswift's new-site placeholder titles read "Catalyst | …"; they are not real metadata,
+  // so the page's own title wins until marketing sets one in the builder.
+  const realTitle = title && !/^catalyst\b/i.test(title.trim()) ? title : undefined;
+
   return {
-    ...(title && { title }),
+    ...(realTitle && { title: realTitle }),
     ...(description && { description }),
   };
 }

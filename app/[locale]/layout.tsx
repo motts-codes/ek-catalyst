@@ -24,6 +24,7 @@ import { ScriptsFragment } from '~/components/consent-manager/scripts-fragment';
 import { ContainerQueryPolyfill } from '~/components/polyfills/container-query';
 import { scriptsTransformer } from '~/data-transformers/scripts-transformer';
 import { routing } from '~/i18n/routing';
+import { BRAND_NAME } from '~/lib/brand';
 import { SiteTheme } from '~/lib/makeswift/components/site-theme';
 import { MakeswiftProvider } from '~/lib/makeswift/provider';
 import { getToastNotification } from '~/lib/server-toast';
@@ -72,8 +73,6 @@ const fetchRootLayoutMetadata = cache(async () => {
 export async function generateMetadata(): Promise<Metadata> {
   const { data } = await fetchRootLayoutMetadata();
 
-  const storeName = data.site.settings?.storeName ?? '';
-
   const { pageTitle, metaDescription, metaKeywords } = data.site.settings?.seo || {};
 
   const vanityUrl = data.site.settings?.url.vanityUrl;
@@ -99,8 +98,8 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: baseUrl,
     robots: isProduction ? undefined : { index: false, follow: false },
     title: {
-      template: `%s - ${storeName}`,
-      default: pageTitle || storeName,
+      template: `%s - ${BRAND_NAME}`,
+      default: pageTitle || BRAND_NAME,
     },
     icons: {
       icon: '/favicon.ico', // app/favicon.ico/route.ts
