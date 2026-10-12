@@ -32,6 +32,12 @@
     --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  /* In-page anchor links (the blog's "On this page", #products, #collections…) glide to their
+     target instead of jumping. The reduced-motion block below switches this off. */
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: var(--font-family-body);
   }
