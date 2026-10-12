@@ -18,11 +18,25 @@ export interface BlogPostCardBlogPost {
 
 interface Props {
   blogPost: BlogPostCardBlogPost;
+  /**
+   * `compact`: the home-page version — "Guide · N min read" over a two-line bold title, no
+   * summary, date or author.
+   */
+  variant?: 'default' | 'compact';
   className?: string;
 }
 
-export function BlogPostCard({ blogPost, className }: Props) {
+// Rough reading time: the API gives only a summary, not the article, so this scales the summary
+// (a typical post runs about twelve times its summary) at ~200 words a minute, 4–12 minutes.
+function readMinutes(text: string): number {
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+
+  return Math.min(12, Math.max(4, Math.round((words * 12) / 200)));
+}
+
+export function BlogPostCard({ blogPost, variant = 'default', className }: Props) {
   const { author, content, date, href, image, title } = blogPost;
+  const compact = variant === 'compact';
 
   return (
     <Link
@@ -48,15 +62,30 @@ export function BlogPostCard({ blogPost, className }: Props) {
         )}
       </div>
 
-      <div className="text-lg font-medium leading-snug">{title}</div>
-      <p className="mb-3 mt-1.5 line-clamp-3 text-sm font-normal text-contrast-400">{content}</p>
-      <div className="text-sm">
-        <time dateTime={date}>{date}</time>
-        {date !== '' && author != null && author !== '' && (
-          <span className="after:mx-2 after:content-['•']" />
-        )}
-        {author != null && author !== '' && <span>{author}</span>}
-      </div>
+      {compact ? (
+        <>
+          <p className="text-xs font-semibold text-contrast-500">
+            Guide · {readMinutes(content)} min read
+          </p>
+          <h3 className="mt-1.5 line-clamp-2 font-heading text-lg font-bold leading-snug">
+            {title}
+          </h3>
+        </>
+      ) : (
+        <>
+          <div className="text-lg font-medium leading-snug">{title}</div>
+          <p className="mb-3 mt-1.5 line-clamp-3 text-sm font-normal text-contrast-400">
+            {content}
+          </p>
+          <div className="text-sm">
+            <time dateTime={date}>{date}</time>
+            {date !== '' && author != null && author !== '' && (
+              <span className="after:mx-2 after:content-['•']" />
+            )}
+            {author != null && author !== '' && <span>{author}</span>}
+          </div>
+        </>
+      )}
     </Link>
   );
 }

@@ -259,6 +259,7 @@ export default async function Home({ params }: Props) {
       {/* 10 · Articles — latest blog posts */}
       <BlogPostCarousel
         action={{ label: 'More articles', href: '/blog' }}
+        kicker="Blog"
         posts={streamablePosts}
       />
 
