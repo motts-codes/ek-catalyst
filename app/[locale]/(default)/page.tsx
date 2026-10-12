@@ -157,12 +157,7 @@ export default async function Home({ params }: Props) {
         type={CATEGORY_CAROUSEL_TYPE}
       />
 
-      {/* 3 · Shop what's moving — tabs by reason to buy now, fed by store data */}
-      <HomeSection halfPadding tint title="Shop what's moving">
-        <ProductTabs tabs={productTabs} />
-      </HomeSection>
-
-      {/* 4 · Assembled or RTA? */}
+      {/* 3 · Assembled or RTA? */}
       <Slot
         fallback={
           <ProgramSplit
@@ -174,6 +169,11 @@ export default async function Home({ params }: Props) {
         label="Home program cards"
         snapshotId="home-programs"
       />
+
+      {/* 4 · Shop what's moving — tabs by reason to buy now, fed by store data */}
+      <HomeSection halfPadding tint title="Shop what's moving">
+        <ProductTabs tabs={productTabs} />
+      </HomeSection>
 
       {/* 5 · Best sellers — collection cards with the 10×10 price in a carousel, then the samples strip */}
       <HomeSection
