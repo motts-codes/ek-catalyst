@@ -16,6 +16,7 @@ interface Props {
   speed?: number;
   /** Column height on desktop, px. */
   height?: number;
+  /** Ignored: the reviews band always sits on the site's light red (#fdf8f8), on every page. */
   tint?: boolean;
   className?: string;
 }
@@ -83,7 +84,6 @@ export function ReviewMarquee({
   action,
   speed = 45,
   height = 560,
-  tint = false,
   className,
 }: Props) {
   // Round-robin the reviews into columns; each column's track is duplicated so the loop is seamless.
@@ -92,7 +92,13 @@ export function ReviewMarquee({
   ).filter((column) => column.length > 0);
 
   return (
-    <HomeSection action={action} className={className} kicker={summary} tint={tint} title={title}>
+    <HomeSection
+      action={action}
+      className={clsx('bg-[#fdf8f8]', className)}
+      kicker={summary}
+      tint={false}
+      title={title}
+    >
       <style>{`
         @keyframes ek-marquee-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
         @keyframes ek-marquee-down { from { transform: translateY(-50%); } to { transform: translateY(0); } }

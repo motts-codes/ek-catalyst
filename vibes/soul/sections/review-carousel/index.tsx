@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { Star } from 'lucide-react';
 
 import {
@@ -27,6 +28,7 @@ interface Props {
   summary?: string;
   reviews: CustomerReview[];
   action?: { label: string; href: string };
+  /** Ignored: the reviews band always sits on the site's light red (#fdf8f8), on every page. */
   tint?: boolean;
   className?: string;
   previousLabel?: string;
@@ -41,14 +43,19 @@ export function ReviewCarousel({
   summary,
   reviews,
   action,
-  tint = false,
   className,
   previousLabel = 'Previous',
   nextLabel = 'Next',
   scrollbarLabel = 'Scroll reviews',
 }: Props) {
   return (
-    <HomeSection action={action} className={className} kicker={summary} tint={tint} title={title}>
+    <HomeSection
+      action={action}
+      className={clsx('bg-[#fdf8f8]', className)}
+      kicker={summary}
+      tint={false}
+      title={title}
+    >
       <Carousel>
         <CarouselContent className="-ml-3 @2xl:-ml-4">
           {reviews.map((review, index) => (

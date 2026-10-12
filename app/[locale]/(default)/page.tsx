@@ -214,8 +214,6 @@ export default async function Home({ params }: Props) {
         fallback={
           <ReviewMarquee
             action={{ label: 'Read all reviews', href: '#' }}
-            // The soft pink of the price strip on the kitchen cards, not the grey tint.
-            className="!bg-[#fdf8f8]"
             reviews={HOME_REVIEWS}
             summary="4.5 · 360+ Google reviews"
             tint
