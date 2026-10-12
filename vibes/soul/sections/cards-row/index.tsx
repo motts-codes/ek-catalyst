@@ -24,8 +24,11 @@ interface Props {
   columns?: 2 | 3 | 4 | 5;
   /** Hide the image area (text-only reasons-to-believe cards get an accent bar instead). */
   hideImages?: boolean;
-  /** 'inset' (default) keeps the photo inside the card padding; 'bleed' runs it edge to edge. */
-  imageStyle?: 'inset' | 'bleed';
+  /**
+   * 'inset' (default) keeps the photo inside the card padding; 'bleed' runs it edge to edge;
+   * 'plain' drops the card chrome: a taller rounded photo with the copy straight beneath it.
+   */
+  imageStyle?: 'inset' | 'bleed' | 'plain';
   tint?: boolean;
   className?: string;
 }
@@ -45,6 +48,7 @@ export function CardsRow({
   className,
 }: Props) {
   const bleed = imageStyle === 'bleed' && !hideImages;
+  const plain = imageStyle === 'plain' && !hideImages;
 
   return (
     <HomeSection
@@ -67,7 +71,12 @@ export function CardsRow({
       >
         {cards.map((card) => (
           <article
-            className="flex h-full flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]"
+            className={clsx(
+              'flex h-full flex-col',
+              plain
+                ? 'group'
+                : 'overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
+            )}
             key={card.title}
           >
             {bleed && (
@@ -85,7 +94,7 @@ export function CardsRow({
                 )}
               </div>
             )}
-            <div className="flex flex-1 flex-col p-6 @xl:p-7">
+            <div className={clsx('flex flex-1 flex-col', plain ? 'p-0' : 'p-6 @xl:p-7')}>
               {hideImages && (
                 <span
                   aria-hidden
@@ -93,11 +102,20 @@ export function CardsRow({
                 />
               )}
               {!hideImages && !bleed && (
-                <div className="relative mb-6 aspect-[16/10] overflow-hidden rounded-2xl bg-contrast-100">
+                <div
+                  className={clsx(
+                    'relative mb-6 overflow-hidden bg-contrast-100',
+                    plain ? 'aspect-[4/3] rounded-3xl' : 'aspect-[16/10] rounded-2xl',
+                  )}
+                >
                   {card.image ? (
                     <Image
                       alt={card.image.alt}
-                      className="object-cover"
+                      className={clsx(
+                        'object-cover',
+                        plain &&
+                          'transition-transform duration-700 ease-smooth group-hover:scale-[1.03]',
+                      )}
                       fill
                       sizes="(min-width: 56rem) 33vw, 100vw"
                       src={card.image.src}

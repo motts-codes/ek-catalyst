@@ -200,6 +200,7 @@ export default async function Home({ params }: Props) {
         fallback={
           <CardsRow
             cards={THREE_WAYS}
+            imageStyle="plain"
             kicker="Not sure yet?"
             title="Pick the way you like to decide."
           />
