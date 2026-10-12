@@ -132,7 +132,7 @@ export function BlogPostContent({
                   )}
                   <article
                     className={clsx(
-                      'prose prose-lg max-w-[68ch] text-[#404040] prose-p:leading-relaxed prose-a:text-[var(--button-primary-background,#d90716)] prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-[var(--button-primary-background,#d90716)] prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-foreground prose-strong:text-foreground prose-li:leading-relaxed prose-img:mx-auto prose-img:max-h-[560px] prose-img:w-full prose-img:rounded-2xl prose-img:object-cover',
+                      'prose prose-lg max-w-[68ch] text-[#404040] prose-p:leading-relaxed prose-a:text-[var(--button-primary-background,#d90716)] prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-[var(--button-primary-background,#d90716)] prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-foreground prose-strong:text-foreground prose-li:leading-relaxed prose-img:mx-auto prose-img:h-auto prose-img:w-auto prose-img:max-w-full prose-img:rounded-2xl prose-img:object-contain @3xl:prose-img:max-h-[360px]',
                       // Section titles: Gilroy bold, our size, with room to jump to from the list.
                       '[&_h2:first-child]:mt-0 [&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:scroll-mt-28 [&_h2]:font-heading [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:leading-tight [&_h2]:text-foreground @xl:[&_h2]:text-3xl',
                       '[&_h3]:mt-8 [&_h3]:font-heading [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-foreground',
