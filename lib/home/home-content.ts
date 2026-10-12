@@ -345,12 +345,23 @@ export const SHOWROOMS: Showroom[] = [
 
 export const STORY = {
   kicker: 'Since 1916',
-  title: 'Made in Connecticut. In stock in Connecticut.',
+  title: "100,000 kitchens later, we're still the ones who make them.",
   description:
-    'We build the cabinets and cut the countertops in our own Bristol factory and sell it all in six showrooms — so the price is manufacturer-direct and two weeks means two weeks. 110 years, 100,000+ kitchens.',
+    "Built in our own Connecticut factory with robotic precision, and sold straight to you at factory-direct prices. Doors that line up, no middleman's cut, and a date we control because the factory is ours.",
   actions: [
-    { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
+    { label: 'Why Express Kitchens', href: '/why-express-kitchens', primary: true },
     { label: 'Our story', href: '/about' },
   ],
   imageLabel: 'The Bristol factory line',
+  video: {
+    src: '/images/home/story/heritage.mp4',
+    poster: '/images/home/story/heritage-poster.jpg',
+    title: 'Express Kitchens: 110 years of craft',
+  },
+  chapters: [
+    { label: '110+ years legacy', start: 0 },
+    { label: 'Robotic precision', start: 9 },
+    { label: "How it's made", start: 15 },
+    { label: '100K+ kitchens delivered', start: 21 },
+  ],
 };

@@ -12,7 +12,7 @@ import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
-import { StoryBand } from '@/vibes/soul/sections/story-band';
+import { StoryFilm } from '@/vibes/soul/sections/story-film';
 import {
   getBestSellingProducts,
   getFeaturedProducts,
@@ -228,12 +228,13 @@ export default async function Home({ params }: Props) {
       {/* 8 · Made in Connecticut — the whole brand story in one band, after the shopping */}
       <Slot
         fallback={
-          <StoryBand
+          <StoryFilm
             actions={STORY.actions}
+            chapters={STORY.chapters}
             description={STORY.description}
-            imageLabel={STORY.imageLabel}
             kicker={STORY.kicker}
             title={STORY.title}
+            video={STORY.video}
           />
         }
         label="Home story band"
