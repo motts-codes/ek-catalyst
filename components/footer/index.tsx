@@ -56,7 +56,6 @@ const paymentIcons = [
   badge('card_mastercard', 'Mastercard', 51, 30),
   badge('card_visa', 'Visa', 51, 30),
   badge('badge_homeadvisor', 'HomeAdvisor', 134, 29),
-  badge('badge_bbb_a', 'BBB accredited, A+', 43, 29),
 ];
 
 const socialIcons: Record<string, { icon: JSX.Element }> = {
