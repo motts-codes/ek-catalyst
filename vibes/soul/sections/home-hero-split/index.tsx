@@ -59,12 +59,15 @@ export interface HeroOffer {
 }
 
 // Slightly smaller on phones so headline + button share one row at 390px wide.
+// The site's button: a pill whose fill slides in from the left on hover. Styled spans (not
+// ButtonLink) because the whole slide is already the link.
 const CTA_BASE =
-  'inline-flex min-h-9 items-center justify-center rounded-full px-3.5 text-[13px] font-semibold transition-colors @xl:min-h-10 @xl:px-5 @xl:text-sm';
+  'relative z-0 inline-flex min-h-9 items-center justify-center overflow-hidden rounded-full border px-3.5 text-[13px] font-semibold transition-colors duration-300 after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:transition-[opacity,transform] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:after:translate-x-0 @xl:min-h-10 @xl:px-5 @xl:text-sm';
 const CTA_COLOR: Record<HeroCtaColor, string> = {
-  red: 'bg-[var(--button-primary-background,#d90716)] text-white hover:opacity-90',
-  black: 'bg-black text-white hover:bg-neutral-800',
-  white: 'bg-white text-foreground hover:bg-neutral-100',
+  // Red and black fill to white with black text; white fills to black with white text.
+  red: 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white after:bg-white hover:text-foreground',
+  black: 'border-foreground bg-foreground text-white after:bg-white hover:text-foreground',
+  white: 'border-white bg-white text-foreground after:bg-foreground hover:text-white',
 };
 
 interface Props {

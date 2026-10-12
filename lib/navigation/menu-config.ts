@@ -216,6 +216,7 @@ const menu: MenuItem[] = [
         // Heading tile on the first row only; the second row's slot stays empty so tiles align.
         label: 'Appliances',
         href: '/appliances',
+        fullRow: true,
         links: [
           {
             label: 'Fridges & Freezers',
@@ -246,6 +247,7 @@ const menu: MenuItem[] = [
       },
       {
         // No heading on the second row — the slot stays empty so the tiles line up.
+        fullRow: true,
         links: [
           {
             label: 'Range Hoods',
