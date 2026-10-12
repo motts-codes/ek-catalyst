@@ -74,7 +74,7 @@ export function MetricsTicker({ metrics, duration = 60, className }: Props) {
     <section
       aria-label="Express Kitchens in numbers"
       className={clsx(
-        'ek-ticker relative overflow-hidden border-y border-[#fcb6bb] bg-[#fdf8f8] @container',
+        'ek-ticker relative mb-12 overflow-hidden border-y border-[#fcb6bb] bg-white @container @xl:mb-16',
         className,
       )}
       data-paused={paused}
