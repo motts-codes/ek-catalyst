@@ -187,14 +187,24 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
               )}
               <div className="flex flex-col justify-center gap-1.5 border-t border-[#fcb6bb] px-[13px] py-2.5 @md:border-l @md:border-t-0 @md:px-4">
                 {line.emiText != null && line.emiText !== '' && (
-                  <div className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-none text-[var(--button-primary-background,#d90716)]">
-                    <WalletMinimal aria-hidden className="shrink-0" size={16} strokeWidth={1.5} />
+                  <div className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-none">
+                    <WalletMinimal
+                      aria-hidden
+                      className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+                      size={16}
+                      strokeWidth={1.5}
+                    />
                     <Finance text={line.emiText} />
                   </div>
                 )}
                 {line.deliveryTime != null && line.deliveryTime !== '' && (
                   <div className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-none">
-                    <Truck aria-hidden className="shrink-0" size={16} strokeWidth={1.5} />
+                    <Truck
+                      aria-hidden
+                      className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+                      size={16}
+                      strokeWidth={1.5}
+                    />
                     <span>Ships {line.deliveryTime}</span>
                   </div>
                 )}
