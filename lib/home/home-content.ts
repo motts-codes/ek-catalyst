@@ -371,7 +371,6 @@ export const SHOWROOMS: Showroom[] = [
   {
     name: 'Bristol',
     href: '/showrooms/bristol',
-    badge: 'factory outlet',
     image: showroomImage('bristol', 'Door and countertop samples laid out on an island'),
   },
 ];
