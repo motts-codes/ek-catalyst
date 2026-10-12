@@ -32,6 +32,10 @@ export const HERO_SLIDES: HeroSlide[] = [
       src: '/images/home/hero/designed-free.webp',
       alt: 'A designer and a homeowner on a red sofa, choosing cabinet styles on a screen',
     },
+    mobileImage: {
+      src: '/images/home/hero/designed-free-mobile.webp',
+      alt: 'A designer and a homeowner on a red sofa, choosing cabinet styles on a screen',
+    },
     href: FREE_DESIGN_HREF,
     ctaLabel: 'Book free consult',
     // The photo's background is brand red, so the button is white. The scene sits centre-right;
