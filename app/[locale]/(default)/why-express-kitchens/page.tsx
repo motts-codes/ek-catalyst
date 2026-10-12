@@ -156,7 +156,7 @@ export default async function WhyExpressKitchens({
         ]}
         columns={3}
         description="Each one you can check on this site or in a showroom."
-        kicker="Three things you won't find together anywhere else"
+        kicker="Only at EK"
         tint
         title="Proven, not promised."
       />
@@ -169,6 +169,7 @@ export default async function WhyExpressKitchens({
           'Custom cabinet shops',
         ]}
         description="Only the rows where the answers differ. We've used store types, not names, so you can check for yourself."
+        kicker="Before you shop around"
         rows={[
           ['!Made by the company that sells it', '✓', '—', '—', '✓'],
           ['!In stock, ships in 2–3 weeks (quick-ship next day)', '✓', 'Some', '—', '—'],

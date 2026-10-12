@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -52,12 +53,21 @@ export function DeliveryLadder({
       tint={tint}
       title={title}
     >
-      <div className="overflow-x-auto rounded-3xl border border-contrast-100 bg-white">
-        <table className="w-full min-w-[40rem] text-left text-sm">
+      {/* Header row in brand red; body rows alternate white / light pink and tint on hover;
+          hairlines between rows and between every column. The first column is the feature. */}
+      <div className="overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white">
+        <table className="w-full min-w-[40rem] border-separate border-spacing-0 text-left text-sm">
           <thead>
-            <tr className="border-b border-contrast-100 text-xs uppercase tracking-wide text-contrast-400">
-              {columns.map((column) => (
-                <th className="px-5 py-3.5 font-semibold" key={column} scope="col">
+            <tr className="bg-[var(--button-primary-background,#d90716)] text-xs uppercase tracking-wide text-white">
+              {columns.map((column, columnIndex) => (
+                <th
+                  className={clsx(
+                    'px-5 py-4 font-semibold',
+                    columnIndex > 0 && 'border-l border-white/30 text-center',
+                  )}
+                  key={column || 'feature'}
+                  scope="col"
+                >
                   {column}
                 </th>
               ))}
@@ -65,18 +75,25 @@ export function DeliveryLadder({
           </thead>
           <tbody>
             {rows.map((row, rowIndex) => (
-              <tr className="border-b border-contrast-100 last:border-b-0" key={rowIndex}>
+              <tr
+                className="group/row odd:bg-white even:bg-[#fdf8f8] hover:bg-[#fbeaea]"
+                key={rowIndex}
+              >
                 {row.map((cell, cellIndex) => {
                   const bold = cell.startsWith('!');
                   const text = bold ? cell.slice(1) : cell;
+                  const feature = cellIndex === 0;
 
                   return (
                     <td
-                      className={
-                        cellIndex === 0 || bold
-                          ? 'px-5 py-4 font-semibold text-foreground'
-                          : 'px-5 py-4 text-contrast-500'
-                      }
+                      className={clsx(
+                        'border-t border-[#fcb6bb] px-5 py-4 transition-colors',
+                        !feature && 'border-l text-center',
+                        feature || bold ? 'font-semibold text-foreground' : 'text-[#404040]',
+                        !feature &&
+                          text.startsWith('✓') &&
+                          'text-[var(--button-primary-background,#d90716)]',
+                      )}
                       key={cellIndex}
                     >
                       {text}
