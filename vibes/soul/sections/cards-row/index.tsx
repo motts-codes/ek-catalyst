@@ -26,7 +26,7 @@ interface Props {
   hideImages?: boolean;
   /**
    * 'inset' (default) keeps the photo inside the card padding; 'bleed' runs it edge to edge;
-   * 'plain' drops the card chrome: a taller (7:5) rounded photo with the copy straight beneath it.
+   * 'plain' drops the card chrome: a wide (5:3) rounded photo with the copy straight beneath it.
    */
   imageStyle?: 'inset' | 'bleed' | 'plain';
   tint?: boolean;
@@ -105,7 +105,7 @@ export function CardsRow({
                 <div
                   className={clsx(
                     'relative mb-6 overflow-hidden bg-contrast-100',
-                    plain ? 'aspect-[4/3] rounded-3xl' : 'aspect-[16/10] rounded-2xl',
+                    plain ? 'aspect-[5/3] rounded-3xl' : 'aspect-[16/10] rounded-2xl',
                   )}
                 >
                   {card.image ? (
