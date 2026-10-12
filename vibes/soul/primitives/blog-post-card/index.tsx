@@ -61,7 +61,7 @@ export function BlogPostCard({ blogPost, variant = 'default', className }: Props
           <p className="text-xs font-semibold text-contrast-500">
             {label ?? 'Guide'} · <time dateTime={date}>{date}</time>
           </p>
-          <h3 className="mt-1.5 line-clamp-2 font-heading text-lg font-bold leading-snug">
+          <h3 className="mt-1.5 line-clamp-2 font-heading text-lg font-bold leading-snug transition-colors group-hover:text-[var(--button-primary-background,#d90716)]">
             {title}
           </h3>
         </>

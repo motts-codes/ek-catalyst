@@ -28,6 +28,8 @@ interface Props {
   /** Auto-cycle interval, ms. 0 disables. */
   interval?: number;
   tint?: boolean;
+  /** Dark panel: near-black band with white copy and inverted chips. */
+  dark?: boolean;
   className?: string;
 }
 
@@ -41,6 +43,7 @@ export function ShowroomBand({
   showrooms,
   interval = 3500,
   tint = false,
+  dark = false,
   className,
 }: Props) {
   const [active, setActive] = useState(0);
@@ -65,16 +68,30 @@ export function ShowroomBand({
   if (!current) return null;
 
   return (
-    <HomeSection className={className} tint={tint}>
+    <HomeSection
+      className={clsx(dark && 'bg-[#1a1a1a] text-white', className)}
+      tint={tint && !dark}
+    >
       <style>{`@keyframes ek-showroom-progress { from { width: 0; } to { width: 100%; } }`}</style>
       <div className="grid items-center gap-8 @3xl:grid-cols-[1fr_1.15fr] @3xl:gap-14">
         <div>
-          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+          <p
+            className={clsx(
+              'mb-1.5 text-xs font-semibold uppercase tracking-wide',
+              // Brand red fails 4.5:1 on the dark panel; the pink used on the other dark bands passes.
+              dark ? 'text-[#F9858D]' : 'text-[var(--button-primary-background,#d90716)]',
+            )}
+          >
             {kicker}
           </p>
           <h2 className={homeHeadingClassName}>{title}</h2>
           {Boolean(description) && (
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+            <p
+              className={clsx(
+                'mt-3 max-w-xl text-sm leading-relaxed @xl:text-base',
+                dark ? 'text-white/85' : 'text-contrast-500',
+              )}
+            >
               {description}
             </p>
           )}
@@ -91,9 +108,14 @@ export function ShowroomBand({
                   <Link
                     className={clsx(
                       'relative inline-flex items-center gap-2 overflow-hidden rounded-full border px-4 py-2 text-sm font-medium transition-colors',
-                      isActive
-                        ? 'border-foreground bg-foreground text-white'
-                        : 'border-contrast-200 bg-white text-contrast-500 hover:border-foreground hover:text-foreground',
+                      isActive &&
+                        (dark
+                          ? 'border-white bg-white text-foreground'
+                          : 'border-foreground bg-foreground text-white'),
+                      !isActive &&
+                        (dark
+                          ? 'border-white/40 bg-transparent text-white hover:border-white'
+                          : 'border-contrast-200 bg-white text-contrast-500 hover:border-foreground hover:text-foreground'),
                     )}
                     href={showroom.href}
                     onFocus={() => setActive(index)}
@@ -122,7 +144,12 @@ export function ShowroomBand({
                 <button
                   aria-label={stopped ? 'Play showroom rotation' : 'Pause showroom rotation'}
                   aria-pressed={stopped}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-contrast-200 bg-white text-foreground transition-colors hover:border-foreground focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                  className={clsx(
+                    'flex h-9 w-9 items-center justify-center rounded-full border transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+                    dark
+                      ? 'border-white/40 bg-transparent text-white hover:border-white'
+                      : 'border-contrast-200 bg-white text-foreground hover:border-foreground',
+                  )}
                   onClick={() => setStopped((value) => !value)}
                   type="button"
                 >
@@ -137,7 +164,7 @@ export function ShowroomBand({
           </ul>
         </div>
 
-        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100 @3xl:aspect-[16/10]">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-contrast-100 @3xl:aspect-[16/10]">
           {showrooms.map((showroom, index) => (
             <div
               className={clsx(
