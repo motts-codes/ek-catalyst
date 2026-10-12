@@ -214,13 +214,13 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
         )}
 
         {/* CTAs pinned to the card bottom so they align across the row. Shop is the brand red;
-            Order sample is outlined black and fills black on hover (the same slide as every button). */}
+            Order sample is outlined black and fills light grey on hover, text staying black. */}
         <div className="mt-auto flex flex-wrap gap-2 pt-5">
           <ButtonLink href={line.href} shape="pill" size="small" variant="primary">
             Shop Now
           </ButtonLink>
           <ButtonLink
-            className="!border-[0.5px] border-foreground bg-white text-foreground after:!bg-foreground hover:!text-white"
+            className="!border-[0.5px] border-foreground bg-white text-foreground after:!bg-contrast-100 hover:!text-foreground"
             href={line.orderSampleHref ?? line.href}
             shape="pill"
             size="small"
