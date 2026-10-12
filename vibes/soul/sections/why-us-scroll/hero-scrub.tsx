@@ -111,7 +111,7 @@ export function HeroScrub({
       const start = stage(r.width, r.height, gapAt(0));
       const end = stage(r.width, r.height, 0);
 
-      cue.style.top = `${start.y0 + 400 * start.k - 100}px`;
+      cue.style.top = `${start.y0 + 400 * start.k - 50}px`;
       sign.style.left = `${(r.width - end.sw) / 2 + 800 * end.k}px`;
       sign.style.top = `${end.y0 + 655 * end.k}px`;
 
@@ -348,7 +348,7 @@ export function HeroScrub({
         <canvas aria-hidden className="absolute inset-0 h-full w-full" ref={canvasRef} />
         <div
           aria-hidden
-          className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2.5 font-heading text-xs font-bold uppercase tracking-[0.16em] text-foreground"
+          className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2.5 font-heading text-xs font-bold uppercase tracking-[0.16em] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35)]"
           ref={cueRef}
         >
           <span className="ek-mouse relative block h-[42px] w-[26px] rounded-[14px] border-2 border-current" />

@@ -3,52 +3,72 @@
 import { clsx } from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 
-import { clamp01, onScrollFrame, pinnedProgress, prefersReducedMotion } from './scroll-utils';
+import { prefersReducedMotion } from './scroll-utils';
 
 interface Props {
-  /** One entry per line; words reveal one at a time, line by line, as the section scrolls. */
+  /** One entry per line; words appear one at a time, line by line, once the band is in view. */
   lines: string[];
   /** Words to set in brand red (matched without punctuation, case-insensitive). */
   accentWords?: string[];
   className?: string;
 }
 
-// A pinned statement: three big centred lines (each kept to one line from tablet up) whose words fade and lift
-// into place one by one as you scroll through the section, then the page carries on. Under reduced motion every word is
-// simply there. The text is real text throughout (screen readers get the whole statement).
+const WORD_EVERY_MS = 110;
+
+// A statement band: three big centred lines (each kept to one line from tablet up) whose words
+// fade and lift into place one after another when the band scrolls into view. Plays once. Under
+// reduced motion every word is simply there. The text is real text throughout.
 export function StatementReveal({ lines, accentWords = [], className }: Props) {
+  const ref = useRef<HTMLElement>(null);
   const accents = new Set(accentWords.map((w) => w.toLowerCase()));
   const isAccent = (word: string) => accents.has(word.toLowerCase().replace(/[^a-z0-9']/g, ''));
-  const ref = useRef<HTMLElement>(null);
-  const words = lines.flatMap((line, lineIndex) =>
-    line.split(' ').map((word) => ({ word, lineIndex })),
-  );
-  const [shown, setShown] = useState(() => words.length);
+  const total = lines.reduce((n, line) => n + line.split(' ').length, 0);
   // Server-rendered with every word (reduced motion / no JS); the effect takes over on mount.
+  const [shown, setShown] = useState(() => total);
 
   useEffect(() => {
     const section = ref.current;
 
-    if (!section || prefersReducedMotion()) return;
+    if (!section || prefersReducedMotion() || !('IntersectionObserver' in window)) return;
 
-    return onScrollFrame(() => {
-      // The first word is there the moment the stage pins (no empty screen after the hero); the
-      // rest arrive over the first 70% of the travel, so the finished statement holds for a beat.
-      const progress = clamp01(pinnedProgress(section) / 0.7);
+    setShown(0);
 
-      setShown(1 + Math.round(progress * (words.length - 1)));
-    });
-  }, [words.length]);
+    let timer = 0;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+
+        observer.disconnect();
+
+        let count = 0;
+        const tick = () => {
+          count += 1;
+          setShown(count);
+          if (count < total) timer = window.setTimeout(tick, WORD_EVERY_MS);
+        };
+
+        timer = window.setTimeout(tick, 150);
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(timer);
+    };
+  }, [total]);
 
   let index = 0;
 
   return (
-    <section className={clsx('relative h-[180vh] bg-white @container', className)} ref={ref}>
-      <div className="sticky top-0 flex h-screen items-center justify-center px-6 @xl:px-9">
+    <section className={clsx('bg-white @container', className)} ref={ref}>
+      <div className="mx-auto flex max-w-screen-2xl justify-center px-6 py-20 @xl:px-9 @xl:py-28 @4xl:py-36">
         <p className="max-w-5xl text-center font-heading text-[1.75rem] font-bold leading-[1.15] tracking-tight @md:text-4xl @3xl:text-[44px] @5xl:text-[52px]">
           {lines.map((line, lineIndex) => (
             <span className="block @md:whitespace-nowrap" key={line}>
-              {line.split(' ').map((word, wordIndex) => {
+              {line.split(' ').map((word, wordIndex, words) => {
                 const visible = index < shown;
 
                 index += 1;
@@ -63,7 +83,7 @@ export function StatementReveal({ lines, accentWords = [], className }: Props) {
                     key={`${lineIndex}-${wordIndex}`}
                   >
                     {word}
-                    {wordIndex < line.split(' ').length - 1 ? ' ' : ''}
+                    {wordIndex < words.length - 1 ? ' ' : ''}
                   </span>
                 );
               })}
