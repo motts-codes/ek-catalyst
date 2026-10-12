@@ -25,7 +25,7 @@ const ghostButtonClassName =
 // say yes at equal weight: book the consult, visit a showroom (dropdown), or call.
 export function ClosingBand({
   title = 'What would your kitchen actually cost?',
-  description = 'Get a real range in four quick questions. Rather talk it through? A designer will plan it with you on a video call, or see the cabinets in person at one of our six Connecticut showrooms.',
+  description = 'Got your number? The next step is a person. A designer plans the layout with you on a video call, or you can see the cabinets up close at one of our six Connecticut showrooms. Either way it is free, and you leave with a plan.',
   primary = { label: 'Free design consult', href: '#' },
   secondary,
   showrooms = [],
