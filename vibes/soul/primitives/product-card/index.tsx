@@ -190,7 +190,7 @@ export function ProductCard({
           </div>
         )}
 
-        <div className="mt-2 flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3">
+        <div className="flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-4 pb-3 pt-3 @xs:pt-4">
           <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
             <span
               className={clsx(
@@ -277,7 +277,7 @@ export function ProductCard({
       {showCompare && (
         // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
         // so the small box doesn't read as a circle.
-        <div className="ml-1 mt-auto shrink-0 pt-2 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
+        <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
           <Compare
             colorScheme={colorScheme}
             label={compareLabel}
