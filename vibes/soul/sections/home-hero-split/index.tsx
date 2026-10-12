@@ -64,8 +64,9 @@ export interface HeroOffer {
 const CTA_BASE =
   'relative z-0 inline-flex min-h-9 items-center justify-center overflow-hidden rounded-full border px-3.5 text-[13px] font-semibold transition-colors duration-300 after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:transition-[opacity,transform] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:after:translate-x-0 @xl:min-h-10 @xl:px-5 @xl:text-sm';
 const CTA_COLOR: Record<HeroCtaColor, string> = {
-  // Red and black fill to white with black text; white fills to black with white text.
-  red: 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white after:bg-white hover:text-foreground',
+  // Red fills to black (like the nav's Free Design Consult); black fills to white with black
+  // text; white fills to black with white text.
+  red: 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white after:bg-black hover:border-black',
   black: 'border-foreground bg-foreground text-white after:bg-white hover:text-foreground',
   white: 'border-white bg-white text-foreground after:bg-foreground hover:text-white',
 };
