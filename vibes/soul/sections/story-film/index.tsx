@@ -134,74 +134,76 @@ export function StoryFilm({
         )}
       </div>
 
-      {/* The film */}
-      <div className="relative mt-8 aspect-[49/20] overflow-hidden rounded-3xl bg-contrast-100 @4xl:mt-10">
-        <video
-          className="h-full w-full object-cover"
-          controls={started}
-          playsInline
-          poster={video.poster}
-          preload="metadata"
-          ref={videoRef}
-          src={video.src}
-        >
-          <track kind="captions" />
-        </video>
-        {!started && (
-          <button
-            aria-label={`Play: ${video.title ?? title}`}
-            className="group absolute inset-0 flex items-center justify-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white"
-            onClick={() => play()}
-            type="button"
+      {/* The film, centred at 80% of the band on wide screens, chapters aligned under it. */}
+      <div className="mx-auto mt-8 w-full @3xl:w-4/5 @4xl:mt-10">
+        <div className="relative aspect-[49/20] overflow-hidden rounded-3xl bg-contrast-100">
+          <video
+            className="h-full w-full object-cover"
+            controls={started}
+            playsInline
+            poster={video.poster}
+            preload="metadata"
+            ref={videoRef}
+            src={video.src}
           >
-            <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white/90 text-foreground shadow-[0_12px_40px_-12px_rgb(0_0_0/0.5)] transition-transform duration-300 ease-smooth group-hover:scale-105">
-              <Play aria-hidden className="ml-1" fill="currentColor" size={28} strokeWidth={0} />
-            </span>
-          </button>
-        )}
-      </div>
+            <track kind="captions" />
+          </video>
+          {!started && (
+            <button
+              aria-label={`Play: ${video.title ?? title}`}
+              className="group absolute inset-0 flex items-center justify-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white"
+              onClick={() => play()}
+              type="button"
+            >
+              <span className="flex h-20 w-20 items-center justify-center rounded-full bg-white/90 text-foreground shadow-[0_12px_40px_-12px_rgb(0_0_0/0.5)] transition-transform duration-300 ease-smooth group-hover:scale-105">
+                <Play aria-hidden className="ml-1" fill="currentColor" size={28} strokeWidth={0} />
+              </span>
+            </button>
+          )}
+        </div>
 
-      {/* Chapters: a line per chapter that fills as the film plays through it. */}
-      {chapters.length > 0 && (
-        <div
-          aria-label="Chapters"
-          className="mt-5 grid gap-x-4 gap-y-3 @lg:grid-cols-2 @3xl:grid-cols-4"
-          role="group"
-        >
-          {chapters.map((chapter, index) => {
-            const progress = chapterProgress(index);
-            const active = activeIndex === index;
+        {/* Chapters: a line per chapter that fills as the film plays through it. */}
+        {chapters.length > 0 && (
+          <div
+            aria-label="Chapters"
+            className="mt-5 grid gap-x-4 gap-y-3 @lg:grid-cols-2 @3xl:grid-cols-4"
+            role="group"
+          >
+            {chapters.map((chapter, index) => {
+              const progress = chapterProgress(index);
+              const active = activeIndex === index;
 
-            return (
-              <button
-                aria-current={active ? 'true' : undefined}
-                className="group text-left focus-visible:outline-none"
-                key={chapter.label}
-                onClick={() => play(chapter.start)}
-                type="button"
-              >
-                <span
-                  aria-hidden
-                  className="block h-0.5 w-full overflow-hidden rounded-full bg-contrast-200"
+              return (
+                <button
+                  aria-current={active ? 'true' : undefined}
+                  className="group text-left focus-visible:outline-none"
+                  key={chapter.label}
+                  onClick={() => play(chapter.start)}
+                  type="button"
                 >
                   <span
-                    className="block h-full bg-foreground transition-[width] duration-300 ease-linear"
-                    style={{ width: `${progress * 100}%` }}
-                  />
-                </span>
-                <span
-                  className={clsx(
-                    'mt-3 block text-sm font-semibold transition-colors group-hover:text-foreground group-focus-visible:text-[var(--button-primary-background,#d90716)]',
-                    active ? 'text-foreground' : 'text-contrast-500',
-                  )}
-                >
-                  {chapter.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      )}
+                    aria-hidden
+                    className="block h-0.5 w-full overflow-hidden rounded-full bg-contrast-200"
+                  >
+                    <span
+                      className="block h-full bg-[var(--button-primary-background,#d90716)] transition-[width] duration-300 ease-linear"
+                      style={{ width: `${progress * 100}%` }}
+                    />
+                  </span>
+                  <span
+                    className={clsx(
+                      'mt-3 block text-sm font-semibold transition-colors group-hover:text-foreground group-focus-visible:text-[var(--button-primary-background,#d90716)]',
+                      active ? 'text-foreground' : 'text-contrast-500',
+                    )}
+                  >
+                    {chapter.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </HomeSection>
   );
 }
