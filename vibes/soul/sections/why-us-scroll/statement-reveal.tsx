@@ -8,15 +8,17 @@ import { clamp01, onScrollFrame, pinnedProgress, prefersReducedMotion } from './
 interface Props {
   /** One entry per line; words reveal one at a time, line by line, as the section scrolls. */
   lines: string[];
-  /** Lines (by index) to set in brand red. */
-  accentLines?: number[];
+  /** Words to set in brand red (matched without punctuation, case-insensitive). */
+  accentWords?: string[];
   className?: string;
 }
 
-// A pinned statement: three big centred lines whose words fade and lift into place one by one as
-// you scroll through the section, then the page carries on. Under reduced motion every word is
+// A pinned statement: three big centred lines (each kept to one line from tablet up) whose words fade and lift
+// into place one by one as you scroll through the section, then the page carries on. Under reduced motion every word is
 // simply there. The text is real text throughout (screen readers get the whole statement).
-export function StatementReveal({ lines, accentLines = [], className }: Props) {
+export function StatementReveal({ lines, accentWords = [], className }: Props) {
+  const accents = new Set(accentWords.map((w) => w.toLowerCase()));
+  const isAccent = (word: string) => accents.has(word.toLowerCase().replace(/[^a-z0-9']/g, ''));
   const ref = useRef<HTMLElement>(null);
   const words = lines.flatMap((line, lineIndex) =>
     line.split(' ').map((word) => ({ word, lineIndex })),
@@ -44,16 +46,9 @@ export function StatementReveal({ lines, accentLines = [], className }: Props) {
   return (
     <section className={clsx('relative h-[220vh] bg-white @container', className)} ref={ref}>
       <div className="sticky top-0 flex h-screen items-center justify-center px-6 @xl:px-9">
-        <p className="max-w-5xl text-center font-heading text-[2rem] font-bold leading-[1.15] tracking-tight @md:text-5xl @3xl:text-6xl @5xl:text-7xl">
+        <p className="max-w-5xl text-center font-heading text-[1.75rem] font-bold leading-[1.15] tracking-tight @md:text-4xl @3xl:text-[44px] @5xl:text-[52px]">
           {lines.map((line, lineIndex) => (
-            <span
-              className={clsx(
-                'block',
-                accentLines.includes(lineIndex) &&
-                  'text-[var(--button-primary-background,#d90716)]',
-              )}
-              key={line}
-            >
+            <span className="block @md:whitespace-nowrap" key={line}>
               {line.split(' ').map((word, wordIndex) => {
                 const visible = index < shown;
 
@@ -63,6 +58,7 @@ export function StatementReveal({ lines, accentLines = [], className }: Props) {
                   <span
                     className={clsx(
                       'inline-block transition-[opacity,transform] duration-500 ease-smooth motion-reduce:transition-none',
+                      isAccent(word) && 'text-[var(--button-primary-background,#d90716)]',
                       visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0',
                     )}
                     key={`${lineIndex}-${wordIndex}`}

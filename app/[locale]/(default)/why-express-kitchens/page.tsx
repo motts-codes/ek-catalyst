@@ -47,7 +47,7 @@ export default async function WhyExpressKitchens({
         title="Why Express Kitchens: simplifying kitchens for 110+ years"
       />
       <StatementReveal
-        accentLines={[1, 2]}
+        accentWords={['wait', 'price']}
         lines={[
           "The kitchen you've been picturing.",
           'Without the wait.',
