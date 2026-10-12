@@ -43,11 +43,14 @@ const badge = (file: string, alt: string, width: number, height: number) => (
   />
 );
 
-const paymentIcons = [
+const trustBadges = [
   badge('badge_nkba', 'NKBA member', 69, 23),
   badge('badge_kcma', 'KCMA certified', 24, 23),
   badge('badge_carb2', 'CARB2 compliant', 61, 24),
   badge('badge_a_plus', 'BBB A+ rating', 42, 23),
+];
+
+const paymentIcons = [
   badge('card_amex', 'American Express', 51, 30),
   badge('card_discover', 'Discover', 44, 30),
   badge('card_mastercard', 'Mastercard', 51, 30),
@@ -107,6 +110,7 @@ export const Footer = async () => {
       paymentIcons={paymentIcons}
       sections={FOOTER_SECTIONS}
       socialMediaLinks={socialMediaLinks}
+      trustBadges={trustBadges}
     />
   );
 };

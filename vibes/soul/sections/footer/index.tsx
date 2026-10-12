@@ -63,6 +63,8 @@ export interface FooterProps {
   /** Legacy address/phone block — superseded by `contactPanel` when both are given. */
   contactInformation?: Streamable<ContactInformation>;
   paymentIcons?: Streamable<ReactNode[]>;
+  /** Membership / compliance marks, shown in a row above the legal strip, right-aligned. */
+  trustBadges?: ReactNode[];
   socialMediaLinks?: Streamable<SocialMediaLink[]>;
   contactTitle?: string;
   className?: string;
@@ -98,6 +100,7 @@ export const Footer = ({
   contactTitle = 'Contact Us',
   contactInformation: streamableContactInformation,
   paymentIcons: streamablePaymentIcons,
+  trustBadges = [],
   socialMediaLinks: streamableSocialMediaLinks,
   copyright: streamableCopyright,
   className,
@@ -272,6 +275,13 @@ export const Footer = ({
           )}
         </Stream>
       </div>
+
+      {/* Membership / compliance marks, right-aligned above the legal strip. */}
+      {trustBadges.length > 0 && (
+        <div className="mx-auto flex max-w-screen-2xl justify-start px-6 pb-5 @xl:px-9 @3xl:justify-end @4xl:px-14">
+          <div className="flex flex-wrap items-center gap-4">{trustBadges}</div>
+        </div>
+      )}
 
       {/* Legal strip */}
       <div className="border-t border-[var(--footer-border-top,hsl(var(--contrast-100)))]">
