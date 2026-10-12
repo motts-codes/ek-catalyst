@@ -105,17 +105,17 @@ export function ProductCard({
   return (
     <article
       className={clsx(
-        // Same shape as the home card: no card chrome, the photo on its own white bordered
-        // panel and the copy straight on the page below it.
-        'group flex h-full min-w-0 max-w-md flex-col font-[family-name:var(--card-font-family,var(--font-family-body))] @container',
+        // Same shape as the home card: no card chrome at rest, the photo on its own white panel
+        // and the copy straight on the page below it. On hover the whole card turns white, lifts
+        // and picks up the category tiles' soft shadow, so it reads as one object.
+        'group flex h-full min-w-0 max-w-md flex-col rounded-2xl font-[family-name:var(--card-font-family,var(--font-family-body))] transition-[transform,box-shadow,background-color] duration-300 ease-out @container hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
         className,
       )}
     >
       <div className="relative flex flex-1 flex-col">
         <div
           className={clsx(
-            // No outline at rest; a light pink hairline (the compare-table pink) appears on hover.
-            'relative overflow-hidden rounded-2xl border border-transparent transition-colors duration-200 group-hover:border-[#fcb6bb]',
+            'relative overflow-hidden rounded-2xl',
             {
               '5:6': 'aspect-[5/6]',
               '3:4': 'aspect-[3/4]',
