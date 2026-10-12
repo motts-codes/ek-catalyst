@@ -224,6 +224,10 @@ export const THREE_WAYS: RowCard[] = [
       'Answer four quick questions and get a real price range for your kitchen. No email, no sales call.',
     ctaLabel: 'Price my kitchen',
     href: ESTIMATOR_HREF,
+    image: {
+      src: '/images/home/ways/estimator.webp',
+      alt: 'A couple at their kitchen island, checking a price range on a phone',
+    },
     imageLabel: 'Estimator on a phone',
   },
   {
