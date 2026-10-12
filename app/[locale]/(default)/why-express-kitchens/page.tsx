@@ -13,13 +13,7 @@ import {
   StatementReveal,
   WaitBand,
 } from '@/vibes/soul/sections/why-us-scroll';
-import {
-  ESTIMATOR_HREF,
-  FREE_DESIGN_HREF,
-  HOME_REVIEWS,
-  SAMPLES_HREF,
-  SHOWROOMS,
-} from '~/lib/home/home-content';
+import { FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS, THREE_WAYS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'Why Express Kitchens',
@@ -209,34 +203,10 @@ export default async function WhyExpressKitchens({
         summary="4.5 on Google · 360+ reviews · BBB A+"
         title="In their words"
       />
+      {/* Same three cards as the home page's "Not sure yet?" band, so the two stay in step. */}
       <CardsRow
-        cards={[
-          {
-            title: 'I want a number',
-            description:
-              'Answer four quick questions and get a real price range for your kitchen. No email, no sales call.',
-            ctaLabel: 'Price my kitchen',
-            href: ESTIMATOR_HREF,
-            imageLabel: 'Estimator on a phone',
-          },
-          {
-            title: 'I want to hold it',
-            description:
-              'Order a real door sample to check against your walls, floors and countertop in your own light. First two free with FREESAMPLES.',
-            ctaLabel: 'Order free samples',
-            href: SAMPLES_HREF,
-            imageLabel: 'Two door samples',
-          },
-          {
-            title: 'I want a person',
-            description:
-              'A designer plans your layout with you, in a showroom or on a video call. Free, with no obligation to buy.',
-            ctaLabel: 'Book a free consult',
-            href: FREE_DESIGN_HREF,
-            primary: true,
-            imageLabel: 'A designer with a homeowner',
-          },
-        ]}
+        cards={THREE_WAYS}
+        imageStyle="plain"
         kicker="Where next"
         title="Pick the way you like to decide."
       />

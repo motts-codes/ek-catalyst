@@ -63,16 +63,16 @@ export function HomeProductCard({
   return (
     <article
       className={clsx(
-        // No card chrome: the photo sits on its own white, bordered panel and the copy below it
-        // sits straight on the band.
-        'group flex h-full min-w-0 max-w-md flex-col font-[family-name:var(--card-font-family,var(--font-family-body))] @container',
+        // No card chrome at rest: the photo on its own white panel, the copy straight on the band.
+        // On hover the whole card turns white, lifts and shadows — same as the listing card.
+        'group flex h-full min-w-0 max-w-md flex-col rounded-2xl font-[family-name:var(--card-font-family,var(--font-family-body))] transition-[transform,box-shadow,background-color] duration-300 ease-out @container hover:-translate-y-1 hover:bg-white hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
         className,
       )}
     >
       <div className="relative flex flex-1 flex-col">
         <div
           className={clsx(
-            'relative overflow-hidden rounded-2xl border border-contrast-100 transition-colors duration-200 group-hover:border-contrast-200',
+            'relative overflow-hidden rounded-2xl',
             {
               '5:6': 'aspect-[5/6]',
               '3:4': 'aspect-[3/4]',
@@ -134,7 +134,7 @@ export function HomeProductCard({
           </div>
         )}
 
-        <div className="mt-2 flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-1 @xs:mt-3">
+        <div className="flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-4 pb-3 pt-3 @xs:pt-4">
           <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
             <span
               className={clsx(
@@ -236,7 +236,7 @@ export function HomeProductCard({
       {showCompare && (
         // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
         // so the small box doesn't read as a circle.
-        <div className="ml-1 mt-auto shrink-0 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
+        <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
           <Compare
             colorScheme={colorScheme}
             label={compareLabel}
