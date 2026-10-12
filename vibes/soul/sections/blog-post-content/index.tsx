@@ -5,6 +5,8 @@ import { Breadcrumb, Breadcrumbs, BreadcrumbsSkeleton } from '@/vibes/soul/secti
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
+import { OnThisPage, type TocItem } from './on-this-page';
+
 interface Tag {
   label: string;
   link: {
@@ -18,10 +20,7 @@ interface Image {
   alt: string;
 }
 
-export interface TocItem {
-  id: string;
-  text: string;
-}
+export type { TocItem };
 
 export interface BlogPostContentBlogPost {
   title: string;
@@ -109,26 +108,10 @@ export function BlogPostContent({
               <div className={clsx(containerClassName, 'py-10 @xl:py-14')}>
                 <div className="grid gap-10 @3xl:grid-cols-[260px_minmax(0,1fr)] @3xl:gap-16 @5xl:grid-cols-[300px_minmax(0,1fr)]">
                   {toc.length > 0 && (
-                    <nav
-                      aria-label="On this page"
+                    <OnThisPage
                       className="@3xl:sticky @3xl:top-28 @3xl:self-start @3xl:border-l @3xl:border-contrast-100 @3xl:pl-6"
-                    >
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-contrast-500">
-                        On this page
-                      </p>
-                      <ol className="mt-4 space-y-2.5 text-sm">
-                        {toc.map((item) => (
-                          <li key={item.id}>
-                            <a
-                              className="block text-contrast-500 transition-colors hover:text-[var(--button-primary-background,#d90716)] focus-visible:text-[var(--button-primary-background,#d90716)] focus-visible:outline-none"
-                              href={`#${item.id}`}
-                            >
-                              {item.text}
-                            </a>
-                          </li>
-                        ))}
-                      </ol>
-                    </nav>
+                      items={toc}
+                    />
                   )}
                   <article
                     className={clsx(
