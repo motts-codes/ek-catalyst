@@ -4,7 +4,6 @@ import { setRequestLocale } from 'next-intl/server';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import {
   CabinetFilm,
@@ -65,136 +64,101 @@ export default async function WhyExpressKitchens({
         ]}
       />
       <WaitBand
-        description="A custom kitchen usually takes 14 weeks to arrive. Ours are already built, all-plywood, and sitting in stock in Connecticut."
+        description="Custom cabinets are usually built after you order, so you wait in line. Ours are already built and on the shelf in Connecticut. Quick-ship collections ship the next day, RTA in 2 weeks and assembled in 3."
         kicker="Why wait 14 weeks?"
         lanes={[
           { label: 'Industry average', value: '14 weeks', width: 100 },
-          { label: 'Express Kitchens', value: '3 weeks', width: 21.4, highlight: true },
+          { label: 'EK assembled', value: '3 weeks', width: 21.4, highlight: true },
+          { label: 'EK RTA', value: '2 weeks', width: 14.3, highlight: true },
+          { label: 'EK quick-ship', value: 'Next day', width: 1.5, highlight: true },
         ]}
-        note="Bars are to scale: 3 weeks against 14."
-        title="The industry mistook waiting for quality."
+        note="Bars are to scale."
+        source="14 weeks: typical custom-cabinet lead time reported by US kitchen designers, 2025–26."
+        title="Most kitchens take 14 weeks. Ours don't."
       />
       <CabinetFilm
         features={[
           {
-            title: 'All-plywood construction',
-            description: 'No particleboard anywhere in the box.',
+            title: 'All-plywood box',
+            description: 'No particleboard to swell when water gets in.',
           },
-          { title: 'Soft-close hinges', description: 'Every door settles shut on its own.' },
+          { title: 'Soft-close hinges', description: 'No banging doors, no pinched fingers.' },
+          { title: 'Dovetail drawers', description: 'Solid wood, joined like good furniture.' },
           {
-            title: 'Dovetail drawer boxes',
-            description: 'Solid wood, joined the way furniture is.',
+            title: 'Full-extension glides',
+            description: 'Reach the back of the drawer without kneeling.',
           },
           {
-            title: 'Undermount drawer glides',
-            description: 'Full extension, hidden under the drawer.',
+            title: 'Precision-made by robots',
+            description:
+              'Robots cut, drill and paint every part, so doors line up, gaps stay even and the finish is the same on every door.',
           },
-          { title: 'BBB A+ rating', description: 'And 5,000+ customer reviews behind it.' },
         ]}
-        kicker="What makes an EK cabinet"
-        title="The same box, whether you pay showroom or outlet price."
+        kicker="What's inside every EK cabinet"
+        title="Built to take the slam, the spill and the 10th year."
       />
       <FactoryRail
-        kicker="The factory · Bristol, Connecticut"
+        kicker="Our factory · Connecticut"
         stations={[
           {
             title: 'Cut',
-            description: 'AI-guided CNC machines cut every plywood panel.',
+            description: 'Robots cut every panel to the same exact size.',
             imageLabel: 'EK plant photo: CNC line',
           },
           {
             title: 'Paint',
-            description: 'Robotic sprayers lay down the finish.',
+            description: 'Robotic sprayers lay an even finish on every door.',
             imageLabel: 'EK plant photo: paint robots',
           },
           {
             title: 'Assemble',
-            description: 'Boxes are built and checked by hand.',
+            description: 'Assembled cabinets are put together and checked by hand.',
             imageLabel: 'EK plant photo: assembly',
           },
           {
             title: 'Stock',
-            description: '50,000 finished cabinets wait on the racks.',
+            description: '50,000 finished cabinets on the racks.',
             imageLabel: 'EK plant photo: warehouse racks',
           },
           {
             title: 'Ship',
-            description: 'Your order leaves within days.',
+            description: 'Quick-ship the next day. RTA in 2 weeks, assembled in 3.',
             imageLabel: 'EK plant photo: loading dock',
           },
         ]}
-        title="300,000 square feet. Run by robots, checked by people."
-      />
-      <PageBreadcrumbs
-        breadcrumbs={[{ label: 'Why Express Kitchens', href: '/why-express-kitchens' }]}
-      />
-      <PageHero
-        actions={[
-          { label: 'Shop cabinets', href: '/cabinets', primary: true },
-          { label: 'Free design consult', href: FREE_DESIGN_HREF },
-        ]}
-        description="Would you rather save with ready-to-assemble, or have the building done for you? With us you don't have to choose between the two companies that offer each — it's the same cabinet, the same finish and the same warranty either way, and you decide. Every one of them is built in our own factory, kept in stock in Bristol and shipped in two weeks. That's what a website with a warehouse somewhere can't say to you."
-        headingLevel={2}
-        imageLabel="A finished Connecticut kitchen, with the family in it"
-        kicker="Why Express Kitchens"
-        title="The kitchen you want, your way — made and stocked in Connecticut"
+        title="300,000 sq ft. Robots do the precise work. People do the checking."
       />
       <CardsRow
         cards={[
           {
-            title: 'We make it',
+            title: 'Assembled or RTA, your call',
             description:
-              "Star Cabinetry is our own brand, built in our Bristol factory. That's why your price is manufacturer-direct, and why the whites match from the wall cabinets to the base run.",
-            ctaLabel: "See how it's built",
+              'The same cabinet, finish and warranty either way. Pay less and put it together yourself, or have it arrive built.',
+            ctaLabel: 'Compare the two',
             href: '/cabinets',
-            imageLabel: 'The cabinet line in the Bristol factory',
-          },
-          {
-            title: 'We stock it',
-            description:
-              'There are 50,000 cabinets on the shelf in Connecticut right now. Two weeks is a real promise because your cabinets are already here, not being built to order overseas.',
-            ctaLabel: 'Shop in-stock cabinets',
-            href: '/cabinets/assembled-cabinets',
-            imageLabel: 'Racked stock in the warehouse',
-          },
-          {
-            title: 'You can see it',
-            description:
-              "Six showrooms across Connecticut where you can open a drawer, hold a door and meet the person who'll plan your kitchen.",
-            ctaLabel: 'Find a showroom',
-            href: '/showrooms',
-            imageLabel: 'A showroom, drawer open',
+            imageLabel: 'The same cabinet, flat-packed and built',
           },
           {
             title: 'The price is on the page',
             description:
-              'Every collection shows its 10×10 price. No quote wall, no "call for pricing". And if you bring us a competitor\'s quote, we\'ll beat it or pay you $500.',
-            ctaLabel: 'Price match guarantee',
-            href: '#',
+              'Every collection shows its 10x10 kitchen price. No "call for pricing," no form to fill in.',
+            ctaLabel: 'Shop cabinets',
+            href: '/cabinets/assembled-cabinets',
             imageLabel: 'A collection card with its price',
           },
           {
-            title: 'Free design, from a named person',
-            description:
-              'A Project Manager plans your kitchen with you — at home, in a showroom or on a call — and gives you a fixed price. No deposit, and you keep the plan.',
-            ctaLabel: 'Free design consult',
-            href: FREE_DESIGN_HREF,
-            imageLabel: 'A Project Manager with a homeowner',
-          },
-          {
-            title: 'Hold it before you buy',
-            description:
-              'Your first two quarter-door samples are free with the code FREESAMPLES. The real door, in the real finish, in your own light.',
-            ctaLabel: 'Order samples',
-            href: SAMPLES_HREF,
-            imageLabel: 'Two quarter-door samples',
+            title: 'Beat our price, get $500',
+            description: "Bring a competitor's quote. We'll beat it, or pay you $500.",
+            ctaLabel: 'See the guarantee',
+            href: '/price-match-guarantee',
+            imageLabel: 'A quote and a cheque',
           },
         ]}
         columns={3}
-        description="Each one is a fact you can check for yourself, on this site or in a showroom."
-        kicker="Six reasons"
+        description="Each one you can check on this site or in a showroom."
+        kicker="Three things you won't find together anywhere else"
         tint
-        title="Proven, not claimed"
+        title="Proven, not promised."
       />
       <DeliveryLadder
         columns={[
@@ -204,13 +168,13 @@ export default async function WhyExpressKitchens({
           'Big-box stores',
           'Custom cabinet shops',
         ]}
-        description="We've kept only the rows where the answer is different, and used categories rather than names so you can check them yourself."
+        description="Only the rows where the answers differ. We've used store types, not names, so you can check for yourself."
         rows={[
           ['!Made by the company that sells it', '✓', '—', '—', '✓'],
-          ['!In stock, ships in 2 weeks', '✓', 'Some', '—', '—'],
+          ['!In stock, ships in 2–3 weeks (quick-ship next day)', '✓', 'Some', '—', '—'],
           ['!Showrooms you can visit', '✓ Six in CT', '—', '✓', 'Some'],
           ['!Price shown on every collection', '✓', '✓', '—', '—'],
-          ['!Free design with a named Project Manager', '✓', 'Online only', '✓', '✓'],
+          ['!Free design with a dedicated designer', '✓', 'Online only', '✓', '✓'],
           ['!Free door samples', '✓ First two', 'Paid', '—', '—'],
           ['!RTA and assembled — your choice', '✓', 'RTA only', 'Assembled only', 'Assembled only'],
           ['!Price match guarantee', '✓', 'Some', '✓', '—'],
@@ -221,8 +185,7 @@ export default async function WhyExpressKitchens({
       <ReviewMarquee
         action={{ label: 'Read all reviews', href: '/reviews' }}
         reviews={HOME_REVIEWS}
-        summary="4.5 · 360+ Google reviews"
-        tint
+        summary="4.5 on Google · 360+ reviews · BBB A+"
         title="In their words"
       />
       <CardsRow
@@ -230,7 +193,7 @@ export default async function WhyExpressKitchens({
           {
             title: 'I want a number',
             description:
-              'The estimator gives you a real range for your room in four steps. Nothing is gated behind a form.',
+              'Answer four quick questions and get a real price range for your kitchen. No email, no sales call.',
             ctaLabel: 'Price my kitchen',
             href: ESTIMATOR_HREF,
             imageLabel: 'Estimator on a phone',
@@ -238,28 +201,30 @@ export default async function WhyExpressKitchens({
           {
             title: 'I want to hold it',
             description:
-              'Your first two quarter-door samples are free. The real door, in the real finish, in your light.',
+              'Order a real door sample to check against your walls, floors and countertop in your own light. First two free with FREESAMPLES.',
             ctaLabel: 'Order free samples',
             href: SAMPLES_HREF,
-            imageLabel: 'Two quarter-door samples',
+            imageLabel: 'Two door samples',
           },
           {
             title: 'I want a person',
             description:
-              'A Project Manager plans it with you — at home, in a showroom or on a call.',
-            ctaLabel: 'Free design consult',
+              'A designer plans your layout with you, in a showroom or on a video call. Free, with no obligation to buy.',
+            ctaLabel: 'Book a free consult',
             href: FREE_DESIGN_HREF,
             primary: true,
             imageLabel: 'A designer with a homeowner',
           },
         ]}
         kicker="Where next"
-        title="Three ways to be sure"
+        title="Pick the way you like to decide."
       />
       <ClosingBand
-        primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
+        description="Bring a photo, a sketch or nothing at all. Plan it on a video call or in one of our six Connecticut showrooms, and leave with a layout and a price. Free."
+        primary={{ label: 'Book a free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}
         tint
+        title="Seen enough? Sit down with a designer."
       />
     </>
   );

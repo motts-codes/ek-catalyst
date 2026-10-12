@@ -49,7 +49,7 @@ export function MetricsTicker({ metrics, duration = 60, className }: Props) {
         <li
           aria-hidden={hidden || undefined}
           className={clsx(
-            'flex shrink-0 items-center gap-3 border-l border-contrast-200 px-7 first:border-l-0 @xl:px-10',
+            'flex shrink-0 items-center gap-3.5 border-l border-[#fcb6bb] px-8 first:border-l-0 @xl:px-12',
             hidden && 'ek-copy',
           )}
           key={`${metric.label}${hidden ? '-copy' : ''}`}
@@ -57,13 +57,13 @@ export function MetricsTicker({ metrics, duration = 60, className }: Props) {
           <Icon
             aria-hidden
             className="shrink-0 text-[var(--button-primary-background,#d90716)]"
-            size={18}
+            size={22}
             strokeWidth={1.75}
           />
-          <span className="font-heading text-lg font-bold leading-none text-[var(--button-primary-background,#d90716)] @xl:text-xl">
+          <span className="font-heading text-2xl font-bold leading-none text-[var(--button-primary-background,#d90716)] @xl:text-[28px]">
             {metric.value}
           </span>
-          <span className="whitespace-nowrap text-xs text-contrast-500 @xl:text-sm">
+          <span className="whitespace-nowrap text-sm text-[#404040] @xl:text-base">
             {metric.label}
           </span>
         </li>
@@ -74,7 +74,7 @@ export function MetricsTicker({ metrics, duration = 60, className }: Props) {
     <section
       aria-label="Express Kitchens in numbers"
       className={clsx(
-        'ek-ticker relative overflow-hidden border-y border-contrast-100 bg-[#f9fafd] @container',
+        'ek-ticker relative overflow-hidden border-y border-[#fcb6bb] bg-[#fdf8f8] @container',
         className,
       )}
       data-paused={paused}
@@ -85,7 +85,7 @@ export function MetricsTicker({ metrics, duration = 60, className }: Props) {
         .ek-ticker:hover .ek-track, .ek-ticker:focus-within .ek-track, .ek-ticker[data-paused='true'] .ek-track { animation-play-state: paused; }
         @media (prefers-reduced-motion: reduce) { .ek-ticker .ek-track { animation: none; flex-wrap: wrap; width: auto; } .ek-ticker .ek-copy { display: none; } }
       `}</style>
-      <ul className="ek-track flex w-max items-center py-3.5 will-change-transform">
+      <ul className="ek-track flex w-max items-center py-5 will-change-transform">
         {row(false)}
         {row(true)}
       </ul>
