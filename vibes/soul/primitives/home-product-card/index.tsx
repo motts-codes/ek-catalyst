@@ -41,7 +41,6 @@ export function HomeProductCard({
     title,
     subtitle,
     badge,
-    badges,
     salePercent,
     deliveryMessage,
     price,
@@ -122,21 +121,8 @@ export function HomeProductCard({
             </Badge>
           )}
         </div>
-        {/* Marketing pills — positioned against the (non-clipped) card wrapper, NOT the image
-            container (which is overflow-hidden and would clip them at the corner). */}
-        {badges != null && badges.length > 0 && (
-          <div className="absolute left-0 top-0 flex flex-wrap items-start gap-1">
-            {badges.map((b) => (
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
-                key={b.label}
-                style={{ backgroundColor: b.color, color: b.textColor }}
-              >
-                {b.label}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* No marketing pills (New / Bestseller / Trending) here: the tab the card sits in
+            already says so. */}
 
         {/* Sale blurb — top-right, driven by the __sale custom field (percentage). Placeholder red
             disc for now; will be replaced with the supplied SVG shape. "UP TO / N% / OFF" in 3 lines. */}
