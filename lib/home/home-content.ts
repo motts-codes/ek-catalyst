@@ -334,13 +334,46 @@ export const HOME_REVIEWS: CustomerReview[] = [
   },
 ];
 
+const showroomImage = (file: string, alt: string) => ({
+  src: `/images/home/showrooms/${file}.webp`,
+  alt,
+});
+
 export const SHOWROOMS: Showroom[] = [
-  { name: 'Brookfield', href: '/showrooms/brookfield' },
-  { name: 'New London', href: '/showrooms/new-london' },
-  { name: 'Newington', href: '/showrooms/newington' },
-  { name: 'Orange', href: '/showrooms/orange' },
-  { name: 'Stamford', href: '/showrooms/stamford' },
-  { name: 'Bristol', href: '/showrooms/bristol', badge: 'factory outlet' },
+  {
+    name: 'Brookfield',
+    href: '/showrooms/brookfield',
+    image: showroomImage('brookfield', 'Door samples on a navy wall above a granite-topped island'),
+  },
+  {
+    name: 'New London',
+    href: '/showrooms/new-london',
+    image: showroomImage(
+      'new-london',
+      'A white shaker display kitchen with a row of tall door samples',
+    ),
+  },
+  {
+    name: 'Newington',
+    href: '/showrooms/newington',
+    image: showroomImage('newington', 'Granite and quartz slabs along a white brick wall'),
+  },
+  {
+    name: 'Orange',
+    href: '/showrooms/orange',
+    image: showroomImage('orange', 'Two display boards of cabinet handles and knobs'),
+  },
+  {
+    name: 'Stamford',
+    href: '/showrooms/stamford',
+    image: showroomImage('stamford', 'A row of cabinet vignettes in different finishes'),
+  },
+  {
+    name: 'Bristol',
+    href: '/showrooms/bristol',
+    badge: 'factory outlet',
+    image: showroomImage('bristol', 'Door and countertop samples laid out on an island'),
+  },
 ];
 
 export const STORY = {
