@@ -1,14 +1,11 @@
 'use client';
 
 import { getFormProps, SubmissionResult, useForm } from '@conform-to/react';
-import { clsx } from 'clsx';
 import { ReactNode, startTransition, useActionState, useEffect } from 'react';
 import { requestFormReset } from 'react-dom';
 
 import { toast } from '@/vibes/soul/primitives/toaster';
 import { useRouter } from '~/i18n/routing';
-
-import { AddToCartIcon } from './cta-icons';
 
 interface State {
   lastResult: SubmissionResult | null;
@@ -25,11 +22,12 @@ interface Props {
   action: ProductCardAddToCartAction;
 }
 
-/**
- * Icon-only "Add to Cart" CTA for no-option products: a red-outline circle with a cart icon that
- * fires the add-to-cart action directly (no label, no hover-reveal — the cart icon is universally
- * understood). Shares the PDP button's slide-fill hover.
- */
+// Shared CTA look for the card (Add to Cart / View Options): a full-width pill, red outline and
+// red label at rest, filling red left-to-right on hover like the home card's "Shop Now".
+export const CTA_BUTTON_CLASS =
+  'relative inline-flex min-h-9 w-full items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,#d90716)] bg-transparent px-4 text-sm font-semibold text-[var(--button-primary-background,#d90716)] transition-colors after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,#d90716)] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0 disabled:opacity-50';
+
+// "Add to Cart" CTA for no-option products: fires the add-to-cart action directly.
 export function AddToCartCta({ id, action }: Props) {
   const router = useRouter();
   const [{ lastResult, successMessage }, formAction, pending] = useActionState(action, {
@@ -63,15 +61,8 @@ export function AddToCartCta({ id, action }: Props) {
   return (
     <form {...getFormProps(form)} action={formAction}>
       <input name="id" type="hidden" value={id} />
-      <button
-        aria-label="Add to cart"
-        className={clsx(
-          'group/cta relative inline-flex size-7 items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,hsl(var(--primary)))] bg-transparent text-[var(--button-primary-background,hsl(var(--primary)))] transition-colors after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,hsl(var(--primary)))] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0 disabled:opacity-50',
-        )}
-        disabled={pending}
-        type="submit"
-      >
-        <AddToCartIcon className="size-5" />
+      <button className={CTA_BUTTON_CLASS} disabled={pending} type="submit">
+        Add to Cart
       </button>
     </form>
   );

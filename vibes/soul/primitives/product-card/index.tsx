@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { Truck } from 'lucide-react';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
@@ -8,9 +9,8 @@ import { Link } from '~/components/link';
 
 import { Rating } from '../rating';
 
-import { AddToCartCta, ProductCardAddToCartAction } from './add-to-cart-cta';
+import { AddToCartCta, CTA_BUTTON_CLASS, ProductCardAddToCartAction } from './add-to-cart-cta';
 import { Compare } from './compare';
-import { OptionsIcon } from './cta-icons';
 
 export type { ProductCardAddToCartAction } from './add-to-cart-cta';
 
@@ -105,17 +105,16 @@ export function ProductCard({
   return (
     <article
       className={clsx(
-        // White card with a border wrapping the whole thing, inner padding so content doesn't
-        // touch the edge (stands out against the tinted listing-page background). Border darkens
-        // slightly on hover.
-        'group flex h-full min-w-0 max-w-md flex-col gap-3 rounded-2xl border border-contrast-100 bg-white p-4 font-[family-name:var(--card-font-family,var(--font-family-body))] transition-colors duration-200 @container hover:border-contrast-200 @md:p-5',
+        // Same shape as the home card: no card chrome, the photo on its own white bordered
+        // panel and the copy straight on the page below it.
+        'group flex h-full min-w-0 max-w-md flex-col font-[family-name:var(--card-font-family,var(--font-family-body))] @container',
         className,
       )}
     >
       <div className="relative flex flex-1 flex-col">
         <div
           className={clsx(
-            'relative overflow-hidden rounded-xl @md:rounded-2xl',
+            'relative overflow-hidden rounded-2xl border border-contrast-100 transition-colors duration-200 group-hover:border-contrast-200',
             {
               '5:6': 'aspect-[5/6]',
               '3:4': 'aspect-[3/4]',
@@ -194,9 +193,9 @@ export function ProductCard({
           <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
             <span
               className={clsx(
-                // Reserve a full 2 lines (min-h) even for 1-line titles so the price and CTA
-                // below align across cards in a row.
-                'line-clamp-2 block min-h-[2lh] font-semibold',
+                // Reserve a full 3 lines (min-h) even for short titles so the brand, price and
+                // CTA below align across cards in a row.
+                'line-clamp-3 min-h-[3lh] font-semibold',
                 {
                   light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
                   dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
@@ -229,28 +228,7 @@ export function ProductCard({
                 superscript
               />
             )}
-            {/* Delivery/pickup message from the __delivery custom field — after the price, with the
-                delivery icon (brand color, 1.3x). Blue text like the PDP trust links (no hover
-                underline here — the whole card is the link, so a text underline would trigger on
-                any card hover, which looks wrong). */}
-            {deliveryMessage != null && deliveryMessage !== '' && (
-              <span className="mt-1 flex items-center gap-1.5 text-xs">
-                <svg
-                  className="size-[1.3rem] shrink-0"
-                  fill="none"
-                  height="21"
-                  viewBox="0 0 24 24"
-                  width="21"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6.15933 17.8214C5.93537 17.5975 5.76685 17.3502 5.65377 17.0795C5.45715 16.6089 5.06731 16.1786 4.55728 16.1786H3.98647C3.68999 16.1786 3.46946 15.9045 3.53296 15.6149C3.57967 15.4018 3.76837 15.25 3.98647 15.25H5.04531C5.45217 15.25 5.8014 14.9874 6.05989 14.6732C6.19267 14.5118 6.34963 14.3686 6.53076 14.2437C6.90451 13.986 7.32832 13.8571 7.8022 13.8571C8.27609 13.8571 8.6999 13.986 9.07365 14.2437C9.25478 14.3686 9.41174 14.5118 9.54452 14.6732C9.80301 14.9874 10.1522 15.25 10.5591 15.25H14.1736L16.213 6.42857H6.13859C6.09084 6.42857 6.05556 6.38406 6.06647 6.33757C6.11166 6.0946 6.2292 5.89426 6.4191 5.73655C6.60899 5.57885 6.83309 5.5 7.09138 5.5H16.1159C16.7592 5.5 17.2352 6.09864 17.0902 6.7254L16.9053 7.5246C16.7603 8.15136 17.2362 8.75 17.8795 8.75H18.0523C18.367 8.75 18.6634 8.8982 18.8523 9.15002L20.8027 11.7508C20.9729 11.9777 21.0387 12.2662 20.9838 12.5444L20.36 15.7044C20.3056 15.98 20.064 16.1786 19.7831 16.1786C19.4584 16.1786 19.2045 16.4459 19.1269 16.7612C19.029 17.1591 18.8255 17.5125 18.5165 17.8214C18.0642 18.2738 17.5165 18.5 16.8737 18.5C16.2308 18.5 15.6831 18.2738 15.2308 17.8214C15.0263 17.617 14.868 17.393 14.756 17.1496C14.525 16.6479 14.1045 16.1786 13.5522 16.1786H11.1236C10.5713 16.1786 10.1508 16.6479 9.91989 17.1496C9.80784 17.393 9.64957 17.617 9.44508 17.8214C8.99271 18.2738 8.44509 18.5 7.8022 18.5C7.15932 18.5 6.6117 18.2738 6.15933 17.8214ZM15.8753 11.934C15.7293 12.5611 16.2053 13.1607 16.8492 13.1607H19.363C19.6806 13.1607 19.954 12.9363 20.0159 12.6248C20.0527 12.4396 20.0092 12.2475 19.8961 12.0963L18.388 10.0797C18.1992 9.82722 17.9024 9.67857 17.5871 9.67857H17.1943C16.7293 9.67857 16.3257 9.99901 16.2203 10.4518L15.8753 11.934ZM15.988 7.359L16.213 6.42857L14.1736 15.25L14.3985 14.3196L15.1344 11.0733L15.988 7.359ZM2.98607 12.9267C2.68401 12.9267 2.46238 12.6429 2.53564 12.3498C2.58731 12.1431 2.77302 11.9981 2.98606 11.9981H6.18961C6.49166 11.9981 6.71329 12.282 6.64003 12.575C6.58836 12.7817 6.40266 12.9267 6.18961 12.9267H2.98607ZM4.84321 9.68043C4.54116 9.68043 4.31953 9.39657 4.39278 9.10354C4.44446 8.89685 4.63016 8.75186 4.84321 8.75186H8.97533C9.27738 8.75186 9.49901 9.03572 9.42575 9.32875C9.37408 9.53543 9.18837 9.68043 8.97533 9.68043H4.84321ZM7.8022 17.5714C8.18431 17.5714 8.51202 17.4349 8.78533 17.1617C9.05848 16.8884 9.19506 16.5607 9.19506 16.1786C9.19506 15.7965 9.05848 15.4688 8.78533 15.1954C8.51202 14.9223 8.18431 14.7857 7.8022 14.7857C7.4201 14.7857 7.09239 14.9223 6.81908 15.1954C6.54592 15.4688 6.40935 15.7965 6.40935 16.1786C6.40935 16.5607 6.54592 16.8884 6.81908 17.1617C7.09239 17.4349 7.4201 17.5714 7.8022 17.5714ZM16.8737 17.5714C17.2558 17.5714 17.5835 17.4349 17.8568 17.1617C18.1299 16.8884 18.2665 16.5607 18.2665 16.1786C18.2665 15.7965 18.1299 15.4688 17.8568 15.1954C17.5835 14.9223 17.2558 14.7857 16.8737 14.7857C16.4915 14.7857 16.1638 14.9223 15.8905 15.1954C15.6174 15.4688 15.4808 15.7965 15.4808 16.1786C15.4808 16.5607 15.6174 16.8884 15.8905 17.1617C16.1638 17.4349 16.4915 17.5714 16.8737 17.5714Z"
-                    fill="#FA9AA1"
-                  />
-                </svg>
-                <span className="font-normal text-[#2162a1]">{deliveryMessage}</span>
-              </span>
-            )}
+            <DeliveryLine message={deliveryMessage} />
             {showRating && typeof rating === 'number' && rating > 0 && (
               <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
             )}
@@ -268,7 +246,7 @@ export function ProductCard({
             {href !== '#' && (
               // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
               // pt-2 guarantees a little space above the button even on the tallest card.
-              <div className="relative z-10 mt-auto pt-2">
+              <div className="relative z-10 mt-auto pt-3">
                 {requiresOptions === false && addToCartAction != null ? (
                   <AddToCartCta action={addToCartAction} id={id} />
                 ) : (
@@ -298,7 +276,7 @@ export function ProductCard({
       {showCompare && (
         // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
         // so the small box doesn't read as a circle.
-        <div className="ml-1 mt-auto shrink-0 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
+        <div className="ml-1 mt-auto shrink-0 pt-2 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
           <Compare
             colorScheme={colorScheme}
             label={compareLabel}
@@ -311,37 +289,29 @@ export function ProductCard({
   );
 }
 
-// Shared CTA button look: pill, red outline / red icon at rest, with the PDP add-to-cart's
-// left-to-right slide-fill hover (an ::after that translates in), turning it solid red + white.
-const CTA_BUTTON_CLASS =
-  'group/cta relative inline-flex min-h-7 items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,hsl(var(--primary)))] bg-transparent text-xs font-semibold tracking-wide text-[var(--button-primary-background,hsl(var(--primary)))] transition-[width] duration-300 ease-out after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,hsl(var(--primary)))] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0';
+// Delivery/pickup message from the __delivery custom field, with the truck in brand red.
+function DeliveryLine({ message }: { message?: string }) {
+  if (message == null || message === '') return null;
 
-/**
- * "View Options" CTA for products with required options: a red-outline circle with an options
- * icon that expands on hover to reveal the label (desktop). On touch/small screens (no hover) the
- * label is always shown, so it's never a bare, ambiguous icon. Links to the PDP to choose options.
- */
+  return (
+    <span className="mt-1.5 flex items-center gap-1.5 text-xs text-foreground">
+      <Truck
+        aria-hidden
+        className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+        size={16}
+        strokeWidth={1.5}
+      />
+      {message}
+    </span>
+  );
+}
+
+// "View Options" CTA for products with required options: the same full-width outline pill as
+// "Add to Cart", linking to the PDP to choose them.
 function ViewOptionsCta({ href }: { href: string }) {
   return (
-    <Link
-      aria-label="See options"
-      // A perfect 36px circle at rest (fixed h-9, min-w-9, no horizontal padding — the icon-only
-      // content makes it exactly square). On hover — and always on touch (max-lg) — horizontal
-      // padding appears and the label expands, so it grows into a pill.
-      className={clsx(
-        CTA_BUTTON_CLASS,
-        // hover:px-4 (not group-hover) — the padding is on the button itself, which can't be
-        // targeted by its own group-hover. max-lg keeps it padded on touch.
-        'h-7 min-w-7 hover:px-3.5 max-lg:px-3.5',
-      )}
-      href={href}
-    >
-      <OptionsIcon className="size-5 shrink-0" />
-      {/* Label: collapsed on desktop until hover; always open on touch (max-lg). Slightly smaller
-          than the base text; a small icon-to-label gap so both clear the padded edges. */}
-      <span className="max-w-0 overflow-hidden whitespace-nowrap text-[11px] transition-[max-width,margin,opacity] duration-300 ease-out group-hover/cta:ml-1.5 group-hover/cta:max-w-[12rem] group-hover/cta:opacity-100 max-lg:ml-1.5 max-lg:max-w-[12rem] max-lg:opacity-100 lg:opacity-0">
-        See options
-      </span>
+    <Link className={CTA_BUTTON_CLASS} href={href}>
+      View Options
     </Link>
   );
 }
