@@ -102,31 +102,51 @@ export default async function WhyExpressKitchens({
         stations={[
           {
             title: 'Cut',
+            image: {
+              src: '/images/why-us/factory/cut.webp',
+              alt: 'A CNC saw cutting white cabinet panels to size',
+            },
             description: 'Robots cut every panel to the same exact size.',
             imageLabel: 'EK plant photo: CNC line',
           },
           {
             title: 'Paint',
+            image: {
+              src: '/images/why-us/factory/paint.webp',
+              alt: 'A robotic sprayer finishing sage-green doors on an overhead line',
+            },
             description: 'Robotic sprayers lay an even finish on every door.',
             imageLabel: 'EK plant photo: paint robots',
           },
           {
             title: 'Assemble',
+            image: {
+              src: '/images/why-us/factory/assemble.webp',
+              alt: 'A craftsman fitting a door to a white cabinet box in the assembly shop',
+            },
             description: 'Assembled cabinets are put together and checked by hand.',
             imageLabel: 'EK plant photo: assembly',
           },
           {
             title: 'Stock',
+            image: {
+              src: '/images/why-us/factory/stock.webp',
+              alt: 'Racks of boxed cabinets in the warehouse',
+            },
             description: '50,000 finished cabinets on the racks.',
             imageLabel: 'EK plant photo: warehouse racks',
           },
           {
             title: 'Ship',
+            image: {
+              src: '/images/why-us/factory/ship.webp',
+              alt: 'A forklift loading pallets into an Express Kitchens truck at the dock',
+            },
             description: 'Quick-ship the next day. RTA in 2 weeks, assembled in 3.',
             imageLabel: 'EK plant photo: loading dock',
           },
         ]}
-        title="300,000 sq ft. Robots do the precise work. People do the checking."
+        title="300,000 sq ft. Robots for precision. People for the final check."
       />
       <CardsRow
         cards={[
