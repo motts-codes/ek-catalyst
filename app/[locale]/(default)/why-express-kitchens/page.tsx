@@ -182,7 +182,7 @@ export default async function WhyExpressKitchens({
       />
       <DeliveryLadder
         columns={[
-          '',
+          'What to check',
           'Express Kitchens',
           'Online-only sellers',
           'Big-box stores',

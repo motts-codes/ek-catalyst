@@ -55,7 +55,7 @@ export function DeliveryLadder({
     >
       {/* Header row in brand red; body rows alternate white / light pink and tint on hover;
           hairlines between rows and between every column. The first column is the feature. */}
-      <div className="overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white @3xl:ml-auto @3xl:w-5/6">
+      <div className="overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white @3xl:mx-auto @3xl:w-5/6">
         <table className="w-full min-w-[40rem] border-separate border-spacing-0 text-left text-sm">
           {/* The feature column takes the room the brand columns don't need. */}
           <colgroup>
@@ -75,7 +75,8 @@ export function DeliveryLadder({
                   key={column || 'feature'}
                   scope="col"
                 >
-                  {column}
+                  {/* Pages that leave the first heading blank still get a labelled column. */}
+                  {columnIndex === 0 && !column ? 'Feature' : column}
                 </th>
               ))}
             </tr>
