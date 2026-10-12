@@ -336,7 +336,7 @@ export function HeroScrub({
         .ek-why-hero .ek-sign { --k: .9; }
         .ek-why-hero .ek-sign span { display: block; opacity: 0; will-change: transform, opacity; }
         .ek-why-hero .ek-s1 { font-size: max(15px, calc(30px * var(--k))); padding: .55em 1em .58em; }
-        .ek-why-hero .ek-s2 { font-size: max(11px, calc(18px * var(--k))); padding: .6em 1.1em .62em; margin: -.3em 0 0 auto; }
+        .ek-why-hero .ek-s2 { font-size: max(11px, calc(18px * var(--k))); padding: .6em 1.1em .62em; margin: -.3em 20px 0 auto; }
         @media (prefers-reduced-motion: reduce) {
           .ek-why-hero .ek-pin { position: relative; }
           .ek-why-hero .ek-mouse::after { animation: none; }
