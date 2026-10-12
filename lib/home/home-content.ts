@@ -241,6 +241,10 @@ export const THREE_WAYS: RowCard[] = [
     ctaLabel: 'Book a free consult',
     href: FREE_DESIGN_HREF,
     primary: true,
+    image: {
+      src: '/images/home/ways/design-consult.webp',
+      alt: 'A designer on a video call with a couple, their kitchen plan and door samples on her laptop',
+    },
     imageLabel: 'Designer with a homeowner',
   },
 ];
