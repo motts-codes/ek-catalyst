@@ -372,6 +372,11 @@ const menu: MenuItem[] = [
             image: nav('kitchen-estimator', 'The estimator on a phone'),
           },
           {
+            label: 'Kitchen Visualizer',
+            href: '/mykitchen/visualizer',
+            image: nav('kitchen-visualizer', 'A kitchen on a tablet with colour swatches'),
+          },
+          {
             label: 'Order Samples',
             href: '/samples',
             image: nav('order-samples', 'Quarter-door samples'),
@@ -380,11 +385,6 @@ const menu: MenuItem[] = [
             label: 'What Is a 10×10 Kitchen',
             href: '/resources/ten-by-ten-kitchen',
             image: nav('ten-by-ten-kitchen', 'A 10×10 kitchen drawn in plan'),
-          },
-          {
-            label: 'Measuring Guide',
-            href: '/resources/measuring-guide',
-            image: nav('measuring-guide', 'A tape measure on a kitchen plan'),
           },
         ],
       },
@@ -401,6 +401,11 @@ const menu: MenuItem[] = [
             label: 'Cabinet Care',
             href: '/resources/cabinet-care',
             image: nav('cabinet-care', 'Wiping a cabinet door'),
+          },
+          {
+            label: 'Measuring Guide',
+            href: '/resources/measuring-guide',
+            image: nav('measuring-guide', 'A tape measure on a kitchen plan'),
           },
         ],
       },
