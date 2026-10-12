@@ -99,7 +99,7 @@ export function CabinetLines({
 // Exported so other sections (e.g. the home page's best-sellers grid) can reuse the exact card.
 export function CabinetLineCard({ line }: { line: CabinetLine }) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-contrast-100 bg-white transition-colors duration-200 hover:border-contrast-200">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-contrast-100 bg-white transition-colors duration-200 @container hover:border-contrast-200">
       {/* Image (whole card links to the category page). Neutral placeholder when the category has no
           image (Avon/Dover currently don't). */}
       <Link
@@ -161,9 +161,9 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             </p>
             {/* Two cells: the price (and was-price) on the left; on the right the finance line and
                 the ship line, stacked and left-aligned. Stacks top/bottom on narrow screens. */}
-            <div className="mt-1.5 grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[1fr_auto]">
+            <div className="mt-1.5 grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @[26rem]:grid-cols-[1fr_auto]">
               {line.price != null && line.price !== '' && (
-                <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 px-[13px] py-3 @md:px-[13px]">
+                <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 px-[13px] py-3">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
                       cents={17}
@@ -185,7 +185,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                   )}
                 </div>
               )}
-              <div className="flex flex-col justify-center gap-1.5 border-t border-[#fcb6bb] px-[13px] py-2.5 @md:border-l @md:border-t-0 @md:px-4">
+              <div className="flex flex-col justify-center gap-1.5 border-t border-[#fcb6bb] px-[13px] py-2.5 @[26rem]:border-l @[26rem]:border-t-0 @[26rem]:px-4">
                 {line.emiText != null && line.emiText !== '' && (
                   <div className="flex items-center gap-1.5 whitespace-nowrap text-[11px] font-medium leading-none">
                     <WalletMinimal

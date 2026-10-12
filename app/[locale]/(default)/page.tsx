@@ -178,9 +178,10 @@ export default async function Home({ params }: Props) {
       {/* 5 · Best sellers — collection cards with the 10×10 price in a carousel, then the samples strip */}
       <HomeSection
         action={{ label: 'All door styles', href: '/cabinets/assembled-cabinets' }}
+        description="Prices shown, no quote needed."
         kicker="Best sellers"
         tint
-        title="The kitchens people order most — with the price"
+        title="The kitchens people order most."
       >
         <CollectionCarousel lines={streamableCollections} />
         <SamplesCallout className="mt-6" cta={{ label: 'Order samples', href: SAMPLES_HREF }} />
