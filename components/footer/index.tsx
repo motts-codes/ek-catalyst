@@ -12,6 +12,7 @@ import { LayoutQuery } from '~/app/[locale]/(default)/page-data';
 import { client } from '~/client';
 import { readFragment } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
+import { Image } from '~/components/image';
 import { subscribe } from '~/components/subscribe/_actions/subscribe';
 import { logoTransformer } from '~/data-transformers/logo-transformer';
 import { SHOWROOMS } from '~/lib/home/home-content';
@@ -25,24 +26,34 @@ import {
 } from '~/lib/navigation/footer-config';
 
 import { FooterFragment } from './fragment';
-import { AmericanExpressIcon } from './payment-icons/american-express';
-import { MastercardIcon } from './payment-icons/mastercard';
-import { VisaIcon } from './payment-icons/visa';
 
-// Text badges for the marks we don't have artwork for yet (Discover, HomeAdvisor, BBB A+).
-const TextBadge = ({ children }: { children: string }) => (
-  <span className="inline-flex h-6 items-center rounded border border-contrast-200 px-1.5 text-[10px] font-semibold uppercase tracking-wide text-contrast-500">
-    {children}
-  </span>
+// The badge row in the legal strip, taken from the live site's footer: the membership /
+// compliance marks (NKBA, KCMA, CARB2, BBB A+ rating) and the card and review marks. The SVGs
+// are the live store's own artwork, served from /images/footer; the four compliance marks were
+// drawn in white for the live site's dark footer and are recoloured dark grey for ours.
+const badge = (file: string, alt: string, width: number, height: number) => (
+  <Image
+    alt={alt}
+    className="h-6 w-auto"
+    height={height}
+    key={file}
+    src={`/images/footer/${file}.svg`}
+    unoptimized
+    width={width}
+  />
 );
 
 const paymentIcons = [
-  <AmericanExpressIcon key="americanExpress" />,
-  <TextBadge key="discover">Discover</TextBadge>,
-  <MastercardIcon key="mastercard" />,
-  <VisaIcon key="visa" />,
-  <TextBadge key="homeadvisor">HomeAdvisor</TextBadge>,
-  <TextBadge key="bbb">BBB A+</TextBadge>,
+  badge('badge_nkba', 'NKBA member', 69, 23),
+  badge('badge_kcma', 'KCMA certified', 24, 23),
+  badge('badge_carb2', 'CARB2 compliant', 61, 24),
+  badge('badge_a_plus', 'BBB A+ rating', 42, 23),
+  badge('card_amex', 'American Express', 51, 30),
+  badge('card_discover', 'Discover', 44, 30),
+  badge('card_mastercard', 'Mastercard', 51, 30),
+  badge('card_visa', 'Visa', 51, 30),
+  badge('badge_homeadvisor', 'HomeAdvisor', 134, 29),
+  badge('badge_bbb_a', 'BBB accredited, A+', 43, 29),
 ];
 
 const socialIcons: Record<string, { icon: JSX.Element }> = {
