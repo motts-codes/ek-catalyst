@@ -63,7 +63,7 @@ export function SamplesCallout({
   return (
     <div
       className={clsx(
-        'grid overflow-hidden rounded-3xl bg-[#9f3632] text-white @3xl:min-h-[230px]',
+        'grid overflow-hidden rounded-3xl bg-[#9f3632] text-white @3xl:min-h-[280px]',
         video && '@3xl:grid-cols-[3fr_2fr]',
         className,
       )}
