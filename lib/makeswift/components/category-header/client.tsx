@@ -57,6 +57,7 @@ export function MSCategoryHeader({
         image={image}
         imageLabel={defaults.imageLabel}
         title={title || defaults.title}
+        tone={defaults.tone}
       />
       {showPoints && (
         <CategoryPoints

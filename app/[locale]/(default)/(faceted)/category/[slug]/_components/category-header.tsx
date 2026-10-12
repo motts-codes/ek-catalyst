@@ -63,6 +63,7 @@ export function getCategoryHeaderDefaults({
     title: content.heading ?? category.name,
     description,
     compact,
+    tone: content.heroTone ?? 'black',
     // BigCommerce's category image first, else the supplied hero photo for this path.
     image: toImage(category.defaultImage, category.name) ?? heroImageFor(category.path),
     imageLabel: content.imageLabel,

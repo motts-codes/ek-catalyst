@@ -32,6 +32,8 @@ interface HeroProps {
    * on the dark-grey panel rather than black.
    */
   compact?: boolean;
+  /** Panel colour: black (default) or the brand red. Subcategory pages ignore it (dark grey). */
+  tone?: 'black' | 'red';
   /** Rendered over the photo, top-right (e.g. the 'Watch the explainer' pill). */
   imageOverlay?: ReactNode;
   className?: string;
@@ -47,6 +49,7 @@ export function CategoryHero({
   imageLabel,
   actions = [],
   compact = false,
+  tone = 'black',
   imageOverlay,
   className,
 }: HeroProps) {
@@ -59,7 +62,14 @@ export function CategoryHero({
               'flex flex-col justify-center text-white @4xl:px-14',
               compact
                 ? 'bg-[#2a2a2a] px-6 py-6 @xl:px-10 @xl:py-7'
-                : 'bg-foreground px-6 py-9 @xl:px-10 @xl:py-12',
+                : clsx(
+                    'px-6 py-9 @xl:px-10 @xl:py-12',
+                    // Brand red (#d90716): white text sits at 5.3:1. The lighter #F20819 was tried and
+                    // misses 4.5:1 for the description line.
+                    tone === 'red'
+                      ? 'bg-[var(--button-primary-background,#d90716)]'
+                      : 'bg-foreground',
+                  ),
             )}
           >
             <h1
