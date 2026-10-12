@@ -184,7 +184,15 @@ export default async function Home({ params }: Props) {
         title="The kitchens people order most."
       >
         <CollectionCarousel lines={streamableCollections} />
-        <SamplesCallout className="mt-6" cta={{ label: 'Order samples', href: SAMPLES_HREF }} />
+        <SamplesCallout
+          className="mt-6"
+          cta={{ label: 'Order samples', href: SAMPLES_HREF }}
+          video={{
+            webm: '/images/home/samples/samples.webm',
+            mp4: '/images/home/samples/samples.mp4',
+            poster: '/images/home/samples/samples-poster.jpg',
+          }}
+        />
       </HomeSection>
 
       {/* 6 · Not sure yet? Three ways to be sure. */}
