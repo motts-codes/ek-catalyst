@@ -353,7 +353,7 @@ export function HeroScrub({
         >
           <span className="ek-mouse relative block h-[42px] w-[26px] rounded-[14px] border-2 border-current" />
           <span>{cueLabel}</span>
-          <small className="mt-0.5 whitespace-pre-line text-center font-heading text-lg font-bold normal-case leading-tight tracking-normal @xl:text-xl">
+          <small className="mt-0.5 whitespace-pre-line text-center font-heading text-lg font-bold normal-case leading-tight tracking-normal text-foreground [text-shadow:none] @xl:text-xl">
             {cueHint}
           </small>
         </div>
