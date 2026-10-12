@@ -56,7 +56,7 @@ export default async function WhyExpressKitchens({
       />
       <MetricsTicker
         metrics={[
-          { icon: 'package', value: '50,000+', label: 'All-plywood cabinets, ready to ship' },
+          { icon: 'package', value: '50,000+', label: 'Assembled cabinets, ready to ship' },
           { icon: 'star', value: '5,000+', label: 'Happy customer reviews' },
           { icon: 'design', value: '100K+', label: 'Kitchens designed' },
           { icon: 'pin', value: '6', label: 'Showrooms to visit' },
@@ -119,7 +119,7 @@ export default async function WhyExpressKitchens({
             imageLabel: 'EK plant photo: paint robots',
           },
           {
-            title: 'Assemble',
+            title: 'Assembled',
             image: {
               src: '/images/why-us/factory/assemble.webp',
               alt: 'A craftsman fitting a door to a white cabinet box in the assembly shop',
