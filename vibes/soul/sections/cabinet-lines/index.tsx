@@ -166,10 +166,10 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                 <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 px-[13px] py-3 @md:px-[13px]">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
-                      cents={16}
+                      cents={17}
                       formatted={`$${withCommas(line.price)}`}
-                      symbol={14}
-                      whole={24}
+                      symbol={15}
+                      whole={28}
                     />
                   </span>
                   {line.strikePrice != null && line.strikePrice !== '' && (
