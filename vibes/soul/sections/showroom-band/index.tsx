@@ -137,7 +137,7 @@ export function ShowroomBand({
           </ul>
         </div>
 
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100 @3xl:aspect-[5/4]">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100 @3xl:aspect-[16/10]">
           {showrooms.map((showroom, index) => (
             <div
               className={clsx(

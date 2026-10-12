@@ -245,9 +245,11 @@ export default async function Home({ params }: Props) {
       <Slot
         fallback={
           <ShowroomBand
-            description="A showroom visit turns a saved photo into something you can see, feel, and make your own. Our specialists are ready when you are. Get one-on-one help."
+            description="Bring your Pinterest saves, your measurements, or just an idea. See the real colours in real light, feel the finishes, test the soft-close, and sit down with a designer to plan your layout for free."
+            kicker="Six showrooms across Connecticut"
             showrooms={SHOWROOMS}
             tint
+            title="Open the drawers before you buy them."
           />
         }
         label="Home showrooms"
