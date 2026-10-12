@@ -19,19 +19,11 @@ export interface BlogPostCardBlogPost {
 interface Props {
   blogPost: BlogPostCardBlogPost;
   /**
-   * `compact`: the home-page version — "Guide · N min read" over a two-line bold title, no
-   * summary, date or author.
+   * `compact`: the home-page version — "Guide · date" over a two-line bold title, no summary
+   * or author.
    */
   variant?: 'default' | 'compact';
   className?: string;
-}
-
-// Rough reading time: the API gives only a summary, not the article, so this scales the summary
-// (a typical post runs about twelve times its summary) at ~200 words a minute, 4–12 minutes.
-function readMinutes(text: string): number {
-  const words = text.trim().split(/\s+/).filter(Boolean).length;
-
-  return Math.min(12, Math.max(4, Math.round((words * 12) / 200)));
 }
 
 export function BlogPostCard({ blogPost, variant = 'default', className }: Props) {
@@ -65,7 +57,7 @@ export function BlogPostCard({ blogPost, variant = 'default', className }: Props
       {compact ? (
         <>
           <p className="text-xs font-semibold text-contrast-500">
-            Guide · {readMinutes(content)} min read
+            Guide · <time dateTime={date}>{date}</time>
           </p>
           <h3 className="mt-1.5 line-clamp-2 font-heading text-lg font-bold leading-snug">
             {title}

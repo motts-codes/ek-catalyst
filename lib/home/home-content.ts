@@ -343,35 +343,44 @@ export const SHOWROOMS: Showroom[] = [
   {
     name: 'Brookfield',
     href: '/showrooms/brookfield',
-    image: showroomImage('brookfield', 'Door samples on a navy wall above a granite-topped island'),
+    image: showroomImage(
+      'brookfield',
+      'Granite and quartz slabs on a white wall beside a quartz sample island',
+    ),
   },
   {
     name: 'New London',
     href: '/showrooms/new-london',
     image: showroomImage(
       'new-london',
-      'A white shaker display kitchen with a row of tall door samples',
+      'Navy and white vanities around a white-brick column, door samples on the wall',
     ),
   },
   {
     name: 'Newington',
     href: '/showrooms/newington',
-    image: showroomImage('newington', 'Granite and quartz slabs along a white brick wall'),
+    image: showroomImage(
+      'newington',
+      'A bright white display kitchen with a grey island and rattan pendants',
+    ),
   },
   {
     name: 'Orange',
     href: '/showrooms/orange',
-    image: showroomImage('orange', 'Two display boards of cabinet handles and knobs'),
+    image: showroomImage('orange', 'A row of cabinet vignettes in seven finishes'),
   },
   {
     name: 'Stamford',
     href: '/showrooms/stamford',
-    image: showroomImage('stamford', 'A row of cabinet vignettes in different finishes'),
+    image: showroomImage('stamford', 'A wall of handles and knobs above a run of white drawers'),
   },
   {
     name: 'Bristol',
     href: '/showrooms/bristol',
-    image: showroomImage('bristol', 'Door and countertop samples laid out on an island'),
+    image: showroomImage(
+      'bristol',
+      'A design table laid with door and countertop samples, a display kitchen behind',
+    ),
   },
 ];
 
