@@ -55,8 +55,15 @@ export function DeliveryLadder({
     >
       {/* Header row in brand red; body rows alternate white / light pink and tint on hover;
           hairlines between rows and between every column. The first column is the feature. */}
-      <div className="overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white">
+      <div className="overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white @3xl:ml-auto @3xl:w-5/6">
         <table className="w-full min-w-[40rem] border-separate border-spacing-0 text-left text-sm">
+          {/* The feature column takes the room the brand columns don't need. */}
+          <colgroup>
+            <col className="w-[40%]" />
+            {columns.slice(1).map((column) => (
+              <col key={column} />
+            ))}
+          </colgroup>
           <thead>
             <tr className="bg-[var(--button-primary-background,#d90716)] text-xs uppercase tracking-wide text-white">
               {columns.map((column, columnIndex) => (
@@ -88,6 +95,7 @@ export function DeliveryLadder({
                     <td
                       className={clsx(
                         'border-t border-[#fcb6bb] px-5 py-4 transition-colors',
+                        feature && 'text-[15px] @xl:text-base',
                         !feature && 'border-l text-center',
                         feature || bold ? 'font-semibold text-foreground' : 'text-[#404040]',
                         !feature &&
