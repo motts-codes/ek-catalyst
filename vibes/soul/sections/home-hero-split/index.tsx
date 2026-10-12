@@ -272,7 +272,8 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                           alt={slide.image.alt}
                           className={clsx(
                             'object-cover',
-                            slide.imagePosition === 'left' && 'object-left',
+                            // On phones the anchor eases toward the centre so the subject isn't cut off at the edge.
+                            slide.imagePosition === 'left' && 'object-[35%_50%] @xl:object-left',
                             slide.imagePosition === 'right' && 'object-right',
                           )}
                           fill
