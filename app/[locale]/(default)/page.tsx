@@ -185,7 +185,7 @@ export default async function Home({ params }: Props) {
       >
         <CollectionCarousel lines={streamableCollections} />
         <SamplesCallout
-          className="mt-6"
+          className="my-10 @4xl:my-12"
           cta={{ label: 'Order samples', href: SAMPLES_HREF }}
           video={{
             webm: '/images/home/samples/samples.webm',
