@@ -103,11 +103,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           <DynamicFormSection action={submitSupportLead} fields={FIELDS} submitLabel="Send" />
         </FormCard>
       </HomeSection>
-      <ShowroomBand
-        kicker="Or talk to someone in person"
-        showrooms={SHOWROOMS}
-        title="Six showrooms across Connecticut"
-      />
+      <ShowroomBand showrooms={SHOWROOMS} />
     </>
   );
 }

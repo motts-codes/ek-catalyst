@@ -245,15 +245,7 @@ export default async function Home({ params }: Props) {
 
       {/* 9 · Showrooms */}
       <Slot
-        fallback={
-          <ShowroomBand
-            dark
-            description="Bring your Pinterest saves, your measurements, or just an idea. See the real colours in real light, feel the finishes, test the soft-close, and sit down with a designer to plan your layout for free."
-            kicker="Six showrooms across Connecticut"
-            showrooms={SHOWROOMS}
-            title="Open the drawers before you buy them."
-          />
-        }
+        fallback={<ShowroomBand showrooms={SHOWROOMS} />}
         label="Home showrooms"
         snapshotId="home-showrooms"
       />

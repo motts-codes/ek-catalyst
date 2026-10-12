@@ -239,12 +239,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         ]}
         title="The person you deal with is the difference"
       />
-      <ShowroomBand
-        kicker="Your local design studio"
-        showrooms={SHOWROOMS}
-        tint
-        title="Six showrooms across Connecticut"
-      />
+      <ShowroomBand showrooms={SHOWROOMS} />
       <ClosingBand
         primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}

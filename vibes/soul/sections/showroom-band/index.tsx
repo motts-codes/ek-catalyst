@@ -28,7 +28,7 @@ interface Props {
   /** Auto-cycle interval, ms. 0 disables. */
   interval?: number;
   tint?: boolean;
-  /** Dark panel: the closing-band red with white copy and inverted chips. */
+  /** Red panel (default, matches the home page); false for the white version. */
   dark?: boolean;
   className?: string;
 }
@@ -37,13 +37,13 @@ interface Props {
 // the auto-cycle; the photo on the right crossfades to the active showroom and carries its name
 // as a caption chip. Hover a pill to hold it, click to open the showroom page.
 export function ShowroomBand({
-  kicker = 'Your local design studio',
-  title = 'Six showrooms across Connecticut',
-  description,
+  kicker = 'Six showrooms across Connecticut',
+  title = 'Open the drawers before you buy them.',
+  description = 'Bring your Pinterest saves, your measurements, or just an idea. See the real colours in real light, feel the finishes, test the soft-close, and sit down with a designer to plan your layout for free.',
   showrooms,
   interval = 3500,
   tint = false,
-  dark = false,
+  dark = true,
   className,
 }: Props) {
   const [active, setActive] = useState(0);

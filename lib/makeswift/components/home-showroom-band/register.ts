@@ -20,12 +20,12 @@ runtime.registerComponent(MSShowroomBand, {
   icon: 'layout',
   props: {
     className: Style(),
-    kicker: TextInput({ label: 'Kicker', defaultValue: 'Your local design studio' }),
-    title: TextInput({ label: 'Title', defaultValue: 'Six showrooms across Connecticut' }),
+    kicker: TextInput({ label: 'Kicker', defaultValue: 'Six showrooms across Connecticut' }),
+    title: TextInput({ label: 'Title', defaultValue: 'Open the drawers before you buy them.' }),
     description: TextArea({
       label: 'Description',
       defaultValue:
-        'A showroom visit turns a saved photo into something you can see, feel, and make your own. Our specialists are ready when you are.',
+        'Bring your Pinterest saves, your measurements, or just an idea. See the real colours in real light, feel the finishes, test the soft-close, and sit down with a designer to plan your layout for free.',
     }),
     showrooms: List({
       label: 'Showrooms',
@@ -44,6 +44,6 @@ runtime.registerComponent(MSShowroomBand, {
       },
     }),
     interval: Number({ label: 'Cycle every', defaultValue: 3.5, suffix: 's' }),
-    tint: Checkbox({ label: 'Tinted background', defaultValue: true }),
+    tint: Checkbox({ label: 'Tinted background', defaultValue: false }),
   },
 });
