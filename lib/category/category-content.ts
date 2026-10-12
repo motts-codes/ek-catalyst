@@ -26,7 +26,7 @@ export interface CategoryContent {
   subcategories?: SubcategoryOverride[];
   /** Overrides the BigCommerce category name in the hero. */
   heading?: string;
-  /** Hero panel colour for a top-level category: black (default) or the brand red. */
+  /** Hero panel colour for a top-level category: brand red (default) or black. */
   heroTone?: 'black' | 'red';
   /** Overrides the BigCommerce category description in the hero. */
   lede?: string;
@@ -205,7 +205,6 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     ],
   },
   '/appliances': {
-    heroTone: 'red',
     subcategories: APPLIANCE_TILES,
     lede: 'Fridges, ranges, hoods, dishwashers and laundry. In stock in Bristol and priced below retail, because you collect.',
     imageLabel: 'A range and hood in a finished kitchen',

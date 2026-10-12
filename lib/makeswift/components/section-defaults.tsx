@@ -27,7 +27,7 @@ export interface CategoryHeaderDefaults {
   description?: string;
   /** Subcategory page: the shorter, dark-grey hero. */
   compact: boolean;
-  /** Top-level hero panel colour: black (default) or the brand red. */
+  /** Top-level hero panel colour: brand red (default) or black. */
   tone?: 'black' | 'red';
   image?: { src: string; alt: string };
   imageLabel?: string;

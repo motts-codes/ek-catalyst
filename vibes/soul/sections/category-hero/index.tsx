@@ -32,7 +32,7 @@ interface HeroProps {
    * on the dark-grey panel rather than black.
    */
   compact?: boolean;
-  /** Panel colour: black (default) or the brand red. Subcategory pages ignore it (dark grey). */
+  /** Panel colour: brand red (default) or black. Subcategory pages ignore it (black, compact). */
   tone?: 'black' | 'red';
   /** Rendered over the photo, top-right (e.g. the 'Watch the explainer' pill). */
   imageOverlay?: ReactNode;
@@ -41,7 +41,8 @@ interface HeroProps {
 
 // Category page header, 50 / 50: the headline and one paragraph on a black panel, the category
 // photo beside it. Same rounded panel as the home hero. Stacks on narrow screens (text first).
-// Subcategories get the compact version: shorter, dark grey, heading plus a short line.
+// Top-level categories sit on the brand red; subcategories get the compact version: shorter,
+// black, heading plus a short line.
 export function CategoryHero({
   title,
   description,
@@ -49,7 +50,7 @@ export function CategoryHero({
   imageLabel,
   actions = [],
   compact = false,
-  tone = 'black',
+  tone = 'red',
   imageOverlay,
   className,
 }: HeroProps) {
@@ -61,7 +62,7 @@ export function CategoryHero({
             className={clsx(
               'flex flex-col justify-center text-white @4xl:px-14',
               compact
-                ? 'bg-[#2a2a2a] px-6 py-6 @xl:px-10 @xl:py-7'
+                ? 'bg-foreground px-6 py-6 @xl:px-10 @xl:py-7'
                 : clsx(
                     'px-6 py-9 @xl:px-10 @xl:py-12',
                     // Brand red (#d90716): white text sits at 5.3:1. The lighter #F20819 was tried and
