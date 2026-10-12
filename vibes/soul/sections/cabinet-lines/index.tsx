@@ -99,7 +99,7 @@ export function CabinetLines({
 // Exported so other sections (e.g. the home page's best-sellers grid) can reuse the exact card.
 export function CabinetLineCard({ line }: { line: CabinetLine }) {
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-contrast-100 bg-white transition-colors duration-200 @container hover:border-contrast-200">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out @container hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]">
       {/* Image (whole card links to the category page). Neutral placeholder when the category has no
           image (Avon/Dover currently don't). */}
       <Link
