@@ -57,7 +57,7 @@ export function WaitBand({ kicker, title, description, lanes, note, source }: Pr
 
   return (
     <section className="bg-[#fdf8f8] @container">
-      <div className="mx-auto grid max-w-screen-2xl gap-10 px-6 py-14 @xl:px-9 @xl:py-20 @3xl:grid-cols-2 @3xl:items-center @3xl:gap-16 @4xl:px-14 @4xl:py-24">
+      <div className="mx-auto grid max-w-screen-2xl gap-10 px-6 py-14 @xl:px-9 @xl:py-20 @3xl:grid-cols-2 @3xl:items-start @3xl:gap-16 @4xl:px-14 @4xl:py-24">
         <div>
           {/* Brand red rather than the lighter pink the client asked for: #F9858D is 2.3:1 on
             this band, below the 4.5:1 small text needs; the nearest passing shade of that hue is
