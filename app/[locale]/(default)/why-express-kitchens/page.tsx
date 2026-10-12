@@ -11,6 +11,7 @@ import {
   FactoryRail,
   HeroScrub,
   MetricsTicker,
+  StatementReveal,
   WaitBand,
 } from '@/vibes/soul/sections/why-us-scroll';
 import {
@@ -44,6 +45,14 @@ export default async function WhyExpressKitchens({
         signLine1="Simplifying Kitchens"
         signLine2="for 110+ years"
         title="Why Express Kitchens: simplifying kitchens for 110+ years"
+      />
+      <StatementReveal
+        accentLines={[1, 2]}
+        lines={[
+          "The kitchen you've been picturing.",
+          'Without the wait.',
+          'Without the price you were dreading.',
+        ]}
       />
       <MetricsTicker
         metrics={[
