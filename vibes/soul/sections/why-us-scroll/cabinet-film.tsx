@@ -387,10 +387,11 @@ export function CabinetFilm({ kicker, title, features }: Props) {
                 <li
                   aria-current={on ? 'step' : undefined}
                   className={clsx(
-                    'grid gap-0.5 border-l-[3px] border-t border-t-contrast-100 py-2.5 pl-4 transition-colors @3xl:py-3.5',
+                    'grid gap-0.5 border-l-[3px] border-t border-t-contrast-100 py-2.5 pl-4 transition-[color,border-color,transform] duration-500 ease-smooth @3xl:py-3.5 motion-reduce:transition-none',
+                    // The active feature slides a touch to the left as it lights up.
                     on
-                      ? 'border-l-[var(--button-primary-background,#d90716)] text-foreground'
-                      : 'border-l-transparent text-contrast-500',
+                      ? '-translate-x-2 border-l-[var(--button-primary-background,#d90716)] text-foreground'
+                      : 'translate-x-0 border-l-transparent text-contrast-500',
                   )}
                   key={feature.title}
                 >

@@ -38,7 +38,7 @@ interface Props {
 // and a Lucide icon, separated by hairlines. The track is doubled so the loop is seamless. It
 // pauses while hovered or focused and has a stop/start button (WCAG 2.2.2); reduced motion lays
 // the figures out in a wrapped row instead.
-export function MetricsTicker({ metrics, duration = 60, className }: Props) {
+export function MetricsTicker({ metrics, duration = 110, className }: Props) {
   const [paused, setPaused] = useState(false);
 
   const row = (hidden: boolean) =>
@@ -49,7 +49,7 @@ export function MetricsTicker({ metrics, duration = 60, className }: Props) {
         <li
           aria-hidden={hidden || undefined}
           className={clsx(
-            'flex shrink-0 items-center gap-3.5 border-l border-[#fcb6bb] px-8 first:border-l-0 @xl:px-12',
+            'flex shrink-0 items-center gap-3.5 border-l border-[#fcb6bb] px-8 @xl:px-12',
             hidden && 'ek-copy',
           )}
           key={`${metric.label}${hidden ? '-copy' : ''}`}
