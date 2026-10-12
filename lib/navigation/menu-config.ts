@@ -367,14 +367,9 @@ const menu: MenuItem[] = [
         label: 'Getting Started',
         links: [
           {
-            label: 'Measuring Guide',
-            href: '/resources/measuring-guide',
-            image: nav('measuring-guide', 'A tape measure on a kitchen plan'),
-          },
-          {
-            label: 'What Is a 10×10 Kitchen',
-            href: '/resources/ten-by-ten-kitchen',
-            image: nav('ten-by-ten-kitchen', 'A 10×10 kitchen drawn in plan'),
+            label: 'Kitchen Estimator',
+            href: '/mykitchen/calculator',
+            image: nav('kitchen-estimator', 'The estimator on a phone'),
           },
           {
             label: 'Order Samples',
@@ -382,26 +377,31 @@ const menu: MenuItem[] = [
             image: nav('order-samples', 'Quarter-door samples'),
           },
           {
-            label: 'Kitchen Estimator',
-            href: '/mykitchen/calculator',
-            image: nav('kitchen-estimator', 'The estimator on a phone'),
+            label: 'What Is a 10×10 Kitchen',
+            href: '/resources/ten-by-ten-kitchen',
+            image: nav('ten-by-ten-kitchen', 'A 10×10 kitchen drawn in plan'),
+          },
+          {
+            label: 'Measuring Guide',
+            href: '/resources/measuring-guide',
+            image: nav('measuring-guide', 'A tape measure on a kitchen plan'),
           },
         ],
       },
       {
         label: 'Guides',
         links: [
-          {
-            label: 'Cabinet Care',
-            href: '/resources/cabinet-care',
-            image: nav('cabinet-care', 'Wiping a cabinet door'),
-          },
+          { label: 'Blog', href: '/blog', image: nav('blog', 'An open notebook on a countertop') },
           {
             label: 'How-To Videos',
             href: '/resources/how-to-videos',
             image: nav('how-to-videos', 'An installer fitting a cabinet'),
           },
-          { label: 'Blog', href: '/blog', image: nav('blog', 'An open notebook on a countertop') },
+          {
+            label: 'Cabinet Care',
+            href: '/resources/cabinet-care',
+            image: nav('cabinet-care', 'Wiping a cabinet door'),
+          },
         ],
       },
       {
