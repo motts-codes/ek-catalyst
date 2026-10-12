@@ -114,7 +114,8 @@ export function ProductCard({
       <div className="relative flex flex-1 flex-col">
         <div
           className={clsx(
-            'relative overflow-hidden rounded-2xl border border-contrast-100 transition-colors duration-200 group-hover:border-contrast-200',
+            // No outline at rest; a light pink hairline (the compare-table pink) appears on hover.
+            'relative overflow-hidden rounded-2xl border border-transparent transition-colors duration-200 group-hover:border-[#fcb6bb]',
             {
               '5:6': 'aspect-[5/6]',
               '3:4': 'aspect-[3/4]',
