@@ -6,6 +6,7 @@ import { createPortal } from 'react-dom';
 
 import { Streamable } from '@/vibes/soul/lib/streamable';
 import { CarouselButtons } from '@/vibes/soul/primitives/carousel';
+import { HomeProductCard } from '@/vibes/soul/primitives/home-product-card';
 import { type Product } from '@/vibes/soul/primitives/product-card';
 import { ProductCarousel } from '@/vibes/soul/sections/product-carousel';
 
@@ -106,6 +107,7 @@ export function ProductTabs({ tabs, aspectRatio = '1:1', className }: Props) {
       className={className}
       renderPanel={(tab) => (
         <ProductCarousel
+          CardComponent={HomeProductCard}
           aspectRatio={aspectRatio}
           controls={<TabRowArrows />}
           density="compact"

@@ -29,6 +29,8 @@ interface Props {
   tint?: boolean;
   /** Tighter vertical padding (used for narrow bands). */
   compact?: boolean;
+  /** Half the default vertical padding. */
+  halfPadding?: boolean;
   /** Minimal top padding — for a band that should sit right under the hero. */
   tightTop?: boolean;
   /** `small`: an h3-sized title, for a band that shouldn't compete with the hero. */
@@ -48,6 +50,7 @@ export function HomeSection({
   action,
   tint = false,
   compact = false,
+  halfPadding = false,
   tightTop = false,
   headingStyle = 'default',
   className,
@@ -56,6 +59,7 @@ export function HomeSection({
   let verticalPadding = 'py-10 @4xl:py-14';
 
   if (compact) verticalPadding = 'py-8 @4xl:py-10';
+  if (halfPadding) verticalPadding = 'py-5 @4xl:py-7';
   if (tightTop) verticalPadding = 'pb-10 pt-2 @4xl:pb-14 @4xl:pt-3';
 
   const hasHeading = Boolean(kicker || title || description || action);

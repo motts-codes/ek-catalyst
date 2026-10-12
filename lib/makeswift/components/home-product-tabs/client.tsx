@@ -56,7 +56,7 @@ export function MSProductTabs({ className, title, tabs, aspectRatio }: Props) {
   const descriptors = source.map((tab, index) => ({ ...tab, id: `${index}-${tab.collection}` }));
 
   return (
-    <HomeSection className={className} title={title}>
+    <HomeSection className={className} halfPadding tint title={title}>
       <ProductTabsShell
         renderPanel={(tab) => <TabPanel aspectRatio={aspectRatio} tab={tab} />}
         tabs={descriptors}

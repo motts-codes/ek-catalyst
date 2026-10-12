@@ -158,7 +158,7 @@ export default async function Home({ params }: Props) {
       />
 
       {/* 3 · Shop what's moving — tabs by reason to buy now, fed by store data */}
-      <HomeSection title="Shop what's moving">
+      <HomeSection halfPadding tint title="Shop what's moving">
         <ProductTabs tabs={productTabs} />
       </HomeSection>
 

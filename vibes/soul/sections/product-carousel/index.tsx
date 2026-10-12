@@ -40,6 +40,8 @@ export interface ProductCarouselProps {
    * use the carousel primitives (e.g. arrows portalled into a tab row).
    */
   controls?: ReactNode;
+  /** The card to render each product with (defaults to the shared ProductCard). */
+  CardComponent?: typeof ProductCard;
 }
 
 const ITEM_CLASS = {
@@ -79,6 +81,7 @@ export function ProductCarousel({
   hideOverflow = true,
   density = 'default',
   controls,
+  CardComponent = ProductCard,
 }: ProductCarouselProps) {
   return (
     <Stream
@@ -113,7 +116,7 @@ export function ProductCarousel({
             <CarouselContent className={clsx('-ml-3 @2xl:-ml-5', controls == null && 'mb-10')}>
               {products.map(({ id, ...product }) => (
                 <CarouselItem className={ITEM_CLASS[density]} key={id}>
-                  <ProductCard
+                  <CardComponent
                     aspectRatio={aspectRatio}
                     colorScheme={colorScheme}
                     imageSizes="(min-width: 42rem) 25vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
