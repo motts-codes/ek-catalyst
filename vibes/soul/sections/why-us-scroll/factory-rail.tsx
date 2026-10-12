@@ -64,7 +64,7 @@ export function FactoryRail({ kicker, title, stations }: Props) {
         >
           {stations.map((station) => (
             <div className="flex w-[min(78vw,560px)] shrink-0 flex-col gap-3" key={station.title}>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-white/10">
+              <div className="relative aspect-[5/3] overflow-hidden rounded-2xl bg-white/10">
                 {station.image ? (
                   <Image
                     alt={station.image.alt}
