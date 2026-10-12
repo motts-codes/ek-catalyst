@@ -381,6 +381,9 @@ export const PublicToPrivateParams = PublicSearchParamsSchema.catchall(SearchPar
         brandEntityIds: brand,
         categoryEntityId: category,
         categoryEntityIds: categoryIn,
+        // Parent categories (Appliances, Cabinet Hardware…) hold no products of their own; the
+        // store assigns products to the leaf category only. Roll the subcategories up.
+        searchSubCategories: category != null ? true : undefined,
         hideOutOfStock: stock?.includes('in_stock'),
         isFreeShipping: shipping?.includes('free_shipping'),
         isFeatured,
