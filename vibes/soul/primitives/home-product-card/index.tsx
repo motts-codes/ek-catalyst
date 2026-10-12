@@ -2,7 +2,7 @@
 // without touching the card used on listings, search and the PDP rails. Types and the add-to-cart
 // / compare / icon pieces are shared with the original. If the changes prove out, fold them back.
 import { clsx } from 'clsx';
-import { Truck } from 'lucide-react';
+import { MessageSquareQuote, Truck } from 'lucide-react';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -173,18 +173,7 @@ export function HomeProductCard({
                 superscript
               />
             )}
-            {/* Delivery/pickup message from the __delivery custom field, with the truck. */}
-            {deliveryMessage != null && deliveryMessage !== '' && (
-              <span className="mt-1.5 flex items-center gap-1.5 text-xs text-foreground">
-                <Truck
-                  aria-hidden
-                  className="shrink-0 text-[var(--button-primary-background,#d90716)]"
-                  size={16}
-                  strokeWidth={1.5}
-                />
-                {deliveryMessage}
-              </span>
-            )}
+            <DeliveryLine message={deliveryMessage} />
             {showRating && typeof rating === 'number' && rating > 0 && (
               <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
             )}
@@ -246,6 +235,26 @@ export function HomeProductCard({
         </div>
       )}
     </article>
+  );
+}
+
+// Delivery/pickup message from the __delivery custom field, with an icon in brand red: the truck,
+// or a quote bubble when the line is a "Request a quote" (same rule as the listing card).
+function DeliveryLine({ message }: { message?: string }) {
+  if (message == null || message === '') return null;
+
+  const Icon = /quote/i.test(message) ? MessageSquareQuote : Truck;
+
+  return (
+    <span className="mt-1.5 flex items-center gap-1.5 text-xs text-foreground">
+      <Icon
+        aria-hidden
+        className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+        size={16}
+        strokeWidth={1.5}
+      />
+      {message}
+    </span>
   );
 }
 

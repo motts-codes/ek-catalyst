@@ -112,8 +112,20 @@ export function ProductCarousel({
         }
 
         return (
-          <Carousel className={className} hideOverflow={hideOverflow}>
-            <CarouselContent className={clsx('-ml-3 @2xl:-ml-5', controls == null && 'mb-10')}>
+          // When the carousel clips (hideOverflow), give the track vertical padding inside the clip
+          // box and pull the box back by the same amount, so the cards' hover lift + shadow aren't
+          // cut off at the bottom and the layout doesn't move.
+          <Carousel
+            className={clsx(className, hideOverflow && '-my-8')}
+            hideOverflow={hideOverflow}
+          >
+            <CarouselContent
+              className={clsx(
+                '-ml-3 @2xl:-ml-5',
+                hideOverflow && 'py-8',
+                controls == null && 'mb-10',
+              )}
+            >
               {products.map(({ id, ...product }) => (
                 <CarouselItem className={ITEM_CLASS[density]} key={id}>
                   <CardComponent
