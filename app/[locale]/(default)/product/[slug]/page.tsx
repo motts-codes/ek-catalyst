@@ -779,12 +779,17 @@ export default async function Product({ params, searchParams }: Props) {
       <hr className="w-full border-t border-[hsl(var(--product-detail-divider))]" />
 
       {quoteOnly && (
-        <CountertopQuote
-          action={submitQuoteLead}
-          fields={countertopQuoteFields(baseProduct.name)}
-          id={QUOTE_ANCHOR}
-          product={baseProduct.name}
-        />
+        <Stream fallback={null} value={streamableImages}>
+          {(imagesData) => (
+            <CountertopQuote
+              action={submitQuoteLead}
+              fields={countertopQuoteFields(baseProduct.name)}
+              id={QUOTE_ANCHOR}
+              image={imagesData.images[0]}
+              product={baseProduct.name}
+            />
+          )}
+        </Stream>
       )}
 
       <Stream fallback={null} value={streamableSpecifications}>

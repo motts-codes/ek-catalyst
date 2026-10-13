@@ -34,6 +34,7 @@ import {
   parseCabinetProgram,
   selectedCabinetProgram,
 } from '~/lib/cabinets/cabinet-collection';
+import { heroImageFor } from '~/lib/category/category-content';
 import { pickFaq } from '~/lib/category/category-faq';
 import { parseSeoContent } from '~/lib/category/category-seo';
 import { COUNTERTOP_QUOTE_FIELDS, QUOTE_ANCHOR } from '~/lib/countertops/quote-form';
@@ -198,7 +199,12 @@ function CountertopQuoteBand({ path }: { path: string }) {
   if (!isCountertopPath(path)) return null;
 
   return (
-    <CountertopQuote action={submitQuoteLead} fields={COUNTERTOP_QUOTE_FIELDS} id={QUOTE_ANCHOR} />
+    <CountertopQuote
+      action={submitQuoteLead}
+      fields={COUNTERTOP_QUOTE_FIELDS}
+      id={QUOTE_ANCHOR}
+      image={heroImageFor(path) ?? heroImageFor('/countertops')}
+    />
   );
 }
 

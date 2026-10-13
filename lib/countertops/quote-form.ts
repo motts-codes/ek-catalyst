@@ -9,24 +9,33 @@ export const QUOTE_ANCHOR = 'request-a-quote';
 
 export const COUNTERTOP_PHONE = { label: 'Call to submit request', href: 'tel:+18602471000' };
 
-export const COUNTERTOP_QUOTE_FIELDS: Field[] = [
-  { type: 'text', name: 'name', label: 'Your name', required: true },
-  { type: 'email', name: 'email', label: 'Email', required: true },
-  { type: 'text', name: 'phone', label: 'Phone', required: true },
-  { type: 'text', name: 'zip', label: 'ZIP code', required: true },
-  {
-    type: 'select',
-    name: 'material',
-    label: 'Material',
-    options: [
-      { label: 'Granite', value: 'granite' },
-      { label: 'Quartz', value: 'quartz' },
-      { label: 'Laminate', value: 'laminate' },
-      { label: 'Prefabricated', value: 'prefab' },
-      { label: 'Not sure yet', value: 'unsure' },
-    ],
-  },
-  { type: 'text', name: 'sqft', label: 'Approximate square feet (rough is fine)' },
+/** The quote form, as rows: related fields share a line so the form stays short. */
+export type QuoteFields = Array<Field | Field[]>;
+
+export const COUNTERTOP_QUOTE_FIELDS: QuoteFields = [
+  [
+    { type: 'text', name: 'name', label: 'Your name', required: true },
+    { type: 'email', name: 'email', label: 'Email', required: true },
+  ],
+  [
+    { type: 'text', name: 'phone', label: 'Phone', required: true },
+    { type: 'text', name: 'zip', label: 'ZIP code', required: true },
+  ],
+  [
+    {
+      type: 'select',
+      name: 'material',
+      label: 'Material',
+      options: [
+        { label: 'Granite', value: 'granite' },
+        { label: 'Quartz', value: 'quartz' },
+        { label: 'Laminate', value: 'laminate' },
+        { label: 'Prefabricated', value: 'prefab' },
+        { label: 'Not sure yet', value: 'unsure' },
+      ],
+    },
+    { type: 'text', name: 'sqft', label: 'Approx. square feet' },
+  ],
   {
     type: 'select',
     name: 'cutouts',
@@ -42,7 +51,7 @@ export const COUNTERTOP_QUOTE_FIELDS: Field[] = [
 ];
 
 // The same form with the chosen stone carried along (PDP), so the quote names the product.
-export function countertopQuoteFields(product?: string): Field[] {
+export function countertopQuoteFields(product?: string): QuoteFields {
   if (!product) return COUNTERTOP_QUOTE_FIELDS;
 
   return [{ type: 'hidden', name: 'product', defaultValue: product }, ...COUNTERTOP_QUOTE_FIELDS];
