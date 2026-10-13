@@ -18,7 +18,7 @@ export const COUNTERTOP_QUOTE_FIELDS: QuoteFields = [
     { type: 'email', name: 'email', label: 'Email', required: true },
   ],
   [
-    { type: 'text', name: 'phone', label: 'Phone', required: true },
+    { type: 'tel', name: 'phone', label: 'Phone', required: true },
     { type: 'text', name: 'zip', label: 'ZIP code', required: true },
   ],
   [

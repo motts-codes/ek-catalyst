@@ -22,7 +22,7 @@ const FIELDS: Array<Field | Field[]> = [
     { type: 'text', name: 'name', label: 'Your name', required: true },
   ],
   [
-    { type: 'text', name: 'phone', label: 'Phone', required: true },
+    { type: 'tel', name: 'phone', label: 'Phone', required: true },
     { type: 'email', name: 'email', label: 'Email', required: true },
   ],
   {

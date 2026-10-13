@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { US_PHONE_PATTERN } from './phone';
+
 export interface PasswordComplexitySettings {
   minimumNumbers?: number | null;
   minimumPasswordLength?: number | null;
@@ -78,6 +80,12 @@ type EmailInputField = {
   defaultValue?: string;
 } & FormField;
 
+// US phone number: formatted "(860) 247-1000" as you type; must have ten digits when filled.
+type TelInputField = {
+  type: 'tel';
+  defaultValue?: string;
+} & FormField;
+
 type TextAreaField = {
   type: 'textarea';
   defaultValue?: string;
@@ -148,6 +156,7 @@ type HiddenInputField = {
 } & FormField;
 
 export type Field =
+  | TelInputField
   | RadioField
   | CheckboxField
   | CheckboxGroupField
@@ -294,6 +303,14 @@ function getFieldSchema(
 
     case 'email':
       fieldSchema = z.string().email().trim();
+
+      if (field.required !== true) fieldSchema = fieldSchema.optional();
+
+      break;
+
+    case 'tel':
+      // Ten digits, with or without the formatting the input applies ("(860) 247-1000").
+      fieldSchema = z.string().trim().regex(US_PHONE_PATTERN, 'Enter a 10-digit US phone number');
 
       if (field.required !== true) fieldSchema = fieldSchema.optional();
 

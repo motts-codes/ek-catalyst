@@ -21,7 +21,7 @@ const FIELDS: Array<Field | Field[]> = [
   ],
   [
     { type: 'email', name: 'email', label: 'Email', required: true },
-    { type: 'text', name: 'phone', label: 'Phone' },
+    { type: 'tel', name: 'phone', label: 'Phone' },
   ],
   { type: 'text', name: 'zip', label: 'ZIP code' },
   { type: 'select', name: 'audience', label: 'I am a…', options: AUDIENCE_OPTIONS },

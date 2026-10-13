@@ -5,7 +5,7 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 export const CONTACT_FIELDS: Field[] = [
   { type: 'text', name: 'name', label: 'Your name', required: true },
   { type: 'email', name: 'email', label: 'Email', required: true },
-  { type: 'text', name: 'phone', label: 'Phone', required: true },
+  { type: 'tel', name: 'phone', label: 'Phone', required: true },
   { type: 'text', name: 'zip', label: 'ZIP code', required: true },
 ];
 

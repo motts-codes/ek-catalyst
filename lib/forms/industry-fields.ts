@@ -9,7 +9,7 @@ export const industryFields = (scopeLabel: string): Array<Field | Field[]> => [
   ],
   [
     { type: 'email', name: 'email', label: 'Email', required: true },
-    { type: 'text', name: 'phone', label: 'Phone', required: true },
+    { type: 'tel', name: 'phone', label: 'Phone', required: true },
   ],
   [
     { type: 'text', name: 'scope', label: scopeLabel, required: true },

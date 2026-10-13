@@ -38,6 +38,7 @@ import { SwatchRadioGroup } from '@/vibes/soul/form/swatch-radio-group';
 import { Textarea } from '@/vibes/soul/form/textarea';
 import { Button, ButtonProps } from '@/vibes/soul/primitives/button';
 
+import { formatUsPhone } from './phone';
 import {
   Field,
   FieldGroup,
@@ -273,6 +274,23 @@ function DynamicFormField({
           key={field.name}
           label={field.label}
           placeholder={field.placeholder}
+        />
+      );
+
+    case 'tel':
+      return (
+        <Input
+          {...getInputProps(formField, { type: 'tel' })}
+          autoComplete="tel"
+          errors={formField.errors}
+          inputMode="tel"
+          key={field.name}
+          label={field.label}
+          onInput={(event) => {
+            // Uncontrolled input: rewrite the value in place, so conform reads the formatted one.
+            event.currentTarget.value = formatUsPhone(event.currentTarget.value);
+          }}
+          placeholder={field.placeholder ?? '(860) 555-0123'}
         />
       );
 
