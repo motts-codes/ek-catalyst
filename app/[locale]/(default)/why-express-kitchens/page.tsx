@@ -170,6 +170,7 @@ export default async function WhyExpressKitchens({
         ]}
         columns={3}
         description="Each one you can check on this site or in a showroom."
+        imageStyle="plain"
         kicker="Only at EK"
         tint
         title="Proven, not promised."
