@@ -71,6 +71,8 @@ interface HeroProps {
   actions?: PageAction[];
   image?: PageImage;
   imageLabel?: string;
+  /** `plain` shows the photo as it is: no frame, rounding or backdrop (for shots on white). */
+  imageStyle?: 'framed' | 'plain';
   /** No photo column — the copy runs the full width. */
   textOnly?: boolean;
   /** `2` when the page already has an h1 above (e.g. a scroll hero). */
@@ -88,6 +90,7 @@ export function PageHero({
   actions = [],
   image,
   imageLabel,
+  imageStyle = 'framed',
   textOnly = false,
   headingLevel = 1,
   className,
@@ -131,11 +134,18 @@ export function PageHero({
           <Actions actions={actions} className="mt-7" />
         </div>
         {!textOnly && (
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+          <div
+            className={clsx(
+              'relative overflow-hidden',
+              imageStyle === 'plain' && image
+                ? 'aspect-square'
+                : 'aspect-[4/3] rounded-3xl bg-contrast-100 ring-1 ring-contrast-100',
+            )}
+          >
             {image ? (
               <Image
                 alt={image.alt}
-                className="object-cover"
+                className={imageStyle === 'plain' ? 'object-contain' : 'object-cover'}
                 fill
                 preload
                 sizes="(min-width: 56rem) 45vw, 100vw"

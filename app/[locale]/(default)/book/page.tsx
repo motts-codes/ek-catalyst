@@ -106,6 +106,7 @@ export default async function Book({
           src: '/images/book/hero.webp',
           alt: 'A designer and a homeowner at a table choosing between door samples',
         }}
+        imageStyle="plain"
         kicker="Schedule a showroom appointment"
         title={chosen ? `Book a visit to ${chosen.name}` : 'Sit down with a designer, in person'}
       />
