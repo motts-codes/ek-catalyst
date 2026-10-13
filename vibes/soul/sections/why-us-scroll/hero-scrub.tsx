@@ -350,7 +350,7 @@ export function HeroScrub({
             with the scroll cue (mouse + "Scroll") underneath it. */}
         <div
           aria-hidden
-          className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex max-w-[calc(100vw-48px)] -translate-x-1/2 -translate-y-1/2 flex-col items-start gap-5 md:-translate-x-[calc(50%+100px)] xl:-translate-x-[calc(50%+175px)]"
+          className="ek-cue pointer-events-none absolute left-6 top-1/2 z-20 flex max-w-[calc(100vw-48px)] -translate-y-1/2 flex-col items-start gap-5 md:left-1/2 md:-translate-x-[calc(50%+100px)] xl:-translate-x-[calc(50%+175px)]"
           ref={cueRef}
         >
           <p // Viewport breakpoints here: the hero is not a @container, so the container variants the
