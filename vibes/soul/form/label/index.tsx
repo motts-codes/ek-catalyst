@@ -42,7 +42,14 @@ export function Label({
       )}
     >
       {children}
-      {!required && <span className="ml-1 font-normal text-contrast-500">({t('optional')})</span>}
+      {/* Required fields get a red asterisk; optional ones keep saying so in words. */}
+      {required ? (
+        <span aria-hidden className="ml-0.5 text-[var(--button-primary-background,#d90716)]">
+          *
+        </span>
+      ) : (
+        <span className="ml-1 font-normal text-contrast-500">({t('optional')})</span>
+      )}
     </LabelPrimitive.Root>
   );
 }
