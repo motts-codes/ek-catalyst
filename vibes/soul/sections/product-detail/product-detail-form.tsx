@@ -747,14 +747,14 @@ function QuoteOnlyPanel({
   return (
     <div className="space-y-3 pb-8">
       <HeaderBox>{header}</HeaderBox>
-      <div className="flex flex-col gap-3 pt-2 @sm:flex-row">
-        <ButtonLink className="@sm:flex-1" href={actions.quoteHref} size="medium">
+      <div className="flex flex-col gap-3 pt-2 @md:flex-row">
+        <ButtonLink className="@md:flex-1" href={actions.quoteHref} size="medium">
           Request a quote
         </ButtonLink>
         <ButtonLink
           // White outline (the PDP themes "tertiary" dark red); fills black on hover like the
           // site's other secondary buttons.
-          className="!border-foreground !bg-white !text-foreground after:!bg-foreground hover:!text-white @sm:flex-1"
+          className="!border-foreground !bg-white !text-foreground after:!bg-foreground hover:!text-white @md:flex-1"
           href={actions.phoneHref}
           size="medium"
           variant="tertiary"
