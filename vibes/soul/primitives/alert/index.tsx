@@ -46,7 +46,12 @@ export function Alert({
 
       <div className="flex items-center gap-1">
         {action && (
-          <Button onClick={action.onClick} size="x-small" variant="ghost">
+          <Button
+            className="shrink-0 whitespace-nowrap"
+            onClick={action.onClick}
+            size="x-small"
+            variant="ghost"
+          >
             {action.label}
           </Button>
         )}
