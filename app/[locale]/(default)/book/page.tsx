@@ -40,7 +40,6 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
       options: [
         { label: 'In the showroom', value: 'showroom' },
         { label: 'On a video call', value: 'video' },
-        { label: 'At my home (Connecticut)', value: 'home' },
       ],
     },
     { type: 'date', name: 'date', label: 'Pick a date', required: true, minDate: today() },

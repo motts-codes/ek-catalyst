@@ -47,7 +47,8 @@ export function CheckboxGroup({
       <div
         aria-labelledby={id}
         className={clsx(
-          'space-y-3 rounded-lg px-5 py-3.5',
+          // Options flow in a row and wrap as the space allows (same panel as the radio group).
+          'flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg px-5 py-3.5',
           colorScheme === 'light' && 'bg-[var(--checkbox-group-light-panel,transparent)]',
         )}
       >
