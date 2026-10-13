@@ -255,18 +255,55 @@ function MobileMenuItem({ item, onNavigate }: { item: Link; onNavigate: () => vo
       )}
       {hasSubLinks &&
         open &&
-        subLinks.map((link, j) => (
-          <li key={j}>
-            <Link
-              className="block rounded-lg bg-[var(--nav-mobile-sub-link-background,transparent)] px-3 py-2 font-[family-name:var(--nav-mobile-sub-link-font-family,var(--font-family-body))] text-[13px] font-medium text-[var(--nav-mobile-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4"
-              href={link.href}
-              onClick={onNavigate}
-            >
-              {link.label}
-            </Link>
+        (item.groups ?? []).map((group, g) => (
+          // Each group (Cabinets, Countertops…) keeps its heading on mobile, with space before it,
+          // so a long category reads as sections rather than one run of links.
+          <li className={clsx(g > 0 && 'mt-3')} key={g}>
+            {group.label != null && group.label !== '' && (
+              <GroupHeading href={group.href} label={group.label} onNavigate={onNavigate} />
+            )}
+            <ul>
+              {group.links.map((link, j) => (
+                <li key={j}>
+                  <Link
+                    className="block rounded-lg bg-[var(--nav-mobile-sub-link-background,transparent)] px-3 py-2 pl-6 font-[family-name:var(--nav-mobile-sub-link-font-family,var(--font-family-body))] text-[13px] font-medium text-[var(--nav-mobile-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-mobile-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-mobile-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2 @4xl:py-4"
+                    href={link.href}
+                    onClick={onNavigate}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </li>
         ))}
     </ul>
+  );
+}
+
+// A group's name inside an expanded mobile category: small caps, red when it links somewhere.
+function GroupHeading({
+  label,
+  href,
+  onNavigate,
+}: {
+  label: string;
+  href?: string;
+  onNavigate: () => void;
+}) {
+  const className =
+    'block px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--nav-mobile-group-text,hsl(var(--foreground)))]';
+
+  return href ? (
+    <Link
+      className={clsx(className, 'hover:text-[var(--button-primary-background,#d90716)]')}
+      href={href}
+      onClick={onNavigate}
+    >
+      {label}
+    </Link>
+  ) : (
+    <span className={className}>{label}</span>
   );
 }
 
