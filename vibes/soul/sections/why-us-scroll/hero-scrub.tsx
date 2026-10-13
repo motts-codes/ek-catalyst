@@ -353,7 +353,10 @@ export function HeroScrub({
           className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex -translate-x-[calc(50%+100px)] -translate-y-1/2 flex-col items-start gap-5"
           ref={cueRef}
         >
-          <p className="m-0 whitespace-pre-line font-heading text-3xl font-bold leading-tight text-foreground @xl:text-4xl @4xl:text-[44px]">
+          <p // Viewport breakpoints here: the hero is not a @container, so the container variants the
+            // page hero uses would never kick in and the line would stay at 30px.
+            className="m-0 whitespace-pre-line font-heading text-3xl font-bold leading-tight text-foreground md:text-4xl xl:text-[44px]"
+          >
             {cueHint}
           </p>
           <span className="flex items-center gap-3 font-heading text-xs font-bold uppercase tracking-[0.16em] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35)]">
