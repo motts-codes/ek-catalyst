@@ -7,9 +7,8 @@ import {
   CategoryPoints,
   SubcategoryTiles,
 } from '@/vibes/soul/sections/category-hero';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
@@ -19,11 +18,15 @@ export const metadata: Metadata = {
     'Vinyl clapboard, Dutch lap, board and batten and shake, new at Express Kitchens. Quoted by the square; tell us the elevation and we price it.',
 };
 
-const FIELDS: Field[] = [
-  { type: 'text', name: 'name', label: 'Your name', required: true },
-  { type: 'email', name: 'email', label: 'Email', required: true },
-  { type: 'text', name: 'phone', label: 'Phone', required: true },
-  { type: 'text', name: 'zip', label: 'ZIP code', required: true },
+const FIELDS: Array<Field | Field[]> = [
+  [
+    { type: 'text', name: 'name', label: 'Your name', required: true },
+    { type: 'email', name: 'email', label: 'Email', required: true },
+  ],
+  [
+    { type: 'text', name: 'phone', label: 'Phone', required: true },
+    { type: 'text', name: 'zip', label: 'ZIP code', required: true },
+  ],
   {
     type: 'select',
     name: 'type',
@@ -84,21 +87,15 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
         }))}
         title="Shop by colour"
       />
-      <HomeSection
+      <LeadFormCard
+        action={submitQuoteLead}
         description="A rough size is fine; we confirm quantities before anything ships."
+        fields={FIELDS}
         id="quote"
         kicker="Get a siding quote"
-        tint
+        submitLabel="Request my quote"
         title="Tell us about the house"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitQuoteLead}
-            fields={FIELDS}
-            submitLabel="Request my quote"
-          />
-        </FormCard>
-      </HomeSection>
+      />
     </>
   );
 }

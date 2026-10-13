@@ -3,11 +3,10 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ShowroomCards } from '@/vibes/soul/sections/page-kit/showrooms';
-import { CONTACT_FIELDS, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
+import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitBookingLead } from '~/lib/forms/submit-lead';
 import { getShowroom, SHOWROOMS } from '~/lib/pages/showrooms';
 
@@ -24,7 +23,7 @@ const TIME_OPTIONS = ['9:00 AM', '10:30 AM', '12:00 PM', '1:30 PM', '3:00 PM', '
 
 const today = () => new Date().toISOString().slice(0, 10);
 
-function fields(showroom: string | undefined): Field[] {
+function fields(showroom: string | undefined): Array<Field | Field[]> {
   return [
     {
       type: 'select',
@@ -65,7 +64,7 @@ function fields(showroom: string | undefined): Field[] {
       required: true,
       options: TIME_OPTIONS,
     },
-    ...CONTACT_FIELDS,
+    ...contactRows(),
     {
       type: 'textarea',
       name: 'notes',
@@ -110,25 +109,21 @@ export default async function Book({
         title={chosen ? `Book a visit to ${chosen.name}` : 'Sit down with a designer, in person'}
       />
       {!chosen && <ShowroomCards bookHref="/book" showrooms={SHOWROOMS} />}
-      <HomeSection
-        description="Your Project Manager confirms by text and email within two hours, and you'll get a reminder the day before. Times are Eastern."
-        id="book"
-        kicker="Your appointment"
-        tint
-        title="Pick a day and a time"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitBookingLead}
-            fields={fields(chosen?.slug)}
-            submitLabel="Book my appointment"
-          />
-          <p className="mt-4 text-xs text-contrast-500">
+      <LeadFormCard
+        action={submitBookingLead}
+        description="Your Project Manager confirms by text and email within two hours. Times are Eastern."
+        fields={fields(chosen?.slug)}
+        fine={
+          <>
             Showrooms are closed on Sundays, and some on Mondays. If the slot you choose turns out
             to be taken, your Project Manager will offer the nearest one when they confirm.
-          </p>
-        </FormCard>
-      </HomeSection>
+          </>
+        }
+        id="book"
+        kicker="Your appointment"
+        submitLabel="Book my appointment"
+        title="Pick a day and a time"
+      />
       <CardsRow
         cards={[
           {

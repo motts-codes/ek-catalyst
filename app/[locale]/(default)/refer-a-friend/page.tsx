@@ -6,15 +6,8 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import {
-  FinePrint,
-  FormCard,
-  PageBreadcrumbs,
-  PageHero,
-  Prose,
-} from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { FinePrint, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { submitReferralLead } from '~/lib/forms/submit-lead';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
@@ -24,9 +17,11 @@ export const metadata: Metadata = {
     'Know someone planning a kitchen? Send them to us. They get $[X] off their first order; you get $[X] when it ships. No limit.',
 };
 
-const FIELDS: Field[] = [
-  { type: 'text', name: 'name', label: 'Your name', required: true },
-  { type: 'email', name: 'email', label: 'Your email', required: true },
+const FIELDS: Array<Field | Field[]> = [
+  [
+    { type: 'text', name: 'name', label: 'Your name', required: true },
+    { type: 'email', name: 'email', label: 'Your email', required: true },
+  ],
   {
     type: 'email',
     name: 'friendEmail',
@@ -83,20 +78,15 @@ export default async function ReferAFriend({ params }: { params: Promise<{ local
         tint
         title="Three steps, no forms for your friend"
       />
-      <HomeSection
-        description="Two fields for you, and optionally your friend's email if you'd like us to send the link."
+      <LeadFormCard
+        action={submitReferralLead}
+        description="Two fields for you, and your friend's email if you'd like us to send the link."
+        fields={FIELDS}
         id="link"
         kicker="Get your link"
+        submitLabel="Get my link"
         title="Start referring"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitReferralLead}
-            fields={FIELDS}
-            submitLabel="Get my link"
-          />
-        </FormCard>
-      </HomeSection>
+      />
       <Prose
         actions={[{ label: 'Pro Program', href: '/pro' }]}
         body={[

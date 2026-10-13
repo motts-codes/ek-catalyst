@@ -2,15 +2,8 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import {
-  FormCard,
-  LinkCards,
-  PageBreadcrumbs,
-  PageHero,
-  Prose,
-} from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { LinkCards, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
 import { submitSupportLead } from '~/lib/forms/submit-lead';
 import { SHOWROOMS } from '~/lib/home/home-content';
@@ -21,9 +14,11 @@ export const metadata: Metadata = {
     'Phone, showroom contacts or a form. Order status, changes, pickups, and the policies that answer most questions.',
 };
 
-const FIELDS: Field[] = [
-  { type: 'text', name: 'name', label: 'Your name', required: true },
-  { type: 'email', name: 'email', label: 'Email', required: true },
+const FIELDS: Array<Field | Field[]> = [
+  [
+    { type: 'text', name: 'name', label: 'Your name', required: true },
+    { type: 'email', name: 'email', label: 'Email', required: true },
+  ],
   { type: 'text', name: 'orderNumber', label: 'Order number, if you have one' },
   { type: 'textarea', name: 'message', label: 'How can we help?', required: true },
 ];
@@ -98,11 +93,15 @@ export default async function Support({ params }: { params: Promise<{ locale: st
         kicker="Order help"
         title="Status, changes and pickups"
       />
-      <HomeSection id="message" kicker="Send a message" tint title="Tell us what you need">
-        <FormCard>
-          <DynamicFormSection action={submitSupportLead} fields={FIELDS} submitLabel="Send" />
-        </FormCard>
-      </HomeSection>
+      <LeadFormCard
+        action={submitSupportLead}
+        description="We reply within one business day."
+        fields={FIELDS}
+        id="message"
+        kicker="Send a message"
+        submitLabel="Send"
+        title="Tell us what you need"
+      />
       <ShowroomBand showrooms={SHOWROOMS} />
     </>
   );

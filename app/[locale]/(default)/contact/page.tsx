@@ -2,9 +2,8 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
 import { AUDIENCE_OPTIONS } from '~/lib/forms/fields';
 import { submitContactLead } from '~/lib/forms/submit-lead';
@@ -15,11 +14,15 @@ export const metadata: Metadata = {
     'A question about an order, a product or a project? Send it here and the right person replies within one business day. Or call or text 860-247-1000, 24/7.',
 };
 
-const FIELDS: Field[] = [
-  { type: 'text', name: 'firstName', label: 'First name', required: true },
-  { type: 'text', name: 'lastName', label: 'Last name', required: true },
-  { type: 'email', name: 'email', label: 'Email', required: true },
-  { type: 'text', name: 'phone', label: 'Phone' },
+const FIELDS: Array<Field | Field[]> = [
+  [
+    { type: 'text', name: 'firstName', label: 'First name', required: true },
+    { type: 'text', name: 'lastName', label: 'Last name', required: true },
+  ],
+  [
+    { type: 'email', name: 'email', label: 'Email', required: true },
+    { type: 'text', name: 'phone', label: 'Phone' },
+  ],
   { type: 'text', name: 'zip', label: 'ZIP code' },
   { type: 'select', name: 'audience', label: 'I am a…', options: AUDIENCE_OPTIONS },
   {
@@ -64,27 +67,31 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
         kicker="Contact"
         title="Talk to Express Kitchens"
       />
-      <HomeSection id="message" kicker="Send a message" tint title="Tell us what you need">
-        <FormCard>
-          <DynamicFormSection
-            action={submitContactLead}
-            fields={FIELDS}
-            submitLabel="Send message"
-          />
-          <p className="mt-4 text-xs text-contrast-500">
+      <LeadFormCard
+        action={submitContactLead}
+        description="We reply within one business day."
+        fields={FIELDS}
+        fine={
+          <>
             By sending this you agree to our{' '}
             <Link className="underline" href="#">
-              Terms
+              {' '}
+              Terms{' '}
             </Link>{' '}
             and{' '}
             <Link className="underline" href="#">
-              Privacy Policy
-            </Link>
+              {' '}
+              Privacy Policy{' '}
+            </Link>{' '}
             , and to be contacted using the details you&apos;ve given. We reply within one business
             day.
-          </p>
-        </FormCard>
-      </HomeSection>
+          </>
+        }
+        id="message"
+        kicker="Send a message"
+        submitLabel="Send message"
+        title="Tell us what you need"
+      />
     </>
   );
 }

@@ -7,9 +7,8 @@ import {
   CategoryPoints,
   SubcategoryTiles,
 } from '@/vibes/soul/sections/category-hero';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
+import { CountertopQuote } from '@/vibes/soul/sections/countertop-quote';
+import { PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
 import { COUNTERTOP_QUOTE_FIELDS } from '~/lib/countertops/quote-form';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
@@ -78,21 +77,7 @@ export default async function Countertops({ params }: { params: Promise<{ locale
         ]}
         title="Shop by edge profile"
       />
-      <HomeSection
-        description="Tell us your counters and we'll price them. A rough number is fine here: we measure before we cut, so nothing is final until it's exact."
-        id="quote"
-        kicker="Get a countertop quote"
-        tint
-        title="Request your quote"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitQuoteLead}
-            fields={COUNTERTOP_QUOTE_FIELDS}
-            submitLabel="Request my quote"
-          />
-        </FormCard>
-      </HomeSection>
+      <CountertopQuote action={submitQuoteLead} fields={COUNTERTOP_QUOTE_FIELDS} id="quote" />
       <Prose
         body={[
           "We supply the countertop: measured, cut and polished to your kitchen, and delivered. We don't install it. Your installer or contractor sets it in place, and if you need one, the Find a pro page will help you choose well.",

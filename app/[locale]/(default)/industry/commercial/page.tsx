@@ -4,9 +4,8 @@ import { setRequestLocale } from 'next-intl/server';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, PageHero, StatsRow } from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero, StatsRow } from '@/vibes/soul/sections/page-kit';
 import { ProjectGrid } from '@/vibes/soul/sections/page-kit/media';
 import { industryFields } from '~/lib/forms/industry-fields';
 import { submitIndustryLead } from '~/lib/forms/submit-lead';
@@ -158,20 +157,15 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
           ],
         }}
       />
-      <HomeSection
-        description="Send the scope and timeline and our commercial team will come back within 48 hours. Or call 860-247-1000."
+      <LeadFormCard
+        action={submitIndustryLead}
+        description="Send the scope and timeline and our commercial team replies within 48 hours."
+        fields={industryFields('Project — scope')}
         id="talk"
         kicker="Talk to us"
+        submitLabel="Send"
         title="Request a project consultation"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitIndustryLead}
-            fields={industryFields('Project — scope')}
-            submitLabel="Send"
-          />
-        </FormCard>
-      </HomeSection>
+      />
     </>
   );
 }

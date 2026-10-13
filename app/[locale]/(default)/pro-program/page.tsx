@@ -5,9 +5,8 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitProProgramLead } from '~/lib/forms/submit-lead';
 
@@ -17,11 +16,15 @@ export const metadata: Metadata = {
     'Two tiers, real discounts. Silver from your first $5,000 invoice, Diamond at $50,000 a year. Contractor-only support, free design and sales-tax exemption.',
 };
 
-const FIELDS: Field[] = [
-  { type: 'text', name: 'company', label: 'Company', required: true },
-  { type: 'text', name: 'name', label: 'Your name', required: true },
-  { type: 'text', name: 'phone', label: 'Phone', required: true },
-  { type: 'email', name: 'email', label: 'Email', required: true },
+const FIELDS: Array<Field | Field[]> = [
+  [
+    { type: 'text', name: 'company', label: 'Company', required: true },
+    { type: 'text', name: 'name', label: 'Your name', required: true },
+  ],
+  [
+    { type: 'text', name: 'phone', label: 'Phone', required: true },
+    { type: 'email', name: 'email', label: 'Email', required: true },
+  ],
   {
     type: 'text',
     name: 'license',
@@ -135,20 +138,15 @@ export default async function ProProgram({ params }: { params: Promise<{ locale:
         tint
         title="Three steps"
       />
-      <HomeSection
+      <LeadFormCard
+        action={submitProProgramLead}
         description="You can order at retail pricing while the account is being set up."
+        fields={FIELDS}
         id="join"
         kicker="Join"
+        submitLabel="Send my application"
         title="Send your application"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitProProgramLead}
-            fields={FIELDS}
-            submitLabel="Send my application"
-          />
-        </FormCard>
-      </HomeSection>
+      />
     </>
   );
 }

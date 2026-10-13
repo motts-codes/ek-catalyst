@@ -4,9 +4,8 @@ import { setRequestLocale } from 'next-intl/server';
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { submitSupportLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -15,9 +14,11 @@ export const metadata: Metadata = {
     'Express Kitchens aims to meet WCAG 2.2 AA across this site and to fix anything that falls short quickly when it is reported.',
 };
 
-const FIELDS: Field[] = [
-  { type: 'text', name: 'name', label: 'Your name', required: true },
-  { type: 'text', name: 'contact', label: 'Email or phone', required: true },
+const FIELDS: Array<Field | Field[]> = [
+  [
+    { type: 'text', name: 'name', label: 'Your name', required: true },
+    { type: 'text', name: 'contact', label: 'Email or phone', required: true },
+  ],
   { type: 'text', name: 'page', label: 'The page or feature' },
   { type: 'textarea', name: 'message', label: 'What happened', required: true },
 ];
@@ -101,17 +102,15 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         kicker="Technology and known limitations"
         title="What we test with, and what we're still fixing"
       />
-      <HomeSection
-        description="If any part of the site is hard to use, tell us which page and what happened. We reply within three business days and fix what we can straight away. You can also visit or call any showroom; everything on the site can be done in person or over the phone."
+      <LeadFormCard
+        action={submitSupportLead}
+        description="Tell us which page and what happened. We reply within three business days."
+        fields={FIELDS}
         id="report"
         kicker="Tell us what isn't working"
-        tint
+        submitLabel="Send"
         title="Report a barrier"
-      >
-        <FormCard>
-          <DynamicFormSection action={submitSupportLead} fields={FIELDS} submitLabel="Send" />
-        </FormCard>
-      </HomeSection>
+      />
     </>
   );
 }

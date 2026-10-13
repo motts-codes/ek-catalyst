@@ -4,15 +4,8 @@ import { setRequestLocale } from 'next-intl/server';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import {
-  FormCard,
-  PageBreadcrumbs,
-  PageHero,
-  Prose,
-  StatsRow,
-} from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero, Prose, StatsRow } from '@/vibes/soul/sections/page-kit';
 import { ProjectGrid } from '@/vibes/soul/sections/page-kit/media';
 import { industryFields } from '~/lib/forms/industry-fields';
 import { submitIndustryLead } from '~/lib/forms/submit-lead';
@@ -133,21 +126,15 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
           ],
         }}
       />
-      <HomeSection
-        description="Tell us the unit count and timeline and we'll come back with portfolio pricing. Or call 860-247-1000."
+      <LeadFormCard
+        action={submitIndustryLead}
+        description="Tell us the unit count and timeline and we'll come back with portfolio pricing."
+        fields={industryFields('Project — number of units')}
         id="talk"
         kicker="Talk to us"
-        tint
+        submitLabel="Send"
         title="Request portfolio pricing"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitIndustryLead}
-            fields={industryFields('Project — number of units')}
-            submitLabel="Send"
-          />
-        </FormCard>
-      </HomeSection>
+      />
     </>
   );
 }

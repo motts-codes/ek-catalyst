@@ -3,11 +3,11 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
-import { CONTACT_FIELDS, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
+import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitDesignLead } from '~/lib/forms/submit-lead';
 import { HOME_REVIEWS, SAMPLES_HREF } from '~/lib/home/home-content';
 import { getAudienceMode } from '~/lib/navigation/audience-mode';
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     'A Project Manager plans your kitchen with you, prices every cabinet both ways and gives you a delivery date. Free, no deposit, no obligation.',
 };
 
-const FIELDS: Field[] = [
-  ...CONTACT_FIELDS,
+const FIELDS: Array<Field | Field[]> = [
+  ...contactRows(),
   {
     type: 'checkbox-group',
     name: 'rooms',
@@ -114,10 +114,10 @@ const FIELDS: Field[] = [
   },
 ];
 
-const PRO_FIELDS: Field[] = [
-  ...CONTACT_FIELDS,
+const PRO_FIELDS: Array<Field | Field[]> = [
+  ...contactRows(),
   { type: 'text', name: 'company', label: 'Company', required: true },
-  ...FIELDS.slice(CONTACT_FIELDS.length),
+  ...FIELDS.slice(contactRows().length),
 ];
 
 // The design consult request: who you are, what you're planning, how you'd like to meet. One
@@ -153,25 +153,21 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             : 'Plan your kitchen with someone who does it every day'
         }
       />
-      <HomeSection
-        description="Only your contact details and the rooms are required. Everything else helps the designer come prepared, so the time you spend together goes further."
-        id="request"
-        kicker="Request your consult"
-        tint
-        title="Tell us about your project"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitDesignLead}
-            fields={pro ? PRO_FIELDS : FIELDS}
-            submitLabel="Request my free consult"
-          />
-          <p className="mt-4 text-xs text-contrast-500">
+      <LeadFormCard
+        action={submitDesignLead}
+        description="Only your contact details and the rooms are required."
+        fields={pro ? PRO_FIELDS : FIELDS}
+        fine={
+          <>
             A designer will call within one business day to confirm the day, time and format.
             You&apos;ll speak to a designer, not a call center. No deposit, no obligation.
-          </p>
-        </FormCard>
-      </HomeSection>
+          </>
+        }
+        id="request"
+        kicker="Request your consult"
+        submitLabel="Request my free consult"
+        title="Tell us about your project"
+      />
       <CardsRow
         cards={[
           {

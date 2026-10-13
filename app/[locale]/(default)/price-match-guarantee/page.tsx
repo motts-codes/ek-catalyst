@@ -5,16 +5,9 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import {
-  FinePrint,
-  FormCard,
-  PageBreadcrumbs,
-  PageHero,
-  Prose,
-} from '@/vibes/soul/sections/page-kit';
-import { CONTACT_FIELDS } from '~/lib/forms/fields';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { FinePrint, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { contactRows } from '~/lib/forms/fields';
 import { submitPriceMatchLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -23,8 +16,8 @@ export const metadata: Metadata = {
     "Bring any competitor cabinet quote of $3,000 or more. We match it after adding free upgrades: all-plywood boxes, soft-close hinges and full-extension glides. If we can't match it, you get $500.",
 };
 
-const FIELDS: Field[] = [
-  ...CONTACT_FIELDS.filter((f) => f.name !== 'zip'),
+const FIELDS: Array<Field | Field[]> = [
+  ...contactRows({ zip: false }),
   { type: 'text', name: 'orderNumber', label: 'Order number, if you have already ordered' },
   {
     type: 'text',
@@ -154,21 +147,15 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
         kicker="Why it rarely comes up"
         title="The price has a reason"
       />
-      <HomeSection
-        description="Prefer to talk? Call or text 860-247-1000 and a Project Manager can check it with you on the phone. We reply within one business day with a matched price, or, if we can't match it, your $500."
+      <LeadFormCard
+        action={submitPriceMatchLead}
+        description="We reply within one business day with a matched price, or your $500."
+        fields={FIELDS}
         id="submit"
         kicker="Submit a quote"
-        tint
+        submitLabel="Submit for price match"
         title="Send us the competitor's quote"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitPriceMatchLead}
-            fields={FIELDS}
-            submitLabel="Submit for price match"
-          />
-        </FormCard>
-      </HomeSection>
+      />
       <CabinetFaq
         data={{
           headline: 'Questions about price matching',

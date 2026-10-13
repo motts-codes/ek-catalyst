@@ -6,10 +6,9 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FormCard, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
-import { CONTACT_FIELDS } from '~/lib/forms/fields';
+import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { contactRows } from '~/lib/forms/fields';
 import { submitReturnLead } from '~/lib/forms/submit-lead';
 import { SAMPLES_HREF } from '~/lib/home/home-content';
 
@@ -19,8 +18,8 @@ export const metadata: Metadata = {
     'Unopened items can come back within 30 days with a 30% restocking fee. Damaged, faulty or wrong items are replaced free. Here is exactly what qualifies and how to do it.',
 };
 
-const FIELDS: Field[] = [
-  ...CONTACT_FIELDS.filter((f) => f.name !== 'zip'),
+const FIELDS: Array<Field | Field[]> = [
+  ...contactRows({ zip: false }),
   { type: 'text', name: 'orderNumber', label: 'Order number', required: true },
   {
     type: 'textarea',
@@ -122,21 +121,15 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
         kicker="How to return"
         title="Three steps"
       />
-      <HomeSection
+      <LeadFormCard
+        action={submitReturnLead}
         description="We reply within one business day with your authorization number and the return address."
+        fields={FIELDS}
         id="request"
         kicker="Request a return authorization"
-        tint
+        submitLabel="Request authorization"
         title="Tell us what's coming back"
-      >
-        <FormCard>
-          <DynamicFormSection
-            action={submitReturnLead}
-            fields={FIELDS}
-            submitLabel="Request authorization"
-          />
-        </FormCard>
-      </HomeSection>
+      />
       <CardsRow
         cards={[
           {
