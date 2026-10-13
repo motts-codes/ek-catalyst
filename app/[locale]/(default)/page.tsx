@@ -41,6 +41,7 @@ import { CATEGORY_CAROUSEL_TYPE, HERO_SPLIT_TYPE } from '~/lib/makeswift/compone
 import { Slot } from '~/lib/makeswift/slot';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
+import { productCardAddToCartAction } from './(faceted)/product-card-add-to-cart';
 import { getBlogPosts } from './blog/page-data';
 
 interface Params {
@@ -176,7 +177,7 @@ export default async function Home({ params }: Props) {
 
       {/* 4 · Shop what's moving — tabs by reason to buy now, fed by store data */}
       <HomeSection halfPadding tint title="Shop what's moving">
-        <ProductTabs tabs={productTabs} />
+        <ProductTabs addToCartAction={productCardAddToCartAction} tabs={productTabs} />
       </HomeSection>
 
       {/* 5 · Best sellers — collection cards with the 10×10 price in a carousel, then the samples strip */}

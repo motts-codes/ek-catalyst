@@ -7,7 +7,10 @@ import { createPortal } from 'react-dom';
 import { Streamable } from '@/vibes/soul/lib/streamable';
 import { CarouselButtons } from '@/vibes/soul/primitives/carousel';
 import { HomeProductCard } from '@/vibes/soul/primitives/home-product-card';
-import { type Product } from '@/vibes/soul/primitives/product-card';
+import {
+  type Product,
+  type ProductCardAddToCartAction,
+} from '@/vibes/soul/primitives/product-card';
 import { ProductCarousel } from '@/vibes/soul/sections/product-carousel';
 
 export interface TabDescriptor {
@@ -97,17 +100,20 @@ interface Props {
   tabs: ProductTab[];
   aspectRatio?: '5:6' | '3:4' | '1:1';
   className?: string;
+  /** Direct add-to-cart for no-option products; the card then says "Add to Cart", not "Shop Now". */
+  addToCartAction?: ProductCardAddToCartAction;
 }
 
 // "Shop what's moving" — tabs by reason to buy now (Trending, New, Best selling, On sale…), each a
 // product carousel fed by store data.
-export function ProductTabs({ tabs, aspectRatio = '1:1', className }: Props) {
+export function ProductTabs({ tabs, aspectRatio = '1:1', className, addToCartAction }: Props) {
   return (
     <ProductTabsShell
       className={className}
       renderPanel={(tab) => (
         <ProductCarousel
           CardComponent={HomeProductCard}
+          addToCartAction={addToCartAction}
           aspectRatio={aspectRatio}
           controls={<TabRowArrows />}
           density="compact"

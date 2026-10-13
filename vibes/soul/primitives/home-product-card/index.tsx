@@ -7,7 +7,11 @@ import { MessageSquareQuote, Truck } from 'lucide-react';
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { PriceLabel } from '@/vibes/soul/primitives/price-label';
-import { type ProductCardProps } from '@/vibes/soul/primitives/product-card';
+import {
+  type ProductCardAddToCartAction,
+  type ProductCardProps,
+} from '@/vibes/soul/primitives/product-card';
+import { AddToCartCta } from '@/vibes/soul/primitives/product-card/add-to-cart-cta';
 import { Compare } from '@/vibes/soul/primitives/product-card/compare';
 import { Rating } from '@/vibes/soul/primitives/rating';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
@@ -46,6 +50,7 @@ export function HomeProductCard({
     price,
     image,
     href,
+    requiresOptions,
     quoteOnly = false,
     priceUnit,
     inventoryMessage,
@@ -59,6 +64,7 @@ export function HomeProductCard({
   aspectRatio = '5:6',
   compareLabel,
   compareParamName,
+  addToCartAction,
   imagePriority = false,
   imageSizes = '(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw',
 }: ProductCardProps) {
@@ -199,15 +205,13 @@ export function HomeProductCard({
               // One simple CTA: a full-width "Shop Now" pill (red outline, fills red on hover),
               // pinned to the bottom so buttons align across a row.
               <div className="relative z-10 mt-auto pt-3">
-                <ButtonLink
-                  className="w-full !border-[var(--button-primary-background,#d90716)] !bg-transparent !text-[var(--button-primary-background,#d90716)] after:!bg-[var(--button-primary-background,#d90716)] hover:!text-white"
-                  href={quoteOnly ? `${href}#request-a-quote` : href}
-                  shape="pill"
-                  size="small"
-                  variant="tertiary"
-                >
-                  {quoteOnly ? 'Request a quote' : 'Shop Now'}
-                </ButtonLink>
+                <HomeCardCta
+                  addToCartAction={addToCartAction}
+                  href={href}
+                  id={id}
+                  quoteOnly={quoteOnly}
+                  requiresOptions={requiresOptions}
+                />
               </div>
             )}
           </div>
@@ -262,6 +266,39 @@ function DeliveryLine({ message }: { message?: string }) {
       />
       {message}
     </span>
+  );
+}
+
+// The card's one CTA: "Request a quote" for quote-only products; "Add to Cart" (straight into the
+// cart, opening the drawer) when the product has no options to choose and the action is wired;
+// otherwise "Shop Now" to the product page.
+function HomeCardCta({
+  quoteOnly,
+  requiresOptions,
+  addToCartAction,
+  href,
+  id,
+}: {
+  quoteOnly: boolean;
+  requiresOptions?: boolean;
+  addToCartAction?: ProductCardAddToCartAction;
+  href: string;
+  id: string;
+}) {
+  if (!quoteOnly && requiresOptions === false && addToCartAction != null) {
+    return <AddToCartCta action={addToCartAction} id={id} />;
+  }
+
+  return (
+    <ButtonLink
+      className="w-full !border-[var(--button-primary-background,#d90716)] !bg-transparent !text-[var(--button-primary-background,#d90716)] after:!bg-[var(--button-primary-background,#d90716)] hover:!text-white"
+      href={quoteOnly ? `${href}#request-a-quote` : href}
+      shape="pill"
+      size="small"
+      variant="tertiary"
+    >
+      {quoteOnly ? 'Request a quote' : 'Shop Now'}
+    </ButtonLink>
   );
 }
 

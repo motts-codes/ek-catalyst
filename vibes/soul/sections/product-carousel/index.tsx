@@ -13,6 +13,7 @@ import {
 import {
   type Product,
   ProductCard,
+  type ProductCardAddToCartAction,
   ProductCardSkeleton,
 } from '@/vibes/soul/primitives/product-card';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
@@ -42,6 +43,8 @@ export interface ProductCarouselProps {
   controls?: ReactNode;
   /** The card to render each product with (defaults to the shared ProductCard). */
   CardComponent?: typeof ProductCard;
+  /** Direct add-to-cart for no-option products; without it cards link to the product page. */
+  addToCartAction?: ProductCardAddToCartAction;
 }
 
 const ITEM_CLASS = {
@@ -82,6 +85,7 @@ export function ProductCarousel({
   density = 'default',
   controls,
   CardComponent = ProductCard,
+  addToCartAction,
 }: ProductCarouselProps) {
   return (
     <Stream
@@ -129,6 +133,7 @@ export function ProductCarousel({
               {products.map(({ id, ...product }) => (
                 <CarouselItem className={ITEM_CLASS[density]} key={id}>
                   <CardComponent
+                    addToCartAction={addToCartAction}
                     aspectRatio={aspectRatio}
                     colorScheme={colorScheme}
                     imageSizes="(min-width: 42rem) 25vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
