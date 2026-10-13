@@ -67,6 +67,10 @@ export default async (): Promise<NextConfig> => {
     reactStrictMode: true,
     experimental: {
       optimizePackageImports: ['@icons-pack/react-simple-icons'],
+      // Build-time prerendering hits the BigCommerce API for ~100 pages at once; a single 429
+      // used to fail the whole build. Fewer workers, and a retry for the odd rate-limited page.
+      staticGenerationMaxConcurrency: 4,
+      staticGenerationRetryCount: 3,
     },
     typescript: {
       ignoreBuildErrors: !!process.env.CI,
