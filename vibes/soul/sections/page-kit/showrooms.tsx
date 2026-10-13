@@ -2,6 +2,7 @@ import { Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import { directionsHref, type Showroom, showroomHref } from '~/lib/pages/showrooms';
 
@@ -29,7 +30,13 @@ export function ShowroomCards({
             key={showroom.slug}
           >
             <div className="relative aspect-[16/9] bg-contrast-100">
-              <MediaPlaceholder label={`${showroom.name} showroom`} />
+              <Image
+                alt={showroom.image.alt}
+                className="object-cover"
+                fill
+                sizes="(min-width: 64rem) 33vw, (min-width: 36rem) 50vw, 100vw"
+                src={showroom.image.src}
+              />
             </div>
             <div className="flex flex-1 flex-col p-6">
               <h3 className="font-heading text-xl font-bold leading-tight">

@@ -66,6 +66,7 @@ export default async function ShowroomPage({ params }: Props) {
           ...(showroom.outlet ? ['Factory outlet on site'] : []),
         ]}
         description={`Whether you're starting with a photo you saved or a kitchen you've been living with for too long, this is the place to turn it into a plan. Walk through full-size kitchens, hold the doors and finishes in your hands, and sit down with ${showroom.pm.name.startsWith('[') ? 'our Project Manager' : showroom.pm.name}, who will design your layout and price it while you're here. Free, with no deposit and no obligation.`}
+        image={showroom.image}
         imageLabel={`${showroom.name} showroom floor, wide`}
         kicker={`Express Kitchens · ${showroom.name}, Connecticut`}
         title={`Your kitchen starts in ${showroom.name}`}

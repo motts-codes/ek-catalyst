@@ -20,6 +20,8 @@ export interface ProjectManager {
 export interface Showroom {
   slug: string;
   name: string;
+  /** The showroom photo (shared with the home page band). */
+  image: { src: string; alt: string };
   address: string;
   phone: string;
   hours: Hours[];
@@ -38,6 +40,12 @@ const MON_SAT: Hours[] = [
   { days: 'Sunday', time: 'Closed' },
 ];
 
+// Showroom photos live with the home page band (public/images/home/showrooms) and are reused here.
+const showroomImage = (file: string, alt: string) => ({
+  src: `/images/home/showrooms/${file}.webp`,
+  alt,
+});
+
 const PM_TBD: ProjectManager = {
   name: '[Project Manager]',
   role: 'Project Manager & Design Consultant',
@@ -47,6 +55,10 @@ export const SHOWROOMS: Showroom[] = [
   {
     slug: 'brookfield',
     name: 'Brookfield',
+    image: showroomImage(
+      'brookfield',
+      'Granite and quartz slabs on a white wall beside a quartz sample island',
+    ),
     address: '67 Federal Road, Brookfield, CT 06804',
     phone: '(203) 546-7290',
     hours: TUE_SAT,
@@ -56,6 +68,10 @@ export const SHOWROOMS: Showroom[] = [
   {
     slug: 'new-london',
     name: 'New London',
+    image: showroomImage(
+      'new-london',
+      'Navy and white vanities around a white-brick column, door samples on the wall',
+    ),
     address: '254 South Frontage Road, New London, CT 06320',
     phone: '(860) 471-8874',
     hours: TUE_SAT,
@@ -117,6 +133,10 @@ export const SHOWROOMS: Showroom[] = [
   {
     slug: 'newington',
     name: 'Newington',
+    image: showroomImage(
+      'newington',
+      'A bright white display kitchen with a grey island and rattan pendants',
+    ),
     address: '3311 Berlin Turnpike, Newington, CT 06111',
     phone: '(860) 436-3686',
     hours: MON_SAT,
@@ -134,6 +154,7 @@ export const SHOWROOMS: Showroom[] = [
   {
     slug: 'orange',
     name: 'Orange',
+    image: showroomImage('orange', 'A row of cabinet vignettes in seven finishes'),
     address: '303 Boston Post Road, Orange, CT 06477',
     phone: '(203) 283-4909',
     hours: TUE_SAT,
@@ -143,6 +164,7 @@ export const SHOWROOMS: Showroom[] = [
   {
     slug: 'stamford',
     name: 'Stamford',
+    image: showroomImage('stamford', 'A wall of handles and knobs above a run of white drawers'),
     address: '1011 Hope Street, Stamford, CT 06907',
     phone: '(203) 721-6190',
     hours: TUE_SAT,
@@ -152,6 +174,10 @@ export const SHOWROOMS: Showroom[] = [
   {
     slug: 'bristol',
     name: 'Bristol',
+    image: showroomImage(
+      'bristol',
+      'A design table laid with door and countertop samples, a display kitchen behind',
+    ),
     address: '18 Main Street, Bristol, CT 06010',
     phone: '(860) 866-4901',
     hours: MON_SAT,
