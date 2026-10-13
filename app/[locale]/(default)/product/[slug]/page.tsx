@@ -781,16 +781,6 @@ export default async function Product({ params, searchParams }: Props) {
           no Product Information content. */}
       <hr className="w-full border-t border-[hsl(var(--product-detail-divider))]" />
 
-      {quoteOnly && (
-        <CountertopQuote
-          action={submitQuoteLead}
-          fields={countertopQuoteFields(baseProduct.name)}
-          id={QUOTE_ANCHOR}
-          image={COUNTERTOP_QUOTE_IMAGE}
-          product={baseProduct.name}
-        />
-      )}
-
       <Stream fallback={null} value={streamableSpecifications}>
         {(specifications) => (
           <ProductInformation features={productInfoFeatures} specifications={specifications} />
@@ -809,6 +799,17 @@ export default async function Product({ params, searchParams }: Props) {
         scrollbarLabel={t('RelatedProducts.scrollbar')}
         title={t('RelatedProducts.title')}
       />
+
+      {/* Countertops: the quote form comes after the product information and related products. */}
+      {quoteOnly && (
+        <CountertopQuote
+          action={submitQuoteLead}
+          fields={countertopQuoteFields(baseProduct.name)}
+          id={QUOTE_ANCHOR}
+          image={COUNTERTOP_QUOTE_IMAGE}
+          product={baseProduct.name}
+        />
+      )}
 
       {showRating && baseProduct.reviewSummary.numberOfReviews > 0 && (
         <div id="reviews">
