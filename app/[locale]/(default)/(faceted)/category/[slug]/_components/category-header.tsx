@@ -83,6 +83,7 @@ export function getCategoryHeaderDefaults({
           // BigCommerce image first, else the mega-menu tile with the same name.
           image: toImage(child.image, child.name) ?? navImageFor(child.name),
         })),
+    brands: content.brands,
     tileGroups: content.tileGroups?.map((group) => ({
       title: group.title,
       items: group.items.map((tile) => ({

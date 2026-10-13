@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  BrandTiles,
   CategoryHero,
   CategoryPoints,
   SubcategoryTiles,
@@ -72,6 +73,9 @@ export function MSCategoryHeader({
         defaults.tileGroups?.map((group) => (
           <SubcategoryTiles items={group.items} key={group.title} stacked title={group.title} />
         ))}
+      {showTiles && defaults.brands != null && defaults.brands.length > 0 && (
+        <BrandTiles brands={defaults.brands} stacked={defaults.subcategories.length > 0} />
+      )}
     </div>
   );
 }

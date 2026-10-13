@@ -250,3 +250,60 @@ export function SubcategoryTiles({
     </section>
   );
 }
+
+interface BrandTilesProps {
+  title?: string;
+  brands: Array<{ name: string; href: string; logo: { src: string; alt: string } }>;
+  /** Follows another tile row: trims the top padding so the rows read as one block. */
+  stacked?: boolean;
+  className?: string;
+}
+
+// "Shop by brand": a row of equal boxes, one logo each, centred with the same inset, in the pink
+// hairline the rest of the site's tiles use. Logos are SVGs, so they're served as-is.
+export function BrandTiles({
+  title = 'Shop by brand',
+  brands,
+  stacked = false,
+  className,
+}: BrandTilesProps) {
+  if (brands.length === 0) return null;
+
+  return (
+    <section className={clsx('@container', className)}>
+      <div
+        className={clsx(
+          containerClassName,
+          'pb-8 @4xl:pb-10',
+          stacked ? 'pt-0' : 'pt-8 @4xl:pt-10',
+        )}
+      >
+        <h2 className="mb-4 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
+          {title}
+        </h2>
+        <ul className="grid grid-cols-2 gap-3 @md:grid-cols-4 @3xl:grid-cols-8 @3xl:gap-4">
+          {brands.map((item) => (
+            <li key={item.name}>
+              <Link
+                aria-label={item.name}
+                className="group flex aspect-[5/3] items-center justify-center rounded-2xl border border-[#fcb6bb] bg-white px-5 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                href={item.href}
+              >
+                <span className="relative block h-full w-full">
+                  <Image
+                    alt={item.logo.alt}
+                    className="object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-105 @3xl:p-3"
+                    fill
+                    sizes="(min-width: 64rem) 12vw, (min-width: 36rem) 25vw, 50vw"
+                    src={item.logo.src}
+                    unoptimized
+                  />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}

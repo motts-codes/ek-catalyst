@@ -26,6 +26,8 @@ export interface CategoryContent {
   subcategories?: SubcategoryOverride[];
   /** More tile rows under the first (e.g. "Shop by finish"); same tile shape, links as given. */
   tileGroups?: Array<{ title: string; items: SubcategoryOverride[] }>;
+  /** "Shop by brand": equal logo boxes linking to the brand pages. */
+  brands?: BrandTile[];
   /** Overrides the BigCommerce category name in the hero. */
   heading?: string;
   /** Hero panel colour for a top-level category: brand red (default) or black. */
@@ -61,6 +63,31 @@ export const DEFAULT_CATEGORY_CONTENT: Required<Pick<CategoryContent, 'subTitle'
 };
 
 const navImage = (file: string, alt: string) => ({ src: `/images/nav/${file}.webp`, alt });
+
+export interface BrandTile {
+  name: string;
+  href: string;
+  logo: { src: string; alt: string };
+}
+
+const brand = (name: string, file: string, href: string): BrandTile => ({
+  name,
+  href,
+  logo: { src: `/images/brands/${file}.svg`, alt: `${name} logo` },
+});
+
+// Appliance brands stocked in Bristol, linking to their BigCommerce brand pages (Maytag has no
+// brand record yet, so it searches).
+const APPLIANCE_BRANDS: BrandTile[] = [
+  brand('GE Appliances', 'ge-appliances', '/ge/'),
+  brand('Frigidaire', 'frigidaire', '/frigidaire/'),
+  brand('Whirlpool', 'whirlpool', '/whirlpool/'),
+  brand('Samsung', 'samsung', '/samsung/'),
+  brand('LG', 'lg', '/lg-electronics/'),
+  brand('Maytag', 'maytag', '/search?term=maytag'),
+  brand('Amana', 'amana', '/amana/'),
+  brand('Haier', 'haier', '/haier/'),
+];
 const handleImage = (file: string, alt: string) => ({
   src: `/images/category/handles/${file}.webp`,
   alt,
@@ -261,6 +288,7 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     ],
   },
   '/appliances': {
+    brands: APPLIANCE_BRANDS,
     heading: 'Appliances you can take home this week',
     subcategories: APPLIANCE_TILES,
     lede: 'Fridges, ranges, dishwashers and laundry, in stock below retail. Pick up in Bristol in two days.',
