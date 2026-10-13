@@ -530,7 +530,7 @@ const heroImage = (file: string, alt: string) => ({
 });
 
 const HERO_IMAGES: Record<string, { src: string; alt: string }> = {
-  '/appliances': heroImage('cat-appliances', 'Stainless appliances in a white kitchen'),
+  '/appliances': heroImage('cat-appliances', 'A white kitchen with a stainless fridge, range and hood beside an oak island'),
   '/bath': heroImage('cat-bath', 'A vanity with a white top, sink and faucet'),
   '/cabinets': heroImage('cat-cabinets', 'A finished shaker kitchen'),
   '/closets': heroImage('cat-closets', 'A fitted closet with shelves and hanging rails'),
