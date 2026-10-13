@@ -2,6 +2,7 @@
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { Check, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/vibes/soul/primitives/button';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -16,14 +17,30 @@ export type { CartDrawerData, CartDrawerItem } from './store';
 interface Props {
   cartHref?: string;
   checkoutHref?: string;
+  /** Milliseconds before the drawer closes itself; 0 disables. Pauses while hovered or focused. */
+  autoCloseMs?: number;
 }
 
 // The "added to cart" drawer: slides in from the right after any add-to-cart. Shows the item just
 // added, the rest of the cart, the subtotal, and Checkout / View cart. Closes on X, overlay, Esc
 // or "Continue shopping". Mounted once in the app providers; opened via openCartDrawer().
-export function CartDrawer({ cartHref = '/cart', checkoutHref = '/checkout' }: Props) {
+export function CartDrawer({
+  cartHref = '/cart',
+  checkoutHref = '/checkout',
+  autoCloseMs = 6000,
+}: Props) {
   const data = useCartDrawer();
   const others = data?.items.filter((item) => item.id !== data.added.id) ?? [];
+  // Auto-close: a thin red line drains across the top; the clock stops while the pointer is
+  // inside or the keyboard is in use, so nobody loses the drawer mid-decision. Each open gets a
+  // fresh timer (the token re-keys the line).
+  const [paused, setPaused] = useState(false);
+  const [token, setToken] = useState(0);
+
+  useEffect(() => {
+    setPaused(false);
+    setToken((value) => value + 1);
+  }, [data]);
 
   return (
     <Dialog.Root
@@ -37,7 +54,20 @@ export function CartDrawer({ cartHref = '/cart', checkoutHref = '/checkout' }: P
         <Dialog.Content
           aria-describedby={undefined}
           className="fixed inset-y-0 right-0 z-50 flex w-[26rem] max-w-full flex-col bg-white shadow-2xl duration-300 @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
+          // Radix focuses the dialog on open, so focus can't be the pause signal; a key press
+          // inside (Tab, arrows) means someone is using it with the keyboard, and that pauses it.
+          onKeyDown={() => setPaused(true)}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
+          {autoCloseMs > 0 && data != null && (
+            <DrainLine
+              durationMs={autoCloseMs}
+              key={token}
+              onDone={closeCartDrawer}
+              paused={paused}
+            />
+          )}
           <div className="flex items-center justify-between gap-3 border-b border-contrast-100 px-6 py-5">
             <Dialog.Title className="flex items-center gap-2 font-heading text-lg font-bold">
               <span className="flex size-6 items-center justify-center rounded-full bg-[#16A34A] text-white">
@@ -118,6 +148,56 @@ export function CartDrawer({ cartHref = '/cart', checkoutHref = '/checkout' }: P
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  );
+}
+
+// The auto-close timer, drawn as a red line that empties left to right. Lives in its own
+// component so the animation starts when the drawer content actually mounts (Radix mounts it a
+// frame after the open state flips).
+function DrainLine({
+  durationMs,
+  paused,
+  onDone,
+}: {
+  durationMs: number;
+  paused: boolean;
+  onDone: () => void;
+}) {
+  const lineRef = useRef<HTMLSpanElement>(null);
+  const drainRef = useRef<Animation | null>(null);
+
+  useEffect(() => {
+    const line = lineRef.current;
+
+    if (line == null) return;
+
+    const drain = line.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], {
+      duration: durationMs,
+      fill: 'forwards',
+      easing: 'linear',
+    });
+
+    drain.onfinish = onDone;
+    drainRef.current = drain;
+
+    return () => drain.cancel();
+  }, [durationMs, onDone]);
+
+  useEffect(() => {
+    const drain = drainRef.current;
+
+    if (drain == null || drain.playState === 'finished') return;
+
+    if (paused) drain.pause();
+    else drain.play();
+  }, [paused]);
+
+  return (
+    <span
+      aria-hidden
+      className="absolute inset-x-0 top-0 h-0.5 origin-left bg-[var(--button-primary-background,#d90716)]"
+      ref={lineRef}
+    />
   );
 }
 
