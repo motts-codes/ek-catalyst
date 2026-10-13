@@ -2,7 +2,6 @@
 // without touching the card used on listings, search and the PDP rails. Types and the add-to-cart
 // / compare / icon pieces are shared with the original. If the changes prove out, fold them back.
 import { clsx } from 'clsx';
-import { MessageSquareQuote, Truck } from 'lucide-react';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -13,6 +12,7 @@ import {
 } from '@/vibes/soul/primitives/product-card';
 import { AddToCartCta } from '@/vibes/soul/primitives/product-card/add-to-cart-cta';
 import { Compare } from '@/vibes/soul/primitives/product-card/compare';
+import { DeliveryLine } from '@/vibes/soul/primitives/product-card/delivery-line';
 import { Rating } from '@/vibes/soul/primitives/rating';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { Image } from '~/components/image';
@@ -186,7 +186,7 @@ export function HomeProductCard({
                 )}
               </span>
             )}
-            <DeliveryLine message={quoteOnly ? undefined : deliveryMessage} />
+            <DeliveryLine message={deliveryMessage} />
             {showRating && typeof rating === 'number' && rating > 0 && (
               <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
             )}
@@ -246,26 +246,6 @@ export function HomeProductCard({
         </div>
       )}
     </article>
-  );
-}
-
-// Delivery/pickup message from the __delivery custom field, with an icon in brand red: the truck,
-// or a quote bubble when the line is a "Request a quote" (same rule as the listing card).
-function DeliveryLine({ message }: { message?: string }) {
-  if (message == null || message === '') return null;
-
-  const Icon = /quote/i.test(message) ? MessageSquareQuote : Truck;
-
-  return (
-    <span className="mt-1.5 flex items-center gap-1.5 text-xs text-foreground">
-      <Icon
-        aria-hidden
-        className="shrink-0 text-[var(--button-primary-background,#d90716)]"
-        size={16}
-        strokeWidth={1.5}
-      />
-      {message}
-    </span>
   );
 }
 

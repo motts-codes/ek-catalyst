@@ -1,5 +1,4 @@
 import { clsx } from 'clsx';
-import { MessageSquareQuote, Truck } from 'lucide-react';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
@@ -11,6 +10,7 @@ import { Rating } from '../rating';
 
 import { AddToCartCta, CTA_BUTTON_CLASS, ProductCardAddToCartAction } from './add-to-cart-cta';
 import { Compare } from './compare';
+import { DeliveryLine } from './delivery-line';
 
 export type { ProductCardAddToCartAction } from './add-to-cart-cta';
 
@@ -232,7 +232,7 @@ export function ProductCard({
             {/* Grey divider below the brand name, above the price (margin below the line). */}
             <hr className="mb-3 mt-2 border-t border-contrast-100" />
             <CardPrice colorScheme={colorScheme} price={price} unit={priceUnit} />
-            <DeliveryLine message={quoteOnly ? undefined : deliveryMessage} />
+            <DeliveryLine message={deliveryMessage} />
             {showRating && typeof rating === 'number' && rating > 0 && (
               <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
             )}
@@ -351,26 +351,6 @@ function CardCta({
   }
 
   return <ViewOptionsCta href={href} />;
-}
-
-// Delivery/pickup message from the __delivery custom field, with an icon in brand red: the truck,
-// or a quote bubble when the line is a "Request a quote" (countertops are quoted, not shipped).
-function DeliveryLine({ message }: { message?: string }) {
-  if (message == null || message === '') return null;
-
-  const Icon = /quote/i.test(message) ? MessageSquareQuote : Truck;
-
-  return (
-    <span className="mt-1.5 flex items-center gap-1.5 text-xs text-foreground">
-      <Icon
-        aria-hidden
-        className="shrink-0 text-[var(--button-primary-background,#d90716)]"
-        size={16}
-        strokeWidth={1.5}
-      />
-      {message}
-    </span>
-  );
 }
 
 // "View Options" CTA for products with required options: the same full-width outline pill as
