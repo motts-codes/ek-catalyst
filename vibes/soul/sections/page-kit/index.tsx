@@ -138,7 +138,7 @@ export function PageHero({
             className={clsx(
               'relative overflow-hidden',
               imageStyle === 'plain' && image
-                ? 'aspect-square'
+                ? 'aspect-[6/5]'
                 : 'aspect-[4/3] rounded-3xl bg-contrast-100 ring-1 ring-contrast-100',
             )}
           >
