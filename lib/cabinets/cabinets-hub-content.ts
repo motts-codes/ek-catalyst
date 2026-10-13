@@ -12,9 +12,9 @@ export const INSTALLER_HREF = '/find-a-pro';
 
 export const HUB_HERO = {
   kicker: 'Made for the room you live in',
-  title: "The kitchen you've been picturing starts here",
+  title: "The kitchen you've pictured, without the 14-week wait",
   description:
-    'Thoughtful design, honest guidance, and beautiful materials — all ready to move from inspiration to completion.',
+    '100+ door styles in 30+ colors, built in our Connecticut factory. Assembled or ready to assemble, same cabinet either way.',
   note: 'Twenty-three collections across four lines, every one on the same ¾-inch all-plywood box — made in Connecticut, stocked in Bristol.',
   imageLabel: 'A finished Connecticut kitchen, wide',
 };

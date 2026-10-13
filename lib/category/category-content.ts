@@ -488,7 +488,8 @@ const normalize = (path: string) => `/${path.replace(/^\/+|\/+$/g, '')}`;
 export function getCategoryContent(path: string): CategoryContent {
   const key = normalize(path);
   const content = CATEGORY_CONTENT[key] ?? {};
-  const lede = HERO_LEDES[key];
+  // The authored lede (client copy, Oct 2026) wins; HERO_LEDES is the older fallback set.
+  const lede = content.lede ?? HERO_LEDES[key];
 
   return lede ? { ...content, lede } : content;
 }
