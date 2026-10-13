@@ -346,16 +346,20 @@ export function HeroScrub({
       <div className="ek-pin" ref={pinRef}>
         <h1 className="sr-only">{title}</h1>
         <canvas aria-hidden className="absolute inset-0 h-full w-full" ref={canvasRef} />
+        {/* The opening line in the site's page-hero h1 style, left-aligned in a centred block,
+            with the scroll cue (mouse + "Scroll") underneath it. */}
         <div
           aria-hidden
-          className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2.5 font-heading text-xs font-bold uppercase tracking-[0.16em] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35)]"
+          className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-start gap-5"
           ref={cueRef}
         >
-          <span className="ek-mouse relative block h-[42px] w-[26px] rounded-[14px] border-2 border-current" />
-          <span>{cueLabel}</span>
-          <small className="mt-0.5 whitespace-pre-line text-center font-heading text-lg font-bold normal-case leading-tight tracking-normal text-foreground [text-shadow:none] @xl:text-xl">
+          <p className="m-0 whitespace-pre-line font-heading text-3xl font-bold leading-tight text-foreground @xl:text-4xl @4xl:text-[44px]">
             {cueHint}
-          </small>
+          </p>
+          <span className="flex items-center gap-3 font-heading text-xs font-bold uppercase tracking-[0.16em] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35)]">
+            <span className="ek-mouse relative block h-[42px] w-[26px] rounded-[14px] border-2 border-current" />
+            <span>{cueLabel}</span>
+          </span>
         </div>
         <div
           aria-hidden
