@@ -11,6 +11,7 @@ import {
   useInputControl,
 } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
+import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
 import {
   FormEvent,
@@ -19,6 +20,7 @@ import {
   startTransition,
   useActionState,
   useEffect,
+  useState,
 } from 'react';
 import { useFormStatus } from 'react-dom';
 import RecaptchaWidget from 'react-google-recaptcha';
@@ -80,6 +82,16 @@ export interface DynamicFormProps<F extends Field> {
   passwordComplexity?: PasswordComplexitySettings | null;
   errorTranslations?: FormErrorTranslationMap;
   recaptchaSiteKey?: string;
+  /**
+   * Split the form into steps (each lists the field names it shows). Fields stay mounted, so
+   * values survive going back; Next validates just that step; Submit appears on the last step.
+   */
+  steps?: FormStep[];
+}
+
+export interface FormStep {
+  title: string;
+  names: string[];
 }
 
 export function DynamicForm<F extends Field>({
@@ -96,8 +108,12 @@ export function DynamicForm<F extends Field>({
   passwordComplexity,
   errorTranslations,
   recaptchaSiteKey,
+  steps,
 }: DynamicFormProps<F>) {
   const t = useTranslations('Form');
+  const [step, setStep] = useState(0);
+  const [advancing, setAdvancing] = useState(false);
+  const isLastStep = steps == null || step >= steps.length - 1;
   // Remove options from fields before passing to action to reduce payload size
   // Options are only needed for rendering, not for processing form submissions
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -164,14 +180,82 @@ export function DynamicForm<F extends Field>({
     }
   }, [lastResult, successMessage, onSuccess]);
 
+  // Stepped form: "Next" validates the current step's fields (conform reports on the next
+  // render), then moves on only when they're clean.
+  const stepNames = steps?.[step]?.names ?? [];
+  const stepHasErrors = stepNames.some((name) => (formFields[name]?.errors?.length ?? 0) > 0);
+
+  useEffect(() => {
+    if (!advancing) return;
+
+    setAdvancing(false);
+
+    if (!stepHasErrors) setStep((current) => current + 1);
+  }, [advancing, stepHasErrors]);
+
+  // A failed submit with an error on an earlier step jumps back to that step.
+  useEffect(() => {
+    if (steps == null || lastResult?.status !== 'error') return;
+
+    const firstBad = steps.findIndex((candidate) =>
+      candidate.names.some((name) => (formFields[name]?.errors?.length ?? 0) > 0),
+    );
+
+    if (firstBad >= 0) setStep(firstBad);
+    // Only when a new result lands.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastResult]);
+
+  const stepIndexOf = (name: string) =>
+    steps == null
+      ? 0
+      : Math.max(
+          0,
+          steps.findIndex((candidate) => candidate.names.includes(name)),
+        );
+  const stepClass = (name: string) => (steps != null && stepIndexOf(name) !== step ? 'hidden' : '');
+
   return (
     <FormProvider context={form.context}>
       <form {...getFormProps(form)} action={formAction} onChange={onChange}>
+        {steps != null && (
+          <ol
+            aria-label={`Step ${step + 1} of ${steps.length}`}
+            className="mb-6 grid gap-2"
+            style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}
+          >
+            {steps.map((candidate, index) => (
+              <li
+                aria-current={index === step ? 'step' : undefined}
+                className={clsx(
+                  'border-t-[3px] pt-2 text-xs font-semibold transition-colors',
+                  index <= step
+                    ? 'border-[var(--button-primary-background,#d90716)] text-foreground'
+                    : 'border-contrast-200 text-contrast-400',
+                )}
+                key={candidate.title}
+              >
+                <span className="block text-[10px] uppercase tracking-wide text-contrast-500">
+                  Step {index + 1}
+                </span>
+                {candidate.title}
+              </li>
+            ))}
+          </ol>
+        )}
         <div className="space-y-6">
           {fields.map((field, index) => {
             if (Array.isArray(field)) {
+              const first = field[0];
+
               return (
-                <div className="flex flex-col gap-4 @sm:flex-row" key={index}>
+                <div
+                  className={clsx(
+                    'flex flex-col gap-4 @sm:flex-row',
+                    first != null && stepClass(first.name),
+                  )}
+                  key={index}
+                >
                   {field.map((f) => {
                     const groupFormField = formFields[f.name];
 
@@ -193,10 +277,14 @@ export function DynamicForm<F extends Field>({
 
             if (formField == null) return null;
 
-            return <DynamicFormField field={field} formField={formField} key={formField.id} />;
+            return (
+              <div className={stepClass(field.name)} key={formField.id}>
+                <DynamicFormField field={field} formField={formField} />
+              </div>
+            );
           })}
           {recaptchaSiteKey ? <RecaptchaWidget sitekey={recaptchaSiteKey} /> : null}
-          <div className="flex gap-1 pt-3">
+          <div className="flex gap-2 pt-3">
             {onCancel && (
               <Button
                 aria-label={`${cancelLabel} ${submitLabel}`}
@@ -207,9 +295,32 @@ export function DynamicForm<F extends Field>({
                 {cancelLabel}
               </Button>
             )}
-            <SubmitButton name={submitName} size={buttonSize} value={submitValue}>
-              {submitLabel}
-            </SubmitButton>
+            {steps != null && step > 0 && (
+              <Button
+                onClick={() => setStep((current) => current - 1)}
+                size={buttonSize}
+                type="button"
+                variant="tertiary"
+              >
+                Back
+              </Button>
+            )}
+            {isLastStep ? (
+              <SubmitButton name={submitName} size={buttonSize} value={submitValue}>
+                {submitLabel}
+              </SubmitButton>
+            ) : (
+              <Button
+                onClick={() => {
+                  stepNames.forEach((name) => form.validate({ name }));
+                  setAdvancing(true);
+                }}
+                size={buttonSize}
+                type="button"
+              >
+                Next
+              </Button>
+            )}
           </div>
           {form.errors?.map((error, index) => (
             <FormStatus key={index} type="error">

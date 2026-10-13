@@ -5,10 +5,9 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { ShowroomCards } from '@/vibes/soul/sections/page-kit/showrooms';
 import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitBookingLead } from '~/lib/forms/submit-lead';
-import { getShowroom, SHOWROOMS } from '~/lib/pages/showrooms';
+import { getShowroom } from '~/lib/pages/showrooms';
 
 export const metadata: Metadata = {
   title: 'Book a Showroom Appointment',
@@ -44,6 +43,15 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
         { label: 'At my home (Connecticut)', value: 'home' },
       ],
     },
+    { type: 'date', name: 'date', label: 'Pick a date', required: true, minDate: today() },
+    {
+      type: 'select',
+      name: 'time',
+      label: 'Pick a time (each slot is 90 minutes)',
+      required: true,
+      options: TIME_OPTIONS,
+    },
+    ...contactRows(),
     {
       type: 'checkbox-group',
       name: 'rooms',
@@ -56,15 +64,6 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
         { label: 'Windows', value: 'windows' },
       ],
     },
-    { type: 'date', name: 'date', label: 'Pick a date', required: true, minDate: today() },
-    {
-      type: 'select',
-      name: 'time',
-      label: 'Pick a time (each slot is 90 minutes)',
-      required: true,
-      options: TIME_OPTIONS,
-    },
-    ...contactRows(),
     {
       type: 'textarea',
       name: 'notes',
@@ -73,8 +72,8 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
   ];
 }
 
-// One form rather than the wireframe's four steps: showroom, how you'd like to meet, a date and
-// a time, then your details. The showroom is preselected when you arrive from a showroom page.
+// One form in three steps: where (showroom, how you'd like to meet), when (date, time), then your
+// details. The showroom is preselected when you arrive from a showroom page.
 export default async function Book({
   params,
   searchParams,
@@ -108,7 +107,6 @@ export default async function Book({
         textOnly
         title={chosen ? `Book a visit to ${chosen.name}` : 'Sit down with a designer, in person'}
       />
-      {!chosen && <ShowroomCards bookHref="/book" showrooms={SHOWROOMS} />}
       <LeadFormCard
         action={submitBookingLead}
         description="Your Project Manager confirms by text and email within two hours. Times are Eastern."
@@ -120,7 +118,16 @@ export default async function Book({
           </>
         }
         id="book"
+        image={{
+          src: '/images/showrooms/hero.webp',
+          alt: 'A bright showroom floor with white, sage, navy and oak display kitchens',
+        }}
         kicker="Your appointment"
+        steps={[
+          { title: 'Where', names: ['showroom', 'format'] },
+          { title: 'When', names: ['date', 'time'] },
+          { title: 'About you', names: ['name', 'email', 'phone', 'zip', 'rooms', 'notes'] },
+        ]}
         submitLabel="Book my appointment"
         title="Pick a day and a time"
       />

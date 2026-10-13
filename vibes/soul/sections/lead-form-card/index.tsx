@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import { type ReactNode } from 'react';
 
-import { DynamicForm, type DynamicFormAction } from '@/vibes/soul/form/dynamic-form';
+import { DynamicForm, type DynamicFormAction, type FormStep } from '@/vibes/soul/form/dynamic-form';
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { homeHeadingClassName } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
@@ -21,6 +21,8 @@ interface Props<F extends Field> {
   image?: { src: string; alt: string };
   /** Small print under the button; defaults to the privacy line. */
   fine?: ReactNode;
+  /** Split the form into steps (see DynamicForm). */
+  steps?: FormStep[];
 }
 
 // The customer-form template (every lead form except the estimator): one rounded white card,
@@ -36,6 +38,7 @@ export function LeadFormCard<F extends Field>({
   submitLabel = 'Send',
   image,
   fine = 'Your details stay with us. No spam, ever.',
+  steps,
 }: Props<F>) {
   return (
     <section className="scroll-mt-24 @container" id={id}>
@@ -77,7 +80,12 @@ export function LeadFormCard<F extends Field>({
               {/* Compact inputs with the site's pink hairline (#fcb6bb) instead of the grey default.
                   The wrapper is its own container so paired fields stack when the card is narrow. */}
               <div className="mt-6 @container [--checkbox-light-unchecked-border:#fcb6bb] [--input-light-border:#fcb6bb] [--radio-group-light-border:#fcb6bb] [--select-light-trigger-border:#fcb6bb] [--textarea-light-border:#fcb6bb] [&_.space-y-6]:space-y-4 [&_button[role=combobox]]:!h-11 [&_button[role=combobox]]:!pl-4 [&_button[role=combobox]]:!text-sm [&_button[type=submit]]:w-full [&_input]:!px-4 [&_input]:!py-2.5 [&_input]:!text-sm [&_textarea]:!min-h-20 [&_textarea]:!px-4 [&_textarea]:!py-2.5 [&_textarea]:!text-sm">
-                <DynamicForm action={action} fields={fields} submitLabel={submitLabel} />
+                <DynamicForm
+                  action={action}
+                  fields={fields}
+                  steps={steps}
+                  submitLabel={submitLabel}
+                />
               </div>
               {fine != null && fine !== '' && (
                 <p className="mt-4 text-xs text-contrast-500">{fine}</p>
