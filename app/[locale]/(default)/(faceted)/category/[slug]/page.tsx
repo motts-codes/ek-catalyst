@@ -34,10 +34,13 @@ import {
   parseCabinetProgram,
   selectedCabinetProgram,
 } from '~/lib/cabinets/cabinet-collection';
-import { heroImageFor } from '~/lib/category/category-content';
 import { pickFaq } from '~/lib/category/category-faq';
 import { parseSeoContent } from '~/lib/category/category-seo';
-import { COUNTERTOP_QUOTE_FIELDS, QUOTE_ANCHOR } from '~/lib/countertops/quote-form';
+import {
+  COUNTERTOP_QUOTE_FIELDS,
+  COUNTERTOP_QUOTE_IMAGE,
+  QUOTE_ANCHOR,
+} from '~/lib/countertops/quote-form';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
@@ -203,7 +206,7 @@ function CountertopQuoteBand({ path }: { path: string }) {
       action={submitQuoteLead}
       fields={COUNTERTOP_QUOTE_FIELDS}
       id={QUOTE_ANCHOR}
-      image={heroImageFor(path) ?? heroImageFor('/countertops')}
+      image={COUNTERTOP_QUOTE_IMAGE}
     />
   );
 }

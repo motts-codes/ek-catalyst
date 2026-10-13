@@ -1,4 +1,5 @@
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
+import { heroImageFor } from '~/lib/category/category-content';
 
 // Countertops are quoted, not carted (they're cut to the kitchen). These pieces are shared by the
 // countertop category pages, the countertop PDPs and the /countertops content page so the quote
@@ -8,6 +9,9 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 export const QUOTE_ANCHOR = 'request-a-quote';
 
 export const COUNTERTOP_PHONE = { label: 'Call to submit request', href: 'tel:+18602471000' };
+
+/** One photo for the quote card everywhere (listing, PDP): the countertops hero, not the swatch. */
+export const COUNTERTOP_QUOTE_IMAGE = heroImageFor('/countertops');
 
 /** The quote form, as rows: related fields share a line so the form stays short. */
 export type QuoteFields = Array<Field | Field[]>;

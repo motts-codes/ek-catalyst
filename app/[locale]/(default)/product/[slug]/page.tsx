@@ -21,6 +21,7 @@ import { productInfoFeaturesTransformer } from '~/data-transformers/product-info
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
 import {
   COUNTERTOP_PHONE,
+  COUNTERTOP_QUOTE_IMAGE,
   countertopQuoteFields,
   QUOTE_ANCHOR,
 } from '~/lib/countertops/quote-form';
@@ -729,13 +730,15 @@ export default async function Product({ params, searchParams }: Props) {
           product={{
             id: baseProduct.entityId.toString(),
             title: baseProduct.name,
-            description: (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: rewriteWysiwygContentUrls(baseProduct.description),
-                }}
-              />
-            ),
+            // No description (e.g. countertops) -> no "About this item" block at all.
+            description:
+              baseProduct.description.trim() === '' ? null : (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: rewriteWysiwygContentUrls(baseProduct.description),
+                  }}
+                />
+              ),
             href: baseProduct.path,
             images: streamableImages,
             price: streamablePrices,
@@ -779,17 +782,13 @@ export default async function Product({ params, searchParams }: Props) {
       <hr className="w-full border-t border-[hsl(var(--product-detail-divider))]" />
 
       {quoteOnly && (
-        <Stream fallback={null} value={streamableImages}>
-          {(imagesData) => (
-            <CountertopQuote
-              action={submitQuoteLead}
-              fields={countertopQuoteFields(baseProduct.name)}
-              id={QUOTE_ANCHOR}
-              image={imagesData.images[0]}
-              product={baseProduct.name}
-            />
-          )}
-        </Stream>
+        <CountertopQuote
+          action={submitQuoteLead}
+          fields={countertopQuoteFields(baseProduct.name)}
+          id={QUOTE_ANCHOR}
+          image={COUNTERTOP_QUOTE_IMAGE}
+          product={baseProduct.name}
+        />
       )}
 
       <Stream fallback={null} value={streamableSpecifications}>

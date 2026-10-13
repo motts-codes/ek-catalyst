@@ -104,7 +104,7 @@ export interface ProductDetailProps<F extends Field> {
   deliveryMessage?: string;
   // Unit shown after the price, e.g. "sq. ft." (countertops).
   priceUnit?: string;
-  // Quote-only products (countertops): no purchase panel or options; a 50/50 gallery/details
+  // Quote-only products (countertops): no purchase panel or options; a 40/60 gallery/details
   // split with "Request a quote" (to the form on the page) and a phone link instead.
   quoteOnly?: QuoteActions;
 }
@@ -193,7 +193,9 @@ export function ProductDetail<F extends Field>({
               <div
                 className={clsx(
                   'grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @5xl:gap-x-12',
-                  quoteOnly ? '@2xl:grid-cols-2' : '@2xl:grid-cols-[minmax(0,3fr)_minmax(0,7fr)]',
+                  quoteOnly
+                    ? '@2xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]'
+                    : '@2xl:grid-cols-[minmax(0,3fr)_minmax(0,7fr)]',
                 )}
               >
                 {/* Mobile gallery: shown FIRST (image above all details). Forced to a shorter 4:3
