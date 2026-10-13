@@ -241,7 +241,7 @@ export function PriceLabel({
         </span>
         <s
           aria-label={t('originalPrice', { price: price.previous[tax] })}
-          className="ml-2 text-[0.8em] font-semibold text-contrast-400"
+          className="ml-2 font-[family-name:var(--font-family-body)] text-[0.9em] font-normal text-contrast-400"
         >
           {price.previous[tax]}
         </s>
