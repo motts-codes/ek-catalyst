@@ -53,7 +53,7 @@ export function LeadFormCard<F extends Field>({
       >
         <div
           className={clsx(
-            'grid overflow-hidden rounded-[2rem] border border-contrast-100 bg-white shadow-[0_24px_60px_-40px_rgb(0_0_0/0.25)]',
+            'grid overflow-hidden rounded-[2rem] border border-[#fcb6bb] bg-white shadow-[0_24px_60px_-40px_rgb(0_0_0/0.25)]',
             image != null && '@3xl:grid-cols-2',
           )}
         >
