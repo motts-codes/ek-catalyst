@@ -11,8 +11,9 @@ import { cartLineItemActionFormDataSchema } from '@/vibes/soul/sections/cart/sch
 
 import { DigitalItemFragment, PhysicalItemFragment } from '../page-data';
 
+import { parseSelectedOptions } from './parse-selected-options';
 import { removeItem } from './remove-item';
-import { CartSelectedOptionsInput, updateQuantity } from './update-quantity';
+import { updateQuantity } from './update-quantity';
 
 type LineItem = {
   selectedOptions:
@@ -54,120 +55,7 @@ export const updateLineItem = async (
 
   switch (submission.value.intent) {
     case 'increment': {
-      const parsedSelectedOptions = cartLineItem.selectedOptions.reduce<CartSelectedOptionsInput>(
-        (accum, option) => {
-          let multipleChoicesOptionInput;
-          let checkboxOptionInput;
-          let numberFieldOptionInput;
-          let textFieldOptionInput;
-          let multiLineTextFieldOptionInput;
-          let dateFieldOptionInput;
-
-          switch (option.__typename) {
-            case 'CartSelectedMultipleChoiceOption':
-              multipleChoicesOptionInput = {
-                optionEntityId: option.entityId,
-                optionValueEntityId: option.valueEntityId,
-              };
-
-              if (accum.multipleChoices) {
-                return {
-                  ...accum,
-                  multipleChoices: [...accum.multipleChoices, multipleChoicesOptionInput],
-                };
-              }
-
-              return {
-                ...accum,
-                multipleChoices: [multipleChoicesOptionInput],
-              };
-
-            case 'CartSelectedCheckboxOption':
-              checkboxOptionInput = {
-                optionEntityId: option.entityId,
-                optionValueEntityId: option.valueEntityId,
-              };
-
-              if (accum.checkboxes) {
-                return {
-                  ...accum,
-                  checkboxes: [...accum.checkboxes, checkboxOptionInput],
-                };
-              }
-
-              return { ...accum, checkboxes: [checkboxOptionInput] };
-
-            case 'CartSelectedNumberFieldOption':
-              numberFieldOptionInput = {
-                optionEntityId: option.entityId,
-                number: option.number,
-              };
-
-              if (accum.numberFields) {
-                return {
-                  ...accum,
-                  numberFields: [...accum.numberFields, numberFieldOptionInput],
-                };
-              }
-
-              return { ...accum, numberFields: [numberFieldOptionInput] };
-
-            case 'CartSelectedTextFieldOption':
-              textFieldOptionInput = {
-                optionEntityId: option.entityId,
-                text: option.text,
-              };
-
-              if (accum.textFields) {
-                return {
-                  ...accum,
-                  textFields: [...accum.textFields, textFieldOptionInput],
-                };
-              }
-
-              return { ...accum, textFields: [textFieldOptionInput] };
-
-            case 'CartSelectedMultiLineTextFieldOption':
-              multiLineTextFieldOptionInput = {
-                optionEntityId: option.entityId,
-                text: option.text,
-              };
-
-              if (accum.multiLineTextFields) {
-                return {
-                  ...accum,
-                  multiLineTextFields: [
-                    ...accum.multiLineTextFields,
-                    multiLineTextFieldOptionInput,
-                  ],
-                };
-              }
-
-              return {
-                ...accum,
-                multiLineTextFields: [multiLineTextFieldOptionInput],
-              };
-
-            case 'CartSelectedDateFieldOption':
-              dateFieldOptionInput = {
-                optionEntityId: option.entityId,
-                date: new Date(String(option.date.utc)).toISOString(),
-              };
-
-              if (accum.dateFields) {
-                return {
-                  ...accum,
-                  dateFields: [...accum.dateFields, dateFieldOptionInput],
-                };
-              }
-
-              return { ...accum, dateFields: [dateFieldOptionInput] };
-          }
-
-          return accum;
-        },
-        {},
-      );
+      const parsedSelectedOptions = parseSelectedOptions(cartLineItem.selectedOptions);
 
       try {
         await updateQuantity({
@@ -208,120 +96,7 @@ export const updateLineItem = async (
     }
 
     case 'decrement': {
-      const parsedSelectedOptions = cartLineItem.selectedOptions.reduce<CartSelectedOptionsInput>(
-        (accum, option) => {
-          let multipleChoicesOptionInput;
-          let checkboxOptionInput;
-          let numberFieldOptionInput;
-          let textFieldOptionInput;
-          let multiLineTextFieldOptionInput;
-          let dateFieldOptionInput;
-
-          switch (option.__typename) {
-            case 'CartSelectedMultipleChoiceOption':
-              multipleChoicesOptionInput = {
-                optionEntityId: option.entityId,
-                optionValueEntityId: option.valueEntityId,
-              };
-
-              if (accum.multipleChoices) {
-                return {
-                  ...accum,
-                  multipleChoices: [...accum.multipleChoices, multipleChoicesOptionInput],
-                };
-              }
-
-              return {
-                ...accum,
-                multipleChoices: [multipleChoicesOptionInput],
-              };
-
-            case 'CartSelectedCheckboxOption':
-              checkboxOptionInput = {
-                optionEntityId: option.entityId,
-                optionValueEntityId: option.valueEntityId,
-              };
-
-              if (accum.checkboxes) {
-                return {
-                  ...accum,
-                  checkboxes: [...accum.checkboxes, checkboxOptionInput],
-                };
-              }
-
-              return { ...accum, checkboxes: [checkboxOptionInput] };
-
-            case 'CartSelectedNumberFieldOption':
-              numberFieldOptionInput = {
-                optionEntityId: option.entityId,
-                number: option.number,
-              };
-
-              if (accum.numberFields) {
-                return {
-                  ...accum,
-                  numberFields: [...accum.numberFields, numberFieldOptionInput],
-                };
-              }
-
-              return { ...accum, numberFields: [numberFieldOptionInput] };
-
-            case 'CartSelectedTextFieldOption':
-              textFieldOptionInput = {
-                optionEntityId: option.entityId,
-                text: option.text,
-              };
-
-              if (accum.textFields) {
-                return {
-                  ...accum,
-                  textFields: [...accum.textFields, textFieldOptionInput],
-                };
-              }
-
-              return { ...accum, textFields: [textFieldOptionInput] };
-
-            case 'CartSelectedMultiLineTextFieldOption':
-              multiLineTextFieldOptionInput = {
-                optionEntityId: option.entityId,
-                text: option.text,
-              };
-
-              if (accum.multiLineTextFields) {
-                return {
-                  ...accum,
-                  multiLineTextFields: [
-                    ...accum.multiLineTextFields,
-                    multiLineTextFieldOptionInput,
-                  ],
-                };
-              }
-
-              return {
-                ...accum,
-                multiLineTextFields: [multiLineTextFieldOptionInput],
-              };
-
-            case 'CartSelectedDateFieldOption':
-              dateFieldOptionInput = {
-                optionEntityId: option.entityId,
-                date: new Date(String(option.date.utc)).toISOString(),
-              };
-
-              if (accum.dateFields) {
-                return {
-                  ...accum,
-                  dateFields: [...accum.dateFields, dateFieldOptionInput],
-                };
-              }
-
-              return { ...accum, dateFields: [dateFieldOptionInput] };
-          }
-
-          return accum;
-        },
-        {},
-      );
+      const parsedSelectedOptions = parseSelectedOptions(cartLineItem.selectedOptions);
 
       try {
         await updateQuantity({

@@ -12,6 +12,7 @@ import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { Slot } from '~/lib/makeswift/slot';
 import { exists } from '~/lib/utils';
 
+import { restoreLineItem } from './_actions/restore-line-item';
 import { updateCouponCode } from './_actions/update-coupon-code';
 import { updateGiftCertificate } from './_actions/update-gift-certificate';
 import { updateLineItem } from './_actions/update-line-item';
@@ -372,6 +373,7 @@ export default async function Cart({ params }: Props) {
           key={`${cart.entityId}-${cart.version}`}
           lineItemAction={updateLineItem}
           lineItemActionPendingLabel={t('cartUpdateInProgress')}
+          restoreLineItemAction={restoreLineItem}
           shipping={{
             action: updateShippingInfo,
             countries,

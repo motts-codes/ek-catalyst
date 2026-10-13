@@ -25,6 +25,7 @@ import {
 import { StickySidebarLayout } from '@/vibes/soul/sections/sticky-sidebar-layout';
 import { useEvents } from '~/components/analytics/events';
 import { Image } from '~/components/image';
+import { useRouter } from '~/i18n/routing';
 
 import { CouponCodeForm, CouponCodeFormState } from './coupon-code-form';
 import { cartLineItemActionFormDataSchema } from './schema';
@@ -170,6 +171,11 @@ export interface CartProps<LineItem extends CartLineItem> {
   giftCertificate?: GiftCertificate;
   shipping?: Shipping;
   lineItemActionPendingLabel?: string;
+  // Puts a removed line back (the "Undo" in the removal toast): receives the line item object as
+  // given in `cart.lineItems`. Without it, no undo is offered.
+  restoreLineItemAction?: (lineItem: unknown) => Promise<{ error?: string }>;
+  removedLabel?: string;
+  undoLabel?: string;
 }
 
 const defaultEmptyState = {
@@ -218,8 +224,35 @@ export function CartClient<LineItem extends CartLineItem>({
   emptyState = defaultEmptyState,
   summaryTitle,
   shipping,
+  restoreLineItemAction,
+  removedLabel = 'removed from your cart.',
+  undoLabel = 'Undo',
 }: CartProps<LineItem>) {
   const events = useEvents();
+  const router = useRouter();
+
+  // No "are you sure?" on remove: the line goes straight away and a toast offers Undo for a few
+  // seconds. Raised at the click (the cart remounts under a new version once the action lands,
+  // so an effect would never see it). Undo re-adds the line and refreshes the page.
+  const toastRemoved = (lineItem: CartLineItem) => {
+    toast.success(`${lineItem.title} ${removedLabel}`, {
+      duration: 8000,
+      action:
+        restoreLineItemAction == null
+          ? undefined
+          : {
+              label: undoLabel,
+              onClick: () => {
+                startTransition(async () => {
+                  const result = await restoreLineItemAction(lineItem);
+
+                  if (result.error) toast.error(result.error);
+                  else router.refresh();
+                });
+              },
+            },
+    });
+  };
   const [state, formAction, isLineItemActionPending] = useActionState(lineItemAction, {
     lineItems: cart.lineItems,
     lastResult: null,
@@ -498,6 +531,7 @@ export function CartClient<LineItem extends CartLineItem>({
                       }
 
                       if (intent === 'delete') {
+                        toastRemoved(lineItem);
                         formData.set('quantity', lineItem.quantity.toString());
 
                         events.onRemoveFromCart?.(formData);

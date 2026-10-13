@@ -15,6 +15,8 @@ interface ToastOptions {
   description?: string;
   position?: ToasterProps['position'];
   dismissLabel?: string;
+  /** How long the toast stays, in ms (Sonner's default otherwise). */
+  duration?: number;
 }
 
 export const Toaster = ({ ...props }: ToasterProps) => {
@@ -42,7 +44,7 @@ export const toast = {
         variant="success"
         {...options}
       />,
-      { position },
+      { position, duration: options?.duration },
     );
   },
   error: (message: ReactNode, options?: ToastOptions) => {
