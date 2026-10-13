@@ -58,7 +58,7 @@ export function CountertopQuote<F extends Field>({ id, action, fields, product, 
                   : "Tell us your counters and we'll price them, usually the same day. A rough number is fine: we measure before we cut."}
               </p>
               {/* Compact inputs: the shared form controls are sized for standalone pages. */}
-              <div className="mt-7 [&_.space-y-6]:space-y-4 [&_button[role=combobox]]:!h-11 [&_button[role=combobox]]:!pl-4 [&_button[role=combobox]]:!text-sm [&_button[type=submit]]:w-full [&_input]:!px-4 [&_input]:!py-2.5 [&_input]:!text-sm [&_textarea]:!min-h-20 [&_textarea]:!px-4 [&_textarea]:!py-2.5 [&_textarea]:!text-sm">
+              <div className="mt-7 @container [&_.space-y-6]:space-y-4 [&_button[role=combobox]]:!h-11 [&_button[role=combobox]]:!pl-4 [&_button[role=combobox]]:!text-sm [&_button[type=submit]]:w-full [&_input]:!px-4 [&_input]:!py-2.5 [&_input]:!text-sm [&_textarea]:!min-h-20 [&_textarea]:!px-4 [&_textarea]:!py-2.5 [&_textarea]:!text-sm">
                 <DynamicForm action={action} fields={fields} submitLabel="Request my quote" />
               </div>
               <p className="mt-4 text-center text-xs text-contrast-500">
