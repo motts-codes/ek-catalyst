@@ -23,6 +23,8 @@ interface Props<F extends Field> {
   fine?: ReactNode;
   /** Split the form into steps (see DynamicForm). */
   steps?: FormStep[];
+  /** `tight` trims the space above the card (when a hero sits directly above it). */
+  spacing?: 'default' | 'tight';
 }
 
 // The customer-form template (every lead form except the estimator): one rounded white card,
@@ -39,10 +41,16 @@ export function LeadFormCard<F extends Field>({
   image,
   fine = 'Your details stay with us. No spam, ever.',
   steps,
+  spacing = 'default',
 }: Props<F>) {
   return (
     <section className="scroll-mt-24 @container" id={id}>
-      <div className="mx-auto max-w-screen-2xl px-6 py-14 @xl:px-9 @xl:py-16 @4xl:px-14 @4xl:py-20">
+      <div
+        className={clsx(
+          'mx-auto max-w-screen-2xl px-6 pb-14 @xl:px-9 @xl:pb-16 @4xl:px-14 @4xl:pb-20',
+          spacing === 'tight' ? 'pt-2 @xl:pt-4' : 'pt-14 @xl:pt-16 @4xl:pt-20',
+        )}
+      >
         <div
           className={clsx(
             'grid overflow-hidden rounded-[2rem] border border-contrast-100 bg-white shadow-[0_24px_60px_-40px_rgb(0_0_0/0.25)]',

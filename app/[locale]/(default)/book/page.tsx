@@ -118,10 +118,11 @@ export default async function Book({
         }
         id="book"
         image={{
-          src: '/images/showrooms/hero.webp',
-          alt: 'A bright showroom floor with white, sage, navy and oak display kitchens',
+          src: '/images/showrooms/book.webp',
+          alt: 'A showroom aisle between a marble waterfall island and a navy island, display kitchens beyond',
         }}
         kicker="Your appointment"
+        spacing="tight"
         steps={[
           { title: 'Where', names: ['showroom', 'format'] },
           { title: 'When', names: ['date', 'time'] },
