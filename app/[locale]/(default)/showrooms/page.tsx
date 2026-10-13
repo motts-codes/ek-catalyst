@@ -31,6 +31,10 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
           { label: 'See the locations', href: '#locations' },
         ]}
         description="There's a difference between scrolling past a kitchen and standing in one. In every showroom you can walk through complete, installed kitchens, open the drawers, hold a door in your hand and sit down with a Project Manager who will lay out your room and price it while you're there. It's free, with no deposit and no obligation. Walk in whenever suits you, or book a time so someone is ready for you."
+        image={{
+          src: '/images/showrooms/hero.webp',
+          alt: 'A bright showroom floor with white, sage, navy and oak display kitchens',
+        }}
         imageLabel="A showroom floor, wide"
         kicker="Six showrooms across Connecticut"
         title="Come and see your kitchen before you buy it"

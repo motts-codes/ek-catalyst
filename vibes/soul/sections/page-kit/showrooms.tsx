@@ -26,13 +26,14 @@ export function ShowroomCards({
       <ul className="grid gap-6 @xl:grid-cols-2 @4xl:grid-cols-3">
         {showrooms.map((showroom) => (
           <li
-            className="flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white"
+            // Same lift-and-shadow hover as the category tiles, with a slow zoom on the photo.
+            className="group flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]"
             key={showroom.slug}
           >
             <div className="relative aspect-[16/9] bg-contrast-100">
               <Image
                 alt={showroom.image.alt}
-                className="object-cover"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 fill
                 sizes="(min-width: 64rem) 33vw, (min-width: 36rem) 50vw, 100vw"
                 src={showroom.image.src}
