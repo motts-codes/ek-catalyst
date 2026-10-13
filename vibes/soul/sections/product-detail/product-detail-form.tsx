@@ -40,6 +40,7 @@ import { Textarea } from '@/vibes/soul/form/textarea';
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { Button } from '@/vibes/soul/primitives/button';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+import { type CartDrawerData, openCartDrawer } from '@/vibes/soul/primitives/cart-drawer/store';
 import { toast } from '@/vibes/soul/primitives/toaster';
 import { useEvents } from '~/components/analytics/events';
 import { usePathname, useRouter } from '~/i18n/routing';
@@ -157,6 +158,8 @@ interface State<F extends Field> {
   fields: F[];
   lastResult: SubmissionResult | null;
   successMessage?: ReactNode;
+  // The cart after the add, for the "added to cart" drawer (falls back to the toast when null).
+  cartDrawer?: CartDrawerData | null;
 }
 
 export type ProductDetailFormAction<F extends Field> = Action<State<F>, FormData>;
@@ -313,7 +316,7 @@ export function ProductDetailForm<F extends Field>({
     { quantity: minQuantity ?? 1 },
   );
 
-  const [{ lastResult, successMessage }, formAction] = useActionState(action, {
+  const [{ lastResult, successMessage, cartDrawer }, formAction] = useActionState(action, {
     fields,
     lastResult: null,
   });
@@ -340,7 +343,9 @@ export function ProductDetailForm<F extends Field>({
         return;
       }
 
-      toast.success(successMessage);
+      // The drawer shows what was added; the toast is the fallback when the cart couldn't be read.
+      if (cartDrawer) openCartDrawer(cartDrawer);
+      else toast.success(successMessage);
 
       startTransition(async () => {
         // This is needed to refresh the Data Cache after the product has been added to the cart.
@@ -348,7 +353,7 @@ export function ProductDetailForm<F extends Field>({
         await revalidateCart();
       });
     }
-  }, [lastResult, successMessage, router]);
+  }, [lastResult, successMessage, cartDrawer, router]);
 
   const [form, formFields] = useForm({
     lastResult,

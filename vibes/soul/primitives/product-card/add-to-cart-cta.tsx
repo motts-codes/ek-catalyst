@@ -4,12 +4,14 @@ import { getFormProps, SubmissionResult, useForm } from '@conform-to/react';
 import { ReactNode, startTransition, useActionState, useEffect } from 'react';
 import { requestFormReset } from 'react-dom';
 
+import { type CartDrawerData, openCartDrawer } from '@/vibes/soul/primitives/cart-drawer/store';
 import { toast } from '@/vibes/soul/primitives/toaster';
 import { useRouter } from '~/i18n/routing';
 
 interface State {
   lastResult: SubmissionResult | null;
   successMessage?: ReactNode;
+  cartDrawer?: CartDrawerData | null;
 }
 
 export type ProductCardAddToCartAction = (
@@ -30,7 +32,7 @@ export const CTA_BUTTON_CLASS =
 // "Add to Cart" CTA for no-option products: fires the add-to-cart action directly.
 export function AddToCartCta({ id, action }: Props) {
   const router = useRouter();
-  const [{ lastResult, successMessage }, formAction, pending] = useActionState(action, {
+  const [{ lastResult, successMessage, cartDrawer }, formAction, pending] = useActionState(action, {
     lastResult: null,
     successMessage: undefined,
   });
@@ -49,10 +51,13 @@ export function AddToCartCta({ id, action }: Props) {
 
   useEffect(() => {
     if (lastResult?.status === 'success') {
-      toast.success(successMessage);
+      // The drawer shows what was added; the toast is the fallback when the cart couldn't be read.
+      if (cartDrawer) openCartDrawer(cartDrawer);
+      else toast.success(successMessage);
+
       router.refresh();
     }
-  }, [lastResult, successMessage, router]);
+  }, [lastResult, successMessage, cartDrawer, router]);
 
   useEffect(() => {
     form.errors?.forEach((error) => toast.error(error));

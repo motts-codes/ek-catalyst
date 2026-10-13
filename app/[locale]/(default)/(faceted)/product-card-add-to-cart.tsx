@@ -6,14 +6,18 @@ import { getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 import { z } from 'zod';
 
+import { type CartDrawerData } from '@/vibes/soul/primitives/cart-drawer/store';
 import { Link } from '~/components/link';
 import { addToOrCreateCart } from '~/lib/cart';
+import { getCartDrawerSummary } from '~/lib/cart/drawer-summary';
 
 const schema = z.object({ id: z.string() });
 
 interface State {
   lastResult: SubmissionResult | null;
   successMessage?: ReactNode;
+  // The cart after the add, for the "added to cart" drawer (falls back to the toast when null).
+  cartDrawer?: CartDrawerData | null;
 }
 
 /**
@@ -39,6 +43,7 @@ export const productCardAddToCartAction = async (
 
     return {
       lastResult: submission.reply(),
+      cartDrawer: await getCartDrawerSummary(Number(submission.value.id)).catch(() => null),
       successMessage: t.rich('successMessage', {
         cartItems: 1,
         cartLink: (chunks) => (
