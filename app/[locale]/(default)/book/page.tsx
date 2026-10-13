@@ -102,8 +102,11 @@ export default async function Book({
             ? `Book time with ${chosen.pm.name.startsWith('[') ? 'the Project Manager' : chosen.pm.name} at our ${chosen.name} showroom. You'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy.`
             : "Every showroom has a Project Manager who plans and prices your kitchen with you. Pick the showroom, a day and a time that suit you, and you'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy."
         }
+        image={{
+          src: '/images/book/hero.webp',
+          alt: 'A designer and a homeowner at a table choosing between door samples',
+        }}
         kicker="Schedule a showroom appointment"
-        textOnly
         title={chosen ? `Book a visit to ${chosen.name}` : 'Sit down with a designer, in person'}
       />
       <LeadFormCard
