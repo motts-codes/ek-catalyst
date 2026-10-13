@@ -350,7 +350,7 @@ export function HeroScrub({
             with the scroll cue (mouse + "Scroll") underneath it. */}
         <div
           aria-hidden
-          className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-start gap-5"
+          className="ek-cue pointer-events-none absolute left-1/2 top-1/2 z-20 flex -translate-x-[calc(50%+100px)] -translate-y-1/2 flex-col items-start gap-5"
           ref={cueRef}
         >
           <p className="m-0 whitespace-pre-line font-heading text-3xl font-bold leading-tight text-foreground @xl:text-4xl @4xl:text-[44px]">
