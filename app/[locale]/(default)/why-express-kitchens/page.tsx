@@ -150,6 +150,10 @@ export default async function WhyExpressKitchens({
               'The same cabinet, finish and warranty either way. Pay less and put it together yourself, or have it arrive built.',
             ctaLabel: 'Compare the two',
             href: '/cabinets',
+            image: {
+              src: '/images/why-us/proof/assembled-or-rta.webp',
+              alt: 'A flat-packed cabinet in its box beside the same cabinet built',
+            },
             imageLabel: 'The same cabinet, flat-packed and built',
           },
           {
@@ -158,6 +162,10 @@ export default async function WhyExpressKitchens({
               'Every collection shows its 10x10 kitchen price. No "call for pricing," no form to fill in.',
             ctaLabel: 'Shop cabinets',
             href: '/cabinets/assembled-cabinets',
+            image: {
+              src: '/images/why-us/proof/price-on-page.webp',
+              alt: 'A sage shaker door sample with its 10x10 kitchen price card',
+            },
             imageLabel: 'A collection card with its price',
           },
           {
@@ -165,6 +173,10 @@ export default async function WhyExpressKitchens({
             description: "Bring a competitor's quote. We'll beat it, or pay you $500.",
             ctaLabel: 'See the guarantee',
             href: '/price-match-guarantee',
+            image: {
+              src: '/images/why-us/proof/guarantee.webp',
+              alt: "A competitor's kitchen cabinet quote with a $500 cheque on top",
+            },
             imageLabel: 'A quote and a cheque',
           },
         ]}
