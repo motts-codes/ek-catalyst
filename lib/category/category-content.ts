@@ -131,7 +131,8 @@ const STOCKED_POINTS: CategoryPoint[] = [
 // which reads the same entries below, so the handover changes nothing the visitor sees.
 const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   '/bath': {
-    lede: "Everything that goes on and around a vanity: tops in granite and quartz, matching side splashes, undermount and vessel sinks, faucets in the finishes people actually ask for, and the drains and accessories that finish the job. It's all stocked in Bristol and sized to go with our vanities, so it fits the first time.",
+    heading: 'Your whole vanity in one order',
+    lede: 'Tops, sinks, faucets and drains, sized to our vanities so everything fits.',
     imageLabel: 'A bathroom vanity with a quartz top, undermount sink and brushed-nickel faucet',
     points: STOCKED_POINTS,
     fine: 'Lead times to be confirmed.',
@@ -164,8 +165,8 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     ],
   },
   '/sinks-faucets': {
-    heading: 'Kitchen sinks & faucets',
-    lede: "A sink that fits the base cabinet, a faucet that reaches the bowl, and the strainer, grid and soap dispenser that finish it off. Every sink here is sized to our sink bases, so if you're buying cabinets from us you won't be guessing at the cut-out. It all ships from Bristol in two days, or you can collect it free with your order.",
+    heading: 'The sink that fits, the first time',
+    lede: 'Kitchen sinks sized to our sink cabinets, faucets to match, and the accessories that finish the job.',
     imageLabel: 'A stainless double-bowl sink with a pull-down faucet, in a white shaker kitchen',
     points: STOCKED_POINTS,
     fine: 'Lead times to be confirmed.',
@@ -188,6 +189,8 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     ],
   },
   '/cabinet-hardware/handles-knobs': {
+    lede: 'Pulls and knobs in every finish we make doors in.',
+    heading: 'Change the handles, change the kitchen',
     // No fine print: "Free & fast shipping" is already one of the icon points.
     fine: '',
     // Until the products land (and a Finish facet with them), the tiles filter the category by
@@ -234,7 +237,8 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     ],
   },
   '/cabinet-hardware': {
-    lede: 'The small things that change how a kitchen feels: handles and knobs in the finishes that go with our doors, backsplash tiles to carry the color up the wall, and the organizers that make a drawer earn its keep. Everything is stocked in Bristol and ships next business day, or you can collect it free. Handles are included with our Premium cabinets; here is where you choose them.',
+    heading: 'Small changes, whole new kitchen',
+    lede: 'Handles, knobs, backsplash tile and organizers in finishes that match our doors. Ships next business day.',
     imageLabel: 'Brass handles on a navy shaker door, with a marble backsplash behind',
     points: [
       { icon: 'stock', label: 'Stocked in Bristol' },
@@ -257,31 +261,164 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     ],
   },
   '/appliances': {
+    heading: 'Appliances you can take home this week',
     subcategories: APPLIANCE_TILES,
-    lede: 'Fridges, ranges, hoods, dishwashers and laundry. In stock in Bristol and priced below retail, because you collect.',
+    lede: 'Fridges, ranges, dishwashers and laundry, in stock below retail. Pick up in Bristol in two days.',
     imageLabel: 'A range and hood in a finished kitchen',
     subTitle: 'Shop by appliance',
     points: [...PICKUP_POINTS, { icon: 'price', label: 'Priced below retail' }],
     fine: undefined,
   },
   '/windows': {
-    heading: 'Replacement windows — $179.99, any size up to 101 united inches',
-    lede: 'United inches is width plus height. A 36 × 60 window is 96 united inches — it qualifies. Double hung, sliders and hoppers, at factory-direct pricing.',
+    heading: 'New windows without the custom-order wait',
+    lede: 'Double hung, sliders and hoppers, in stock in Bristol. Double hung windows are $179.99 in almost any size.',
     imageLabel: 'A white vinyl double-hung window, installed',
     subTitle: 'Shop by window type',
     points: [...PICKUP_POINTS, { icon: 'price', label: 'Factory-direct pricing' }],
     fine: undefined,
   },
   '/closets': {
-    heading: 'Closet organizers',
-    lede: 'Twelve closet pieces that fit together — hanging units, towers, shelves, drawers, panels and fillers. Buy the ones your closet needs and put them up in an afternoon. Installation not included.',
+    heading: 'Build the closet you keep meaning to sort out',
+    lede: '12 pieces that fit together, in three colors. Buy what your space needs and put it up in an afternoon.',
     imageLabel: 'A reach-in closet with hanging units, a tower and shelves',
   },
   '/cabinets': {
-    heading: 'Kitchen cabinets',
-    lede: '100+ door styles in 30+ colors, built in our own Connecticut factory. Buy them assembled or ready to assemble — same box, same door, same finish.',
+    heading: "The kitchen you've pictured, without the 14-week wait",
+    lede: '100+ door styles in 30+ colors, built in our Connecticut factory. Assembled or ready to assemble, same cabinet either way.',
     imageLabel: 'A finished shaker kitchen',
     subTitle: 'Shop by collection',
+  },
+  '/countertops': {
+    heading: 'The surface your kitchen is built around',
+    lede: 'Granite, quartz and laminate, cut to fit your cabinets, with the price per square foot up front.',
+  },
+  '/countertops/granite': {
+    heading: 'One of a kind, like your kitchen',
+    lede: 'Natural stone, every slab unique. From $49.99 a sq ft.',
+  },
+  '/countertops/quartz': {
+    heading: 'Good looks, no upkeep',
+    lede: 'Engineered stone that never needs sealing. From $59.99 a sq ft.',
+  },
+  '/countertops/laminate': {
+    heading: 'The look you want, for less',
+    lede: 'The budget choice, in the widest range of colors and patterns.',
+  },
+  '/countertops/prefabricated': {
+    heading: 'Stone tops, ready to go',
+    lede: 'Granite and quartz in standard lengths with a finished edge.',
+  },
+  '/countertops/prefabricated/granite-prefabricated': {
+    heading: 'Granite, ready to install',
+    lede: 'Standard lengths with a finished front edge.',
+  },
+  '/countertops/prefabricated/quartz-prefabricated': {
+    heading: 'Quartz, ready to install',
+    lede: 'Standard lengths with a finished front edge.',
+  },
+  '/countertops/samples': {
+    heading: 'See it in your own light',
+    lede: 'Hold the real material against your cabinets before you decide.',
+  },
+  '/appliances/fridges-freezers': {
+    heading: "Room for the whole week's groceries",
+    lede: 'French door, side-by-side, top and bottom freezer, and counter-depth.',
+  },
+  '/appliances/ranges-cooktops': {
+    heading: 'Cook the way you like',
+    lede: 'Gas, electric and induction, in 30 and 36 inches.',
+  },
+  '/appliances/dishwashers': {
+    heading: 'Less time at the sink',
+    lede: 'Built-in, fits the standard 24-inch opening.',
+  },
+  '/appliances/microwaves': {
+    heading: 'Reheat, defrost, done',
+    lede: 'Countertop, over-the-range and built-in.',
+  },
+  '/appliances/wall-ovens': {
+    heading: 'Bake at eye level',
+    lede: 'Single and double, in 24 and 30 inches.',
+  },
+  '/appliances/range-hoods': {
+    heading: 'Keep the cooking smell in the kitchen',
+    lede: 'Under-cabinet, wall-mount and insert, matched to your cooktop.',
+  },
+  '/appliances/washers-dryers': {
+    heading: 'Make laundry day shorter',
+    lede: 'Front-load, top-load and stackable pairs.',
+  },
+  '/appliances/garbage-disposals': {
+    heading: 'No more scraping plates into the trash',
+    lede: '½ to 1 horsepower, matched to your sink.',
+  },
+  '/appliances/air-conditioning': {
+    heading: "Cool the room you're in",
+    lede: 'Window and portable units, sized by room.',
+  },
+  '/appliances/accessories': {
+    heading: 'The parts that finish the install',
+    lede: 'Trim kits, hoses, vents and filters.',
+  },
+  '/windows/replacement': {
+    heading: 'Swap old windows without reframing',
+    lede: 'Double hung, sliders and hoppers made to fit your existing opening.',
+  },
+  '/windows/replacement/double-hung-windows': {
+    heading: '$179.99, almost any size',
+    lede: 'Any size up to 101 inches (width + height). A 36 x 60 window is 96, so it qualifies. Energy-saving Low-E glass, and sashes that tilt in for cleaning.',
+  },
+  '/windows/replacement/slider-windows': {
+    heading: 'Glide open, nothing to crank',
+    lede: 'Vinyl, energy-saving Low-E glass, no hinges to break.',
+  },
+  '/windows/replacement/hopper-windows': {
+    heading: 'Light and air for the basement',
+    lede: 'Vinyl, energy-saving Low-E glass, for basements and utility rooms.',
+  },
+  '/windows/new-construction': {
+    heading: 'Windows for a brand-new opening',
+    lede: 'With a nailing fin for framing.',
+  },
+  '/sinks-faucets/kitchen-sinks': {
+    heading: 'Big enough for the roasting pan',
+    lede: 'Single, double, farmhouse and workstation, sized to our sink cabinets.',
+  },
+  '/sinks-faucets/kitchen-faucets': {
+    heading: 'Reach every corner of the sink',
+    lede: 'Pull-down, pull-out, single and double handle.',
+  },
+  '/sinks-faucets/accessories': {
+    heading: 'Finish the sink',
+    lede: 'Strainers, grids, soap dispensers and sprays.',
+  },
+  '/bath/vanity-tops': {
+    heading: 'The top that fits your vanity',
+    lede: 'Cultured marble and quartz, sized to our vanities.',
+  },
+  '/bath/side-splashes': {
+    heading: 'Finish the edge',
+    lede: 'Sold by the piece to match your top.',
+  },
+  '/bath/bathroom-sinks': {
+    heading: 'Pick your basin',
+    lede: 'Vessel, undermount and integrated.',
+  },
+  '/bath/bathroom-faucets': {
+    heading: 'The finishing touch',
+    lede: 'Single-hole, centerset and widespread.',
+  },
+  '/bath/drains-accessories': {
+    heading: 'The parts that make it work',
+    lede: 'Pop-up drains, traps, supply lines and more.',
+  },
+  '/cabinet-hardware/tiles': {
+    heading: 'Carry the color up the wall',
+    lede: 'Ceramic, porcelain, glass and stone, by the square foot.',
+  },
+  '/cabinet-hardware/accessories': {
+    heading: 'Make every drawer earn its keep',
+    lede: 'Organizers, trim, fillers and end panels, sized to our cabinets.',
   },
 };
 
