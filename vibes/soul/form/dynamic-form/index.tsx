@@ -297,6 +297,8 @@ export function DynamicForm<F extends Field>({
             )}
             {steps != null && step > 0 && (
               <Button
+                // White outline (some pages theme "tertiary" dark red), black fill on hover.
+                className="!border-foreground !bg-white !text-foreground after:!bg-foreground hover:!text-white"
                 onClick={() => setStep((current) => current - 1)}
                 size={buttonSize}
                 type="button"

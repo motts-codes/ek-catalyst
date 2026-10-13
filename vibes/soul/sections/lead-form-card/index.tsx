@@ -79,7 +79,12 @@ export function LeadFormCard<F extends Field>({
               )}
               {/* Compact inputs with the site's pink hairline (#fcb6bb) instead of the grey default.
                   The wrapper is its own container so paired fields stack when the card is narrow. */}
-              <div className="mt-6 @container [--checkbox-light-unchecked-border:#fcb6bb] [--input-light-border:#fcb6bb] [--radio-group-light-border:#fcb6bb] [--select-light-trigger-border:#fcb6bb] [--textarea-light-border:#fcb6bb] [&_.space-y-6]:space-y-4 [&_button[role=combobox]]:!h-11 [&_button[role=combobox]]:!pl-4 [&_button[role=combobox]]:!text-sm [&_button[type=submit]]:w-full [&_input]:!px-4 [&_input]:!py-2.5 [&_input]:!text-sm [&_textarea]:!min-h-20 [&_textarea]:!px-4 [&_textarea]:!py-2.5 [&_textarea]:!text-sm">
+              <div
+                className={clsx(
+                  steps == null && '[&_button[type=submit]]:w-full',
+                  'mt-6 @container [--checkbox-light-unchecked-border:#fcb6bb] [--input-light-border:#fcb6bb] [--radio-group-light-border:#fcb6bb] [--select-light-trigger-border:#fcb6bb] [--textarea-light-border:#fcb6bb] [&_.space-y-6]:space-y-4 [&_button[role=combobox]]:!h-11 [&_button[role=combobox]]:!pl-4 [&_button[role=combobox]]:!text-sm [&_input]:!px-4 [&_input]:!py-2.5 [&_input]:!text-sm [&_textarea]:!min-h-20 [&_textarea]:!px-4 [&_textarea]:!py-2.5 [&_textarea]:!text-sm',
+                )}
+              >
                 <DynamicForm
                   action={action}
                   fields={fields}
