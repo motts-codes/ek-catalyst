@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Streamable } from '@/vibes/soul/lib/streamable';
@@ -50,13 +50,31 @@ export function ProductTabsShell<T extends TabDescriptor>({
   const [arrowSlot, setArrowSlot] = useState<HTMLElement | null>(null);
   const active = tabs.find((tab) => tab.id === activeId) ?? tabs[0];
 
+  // The red underline is one element that glides to the active tab (left/width transition)
+  // rather than a border that switches from one label to the next.
+  const tabRefs = useRef(new Map<string, HTMLButtonElement>());
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = active ? tabRefs.current.get(active.id) : undefined;
+
+      if (el) setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+
+    return () => window.removeEventListener('resize', measure);
+  }, [active]);
+
   if (!active) return null;
 
   return (
     <div className={clsx('@container', className)}>
       <div className="mb-6 flex items-end justify-between gap-6 border-b border-contrast-200">
         <div
-          className="-mb-px flex min-w-0 gap-7 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="relative -mb-px flex min-w-0 gap-7 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="tablist"
         >
           {tabs.map((tab) => {
@@ -66,13 +84,17 @@ export function ProductTabsShell<T extends TabDescriptor>({
               <button
                 aria-selected={isActive}
                 className={clsx(
-                  'whitespace-nowrap border-b-2 px-0.5 pb-3 pt-2 text-[15px] transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
+                  'whitespace-nowrap border-b-2 border-transparent px-0.5 pb-3 pt-2 text-[15px] transition-colors duration-300 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary',
                   isActive
-                    ? 'border-[var(--button-primary-background,#d90716)] font-bold text-foreground'
-                    : 'border-transparent text-contrast-500 hover:text-foreground',
+                    ? 'font-bold text-foreground'
+                    : 'text-contrast-500 hover:text-foreground',
                 )}
                 key={tab.id}
                 onClick={() => setActiveId(tab.id)}
+                ref={(el) => {
+                  if (el) tabRefs.current.set(tab.id, el);
+                  else tabRefs.current.delete(tab.id);
+                }}
                 role="tab"
                 type="button"
               >
@@ -80,10 +102,22 @@ export function ProductTabsShell<T extends TabDescriptor>({
               </button>
             );
           })}
+          {indicator != null && (
+            <span
+              aria-hidden
+              className="absolute bottom-0 h-0.5 bg-[var(--button-primary-background,#d90716)] transition-[left,width] duration-300 ease-smooth motion-reduce:transition-none"
+              style={{ left: indicator.left, width: indicator.width }}
+            />
+          )}
         </div>
         <div className="shrink-0 pb-2.5" ref={setArrowSlot} />
       </div>
-      <div key={active.id} role="tabpanel">
+      {/* The new panel fades in with a small rise; keyed so it replays on every switch. */}
+      <div
+        className="duration-300 animate-in fade-in slide-in-from-bottom-2 motion-reduce:animate-none"
+        key={active.id}
+        role="tabpanel"
+      >
         <ArrowSlotContext.Provider value={arrowSlot}>
           {renderPanel(active)}
         </ArrowSlotContext.Provider>
