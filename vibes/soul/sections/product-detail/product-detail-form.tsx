@@ -752,7 +752,9 @@ function QuoteOnlyPanel({
           Request a quote
         </ButtonLink>
         <ButtonLink
-          className="@sm:flex-1"
+          // White outline (the PDP themes "tertiary" dark red); fills black on hover like the
+          // site's other secondary buttons.
+          className="!border-foreground !bg-white !text-foreground after:!bg-foreground hover:!text-white @sm:flex-1"
           href={actions.phoneHref}
           size="medium"
           variant="tertiary"
