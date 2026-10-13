@@ -42,6 +42,18 @@
     font-family: var(--font-family-body);
   }
 
+  /* No hanging last word: headings wrap to balanced lines, and short copy (ledes, card text)
+     avoids a one-word last line. Browsers without text-wrap support simply ignore it. */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
   /* Every interactive element eases between states by default, so a hover or focus change never
      snaps. Component-level `transition-*` utilities still take precedence when they're present. */
   a,
