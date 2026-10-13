@@ -555,6 +555,8 @@ const HERO_IMAGES: Record<string, { src: string; alt: string }> = {
   '/bath/side-splashes': heroImage('sub-side-splashes', 'A vanity side splash'),
   '/bath/vanity-tops': heroImage('sub-vanity-tops', 'A vanity top'),
   '/cabinet-hardware/accessories': heroImage('sub-cabinet-accessories', 'Cabinet accessories'),
+  // The parent has no photo of its own yet; the handles shot stands in until one arrives.
+  '/cabinet-hardware': heroImage('sub-handles', 'Brass handles on a navy shaker door'),
   '/cabinet-hardware/handles-knobs': heroImage('sub-handles', 'Cabinet handles'),
   '/cabinet-hardware/tiles': heroImage('sub-backsplash-tiles', 'Backsplash tiles'),
   '/countertops/granite': heroImage('sub-granite', 'A granite countertop'),
