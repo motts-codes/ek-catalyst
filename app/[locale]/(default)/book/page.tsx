@@ -137,21 +137,34 @@ export default async function Book({
             title: 'Bring a photo',
             description:
               'Any angle, from your phone. It tells the designer more about your room than a sketch ever could.',
+            image: {
+              src: '/images/book/photo.webp',
+              alt: 'Someone photographing their current kitchen on a phone',
+            },
             imageLabel: 'A phone photo of a kitchen',
           },
           {
             title: 'Rough measurements help',
             description:
               'Corner to corner along each wall, and the ceiling height. Rough is absolutely fine; we check everything before you order.',
+            image: {
+              src: '/images/book/measure.webp',
+              alt: 'A tape measure held along a wall, a sketch on a notepad below',
+            },
             imageLabel: 'A tape measure along a wall',
           },
           {
             title: 'Or bring nothing at all',
             description:
               "If all you have is a feeling about what you want, that's a perfectly good place to start.",
+            image: {
+              src: '/images/book/inspiration.webp',
+              alt: 'A phone showing a grid of saved kitchen photos',
+            },
             imageLabel: 'Saved kitchen screenshots on a phone',
           },
         ]}
+        imageStyle="plain"
         kicker="Before you come"
         title="Three things that make the visit better"
       />
