@@ -1,5 +1,6 @@
-# Not part of the app: import tooling + raw harvest data, hand-off docs, stray output dirs.
-scripts/
+# Not part of the app: raw import data folders, hand-off docs, stray output dirs.
+# (scripts/generate.cjs at the top level is needed by the build and stays.)
+scripts/*/
 undefined/
 docs/
 tests/
