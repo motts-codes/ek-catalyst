@@ -105,7 +105,7 @@ export function CardsRow({
                 <div
                   className={clsx(
                     'relative mb-6 overflow-hidden bg-contrast-100',
-                    plain ? 'aspect-[5/3] rounded-3xl' : 'aspect-[16/10] rounded-2xl',
+                    plain ? 'aspect-[5/3] rounded-t-3xl' : 'aspect-[16/10] rounded-2xl',
                   )}
                 >
                   {card.image ? (
