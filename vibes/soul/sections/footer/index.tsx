@@ -165,7 +165,7 @@ export const Footer = ({
                   if (contactInformation?.address != null || contactInformation?.phone != null) {
                     return (
                       <div className="mt-4 text-sm">
-                        <h3 className="font-semibold text-[var(--footer-contact-title,hsl(var(--contrast-500)))]">
+                        <h3 className="whitespace-pre-line font-semibold text-[var(--footer-contact-title,hsl(var(--contrast-500)))]">
                           {contactTitle}
                         </h3>
                         {Boolean(contactInformation.address) && <p>{contactInformation.address}</p>}
