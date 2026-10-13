@@ -34,6 +34,10 @@ export interface Product {
   numberOfReviews?: number;
   /** True when the product has required options; the CTA then links to the PDP to choose them. */
   requiresOptions?: boolean;
+  /** Quoted, not carted (countertops): "Request a quote" CTA, no delivery line. */
+  quoteOnly?: boolean;
+  /** Unit shown after the price, e.g. "sq. ft.". */
+  priceUnit?: string;
 }
 
 export interface ProductCardProps {
@@ -48,6 +52,9 @@ export interface ProductCardProps {
   /** Direct add-to-cart action; the icon CTA on no-option products fires it. When omitted, even
    *  no-option products fall back to a PDP link. */
   addToCartAction?: ProductCardAddToCartAction;
+  /** Where a quote-only product's CTA goes. Defaults to the product page's quote form; listing
+   *  pages that render the form themselves pass their in-page anchor. */
+  quoteHref?: string;
   product: Product;
   showRating?: boolean;
 }
@@ -87,6 +94,8 @@ export function ProductCard({
     image,
     href,
     requiresOptions,
+    quoteOnly = false,
+    priceUnit,
     inventoryMessage,
     rating,
     numberOfReviews,
@@ -99,6 +108,7 @@ export function ProductCard({
   compareLabel,
   compareParamName,
   addToCartAction,
+  quoteHref,
   imagePriority = false,
   imageSizes = '(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw',
 }: ProductCardProps) {
@@ -221,15 +231,8 @@ export function ProductCard({
             )}
             {/* Grey divider below the brand name, above the price (margin below the line). */}
             <hr className="mb-3 mt-2 border-t border-contrast-100" />
-            {price != null && (
-              <PriceLabel
-                className="mt-0.5 text-base @[16rem]:text-lg [&_abbr]:cursor-default [&_abbr]:no-underline"
-                colorScheme={colorScheme}
-                price={price}
-                superscript
-              />
-            )}
-            <DeliveryLine message={deliveryMessage} />
+            <CardPrice colorScheme={colorScheme} price={price} unit={priceUnit} />
+            <DeliveryLine message={quoteOnly ? undefined : deliveryMessage} />
             {showRating && typeof rating === 'number' && rating > 0 && (
               <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
             )}
@@ -248,11 +251,14 @@ export function ProductCard({
               // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
               // pt-2 guarantees a little space above the button even on the tallest card.
               <div className="relative z-10 mt-auto pt-3">
-                {requiresOptions === false && addToCartAction != null ? (
-                  <AddToCartCta action={addToCartAction} id={id} />
-                ) : (
-                  <ViewOptionsCta href={href} />
-                )}
+                <CardCta
+                  addToCartAction={addToCartAction}
+                  href={href}
+                  id={id}
+                  quoteHref={quoteHref}
+                  quoteOnly={quoteOnly}
+                  requiresOptions={requiresOptions}
+                />
               </div>
             )}
           </div>
@@ -288,6 +294,63 @@ export function ProductCard({
       )}
     </article>
   );
+}
+
+// Price in the card's bold superscript style, with an optional unit after it ("/ sq. ft.").
+function CardPrice({
+  price,
+  unit,
+  colorScheme,
+}: {
+  price?: Price;
+  unit?: string;
+  colorScheme: 'light' | 'dark';
+}) {
+  if (price == null) return null;
+
+  return (
+    <span className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
+      <PriceLabel
+        className="text-base @[16rem]:text-lg [&_abbr]:cursor-default [&_abbr]:no-underline"
+        colorScheme={colorScheme}
+        price={price}
+        superscript
+      />
+      {Boolean(unit) && <span className="text-xs text-contrast-500">/ {unit}</span>}
+    </span>
+  );
+}
+
+// The card's one CTA: "Request a quote" for quote-only products, "Add to Cart" for products
+// without options (when the action is wired), otherwise "View Options" to the product page.
+function CardCta({
+  quoteOnly,
+  quoteHref,
+  href,
+  id,
+  requiresOptions,
+  addToCartAction,
+}: {
+  quoteOnly: boolean;
+  quoteHref?: string;
+  href: string;
+  id: string;
+  requiresOptions?: boolean;
+  addToCartAction?: ProductCardAddToCartAction;
+}) {
+  if (quoteOnly) {
+    return (
+      <Link className={CTA_BUTTON_CLASS} href={quoteHref ?? `${href}#request-a-quote`}>
+        Request a quote
+      </Link>
+    );
+  }
+
+  if (requiresOptions === false && addToCartAction != null) {
+    return <AddToCartCta action={addToCartAction} id={id} />;
+  }
+
+  return <ViewOptionsCta href={href} />;
 }
 
 // Delivery/pickup message from the __delivery custom field, with an icon in brand red: the truck,

@@ -16,6 +16,7 @@ import {
   CabinetTypeFilter,
   type CabinetTypeValue,
 } from '@/vibes/soul/sections/cabinet-type-filter';
+import { CountertopQuote } from '@/vibes/soul/sections/countertop-quote';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { SeoContentSection } from '@/vibes/soul/sections/seo-content';
@@ -35,7 +36,9 @@ import {
 } from '~/lib/cabinets/cabinet-collection';
 import { pickFaq } from '~/lib/category/category-faq';
 import { parseSeoContent } from '~/lib/category/category-seo';
+import { COUNTERTOP_QUOTE_FIELDS, QUOTE_ANCHOR } from '~/lib/countertops/quote-form';
 import { getPreferredCurrencyCode } from '~/lib/currency';
+import { submitQuoteLead } from '~/lib/forms/submit-lead';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { EditableSection } from '~/lib/makeswift/components/editable-section';
 import { CATEGORY_HEADER_TYPE } from '~/lib/makeswift/components/section-types';
@@ -184,6 +187,19 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       alternates: await getMetadataAlternates({ path: categoryPath, locale }),
     }),
   };
+}
+
+// Countertops are quoted, not carted: their cards link to a quote form rendered under the grid.
+const isCountertopPath = (path: string) => path.startsWith('/countertops');
+
+const quoteHrefFor = (path: string) => (isCountertopPath(path) ? `#${QUOTE_ANCHOR}` : undefined);
+
+function CountertopQuoteBand({ path }: { path: string }) {
+  if (!isCountertopPath(path)) return null;
+
+  return (
+    <CountertopQuote action={submitQuoteLead} fields={COUNTERTOP_QUOTE_FIELDS} id={QUOTE_ANCHOR} />
+  );
 }
 
 export default async function Category(props: Props) {
@@ -456,6 +472,7 @@ export default async function Category(props: Props) {
           maxItems={MAX_COMPARE_LIMIT}
           paginationInfo={streamablePagination}
           products={streamableProducts}
+          quoteHref={quoteHrefFor(category.path)}
           rangeFilterApplyLabel={t('FacetedSearch.Range.apply')}
           removeLabel={t('Compare.remove')}
           resetFiltersLabel={t('FacetedSearch.resetFilters')}
@@ -479,6 +496,7 @@ export default async function Category(props: Props) {
           totalCount={streamableTotalCount}
         />
       </div>
+      <CountertopQuoteBand path={category.path} />
       <Slot
         label={`${category.name} bottom content`}
         snapshotId={`category-${categoryId}-bottom-content`}

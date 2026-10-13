@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
-import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import {
   CategoryHero,
@@ -11,6 +10,7 @@ import {
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { FormCard, PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
+import { COUNTERTOP_QUOTE_FIELDS } from '~/lib/countertops/quote-form';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -18,38 +18,6 @@ export const metadata: Metadata = {
   description:
     'Granite, quartz, laminate and prefabricated countertops at some of the lowest prices per square foot anywhere. Request a quote or call to order.',
 };
-
-const FIELDS: Field[] = [
-  { type: 'text', name: 'name', label: 'Your name', required: true },
-  { type: 'email', name: 'email', label: 'Email', required: true },
-  { type: 'text', name: 'phone', label: 'Phone', required: true },
-  { type: 'text', name: 'zip', label: 'ZIP code', required: true },
-  {
-    type: 'select',
-    name: 'material',
-    label: 'Material',
-    options: [
-      { label: 'Granite', value: 'granite' },
-      { label: 'Quartz', value: 'quartz' },
-      { label: 'Laminate', value: 'laminate' },
-      { label: 'Prefabricated', value: 'prefab' },
-      { label: 'Not sure yet', value: 'unsure' },
-    ],
-  },
-  { type: 'text', name: 'sqft', label: 'Approximate square feet (rough is fine)' },
-  {
-    type: 'select',
-    name: 'cutouts',
-    label: 'Cut-outs',
-    options: [
-      { label: 'Sink', value: 'sink' },
-      { label: 'Cooktop', value: 'hob' },
-      { label: 'Sink and cooktop', value: 'both' },
-      { label: 'None', value: 'none' },
-    ],
-  },
-  { type: 'textarea', name: 'notes', label: 'Anything else — colour, edge, timing' },
-];
 
 export default async function Countertops({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -120,7 +88,7 @@ export default async function Countertops({ params }: { params: Promise<{ locale
         <FormCard>
           <DynamicFormSection
             action={submitQuoteLead}
-            fields={FIELDS}
+            fields={COUNTERTOP_QUOTE_FIELDS}
             submitLabel="Request my quote"
           />
         </FormCard>

@@ -5,6 +5,7 @@ import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/serve
 import { SearchParams } from 'nuqs/server';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
+import { CountertopQuote } from '@/vibes/soul/sections/countertop-quote';
 import { Faq } from '@/vibes/soul/sections/faq';
 import { FeaturedProductCarousel } from '@/vibes/soul/sections/featured-product-carousel';
 import { FeaturesGrid } from '@/vibes/soul/sections/features-grid';
@@ -18,7 +19,13 @@ import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { productInfoFeaturesTransformer } from '~/data-transformers/product-info-features-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
+import {
+  COUNTERTOP_PHONE,
+  countertopQuoteFields,
+  QUOTE_ANCHOR,
+} from '~/lib/countertops/quote-form';
 import { getPreferredCurrencyCode } from '~/lib/currency';
+import { submitQuoteLead } from '~/lib/forms/submit-lead';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { ProductDetail } from '~/lib/makeswift/components/product-detail';
 import { getRecaptchaSiteKey } from '~/lib/recaptcha';
@@ -151,6 +158,15 @@ export default async function Product({ params, searchParams }: Props) {
   const deliveryMessage = removeEdgesAndNodes(baseProduct.customFields)
     .find((field) => field.name === '__delivery')
     ?.value?.trim();
+
+  // Countertops: __quote_only = yes swaps the purchase panel for "Request a quote" + phone, and the
+  // quote form renders under the product; __price_unit (e.g. "sq. ft.") follows the price.
+  const customField = (name: string) =>
+    removeEdgesAndNodes(baseProduct.customFields)
+      .find((field) => field.name === name)
+      ?.value.trim();
+  const quoteOnly = customField('__quote_only')?.toLowerCase() === 'yes';
+  const priceUnit = customField('__price_unit');
 
   // "N bought in past month" social-proof count, from the __bought_last_month custom field.
   // Framework is real (see docs/BOUGHT-COUNT-SYNC.md): a scheduled job will write actual last-30-day
@@ -709,6 +725,7 @@ export default async function Product({ params, searchParams }: Props) {
           loadMoreImagesAction={getMoreProductImages}
           optionDependencyMap={buildOptionDependencyMap(baseProduct.variants?.edges)}
           prefetch={true}
+          priceUnit={priceUnit}
           product={{
             id: baseProduct.entityId.toString(),
             title: baseProduct.name,
@@ -739,6 +756,15 @@ export default async function Product({ params, searchParams }: Props) {
           }}
           productId={baseProduct.entityId}
           quantityLabel={t('ProductDetails.quantity')}
+          quoteOnly={
+            quoteOnly
+              ? {
+                  quoteHref: `#${QUOTE_ANCHOR}`,
+                  phoneHref: COUNTERTOP_PHONE.href,
+                  phoneLabel: COUNTERTOP_PHONE.label,
+                }
+              : undefined
+          }
           recaptchaSiteKey={recaptchaSiteKey}
           reviewFormAction={submitReview}
           stockStatus={streamableStockStatus}
@@ -751,6 +777,15 @@ export default async function Product({ params, searchParams }: Props) {
           Rendered here (not inside ProductInformation) so it always shows, even when a product has
           no Product Information content. */}
       <hr className="w-full border-t border-[hsl(var(--product-detail-divider))]" />
+
+      {quoteOnly && (
+        <CountertopQuote
+          action={submitQuoteLead}
+          fields={countertopQuoteFields(baseProduct.name)}
+          id={QUOTE_ANCHOR}
+          product={baseProduct.name}
+        />
+      )}
 
       <Stream fallback={null} value={streamableSpecifications}>
         {(specifications) => (

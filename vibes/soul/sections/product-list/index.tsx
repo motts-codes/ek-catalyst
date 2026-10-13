@@ -22,6 +22,8 @@ interface ProductListProps {
   compareLabel?: Streamable<string>;
   compareParamName?: string;
   addToCartAction?: ProductCardAddToCartAction;
+  /** In-page anchor for quote-only products' CTA (pages that render the quote form below). */
+  quoteHref?: string;
   emptyStateTitle?: Streamable<string>;
   emptyStateSubtitle?: Streamable<string>;
   placeholderCount?: number;
@@ -58,6 +60,7 @@ export function ProductList({
   compareLabel: streamableCompareLabel = 'Compare',
   compareParamName = 'compare',
   addToCartAction,
+  quoteHref,
   emptyStateTitle = 'No products found',
   emptyStateSubtitle = 'Try browsing our complete catalog of products.',
   placeholderCount = 8,
@@ -113,6 +116,7 @@ export function ProductList({
                     imageSizes="(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw"
                     key={product.id}
                     product={product}
+                    quoteHref={quoteHref}
                     showCompare={showCompare}
                     showRating={showRating}
                   />

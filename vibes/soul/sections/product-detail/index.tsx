@@ -22,6 +22,7 @@ import {
   BackorderDisplayData,
   ProductDetailForm,
   ProductDetailFormAction,
+  type QuoteActions,
   StockDisplayData,
 } from './product-detail-form';
 import { RatingLink } from './rating-link';
@@ -101,6 +102,11 @@ export interface ProductDetailProps<F extends Field> {
   fulfillmentMessage?: string;
   // First trust-block row label (from the __delivery custom field, e.g. "Same Day Pickup").
   deliveryMessage?: string;
+  // Unit shown after the price, e.g. "sq. ft." (countertops).
+  priceUnit?: string;
+  // Quote-only products (countertops): no purchase panel or options; a 50/50 gallery/details
+  // split with "Request a quote" (to the form on the page) and a phone link instead.
+  quoteOnly?: QuoteActions;
 }
 
 /**
@@ -165,6 +171,8 @@ export function ProductDetail<F extends Field>({
   optionDependencyMap,
   fulfillmentMessage,
   deliveryMessage,
+  priceUnit,
+  quoteOnly,
 }: ProductDetailProps<F>) {
   return (
     <section className="@container">
@@ -182,7 +190,12 @@ export function ProductDetail<F extends Field>({
         <Stream fallback={<ProductDetailSkeleton />} value={streamableProduct}>
           {(product) =>
             product && (
-              <div className="grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @2xl:grid-cols-[minmax(0,3fr)_minmax(0,7fr)] @5xl:gap-x-12">
+              <div
+                className={clsx(
+                  'grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @5xl:gap-x-12',
+                  quoteOnly ? '@2xl:grid-cols-2' : '@2xl:grid-cols-[minmax(0,3fr)_minmax(0,7fr)]',
+                )}
+              >
                 {/* Mobile gallery: shown FIRST (image above all details). Forced to a shorter 4:3
                     frame so it isn't full-width-tall on phones. Hidden at @2xl where the gallery
                     lives in its own grid column instead. */}
@@ -385,11 +398,18 @@ export function ProductDetail<F extends Field>({
                               <div className="group/product-price">
                                 <Stream fallback={<PriceLabelSkeleton />} value={product.price}>
                                   {(price) => (
-                                    <PriceLabel
-                                      className="my-2 text-2xl @xl:text-3xl"
-                                      price={price ?? ''}
-                                      showSavings
-                                    />
+                                    <span className="flex flex-wrap items-baseline gap-x-2">
+                                      <PriceLabel
+                                        className="my-2 text-2xl @xl:text-3xl"
+                                        price={price ?? ''}
+                                        showSavings
+                                      />
+                                      {Boolean(priceUnit) && (
+                                        <span className="text-sm text-contrast-500">
+                                          / {priceUnit}
+                                        </span>
+                                      )}
+                                    </span>
                                   )}
                                 </Stream>
                               </div>
@@ -432,6 +452,7 @@ export function ProductDetail<F extends Field>({
                           prefetch={prefetch}
                           productId={product.id}
                           quantityLabel={quantityLabel}
+                          quoteOnly={quoteOnly}
                           stockDisplayData={stockDisplayData ?? undefined}
                           stockStatus={stockStatus ?? undefined}
                         />

@@ -50,6 +50,8 @@ interface Props {
   sortDefaultValue?: string;
   compareParamName?: string;
   addToCartAction?: ProductCardAddToCartAction;
+  /** In-page anchor for quote-only products' CTA (when the page renders the quote form). */
+  quoteHref?: string;
   emptyStateSubtitle?: Streamable<string>;
   emptyStateTitle?: Streamable<string>;
   placeholderCount?: number;
@@ -85,6 +87,7 @@ export function ProductsListSection({
   sortParamName,
   compareParamName,
   addToCartAction,
+  quoteHref,
   emptyStateSubtitle,
   emptyStateTitle,
   placeholderCount = 8,
@@ -231,6 +234,7 @@ export function ProductsListSection({
                 maxItems={maxItems}
                 placeholderCount={placeholderCount}
                 products={products}
+                quoteHref={quoteHref}
                 removeLabel={removeLabel}
                 showCompare={showCompare}
                 showRating={showRating}

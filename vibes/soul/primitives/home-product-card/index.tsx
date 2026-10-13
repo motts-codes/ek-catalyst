@@ -46,6 +46,8 @@ export function HomeProductCard({
     price,
     image,
     href,
+    quoteOnly = false,
+    priceUnit,
     inventoryMessage,
     rating,
     numberOfReviews,
@@ -166,14 +168,19 @@ export function HomeProductCard({
             {/* Grey divider below the brand name, above the price (margin below the line). */}
             <hr className="mb-3 mt-2 border-t border-contrast-100" />
             {price != null && (
-              <PriceLabel
-                className="mt-0.5 text-base @[16rem]:text-lg [&_abbr]:cursor-default [&_abbr]:no-underline"
-                colorScheme={colorScheme}
-                price={price}
-                superscript
-              />
+              <span className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
+                <PriceLabel
+                  className="text-base @[16rem]:text-lg [&_abbr]:cursor-default [&_abbr]:no-underline"
+                  colorScheme={colorScheme}
+                  price={price}
+                  superscript
+                />
+                {Boolean(priceUnit) && (
+                  <span className="text-xs text-contrast-500">/ {priceUnit}</span>
+                )}
+              </span>
             )}
-            <DeliveryLine message={deliveryMessage} />
+            <DeliveryLine message={quoteOnly ? undefined : deliveryMessage} />
             {showRating && typeof rating === 'number' && rating > 0 && (
               <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
             )}
@@ -194,12 +201,12 @@ export function HomeProductCard({
               <div className="relative z-10 mt-auto pt-3">
                 <ButtonLink
                   className="w-full !border-[var(--button-primary-background,#d90716)] !bg-transparent !text-[var(--button-primary-background,#d90716)] after:!bg-[var(--button-primary-background,#d90716)] hover:!text-white"
-                  href={href}
+                  href={quoteOnly ? `${href}#request-a-quote` : href}
                   shape="pill"
                   size="small"
                   variant="tertiary"
                 >
-                  Shop Now
+                  {quoteOnly ? 'Request a quote' : 'Shop Now'}
                 </ButtonLink>
               </div>
             )}

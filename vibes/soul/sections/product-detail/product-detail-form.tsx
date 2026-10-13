@@ -39,6 +39,7 @@ import { SwatchRadioGroup } from '@/vibes/soul/form/swatch-radio-group';
 import { Textarea } from '@/vibes/soul/form/textarea';
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { Button } from '@/vibes/soul/primitives/button';
+import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { toast } from '@/vibes/soul/primitives/toaster';
 import { useEvents } from '~/components/analytics/events';
 import { usePathname, useRouter } from '~/i18n/routing';
@@ -173,6 +174,13 @@ export interface BackorderDisplayData {
   backorderMessage: string | null;
 }
 
+// Quote-only mode (countertops): where "Request a quote" and the phone link go.
+export interface QuoteActions {
+  quoteHref: string;
+  phoneHref: string;
+  phoneLabel: string;
+}
+
 export interface ProductDetailFormProps<F extends Field> {
   fields: F[];
   action: ProductDetailFormAction<F>;
@@ -207,6 +215,9 @@ export interface ProductDetailFormProps<F extends Field> {
   // Variant-aware stock badge above the quantity: 'in' -> green "In stock", { low: N } -> dark red
   // "Only N in stock" (1–4 available), 'out' -> red "Out of stock". Consistent with the CTA.
   stockStatus?: 'in' | 'out' | { low: number };
+  // When set, the form shows no options, quantity, cart buttons or trust block: just the header,
+  // the two quote buttons and the description, full width.
+  quoteOnly?: QuoteActions;
 }
 
 export function ProductDetailForm<F extends Field>({
@@ -231,6 +242,7 @@ export function ProductDetailForm<F extends Field>({
   fulfillmentMessage,
   deliveryMessage,
   stockStatus,
+  quoteOnly,
 }: ProductDetailFormProps<F>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -400,6 +412,10 @@ export function ProductDetailForm<F extends Field>({
 
   const quantityControl = useInputControl(formFields.quantity);
 
+  if (quoteOnly != null) {
+    return <QuoteOnlyPanel actions={quoteOnly} descriptionSlot={descriptionSlot} header={header} />;
+  }
+
   return (
     <FormProvider context={form.context}>
       <FormStateInput />
@@ -410,7 +426,7 @@ export function ProductDetailForm<F extends Field>({
               The header keeps its own internal margins, so it's wrapped in a single element
               (not spread into the space-y-6 flow, which would add 24px between every header row). */}
           <div className="space-y-3">
-            {header != null && <div>{header}</div>}
+            <HeaderBox>{header}</HeaderBox>
             <div className="space-y-2.5">
               {(() => {
                 // Windows-style products expose a "Width (in.)" and "Height (in.)" option. When
@@ -560,7 +576,7 @@ export function ProductDetailForm<F extends Field>({
               </div>
             )}
             {/* Description at the bottom of the LEFT column (under the options). */}
-            {descriptionSlot != null && <div className="pt-2">{descriptionSlot}</div>}
+            <DescriptionBox>{descriptionSlot}</DescriptionBox>
           </div>
           {/* RIGHT (30%): purchase panel (quantity + buttons), the fulfillment box, and a small
               trust/service block (pickup / price match / returns). */}
@@ -715,6 +731,47 @@ export function ProductDetailForm<F extends Field>({
       </form>
     </FormProvider>
   );
+}
+
+// Quote-only products (countertops): header, the two quote buttons, then the description. No
+// options, quantity or cart — the price is a quote, not a cart.
+function QuoteOnlyPanel({
+  actions,
+  header,
+  descriptionSlot,
+}: {
+  actions: QuoteActions;
+  header?: ReactNode;
+  descriptionSlot?: ReactNode;
+}) {
+  return (
+    <div className="space-y-3 pb-8">
+      <HeaderBox>{header}</HeaderBox>
+      <div className="flex flex-col gap-3 pt-2 @sm:flex-row">
+        <ButtonLink className="@sm:flex-1" href={actions.quoteHref} size="medium">
+          Request a quote
+        </ButtonLink>
+        <ButtonLink
+          className="@sm:flex-1"
+          href={actions.phoneHref}
+          size="medium"
+          variant="tertiary"
+        >
+          {actions.phoneLabel}
+        </ButtonLink>
+      </div>
+      <DescriptionBox>{descriptionSlot}</DescriptionBox>
+    </div>
+  );
+}
+
+// The header / description slots, rendered only when given (keeps the form's own branching down).
+function HeaderBox({ children }: { children?: ReactNode }) {
+  return children != null ? <div>{children}</div> : null;
+}
+
+function DescriptionBox({ children }: { children?: ReactNode }) {
+  return children != null ? <div className="pt-2">{children}</div> : null;
 }
 
 function SubmitButton({

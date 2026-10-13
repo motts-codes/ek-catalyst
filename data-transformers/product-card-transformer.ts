@@ -52,6 +52,29 @@ const getInventoryMessage = (
 
 // Marketing pills shown on the card, driven by the __is_* custom fields (value "yes"). Order:
 // New, Bestseller, Trending. Colors reuse the PDP pill CSS variables so cards match the PDP.
+// Sale percentage from the __sale custom field. Returns a positive number, or undefined when the
+// field is absent / empty / non-positive (so the card shows nothing).
+const getSalePercent = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+): number | undefined => {
+  if (!('customFields' in product)) {
+    return undefined;
+  }
+
+  const raw = removeEdgesAndNodes(product.customFields)
+    .find((f) => f.name === '__sale')
+    ?.value.replace('%', '')
+    .trim();
+
+  if (raw == null || raw === '') {
+    return undefined;
+  }
+
+  const pct = Number(raw);
+
+  return Number.isFinite(pct) && pct > 0 ? pct : undefined;
+};
+
 const getCardBadges = (
   product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
 ): Array<{ label: string; color: string; textColor?: string }> => {
@@ -61,7 +84,10 @@ const getCardBadges = (
 
   const fields = removeEdgesAndNodes(product.customFields);
   const isYes = (name: string) =>
-    fields.find((f) => f.name === name)?.value?.trim().toLowerCase() === 'yes';
+    fields
+      .find((f) => f.name === name)
+      ?.value.trim()
+      .toLowerCase() === 'yes';
   // A product is "on sale" when __sale holds a positive percentage.
   const onSale = getSalePercent(product) != null;
 
@@ -78,29 +104,6 @@ const getCardBadges = (
   ].filter((b): b is { label: string; color: string; textColor?: string } => Boolean(b));
 };
 
-// Sale percentage from the __sale custom field. Returns a positive number, or undefined when the
-// field is absent / empty / non-positive (so the card shows nothing).
-const getSalePercent = (
-  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
-): number | undefined => {
-  if (!('customFields' in product)) {
-    return undefined;
-  }
-
-  const raw = removeEdgesAndNodes(product.customFields)
-    .find((f) => f.name === '__sale')
-    ?.value?.replace('%', '')
-    .trim();
-
-  if (raw == null || raw === '') {
-    return undefined;
-  }
-
-  const pct = Number(raw);
-
-  return Number.isFinite(pct) && pct > 0 ? pct : undefined;
-};
-
 // Delivery/pickup message from the __delivery custom field (e.g. "Same Day Pickup", "2 Day pickup").
 // Shown on the card after the price. Absent -> nothing shown.
 const getDeliveryMessage = (
@@ -112,7 +115,23 @@ const getDeliveryMessage = (
 
   const value = removeEdgesAndNodes(product.customFields)
     .find((f) => f.name === '__delivery')
-    ?.value?.trim();
+    ?.value.trim();
+
+  return value !== undefined && value !== '' ? value : undefined;
+};
+
+// A trimmed custom-field value, or undefined when absent/empty.
+const getCustomFieldValue = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+  name: string,
+): string | undefined => {
+  if (!('customFields' in product)) {
+    return undefined;
+  }
+
+  const value = removeEdgesAndNodes(product.customFields)
+    .find((f) => f.name === name)
+    ?.value.trim();
 
   return value !== undefined && value !== '' ? value : undefined;
 };
@@ -136,6 +155,10 @@ export const singleProductCardTransformer = (
     badges: getCardBadges(product),
     salePercent: getSalePercent(product),
     deliveryMessage: getDeliveryMessage(product),
+    // Quote-only products (countertops): __quote_only = yes swaps the cart CTA for "Request a
+    // quote" and hides the delivery line; __price_unit (e.g. "sq. ft.") is shown after the price.
+    quoteOnly: getCustomFieldValue(product, '__quote_only')?.toLowerCase() === 'yes',
+    priceUnit: getCustomFieldValue(product, '__price_unit'),
     requiresOptions:
       'productOptions' in product
         ? removeEdgesAndNodes(product.productOptions).some((o) => o.isRequired)
