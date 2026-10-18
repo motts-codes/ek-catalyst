@@ -162,49 +162,52 @@ export function ProductsListSection({
               >
                 <div className="flex flex-wrap items-center gap-2 @md:flex-nowrap">
                   <ListSearch placeholder={searchPlaceholder} />
-                  <Stream
-                    fallback={<SortingSkeleton />}
-                    value={Streamable.all([
-                      streamableSortLabel,
-                      streamableSortOptions,
-                      streamableSortPlaceholder,
-                    ])}
-                  >
-                    {([label, options, placeholder]) => (
-                      <Sorting
-                        defaultValue={sortDefaultValue}
-                        label={label}
-                        options={options}
-                        paramName={sortParamName}
-                        placeholder={placeholder}
-                      />
-                    )}
-                  </Stream>
-                  <div className="block @3xl:hidden">
-                    <SidePanel.Root>
-                      <SidePanel.Trigger asChild>
-                        <Button
-                          className="!h-8 text-xs [&>span]:!min-h-0"
-                          size="x-small"
-                          variant="secondary"
-                        >
-                          {filterLabel}
-                          <Sliders size={15} />
-                        </Button>
-                      </SidePanel.Trigger>
-                      <Stream value={streamableFiltersPanelTitle}>
-                        {(filtersPanelTitle) => (
-                          <SidePanel.Content title={filtersPanelTitle}>
-                            <FiltersPanel
-                              filters={filters}
-                              paginationInfo={paginationInfo}
-                              rangeFilterApplyLabel={rangeFilterApplyLabel}
-                              resetFiltersLabel={resetFiltersLabel}
-                            />
-                          </SidePanel.Content>
-                        )}
-                      </Stream>
-                    </SidePanel.Root>
+                  {/* Sort + (phone) Filters stay together on one line when the search wraps. */}
+                  <div className="flex items-center gap-2">
+                    <Stream
+                      fallback={<SortingSkeleton />}
+                      value={Streamable.all([
+                        streamableSortLabel,
+                        streamableSortOptions,
+                        streamableSortPlaceholder,
+                      ])}
+                    >
+                      {([label, options, placeholder]) => (
+                        <Sorting
+                          defaultValue={sortDefaultValue}
+                          label={label}
+                          options={options}
+                          paramName={sortParamName}
+                          placeholder={placeholder}
+                        />
+                      )}
+                    </Stream>
+                    <div className="block @3xl:hidden">
+                      <SidePanel.Root>
+                        <SidePanel.Trigger asChild>
+                          <Button
+                            className="!h-8 text-xs [&>span]:!min-h-0"
+                            size="x-small"
+                            variant="secondary"
+                          >
+                            {filterLabel}
+                            <Sliders size={15} />
+                          </Button>
+                        </SidePanel.Trigger>
+                        <Stream value={streamableFiltersPanelTitle}>
+                          {(filtersPanelTitle) => (
+                            <SidePanel.Content title={filtersPanelTitle}>
+                              <FiltersPanel
+                                filters={filters}
+                                paginationInfo={paginationInfo}
+                                rangeFilterApplyLabel={rangeFilterApplyLabel}
+                                resetFiltersLabel={resetFiltersLabel}
+                              />
+                            </SidePanel.Content>
+                          )}
+                        </Stream>
+                      </SidePanel.Root>
+                    </div>
                   </div>
                 </div>
                 {/* Desktop: show / hide the sidebar, far right of the row. */}
