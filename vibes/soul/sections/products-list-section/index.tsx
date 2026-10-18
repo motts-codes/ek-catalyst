@@ -154,13 +154,13 @@ export function ProductsListSection({
               <div
                 className={clsx(
                   'flex items-center gap-2',
-                  // With the heading hidden the sort and the toggle are the whole row: ends apart.
-                  hideHeader && 'w-full justify-between',
+                  // Search, sort and the filters toggle sit together at the right end of the row.
+                  hideHeader && 'w-full justify-end',
                   // Narrow toolbars put the search on its own line (see ListSearch).
-                  '[&>div:first-child]:min-w-0 [&>div:first-child]:flex-1 @3xl:[&>div:first-child]:flex-none',
+                  '[&>div:first-child]:min-w-0 [&>div:first-child]:flex-1 @md:[&>div:first-child]:flex-none',
                 )}
               >
-                <div className="flex flex-wrap items-center gap-2 @md:flex-nowrap">
+                <div className="flex flex-wrap items-center justify-end gap-2 @md:flex-nowrap">
                   <ListSearch placeholder={searchPlaceholder} />
                   {/* Sort + (phone) Filters stay together on one line when the search wraps. */}
                   <div className="flex items-center gap-2">
@@ -208,11 +208,11 @@ export function ProductsListSection({
                         </Stream>
                       </SidePanel.Root>
                     </div>
+                    {/* Desktop: show / hide the sidebar, last in the group. */}
+                    <div className="hidden @3xl:block">
+                      <FiltersToggle hideLabel={hideFiltersLabel} showLabel={showFiltersLabel} />
+                    </div>
                   </div>
-                </div>
-                {/* Desktop: show / hide the sidebar, far right of the row. */}
-                <div className="hidden @3xl:block">
-                  <FiltersToggle hideLabel={hideFiltersLabel} showLabel={showFiltersLabel} />
                 </div>
               </div>
             </div>
