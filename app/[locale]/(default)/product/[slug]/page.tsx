@@ -87,6 +87,59 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+type ProductForDefaults = NonNullable<Awaited<ReturnType<typeof getProduct>>['product']>;
+
+interface Selection {
+  optionEntityId: number;
+  valueEntityId: number;
+}
+
+// The option values to preselect for required multiple-choice options the URL doesn't set.
+function defaultOptionSelections(product: ProductForDefaults, chosen: Selection[]): Selection[] {
+  const chosenIds = new Set(chosen.map((selection) => selection.optionEntityId));
+  const required = removeEdgesAndNodes(product.productOptions).filter(
+    (option) => option.isRequired && !chosenIds.has(option.entityId) && 'values' in option,
+  );
+
+  if (required.length === 0) return [];
+
+  // Prefer the first purchasable variant's values: a combination that exists and can be bought.
+  const variant = removeEdgesAndNodes(product.variants).find(
+    (candidate) => candidate.isPurchasable,
+  );
+  const fromVariant = variant
+    ? removeEdgesAndNodes(variant.productOptions).flatMap((option) => {
+        const valueEntityId =
+          'values' in option ? removeEdgesAndNodes(option.values)[0]?.entityId : undefined;
+
+        return valueEntityId != null ? [{ optionEntityId: option.entityId, valueEntityId }] : [];
+      })
+    : [];
+
+  return required.flatMap((option) => {
+    const picked = fromVariant.find((selection) => selection.optionEntityId === option.entityId);
+
+    if (picked) return [picked];
+
+    const values = 'values' in option ? removeEdgesAndNodes(option.values) : [];
+    const value = values.find((candidate) => candidate.isDefault) ?? values[0];
+
+    return value ? [{ optionEntityId: option.entityId, valueEntityId: value.entityId }] : [];
+  });
+}
+
+// The same defaults applied to the form fields, so the option shows as selected.
+async function withDefaultSelections<F extends { name: string; defaultValue?: unknown }>(
+  fields: Promise<F[]>,
+  defaults: Selection[],
+): Promise<F[]> {
+  return (await fields).map((field) => {
+    const picked = defaults.find((selection) => String(selection.optionEntityId) === field.name);
+
+    return picked ? { ...field, defaultValue: String(picked.valueEntityId) } : field;
+  });
+}
+
 export default async function Product({ params, searchParams }: Props) {
   const { locale, slug } = await params;
   const options = await searchParams;
@@ -122,6 +175,13 @@ export default async function Product({ params, searchParams }: Props) {
   if (!baseProduct) {
     return notFound();
   }
+
+  // With nothing chosen in the URL, open on a real variant: the first purchasable one (so the
+  // combination exists), else each required option's default or first value. The price, stock
+  // and the form then show that variant instead of a range and "Select … for availability".
+  const defaultSelections = defaultOptionSelections(baseProduct, optionValueIds);
+
+  optionValueIds.push(...defaultSelections);
 
   // Breadcrumbs: Home / <category trail> / <product name>.
   // A product can be assigned to several categories at once — including both a parent
@@ -722,7 +782,10 @@ export default async function Product({ params, searchParams }: Props) {
           decrementLabel={t('ProductDetails.decreaseQuantity')}
           deliveryMessage={deliveryMessage}
           emptySelectPlaceholder={t('ProductDetails.emptySelectPlaceholder')}
-          fields={productOptionsTransformer(baseProduct.productOptions)}
+          fields={withDefaultSelections(
+            productOptionsTransformer(baseProduct.productOptions),
+            defaultSelections,
+          )}
           fulfillmentMessage={fulfillmentMessage}
           incrementLabel={t('ProductDetails.increaseQuantity')}
           loadMoreImagesAction={getMoreProductImages}

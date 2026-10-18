@@ -12,6 +12,7 @@ import {
 
 import { type Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
 import { Image } from '~/components/image';
+import { Link } from '~/components/link';
 
 // What a swatch chosen on the card swaps in: that variant's own photo and price. Keyed by the
 // option value id the swatch carries.
@@ -24,6 +25,8 @@ export interface CardVariant {
 export type CardVariants = Record<string, CardVariant>;
 
 interface VariantState {
+  /** The option the swatches belong to (for links that carry the choice to the product page). */
+  optionId: number | undefined;
   selected: string | undefined;
   variant: CardVariant | undefined;
   select: (valueId: number) => void;
@@ -37,10 +40,12 @@ const VariantContext = createContext<VariantState | null>(null);
 // click swaps both; the add-to-cart button waits for `pending` to clear.
 export function CardVariantProvider({
   variants,
+  optionId,
   initial,
   children,
 }: {
   variants?: CardVariants;
+  optionId?: number;
   initial?: number;
   children: ReactNode;
 }) {
@@ -52,6 +57,7 @@ export function CardVariantProvider({
   return (
     <VariantContext.Provider
       value={{
+        optionId,
         selected,
         variant: selected != null ? variants[selected] : undefined,
         select: (valueId) => startTransition(() => setSelected(String(valueId))),
@@ -134,6 +140,33 @@ export function CardImage({
         />
       )}
     </>
+  );
+}
+
+// The card's link to the product page, carrying the chosen swatch (?optionId=valueId) so the
+// page opens on that variant.
+export function CardLink({
+  href,
+  className,
+  children,
+  ...rest
+}: {
+  href: string;
+  className?: string;
+  children: ReactNode;
+  id?: string;
+  'aria-label'?: string;
+}) {
+  const state = useCardVariant();
+  const withChoice =
+    state?.optionId != null && state.selected != null
+      ? `${href}${href.includes('?') ? '&' : '?'}${state.optionId}=${state.selected}`
+      : href;
+
+  return (
+    <Link className={className} href={withChoice} {...rest}>
+      {children}
+    </Link>
   );
 }
 

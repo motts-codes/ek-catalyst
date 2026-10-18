@@ -12,7 +12,13 @@ import { Compare } from './compare';
 import { DeliveryLine } from './delivery-line';
 import { cardSwatchOption, optionsCtaLabel, type RequiredOption } from './options';
 import { SwatchAddToCart } from './options-cta';
-import { CardImage, CardPrice, CardVariantProvider, type CardVariants } from './variant-context';
+import {
+  CardImage,
+  CardLink,
+  CardPrice,
+  CardVariantProvider,
+  type CardVariants,
+} from './variant-context';
 
 export type { CardVariants } from './variant-context';
 
@@ -139,6 +145,7 @@ export function ProductCard({
           cardSwatchOption(requiredOptions)?.swatches?.find((s) => s.isDefault)?.id ??
           cardSwatchOption(requiredOptions)?.swatches?.[0]?.id
         }
+        optionId={cardSwatchOption(requiredOptions)?.id}
         variants={cardVariants}
       >
         <div className="relative flex flex-1 flex-col">
@@ -283,7 +290,7 @@ export function ProductCard({
             </div>
           </div>
           {href !== '#' && (
-            <Link
+            <CardLink
               aria-label={title}
               className={clsx(
                 'absolute inset-0 rounded-b-lg rounded-t-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-card-focus,hsl(var(--primary)))] focus-visible:ring-offset-4',
@@ -296,7 +303,7 @@ export function ProductCard({
               id={id}
             >
               <span className="sr-only">View product</span>
-            </Link>
+            </CardLink>
           )}
         </div>
         {showCompare && (

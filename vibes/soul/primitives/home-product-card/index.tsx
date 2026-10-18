@@ -10,12 +10,12 @@ import { DeliveryLine } from '@/vibes/soul/primitives/product-card/delivery-line
 import { cardSwatchOption } from '@/vibes/soul/primitives/product-card/options';
 import {
   CardImage,
+  CardLink,
   CardPrice,
   CardVariantProvider,
 } from '@/vibes/soul/primitives/product-card/variant-context';
 import { Rating } from '@/vibes/soul/primitives/rating';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
-import { Link } from '~/components/link';
 
 // This component supports various CSS variables for theming. Here's a comprehensive list, along
 // with their default values:
@@ -83,6 +83,7 @@ export function HomeProductCard({
           cardSwatchOption(requiredOptions)?.swatches?.find((swatch) => swatch.isDefault)?.id ??
           cardSwatchOption(requiredOptions)?.swatches?.[0]?.id
         }
+        optionId={cardSwatchOption(requiredOptions)?.id}
         variants={cardVariants}
       >
         <div className="relative flex flex-1 flex-col">
@@ -213,7 +214,7 @@ export function HomeProductCard({
             </div>
           </div>
           {href !== '#' && (
-            <Link
+            <CardLink
               aria-label={title}
               className={clsx(
                 'absolute inset-0 rounded-b-lg rounded-t-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-card-focus,hsl(var(--primary)))] focus-visible:ring-offset-4',
@@ -226,7 +227,7 @@ export function HomeProductCard({
               id={id}
             >
               <span className="sr-only">View product</span>
-            </Link>
+            </CardLink>
           )}
         </div>
         {showCompare && (
