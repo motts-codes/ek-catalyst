@@ -28,7 +28,7 @@ export function ListSearch({ placeholder = 'Search products' }: { placeholder?: 
   return (
     <form
       // Full width on its own line in a narrow toolbar; inline beside the sort control otherwise.
-      className="relative flex h-8 min-w-0 basis-full items-center rounded-full border border-[hsl(var(--primary)/40%)] bg-white pl-3 pr-1 text-xs focus-within:border-[hsl(var(--primary))] @sm:basis-auto"
+      className="relative flex h-8 min-w-0 basis-full items-center rounded-full border border-[hsl(var(--primary)/40%)] bg-white pl-3 pr-1 text-xs focus-within:border-[hsl(var(--primary))] @md:basis-auto"
       onSubmit={(event) => {
         event.preventDefault();
         apply(value);
