@@ -14,7 +14,7 @@ export interface RequiredOption {
 }
 
 // Up to this many swatches fit on a card; beyond it the shopper chooses on the product page.
-const MAX_CARD_SWATCHES = 4;
+const MAX_CARD_SWATCHES = 6;
 
 const SIZE_WORDS = /\b(width|height|size|length|depth)\b/i;
 
