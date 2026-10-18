@@ -34,6 +34,11 @@ import {
   parseCabinetProgram,
   selectedCabinetProgram,
 } from '~/lib/cabinets/cabinet-collection';
+import {
+  fetchCabinetProductsByType,
+  hasProductTypeFacet,
+  isFallbackCursor,
+} from '~/lib/cabinets/type-filter-fallback';
 import { pickFaq } from '~/lib/category/category-faq';
 import { parseSeoContent } from '~/lib/category/category-seo';
 import {
@@ -112,7 +117,15 @@ function getTypeHref(
   const params = new URLSearchParams();
 
   Object.entries(searchParams).forEach(([key, raw]) => {
-    if (key === CABINET_TYPE_PARAM || key === 'page' || raw == null) return;
+    // Switching type starts from page one: drop the page and cursor params.
+    if (
+      key === CABINET_TYPE_PARAM ||
+      key === 'page' ||
+      key === 'after' ||
+      key === 'before' ||
+      raw == null
+    )
+      return;
 
     (Array.isArray(raw) ? raw : [raw]).forEach((item) => params.append(key, item));
   });
@@ -273,9 +286,14 @@ export default async function Category(props: Props) {
     const programFilter = selectedProgram ? cabinetProgramSearchParam(selectedProgram) : {};
     const typeFilter = cabinetTypeSearchParam(selectedType);
 
+    // The in-code type fallback (below) pages with plain page-number cursors ("p2"), which
+    // BigCommerce would reject; real cursors are opaque encoded strings. Keep those away from it.
+    const fallbackCursors =
+      isFallbackCursor(searchParams.after) || isFallbackCursor(searchParams.before);
     const search = await fetchFacetedSearch(
       {
         ...searchParams,
+        ...(fallbackCursors ? { after: undefined, before: undefined } : {}),
         ...parsedSearchParams,
         ...programFilter,
         ...typeFilter,
@@ -284,6 +302,23 @@ export default async function Category(props: Props) {
       currencyCode,
       customerAccessToken,
     );
+
+    // Until BigCommerce indexes the Product Type facet, the attribute filter above is ignored and
+    // the grid would show every type. Narrow in code instead (see lib/cabinets/type-filter-fallback).
+    if (selectedType && !hasProductTypeFacet(search)) {
+      return fetchCabinetProductsByType({
+        searchParams: {
+          ...searchParams,
+          ...parsedSearchParams,
+          ...programFilter,
+          category: categoryId,
+        },
+        type: selectedType,
+        search,
+        currencyCode,
+        customerAccessToken,
+      });
+    }
 
     return search;
   });
