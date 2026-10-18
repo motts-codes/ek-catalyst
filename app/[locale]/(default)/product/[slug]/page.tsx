@@ -856,7 +856,6 @@ export default async function Product({ params, searchParams }: Props) {
 
       <FeaturedProductCarousel
         addToCartAction={productCardAddToCartAction}
-        cta={{ label: t('RelatedProducts.cta'), href: '/shop-all' }}
         density="compact"
         emptyStateSubtitle={t('RelatedProducts.browseCatalog')}
         emptyStateTitle={t('RelatedProducts.noRelatedProducts')}
