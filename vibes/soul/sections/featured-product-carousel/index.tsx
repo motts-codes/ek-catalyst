@@ -21,6 +21,8 @@ export interface FeaturedProductCarouselProps {
   previousLabel?: string;
   nextLabel?: string;
   hideOverflow?: boolean;
+  /** `compact` fits five cards per row on desktop, the size the category grids use. */
+  density?: 'default' | 'compact';
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -49,6 +51,7 @@ export function FeaturedProductCarousel({
   previousLabel,
   nextLabel,
   hideOverflow = false,
+  density = 'default',
 }: FeaturedProductCarouselProps) {
   return (
     <SectionLayout containerSize="2xl">
@@ -71,6 +74,7 @@ export function FeaturedProductCarousel({
       </div>
       <div className="group/product-carousel">
         <ProductCarousel
+          density={density}
           emptyStateSubtitle={emptyStateSubtitle}
           emptyStateTitle={emptyStateTitle}
           hideOverflow={hideOverflow}
