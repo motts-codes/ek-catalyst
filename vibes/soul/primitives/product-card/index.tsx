@@ -11,6 +11,10 @@ import { Rating } from '../rating';
 import { AddToCartCta, CTA_BUTTON_CLASS, ProductCardAddToCartAction } from './add-to-cart-cta';
 import { Compare } from './compare';
 import { DeliveryLine } from './delivery-line';
+import { cardSwatchOption, optionsCtaLabel, type RequiredOption } from './options';
+import { SwatchAddToCart } from './options-cta';
+
+export type { RequiredOption } from './options';
 
 export type { ProductCardAddToCartAction } from './add-to-cart-cta';
 
@@ -34,6 +38,8 @@ export interface Product {
   numberOfReviews?: number;
   /** True when the product has required options; the CTA then links to the PDP to choose them. */
   requiresOptions?: boolean;
+  /** The required options themselves (names, swatch colours): swatches on the card or the CTA label. */
+  requiredOptions?: RequiredOption[];
   /** Quoted, not carted (countertops): "Request a quote" CTA, no delivery line. */
   quoteOnly?: boolean;
   /** Unit shown after the price, e.g. "sq. ft.". */
@@ -94,6 +100,7 @@ export function ProductCard({
     image,
     href,
     requiresOptions,
+    requiredOptions,
     quoteOnly = false,
     priceUnit,
     inventoryMessage,
@@ -257,6 +264,7 @@ export function ProductCard({
                   id={id}
                   quoteHref={quoteHref}
                   quoteOnly={quoteOnly}
+                  requiredOptions={requiredOptions}
                   requiresOptions={requiresOptions}
                 />
               </div>
@@ -321,14 +329,16 @@ function CardPrice({
   );
 }
 
-// The card's one CTA: "Request a quote" for quote-only products, "Add to Cart" for products
-// without options (when the action is wired), otherwise "Shop Now" to the product page.
+// The card's one CTA: "Request a quote" for quote-only products; "Add to Cart" for products
+// without options (when the action is wired); swatches + "Add to Cart" for a single small swatch
+// option; otherwise "Choose size / finish / options" to the product page.
 function CardCta({
   quoteOnly,
   quoteHref,
   href,
   id,
   requiresOptions,
+  requiredOptions,
   addToCartAction,
 }: {
   quoteOnly: boolean;
@@ -336,6 +346,7 @@ function CardCta({
   href: string;
   id: string;
   requiresOptions?: boolean;
+  requiredOptions?: RequiredOption[];
   addToCartAction?: ProductCardAddToCartAction;
 }) {
   if (quoteOnly) {
@@ -350,15 +361,21 @@ function CardCta({
     return <AddToCartCta action={addToCartAction} id={id} />;
   }
 
-  return <ViewOptionsCta href={href} />;
+  const swatchOption = cardSwatchOption(requiredOptions);
+
+  if (swatchOption != null && addToCartAction != null) {
+    return <SwatchAddToCart action={addToCartAction} id={id} option={swatchOption} />;
+  }
+
+  return <ViewOptionsCta href={href} label={optionsCtaLabel(requiredOptions)} />;
 }
 
-// "Shop Now" for products with required options: the same full-width outline pill as "Add to
-// Cart", linking to the PDP to choose them. Same two labels as the home cards, site-wide.
-function ViewOptionsCta({ href }: { href: string }) {
+// The link to the product page for products whose options can't be chosen on the card, labelled
+// with what there is to choose ("Choose size"); the same outline pill as "Add to Cart".
+function ViewOptionsCta({ href, label }: { href: string; label: string }) {
   return (
     <Link className={CTA_BUTTON_CLASS} href={href}>
-      Shop Now
+      {label}
     </Link>
   );
 }

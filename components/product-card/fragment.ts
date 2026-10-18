@@ -38,12 +38,31 @@ export const ProductCardFragment = graphql(
         numberOfReviews
         averageRating
       }
-      # Whether the product has any required options — a card can only do a true one-click
-      # add-to-cart when there are none; otherwise the CTA links to the PDP to choose options.
-      productOptions(first: 1) {
+      # Required options drive the card CTA: none -> one-click add-to-cart; one swatch option
+      # with a few values -> swatches on the card; otherwise a "Choose size/finish/options" link.
+      productOptions(first: 5) {
         edges {
           node {
+            entityId
+            displayName
             isRequired
+            ... on MultipleChoiceOption {
+              displayStyle
+              values(first: 8) {
+                edges {
+                  node {
+                    __typename
+                    entityId
+                    label
+                    isDefault
+                    ... on SwatchOptionValue {
+                      hexColors
+                      imageUrl(width: 48)
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

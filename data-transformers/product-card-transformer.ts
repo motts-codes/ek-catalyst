@@ -6,7 +6,7 @@ import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { ResultOf } from 'gql.tada';
 import { getFormatter } from 'next-intl/server';
 
-import { Product } from '@/vibes/soul/primitives/product-card';
+import { Product, type RequiredOption } from '@/vibes/soul/primitives/product-card';
 import { ExistingResultType } from '~/client/util';
 import { ProductCardFragment } from '~/components/product-card/fragment';
 import { WishlistItemProductFragment } from '~/components/wishlist/fragment';
@@ -136,6 +136,44 @@ const getCustomFieldValue = (
   return value !== undefined && value !== '' ? value : undefined;
 };
 
+// The product's required options, with swatch colours where BigCommerce has them. The card
+// shows swatches for a single small swatch option and names the choice in the CTA otherwise.
+const getRequiredOptions = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+): RequiredOption[] | undefined => {
+  if (!('productOptions' in product)) {
+    return undefined;
+  }
+
+  return removeEdgesAndNodes(product.productOptions)
+    .filter((option) => option.isRequired)
+    .map((option) => {
+      const values =
+        'values' in option && option.displayStyle === 'Swatch'
+          ? removeEdgesAndNodes(option.values)
+          : [];
+      const swatches = values.flatMap((value) =>
+        '__typename' in value && value.__typename === 'SwatchOptionValue'
+          ? [
+              {
+                id: value.entityId,
+                label: value.label,
+                color: value.hexColors[0] ?? undefined,
+                image: value.imageUrl ?? undefined,
+                isDefault: value.isDefault,
+              },
+            ]
+          : [],
+      );
+
+      return {
+        id: option.entityId,
+        name: option.displayName,
+        swatches: swatches.length > 0 ? swatches : undefined,
+      };
+    });
+};
+
 export const singleProductCardTransformer = (
   product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
   format: ExistingResultType<typeof getFormatter>,
@@ -163,6 +201,7 @@ export const singleProductCardTransformer = (
       'productOptions' in product
         ? removeEdgesAndNodes(product.productOptions).some((o) => o.isRequired)
         : undefined,
+    requiredOptions: getRequiredOptions(product),
     rating: product.reviewSummary.averageRating,
     numberOfReviews: product.reviewSummary.numberOfReviews,
     inventoryMessage:

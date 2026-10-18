@@ -11,7 +11,14 @@ import { Link } from '~/components/link';
 import { addToOrCreateCart } from '~/lib/cart';
 import { getCartDrawerSummary } from '~/lib/cart/drawer-summary';
 
-const schema = z.object({ id: z.string() });
+// `option` carries a swatch chosen on the card as "optionId:valueId".
+const schema = z.object({
+  id: z.string(),
+  option: z
+    .string()
+    .regex(/^\d+:\d+$/)
+    .optional(),
+});
 
 interface State {
   lastResult: SubmissionResult | null;
@@ -37,8 +44,16 @@ export const productCardAddToCartAction = async (
   }
 
   try {
+    const [optionEntityId, optionValueEntityId] = submission.value.option
+      ? submission.value.option.split(':').map(Number)
+      : [];
+    const selectedOptions =
+      optionEntityId != null && optionValueEntityId != null
+        ? { multipleChoices: [{ optionEntityId, optionValueEntityId }] }
+        : undefined;
+
     await addToOrCreateCart({
-      lineItems: [{ productEntityId: Number(submission.value.id), quantity: 1 }],
+      lineItems: [{ productEntityId: Number(submission.value.id), quantity: 1, selectedOptions }],
     });
 
     return {
