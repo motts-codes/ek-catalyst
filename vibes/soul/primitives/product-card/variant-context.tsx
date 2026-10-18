@@ -1,7 +1,14 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { createContext, type ReactNode, useContext, useState, useTransition } from 'react';
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+  useTransition,
+} from 'react';
 
 import { type Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
 import { Image } from '~/components/image';
@@ -60,8 +67,9 @@ export function useCardVariant(): VariantState | null {
   return useContext(VariantContext);
 }
 
-// The card photo: the chosen variant's when there is one, else the product's. Re-keyed on the
-// source so the swap fades in rather than snapping.
+// The card photo: the chosen variant's when there is one, else the product's. A change
+// cross-fades: the photo on screen stays until the next one has loaded, then the new one fades
+// in over it, so there is never a blank frame or a pop.
 export function CardImage({
   src,
   alt,
@@ -76,18 +84,48 @@ export function CardImage({
   preload?: boolean;
 }) {
   const state = useCardVariant();
-  const image = state?.variant?.image ?? { src, alt };
+  const target = state?.variant?.image ?? { src, alt };
+  const [shown, setShown] = useState(target);
+  const [ready, setReady] = useState(true);
+  const incoming = target.src !== shown.src ? target : null;
+
+  useEffect(() => {
+    if (incoming != null) setReady(false);
+  }, [incoming]);
 
   return (
-    <Image
-      alt={image.alt}
-      className={clsx(className, 'duration-300 animate-in fade-in')}
-      fill
-      key={image.src}
-      preload={preload}
-      sizes={sizes}
-      src={image.src}
-    />
+    <>
+      <Image
+        alt={shown.alt}
+        className={clsx(
+          className,
+          'transition-opacity duration-300',
+          incoming != null && ready && 'opacity-0',
+        )}
+        fill
+        preload={preload}
+        sizes={sizes}
+        src={shown.src}
+      />
+      {incoming != null && (
+        <Image
+          alt={incoming.alt}
+          className={clsx(
+            className,
+            'transition-opacity duration-300',
+            ready ? 'opacity-100' : 'opacity-0',
+          )}
+          fill
+          key={incoming.src}
+          onLoad={() => setReady(true)}
+          onTransitionEnd={() => {
+            if (ready) setShown(incoming);
+          }}
+          sizes={sizes}
+          src={incoming.src}
+        />
+      )}
+    </>
   );
 }
 
