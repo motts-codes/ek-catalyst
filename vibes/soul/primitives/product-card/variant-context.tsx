@@ -93,6 +93,16 @@ export function CardImage({
     if (incoming != null) setReady(false);
   }, [incoming]);
 
+  // Once the new photo has loaded and faded in, it becomes the one on screen and the old one
+  // is dropped (the fade is 300ms; wait a touch longer so it has finished).
+  useEffect(() => {
+    if (incoming == null || !ready) return;
+
+    const timer = window.setTimeout(() => setShown(incoming), 350);
+
+    return () => window.clearTimeout(timer);
+  }, [incoming, ready]);
+
   return (
     <>
       <Image
@@ -100,7 +110,8 @@ export function CardImage({
         className={clsx(
           className,
           'transition-opacity duration-300',
-          incoming != null && ready && 'opacity-0',
+          // Dimmed while the next photo loads (the click registered), gone once it has faded in.
+          incoming != null && (ready ? 'opacity-0' : 'opacity-60'),
         )}
         fill
         preload={preload}
@@ -118,9 +129,6 @@ export function CardImage({
           fill
           key={incoming.src}
           onLoad={() => setReady(true)}
-          onTransitionEnd={() => {
-            if (ready) setShown(incoming);
-          }}
           sizes={sizes}
           src={incoming.src}
         />
