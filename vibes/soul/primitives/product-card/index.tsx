@@ -322,7 +322,7 @@ function CardPrice({
 }
 
 // The card's one CTA: "Request a quote" for quote-only products, "Add to Cart" for products
-// without options (when the action is wired), otherwise "View Options" to the product page.
+// without options (when the action is wired), otherwise "Shop Now" to the product page.
 function CardCta({
   quoteOnly,
   quoteHref,
@@ -353,12 +353,12 @@ function CardCta({
   return <ViewOptionsCta href={href} />;
 }
 
-// "View Options" CTA for products with required options: the same full-width outline pill as
-// "Add to Cart", linking to the PDP to choose them.
+// "Shop Now" for products with required options: the same full-width outline pill as "Add to
+// Cart", linking to the PDP to choose them. Same two labels as the home cards, site-wide.
 function ViewOptionsCta({ href }: { href: string }) {
   return (
     <Link className={CTA_BUTTON_CLASS} href={href}>
-      View Options
+      Shop Now
     </Link>
   );
 }
