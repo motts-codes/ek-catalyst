@@ -24,7 +24,7 @@ interface Props {
   action: ProductCardAddToCartAction;
 }
 
-// Shared CTA look for the card (Add to Cart / View Options): a full-width pill, red outline and
+// Shared CTA look for the card (Add to Cart / Shop Now): a full-width pill, red outline and
 // red label at rest, filling red left-to-right on hover like the home card's "Shop Now".
 export const CTA_BUTTON_CLASS =
   'relative inline-flex min-h-10 w-full items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,#d90716)] bg-transparent px-4 py-2.5 text-sm font-semibold text-[var(--button-primary-background,#d90716)] transition-colors after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,#d90716)] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0 disabled:opacity-50';

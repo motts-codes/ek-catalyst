@@ -58,7 +58,7 @@ The card CTA is **smart**, keyed on `requiresOptions`:
 
 | Product | CTA | Behavior |
 | --- | --- | --- |
-| Requires options | **View Options** | Circle with an options icon that **expands on hover** to a labeled pill (desktop); always labeled on touch (`max-lg`). Links to the PDP to choose options. |
+| Requires options | **Shop Now** | Full-width outline pill linking to the PDP to choose options (desktop); always labeled on touch (`max-lg`). Links to the PDP to choose options. |
 | No required options | **Add to Cart** | Icon-only cart circle that **directly adds to cart** (real `addToOrCreateCart` action). No label, no reveal — the cart icon is universally understood. |
 
 Both are 36px circles at rest, red outline + **red icon** (matching `--button-primary-background`,
@@ -66,7 +66,7 @@ Both are 36px circles at rest, red outline + **red icon** (matching `--button-pr
 (an `::after` that translates in), turning solid red with a white icon/label. `after:rounded-full`
 keeps the sliding fill pill-shaped.
 
-### Why View Options is built the way it is
+### Why the options CTA is built the way it is
 
 - A true circle at rest needs `h-9 min-w-9` with **no** horizontal padding (icon-only content makes
   it exactly 36×36). Padding + label appear only on hover.
@@ -90,6 +90,8 @@ is provided; otherwise it falls back to a `ViewOptionsCta` PDP link.
 **Caveat:** if every product in a category requires options, the Add-to-Cart path renders on no
 product there. The **Makeswift home-page carousel** uses a *different* transformer
 (`useBcProductToVibesProduct`) that does **not** compute `requiresOptions`/`badges` and does **not**
-thread the add-to-cart action — so home cards always show "View Options" and no badges. That's a
+thread the add-to-cart action — so home cards always showed "View Options" and no badges. That's a
 deliberate, deferred gap; achieving parity means extending the Makeswift schema/transformer and
 wiring the server action into the Makeswift runtime.
+
+> **Label history (Oct 18 2026):** the options CTA was "View Options" (icon circle, then a pill); Arun chose **"Shop Now"** so listing cards use the same two labels as the home cards ("Add to Cart" / "Shop Now"). Quote-only products say "Request a quote".
