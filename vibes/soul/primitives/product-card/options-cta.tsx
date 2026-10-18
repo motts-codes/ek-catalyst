@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { AddToCartCta, type ProductCardAddToCartAction } from './add-to-cart-cta';
 import { type RequiredOption } from './options';
+import { useCardVariant } from './variant-context';
 
 export function SwatchAddToCart({
   id,
@@ -16,10 +17,16 @@ export function SwatchAddToCart({
   action: ProductCardAddToCartAction;
 }) {
   const swatches = option.swatches ?? [];
-  const [selected, setSelected] = useState(
+  const state = useCardVariant();
+  // Without variant data (no provider) the picker keeps its own selection.
+  const [local, setLocal] = useState(
     () => swatches.find((swatch) => swatch.isDefault)?.id ?? swatches[0]?.id,
   );
+  const selected = state?.selected != null ? Number(state.selected) : local;
   const current = swatches.find((swatch) => swatch.id === selected);
+  const select = (valueId: number) => (state ? state.select(valueId) : setLocal(valueId));
+  // Add waits until the card shows the chosen variant, and stays off for one that can't be bought.
+  const blocked = state != null && (state.pending || state.variant?.purchasable === false);
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -40,7 +47,7 @@ export function SwatchAddToCart({
                   : 'border-black/15 hover:border-contrast-400',
               )}
               key={swatch.id}
-              onClick={() => setSelected(swatch.id)}
+              onClick={() => select(swatch.id)}
               role="radio"
               title={swatch.label}
               type="button"
@@ -62,6 +69,7 @@ export function SwatchAddToCart({
       </div>
       <AddToCartCta
         action={action}
+        disabled={blocked}
         id={id}
         selectedOption={selected != null ? `${option.id}:${selected}` : undefined}
       />

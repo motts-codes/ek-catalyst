@@ -66,11 +66,60 @@ export const ProductCardFragment = graphql(
           }
         }
       }
-      variants(first: 1) {
+      # A few variants, with their own photo and price, so a swatch chosen on the card can swap
+      # them in and the add goes through only once the chosen variant is on screen.
+      variants(first: 8) {
         edges {
           node {
             entityId
             sku
+            isPurchasable
+            defaultImage {
+              altText
+              url: urlTemplate(lossy: true)
+            }
+            variantPricesIncludingTax: prices(currencyCode: $currencyCode, includeTax: true) {
+              price {
+                value
+                currencyCode
+              }
+              basePrice {
+                value
+                currencyCode
+              }
+              salePrice {
+                value
+                currencyCode
+              }
+            }
+            variantPricesExcludingTax: prices(currencyCode: $currencyCode, includeTax: false) {
+              price {
+                value
+                currencyCode
+              }
+              basePrice {
+                value
+                currencyCode
+              }
+              salePrice {
+                value
+                currencyCode
+              }
+            }
+            options {
+              edges {
+                node {
+                  entityId
+                  values {
+                    edges {
+                      node {
+                        entityId
+                      }
+                    }
+                  }
+                }
+              }
+            }
             inventory {
               byLocation {
                 edges {

@@ -1,9 +1,8 @@
 import { clsx } from 'clsx';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
-import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
+import { Price } from '@/vibes/soul/primitives/price-label';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
-import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 import { Rating } from '../rating';
@@ -13,6 +12,9 @@ import { Compare } from './compare';
 import { DeliveryLine } from './delivery-line';
 import { cardSwatchOption, optionsCtaLabel, type RequiredOption } from './options';
 import { SwatchAddToCart } from './options-cta';
+import { CardImage, CardPrice, CardVariantProvider, type CardVariants } from './variant-context';
+
+export type { CardVariants } from './variant-context';
 
 export type { RequiredOption } from './options';
 
@@ -40,6 +42,8 @@ export interface Product {
   requiresOptions?: boolean;
   /** The required options themselves (names, swatch colours): swatches on the card or the CTA label. */
   requiredOptions?: RequiredOption[];
+  /** Per swatch value: that variant's photo, price and purchasability (swaps in on the card). */
+  cardVariants?: CardVariants;
   /** Quoted, not carted (countertops): "Request a quote" CTA, no delivery line. */
   quoteOnly?: boolean;
   /** Unit shown after the price, e.g. "sq. ft.". */
@@ -101,6 +105,7 @@ export function ProductCard({
     href,
     requiresOptions,
     requiredOptions,
+    cardVariants,
     quoteOnly = false,
     priceUnit,
     inventoryMessage,
@@ -129,203 +134,185 @@ export function ProductCard({
         className,
       )}
     >
-      <div className="relative flex flex-1 flex-col">
-        <div
-          className={clsx(
-            'relative overflow-hidden rounded-2xl',
-            {
-              '5:6': 'aspect-[5/6]',
-              '3:4': 'aspect-[3/4]',
-              '1:1': 'aspect-square',
-            }[aspectRatio],
-            // White image backdrop (products are shot on white). The border now lives on the whole
-            // card, not the image.
-            {
-              light: 'bg-white',
-              dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500)))]',
-            }[colorScheme],
-          )}
-        >
-          {image != null ? (
-            <Image
-              alt={image.alt}
-              className={clsx(
-                // Contain (show the whole product, not cropped) and scale DOWN on hover.
-                'h-full w-full scale-100 select-none object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-95',
-                {
-                  light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
-                  dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
-                }[colorScheme],
-              )}
-              fill
-              preload={imagePriority}
-              sizes={imageSizes}
-              src={image.src}
-            />
-          ) : (
-            <div
-              className={clsx(
-                'break-words pl-5 pt-5 text-2xl font-bold leading-snug tracking-tighter opacity-10 transition-transform duration-500 ease-out group-hover:scale-105 @xs:text-4xl',
-                {
-                  light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
-                  dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
-                }[colorScheme],
-              )}
-            >
-              {title}
-            </div>
-          )}
-          {badge != null && badge !== '' && (
-            <Badge className="absolute left-3 top-3" shape="rounded">
-              {badge}
-            </Badge>
-          )}
-        </div>
-        {/* Marketing pills — positioned against the (non-clipped) card wrapper, NOT the image
-            container (which is overflow-hidden and would clip them at the corner). */}
-        {badges != null && badges.length > 0 && (
-          <div className="absolute left-0 top-0 flex flex-wrap items-start gap-1">
-            {badges.map((b) => (
-              <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
-                key={b.label}
-                style={{ backgroundColor: b.color, color: b.textColor }}
-              >
-                {b.label}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Sale blurb — top-right, driven by the __sale custom field (percentage). Placeholder red
-            disc for now; will be replaced with the supplied SVG shape. "UP TO / N% / OFF" in 3 lines. */}
-        {typeof salePercent === 'number' && salePercent > 0 && (
-          <div className="absolute right-0 top-0 flex size-[52px] flex-col items-center justify-center rounded-full bg-[var(--pill-sale-background,#d90716)] text-center leading-none text-[var(--pill-sale-text,#fff)] @md:size-[58px]">
-            <span className="text-[7px] font-semibold uppercase tracking-wide">Up to</span>
-            <span className="text-[15px] font-bold @md:text-base">{salePercent}%</span>
-            <span className="text-[7px] font-semibold uppercase tracking-wide">Off</span>
-          </div>
-        )}
-
-        <div className="flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-4 pb-3 pt-3 @xs:pt-4">
-          <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
-            <span
-              className={clsx(
-                // Reserve a full 3 lines (min-h) even for short titles so the brand, price and
-                // CTA below align across cards in a row.
-                'line-clamp-3 min-h-[3lh] font-semibold',
-                {
-                  light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
-                  dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
-                }[colorScheme],
-              )}
-            >
-              {title}
-            </span>
-            {subtitle != null && subtitle !== '' && (
-              <span
+      <CardVariantProvider
+        initial={
+          cardSwatchOption(requiredOptions)?.swatches?.find((s) => s.isDefault)?.id ??
+          cardSwatchOption(requiredOptions)?.swatches?.[0]?.id
+        }
+        variants={cardVariants}
+      >
+        <div className="relative flex flex-1 flex-col">
+          <div
+            className={clsx(
+              'relative overflow-hidden rounded-2xl',
+              {
+                '5:6': 'aspect-[5/6]',
+                '3:4': 'aspect-[3/4]',
+                '1:1': 'aspect-square',
+              }[aspectRatio],
+              // White image backdrop (products are shot on white). The border now lives on the whole
+              // card, not the image.
+              {
+                light: 'bg-white',
+                dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500)))]',
+              }[colorScheme],
+            )}
+          >
+            {image != null ? (
+              <CardImage
+                alt={image.alt}
                 className={clsx(
-                  'block text-xs font-normal',
-                  // Brand name in grey (contrast-400 is the lightest grey that passes AA at 12px).
+                  // Contain (show the whole product, not cropped) and scale DOWN on hover.
+                  'h-full w-full scale-100 select-none object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-95',
                   {
-                    light: 'text-contrast-400',
-                    dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
+                    light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
+                    dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
+                  }[colorScheme],
+                )}
+                preload={imagePriority}
+                sizes={imageSizes}
+                src={image.src}
+              />
+            ) : (
+              <div
+                className={clsx(
+                  'break-words pl-5 pt-5 text-2xl font-bold leading-snug tracking-tighter opacity-10 transition-transform duration-500 ease-out group-hover:scale-105 @xs:text-4xl',
+                  {
+                    light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
+                    dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
                   }[colorScheme],
                 )}
               >
-                {subtitle}
-              </span>
-            )}
-            {/* Grey divider below the brand name, above the price (margin below the line). */}
-            <hr className="mb-3 mt-2 border-t border-contrast-100" />
-            <CardPrice colorScheme={colorScheme} price={price} unit={priceUnit} />
-            <DeliveryLine message={deliveryMessage} />
-            {showRating && typeof rating === 'number' && rating > 0 && (
-              <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
-            )}
-            <span
-              className={clsx(
-                'block text-sm font-normal',
-                {
-                  light: 'text-[var(--product-card-light-message,hsl(var(--foreground)/75%))]',
-                  dark: 'text-[var(--product-card-dark-message,hsl(var(--background)/75%))]',
-                }[colorScheme],
-              )}
-            >
-              {inventoryMessage}
-            </span>
-            {href !== '#' && (
-              // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
-              // pt-2 guarantees a little space above the button even on the tallest card.
-              <div className="relative z-10 mt-auto pt-3">
-                <CardCta
-                  addToCartAction={addToCartAction}
-                  href={href}
-                  id={id}
-                  quoteHref={quoteHref}
-                  quoteOnly={quoteOnly}
-                  requiredOptions={requiredOptions}
-                  requiresOptions={requiresOptions}
-                />
+                {title}
               </div>
             )}
-          </div>
-        </div>
-        {href !== '#' && (
-          <Link
-            aria-label={title}
-            className={clsx(
-              'absolute inset-0 rounded-b-lg rounded-t-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-card-focus,hsl(var(--primary)))] focus-visible:ring-offset-4',
-              {
-                light: 'ring-offset-[var(--product-card-light-offset,hsl(var(--background)))]',
-                dark: 'ring-offset-[var(--product-card-dark-offset,hsl(var(--foreground)))]',
-              }[colorScheme],
+            {badge != null && badge !== '' && (
+              <Badge className="absolute left-3 top-3" shape="rounded">
+                {badge}
+              </Badge>
             )}
-            href={href}
-            id={id}
-          >
-            <span className="sr-only">View product</span>
-          </Link>
-        )}
-      </div>
-      {showCompare && (
-        // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
-        // so the small box doesn't read as a circle.
-        <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
-          <Compare
-            colorScheme={colorScheme}
-            label={compareLabel}
-            paramName={compareParamName}
-            product={{ id, title, href, image }}
-          />
+          </div>
+          {/* Marketing pills — positioned against the (non-clipped) card wrapper, NOT the image
+            container (which is overflow-hidden and would clip them at the corner). */}
+          {badges != null && badges.length > 0 && (
+            <div className="absolute left-0 top-0 flex flex-wrap items-start gap-1">
+              {badges.map((b) => (
+                <span
+                  className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase leading-none tracking-wide text-foreground"
+                  key={b.label}
+                  style={{ backgroundColor: b.color, color: b.textColor }}
+                >
+                  {b.label}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Sale blurb — top-right, driven by the __sale custom field (percentage). Placeholder red
+            disc for now; will be replaced with the supplied SVG shape. "UP TO / N% / OFF" in 3 lines. */}
+          {typeof salePercent === 'number' && salePercent > 0 && (
+            <div className="absolute right-0 top-0 flex size-[52px] flex-col items-center justify-center rounded-full bg-[var(--pill-sale-background,#d90716)] text-center leading-none text-[var(--pill-sale-text,#fff)] @md:size-[58px]">
+              <span className="text-[7px] font-semibold uppercase tracking-wide">Up to</span>
+              <span className="text-[15px] font-bold @md:text-base">{salePercent}%</span>
+              <span className="text-[7px] font-semibold uppercase tracking-wide">Off</span>
+            </div>
+          )}
+
+          <div className="flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-4 pb-3 pt-3 @xs:pt-4">
+            <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
+              <span
+                className={clsx(
+                  // Reserve a full 3 lines (min-h) even for short titles so the brand, price and
+                  // CTA below align across cards in a row.
+                  'line-clamp-3 min-h-[3lh] font-semibold',
+                  {
+                    light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
+                    dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
+                  }[colorScheme],
+                )}
+              >
+                {title}
+              </span>
+              {subtitle != null && subtitle !== '' && (
+                <span
+                  className={clsx(
+                    'block text-xs font-normal',
+                    // Brand name in grey (contrast-400 is the lightest grey that passes AA at 12px).
+                    {
+                      light: 'text-contrast-400',
+                      dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
+                    }[colorScheme],
+                  )}
+                >
+                  {subtitle}
+                </span>
+              )}
+              {/* Grey divider below the brand name, above the price (margin below the line). */}
+              <hr className="mb-3 mt-2 border-t border-contrast-100" />
+              <CardPrice colorScheme={colorScheme} price={price} unit={priceUnit} />
+              <DeliveryLine message={deliveryMessage} />
+              {showRating && typeof rating === 'number' && rating > 0 && (
+                <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
+              )}
+              <span
+                className={clsx(
+                  'block text-sm font-normal',
+                  {
+                    light: 'text-[var(--product-card-light-message,hsl(var(--foreground)/75%))]',
+                    dark: 'text-[var(--product-card-dark-message,hsl(var(--background)/75%))]',
+                  }[colorScheme],
+                )}
+              >
+                {inventoryMessage}
+              </span>
+              {href !== '#' && (
+                // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
+                // pt-2 guarantees a little space above the button even on the tallest card.
+                <div className="relative z-10 mt-auto pt-3">
+                  <CardCta
+                    addToCartAction={addToCartAction}
+                    href={href}
+                    id={id}
+                    quoteHref={quoteHref}
+                    quoteOnly={quoteOnly}
+                    requiredOptions={requiredOptions}
+                    requiresOptions={requiresOptions}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          {href !== '#' && (
+            <Link
+              aria-label={title}
+              className={clsx(
+                'absolute inset-0 rounded-b-lg rounded-t-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-card-focus,hsl(var(--primary)))] focus-visible:ring-offset-4',
+                {
+                  light: 'ring-offset-[var(--product-card-light-offset,hsl(var(--background)))]',
+                  dark: 'ring-offset-[var(--product-card-dark-offset,hsl(var(--foreground)))]',
+                }[colorScheme],
+              )}
+              href={href}
+              id={id}
+            >
+              <span className="sr-only">View product</span>
+            </Link>
+          )}
         </div>
-      )}
+        {showCompare && (
+          // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
+          // so the small box doesn't read as a circle.
+          <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
+            <Compare
+              colorScheme={colorScheme}
+              label={compareLabel}
+              paramName={compareParamName}
+              product={{ id, title, href, image }}
+            />
+          </div>
+        )}
+      </CardVariantProvider>
     </article>
-  );
-}
-
-// Price in the card's bold superscript style, with an optional unit after it ("/ sq. ft.").
-function CardPrice({
-  price,
-  unit,
-  colorScheme,
-}: {
-  price?: Price;
-  unit?: string;
-  colorScheme: 'light' | 'dark';
-}) {
-  if (price == null) return null;
-
-  return (
-    <span className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
-      <PriceLabel
-        className="text-base @[16rem]:text-lg [&_abbr]:cursor-default [&_abbr]:no-underline"
-        colorScheme={colorScheme}
-        price={price}
-        superscript
-      />
-      {Boolean(unit) && <span className="text-xs text-contrast-500">/ {unit}</span>}
-    </span>
   );
 }
 

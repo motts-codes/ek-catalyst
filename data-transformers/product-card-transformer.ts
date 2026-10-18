@@ -6,7 +6,12 @@ import { removeEdgesAndNodes } from '@bigcommerce/catalyst-client';
 import { ResultOf } from 'gql.tada';
 import { getFormatter } from 'next-intl/server';
 
-import { Product, type RequiredOption } from '@/vibes/soul/primitives/product-card';
+import { type Price } from '@/vibes/soul/primitives/price-label';
+import {
+  type CardVariants,
+  Product,
+  type RequiredOption,
+} from '@/vibes/soul/primitives/product-card';
 import { ExistingResultType } from '~/client/util';
 import { ProductCardFragment } from '~/components/product-card/fragment';
 import { WishlistItemProductFragment } from '~/components/wishlist/fragment';
@@ -174,6 +179,67 @@ const getRequiredOptions = (
     });
 };
 
+// Money for a variant's price block, formatted like the product's.
+const variantMoney = (
+  inc: { value: number; currencyCode: string },
+  ex: { value: number; currencyCode: string },
+  format: ExistingResultType<typeof getFormatter>,
+) => ({
+  inc: format.number(inc.value, { style: 'currency', currency: inc.currencyCode }),
+  ex: format.number(ex.value, { style: 'currency', currency: ex.currencyCode }),
+});
+
+// For the card's swatch option: each option value -> its variant's photo, price and
+// purchasability, so choosing a swatch swaps the card to that variant.
+const getCardVariants = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+  optionId: number | undefined,
+  format: ExistingResultType<typeof getFormatter>,
+): CardVariants | undefined => {
+  if (optionId == null || !('variants' in product)) {
+    return undefined;
+  }
+
+  const entries = removeEdgesAndNodes(product.variants).flatMap((variant) => {
+    if (!('options' in variant)) return [];
+
+    const option = removeEdgesAndNodes(variant.options).find((o) => o.entityId === optionId);
+    const valueId = option ? removeEdgesAndNodes(option.values)[0]?.entityId : undefined;
+
+    if (valueId == null) return [];
+
+    const inc = variant.variantPricesIncludingTax;
+    const ex = variant.variantPricesExcludingTax;
+    let price: Price | undefined;
+
+    if (inc?.price && ex?.price) {
+      const current = variantMoney(inc.price, ex.price, format);
+      const onSale =
+        inc.basePrice && ex.basePrice && inc.salePrice && inc.price.value < inc.basePrice.value;
+
+      price =
+        onSale && inc.basePrice && ex.basePrice
+          ? { type: 'sale', previous: variantMoney(inc.basePrice, ex.basePrice, format), current }
+          : { type: 'plain', money: current };
+    }
+
+    return [
+      [
+        String(valueId),
+        {
+          image: variant.defaultImage
+            ? { src: variant.defaultImage.url, alt: variant.defaultImage.altText || product.name }
+            : undefined,
+          price,
+          purchasable: variant.isPurchasable,
+        },
+      ] as const,
+    ];
+  });
+
+  return entries.length > 0 ? Object.fromEntries(entries) : undefined;
+};
+
 export const singleProductCardTransformer = (
   product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
   format: ExistingResultType<typeof getFormatter>,
@@ -202,6 +268,11 @@ export const singleProductCardTransformer = (
         ? removeEdgesAndNodes(product.productOptions).some((o) => o.isRequired)
         : undefined,
     requiredOptions: getRequiredOptions(product),
+    cardVariants: getCardVariants(
+      product,
+      getRequiredOptions(product)?.find((option) => option.swatches != null)?.id,
+      format,
+    ),
     rating: product.reviewSummary.averageRating,
     numberOfReviews: product.reviewSummary.numberOfReviews,
     inventoryMessage:
