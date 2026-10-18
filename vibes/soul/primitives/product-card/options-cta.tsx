@@ -30,7 +30,7 @@ export function SwatchAddToCart({
 
   return (
     <div className="flex flex-col gap-2.5">
-      <div aria-label={option.name} className="flex items-center gap-1" role="radiogroup">
+      <div aria-label={option.name} className="flex flex-wrap items-center gap-1" role="radiogroup">
         {swatches.map((swatch) => {
           const isSelected = swatch.id === selected;
 
@@ -39,7 +39,7 @@ export function SwatchAddToCart({
               aria-checked={isSelected}
               aria-label={swatch.label}
               className={clsx(
-                'size-5 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+                'size-5 shrink-0 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
                 // The ring sits directly on the swatch edge: red when selected, a faint hairline
                 // otherwise so pale swatches (white) still read as dots.
                 isSelected
@@ -64,7 +64,9 @@ export function SwatchAddToCart({
           );
         })}
         {current != null && (
-          <span className="ml-1 truncate text-xs text-contrast-500">{current.label}</span>
+          <span className="ml-1 hidden min-w-0 truncate text-xs text-contrast-500 @[14rem]:inline">
+            {current.label}
+          </span>
         )}
       </div>
       <AddToCartCta
