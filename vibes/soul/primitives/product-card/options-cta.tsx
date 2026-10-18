@@ -23,7 +23,7 @@ export function SwatchAddToCart({
 
   return (
     <div className="flex flex-col gap-2.5">
-      <div aria-label={option.name} className="flex items-center gap-2" role="radiogroup">
+      <div aria-label={option.name} className="flex items-center gap-1" role="radiogroup">
         {swatches.map((swatch) => {
           const isSelected = swatch.id === selected;
 
