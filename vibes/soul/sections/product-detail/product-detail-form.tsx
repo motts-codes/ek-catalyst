@@ -263,13 +263,25 @@ export function ProductDetailForm<F extends Field>({
   // product's aggregate — showing "In stock" before any choice is made. We show a prompt instead.
   // Only persisted fields are product options (they round-trip through the URL); `quantity` and
   // other non-persisted inputs are also `required` but aren't variant selections.
-  const hasUnselectedRequiredOption = fields.some(
+  const unselectedRequiredOptions = fields.filter(
     (field) =>
       field.persist === true &&
       field.required === true &&
       field.type !== 'checkbox' &&
       (params[field.name] ?? field.defaultValue ?? '') === '',
   );
+  const hasUnselectedRequiredOption = unselectedRequiredOptions.length > 0;
+  // "Select finish for availability" / "Select size…": name what's still to choose. Width and
+  // Height (windows, cabinets) read as "size"; several different options read as "options".
+  const unselectedLabel = (() => {
+    const names = unselectedRequiredOptions.map((field) => field.label.trim());
+
+    if (names.every((name) => /\b(width|height|size|length|depth)\b/i.test(name))) return 'size';
+    if (names.length === 1 && names[0] != null && names[0].length <= 14)
+      return names[0].toLowerCase();
+
+    return 'options';
+  })();
 
   const onPrefetch = (fieldName: string, value: string) => {
     if (prefetch) {
@@ -589,7 +601,7 @@ export function ProductDetailForm<F extends Field>({
             <div className="space-y-4 rounded-xl border border-contrast-100 bg-[#f5f5f5] p-4">
               {hasUnselectedRequiredOption ? (
                 <p className="text-sm font-semibold text-foreground">
-                  Select size for availability
+                  Select {unselectedLabel} for availability
                 </p>
               ) : (
                 stockStatus != null && (
