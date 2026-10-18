@@ -32,10 +32,12 @@ export function SwatchAddToCart({
               aria-checked={isSelected}
               aria-label={swatch.label}
               className={clsx(
-                'box-content size-4 rounded-full border p-[3px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
+                'size-5 rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+                // The ring sits directly on the swatch edge: red when selected, a faint hairline
+                // otherwise so pale swatches (white) still read as dots.
                 isSelected
                   ? 'border-[var(--button-primary-background,#d90716)]'
-                  : 'border-transparent hover:border-contrast-300',
+                  : 'border-black/15 hover:border-contrast-400',
               )}
               key={swatch.id}
               onClick={() => setSelected(swatch.id)}
@@ -44,7 +46,7 @@ export function SwatchAddToCart({
               type="button"
             >
               <span
-                className="block size-full rounded-full border border-black/10"
+                className="block size-full rounded-full"
                 style={
                   swatch.image
                     ? { backgroundImage: `url(${swatch.image})`, backgroundSize: 'cover' }
