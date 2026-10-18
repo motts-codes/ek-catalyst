@@ -80,7 +80,7 @@ export function ProductsListSection({
   showCompare,
   paginationInfo,
   filterLabel = 'Filters',
-  searchPlaceholder = 'Search these products',
+  searchPlaceholder = 'Search products',
   showFiltersLabel = 'Show filters',
   hideFiltersLabel = 'Hide filters',
   filtersPanelTitle: streamableFiltersPanelTitle = 'Filters',

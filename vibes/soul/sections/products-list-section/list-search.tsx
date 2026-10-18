@@ -7,7 +7,7 @@ import { useEffect, useState, useTransition } from 'react';
 // A search box for the listing: filters the whole result set (every page) by the "term" search
 // param, which the faceted search already understands, so it combines with the sidebar filters,
 // the type tiles and the program. Submitting resets to page one.
-export function ListSearch({ placeholder = 'Search these products' }: { placeholder?: string }) {
+export function ListSearch({ placeholder = 'Search products' }: { placeholder?: string }) {
   const [params, setParams] = useQueryStates(
     { term: parseAsString, before: parseAsString, after: parseAsString, page: parseAsString },
     { shallow: false, history: 'push' },
@@ -37,7 +37,7 @@ export function ListSearch({ placeholder = 'Search these products' }: { placehol
       <Search aria-hidden className="shrink-0 text-contrast-400" size={14} strokeWidth={1.75} />
       <input
         aria-label={placeholder}
-        className="h-full w-32 min-w-0 bg-transparent px-2 text-xs placeholder:text-contrast-400 focus:outline-none @md:w-44"
+        className="h-full w-28 min-w-0 bg-transparent px-2 text-xs placeholder:text-contrast-400 focus:outline-none @sm:w-40 @2xl:w-56"
         name="term"
         onChange={(event) => setValue(event.currentTarget.value)}
         placeholder={placeholder}
