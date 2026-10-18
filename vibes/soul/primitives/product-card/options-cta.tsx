@@ -32,7 +32,7 @@ export function SwatchAddToCart({
               aria-checked={isSelected}
               aria-label={swatch.label}
               className={clsx(
-                'box-content size-6 rounded-full border-2 p-0.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
+                'box-content size-4 rounded-full border p-[3px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
                 isSelected
                   ? 'border-[var(--button-primary-background,#d90716)]'
                   : 'border-transparent hover:border-contrast-300',
