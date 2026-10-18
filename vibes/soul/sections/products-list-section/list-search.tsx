@@ -27,7 +27,8 @@ export function ListSearch({ placeholder = 'Search products' }: { placeholder?: 
 
   return (
     <form
-      className="relative flex h-8 min-w-0 items-center rounded-full border border-[hsl(var(--primary)/40%)] bg-white pl-3 pr-1 text-xs focus-within:border-[hsl(var(--primary))]"
+      // Full width on its own line in a narrow toolbar; inline beside the sort control otherwise.
+      className="relative flex h-8 min-w-0 basis-full items-center rounded-full border border-[hsl(var(--primary)/40%)] bg-white pl-3 pr-1 text-xs focus-within:border-[hsl(var(--primary))] @sm:basis-auto"
       onSubmit={(event) => {
         event.preventDefault();
         apply(value);
@@ -37,7 +38,7 @@ export function ListSearch({ placeholder = 'Search products' }: { placeholder?: 
       <Search aria-hidden className="shrink-0 text-contrast-400" size={14} strokeWidth={1.75} />
       <input
         aria-label={placeholder}
-        className="h-full w-28 min-w-0 bg-transparent px-2 text-xs placeholder:text-contrast-400 focus:outline-none @sm:w-40 @2xl:w-56"
+        className="h-full w-full min-w-0 bg-transparent px-2 text-xs placeholder:text-contrast-400 focus:outline-none @md:w-40 @2xl:w-56"
         name="term"
         onChange={(event) => setValue(event.currentTarget.value)}
         placeholder={placeholder}

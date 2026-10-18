@@ -156,9 +156,11 @@ export function ProductsListSection({
                   'flex items-center gap-2',
                   // With the heading hidden the sort and the toggle are the whole row: ends apart.
                   hideHeader && 'w-full justify-between',
+                  // Narrow toolbars put the search on its own line (see ListSearch).
+                  '[&>div:first-child]:min-w-0 [&>div:first-child]:flex-1 @3xl:[&>div:first-child]:flex-none',
                 )}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 @md:flex-nowrap">
                   <ListSearch placeholder={searchPlaceholder} />
                   <Stream
                     fallback={<SortingSkeleton />}
