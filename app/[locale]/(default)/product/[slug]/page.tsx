@@ -32,6 +32,8 @@ import { ProductDetail } from '~/lib/makeswift/components/product-detail';
 import { getRecaptchaSiteKey } from '~/lib/recaptcha';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
+import { productCardAddToCartAction } from '../../(faceted)/product-card-add-to-cart';
+
 import { addToCart } from './_actions/add-to-cart';
 import { getMoreProductImages } from './_actions/get-more-images';
 import { submitReview } from './_actions/submit-review';
@@ -790,6 +792,7 @@ export default async function Product({ params, searchParams }: Props) {
       <FeaturesGrid featuresGrid={featuresGrid} />
 
       <FeaturedProductCarousel
+        addToCartAction={productCardAddToCartAction}
         cta={{ label: t('RelatedProducts.cta'), href: '/shop-all' }}
         density="compact"
         emptyStateSubtitle={t('RelatedProducts.browseCatalog')}

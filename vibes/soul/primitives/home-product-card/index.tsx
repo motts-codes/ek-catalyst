@@ -4,18 +4,17 @@
 import { clsx } from 'clsx';
 
 import { Badge } from '@/vibes/soul/primitives/badge';
-import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { PriceLabel } from '@/vibes/soul/primitives/price-label';
-import {
-  type ProductCardAddToCartAction,
-  type ProductCardProps,
-} from '@/vibes/soul/primitives/product-card';
-import { AddToCartCta } from '@/vibes/soul/primitives/product-card/add-to-cart-cta';
+import { CardCta, type ProductCardProps } from '@/vibes/soul/primitives/product-card';
 import { Compare } from '@/vibes/soul/primitives/product-card/compare';
 import { DeliveryLine } from '@/vibes/soul/primitives/product-card/delivery-line';
+import { cardSwatchOption } from '@/vibes/soul/primitives/product-card/options';
+import {
+  CardImage,
+  CardPrice,
+  CardVariantProvider,
+} from '@/vibes/soul/primitives/product-card/variant-context';
 import { Rating } from '@/vibes/soul/primitives/rating';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
-import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 // This component supports various CSS variables for theming. Here's a comprehensive list, along
@@ -51,6 +50,8 @@ export function HomeProductCard({
     image,
     href,
     requiresOptions,
+    requiredOptions,
+    cardVariants,
     quoteOnly = false,
     priceUnit,
     inventoryMessage,
@@ -77,208 +78,171 @@ export function HomeProductCard({
         className,
       )}
     >
-      <div className="relative flex flex-1 flex-col">
-        <div
-          className={clsx(
-            'relative overflow-hidden rounded-2xl',
-            {
-              '5:6': 'aspect-[5/6]',
-              '3:4': 'aspect-[3/4]',
-              '1:1': 'aspect-square',
-            }[aspectRatio],
-            // White image backdrop (products are shot on white). The border now lives on the whole
-            // card, not the image.
-            {
-              light: 'bg-white',
-              dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500)))]',
-            }[colorScheme],
-          )}
-        >
-          {image != null ? (
-            <Image
-              alt={image.alt}
-              className={clsx(
-                // Contain (show the whole product, not cropped) and scale DOWN on hover.
-                'h-full w-full scale-100 select-none object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-95',
-                {
-                  light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
-                  dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
-                }[colorScheme],
-              )}
-              fill
-              preload={imagePriority}
-              sizes={imageSizes}
-              src={image.src}
-            />
-          ) : (
-            <div
-              className={clsx(
-                'break-words pl-5 pt-5 text-2xl font-bold leading-snug tracking-tighter opacity-10 transition-transform duration-500 ease-out group-hover:scale-105 @xs:text-4xl',
-                {
-                  light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
-                  dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
-                }[colorScheme],
-              )}
-            >
-              {title}
-            </div>
-          )}
-          {badge != null && badge !== '' && (
-            <Badge className="absolute left-3 top-3" shape="rounded">
-              {badge}
-            </Badge>
-          )}
-        </div>
-        {/* No marketing pills (New / Bestseller / Trending) here: the tab the card sits in
-            already says so. */}
-
-        {/* Sale blurb — top-right, driven by the __sale custom field (percentage). Placeholder red
-            disc for now; will be replaced with the supplied SVG shape. "UP TO / N% / OFF" in 3 lines. */}
-        {typeof salePercent === 'number' && salePercent > 0 && (
-          <div className="absolute right-0 top-0 flex size-[52px] flex-col items-center justify-center rounded-full bg-[var(--pill-sale-background,#d90716)] text-center leading-none text-[var(--pill-sale-text,#fff)] @md:size-[58px]">
-            <span className="text-[7px] font-semibold uppercase tracking-wide">Up to</span>
-            <span className="text-[15px] font-bold @md:text-base">{salePercent}%</span>
-            <span className="text-[7px] font-semibold uppercase tracking-wide">Off</span>
-          </div>
-        )}
-
-        <div className="flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-4 pb-3 pt-3 @xs:pt-4">
-          <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
-            <span
-              className={clsx(
-                // Reserve a full 2 lines (min-h) even for 1-line titles so the price and CTA
-                // below align across cards in a row.
-                'line-clamp-2 min-h-[2lh] font-semibold',
-                {
-                  light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
-                  dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
-                }[colorScheme],
-              )}
-            >
-              {title}
-            </span>
-            {subtitle != null && subtitle !== '' && (
-              <span
+      <CardVariantProvider
+        initial={
+          cardSwatchOption(requiredOptions)?.swatches?.find((swatch) => swatch.isDefault)?.id ??
+          cardSwatchOption(requiredOptions)?.swatches?.[0]?.id
+        }
+        variants={cardVariants}
+      >
+        <div className="relative flex flex-1 flex-col">
+          <div
+            className={clsx(
+              'relative overflow-hidden rounded-2xl',
+              {
+                '5:6': 'aspect-[5/6]',
+                '3:4': 'aspect-[3/4]',
+                '1:1': 'aspect-square',
+              }[aspectRatio],
+              // White image backdrop (products are shot on white). The border now lives on the whole
+              // card, not the image.
+              {
+                light: 'bg-white',
+                dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500)))]',
+              }[colorScheme],
+            )}
+          >
+            {image != null ? (
+              <CardImage
+                alt={image.alt}
                 className={clsx(
-                  'block truncate text-xs font-normal',
-                  // Brand name in grey (contrast-400 is the lightest grey that passes AA at 12px).
+                  // Contain (show the whole product, not cropped) and scale DOWN on hover.
+                  'h-full w-full scale-100 select-none object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-95',
                   {
-                    light: 'text-contrast-400',
-                    dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
+                    light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
+                    dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
+                  }[colorScheme],
+                )}
+                preload={imagePriority}
+                sizes={imageSizes}
+                src={image.src}
+              />
+            ) : (
+              <div
+                className={clsx(
+                  'break-words pl-5 pt-5 text-2xl font-bold leading-snug tracking-tighter opacity-10 transition-transform duration-500 ease-out group-hover:scale-105 @xs:text-4xl',
+                  {
+                    light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
+                    dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
                   }[colorScheme],
                 )}
               >
-                {subtitle}
-              </span>
-            )}
-            {/* Grey divider below the brand name, above the price (margin below the line). */}
-            <hr className="mb-3 mt-2 border-t border-contrast-100" />
-            {price != null && (
-              <span className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
-                <PriceLabel
-                  className="text-base @[16rem]:text-lg [&_abbr]:cursor-default [&_abbr]:no-underline"
-                  colorScheme={colorScheme}
-                  price={price}
-                  superscript
-                />
-                {Boolean(priceUnit) && (
-                  <span className="text-xs text-contrast-500">/ {priceUnit}</span>
-                )}
-              </span>
-            )}
-            <DeliveryLine message={deliveryMessage} />
-            {showRating && typeof rating === 'number' && rating > 0 && (
-              <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
-            )}
-            <span
-              className={clsx(
-                'block text-sm font-normal',
-                {
-                  light: 'text-[var(--product-card-light-message,hsl(var(--foreground)/75%))]',
-                  dark: 'text-[var(--product-card-dark-message,hsl(var(--background)/75%))]',
-                }[colorScheme],
-              )}
-            >
-              {inventoryMessage}
-            </span>
-            {href !== '#' && (
-              // One simple CTA: a full-width "Shop Now" pill (red outline, fills red on hover),
-              // pinned to the bottom so buttons align across a row.
-              <div className="relative z-10 mt-auto pt-3">
-                <HomeCardCta
-                  addToCartAction={addToCartAction}
-                  href={href}
-                  id={id}
-                  quoteOnly={quoteOnly}
-                  requiresOptions={requiresOptions}
-                />
+                {title}
               </div>
             )}
-          </div>
-        </div>
-        {href !== '#' && (
-          <Link
-            aria-label={title}
-            className={clsx(
-              'absolute inset-0 rounded-b-lg rounded-t-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-card-focus,hsl(var(--primary)))] focus-visible:ring-offset-4',
-              {
-                light: 'ring-offset-[var(--product-card-light-offset,hsl(var(--background)))]',
-                dark: 'ring-offset-[var(--product-card-dark-offset,hsl(var(--foreground)))]',
-              }[colorScheme],
+            {badge != null && badge !== '' && (
+              <Badge className="absolute left-3 top-3" shape="rounded">
+                {badge}
+              </Badge>
             )}
-            href={href}
-            id={id}
-          >
-            <span className="sr-only">View product</span>
-          </Link>
-        )}
-      </div>
-      {showCompare && (
-        // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
-        // so the small box doesn't read as a circle.
-        <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
-          <Compare
-            colorScheme={colorScheme}
-            label={compareLabel}
-            paramName={compareParamName}
-            product={{ id, title, href, image }}
-          />
+          </div>
+          {/* No marketing pills (New / Bestseller / Trending) here: the tab the card sits in
+            already says so. */}
+
+          {/* Sale blurb — top-right, driven by the __sale custom field (percentage). Placeholder red
+            disc for now; will be replaced with the supplied SVG shape. "UP TO / N% / OFF" in 3 lines. */}
+          {typeof salePercent === 'number' && salePercent > 0 && (
+            <div className="absolute right-0 top-0 flex size-[52px] flex-col items-center justify-center rounded-full bg-[var(--pill-sale-background,#d90716)] text-center leading-none text-[var(--pill-sale-text,#fff)] @md:size-[58px]">
+              <span className="text-[7px] font-semibold uppercase tracking-wide">Up to</span>
+              <span className="text-[15px] font-bold @md:text-base">{salePercent}%</span>
+              <span className="text-[7px] font-semibold uppercase tracking-wide">Off</span>
+            </div>
+          )}
+
+          <div className="flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-4 pb-3 pt-3 @xs:pt-4">
+            <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">
+              <span
+                className={clsx(
+                  // Reserve a full 2 lines (min-h) even for 1-line titles so the price and CTA
+                  // below align across cards in a row.
+                  'line-clamp-2 min-h-[2lh] font-semibold',
+                  {
+                    light: 'text-[var(--product-card-light-title,hsl(var(--foreground)))]',
+                    dark: 'text-[var(--product-card-dark-title,hsl(var(--background)))]',
+                  }[colorScheme],
+                )}
+              >
+                {title}
+              </span>
+              {subtitle != null && subtitle !== '' && (
+                <span
+                  className={clsx(
+                    'block truncate text-xs font-normal',
+                    // Brand name in grey (contrast-400 is the lightest grey that passes AA at 12px).
+                    {
+                      light: 'text-contrast-400',
+                      dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
+                    }[colorScheme],
+                  )}
+                >
+                  {subtitle}
+                </span>
+              )}
+              {/* Grey divider below the brand name, above the price (margin below the line). */}
+              <hr className="mb-3 mt-2 border-t border-contrast-100" />
+              <CardPrice colorScheme={colorScheme} price={price} unit={priceUnit} />
+              <DeliveryLine message={deliveryMessage} />
+              {showRating && typeof rating === 'number' && rating > 0 && (
+                <Rating className="mb-2 mt-1" numberOfReviews={numberOfReviews} rating={rating} />
+              )}
+              <span
+                className={clsx(
+                  'block text-sm font-normal',
+                  {
+                    light: 'text-[var(--product-card-light-message,hsl(var(--foreground)/75%))]',
+                    dark: 'text-[var(--product-card-dark-message,hsl(var(--background)/75%))]',
+                  }[colorScheme],
+                )}
+              >
+                {inventoryMessage}
+              </span>
+              {href !== '#' && (
+                // The same CTA as the listing card: swatches + Add to Cart, Add to Cart, "Choose
+                // size…", or Request a quote. Pinned to the bottom so buttons align across a row.
+                <div className="relative z-10 mt-auto pt-3">
+                  <CardCta
+                    addToCartAction={addToCartAction}
+                    href={href}
+                    id={id}
+                    quoteOnly={quoteOnly}
+                    requiredOptions={requiredOptions}
+                    requiresOptions={requiresOptions}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+          {href !== '#' && (
+            <Link
+              aria-label={title}
+              className={clsx(
+                'absolute inset-0 rounded-b-lg rounded-t-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-card-focus,hsl(var(--primary)))] focus-visible:ring-offset-4',
+                {
+                  light: 'ring-offset-[var(--product-card-light-offset,hsl(var(--background)))]',
+                  dark: 'ring-offset-[var(--product-card-dark-offset,hsl(var(--foreground)))]',
+                }[colorScheme],
+              )}
+              href={href}
+              id={id}
+            >
+              <span className="sr-only">View product</span>
+            </Link>
+          )}
         </div>
-      )}
+        {showCompare && (
+          // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
+          // so the small box doesn't read as a circle.
+          <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
+            <Compare
+              colorScheme={colorScheme}
+              label={compareLabel}
+              paramName={compareParamName}
+              product={{ id, title, href, image }}
+            />
+          </div>
+        )}
+      </CardVariantProvider>
     </article>
-  );
-}
-
-// The card's one CTA: "Request a quote" for quote-only products; "Add to Cart" (straight into the
-// cart, opening the drawer) when the product has no options to choose and the action is wired;
-// otherwise "Shop Now" to the product page.
-function HomeCardCta({
-  quoteOnly,
-  requiresOptions,
-  addToCartAction,
-  href,
-  id,
-}: {
-  quoteOnly: boolean;
-  requiresOptions?: boolean;
-  addToCartAction?: ProductCardAddToCartAction;
-  href: string;
-  id: string;
-}) {
-  if (!quoteOnly && requiresOptions === false && addToCartAction != null) {
-    return <AddToCartCta action={addToCartAction} id={id} />;
-  }
-
-  return (
-    <ButtonLink
-      className="w-full !border-[var(--button-primary-background,#d90716)] !bg-transparent !text-[var(--button-primary-background,#d90716)] after:!bg-[var(--button-primary-background,#d90716)] hover:!text-white"
-      href={quoteOnly ? `${href}#request-a-quote` : href}
-      shape="pill"
-      size="small"
-      variant="tertiary"
-    >
-      {quoteOnly ? 'Request a quote' : 'Shop Now'}
-    </ButtonLink>
   );
 }
 

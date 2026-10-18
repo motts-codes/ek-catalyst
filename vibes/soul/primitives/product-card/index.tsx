@@ -319,7 +319,7 @@ export function ProductCard({
 // The card's one CTA: "Request a quote" for quote-only products; "Add to Cart" for products
 // without options (when the action is wired); swatches + "Add to Cart" for a single small swatch
 // option; otherwise "Choose size / finish / options" to the product page.
-function CardCta({
+export function CardCta({
   quoteOnly,
   quoteHref,
   href,

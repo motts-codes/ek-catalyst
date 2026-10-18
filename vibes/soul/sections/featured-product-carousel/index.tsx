@@ -1,5 +1,6 @@
 import { Streamable } from '@/vibes/soul/lib/streamable';
 import { AnimatedUnderline } from '@/vibes/soul/primitives/animated-underline';
+import { type ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
 import { CarouselProduct, ProductCarousel } from '@/vibes/soul/sections/product-carousel';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Link } from '~/components/link';
@@ -23,6 +24,8 @@ export interface FeaturedProductCarouselProps {
   hideOverflow?: boolean;
   /** `compact` fits five cards per row on desktop, the size the category grids use. */
   density?: 'default' | 'compact';
+  /** Direct add-to-cart for the cards (swatches, Add to Cart); without it they link to the PDP. */
+  addToCartAction?: ProductCardAddToCartAction;
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -52,6 +55,7 @@ export function FeaturedProductCarousel({
   nextLabel,
   hideOverflow = false,
   density = 'default',
+  addToCartAction,
 }: FeaturedProductCarouselProps) {
   return (
     <SectionLayout containerSize="2xl">
@@ -74,6 +78,7 @@ export function FeaturedProductCarousel({
       </div>
       <div className="group/product-carousel">
         <ProductCarousel
+          addToCartAction={addToCartAction}
           density={density}
           emptyStateSubtitle={emptyStateSubtitle}
           emptyStateTitle={emptyStateTitle}
