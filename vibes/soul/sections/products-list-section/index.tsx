@@ -15,6 +15,7 @@ import {
   FiltersToggle,
   FiltersVisibilityProvider,
 } from '@/vibes/soul/sections/products-list-section/filters-visibility';
+import { ListSearch } from '@/vibes/soul/sections/products-list-section/list-search';
 import {
   Sorting,
   SortingSkeleton,
@@ -38,6 +39,8 @@ interface Props {
   compareLabel?: Streamable<string>;
   showCompare?: Streamable<boolean>;
   filterLabel?: string;
+  /** Placeholder for the search box that filters the whole listing by term. */
+  searchPlaceholder?: string;
   showFiltersLabel?: string;
   hideFiltersLabel?: string;
   filtersPanelTitle?: Streamable<string>;
@@ -77,6 +80,7 @@ export function ProductsListSection({
   showCompare,
   paginationInfo,
   filterLabel = 'Filters',
+  searchPlaceholder = 'Search these products',
   showFiltersLabel = 'Show filters',
   hideFiltersLabel = 'Hide filters',
   filtersPanelTitle: streamableFiltersPanelTitle = 'Filters',
@@ -155,6 +159,7 @@ export function ProductsListSection({
                 )}
               >
                 <div className="flex items-center gap-2">
+                  <ListSearch placeholder={searchPlaceholder} />
                   <Stream
                     fallback={<SortingSkeleton />}
                     value={Streamable.all([
