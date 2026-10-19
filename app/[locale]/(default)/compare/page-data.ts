@@ -40,13 +40,8 @@ const ComparedProductsQuery = graphql(
                   }
                 }
               }
-              productOptions(first: 1) {
-                edges {
-                  node {
-                    entityId
-                  }
-                }
-              }
+              # productOptions come from ProductCardFragment (first: 5); selecting them again with
+              # a different argument is a "differing arguments" conflict too.
               inventory {
                 isInStock
               }

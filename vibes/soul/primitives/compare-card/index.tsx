@@ -5,6 +5,7 @@ import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import {
   type Product,
   ProductCard,
+  type ProductCardAddToCartAction,
   ProductCardSkeleton,
 } from '@/vibes/soul/primitives/product-card';
 import { Rating } from '@/vibes/soul/primitives/rating';
@@ -36,6 +37,9 @@ export interface CompareCardProps {
   showMoreLabel?: string;
   showLessLabel?: string;
   addToCartAction?: CompareAddToCartAction;
+  /** When given, the ProductCard's own CTA (swatches / Add to Cart / Choose …) is used and the
+   *  compare-specific button below it is not rendered — one CTA per product. */
+  cardAddToCartAction?: ProductCardAddToCartAction;
   imageSizes?: string;
 }
 
@@ -59,6 +63,7 @@ export function CompareCard({
   className,
   product,
   addToCartAction,
+  cardAddToCartAction,
   addToCartLabel = 'Add to cart',
   descriptionLabel = 'Description',
   noDescriptionLabel = 'There is no description available.',
@@ -80,8 +85,13 @@ export function CompareCard({
       )}
     >
       <div className="mb-2 space-y-4 pb-4">
-        <ProductCard imageSizes={imageSizes} product={product} />
+        <ProductCard
+          addToCartAction={cardAddToCartAction}
+          imageSizes={imageSizes}
+          product={product}
+        />
         {addToCartAction &&
+          cardAddToCartAction == null &&
           (product.hasVariants !== undefined && !product.hasVariants ? (
             <AddToCartForm
               addToCartAction={addToCartAction}

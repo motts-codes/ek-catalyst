@@ -14,6 +14,7 @@ import {
   type CompareProduct,
 } from '@/vibes/soul/primitives/compare-card';
 import { CompareAddToCartAction } from '@/vibes/soul/primitives/compare-card/add-to-cart-form';
+import type { ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 
 interface CompareSectionProps {
@@ -37,6 +38,7 @@ interface CompareSectionProps {
   showLessLabel?: string;
   placeholderCount?: number;
   addToCartAction?: CompareAddToCartAction;
+  cardAddToCartAction?: ProductCardAddToCartAction;
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -61,6 +63,7 @@ export function CompareSection({
   title = 'Compare products',
   products: streamableProducts,
   addToCartAction,
+  cardAddToCartAction,
   addToCartLabel,
   emptyStateTitle = 'No products to compare',
   emptyStateSubtitle = 'Browse our catalog to find products.',
@@ -123,6 +126,7 @@ export function CompareSection({
                       <CompareCard
                         addToCartAction={addToCartAction}
                         addToCartLabel={addToCartLabel}
+                        cardAddToCartAction={cardAddToCartAction}
                         descriptionLabel={descriptionLabel}
                         imageSizes="(min-width: 42rem) 25vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
                         key={product.id}

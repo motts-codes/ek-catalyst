@@ -12,6 +12,8 @@ import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 import { pickPricesForTaxDisplay } from '~/lib/tax-pricing';
 
+import { productCardAddToCartAction } from '../(faceted)/product-card-add-to-cart';
+
 import { addToCart } from './_actions/add-to-cart';
 import { CompareAnalyticsProvider } from './_components/compare-analytics-provider';
 import { getComparedProducts } from './page-data';
@@ -89,7 +91,10 @@ export default async function Compare(props: Props) {
       customFields: [
         { name: t('sku'), value: product.sku },
         { name: t('weight'), value: `${product.weight?.value} ${product.weight?.unit}` },
-        ...removeEdgesAndNodes(product.customFields).map(({ name, value }) => ({ name, value })),
+        // `__*` custom fields are storefront flags (badges, delivery, quote-only), not specs.
+        ...removeEdgesAndNodes(product.customFields)
+          .filter(({ name }) => !name.startsWith('__'))
+          .map(({ name, value }) => ({ name, value })),
       ],
       hasVariants: removeEdgesAndNodes(product.productOptions).length > 0,
       isPreorder: product.availabilityV2.status === 'Preorder',
@@ -130,6 +135,7 @@ export default async function Compare(props: Props) {
       <CompareSection
         addToCartAction={addToCart}
         addToCartLabel={t('addToCart')}
+        cardAddToCartAction={productCardAddToCartAction}
         descriptionLabel={t('description')}
         emptyStateTitle={t('noProductsToCompare')}
         nextLabel={t('next')}
