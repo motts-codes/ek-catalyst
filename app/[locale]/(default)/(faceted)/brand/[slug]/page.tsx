@@ -10,7 +10,6 @@ import { ProductsListSection } from '@/vibes/soul/sections/products-list-section
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { getSessionCustomerAccessToken } from '~/auth';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
-import { pageInfoTransformer } from '~/data-transformers/page-info-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
@@ -19,6 +18,12 @@ import { getMetadataAlternates } from '~/lib/seo/canonical';
 import { MAX_COMPARE_LIMIT } from '../../../compare/page-data';
 import { getCompareProducts as getCompareProductsData } from '../../fetch-compare-products';
 import { fetchFacetedSearch } from '../../fetch-faceted-search';
+import {
+  numberedPaginationInfo,
+  PAGE_PARAM,
+  pageNumber,
+  resolvePageCursor,
+} from '../../paged-search';
 
 import { getBrandPageData } from './page-data';
 
@@ -125,13 +130,14 @@ export default async function Brand(props: Props) {
     const parsedSearchParams = loadSearchParams?.(searchParams) ?? {};
     const sort = typeof searchParams.sort === 'string' ? searchParams.sort : 'featured';
 
+    const baseParams = { ...searchParams, ...parsedSearchParams, brand: [slug], sort };
+    const page = pageNumber(searchParams[PAGE_PARAM]);
+    const { after } = await resolvePageCursor(baseParams, page, {
+      currencyCode,
+      customerAccessToken,
+    });
     const search = await fetchFacetedSearch(
-      {
-        ...searchParams,
-        ...parsedSearchParams,
-        brand: [slug],
-        sort,
-      },
+      { ...baseParams, ...(page > 1 ? { after, before: undefined } : {}) },
       currencyCode,
       customerAccessToken,
     );
@@ -165,9 +171,13 @@ export default async function Brand(props: Props) {
   });
 
   const streamablePagination = Streamable.from(async () => {
+    const searchParams = await props.searchParams;
     const search = await streamableFacetedSearch;
 
-    return pageInfoTransformer(search.products.pageInfo);
+    return numberedPaginationInfo(
+      search.products.collectionInfo?.totalItems ?? 0,
+      pageNumber(searchParams[PAGE_PARAM]),
+    );
   });
 
   const streamableFilters = Streamable.from(async () => {
@@ -228,7 +238,7 @@ export default async function Brand(props: Props) {
       filtersPanelTitle={t('FacetedSearch.filters')}
       maxCompareLimitMessage={t('Compare.maxCompareLimit')}
       maxItems={MAX_COMPARE_LIMIT}
-      paginationInfo={streamablePagination}
+      pagination={streamablePagination}
       products={streamableProducts}
       rangeFilterApplyLabel={t('FacetedSearch.Range.apply')}
       removeLabel={t('Compare.remove')}

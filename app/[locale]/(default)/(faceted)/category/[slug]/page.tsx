@@ -22,7 +22,6 @@ import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/fi
 import { SeoContentSection } from '@/vibes/soul/sections/seo-content';
 import { getSessionCustomerAccessToken } from '~/auth';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
-import { pageInfoTransformer } from '~/data-transformers/page-info-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import {
   cabinetProgramSearchParam,
@@ -57,6 +56,12 @@ import { getMetadataAlternates } from '~/lib/seo/canonical';
 import { MAX_COMPARE_LIMIT } from '../../../compare/page-data';
 import { getCompareProducts } from '../../fetch-compare-products';
 import { fetchFacetedSearch } from '../../fetch-faceted-search';
+import {
+  numberedPaginationInfo,
+  PAGE_PARAM,
+  pageNumber,
+  resolvePageCursor,
+} from '../../paged-search';
 import { productCardAddToCartAction } from '../../product-card-add-to-cart';
 
 import {
@@ -290,14 +295,24 @@ export default async function Category(props: Props) {
     // BigCommerce would reject; real cursors are opaque encoded strings. Keep those away from it.
     const fallbackCursors =
       isFallbackCursor(searchParams.after) || isFallbackCursor(searchParams.before);
+    const baseParams = {
+      ...searchParams,
+      ...parsedSearchParams,
+      ...programFilter,
+      ...typeFilter,
+      category: categoryId,
+    };
+    // ?page=N is resolved to a BigCommerce cursor (paged-search.ts). Legacy ?after/?before links
+    // still work when no page is given.
+    const page = pageNumber(searchParams[PAGE_PARAM]);
+    const { after: pageCursor } = await resolvePageCursor(baseParams, page, {
+      currencyCode,
+      customerAccessToken,
+    });
     const search = await fetchFacetedSearch(
       {
-        ...searchParams,
-        ...(fallbackCursors ? { after: undefined, before: undefined } : {}),
-        ...parsedSearchParams,
-        ...programFilter,
-        ...typeFilter,
-        category: categoryId,
+        ...baseParams,
+        ...(page > 1 || fallbackCursors ? { after: pageCursor, before: undefined } : {}),
       },
       currencyCode,
       customerAccessToken,
@@ -355,9 +370,13 @@ export default async function Category(props: Props) {
   });
 
   const streamablePagination = Streamable.from(async () => {
+    const searchParams = await props.searchParams;
     const search = await streamableFacetedSearch;
 
-    return pageInfoTransformer(search.products.pageInfo);
+    return numberedPaginationInfo(
+      search.products.collectionInfo?.totalItems ?? 0,
+      pageNumber(searchParams[PAGE_PARAM]),
+    );
   });
 
   const streamableFilters = Streamable.from(async () => {
@@ -514,7 +533,7 @@ export default async function Category(props: Props) {
           hideHeader={!isCabinet}
           maxCompareLimitMessage={t('Compare.maxCompareLimit')}
           maxItems={MAX_COMPARE_LIMIT}
-          paginationInfo={streamablePagination}
+          pagination={streamablePagination}
           products={streamableProducts}
           quoteHref={quoteHrefFor(category.path)}
           rangeFilterApplyLabel={t('FacetedSearch.Range.apply')}

@@ -82,7 +82,7 @@ export async function fetchCabinetProductsByType({
   currencyCode?: CurrencyCode;
   customerAccessToken?: string;
 }): Promise<FacetedSearch> {
-  const { after, before, page: _page, ...rest } = searchParams;
+  const { after, before, page: pageParam, ...rest } = searchParams;
   const key = JSON.stringify([rest, currencyCode, Boolean(customerAccessToken)]);
   const cached = listCache.get(key);
   const fresh = cached != null && Date.now() - cached.at < TTL_MS;
@@ -92,7 +92,10 @@ export async function fetchCabinetProductsByType({
 
   const wanted = type.trim().toUpperCase();
   const matching = (await all).filter((item) => productTypeOf(item) === wanted);
-  const page = pageFromCursor(before ?? after);
+  // ?page=N (numbered pagination) wins; the older "p2"-style cursors still work.
+  const requested =
+    typeof pageParam === 'string' && /^\d+$/.test(pageParam) ? Number(pageParam) : 0;
+  const page = requested > 0 ? requested : pageFromCursor(before ?? after);
   const start = (page - 1) * PAGE_SIZE;
   const items = matching.slice(start, start + PAGE_SIZE);
   const hasNextPage = start + PAGE_SIZE < matching.length;

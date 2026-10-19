@@ -138,6 +138,7 @@ export function FiltersPanelInner({
       ...getFilterParsers(filters),
       [startCursorParamName]: parseAsString,
       [endCursorParamName]: parseAsString,
+      page: parseAsString,
     },
     {
       shallow: false,
@@ -222,6 +223,7 @@ export function FiltersPanelInner({
                                 ...optimisticParams,
                                 [startCursorParamName]: null,
                                 [endCursorParamName]: null,
+                                page: null,
                                 [filter.paramName]: values.length === 0 ? null : values,
                               };
 
@@ -264,6 +266,7 @@ export function FiltersPanelInner({
                             [filter.maxParamName]: max,
                             [startCursorParamName]: null,
                             [endCursorParamName]: null,
+                            page: null,
                           };
 
                           setOptimisticParams(nextParams);
@@ -303,6 +306,7 @@ export function FiltersPanelInner({
                               [filter.paramName]: Array.from(ratings),
                               [startCursorParamName]: null,
                               [endCursorParamName]: null,
+                              page: null,
                             };
 
                             setOptimisticParams(nextParams);
@@ -329,6 +333,7 @@ export function FiltersPanelInner({
               ...Object.fromEntries(Object.entries(optimisticParams).map(([key]) => [key, null])),
               [startCursorParamName]: optimisticParams[startCursorParamName],
               [endCursorParamName]: optimisticParams[endCursorParamName],
+              page: null,
             };
 
             setOptimisticParams(nextParams);

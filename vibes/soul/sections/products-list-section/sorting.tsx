@@ -29,6 +29,7 @@ export function Sorting({
       [paramName]: parseAsString.withDefault(defaultValue),
       before: parseAsString,
       after: parseAsString,
+      page: parseAsString,
     },
     { shallow: false, history: 'push' },
   );
@@ -53,6 +54,7 @@ export function Sorting({
             [paramName]: value,
             before: null,
             after: null,
+            page: null,
           });
         });
       }}

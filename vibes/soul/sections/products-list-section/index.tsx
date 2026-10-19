@@ -5,6 +5,10 @@ import { Suspense } from 'react';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Button } from '@/vibes/soul/primitives/button';
 import { CursorPagination, CursorPaginationInfo } from '@/vibes/soul/primitives/cursor-pagination';
+import {
+  NumberedPagination,
+  type NumberedPaginationInfo,
+} from '@/vibes/soul/primitives/numbered-pagination';
 import { Product, type ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
 import * as SidePanel from '@/vibes/soul/primitives/side-panel';
 import { Breadcrumb, Breadcrumbs, BreadcrumbsSkeleton } from '@/vibes/soul/sections/breadcrumbs';
@@ -35,6 +39,8 @@ interface Props {
   sortOptions: Streamable<SortOption[]>;
   compareProducts?: Streamable<Product[]>;
   paginationInfo?: Streamable<CursorPaginationInfo>;
+  /** Numbered pages (?page=N). When given, replaces the cursor arrows. */
+  pagination?: Streamable<NumberedPaginationInfo>;
   compareHref?: string;
   compareLabel?: Streamable<string>;
   showCompare?: Streamable<boolean>;
@@ -79,6 +85,7 @@ export function ProductsListSection({
   compareLabel,
   showCompare,
   paginationInfo,
+  pagination,
   filterLabel = 'Filters',
   searchPlaceholder = 'Search products',
   showFiltersLabel = 'Show filters',
@@ -250,7 +257,11 @@ export function ProductsListSection({
                 showRating={showRating}
               />
 
-              {paginationInfo && <CursorPagination info={paginationInfo} />}
+              {pagination ? (
+                <NumberedPagination info={pagination} />
+              ) : (
+                paginationInfo && <CursorPagination info={paginationInfo} />
+              )}
             </div>
           </div>
         </div>
