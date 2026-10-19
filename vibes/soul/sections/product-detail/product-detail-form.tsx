@@ -44,6 +44,7 @@ import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { type CartDrawerData, openCartDrawer } from '@/vibes/soul/primitives/cart-drawer/store';
 import { toast } from '@/vibes/soul/primitives/toaster';
 import { useEvents } from '~/components/analytics/events';
+import { Link } from '~/components/link';
 import { usePathname, useRouter } from '~/i18n/routing';
 
 import { revalidateCart } from './actions/revalidate-cart';
@@ -54,10 +55,11 @@ import { Field, schema, SchemaRawShape } from './schema';
 // (hrefs are '#' placeholders for now). Icons are the supplied brand SVGs, which keep their own
 // colors (the white background rect from each source file is dropped). Order: pickup, secure,
 // price match, returns.
-const TRUST_ITEMS: Array<{ label: string; href: string; icon: ReactNode }> = [
+// `href` undefined → plain text (no page to send people to, e.g. installation).
+const TRUST_ITEMS: Array<{ label: string; href?: string; icon: ReactNode }> = [
   {
     label: 'Same Day Pickup',
-    href: '#', // TODO: shipping/pickup page
+    href: '/shipping-policy',
     icon: (
       <svg
         fill="none"
@@ -75,7 +77,7 @@ const TRUST_ITEMS: Array<{ label: string; href: string; icon: ReactNode }> = [
   },
   {
     label: 'Secure Transaction',
-    href: '#', // TODO: secure transaction / security page
+    href: '/secure-shopping',
     icon: (
       <svg
         fill="none"
@@ -93,7 +95,7 @@ const TRUST_ITEMS: Array<{ label: string; href: string; icon: ReactNode }> = [
   },
   {
     label: 'Installation, Not Included',
-    href: '#', // TODO: installation info page
+    // EK installs nothing and there's no page for it — informational only.
     icon: (
       <svg
         fill="none"
@@ -111,7 +113,7 @@ const TRUST_ITEMS: Array<{ label: string; href: string; icon: ReactNode }> = [
   },
   {
     label: 'Price Match Guarantee',
-    href: '#', // TODO: price match page
+    href: '/price-match-guarantee',
     icon: (
       <svg
         fill="none"
@@ -129,7 +131,7 @@ const TRUST_ITEMS: Array<{ label: string; href: string; icon: ReactNode }> = [
   },
   {
     label: 'Returns Policy',
-    href: '#', // TODO: returns page
+    href: '/returns-policy',
     icon: (
       <svg
         fill="none"
@@ -677,7 +679,7 @@ export function ProductDetailForm<F extends Field>({
                 </div>
               )}
               {/* Trust / service block: three small icon + label rows under the purchase panel, each a
-              link to its policy page (href placeholders for now). The first row's label comes from
+              link to its policy page (installation has none, so it's plain text). The first row's label comes from
               the __delivery custom field (deliveryMessage) when set. Only the TEXT is link-colored
               (#2162a1, darker on hover); the icon keeps its own color (SVGs to be supplied). */}
               <ul className="flex flex-col gap-2 rounded-xl border border-contrast-100 p-4 [&_svg]:size-6">
@@ -692,20 +694,29 @@ export function ProductDetailForm<F extends Field>({
 
                   const label = isDeliveryRow ? deliveryMessage : item.label;
 
+                  const icon = <span className="shrink-0 text-foreground">{item.icon}</span>;
+
                   return (
                     <li key={item.label}>
-                      <a className="flex items-center gap-3" href={item.href}>
-                        <span className="shrink-0 text-foreground">{item.icon}</span>
-                        {/* Same animated red-underline hover as breadcrumbs / "Write a review". */}
-                        <span
-                          className={clsx(
-                            'text-xs font-normal text-[#2162a1]',
-                            animatedUnderlineClassName,
-                          )}
-                        >
-                          {label}
+                      {item.href != null ? (
+                        <Link className="flex items-center gap-3" href={item.href}>
+                          {icon}
+                          {/* Same animated red-underline hover as breadcrumbs / "Write a review". */}
+                          <span
+                            className={clsx(
+                              'text-xs font-normal text-[#2162a1]',
+                              animatedUnderlineClassName,
+                            )}
+                          >
+                            {label}
+                          </span>
+                        </Link>
+                      ) : (
+                        <span className="flex items-center gap-3">
+                          {icon}
+                          <span className="text-xs font-normal text-contrast-500">{label}</span>
                         </span>
-                      </a>
+                      )}
                     </li>
                   );
                 })}
