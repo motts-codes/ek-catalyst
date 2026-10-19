@@ -32,6 +32,7 @@ import { DatePicker } from '@/vibes/soul/form/date-picker';
 import { FormStatus } from '@/vibes/soul/form/form-status';
 import { Input } from '@/vibes/soul/form/input';
 import { Label } from '@/vibes/soul/form/label';
+import { RequiredMarks } from '@/vibes/soul/form/label/required-marks';
 import { NumberInput } from '@/vibes/soul/form/number-input';
 import { RadioGroup } from '@/vibes/soul/form/radio-group';
 import { Select } from '@/vibes/soul/form/select';
@@ -437,314 +438,317 @@ export function ProductDetailForm<F extends Field>({
     <FormProvider context={form.context}>
       <FormStateInput />
       <form {...getFormProps(form)} action={formAction}>
-        <input name="id" type="hidden" value={productId} />
-        <div className="grid grid-cols-1 gap-6 pb-8 @5xl:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] @5xl:items-start">
-          {/* LEFT (70%): product header (title/price/etc.) + variant option groups.
+        {/* Every option here is required, so the asterisks would be noise. */}
+        <RequiredMarks show={false}>
+          <input name="id" type="hidden" value={productId} />
+          <div className="grid grid-cols-1 gap-6 pb-8 @5xl:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] @5xl:items-start">
+            {/* LEFT (70%): product header (title/price/etc.) + variant option groups.
               The header keeps its own internal margins, so it's wrapped in a single element
               (not spread into the space-y-6 flow, which would add 24px between every header row). */}
-          <div className="space-y-3">
-            <HeaderBox>{header}</HeaderBox>
-            <div className="space-y-2.5">
-              {(() => {
-                // Windows-style products expose a "Width (in.)" and "Height (in.)" option. When
-                // both are present, render them side-by-side as `Width [ ] × Height [ ]` instead
-                // of stacked. Keyed on the option labels (not the category, which the form never
-                // receives), so it applies to any product with both dimensions.
-                const widthField = fields.find((f) => /width/i.test(f.label));
-                const heightField = fields.find((f) => /height/i.test(f.label));
-                const paired = widthField != null && heightField != null;
+            <div className="space-y-3">
+              <HeaderBox>{header}</HeaderBox>
+              <div className="space-y-2.5">
+                {(() => {
+                  // Windows-style products expose a "Width (in.)" and "Height (in.)" option. When
+                  // both are present, render them side-by-side as `Width [ ] × Height [ ]` instead
+                  // of stacked. Keyed on the option labels (not the category, which the form never
+                  // receives), so it applies to any product with both dimensions.
+                  const widthField = fields.find((f) => /width/i.test(f.label));
+                  const heightField = fields.find((f) => /height/i.test(f.label));
+                  const paired = widthField != null && heightField != null;
 
-                const renderField = (field: F) => (
-                  <FormField
-                    emptySelectPlaceholder={emptySelectPlaceholder}
-                    field={field}
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    formField={formFields[field.name]!}
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    key={formFields[field.name]!.id}
-                    onPrefetch={onPrefetch}
-                  />
-                );
+                  const renderField = (field: F) => (
+                    <FormField
+                      emptySelectPlaceholder={emptySelectPlaceholder}
+                      field={field}
+                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                      formField={formFields[field.name]!}
+                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                      key={formFields[field.name]!.id}
+                      onPrefetch={onPrefetch}
+                    />
+                  );
 
-                // Sort a select field's options by the numeric value in their label, ascending
-                // (e.g. Width / Height dimensions: 24, 30, 36...). Falls back to a locale string
-                // compare when a label has no leading number. Leaves non-select fields untouched.
-                const sortOptionsAscending = (field: F): F => {
-                  if (
-                    !('options' in field) ||
-                    !Array.isArray((field as { options?: unknown }).options)
-                  ) {
-                    return field;
-                  }
-
-                  // Parse dimension labels to a sortable number. Handles plain numbers ("30",
-                  // "30.5") and the "whole-numerator/denominator" fraction format BigCommerce
-                  // uses for windows ("17-3/4" -> 17.75, "23-1/4" -> 23.25).
-                  const toNum = (label: string) => {
-                    const fraction = /^(\d+)-(\d+)\/(\d+)/.exec(label.trim());
-
-                    if (fraction) {
-                      const [, whole, num, den] = fraction;
-
-                      return Number(whole) + Number(num) / Number(den);
+                  // Sort a select field's options by the numeric value in their label, ascending
+                  // (e.g. Width / Height dimensions: 24, 30, 36...). Falls back to a locale string
+                  // compare when a label has no leading number. Leaves non-select fields untouched.
+                  const sortOptionsAscending = (field: F): F => {
+                    if (
+                      !('options' in field) ||
+                      !Array.isArray((field as { options?: unknown }).options)
+                    ) {
+                      return field;
                     }
 
-                    return parseFloat(label.replace(/[^0-9.]/g, ''));
-                  };
+                    // Parse dimension labels to a sortable number. Handles plain numbers ("30",
+                    // "30.5") and the "whole-numerator/denominator" fraction format BigCommerce
+                    // uses for windows ("17-3/4" -> 17.75, "23-1/4" -> 23.25).
+                    const toNum = (label: string) => {
+                      const fraction = /^(\d+)-(\d+)\/(\d+)/.exec(label.trim());
 
-                  return {
-                    ...field,
-                    options: [
-                      ...(field as unknown as { options: Array<{ label: string }> }).options,
-                    ].sort((a, b) => {
-                      const na = toNum(a.label);
-                      const nb = toNum(b.label);
+                      if (fraction) {
+                        const [, whole, num, den] = fraction;
 
-                      if (Number.isNaN(na) || Number.isNaN(nb)) {
-                        return a.label.localeCompare(b.label, undefined, { numeric: true });
+                        return Number(whole) + Number(num) / Number(den);
                       }
 
-                      return na - nb;
-                    }),
+                      return parseFloat(label.replace(/[^0-9.]/g, ''));
+                    };
+
+                    return {
+                      ...field,
+                      options: [
+                        ...(field as unknown as { options: Array<{ label: string }> }).options,
+                      ].sort((a, b) => {
+                        const na = toNum(a.label);
+                        const nb = toNum(b.label);
+
+                        if (Number.isNaN(na) || Number.isNaN(nb)) {
+                          return a.label.localeCompare(b.label, undefined, { numeric: true });
+                        }
+
+                        return na - nb;
+                      }),
+                    };
                   };
-                };
 
-                if (paired) {
-                  const rest = fields.filter((f) => f !== widthField && f !== heightField);
+                  if (paired) {
+                    const rest = fields.filter((f) => f !== widthField && f !== heightField);
 
-                  // Dependent filtering (one-directional): Width always shows ALL options; once a
-                  // Width is chosen, Height is restricted to values that co-occur with it in a real
-                  // variant. Kept one-way on purpose — if it were bidirectional, picking a Height
-                  // would shrink the Width list and the user could get stuck with no way back to
-                  // the full set. Derived at render time from the current selection (no local
-                  // state, so it never goes stale).
-                  const selectedWidth = params[widthField.name] ?? undefined;
+                    // Dependent filtering (one-directional): Width always shows ALL options; once a
+                    // Width is chosen, Height is restricted to values that co-occur with it in a real
+                    // variant. Kept one-way on purpose — if it were bidirectional, picking a Height
+                    // would shrink the Width list and the user could get stuck with no way back to
+                    // the full set. Derived at render time from the current selection (no local
+                    // state, so it never goes stale).
+                    const selectedWidth = params[widthField.name] ?? undefined;
 
-                  let filteredHeightField = heightField;
+                    let filteredHeightField = heightField;
 
-                  if (
-                    optionDependencyMap != null &&
-                    selectedWidth != null &&
-                    'options' in heightField &&
-                    Array.isArray((heightField as { options?: unknown }).options)
-                  ) {
-                    const allowed = optionDependencyMap[Number(selectedWidth)];
+                    if (
+                      optionDependencyMap != null &&
+                      selectedWidth != null &&
+                      'options' in heightField &&
+                      Array.isArray((heightField as { options?: unknown }).options)
+                    ) {
+                      const allowed = optionDependencyMap[Number(selectedWidth)];
 
-                    if (allowed != null) {
-                      const allowedSet = new Set(allowed.map((id) => id.toString()));
+                      if (allowed != null) {
+                        const allowedSet = new Set(allowed.map((id) => id.toString()));
 
-                      filteredHeightField = {
-                        ...heightField,
-                        options: (
-                          heightField as unknown as { options: Array<{ value: string }> }
-                        ).options.filter((option) => allowedSet.has(option.value)),
-                      };
+                        filteredHeightField = {
+                          ...heightField,
+                          options: (
+                            heightField as unknown as { options: Array<{ value: string }> }
+                          ).options.filter((option) => allowedSet.has(option.value)),
+                        };
+                      }
                     }
+
+                    return (
+                      <>
+                        <div className="flex items-end gap-3">
+                          {renderField(sortOptionsAscending(widthField))}
+                          <span className="pb-2 text-lg text-contrast-400">×</span>
+                          {renderField(sortOptionsAscending(filteredHeightField))}
+                        </div>
+                        {rest.map(renderField)}
+                      </>
+                    );
                   }
 
-                  return (
-                    <>
-                      <div className="flex items-end gap-3">
-                        {renderField(sortOptionsAscending(widthField))}
-                        <span className="pb-2 text-lg text-contrast-400">×</span>
-                        {renderField(sortOptionsAscending(filteredHeightField))}
-                      </div>
-                      {rest.map(renderField)}
-                    </>
-                  );
-                }
+                  return fields.map(renderField);
+                })()}
+              </div>
+              {form.errors?.map((error, index) => (
+                <FormStatus className="pt-3" key={index} type="error">
+                  {error}
+                </FormStatus>
+              ))}
 
-                return fields.map(renderField);
-              })()}
-            </div>
-            {form.errors?.map((error, index) => (
-              <FormStatus className="pt-3" key={index} type="error">
-                {error}
-              </FormStatus>
-            ))}
-
-            {/* Reserved slot for backorder messages — collapses to zero height when empty.
+              {/* Reserved slot for backorder messages — collapses to zero height when empty.
               BigCommerce's stock-level count message ("N in stock") is intentionally NOT shown
               here; the stock state is conveyed by the In/Limited/Out badge above the quantity
               instead. */}
-            {!!backorderMessages && (
-              <div className="h-[1.6rem] @2xl:h-auto sm:h-[1.3rem]">
-                {!!backorderMessages && (
-                  <div
-                    className={clsx(
-                      'mt-1 flex flex-wrap justify-start gap-x-2.5 gap-y-2 text-sm text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]',
-                      'ease-initial transition-opacity',
-                      backorderMessages.backorderQuantityMessage ||
-                        backorderMessages.backorderInfoMessage
-                        ? 'duration-400 opacity-100'
-                        : 'opacity-0 delay-0 duration-100',
-                    )}
-                  >
-                    <div className="flex-none whitespace-nowrap font-semibold text-black">
-                      {backorderMessages.backorderQuantityMessage}
-                    </div>
-                    {!!backorderMessages.backorderInfoMessage && (
-                      <div className="flex-none whitespace-nowrap border-s border-gray-300 pl-2.5">
-                        {backorderMessages.backorderInfoMessage}
+              {!!backorderMessages && (
+                <div className="h-[1.6rem] @2xl:h-auto sm:h-[1.3rem]">
+                  {!!backorderMessages && (
+                    <div
+                      className={clsx(
+                        'mt-1 flex flex-wrap justify-start gap-x-2.5 gap-y-2 text-sm text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]',
+                        'ease-initial transition-opacity',
+                        backorderMessages.backorderQuantityMessage ||
+                          backorderMessages.backorderInfoMessage
+                          ? 'duration-400 opacity-100'
+                          : 'opacity-0 delay-0 duration-100',
+                      )}
+                    >
+                      <div className="flex-none whitespace-nowrap font-semibold text-black">
+                        {backorderMessages.backorderQuantityMessage}
                       </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-            {/* Description at the bottom of the LEFT column (under the options). */}
-            <DescriptionBox>{descriptionSlot}</DescriptionBox>
-          </div>
-          {/* RIGHT (30%): purchase panel (quantity + buttons), the fulfillment box, and a small
-              trust/service block (pickup / price match / returns). */}
-          <div className="space-y-4 @5xl:sticky @5xl:top-4">
-            <div className="space-y-4 rounded-xl border border-contrast-100 bg-[#f5f5f5] p-4">
-              {hasUnselectedRequiredOption ? (
-                <p className="text-sm font-semibold text-foreground">
-                  Select {unselectedLabel} for availability
-                </p>
-              ) : (
-                stockStatus != null && (
-                  <p
-                    className={clsx(
-                      'text-sm font-semibold',
-                      stockStatus === 'in' && 'text-[#16A34A]',
-                      typeof stockStatus === 'object' && 'text-[#96050F]',
-                      stockStatus === 'out' && 'text-error',
-                    )}
-                  >
-                    {stockStatus === 'in' && 'In stock'}
-                    {typeof stockStatus === 'object' && `Only ${stockStatus.low} in stock`}
-                    {stockStatus === 'out' && 'Out of stock'}
-                  </p>
-                )
-              )}
-              <div>
-                <Label className="mb-2" id="quantity-label" required>
-                  {quantityLabel}
-                </Label>
-                <NumberInput
-                  aria-label={quantityLabel}
-                  // +/- states (scoped to this PDP stepper):
-                  //  • regular icon: black (visible) — but NOT on hover (icon turns white there).
-                  //  • regular hover: black bg + white icon (from the global vars).
-                  //  • disabled (at min/max/stock): faded via disabled:opacity-30, and on hover a light
-                  //    (near-white) bg instead of the dark actionable hover, since it can't be used.
-                  //  • press: a lighter grey bg so the press reads distinct from the black hover.
-                  className={clsx(
-                    '[&_button:active]:!bg-[#666666]',
-                    // Black icon only when the button is enabled and not hovered/active.
-                    '[&_button:not(:hover):not(:disabled)_svg]:!text-foreground',
-                    // Disabled buttons: light hover bg + keep the (faded) icon, no dark fill.
-                    '[&_button:disabled]:hover:!bg-contrast-100 [&_button:disabled_svg]:!text-foreground',
+                      {!!backorderMessages.backorderInfoMessage && (
+                        <div className="flex-none whitespace-nowrap border-s border-gray-300 pl-2.5">
+                          {backorderMessages.backorderInfoMessage}
+                        </div>
+                      )}
+                    </div>
                   )}
-                  decrementLabel={decrementLabel}
-                  incrementLabel={incrementLabel}
-                  max={maxQuantity}
-                  min={minQuantity ?? 1}
-                  name={formFields.quantity.name}
-                  onBlur={quantityControl.blur}
-                  onChange={(e) => quantityControl.change(e.currentTarget.value)}
-                  onFocus={quantityControl.focus}
-                  required
-                  value={quantityControl.value}
-                />
-              </div>
-              {/* In-flow buttons — desktop only. On mobile they live in the sticky bottom bar. */}
-              <div className="hidden flex-col gap-3 @2xl:flex">
-                <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
-                <SubmitButton
-                  disabled={ctaDisabled}
-                  onClick={() => {
-                    buyNowRef.current = true;
-                  }}
-                  variant="tertiary"
-                >
-                  Buy now
-                </SubmitButton>
-              </div>
+                </div>
+              )}
+              {/* Description at the bottom of the LEFT column (under the options). */}
+              <DescriptionBox>{descriptionSlot}</DescriptionBox>
             </div>
-            {/* Fulfillment box (__fulfillment custom field): delivery/pickup message with an icon. */}
-            {fulfillmentMessage != null && fulfillmentMessage !== '' && (
-              <div className="flex items-start gap-3 rounded-xl bg-[var(--product-detail-fulfillment-background,#F6EBD6)] p-4">
-                <FulfillmentIcon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--product-detail-fulfillment-icon,hsl(var(--foreground)))]" />
-                <p className="text-sm text-[var(--product-detail-fulfillment-text,hsl(var(--contrast-500)))]">
-                  {fulfillmentMessage}
-                </p>
+            {/* RIGHT (30%): purchase panel (quantity + buttons), the fulfillment box, and a small
+              trust/service block (pickup / price match / returns). */}
+            <div className="space-y-4 @5xl:sticky @5xl:top-4">
+              <div className="space-y-4 rounded-xl border border-contrast-100 bg-[#f5f5f5] p-4">
+                {hasUnselectedRequiredOption ? (
+                  <p className="text-sm font-semibold text-foreground">
+                    Select {unselectedLabel} for availability
+                  </p>
+                ) : (
+                  stockStatus != null && (
+                    <p
+                      className={clsx(
+                        'text-sm font-semibold',
+                        stockStatus === 'in' && 'text-[#16A34A]',
+                        typeof stockStatus === 'object' && 'text-[#96050F]',
+                        stockStatus === 'out' && 'text-error',
+                      )}
+                    >
+                      {stockStatus === 'in' && 'In stock'}
+                      {typeof stockStatus === 'object' && `Only ${stockStatus.low} in stock`}
+                      {stockStatus === 'out' && 'Out of stock'}
+                    </p>
+                  )
+                )}
+                <div>
+                  <Label className="mb-2" id="quantity-label" required>
+                    {quantityLabel}
+                  </Label>
+                  <NumberInput
+                    aria-label={quantityLabel}
+                    // +/- states (scoped to this PDP stepper):
+                    //  • regular icon: black (visible) — but NOT on hover (icon turns white there).
+                    //  • regular hover: black bg + white icon (from the global vars).
+                    //  • disabled (at min/max/stock): faded via disabled:opacity-30, and on hover a light
+                    //    (near-white) bg instead of the dark actionable hover, since it can't be used.
+                    //  • press: a lighter grey bg so the press reads distinct from the black hover.
+                    className={clsx(
+                      '[&_button:active]:!bg-[#666666]',
+                      // Black icon only when the button is enabled and not hovered/active.
+                      '[&_button:not(:hover):not(:disabled)_svg]:!text-foreground',
+                      // Disabled buttons: light hover bg + keep the (faded) icon, no dark fill.
+                      '[&_button:disabled]:hover:!bg-contrast-100 [&_button:disabled_svg]:!text-foreground',
+                    )}
+                    decrementLabel={decrementLabel}
+                    incrementLabel={incrementLabel}
+                    max={maxQuantity}
+                    min={minQuantity ?? 1}
+                    name={formFields.quantity.name}
+                    onBlur={quantityControl.blur}
+                    onChange={(e) => quantityControl.change(e.currentTarget.value)}
+                    onFocus={quantityControl.focus}
+                    required
+                    value={quantityControl.value}
+                  />
+                </div>
+                {/* In-flow buttons — desktop only. On mobile they live in the sticky bottom bar. */}
+                <div className="hidden flex-col gap-3 @2xl:flex">
+                  <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+                  <SubmitButton
+                    disabled={ctaDisabled}
+                    onClick={() => {
+                      buyNowRef.current = true;
+                    }}
+                    variant="tertiary"
+                  >
+                    Buy now
+                  </SubmitButton>
+                </div>
               </div>
-            )}
-            {/* Trust / service block: three small icon + label rows under the purchase panel, each a
+              {/* Fulfillment box (__fulfillment custom field): delivery/pickup message with an icon. */}
+              {fulfillmentMessage != null && fulfillmentMessage !== '' && (
+                <div className="flex items-start gap-3 rounded-xl bg-[var(--product-detail-fulfillment-background,#F6EBD6)] p-4">
+                  <FulfillmentIcon className="mt-0.5 h-5 w-5 shrink-0 text-[var(--product-detail-fulfillment-icon,hsl(var(--foreground)))]" />
+                  <p className="text-sm text-[var(--product-detail-fulfillment-text,hsl(var(--contrast-500)))]">
+                    {fulfillmentMessage}
+                  </p>
+                </div>
+              )}
+              {/* Trust / service block: three small icon + label rows under the purchase panel, each a
               link to its policy page (href placeholders for now). The first row's label comes from
               the __delivery custom field (deliveryMessage) when set. Only the TEXT is link-colored
               (#2162a1, darker on hover); the icon keeps its own color (SVGs to be supplied). */}
-            <ul className="flex flex-col gap-2 rounded-xl border border-contrast-100 p-4 [&_svg]:size-6">
-              {TRUST_ITEMS.map((item, idx) => {
-                const isDeliveryRow = idx === 0;
+              <ul className="flex flex-col gap-2 rounded-xl border border-contrast-100 p-4 [&_svg]:size-6">
+                {TRUST_ITEMS.map((item, idx) => {
+                  const isDeliveryRow = idx === 0;
 
-                // The delivery row (first) is driven by the __delivery custom field — only shown when
-                // that field is set. The other trust items always render.
-                if (isDeliveryRow && (deliveryMessage == null || deliveryMessage === '')) {
-                  return null;
-                }
+                  // The delivery row (first) is driven by the __delivery custom field — only shown when
+                  // that field is set. The other trust items always render.
+                  if (isDeliveryRow && (deliveryMessage == null || deliveryMessage === '')) {
+                    return null;
+                  }
 
-                const label = isDeliveryRow ? deliveryMessage : item.label;
+                  const label = isDeliveryRow ? deliveryMessage : item.label;
 
-                return (
-                  <li key={item.label}>
-                    <a className="flex items-center gap-3" href={item.href}>
-                      <span className="shrink-0 text-foreground">{item.icon}</span>
-                      {/* Same animated red-underline hover as breadcrumbs / "Write a review". */}
-                      <span
-                        className={clsx(
-                          'text-xs font-normal text-[#2162a1]',
-                          animatedUnderlineClassName,
-                        )}
-                      >
-                        {label}
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
+                  return (
+                    <li key={item.label}>
+                      <a className="flex items-center gap-3" href={item.href}>
+                        <span className="shrink-0 text-foreground">{item.icon}</span>
+                        {/* Same animated red-underline hover as breadcrumbs / "Write a review". */}
+                        <span
+                          className={clsx(
+                            'text-xs font-normal text-[#2162a1]',
+                            animatedUnderlineClassName,
+                          )}
+                        >
+                          {label}
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
-        </div>
 
-        {/* Mobile sticky bottom bar: Add to cart + Buy now side-by-side, fixed to the viewport
+          {/* Mobile sticky bottom bar: Add to cart + Buy now side-by-side, fixed to the viewport
             bottom so the CTAs are always reachable while scrolling. Hidden on desktop (@2xl), where
             the in-flow buttons in the purchase panel are shown instead. Inside the <form> so both
             buttons submit correctly. */}
-        <div className="fixed inset-x-0 bottom-0 z-40 flex items-stretch gap-2 border-t border-contrast-100 bg-white p-3 shadow-[0_-2px_10px_rgba(0,0,0,0.06)] @2xl:hidden">
-          {/* Compact quantity stepper. No `name` — it's display-only and drives quantityControl; the
+          <div className="fixed inset-x-0 bottom-0 z-40 flex items-stretch gap-2 border-t border-contrast-100 bg-white p-3 shadow-[0_-2px_10px_rgba(0,0,0,0.06)] @2xl:hidden">
+            {/* Compact quantity stepper. No `name` — it's display-only and drives quantityControl; the
               actual form value is carried by the (CSS-hidden but still-mounted) desktop input above,
               so we don't submit a duplicate quantity field. Black icons like the main stepper. */}
-          <NumberInput
-            aria-label={quantityLabel}
-            className="shrink-0 [&_button:active]:!bg-[#666666] [&_button:not(:hover):not(:disabled)_svg]:!text-foreground [&_input]:w-6"
-            decrementLabel={decrementLabel}
-            incrementLabel={incrementLabel}
-            max={maxQuantity}
-            min={minQuantity ?? 1}
-            onBlur={quantityControl.blur}
-            onChange={(e) => quantityControl.change(e.currentTarget.value)}
-            onFocus={quantityControl.focus}
-            value={quantityControl.value}
-          />
-          <div className="flex-1 [&_button]:h-full [&_button]:w-full">
-            <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+            <NumberInput
+              aria-label={quantityLabel}
+              className="shrink-0 [&_button:active]:!bg-[#666666] [&_button:not(:hover):not(:disabled)_svg]:!text-foreground [&_input]:w-6"
+              decrementLabel={decrementLabel}
+              incrementLabel={incrementLabel}
+              max={maxQuantity}
+              min={minQuantity ?? 1}
+              onBlur={quantityControl.blur}
+              onChange={(e) => quantityControl.change(e.currentTarget.value)}
+              onFocus={quantityControl.focus}
+              value={quantityControl.value}
+            />
+            <div className="flex-1 [&_button]:h-full [&_button]:w-full">
+              <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+            </div>
+            <div className="flex-1 [&_button]:h-full [&_button]:w-full">
+              <SubmitButton
+                disabled={ctaDisabled}
+                onClick={() => {
+                  buyNowRef.current = true;
+                }}
+                variant="tertiary"
+              >
+                Buy now
+              </SubmitButton>
+            </div>
           </div>
-          <div className="flex-1 [&_button]:h-full [&_button]:w-full">
-            <SubmitButton
-              disabled={ctaDisabled}
-              onClick={() => {
-                buyNowRef.current = true;
-              }}
-              variant="tertiary"
-            >
-              Buy now
-            </SubmitButton>
-          </div>
-        </div>
+        </RequiredMarks>
       </form>
     </FormProvider>
   );

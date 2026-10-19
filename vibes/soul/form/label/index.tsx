@@ -5,6 +5,8 @@ import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
 import { ComponentPropsWithoutRef } from 'react';
 
+import { useRequiredMarks } from './required-marks';
+
 // eslint-disable-next-line valid-jsdoc
 /**
  * This component supports various CSS variables for theming. Here's a comprehensive list, along
@@ -28,6 +30,7 @@ export function Label({
   required?: boolean;
 }) {
   const t = useTranslations('Form');
+  const showRequiredMark = useRequiredMarks();
 
   return (
     <LabelPrimitive.Root
@@ -44,9 +47,11 @@ export function Label({
       {children}
       {/* Required fields get a red asterisk; optional ones keep saying so in words. */}
       {required ? (
-        <span aria-hidden className="ml-0.5 text-[var(--button-primary-background,#d90716)]">
-          *
-        </span>
+        showRequiredMark && (
+          <span aria-hidden className="ml-0.5 text-[var(--button-primary-background,#d90716)]">
+            *
+          </span>
+        )
       ) : (
         <span className="ml-1 font-normal text-contrast-500">({t('optional')})</span>
       )}

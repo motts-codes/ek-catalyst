@@ -194,6 +194,8 @@ h6,
   --button-primary-foreground: #ffffff !important;
   --button-primary-text: #ffffff !important;
   --button-primary-border: #d90716 !important;
+  /* PDP swatch picker: selected ring in brand red (upstream default is black). */
+  --swatch-radio-group-light-checked-border: #d90716;
   --button-tertiary-background: #96050f !important;
   --button-tertiary-background-hover: #6b040b !important;
   --button-tertiary-foreground: #ffffff !important;
