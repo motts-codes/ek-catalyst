@@ -87,7 +87,10 @@ export default async function Compare(props: Props) {
       price: pricesTransformer(product, format, taxDisplay),
       subtitle: product.brand?.name ?? undefined,
       rating: product.reviewSummary.averageRating,
-      description: <div dangerouslySetInnerHTML={{ __html: product.description }} />,
+      description:
+        product.description.trim() !== '' ? (
+          <div dangerouslySetInnerHTML={{ __html: product.description }} />
+        ) : undefined,
       customFields: [
         { name: t('sku'), value: product.sku },
         { name: t('weight'), value: `${product.weight?.value} ${product.weight?.unit}` },

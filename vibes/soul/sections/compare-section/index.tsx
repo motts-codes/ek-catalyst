@@ -2,19 +2,15 @@ import { clsx } from 'clsx';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
+import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+import { CompareCardSkeleton, type CompareProduct } from '@/vibes/soul/primitives/compare-card';
 import {
-  Carousel,
-  CarouselButtons,
-  CarouselContent,
-  CarouselItem,
-} from '@/vibes/soul/primitives/carousel';
-import {
-  CompareCard,
-  CompareCardSkeleton,
-  type CompareProduct,
-} from '@/vibes/soul/primitives/compare-card';
-import { CompareAddToCartAction } from '@/vibes/soul/primitives/compare-card/add-to-cart-form';
-import type { ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
+  AddToCartForm,
+  CompareAddToCartAction,
+} from '@/vibes/soul/primitives/compare-card/add-to-cart-form';
+import { ProductCard, type ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
+import { Rating } from '@/vibes/soul/primitives/rating';
+import { Reveal } from '@/vibes/soul/primitives/reveal';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 
 interface CompareSectionProps {
@@ -64,19 +60,17 @@ export function CompareSection({
   products: streamableProducts,
   addToCartAction,
   cardAddToCartAction,
-  addToCartLabel,
+  addToCartLabel = 'Add to cart',
   emptyStateTitle = 'No products to compare',
   emptyStateSubtitle = 'Browse our catalog to find products.',
-  previousLabel,
-  nextLabel,
   descriptionLabel,
   noDescriptionLabel,
   ratingLabel,
   noRatingsLabel,
   otherDetailsLabel,
   noOtherDetailsLabel,
-  viewOptionsLabel,
-  preorderLabel,
+  viewOptionsLabel = 'View options',
+  preorderLabel = 'Preorder',
   showMoreLabel,
   showLessLabel,
   placeholderCount,
@@ -100,51 +94,120 @@ export function CompareSection({
           );
         }
 
+        // Table-style layout: one grid, a column per product, a row per feature, so every
+        // cell in a row shares a height and products can be read across like a table. Field
+        // rows come from the union of all products' fields; a product without one shows "—".
+        const fieldNames = products.reduce<string[]>((names, product) => {
+          (product.customFields ?? []).forEach(({ name }) => {
+            if (!names.includes(name)) names.push(name);
+          });
+
+          return names;
+        }, []);
+        const columns = { gridTemplateColumns: `repeat(${products.length}, minmax(16rem, 22rem))` };
+        const rowHeading =
+          'col-span-full border-b border-[var(--compare-card-divider,hsl(var(--contrast-100)))] pb-2 pt-8 font-[family-name:var(--compare-card-font-family-secondary,var(--font-family-mono))] text-xs font-normal uppercase text-[var(--compare-card-label,hsl(var(--foreground)))]';
+        const cell =
+          'border-b border-[var(--compare-card-divider,hsl(var(--contrast-100)))] py-3 text-sm';
+        const muted = 'text-[var(--compare-card-description,hsl(var(--contrast-400)))]';
+
         return (
-          <div className={clsx('overflow-hidden @container', className)}>
+          <div className={clsx('@container', className)}>
             <div className="mx-auto w-full max-w-screen-2xl px-6 py-10 @xl:px-9 @xl:py-14 @4xl:px-14 @4xl:py-20">
-              <Carousel>
-                <div className="mb-8 flex w-full items-end justify-between gap-10 @xl:mb-10">
-                  <h1 className="font-[family-name:var(--compare-section-title-font-family,var(--font-family-heading))] text-2xl leading-none text-[var(--compare-section-title,hsl(var(--foreground)))] @xl:text-3xl @4xl:text-4xl">
-                    {title}{' '}
-                    <span className="text-[var(--compare-section-count,hsl(var(--contrast-300)))]">
-                      {products.length}
-                    </span>
-                  </h1>
-                  <CarouselButtons
-                    className="hidden @md:flex"
-                    nextLabel={nextLabel}
-                    previousLabel={previousLabel}
-                  />
-                </div>
-                <CarouselContent>
+              <h1 className="mb-8 font-[family-name:var(--compare-section-title-font-family,var(--font-family-heading))] text-2xl leading-none text-[var(--compare-section-title,hsl(var(--foreground)))] @xl:mb-10 @xl:text-3xl @4xl:text-4xl">
+                {title}{' '}
+                <span className="text-[var(--compare-section-count,hsl(var(--contrast-300)))]">
+                  {products.length}
+                </span>
+              </h1>
+              <div className="overflow-x-auto">
+                <div className="grid min-w-max gap-x-6 @4xl:gap-x-10" style={columns}>
                   {products.map((product) => (
-                    <CarouselItem
-                      className="basis-full @sm:basis-1/2 @md:basis-1/3 @4xl:basis-1/4"
-                      key={product.id}
-                    >
-                      <CompareCard
-                        addToCartAction={addToCartAction}
-                        addToCartLabel={addToCartLabel}
-                        cardAddToCartAction={cardAddToCartAction}
-                        descriptionLabel={descriptionLabel}
+                    <div className="space-y-4" key={product.id}>
+                      <ProductCard
+                        addToCartAction={cardAddToCartAction}
                         imageSizes="(min-width: 42rem) 25vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
-                        key={product.id}
-                        noDescriptionLabel={noDescriptionLabel}
-                        noOtherDetailsLabel={noOtherDetailsLabel}
-                        noRatingsLabel={noRatingsLabel}
-                        otherDetailsLabel={otherDetailsLabel}
-                        preorderLabel={preorderLabel}
                         product={product}
-                        ratingLabel={ratingLabel}
-                        showLessLabel={showLessLabel}
-                        showMoreLabel={showMoreLabel}
-                        viewOptionsLabel={viewOptionsLabel}
                       />
-                    </CarouselItem>
+                      {addToCartAction &&
+                        cardAddToCartAction == null &&
+                        (product.hasVariants !== undefined && !product.hasVariants ? (
+                          <AddToCartForm
+                            addToCartAction={addToCartAction}
+                            addToCartLabel={addToCartLabel}
+                            disabled={product.disabled}
+                            isPreorder={product.isPreorder}
+                            preorderLabel={preorderLabel}
+                            productId={product.id}
+                          />
+                        ) : (
+                          <ButtonLink className="w-full" href={product.href} size="medium">
+                            {viewOptionsLabel}
+                          </ButtonLink>
+                        ))}
+                    </div>
                   ))}
-                </CarouselContent>
-              </Carousel>
+
+                  <div className={rowHeading}>{ratingLabel}</div>
+                  {products.map((product) => (
+                    <div className={cell} key={product.id}>
+                      {product.rating != null ? (
+                        <Rating rating={product.rating} />
+                      ) : (
+                        <p className={muted}>{noRatingsLabel}</p>
+                      )}
+                    </div>
+                  ))}
+
+                  <div className={rowHeading}>{descriptionLabel}</div>
+                  {products.map((product) => (
+                    <div className={cell} key={product.id}>
+                      {product.description != null && product.description !== '' ? (
+                        <Reveal hideLabel={showLessLabel} showLabel={showMoreLabel}>
+                          <div className="prose prose-sm [&>div>*:first-child]:mt-0">
+                            {product.description}
+                          </div>
+                        </Reveal>
+                      ) : (
+                        <p className={muted}>{noDescriptionLabel}</p>
+                      )}
+                    </div>
+                  ))}
+
+                  <div className={rowHeading}>{otherDetailsLabel}</div>
+                  {fieldNames.length === 0 &&
+                    products.map((product) => (
+                      <div className={cell} key={product.id}>
+                        <p className={muted}>{noOtherDetailsLabel}</p>
+                      </div>
+                    ))}
+                  {fieldNames.map((name) =>
+                    products.map((product) => {
+                      const value = product.customFields?.find((f) => f.name === name)?.value;
+
+                      return (
+                        <div
+                          className={clsx(cell, 'grid grid-cols-[auto_1fr] gap-x-3 text-xs')}
+                          key={`${name}-${product.id}`}
+                        >
+                          <span className="font-semibold text-[var(--compare-card-field,hsl(var(--foreground)))]">
+                            {name}:
+                          </span>
+                          {value != null && value !== '' ? (
+                            <span className="text-[var(--compare-card-field,hsl(var(--foreground)))]">
+                              {value}
+                            </span>
+                          ) : (
+                            <span aria-label="Not specified" className={muted}>
+                              —
+                            </span>
+                          )}
+                        </div>
+                      );
+                    }),
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         );
