@@ -306,7 +306,8 @@ export function ProductGallery({
               <button
                 aria-label={`${thumbnailLabel} ${index + 1}`}
                 className={clsx(
-                  'relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-gallery-focus,hsl(var(--primary)))] focus-visible:ring-offset-2 @md:h-16 @md:w-16',
+                  // 2px of white between the photo and the outline, matching the swatch rings.
+                  'h-12 w-12 shrink-0 rounded-lg border p-[2px] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--product-gallery-focus,hsl(var(--primary)))] focus-visible:ring-offset-2 @md:h-16 @md:w-16',
                   index === selectedIndex
                     ? 'border-[var(--product-gallery-image-border-active,hsl(var(--foreground)))]'
                     : 'border-transparent',
@@ -318,7 +319,7 @@ export function ProductGallery({
                 <div
                   className={clsx(
                     index === selectedIndex ? 'opacity-100' : 'opacity-50',
-                    'transition-all duration-300 hover:opacity-100',
+                    'relative h-full w-full overflow-hidden rounded-[5px] transition-all duration-300 hover:opacity-100',
                   )}
                 >
                   <Image

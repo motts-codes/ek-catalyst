@@ -505,11 +505,19 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isSearchOpen, setIsSearchOpen } = useSearch();
 
+  // The mega menu is controlled so a click on a top-level link (which navigates) closes it and
+  // keeps it closed: Radix reopens on the next pointer move over the still-hovered trigger, which
+  // read as the menu "going and coming back". Hover opening resumes once the pointer leaves the
+  // nav (or a key is pressed, so keyboard users aren't locked out).
+  const [menuValue, setMenuValue] = useState('');
+  const hoverSuppressed = useRef(false);
+
   const pathname = usePathname();
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsSearchOpen(false);
+    setMenuValue('');
   }, [pathname, setIsSearchOpen]);
 
   useEffect(() => {
@@ -646,8 +654,21 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     <NavigationMenu.Root
       className={clsx('relative mx-auto w-full max-w-screen-2xl @container', className)}
       delayDuration={0}
-      onValueChange={() => setIsSearchOpen(false)}
+      onKeyDown={() => {
+        hoverSuppressed.current = false;
+      }}
+      onPointerLeave={() => {
+        hoverSuppressed.current = false;
+      }}
+      onValueChange={(value) => {
+        setIsSearchOpen(false);
+
+        if (value !== '' && hoverSuppressed.current) return;
+
+        setMenuValue(value);
+      }}
       ref={ref}
+      value={menuValue}
     >
       <div
         className={clsx(
@@ -825,7 +846,14 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   value={i.toString()}
                 >
                   <NavigationMenu.Trigger asChild>
-                    <Link className={navLinkClassName} href={item.href}>
+                    <Link
+                      className={navLinkClassName}
+                      href={item.href}
+                      onClick={() => {
+                        hoverSuppressed.current = true;
+                        setMenuValue('');
+                      }}
+                    >
                       {item.label}
                     </Link>
                   </NavigationMenu.Trigger>
