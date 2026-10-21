@@ -155,6 +155,41 @@ def sync_colors_to_master(client, color_names):
 
 
 # ── main import for one collection ──────────────────────────────────────────────────────────────
+def merge_records(a, b):
+    """Fold Laravel record b into a (same collection + program): union of colours and images in
+    order, the LOWER price (its strike/EMI travel with it, so the card reads "from $…"), and the
+    first record's text fields. Used for Prism, where every colour is its own Laravel category."""
+    out = dict(a)
+
+    def names(items):
+        return [(c.get("name") if isinstance(c, dict) else c) for c in (items or [])]
+
+    seen = set(names(out.get("colors")))
+    out["colors"] = list(out.get("colors") or [])
+    for c in b.get("colors") or []:
+        n = c.get("name") if isinstance(c, dict) else c
+        if n and n not in seen:
+            seen.add(n)
+            out["colors"].append(c)
+    imgs = list(out.get("images") or [])
+    for im in b.get("images") or []:
+        if im not in imgs:
+            imgs.append(im)
+    out["images"] = imgs
+    try:
+        if b.get("price") and (not out.get("price") or float(b["price"]) < float(out["price"])):
+            for k in ("price", "discounted_price", "emi_text", "_laravel_id", "_shop_now_url", "shop_now_url"):
+                if b.get(k) is not None:
+                    out[k] = b[k]
+    except ValueError:
+        pass
+    for k in ("specification", "short_description", "assembly_instructions", "specification_sheet_url",
+              "order_sample_price", "order_sample_product_id", "tags"):
+        if not out.get(k) and b.get(k):
+            out[k] = b[k]
+    return out
+
+
 def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery_by_id=None, attr_ids=None):
     delivery_by_id = delivery_by_id or {}
     attr_ids = attr_ids or {}
@@ -218,7 +253,11 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery
     # merch.info — door_style from tags[0].name (Laravel treats door-style as a tag). line/finish
     # from whatever's known; kept as the legacy fallback (attribute selection supersedes on storefront).
     tags = g(src, "tags", []) or []
-    door_style = tags[0]["name"] if tags and isinstance(tags[0], dict) else ""
+    # Euro lines tag the construction too ("Frameless", "Slab"); the door style is the first tag
+    # that isn't a construction word.
+    door_style = next((t["name"] for t in tags
+                       if isinstance(t, dict) and t.get("name")
+                       and t["name"].strip().lower() not in ("framed", "frameless")), "")
     client.upsert("categories", cat_id, "merch", "info",
                   json.dumps({"line": "", "door_style": door_style, "default_finish": ""}))
 
@@ -243,7 +282,10 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--file", required=True, help="laravel_category_details.json")
-    p.add_argument("--only", help="only import the collection whose name matches this (case-insensitive)")
+    p.add_argument("--only", help="only import the collection whose name CONTAINS this (case-insensitive; "
+                                  "'avon' also matches 'Prism Avon' — prefer --category)")
+    p.add_argument("--category", type=int, action="append", default=[],
+                   help="only import this sandbox collection category id (repeatable)")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--collections", help="laravel_collections.json — supplies delivery_time per program")
     p.add_argument("--product-line", help='863 attributes.product_lines NAME to set in spec.info (e.g. "Star")')
@@ -273,14 +315,18 @@ def main():
 
     attr_ids = resolve_attribute_ids(client, args.product_line, args.construction)
 
-    # index laravel records by (base_name, type)
+    # index laravel records by (base_name, type). Prism collections are harvested as one record
+    # PER COLOUR (same card name, own price); those are merged into one collection record.
     by_key = {}
     for rec in laravel.values():
         if not isinstance(rec, dict) or not rec.get("_card_name"):
             continue
-        by_key[(base_name(rec["_card_name"]), str(rec.get("_type")))] = rec
+        key = (base_name(rec["_card_name"]), str(rec.get("_type")))
+        by_key[key] = merge_records(by_key[key], rec) if key in by_key else rec
 
     collections = client.cabinet_collections()
+    if args.category:
+        collections = [(cid, n) for cid, n in collections if cid in args.category]
     if args.only:
         collections = [(cid, n) for cid, n in collections if args.only.lower() in n.lower()]
     print(f"{len(collections)} sandbox collection(s) to import.")

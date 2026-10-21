@@ -101,6 +101,22 @@ python scripts/import-laravel-collections.py --file "$H/laravel_category_details
 
 A collection with no price for a program (Rochelle has no RTA) is left off that program's listing.
 
+**All the other harvest collections (33 of them)** — Star (Beacon Hill … Northampton), Prism (7, one
+Laravel record *per colour*, merged into one collection with "from" pricing), Euro Max and Euro Value
+(8 each, the harvest's "EM"/"EV" prefixes spelled out) — are created and imported with:
+
+```bash
+python scripts/create-cabinet-collections.py --dry-run          # children of Cabinets 863, /cabinets/<slug>/
+python scripts/create-cabinet-collections.py --print-import-commands
+# then run the printed import lines (one per collection: --category <id> --product-line … --construction …
+# and an --alias where the sandbox name differs from the Laravel card name). Export H first:
+export H="$HOME/Desktop/Catalyst Products/Laravel Harvest"
+```
+
+Prefer `--category <id>` over `--only` — `--only avon` also matches "Prism Avon". Product line and
+construction are set per group (Star/Prism → Framed, Euro Max/Euro Value → Frameless); the harvest
+doesn't carry construction per collection, so adjust in `/cabinet-admin` if a line differs.
+
 ### Demo / placeholder data
 
 Use [scripts/seed-cabinet-metafields.py](../scripts/seed-cabinet-metafields.py). It is **idempotent**
