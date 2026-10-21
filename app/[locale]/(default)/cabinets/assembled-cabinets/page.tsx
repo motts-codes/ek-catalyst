@@ -7,6 +7,7 @@ import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
+import { CABINET_LINE_COPY } from '~/lib/cabinets/cabinet-line-copy';
 import {
   cabinetLineOptions,
   filterCabinetLines,
@@ -70,6 +71,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
       />
       <CabinetLineFilter
         className="pb-2 pt-8 @4xl:pt-10"
+        descriptions={CABINET_LINE_COPY}
         hrefFor={(slug) =>
           slug ? `/cabinets/assembled-cabinets?line=${slug}` : '/cabinets/assembled-cabinets'
         }

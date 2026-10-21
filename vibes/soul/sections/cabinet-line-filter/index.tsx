@@ -19,6 +19,8 @@ interface Props {
   /** Count for "All": every collection listed, including any with no line set. Defaults to the
    *  sum of the options. */
   total?: number;
+  /** A line of copy per slug ("all" for no selection), shown to the right of the pills. */
+  descriptions?: Record<string, string>;
   className?: string;
 }
 
@@ -35,17 +37,28 @@ export function CabinetLineFilter({
   selected,
   hrefFor,
   total,
+  descriptions,
   className,
 }: Props) {
   if (options.length < 2) return null;
 
   const allCount = total ?? options.reduce((sum, o) => sum + o.count, 0);
   const pills = [{ label: 'All', slug: null, count: allCount }, ...options];
+  const description = descriptions?.[selected ?? 'all'];
 
   return (
     <nav aria-label={title} className={clsx('@container', className)}>
       <div className="mx-auto flex max-w-screen-2xl flex-wrap items-center gap-x-4 gap-y-3 px-6 @xl:px-9 @4xl:px-14">
         <h2 className="font-heading text-lg font-bold leading-tight">{title}</h2>
+        {/* The selected line's one-liner: to the right on wide screens, under the pills below. */}
+        {Boolean(description) && (
+          <p
+            aria-live="polite"
+            className="order-last basis-full text-sm text-contrast-500 @3xl:order-none @3xl:ml-auto @3xl:max-w-md @3xl:basis-auto @3xl:text-right"
+          >
+            {description}
+          </p>
+        )}
         <ul className="flex flex-wrap gap-x-3 gap-y-3">
           {pills.map((pill) => {
             const active = pill.slug === selected;
