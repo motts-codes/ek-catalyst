@@ -70,7 +70,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
         tone="black"
       />
       <CabinetLineFilter
-        className="pb-2 pt-8 @4xl:pt-10"
+        className="pb-8 pt-8 @4xl:pb-10 @4xl:pt-10"
         descriptions={CABINET_LINE_COPY.assembled}
         hrefFor={(slug) =>
           slug ? `/cabinets/assembled-cabinets?line=${slug}` : '/cabinets/assembled-cabinets'
