@@ -25,6 +25,7 @@ Usage:
 """
 import argparse
 import json
+import re
 import os
 import sys
 import urllib.error
@@ -53,7 +54,10 @@ def load_env():
 
 
 class Client:
-    def __init__(self, hash_, token, dry_run=False):
+    def __init__(self, hash_, token, dry_run=False, only_namespaces=None):
+        # When set, upsert() writes only these metafield namespaces (e.g. {"sample"}) — for
+        # re-running one field across every collection without touching the rest.
+        self.only_namespaces = only_namespaces
         self.base = API_ROOT.format(hash=hash_)
         self.h = {"X-Auth-Token": token, "Content-Type": "application/json", "Accept": "application/json"}
         self.dry_run = dry_run
@@ -74,6 +78,8 @@ class Client:
 
     def upsert(self, entity, eid, ns, key, value):
         label = f"{ns}.{key}"
+        if self.only_namespaces is not None and ns not in self.only_namespaces:
+            return
         if self.dry_run:
             preview = value if len(value) < 70 else value[:67] + "..."
             print(f"    [dry-run] {entity} {eid} {label} = {preview}")
@@ -94,6 +100,12 @@ def base_name(card):
         if n.lower().endswith(suffix):
             n = n[: -len(suffix)]
     return n.strip().lower()
+
+
+def sample_path(url):
+    """'https://expresskitchens.com/avon-qds-quarter-cut-door-sample/' -> '/avon-qds-quarter-cut-door-sample/'."""
+    m = re.match(r"^https?://[^/]+(/.*)$", str(url or "").strip())
+    return m.group(1) if m else str(url or "").strip()
 
 
 def normalize_delivery(value):
@@ -190,8 +202,10 @@ def merge_records(a, b):
     return out
 
 
-def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery_by_id=None, attr_ids=None):
+def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery_by_id=None, attr_ids=None,
+                      sample_url_by_id=None):
     delivery_by_id = delivery_by_id or {}
+    sample_url_by_id = sample_url_by_id or {}
     attr_ids = attr_ids or {}
     print(f"\n=== {cat_name} (category {cat_id}) — RTA={'yes' if rta else 'NO'} Assembled={'yes' if asm else 'NO'}")
 
@@ -228,11 +242,16 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery
                   json.dumps({"rta": g(rta, "shop_now_url") or g(rta, "_shop_now_url"),
                               "assembled": g(asm, "shop_now_url") or g(asm, "_shop_now_url")}))
 
-    # sample.order_sample (shared)
+    # sample.order_sample (shared): the live-store sample product id + price from the details, and
+    # the "Order sample" link from the collections list (stored as a path, so it resolves on
+    # whichever store serves the page; editable in /cabinet-admin).
     src = rta or asm
+    sample_url = next((sample_url_by_id[str(r.get("_laravel_id", ""))] for r in (asm, rta)
+                       if r and str(r.get("_laravel_id", "")) in sample_url_by_id), "")
     client.upsert("categories", cat_id, "sample", "order_sample",
                   json.dumps({"product_id": g(src, "order_sample_product_id", 0),
-                              "price": str(g(src, "order_sample_price", ""))}))
+                              "price": str(g(src, "order_sample_price", "")),
+                              "url": sample_url}))
 
     # content.short_description (shared, raw HTML)
     client.upsert("categories", cat_id, "content", "short_description", g(src, "short_description"))
@@ -287,6 +306,7 @@ def main():
     p.add_argument("--category", type=int, action="append", default=[],
                    help="only import this sandbox collection category id (repeatable)")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--fields", help='comma-separated metafield NAMESPACES to write, e.g. "sample" (default: all)')
     p.add_argument("--collections", help="laravel_collections.json — supplies delivery_time per program")
     p.add_argument("--product-line", help='863 attributes.product_lines NAME to set in spec.info (e.g. "Star")')
     p.add_argument("--construction", help='863 attributes.constructions NAME to set in spec.info (e.g. "Framed")')
@@ -301,17 +321,23 @@ def main():
         aliases[k.strip().lower()] = v.strip().lower()
 
     hash_, token = load_env()
-    client = Client(hash_, token, dry_run=args.dry_run)
+    only = {f.strip() for f in args.fields.split(",") if f.strip()} if args.fields else None
+    client = Client(hash_, token, dry_run=args.dry_run, only_namespaces=only)
     laravel = json.load(open(args.file))
 
     # delivery_time lives on the collections list (not the details), keyed by laravel id.
     delivery_by_id = {}
+    sample_url_by_id = {}
     if args.collections:
         coll = json.load(open(args.collections)).get("collections", {})
         for items in coll.values():
             for it in items:
-                if it.get("id") is not None and it.get("delivery_time"):
+                if it.get("id") is None:
+                    continue
+                if it.get("delivery_time"):
                     delivery_by_id[str(it["id"])] = normalize_delivery(it["delivery_time"])
+                if it.get("order_sample_url"):
+                    sample_url_by_id[str(it["id"])] = sample_path(it["order_sample_url"])
 
     attr_ids = resolve_attribute_ids(client, args.product_line, args.construction)
 
@@ -350,7 +376,8 @@ def main():
                 print(f"\n=== {name} (category {cid}) — NO Laravel match for base name '{bn}', skipping")
                 continue
             import_collection(client, cid, name, rta, asm, color_id_map,
-                              delivery_by_id=delivery_by_id, attr_ids=attr_ids)
+                              delivery_by_id=delivery_by_id, attr_ids=attr_ids,
+                              sample_url_by_id=sample_url_by_id)
     except urllib.error.HTTPError as e:
         sys.exit(f"HTTP {e.code}: {e.read().decode()[:400]}")
 

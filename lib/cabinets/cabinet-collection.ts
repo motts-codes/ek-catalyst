@@ -274,6 +274,8 @@ interface MerchInfo {
 interface SampleInfo {
   product_id?: number;
   price?: string;
+  /** "Order sample" link (a path on this store, or a full URL) — from the collection metafield. */
+  url?: string;
 }
 
 // faq.by_program = { assembled: {headline, items[]}, rta: {headline, items[]} } — written by the
@@ -466,9 +468,8 @@ export const getCabinetCollectionHeader = cache(
       emiText: pricing?.emi_text,
       deliveryTime: delivery,
       specSheetUrl: specSheets?.[program],
-      // Add-to-cart of the specific sample product is a later step (sample.product_id is a live-store
-      // id in the seeded data); for now no sample CTA when we can't resolve it. Omit href to hide it.
-      orderSampleHref: undefined,
+      // The "Order sample" link stored on the collection (sample.order_sample.url). No link → no CTA.
+      orderSampleHref: sample?.url || undefined,
       orderSamplePrice: sample?.price,
     };
   },

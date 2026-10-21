@@ -55,9 +55,7 @@ export function CollectionEditor({
     validateUrl(data.shopNowUrl.assembled) != null ||
     validateUrl(data.shopNowUrl.rta) != null ||
     data.images.some((u) => validateUrl(u) != null) ||
-    [...data.assembly.rta, ...data.assembly.assembled].some(
-      (v) => validateUrl(v.url) != null,
-    );
+    [...data.assembly.rta, ...data.assembly.assembled].some((v) => validateUrl(v.url) != null);
 
   return (
     <div>
@@ -212,7 +210,9 @@ export function CollectionEditor({
           <Field
             error={validateUrl(data.shopNowUrl.assembled)}
             label="Assembled"
-            onChange={(v) => setData((d) => ({ ...d, shopNowUrl: { ...d.shopNowUrl, assembled: v } }))}
+            onChange={(v) =>
+              setData((d) => ({ ...d, shopNowUrl: { ...d.shopNowUrl, assembled: v } }))
+            }
             value={data.shopNowUrl.assembled}
           />
           <Field
@@ -263,6 +263,13 @@ export function CollectionEditor({
             label="Sample price"
             onChange={(v) => setData((d) => set(d, ['sample', 'price'], v))}
             value={data.sample.price}
+          />
+          {/* Where "Order sample" goes (collection page + listing cards): a path on this store or a URL. */}
+          <Field
+            label="Sample link (path or URL)"
+            onChange={(v) => setData((d) => set(d, ['sample', 'url'], v))}
+            placeholder="/avon-quarter-cut-door-sample-assembled/"
+            value={data.sample.url}
           />
         </Group>
 

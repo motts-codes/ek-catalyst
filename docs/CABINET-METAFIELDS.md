@@ -45,7 +45,7 @@ storefront drops silently.
 | `merch` | `info` | `{line, door_style, default_finish}` | **Legacy** free-text merch (superseded by `spec.info`; kept as fallback) | Header (fallback only) |
 | `fulfillment` | `delivery` | `{rta, assembled}` (strings) | Delivery/lead-time text per program | Header ("Ships: …") |
 | `assets` | `spec_sheets` | `{rta, assembled}` (PDF URLs) | Spec-sheet PDF per program | Header "Specification Sheet" link |
-| `sample` | `order_sample` | `{product_id, price}` | Order-a-sample product + price | Header (sample CTA — href deferred) |
+| `sample` | `order_sample` | `{product_id, price, url}` | Order-a-sample product id (live store), price, and the link the "Order sample" buttons use (path or URL) | Collection header CTA + listing card "Order Sample" (collection page when `url` is empty) |
 | `faq` | `by_program` | `{assembled:{headline,items:[{q,a}]}, rta:{…}}` | **Per-collection** FAQ, split by program | FAQ accordion below grid |
 | `spec` | `info` | `{product_line_id, construction_id, color_ids:[…], default_color_id}` | Attribute **selections** (ids into the 863 master lists) | Header: "Line · Construction" + swatch row |
 | `assembly` | `videos` | `[{name, url}]` | Assembly instruction videos (YouTube) | Assembly section (embedded) |

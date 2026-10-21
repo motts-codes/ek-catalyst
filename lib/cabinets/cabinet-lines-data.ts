@@ -289,8 +289,11 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
       const productLineId = parseJson<{ product_line_id?: string }>(specRaw)?.product_line_id;
       const productLine = productLineId ? lineNames.get(productLineId) : undefined;
 
-      // sample.order_sample = { product_id, price } — for now the card links to the category page
-      // (add-to-cart of a specific sample product is a later step).
+      // sample.order_sample = { product_id, price, url } — the card's "Order sample" goes to the
+      // collection's own sample link; collection page when none is set.
+      const sampleRaw = cat?.sample.edges?.find((e) => e.node.key === 'order_sample')?.node.value;
+      const sampleUrl = parseJson<{ url?: string }>(sampleRaw)?.url;
+
       return {
         productLine,
         entityId: child.entityId,
@@ -303,7 +306,7 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
         strikePrice: pricing?.strike_price,
         emiText: pricing?.emi_text,
         deliveryTime: delivery,
-        orderSampleHref: href,
+        orderSampleHref: sampleUrl || href,
       };
     }),
   );

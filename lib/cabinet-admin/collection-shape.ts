@@ -1,6 +1,11 @@
 import { readCabinetAttributes } from './attributes-shape';
 import { CABINETS_PARENT_CATEGORY_ID } from './collection-shape-const';
-import { listCabinetCollections, listMetafields, type Metafield, upsertMetafield } from './metafields-api';
+import {
+  listCabinetCollections,
+  listMetafields,
+  type Metafield,
+  upsertMetafield,
+} from './metafields-api';
 
 export { CABINETS_PARENT_CATEGORY_ID };
 
@@ -42,7 +47,7 @@ export interface CollectionMetafields {
   // assets.spec_sheets = { rta, assembled }
   specSheets: { rta: string; assembled: string };
   // sample.order_sample
-  sample: { product_id: string; price: string };
+  sample: { product_id: string; price: string; url: string };
   // faq.by_program = { assembled: {headline, items[]}, rta: {headline, items[]} } — collection FAQ
   // split by program (RTA and Assembled have different questions).
   faq: {
@@ -84,7 +89,7 @@ export function emptyCollectionMetafields(): CollectionMetafields {
     merch: { line: '', door_style: '', default_finish: '' },
     delivery: { rta: '', assembled: '' },
     specSheets: { rta: '', assembled: '' },
-    sample: { product_id: '', price: '' },
+    sample: { product_id: '', price: '', url: '' },
     faq: {
       assembled: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
       rta: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
@@ -125,23 +130,17 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
   const base = emptyCollectionMetafields();
 
   const pricing = findValue(mfs, 'pricing_10x10', 'pricing') as
-    | Partial<CollectionMetafields['pricing']>
-    | undefined;
+    Partial<CollectionMetafields['pricing']> | undefined;
   const merch = findValue(mfs, 'merch', 'info') as
-    | Partial<CollectionMetafields['merch']>
-    | undefined;
+    Partial<CollectionMetafields['merch']> | undefined;
   const delivery = findValue(mfs, 'fulfillment', 'delivery') as
-    | Partial<CollectionMetafields['delivery']>
-    | undefined;
+    Partial<CollectionMetafields['delivery']> | undefined;
   const specSheets = findValue(mfs, 'assets', 'spec_sheets') as
-    | Partial<CollectionMetafields['specSheets']>
-    | undefined;
+    Partial<CollectionMetafields['specSheets']> | undefined;
   const sample = findValue(mfs, 'sample', 'order_sample') as
-    | { product_id?: number | string; price?: string }
-    | undefined;
+    { product_id?: number | string; price?: string; url?: string } | undefined;
   const faq = findValue(mfs, 'faq', 'by_program') as
-    | Partial<CollectionMetafields['faq']>
-    | undefined;
+    Partial<CollectionMetafields['faq']> | undefined;
   const spec = findValue(mfs, 'spec', 'info') as
     | {
         product_line_id?: string;
@@ -153,15 +152,12 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
   // Assembly is now per-program (assembly.by_program). Fall back to the legacy flat assembly.videos
   // (put under RTA) so pre-migration collections still read.
   const assemblyByProgram = findValue(mfs, 'assembly', 'by_program') as
-    | { rta?: AssemblyVideo[]; assembled?: AssemblyVideo[] }
-    | undefined;
+    { rta?: AssemblyVideo[]; assembled?: AssemblyVideo[] } | undefined;
   const legacyAssembly = findValue(mfs, 'assembly', 'videos') as AssemblyVideo[] | undefined;
   const specByProgram = findValue(mfs, 'content', 'spec_by_program') as
-    | { rta?: string; assembled?: string }
-    | undefined;
+    { rta?: string; assembled?: string } | undefined;
   const shopNow = findValue(mfs, 'assets', 'shop_now_url') as
-    | { rta?: string; assembled?: string }
-    | undefined;
+    { rta?: string; assembled?: string } | undefined;
   const imagesRaw = findValue(mfs, 'media', 'images') as string[] | undefined;
   const images = Array.from({ length: IMAGE_SLOTS }, (_, i) =>
     Array.isArray(imagesRaw) && typeof imagesRaw[i] === 'string' ? imagesRaw[i] : '',
@@ -186,6 +182,7 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
     sample: {
       product_id: sample?.product_id != null ? String(sample.product_id) : '',
       price: sample?.price ?? '',
+      url: sample?.url ?? '',
     },
     faq: {
       assembled: normalizeFaqSide(faq?.assembled, base.faq.assembled),
@@ -258,6 +255,7 @@ export async function writeCollectionMetafields(
         ? Number(data.sample.product_id)
         : data.sample.product_id,
       price: data.sample.price,
+      url: data.sample.url.trim(),
     }),
   );
   // Collection FAQ, split by program. Drop empty Q&A rows on save so the stored list is clean.
