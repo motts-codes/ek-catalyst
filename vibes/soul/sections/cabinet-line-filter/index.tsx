@@ -54,7 +54,7 @@ export function CabinetLineFilter({
         {Boolean(description) && (
           <p
             aria-live="polite"
-            className="order-last basis-full text-sm text-contrast-500 @3xl:ml-auto @3xl:max-w-md @3xl:basis-auto @3xl:text-right"
+            className="order-last basis-full text-xs text-contrast-500 @3xl:ml-auto @3xl:max-w-md @3xl:basis-auto @3xl:text-right"
           >
             {description}
           </p>
