@@ -172,6 +172,8 @@ def merge_records(a, b):
     order, the LOWER price (its strike/EMI travel with it, so the card reads "from $…"), and the
     first record's text fields. Used for Prism, where every colour is its own Laravel category."""
     out = dict(a)
+    # Keep every original record: per-finish pricing/images are written from them (finishes.by_finish).
+    out["_records"] = list(a.get("_records") or [a]) + [b]
 
     def names(items):
         return [(c.get("name") if isinstance(c, dict) else c) for c in (items or [])]
@@ -222,6 +224,25 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery
 
     client.upsert("categories", cat_id, "pricing_10x10", "pricing",
                   json.dumps({"rta": pricing(rta), "assembled": pricing(asm)}))
+
+    # finishes.by_finish = { "<finish>": { assembled:{price…}, rta:{price…}, images:[…] } } — only for
+    # collections harvested as one Laravel record PER COLOUR (Prism): each record's first colour is
+    # the finish, with its own price and door photos. Single-record collections write nothing.
+    by_finish = {}
+    for prog_name, rec in (("rta", rta), ("assembled", asm)):
+        records = (rec or {}).get("_records") or []
+        for r in records:
+            cols = r.get("colors") or []
+            finish = (cols[0].get("name") if cols and isinstance(cols[0], dict) else cols[0] if cols else "")
+            if not finish:
+                continue
+            entry = by_finish.setdefault(finish.strip(), {"images": []})
+            entry[prog_name] = pricing(r)
+            for u in (r.get("images") or [])[:5]:
+                if isinstance(u, str) and u.strip() and u not in entry["images"]:
+                    entry["images"].append(u)
+    if by_finish:
+        client.upsert("categories", cat_id, "finishes", "by_finish", json.dumps(by_finish))
 
     # fulfillment.delivery = { rta, assembled } — from the collections list; program absent -> "".
     def delivery(rec):

@@ -29,6 +29,7 @@ import {
   getCabinetAssemblyVideos,
   getCabinetCollectionContent,
   getCabinetCollectionFaq,
+  cabinetFinishContext,
   getCabinetCollectionHeader,
   isCabinetCollection,
 } from '~/lib/cabinets/cabinet-collection';
@@ -110,6 +111,38 @@ function selectedCabinetType(value: string | string[] | undefined): CabinetTypeV
 // The facet filter for a selected type ({} when none), applied like the Program facet.
 function cabinetTypeSearchParam(value: CabinetTypeValue | null): Record<string, string[]> {
   return value ? { [CABINET_TYPE_PARAM]: [value] } : {};
+}
+
+// Multi-finish collections (Prism): ?finish=<slug> selects a finish. Header pricing/photos follow it
+// and the grid narrows through the products' "Finish" custom field (a search facet, like Program).
+const FINISH_PARAM = 'finish';
+
+// The collection URL with the finish set (or cleared), keeping program and type, dropping the page.
+function getFinishHref(
+  path: string,
+  searchParams: Record<string, string | string[] | undefined>,
+  slug: string | null,
+) {
+  const params = new URLSearchParams();
+
+  Object.entries(searchParams).forEach(([key, raw]) => {
+    if (
+      key === FINISH_PARAM ||
+      key === 'page' ||
+      key === 'after' ||
+      key === 'before' ||
+      raw == null
+    )
+      return;
+
+    (Array.isArray(raw) ? raw : [raw]).forEach((item) => params.append(key, item));
+  });
+
+  if (slug) params.set(FINISH_PARAM, slug);
+
+  const query = params.toString();
+
+  return query ? `${path}?${query}` : path;
 }
 
 // The collection URL with the type set (or cleared), keeping the program and dropping the page.
@@ -259,6 +292,12 @@ export default async function Category(props: Props) {
   } = await cabinetProgramContext(isCabinet, categoryId, programParam);
   const searchParamsForLinks = await props.searchParams;
   const selectedType = selectedCabinetType(searchParamsForLinks[CABINET_TYPE_PARAM]);
+  // ?finish= → the finish name (null when absent/unknown) and the grid filter for it.
+  const { name: selectedFinish, filter: finishFilter } = await cabinetFinishContext(
+    isCabinet,
+    categoryId,
+    searchParamsForLinks[FINISH_PARAM],
+  );
 
   if (!category) {
     return notFound();
@@ -304,6 +343,7 @@ export default async function Category(props: Props) {
       ...parsedSearchParams,
       ...programFilter,
       ...typeFilter,
+      ...finishFilter,
       category: categoryId,
     };
     // ?page=N is resolved to a BigCommerce cursor (paged-search.ts). Legacy ?after/?before links
@@ -330,6 +370,7 @@ export default async function Category(props: Props) {
           ...searchParams,
           ...parsedSearchParams,
           ...programFilter,
+          ...finishFilter,
           category: categoryId,
         },
         type: selectedType,
@@ -463,7 +504,7 @@ export default async function Category(props: Props) {
   // scoped to the same program (Assembled / RTA) the visitor arrived with.
   const cabinetHeader =
     isCabinet && cabinetProgram
-      ? await getCabinetCollectionHeader(categoryId, cabinetProgram)
+      ? await getCabinetCollectionHeader(categoryId, cabinetProgram, selectedFinish)
       : null;
 
   // Per-collection FAQ (Avon's Assembled FAQ, etc.), shown below the grid. Program-aware; null when
@@ -510,6 +551,9 @@ export default async function Category(props: Props) {
         <>
           <CabinetCollectionHeader
             data={cabinetHeader}
+            finishHrefFor={(finishSlug) =>
+              getFinishHref(category.path, searchParamsForLinks, finishSlug)
+            }
             program={cabinetProgram}
             specifications={cabinetContent?.specifications}
             switchHref={

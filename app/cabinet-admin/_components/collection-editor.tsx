@@ -106,6 +106,54 @@ export function CollectionEditor({
           </div>
         </Group>
 
+        {/* Per-finish pricing (multi-finish collections such as Prism): one row per finish, both
+            programs. The storefront uses a finish's price when the visitor picks that finish and
+            falls back to the 10×10 price above. Finishes themselves come from the import. */}
+        {Object.keys(data.finishes).length > 0 && (
+          <Group title="Pricing by finish">
+            <div className="space-y-3">
+              {Object.entries(data.finishes).map(([name, entry]) => (
+                <div className="rounded-lg border border-gray-200 p-3" key={name}>
+                  <p className="mb-2 text-sm font-semibold">{name}</p>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {(['assembled', 'rta'] as const).map((prog) => (
+                      <div className="grid grid-cols-3 gap-2" key={prog}>
+                        <Field
+                          error={validatePrice(entry[prog].price)}
+                          label={`${prog} price`}
+                          onChange={(v) =>
+                            setData((d) => set(d, ['finishes', name, prog, 'price'], v))
+                          }
+                          value={entry[prog].price}
+                        />
+                        <Field
+                          error={validatePrice(entry[prog].strike_price)}
+                          label="Strike"
+                          onChange={(v) =>
+                            setData((d) => set(d, ['finishes', name, prog, 'strike_price'], v))
+                          }
+                          value={entry[prog].strike_price}
+                        />
+                        <Field
+                          label="EMI text"
+                          onChange={(v) =>
+                            setData((d) => set(d, ['finishes', name, prog, 'emi_text'], v))
+                          }
+                          value={entry[prog].emi_text}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-xs text-gray-500">
+                    {entry.images.length} door photo{entry.images.length === 1 ? '' : 's'} (from the
+                    import)
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Group>
+        )}
+
         <Group title="Specification">
           <Select
             emptyLabel="— Select a product line —"

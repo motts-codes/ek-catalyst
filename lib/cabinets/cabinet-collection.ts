@@ -187,6 +187,14 @@ const CabinetCollectionQuery = graphql(`
             }
           }
         }
+        finishes: metafields(namespace: "finishes") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
         media: metafields(namespace: "media") {
           edges {
             node {
@@ -271,6 +279,65 @@ interface MerchInfo {
   door_style?: string;
   default_finish?: string;
 }
+// finishes.by_finish = { "<finish name>": { assembled?: ProgramPricing, rta?: ProgramPricing, images?: [] } }
+// Multi-finish collections (Prism) price and photograph each finish; keyed by the finish name as it
+// appears in the Cabinets colour master list.
+type ByFinish = Record<
+  string,
+  { assembled?: ProgramPricing; rta?: ProgramPricing; images?: string[] }
+>;
+
+/** URL slug for a finish name: "French Vanilla" -> "french-vanilla". */
+export function cabinetFinishSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/** Resolve a ?finish= slug to the finish name among this collection's colours, or null. */
+export const resolveCabinetFinish = cache(
+  async (categoryId: number, slug: string | null): Promise<string | null> => {
+    if (!slug) return null;
+
+    const cat = await fetchCabinetCollection(categoryId);
+
+    if (!cat) return null;
+
+    const spec = parseJson<{ color_ids?: string[] }>(
+      cat.spec.edges?.find((e) => e.node.key === 'info')?.node.value,
+    );
+    const attributes = await getCabinetAttributes();
+    const names = (spec?.color_ids ?? [])
+      .map((id) => attributes.colors.find((c) => c.id === id)?.name)
+      .filter((n): n is string => n != null);
+
+    return names.find((n) => cabinetFinishSlug(n) === slug) ?? null;
+  },
+);
+
+export const CABINET_FINISH_ATTRIBUTE_PARAM = 'attr_Finish';
+
+export interface CabinetFinishContext {
+  /** The selected finish name, or null. */
+  name: string | null;
+  /** The faceted-search param narrowing the grid to that finish ({} when none). */
+  filter: Record<string, string[]>;
+}
+
+/** ?finish=<slug> for a collection page: the finish name and the grid filter for it. */
+export async function cabinetFinishContext(
+  isCollection: boolean,
+  categoryId: number,
+  raw: string | string[] | undefined,
+): Promise<CabinetFinishContext> {
+  const first = Array.isArray(raw) ? raw[0] : raw;
+  const slug = isCollection && first ? first : null;
+  const name = await resolveCabinetFinish(categoryId, slug);
+
+  return { name, filter: name ? { [CABINET_FINISH_ATTRIBUTE_PARAM]: [name] } : {} };
+}
+
 interface SampleInfo {
   product_id?: number;
   price?: string;
@@ -395,14 +462,25 @@ export const getCabinetCollectionHeader = cache(
   async (
     categoryId: number,
     program: CabinetProgram,
+    /** The selected finish NAME (see resolveCabinetFinish); its own price/photos win when present. */
+    finish: string | null = null,
   ): Promise<CabinetCollectionHeaderData | null> => {
     const cat = await fetchCabinetCollection(categoryId);
 
     if (!cat) return null;
 
-    const pricing = parseJson<Record<string, ProgramPricing>>(
-      cat.pricing.edges?.find((e) => e.node.key === 'pricing')?.node.value,
-    )?.[program];
+    const byFinish =
+      parseJson<ByFinish>(
+        cat.finishes.edges?.find((e) => e.node.key === 'by_finish')?.node.value,
+      ) ?? {};
+    const finishEntry = finish ? byFinish[finish] : undefined;
+    const finishPricing = finishEntry?.[program];
+    const pricing =
+      finishPricing?.price != null && finishPricing.price !== ''
+        ? finishPricing
+        : parseJson<Record<string, ProgramPricing>>(
+            cat.pricing.edges?.find((e) => e.node.key === 'pricing')?.node.value,
+          )?.[program];
     const merch = parseJson<MerchInfo>(
       cat.merch.edges?.find((e) => e.node.key === 'info')?.node.value,
     );
@@ -431,7 +509,15 @@ export const getCabinetCollectionHeader = cache(
     const colors = (spec?.color_ids ?? [])
       .map((id) => attributes.colors.find((c) => c.id === id))
       .filter((c): c is ColorOption => c != null)
-      .map((c) => ({ id: c.id, name: c.name, hex: c.hex, image: c.image }));
+      .map((c) => ({
+        id: c.id,
+        name: c.name,
+        slug: cabinetFinishSlug(c.name),
+        hex: c.hex,
+        image: c.image,
+        // A finish with its own photo shows that door as its swatch when the master list has none.
+        swatch: c.image || byFinish[c.name]?.images?.[0],
+      }));
 
     // Overview (staff-authored HTML metafield) replaces the native BC category description for
     // cabinet collections. Gallery images come from media.images (order: [door-sample, …, kitchen]).
@@ -444,10 +530,16 @@ export const getCabinetCollectionHeader = cache(
     // kitchen (last image) moved to the front; contractors keep the door sample (first) as-is.
     const audience = await getAudienceMode();
     const kitchen = rawImages.at(-1);
-    const images =
+    const finishImages = (finishEntry?.images ?? []).filter((u) => u !== '');
+    const homeownerOrder =
       audience === 'homeowner' && rawImages.length > 1 && kitchen
         ? [kitchen, ...rawImages.slice(0, -1)]
         : rawImages;
+    // A chosen finish leads with its own door photos, then the rest of the gallery.
+    const images =
+      finishImages.length > 0
+        ? [...finishImages, ...rawImages.filter((u) => !finishImages.includes(u))]
+        : homeownerOrder;
 
     // Contractors lead with the door sample — contain it (not crop) so it's fully visible.
     const containMainImage = audience === 'pro';
@@ -463,6 +555,7 @@ export const getCabinetCollectionHeader = cache(
       productLine,
       construction,
       colors,
+      selectedFinish: finish ?? undefined,
       price: pricing?.price,
       strikePrice: pricing?.strike_price,
       emiText: pricing?.emi_text,

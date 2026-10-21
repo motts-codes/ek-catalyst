@@ -18,6 +18,12 @@ export interface ProgramPricing {
   emi_text: string;
 }
 
+export interface FinishEntry {
+  assembled: ProgramPricing;
+  rta: ProgramPricing;
+  images: string[];
+}
+
 export interface FaqItem {
   q: string;
   a: string;
@@ -48,6 +54,9 @@ export interface CollectionMetafields {
   specSheets: { rta: string; assembled: string };
   // sample.order_sample
   sample: { product_id: string; price: string; url: string };
+  // finishes.by_finish = { "<finish name>": { assembled, rta, images } } — multi-finish collections
+  // (Prism) price and photograph each finish; empty for single-finish collections.
+  finishes: Record<string, FinishEntry>;
   // faq.by_program = { assembled: {headline, items[]}, rta: {headline, items[]} } — collection FAQ
   // split by program (RTA and Assembled have different questions).
   faq: {
@@ -90,6 +99,7 @@ export function emptyCollectionMetafields(): CollectionMetafields {
     delivery: { rta: '', assembled: '' },
     specSheets: { rta: '', assembled: '' },
     sample: { product_id: '', price: '', url: '' },
+    finishes: {},
     faq: {
       assembled: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
       rta: { headline: DEFAULT_FAQ_HEADLINE, items: [] },
@@ -139,6 +149,27 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
     Partial<CollectionMetafields['specSheets']> | undefined;
   const sample = findValue(mfs, 'sample', 'order_sample') as
     { product_id?: number | string; price?: string; url?: string } | undefined;
+  const byFinish = findValue(mfs, 'finishes', 'by_finish') as
+    | Record<
+        string,
+        Partial<{
+          assembled: Partial<ProgramPricing>;
+          rta: Partial<ProgramPricing>;
+          images: unknown;
+        }>
+      >
+    | undefined;
+  const finishes: Record<string, FinishEntry> = {};
+
+  Object.entries(byFinish ?? {}).forEach(([name, entry]) => {
+    finishes[name] = {
+      assembled: { ...emptyPricing(), ...entry.assembled },
+      rta: { ...emptyPricing(), ...entry.rta },
+      images: Array.isArray(entry.images)
+        ? entry.images.filter((u): u is string => typeof u === 'string')
+        : [],
+    };
+  });
   const faq = findValue(mfs, 'faq', 'by_program') as
     Partial<CollectionMetafields['faq']> | undefined;
   const spec = findValue(mfs, 'spec', 'info') as
@@ -184,6 +215,7 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
       price: sample?.price ?? '',
       url: sample?.url ?? '',
     },
+    finishes,
     faq: {
       assembled: normalizeFaqSide(faq?.assembled, base.faq.assembled),
       rta: normalizeFaqSide(faq?.rta, base.faq.rta),
@@ -258,6 +290,17 @@ export async function writeCollectionMetafields(
       url: data.sample.url.trim(),
     }),
   );
+  // Per-finish pricing/photos (Prism). Written only when the collection has any, so single-finish
+  // collections don't grow an empty metafield on every save.
+  if (Object.keys(data.finishes).length > 0) {
+    await upsertMetafield(
+      'categories',
+      categoryId,
+      'finishes',
+      'by_finish',
+      JSON.stringify(data.finishes),
+    );
+  }
   // Collection FAQ, split by program. Drop empty Q&A rows on save so the stored list is clean.
   const cleanSide = (side: { headline: string; items: FaqItem[] }) => ({
     headline: side.headline,

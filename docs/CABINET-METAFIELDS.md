@@ -45,6 +45,7 @@ storefront drops silently.
 | `merch` | `info` | `{line, door_style, default_finish}` | **Legacy** free-text merch (superseded by `spec.info`; kept as fallback) | Header (fallback only) |
 | `fulfillment` | `delivery` | `{rta, assembled}` (strings) | Delivery/lead-time text per program | Header ("Ships: …") |
 | `assets` | `spec_sheets` | `{rta, assembled}` (PDF URLs) | Spec-sheet PDF per program | Header "Specification Sheet" link |
+| `finishes` | `by_finish` | `{ "<finish>": { assembled:{price,strike_price,emi_text}, rta:{…}, images:[url…] } }` | Multi-finish collections (Prism): price + door photos per finish, keyed by the colour master-list name | Collection header when `?finish=<slug>` is selected (price/photos), chips become links; grid filters by the products' `Finish` custom field (`attr_Finish`) |
 | `sample` | `order_sample` | `{product_id, price, url}` | Order-a-sample product id (live store), price, and the link the "Order sample" buttons use (path or URL) | Collection header CTA + listing card "Order Sample" (collection page when `url` is empty) |
 | `faq` | `by_program` | `{assembled:{headline,items:[{q,a}]}, rta:{…}}` | **Per-collection** FAQ, split by program | FAQ accordion below grid |
 | `spec` | `info` | `{product_line_id, construction_id, color_ids:[…], default_color_id}` | Attribute **selections** (ids into the 863 master lists) | Header: "Line · Construction" + swatch row |

@@ -19,6 +19,10 @@ export interface CabinetSwatch {
   name: string;
   hex?: string;
   image?: string;
+  /** URL slug used by ?finish= when finishes are selectable. */
+  slug?: string;
+  /** Swatch image: the master-list swatch, or the finish's own door photo. */
+  swatch?: string;
 }
 
 export interface CabinetCollectionHeaderData {
@@ -37,6 +41,8 @@ export interface CabinetCollectionHeaderData {
   productLine?: string;
   construction?: string;
   colors?: CabinetSwatch[];
+  /** The selected finish name (multi-finish collections); pricing/photos above reflect it. */
+  selectedFinish?: string;
   /** "Basic Kitchen Starting" pricing for the shown program. */
   price?: string;
   strikePrice?: string;
@@ -149,6 +155,8 @@ interface Props {
   specifications?: string;
   /** The same collection in the other program ("Switch to RTA"). */
   switchHref?: string;
+  /** When given, finish chips become links (multi-finish collections); null clears the finish. */
+  finishHrefFor?: (slug: string | null) => string;
   /** Where "Shop products" scrolls to. */
   productsHref?: string;
   className?: string;
@@ -159,31 +167,71 @@ const PROGRAM_LABEL = { assembled: 'Assembled', rta: 'RTA' };
 // Metafield prices arrive as plain numbers ("3289.55"); show them with thousands separators.
 const formatPrice = (value = '') => value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-function Finishes({ colors = [] }: { colors?: CabinetSwatch[] }) {
+// Finish chips. Display-only on single-finish collections; on multi-finish ones (Prism) each chip
+// is a link that sets ?finish= — the price, photos and product grid follow the selection. The
+// selected chip gets the brand-red outline (plus aria-current); clicking it again clears.
+function Finishes({
+  colors = [],
+  selected,
+  hrefFor,
+}: {
+  colors?: CabinetSwatch[];
+  selected?: string;
+  hrefFor?: (slug: string | null) => string;
+}) {
   if (colors.length === 0) return null;
+
+  const selectable = hrefFor != null && colors.length > 1;
+  const chipClass =
+    'inline-flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-3 text-xs transition-colors';
+  const swatch = (c: CabinetSwatch) => (
+    <span
+      className="inline-block size-5 rounded-full border border-contrast-100 bg-cover bg-center"
+      style={{
+        backgroundColor: c.hex || undefined,
+        backgroundImage: c.swatch ? `url(${c.swatch})` : undefined,
+      }}
+      title={c.name}
+    />
+  );
 
   return (
     <div>
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
-        Available finishes
+        {selectable ? 'Choose a finish' : 'Available finishes'}
       </p>
       <div className="flex flex-wrap gap-2">
-        {colors.map((c) => (
-          <span
-            className="inline-flex items-center gap-1.5 rounded-full border border-contrast-100 py-1 pl-1 pr-3 text-xs text-contrast-500"
-            key={c.id}
-          >
-            <span
-              className="inline-block size-5 rounded-full border border-contrast-100 bg-cover bg-center"
-              style={{
-                backgroundColor: c.hex || undefined,
-                backgroundImage: c.image ? `url(${c.image})` : undefined,
-              }}
-              title={c.name}
-            />
-            {c.name}
-          </span>
-        ))}
+        {colors.map((c) => {
+          const active = selectable && selected != null && c.name === selected;
+
+          if (!selectable || c.slug == null) {
+            return (
+              <span className={clsx(chipClass, 'border-contrast-100 text-contrast-500')} key={c.id}>
+                {swatch(c)}
+                {c.name}
+              </span>
+            );
+          }
+
+          return (
+            <Link
+              aria-current={active ? 'true' : undefined}
+              className={clsx(
+                chipClass,
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+                active
+                  ? 'border-[var(--button-primary-background,#d90716)] font-semibold text-foreground ring-1 ring-[var(--button-primary-background,#d90716)]'
+                  : 'border-contrast-100 text-contrast-500 hover:border-contrast-300 hover:text-foreground',
+              )}
+              href={hrefFor(active ? null : c.slug)}
+              key={c.id}
+            >
+              {swatch(c)}
+              {c.name}
+              {active && <span className="sr-only"> (selected)</span>}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -243,6 +291,7 @@ export function CabinetCollectionHeader({
   program = 'assembled',
   specifications,
   switchHref,
+  finishHrefFor,
   productsHref = '#products',
   className,
 }: Props) {
@@ -318,7 +367,7 @@ export function CabinetCollectionHeader({
               </div>
             )}
 
-            <Finishes colors={data.colors} />
+            <Finishes colors={data.colors} hrefFor={finishHrefFor} selected={data.selectedFinish} />
 
             {hasPricing && <PriceCard data={data} program={program} />}
 
