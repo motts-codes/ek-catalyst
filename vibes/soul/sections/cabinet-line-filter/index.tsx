@@ -27,7 +27,7 @@ const PILL =
 
 // "Filter by line" — a pill row under the program hero on the Assembled / RTA listings: All, then
 // the product lines present in that program (Star, Prism, Euro Value, Euro Max), each with a
-// black count badge on its top-right corner (a fixed 22px circle, so 7 and 37 look the same). The selected pill is solid brand red; the state also
+// cream (#F6EBD6) count badge with black text on its top-right corner (a fixed 22px circle, so 7 and 37 look the same). The selected pill is solid brand red; the state also
 // carries aria-current so it doesn't rely on colour, and the count is read out as text.
 export function CabinetLineFilter({
   title = 'Filter by line',
@@ -67,10 +67,10 @@ export function CabinetLineFilter({
                     , {pill.count} {pill.count === 1 ? 'collection' : 'collections'}
                   </span>
                   {active && <span className="sr-only"> (selected)</span>}
-                  {/* Count badge, notification-style: top-right, black with white text. */}
+                  {/* Count badge, notification-style: top-right, cream with black text. */}
                   <span
                     aria-hidden
-                    className="absolute -right-2 -top-2 inline-flex size-[22px] items-center justify-center rounded-full bg-foreground font-body text-[11px] font-semibold leading-none text-white"
+                    className="absolute -right-2 -top-2 inline-flex size-[22px] items-center justify-center rounded-full bg-[#F6EBD6] font-body text-[11px] font-semibold leading-none text-foreground"
                   >
                     {pill.count}
                   </span>
