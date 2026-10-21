@@ -165,6 +165,8 @@ const CABINET_LINE_ORDER = ['Star', 'Prism', 'Euro Value', 'Euro Max'];
 export interface CabinetLineOption {
   label: string;
   slug: string;
+  /** Collections in this line for the program. */
+  count: number;
 }
 
 /** URL slug for a product line name: "Euro Max" -> "euro-max". */
@@ -183,7 +185,11 @@ export function cabinetLineOptions(lines: CabinetLine[]): CabinetLineOption[] {
     ...[...present].filter((n) => !CABINET_LINE_ORDER.includes(n)).sort(),
   ];
 
-  return ordered.map((label) => ({ label, slug: cabinetLineSlug(label) }));
+  return ordered.map((label) => ({
+    label,
+    slug: cabinetLineSlug(label),
+    count: lines.filter((line) => line.productLine === label).length,
+  }));
 }
 
 /** Collections in the selected line (slug), or all of them when no line is selected. */
