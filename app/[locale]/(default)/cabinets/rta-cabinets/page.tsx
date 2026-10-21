@@ -71,6 +71,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
         }
         options={cabinetLineOptions(lines)}
         selected={selectedLine}
+        total={lines.length}
       />
       <CabinetLines lines={filterCabinetLines(lines, selectedLine)} program="rta" />
       <CabinetFaq data={faq} />

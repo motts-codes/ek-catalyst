@@ -16,6 +16,9 @@ interface Props {
   selected: string | null;
   /** Builds the link for a line slug; `null` is "All". */
   hrefFor: (slug: string | null) => string;
+  /** Count for "All": every collection listed, including any with no line set. Defaults to the
+   *  sum of the options. */
+  total?: number;
   className?: string;
 }
 
@@ -31,12 +34,13 @@ export function CabinetLineFilter({
   options,
   selected,
   hrefFor,
+  total,
   className,
 }: Props) {
   if (options.length < 2) return null;
 
-  const total = options.reduce((sum, o) => sum + o.count, 0);
-  const pills = [{ label: 'All', slug: null, count: total }, ...options];
+  const allCount = total ?? options.reduce((sum, o) => sum + o.count, 0);
+  const pills = [{ label: 'All', slug: null, count: allCount }, ...options];
 
   return (
     <nav aria-label={title} className={clsx('@container', className)}>

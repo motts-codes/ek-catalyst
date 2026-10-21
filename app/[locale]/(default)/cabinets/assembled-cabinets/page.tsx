@@ -75,6 +75,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
         }
         options={cabinetLineOptions(lines)}
         selected={selectedLine}
+        total={lines.length}
       />
       <CabinetLines lines={filterCabinetLines(lines, selectedLine)} program="assembled" />
       <CabinetFaq data={faq} />
