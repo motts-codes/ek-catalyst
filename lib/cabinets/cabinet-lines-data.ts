@@ -114,10 +114,84 @@ const CabinetLineMetafieldsQuery = graphql(`
             }
           }
         }
+        spec: metafields(namespace: "spec") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
       }
     }
   }
 `);
+
+// The product-line master list on the Cabinets parent (spec.info.product_line_id points into it).
+const CabinetProductLinesQuery = graphql(`
+  query CabinetProductLinesQuery($entityId: Int!) {
+    site {
+      category(entityId: $entityId) {
+        attributes: metafields(namespace: "attributes") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+`);
+
+const getProductLineNames = cache(async (): Promise<Map<string, string>> => {
+  const { data } = await client.fetch({
+    document: CabinetProductLinesQuery,
+    variables: { entityId: CABINETS_CATEGORY_ID },
+    fetchOptions: { next: { revalidate } },
+  });
+  const raw = data.site.category?.attributes.edges?.find((e) => e.node.key === 'product_lines')
+    ?.node.value;
+  const rows = parseJson<Array<{ id: string; name: string }>>(raw) ?? [];
+
+  return new Map(rows.map((row) => [row.id, row.name]));
+});
+
+// Product-line filter on the Assembled / RTA listings. Options are the lines present among the
+// collections sold in that program, in this order (Arun's), so RTA shows only Star and Euro Max.
+const CABINET_LINE_ORDER = ['Star', 'Prism', 'Euro Value', 'Euro Max'];
+
+export interface CabinetLineOption {
+  label: string;
+  slug: string;
+}
+
+/** URL slug for a product line name: "Euro Max" -> "euro-max". */
+export function cabinetLineSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/** The product lines present in a set of collections, ordered for the filter. */
+export function cabinetLineOptions(lines: CabinetLine[]): CabinetLineOption[] {
+  const present = new Set(lines.map((line) => line.productLine).filter((n): n is string => !!n));
+  const ordered = [
+    ...CABINET_LINE_ORDER.filter((n) => present.has(n)),
+    ...[...present].filter((n) => !CABINET_LINE_ORDER.includes(n)).sort(),
+  ];
+
+  return ordered.map((label) => ({ label, slug: cabinetLineSlug(label) }));
+}
+
+/** Collections in the selected line (slug), or all of them when no line is selected. */
+export function filterCabinetLines(lines: CabinetLine[], slug: string | null): CabinetLine[] {
+  if (!slug) return lines;
+
+  return lines.filter((line) => line.productLine && cabinetLineSlug(line.productLine) === slug);
+}
 
 function parseJson<T>(value: string | undefined): T | undefined {
   if (value == null || value === '') return undefined;
@@ -159,74 +233,79 @@ function pickCardImages(
  * the given program (Assembled or RTA), shaped for the CabinetLines section. Card imagery is
  * audience-aware (see pickCardImages).
  */
-export const getCabinetLines = cache(
-  async (program: CabinetProgram): Promise<CabinetLine[]> => {
-    const audience = await getAudienceMode();
-    const { data } = await client.fetch({
-      document: CabinetLinesQuery,
-      variables: { rootEntityId: CABINETS_CATEGORY_ID },
-      fetchOptions: { next: { revalidate } },
-    });
+export const getCabinetLines = cache(async (program: CabinetProgram): Promise<CabinetLine[]> => {
+  const audience = await getAudienceMode();
+  const { data } = await client.fetch({
+    document: CabinetLinesQuery,
+    variables: { rootEntityId: CABINETS_CATEGORY_ID },
+    fetchOptions: { next: { revalidate } },
+  });
 
-    const root = data.site.categoryTree.find((c) => c.entityId === CABINETS_CATEGORY_ID);
-    const children = root?.children ?? [];
+  const root = data.site.categoryTree.find((c) => c.entityId === CABINETS_CATEGORY_ID);
+  const children = root?.children ?? [];
+  const lineNames = await getProductLineNames();
 
-    const lines = await Promise.all(
-      children.map(async (child): Promise<CabinetLine> => {
-        const { data: mf } = await client.fetch({
-          document: CabinetLineMetafieldsQuery,
-          variables: { entityId: child.entityId },
-          fetchOptions: { next: { revalidate } },
-        });
+  const lines = await Promise.all(
+    children.map(async (child): Promise<CabinetLine> => {
+      const { data: mf } = await client.fetch({
+        document: CabinetLineMetafieldsQuery,
+        variables: { entityId: child.entityId },
+        fetchOptions: { next: { revalidate } },
+      });
 
-        const cat = mf.site.category;
+      const cat = mf.site.category;
 
-        // pricing_10x10.pricing = { rta: {...}, assembled: {...} }
-        const pricingRaw = cat?.pricing.edges?.find((e) => e.node.key === 'pricing')?.node.value;
-        const pricing = parseJson<Record<string, ProgramPricing>>(pricingRaw)?.[program];
+      // pricing_10x10.pricing = { rta: {...}, assembled: {...} }
+      const pricingRaw = cat?.pricing.edges?.find((e) => e.node.key === 'pricing')?.node.value;
+      const pricing = parseJson<Record<string, ProgramPricing>>(pricingRaw)?.[program];
 
-        // fulfillment.delivery = { rta: "2 Weeks", assembled: "3 Weeks" }
-        const deliveryRaw = cat?.fulfillment.edges?.find((e) => e.node.key === 'delivery')?.node
-          .value;
-        const delivery = parseJson<Record<string, string>>(deliveryRaw)?.[program];
+      // fulfillment.delivery = { rta: "2 Weeks", assembled: "3 Weeks" }
+      const deliveryRaw = cat?.fulfillment.edges?.find((e) => e.node.key === 'delivery')?.node
+        .value;
+      const delivery = parseJson<Record<string, string>>(deliveryRaw)?.[program];
 
-        // Carry the program in the URL so the collection detail page scopes its grid + header to
-        // the same program (Assembled / RTA) the visitor came from.
-        const href = `${child.path}?program=${program}`;
+      // Carry the program in the URL so the collection detail page scopes its grid + header to
+      // the same program (Assembled / RTA) the visitor came from.
+      const href = `${child.path}?program=${program}`;
 
-        // media.images = [door-sample, …, kitchen]. Cover + hover are chosen by audience.
-        const galleryRaw = cat?.media?.edges?.find((e) => e.node.key === 'images')?.node.value;
-        const gallery = (parseJson<string[]>(galleryRaw) ?? []).filter(
-          (u): u is string => typeof u === 'string' && u !== '',
-        );
-        const { cover, hover, containCover } = pickCardImages(gallery, audience);
-        const mainSrc = cover ?? child.image?.url; // fall back to native BC category image
-        const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
-        const hoverImage = hover ? { src: hover, alt: `${child.name} door sample` } : undefined;
+      // media.images = [door-sample, …, kitchen]. Cover + hover are chosen by audience.
+      const galleryRaw = cat?.media?.edges?.find((e) => e.node.key === 'images')?.node.value;
+      const gallery = (parseJson<string[]>(galleryRaw) ?? []).filter(
+        (u): u is string => typeof u === 'string' && u !== '',
+      );
+      const { cover, hover, containCover } = pickCardImages(gallery, audience);
+      const mainSrc = cover ?? child.image?.url; // fall back to native BC category image
+      const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
+      const hoverImage = hover ? { src: hover, alt: `${child.name} door sample` } : undefined;
 
-        // sample.order_sample = { product_id, price } — for now the card links to the category page
-        // (add-to-cart of a specific sample product is a later step).
-        return {
-          entityId: child.entityId,
-          name: child.name,
-          href,
-          image,
-          containCover: containCover ?? false,
-          hoverImage,
-          price: pricing?.price,
-          strikePrice: pricing?.strike_price,
-          emiText: pricing?.emi_text,
-          deliveryTime: delivery,
-          orderSampleHref: href,
-        };
-      }),
-    );
+      // spec.info.product_line_id -> master-list name ("Star", "Prism", …) for the line filter.
+      const specRaw = cat?.spec.edges?.find((e) => e.node.key === 'info')?.node.value;
+      const productLineId = parseJson<{ product_line_id?: string }>(specRaw)?.product_line_id;
+      const productLine = productLineId ? lineNames.get(productLineId) : undefined;
 
-    // A collection with no price for this program isn't sold in it (e.g. Rochelle is Assembled
-    // only), so it stays off that program's listing rather than showing a card with no price.
-    return lines.filter((line) => line.price != null && line.price !== '');
-  },
-);
+      // sample.order_sample = { product_id, price } — for now the card links to the category page
+      // (add-to-cart of a specific sample product is a later step).
+      return {
+        productLine,
+        entityId: child.entityId,
+        name: child.name,
+        href,
+        image,
+        containCover: containCover ?? false,
+        hoverImage,
+        price: pricing?.price,
+        strikePrice: pricing?.strike_price,
+        emiText: pricing?.emi_text,
+        deliveryTime: delivery,
+        orderSampleHref: href,
+      };
+    }),
+  );
+
+  // A collection with no price for this program isn't sold in it (e.g. Rochelle is Assembled
+  // only), so it stays off that program's listing rather than showing a card with no price.
+  return lines.filter((line) => line.price != null && line.price !== '');
+});
 
 // Program-wide FAQ shown on the /cabinets/* listing listing pages (one FAQ per program, not per
 // collection). Stored on the Cabinets parent (863) as faq.by_program = { assembled, rta } — the

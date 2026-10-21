@@ -2,14 +2,21 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
-import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
+import {
+  cabinetLineOptions,
+  filterCabinetLines,
+  getCabinetLines,
+  getCabinetProgramFaq,
+} from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ line?: string | string[] }>;
 }
 
 export const metadata: Metadata = {
@@ -20,8 +27,10 @@ export const metadata: Metadata = {
 
 // RTA (ready-to-assemble) cabinet lines landing page — same view as the Assembled page, driven by
 // the child categories' BigCommerce metafields for the RTA program.
-export default async function RtaCabinets({ params }: Props) {
+export default async function RtaCabinets({ params, searchParams }: Props) {
   const { locale } = await params;
+  const lineParam = (await searchParams).line;
+  const selectedLine = (Array.isArray(lineParam) ? lineParam[0] : lineParam) || null;
 
   setRequestLocale(locale);
 
@@ -55,7 +64,15 @@ export default async function RtaCabinets({ params }: Props) {
         title="RTA Kitchen Cabinets"
         tone="black"
       />
-      <CabinetLines lines={lines} program="rta" />
+      <CabinetLineFilter
+        className="pb-2 pt-8 @4xl:pt-10"
+        hrefFor={(slug) =>
+          slug ? `/cabinets/rta-cabinets?line=${slug}` : '/cabinets/rta-cabinets'
+        }
+        options={cabinetLineOptions(lines)}
+        selected={selectedLine}
+      />
+      <CabinetLines lines={filterCabinetLines(lines, selectedLine)} program="rta" />
       <CabinetFaq data={faq} />
     </>
   );

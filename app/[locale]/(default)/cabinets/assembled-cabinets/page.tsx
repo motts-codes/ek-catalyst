@@ -2,14 +2,21 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
-import { getCabinetLines, getCabinetProgramFaq } from '~/lib/cabinets/cabinet-lines-data';
+import {
+  cabinetLineOptions,
+  filterCabinetLines,
+  getCabinetLines,
+  getCabinetProgramFaq,
+} from '~/lib/cabinets/cabinet-lines-data';
 
 interface Props {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ line?: string | string[] }>;
 }
 
 export const metadata: Metadata = {
@@ -21,8 +28,10 @@ export const metadata: Metadata = {
 // Assembled cabinet lines landing page. A card per cabinet line/finish (Avon, Dover, …), driven by
 // the child categories' BigCommerce metafields (pricing_10x10 / fulfillment / sample) for the
 // Assembled program. The RTA sibling page (../rta-cabinets) is the same view with program="rta".
-export default async function AssembledCabinets({ params }: Props) {
+export default async function AssembledCabinets({ params, searchParams }: Props) {
   const { locale } = await params;
+  const lineParam = (await searchParams).line;
+  const selectedLine = (Array.isArray(lineParam) ? lineParam[0] : lineParam) || null;
 
   setRequestLocale(locale);
 
@@ -59,7 +68,15 @@ export default async function AssembledCabinets({ params }: Props) {
         title="Assembled Kitchen Cabinets"
         tone="black"
       />
-      <CabinetLines lines={lines} program="assembled" />
+      <CabinetLineFilter
+        className="pb-2 pt-8 @4xl:pt-10"
+        hrefFor={(slug) =>
+          slug ? `/cabinets/assembled-cabinets?line=${slug}` : '/cabinets/assembled-cabinets'
+        }
+        options={cabinetLineOptions(lines)}
+        selected={selectedLine}
+      />
+      <CabinetLines lines={filterCabinetLines(lines, selectedLine)} program="assembled" />
       <CabinetFaq data={faq} />
     </>
   );

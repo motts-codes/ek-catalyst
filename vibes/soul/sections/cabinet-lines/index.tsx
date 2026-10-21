@@ -31,6 +31,8 @@ export interface CabinetLine {
   deliveryTime?: string;
   /** Order-sample link (falls back to the category page when absent). */
   orderSampleHref?: string;
+  /** Product line name from the Cabinets master list, e.g. "Star", "Prism", "Euro Max". */
+  productLine?: string;
 }
 
 interface Props {
