@@ -67,7 +67,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
       />
       <CabinetLineFilter
         className="pb-2 pt-8 @4xl:pt-10"
-        descriptions={CABINET_LINE_COPY}
+        descriptions={CABINET_LINE_COPY.rta}
         hrefFor={(slug) =>
           slug ? `/cabinets/rta-cabinets?line=${slug}` : '/cabinets/rta-cabinets'
         }
