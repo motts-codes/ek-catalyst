@@ -24,14 +24,13 @@ import { getSessionCustomerAccessToken } from '~/auth';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import {
+  cabinetProgramContext,
   cabinetProgramSearchParam,
   getCabinetAssemblyVideos,
   getCabinetCollectionContent,
   getCabinetCollectionFaq,
   getCabinetCollectionHeader,
   isCabinetCollection,
-  parseCabinetProgram,
-  selectedCabinetProgram,
 } from '~/lib/cabinets/cabinet-collection';
 import {
   fetchCabinetProductsByType,
@@ -251,8 +250,13 @@ export default async function Category(props: Props) {
   //    filter, so a bare /cabinets/avon (no ?program) shows ALL products (both programs).
   const isCabinet = await isCabinetCollection(categoryId);
   const programParam = (await props.searchParams).program;
-  const cabinetProgram = isCabinet ? parseCabinetProgram(programParam) : undefined;
-  const selectedProgram = isCabinet ? selectedCabinetProgram(programParam) : null;
+  // A collection sold in one program only (Prism, Euro Value, Rochelle…) ignores a request for the
+  // other: header, pricing, FAQ and grid all fall back to the program it actually has.
+  const {
+    program: cabinetProgram,
+    selected: selectedProgram,
+    switchable: programSwitchable,
+  } = await cabinetProgramContext(isCabinet, categoryId, programParam);
   const searchParamsForLinks = await props.searchParams;
   const selectedType = selectedCabinetType(searchParamsForLinks[CABINET_TYPE_PARAM]);
 
@@ -508,7 +512,9 @@ export default async function Category(props: Props) {
             data={cabinetHeader}
             program={cabinetProgram}
             specifications={cabinetContent?.specifications}
-            switchHref={getSwitchHref(category.path, cabinetProgram)}
+            switchHref={
+              programSwitchable ? getSwitchHref(category.path, cabinetProgram) : undefined
+            }
           />
           <CabinetTypeFilter
             className="pb-8 @4xl:pb-10"

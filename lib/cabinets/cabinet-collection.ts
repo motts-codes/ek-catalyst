@@ -330,6 +330,64 @@ export const getCabinetCollectionFaq = cache(
   },
 );
 
+export interface CabinetCollectionPrograms {
+  rta: boolean;
+  assembled: boolean;
+}
+
+// Which programs this collection is sold in: a program counts when it has a 10×10 price (the same
+// rule the listings use to hide a collection from a program). Prism and Euro Value lines are
+// Assembled only; Rochelle and Brunswick too.
+export const getCabinetCollectionPrograms = cache(
+  async (categoryId: number): Promise<CabinetCollectionPrograms> => {
+    const cat = await fetchCabinetCollection(categoryId);
+    const pricing = cat
+      ? parseJson<Record<string, ProgramPricing>>(
+          cat.pricing.edges?.find((e) => e.node.key === 'pricing')?.node.value,
+        )
+      : null;
+    const priced = (program: CabinetProgram) => {
+      const price = pricing?.[program]?.price;
+
+      return price != null && price !== '';
+    };
+
+    return { rta: priced('rta'), assembled: priced('assembled') };
+  },
+);
+
+export interface CabinetProgramContext {
+  /** The program the page shows (header, pricing, FAQ): the requested one when the collection
+   *  sells it, else the one it does sell. Undefined for a non-collection category. */
+  program: CabinetProgram | undefined;
+  /** The explicit ?program= selection for the grid filter (resolved the same way), or null. */
+  selected: CabinetProgram | null;
+  /** Whether a "Switch to <other program>" link makes sense. */
+  switchable: boolean;
+}
+
+// Resolve ?program= for a collection page. A request for RTA on an Assembled-only collection
+// (Prism, Euro Value…) shows Assembled instead of an empty header, and offers no switch.
+export async function cabinetProgramContext(
+  isCollection: boolean,
+  categoryId: number,
+  programParam: string | string[] | undefined,
+): Promise<CabinetProgramContext> {
+  if (!isCollection) return { program: undefined, selected: null, switchable: false };
+
+  const programs = await getCabinetCollectionPrograms(categoryId);
+  const requested = parseCabinetProgram(programParam);
+  const other: CabinetProgram = requested === 'rta' ? 'assembled' : 'rta';
+  const program = programs[requested] || !programs[other] ? requested : other;
+  const explicit = selectedCabinetProgram(programParam);
+
+  return {
+    program,
+    selected: explicit == null ? null : program,
+    switchable: programs[program === 'rta' ? 'assembled' : 'rta'],
+  };
+}
+
 /** Build the collection-header data for a cabinet collection category + program (Assembled / RTA). */
 export const getCabinetCollectionHeader = cache(
   async (
@@ -343,7 +401,9 @@ export const getCabinetCollectionHeader = cache(
     const pricing = parseJson<Record<string, ProgramPricing>>(
       cat.pricing.edges?.find((e) => e.node.key === 'pricing')?.node.value,
     )?.[program];
-    const merch = parseJson<MerchInfo>(cat.merch.edges?.find((e) => e.node.key === 'info')?.node.value);
+    const merch = parseJson<MerchInfo>(
+      cat.merch.edges?.find((e) => e.node.key === 'info')?.node.value,
+    );
     const delivery = parseJson<Record<string, string>>(
       cat.fulfillment.edges?.find((e) => e.node.key === 'delivery')?.node.value,
     )?.[program];
@@ -374,9 +434,9 @@ export const getCabinetCollectionHeader = cache(
     // Overview (staff-authored HTML metafield) replaces the native BC category description for
     // cabinet collections. Gallery images come from media.images (order: [door-sample, …, kitchen]).
     const overview = cat.content.edges?.find((e) => e.node.key === 'overview')?.node.value ?? '';
-    const rawImages = (parseJson<string[]>(
-      cat.media.edges?.find((e) => e.node.key === 'images')?.node.value,
-    ) ?? []).filter((u): u is string => typeof u === 'string' && u !== '');
+    const rawImages = (
+      parseJson<string[]>(cat.media.edges?.find((e) => e.node.key === 'images')?.node.value) ?? []
+    ).filter((u): u is string => typeof u === 'string' && u !== '');
 
     // Audience-aware lead image (Gallery shows images[0] as the main): homeowners lead with the
     // kitchen (last image) moved to the front; contractors keep the door sample (first) as-is.
