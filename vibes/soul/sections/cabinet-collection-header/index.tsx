@@ -21,8 +21,11 @@ export interface CabinetSwatch {
   image?: string;
   /** URL slug used by ?finish= when finishes are selectable. */
   slug?: string;
-  /** Swatch image: the master-list swatch, or the finish's own door photo. */
+  /** Swatch image from the colour master list (shown as-is). */
   swatch?: string;
+  /** The finish's door photo — used zoomed-in as the swatch when there's no hex or swatch image
+   *  (a whole door is two panels with a white gap, which reads as a line at 20px). */
+  photo?: string;
 }
 
 export interface CabinetCollectionHeaderData {
@@ -184,16 +187,24 @@ function Finishes({
   const selectable = hrefFor != null && colors.length > 1;
   const chipClass =
     'inline-flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-3 text-xs transition-colors';
-  const swatch = (c: CabinetSwatch) => (
-    <span
-      className="inline-block size-5 rounded-full border border-contrast-100 bg-cover bg-center"
-      style={{
-        backgroundColor: c.hex || undefined,
-        backgroundImage: c.swatch ? `url(${c.swatch})` : undefined,
-      }}
-      title={c.name}
-    />
-  );
+  const swatch = (c: CabinetSwatch) => {
+    const usePhoto = !c.hex && !c.swatch && Boolean(c.photo);
+    const image = c.swatch ?? (usePhoto ? c.photo : undefined);
+
+    return (
+      <span
+        className="inline-block size-5 rounded-full border border-contrast-100 bg-center"
+        style={{
+          backgroundColor: c.hex || undefined,
+          backgroundImage: image ? `url(${image})` : undefined,
+          // Door photo: sample a solid patch of the left panel rather than the whole door.
+          backgroundSize: usePhoto ? '400%' : 'cover',
+          backgroundPosition: usePhoto ? '22% 50%' : 'center',
+        }}
+        title={c.name}
+      />
+    );
+  };
 
   return (
     <div>

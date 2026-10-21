@@ -515,8 +515,9 @@ export const getCabinetCollectionHeader = cache(
         slug: cabinetFinishSlug(c.name),
         hex: c.hex,
         image: c.image,
-        // A finish with its own photo shows that door as its swatch when the master list has none.
-        swatch: c.image || byFinish[c.name]?.images?.[0],
+        swatch: c.image,
+        // A finish with its own door photo can stand in for a missing master-list swatch.
+        photo: byFinish[c.name]?.images?.[0],
       }));
 
     // Overview (staff-authored HTML metafield) replaces the native BC category description for
