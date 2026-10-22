@@ -231,7 +231,7 @@ function Finishes({
 // background): price | 10×10 badge | three fact rows (kitchen, finance, lead time). The fixed-list
 // disclaimer sits under the strip.
 function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
-  const row = 'flex items-center gap-2 px-4 py-2.5 text-sm font-medium leading-snug';
+  const row = 'flex items-center gap-2 px-4 py-2.5 text-[13px] font-normal leading-snug';
   const icon = 'shrink-0 text-[var(--button-primary-background,#d90716)]';
 
   return (
