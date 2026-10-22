@@ -332,15 +332,15 @@ export function CabinetCollectionHeader({
 
           {/* Right: the decision column */}
           <div className="flex flex-col gap-5">
-            {/* The program tag is identification, not a highlight: small, light grey, tucked at the
-                bottom-right of the name. */}
-            <div className="flex flex-wrap items-end gap-2.5">
+            {/* The program tag is identification, not a highlight: a small light-grey label above
+                the name. */}
+            <div className="flex flex-col items-start gap-1.5">
+              <span className="rounded-full bg-contrast-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-foreground">
+                {PROGRAM_LABEL[program]}
+              </span>
               <h1 className="m-0 font-heading text-3xl font-bold leading-tight @xl:text-4xl">
                 {data.name}
               </h1>
-              <span className="mb-1.5 rounded-full bg-contrast-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-foreground">
-                {PROGRAM_LABEL[program]}
-              </span>
             </div>
 
             {data.overview != null && data.overview !== '' && (
