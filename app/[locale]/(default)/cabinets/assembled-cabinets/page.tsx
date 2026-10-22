@@ -80,7 +80,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
         ]}
       />
       <CabinetLineFilter
-        className="pb-8 pt-8 @4xl:pb-10 @4xl:pt-10"
+        className="pt-8 @4xl:pt-10"
         descriptions={CABINET_LINE_COPY.assembled}
         hrefFor={(slug) =>
           slug ? `/cabinets/assembled-cabinets?line=${slug}` : '/cabinets/assembled-cabinets'
@@ -89,7 +89,12 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
         selected={selectedLine}
         total={lines.length}
       />
-      <CabinetLines lines={filterCabinetLines(lines, selectedLine)} program="assembled" />
+      {/* The grey band meets the filter's rule; the cards start a little lower inside it. */}
+      <CabinetLines
+        className="pt-6 @4xl:pt-8"
+        lines={filterCabinetLines(lines, selectedLine)}
+        program="assembled"
+      />
       <CabinetFaq data={faq} />
     </>
   );

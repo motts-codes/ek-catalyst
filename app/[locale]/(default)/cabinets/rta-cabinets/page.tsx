@@ -76,7 +76,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
         ]}
       />
       <CabinetLineFilter
-        className="pb-8 pt-8 @4xl:pb-10 @4xl:pt-10"
+        className="pt-8 @4xl:pt-10"
         descriptions={CABINET_LINE_COPY.rta}
         hrefFor={(slug) =>
           slug ? `/cabinets/rta-cabinets?line=${slug}` : '/cabinets/rta-cabinets'
@@ -85,7 +85,12 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
         selected={selectedLine}
         total={lines.length}
       />
-      <CabinetLines lines={filterCabinetLines(lines, selectedLine)} program="rta" />
+      {/* The grey band meets the filter's rule; the cards start a little lower inside it. */}
+      <CabinetLines
+        className="pt-6 @4xl:pt-8"
+        lines={filterCabinetLines(lines, selectedLine)}
+        program="rta"
+      />
       <CabinetFaq data={faq} />
     </>
   );

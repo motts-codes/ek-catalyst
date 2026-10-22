@@ -25,13 +25,13 @@ interface Props {
 }
 
 const TAB =
-  '-mb-px inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 px-0.5 pb-3 pt-2 text-[15px] transition-colors duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)]';
+  '-mb-px inline-flex items-center gap-1 whitespace-nowrap border-b-[3px] px-0.5 pb-3 pt-2 text-[15px] transition-colors duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)]';
 
 // "Filter by line" — underline tabs under the program hero on the Assembled / RTA listings, in the
 // home page's product-tabs style: one rule under the row, the selected line bold with a red
 // underline, the rest grey. All, then the product lines present in that program (Star, Prism,
-// Euro Value, Euro Max), each followed by a light blue (#C0EDF6) count circle (a fixed 22px, so 7
-// and 37 look the same). The state also carries aria-current so it doesn't rely on colour, and
+// Euro Value, Euro Max), each followed by a raised light blue (#C0EDF6) count circle (a fixed 22px, so
+// 7 and 37 look the same). The state also carries aria-current so it doesn't rely on colour, and
 // the count is read out as text.
 export function CabinetLineFilter({
   title = 'Filter by line',
@@ -75,10 +75,10 @@ export function CabinetLineFilter({
                       , {tab.count} {tab.count === 1 ? 'collection' : 'collections'}
                     </span>
                     {active && <span className="sr-only"> (selected)</span>}
-                    {/* Count, after the label: light blue circle with black text. */}
+                    {/* Count, raised like a superscript after the label: light blue circle, black text. */}
                     <span
                       aria-hidden
-                      className="inline-flex size-[22px] items-center justify-center rounded-full bg-[#C0EDF6] font-body text-[11px] font-semibold leading-none text-foreground"
+                      className="inline-flex size-[22px] -translate-y-1.5 items-center justify-center rounded-full bg-[#C0EDF6] font-body text-[11px] font-semibold leading-none text-foreground"
                     >
                       {tab.count}
                     </span>
