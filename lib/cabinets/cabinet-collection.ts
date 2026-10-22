@@ -504,9 +504,15 @@ export const getCabinetCollectionHeader = cache(
     }>(cat.spec.edges?.find((e) => e.node.key === 'info')?.node.value);
     const attributes = await getCabinetAttributes();
 
+    // The collection's door-sample photo (media.images[0]) stands in as a swatch for a finish with
+    // no hex/swatch in the master list and no photo of its own (single-finish collections).
+    const doorPhoto = (
+      parseJson<string[]>(cat.media.edges?.find((e) => e.node.key === 'images')?.node.value) ?? []
+    ).find((u): u is string => typeof u === 'string' && u !== '');
     const productLine = attributes.productLines.find((o) => o.id === spec?.product_line_id)?.name;
     const construction = attributes.constructions.find((o) => o.id === spec?.construction_id)?.name;
-    const colors = (spec?.color_ids ?? [])
+    const colorIds = spec?.color_ids ?? [];
+    const colors = colorIds
       .map((id) => attributes.colors.find((c) => c.id === id))
       .filter((c): c is ColorOption => c != null)
       .map((c) => ({
@@ -516,8 +522,9 @@ export const getCabinetCollectionHeader = cache(
         hex: c.hex,
         image: c.image,
         swatch: c.image,
-        // A finish with its own door photo can stand in for a missing master-list swatch.
-        photo: byFinish[c.name]?.images?.[0],
+        // A finish's own door photo can stand in for a missing master-list swatch; the collection's
+        // door sample only when it has a single finish (otherwise every chip would show one colour).
+        photo: byFinish[c.name]?.images?.[0] || (colorIds.length === 1 ? doorPhoto : undefined),
       }));
 
     // Overview (staff-authored HTML metafield) replaces the native BC category description for

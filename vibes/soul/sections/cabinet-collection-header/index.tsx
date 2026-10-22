@@ -188,8 +188,9 @@ function Finishes({
   const chipClass =
     'inline-flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-3 text-xs transition-colors';
   const swatch = (c: CabinetSwatch) => {
+    // Master-list values come through as '' when unset, so test truthiness, not nullishness.
     const usePhoto = !c.hex && !c.swatch && Boolean(c.photo);
-    const image = c.swatch ?? (usePhoto ? c.photo : undefined);
+    const image = c.swatch || (usePhoto ? c.photo : undefined);
 
     return (
       <span
@@ -230,8 +231,9 @@ function Finishes({
               className={clsx(
                 chipClass,
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+                // Selected: a thin (1px) brand-red outline, plus bold text and aria-current.
                 active
-                  ? 'border-[var(--button-primary-background,#d90716)] font-semibold text-foreground ring-1 ring-[var(--button-primary-background,#d90716)]'
+                  ? 'border-[var(--button-primary-background,#d90716)] font-semibold text-foreground'
                   : 'border-contrast-100 text-contrast-500 hover:border-contrast-300 hover:text-foreground',
               )}
               href={hrefFor(active ? null : c.slug)}
