@@ -225,11 +225,11 @@ export function OffersRow({ offers }: { offers: CollectionOffer[] }) {
 }
 
 // "Need help?" under the offers: two small pills on the right, both on a half-strength cream
-// (#F6EBD6/50, solid on hover) — a free design consult in black and the showroom line in the thin
-// brand-red outline — joined by "or". The number is a tel: link so a tap dials; on phones the pills drop under the label.
+// (#F6EBD6/50, solid on hover) in black — a free design consult (/free-design) and the showroom
+// line — joined by "or". The number is a tel: link so a tap dials; on phones the pills drop under the label.
 export function HelpRow({
   phone = '860-247-1000',
-  consultHref = '/book',
+  consultHref = '/free-design',
 }: {
   phone?: string;
   consultHref?: string;
@@ -246,13 +246,7 @@ export function HelpRow({
           Book a free design consult
         </Link>
         <span className="text-xs">or</span>
-        <a
-          className={clsx(
-            pill,
-            'border-[0.5px] border-[var(--button-primary-background,#d90716)] text-[var(--button-primary-background,#d90716)]',
-          )}
-          href={`tel:+1${phone.replace(/\D/g, '')}`}
-        >
+        <a className={clsx(pill, 'text-foreground')} href={`tel:+1${phone.replace(/\D/g, '')}`}>
           <Phone size={13} strokeWidth={1.75} />
           Call {phone}
         </a>
