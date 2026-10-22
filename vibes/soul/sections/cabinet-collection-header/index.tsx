@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ArrowDown, LayoutGrid, Repeat, Truck, WalletMinimal } from 'lucide-react';
+import { ArrowDown, PencilRuler, Repeat, Truck, WalletMinimal } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { Amount, withCommas } from '@/vibes/soul/sections/cabinet-lines';
@@ -266,7 +266,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
         {/* Three fact rows with full-width hairlines between them. */}
         <div className="flex flex-col justify-center divide-y divide-[#fcb6bb] border-t border-[#fcb6bb] @md:border-l @md:border-t-0">
           <div className={row}>
-            <LayoutGrid aria-hidden className={icon} size={16} strokeWidth={1.5} />
+            <PencilRuler aria-hidden className={icon} size={16} strokeWidth={1.5} />
             <span>{data.name} 10×10 kitchen</span>
           </div>
           {data.emiText != null && data.emiText !== '' && (
