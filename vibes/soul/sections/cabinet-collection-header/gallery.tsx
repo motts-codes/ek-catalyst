@@ -25,14 +25,14 @@ export function Gallery({
   const fitClass = (src: string | undefined, thumb = false) => {
     if (src != null && kitchenImages.includes(src)) return 'object-cover';
     if (src != null && doorImages.includes(src))
-      return thumb ? 'bg-contrast-100 object-contain p-1.5' : 'object-contain p-10 @xl:p-14';
+      return thumb ? 'object-contain p-1.5' : 'object-contain p-10 @xl:p-14';
 
-    return thumb ? 'bg-contrast-100 object-contain p-0.5' : 'object-contain p-4 @xl:p-6';
+    return thumb ? 'object-contain p-0.5' : 'object-contain p-4 @xl:p-6';
   };
 
   return (
     <div>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-3xl">
         {main != null && (
           <Image
             alt={name}
