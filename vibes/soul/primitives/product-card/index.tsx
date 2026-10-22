@@ -365,11 +365,13 @@ export function CardCta({
 }
 
 // The link to the product page for products whose options can't be chosen on the card, labelled
-// with what there is to choose ("Choose size"); the same outline pill as "Add to Cart".
+// with what there is to choose ("Choose size"); the same outline pill as "Add to Cart". On a
+// narrow card (two-up on phones) the specific label would wrap, so it reads "Choose options".
 function ViewOptionsCta({ href, label }: { href: string; label: string }) {
   return (
     <Link className={CTA_BUTTON_CLASS} href={href}>
-      {label}
+      <span className="@[14rem]:hidden">Choose options</span>
+      <span className="hidden @[14rem]:inline">{label}</span>
     </Link>
   );
 }
