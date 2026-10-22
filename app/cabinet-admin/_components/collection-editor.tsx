@@ -174,6 +174,14 @@ export function CollectionEditor({
               Add options in the Attributes tab to populate these dropdowns.
             </p>
           )}
+          {/* Door style is its own dimension (the storefront shows it as a chip beside Construction
+              and Product Line); free text, imported from the live site's collection tag. */}
+          <Field
+            label="Door style"
+            onChange={(v) => setData((d) => set(d, ['merch', 'door_style'], v))}
+            placeholder="Shaker Full Overlay"
+            value={data.merch.door_style}
+          />
         </Group>
 
         <Group title="Colors / Finishes">

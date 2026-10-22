@@ -64,8 +64,9 @@ export interface CollectionMetafields {
     rta: { headline: string; items: FaqItem[] };
   };
   // spec.info = { product_line_id, construction_id, color_ids[], default_color_id } — references into
-  // the attribute master-lists on 863. Product Line replaces the old free-text merch.line;
-  // Construction replaces merch.door_style; the default color supersedes merch.default_finish.
+  // the attribute master-lists on 863. Product Line replaces the old free-text merch.line and the
+  // default color supersedes merch.default_finish. merch.door_style stays in use: it's a separate
+  // dimension from Construction (e.g. "Shaker Full Overlay" vs "Framed") and shows as its own chip.
   spec: CollectionSpec;
   // assembly.videos = { rta: [{name,url}], assembled: [...] } — PER-PROGRAM assembly videos. RTA
   // ships flat (has videos); Assembled ships built (usually none). Matches the Laravel source.
