@@ -462,10 +462,20 @@ function orderFinishes(colors: ColorOption[], perFinish: boolean): ColorOption[]
     .map(({ c }) => c);
 }
 
-/** The collection name without its colour: "Avon Painted White" → "Avon", "Derry Stratus" →
- *  "Derry" (a colour's last word counts too, since names carry "Stratus" for "Painted Stratus").
- *  Names with no colour in them ("Prism Avon", "Euro Max Tribeca Shaker") are unchanged. */
-export function shortCollectionName(name: string, colorNames: string[]): string {
+/** The collection name without its line or colour, for "Shop Avon cabinets": "Avon Painted
+ *  White" → "Avon", "Derry Stratus" → "Derry" (a colour's last word counts too, since names carry
+ *  "Stratus" for "Painted Stratus"), "Euro Max Tribeca Shaker" → "Tribeca Shaker". */
+export function shortCollectionName(
+  name: string,
+  colorNames: string[],
+  productLine?: string,
+): string {
+  // The line prefix ("Prism Avon", "Euro Max Tribeca Shaker") goes too: it is already in the tag
+  // beside the name and in the breadcrumb.
+  const base =
+    productLine && name.toLowerCase().startsWith(`${productLine.toLowerCase()} `)
+      ? name.slice(productLine.length).trim()
+      : name;
   const tokens = colorNames.flatMap((c) => {
     const words = c.trim().split(/\s+/);
 
@@ -476,7 +486,7 @@ export function shortCollectionName(name: string, colorNames: string[]): string 
     .reduce(
       (acc, t) =>
         acc.replace(new RegExp(`\\s+${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i'), ''),
-      name,
+      base,
     )
     .trim();
 
@@ -805,6 +815,7 @@ export const getCabinetCollectionHeader = cache(
       shortName: shortCollectionName(
         cat.name,
         colors.map((c) => c.name),
+        productLine,
       ),
       overview: overview !== '' ? overview : undefined,
       images: images.length > 0 ? images : undefined,
