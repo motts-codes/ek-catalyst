@@ -11,6 +11,7 @@ import {
   type BuildPoint,
   type CollectionOffer,
   HEADER_COPY_CLASS,
+  HelpRow,
   HowBuiltRow,
   OffersRow,
   type SpecLine,
@@ -402,6 +403,7 @@ export function CabinetCollectionHeader({
                 specifications={specifications}
               />
               <OffersRow offers={offers} />
+              <HelpRow />
             </div>
 
             <Actions data={data} productsHref={productsHref} />

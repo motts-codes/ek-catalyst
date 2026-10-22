@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { ArrowUpRight, Download, Plus } from 'lucide-react';
+import { ArrowUpRight, Download, Phone, Plus } from 'lucide-react';
 import { useId, useState } from 'react';
 
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
@@ -221,5 +221,37 @@ export function OffersRow({ offers }: { offers: CollectionOffer[] }) {
         </ul>
       </div>
     </AccordionRow>
+  );
+}
+
+// "Need help?" under the offers: a free design consult, or the showroom line. The number is a
+// tel: link in the thin brand-red outline, filling red on hover; on phones it drops under the line.
+export function HelpRow({
+  phone = '860-247-1000',
+  consultHref = '/book',
+}: {
+  phone?: string;
+  consultHref?: string;
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-contrast-100 py-3 text-sm text-contrast-500">
+      <p className="m-0">
+        <span className="font-medium text-foreground">Need help?</span>{' '}
+        <Link
+          className="text-foreground underline decoration-contrast-300 underline-offset-4 transition-colors hover:decoration-[var(--button-primary-background,#d90716)]"
+          href={consultHref}
+        >
+          Book a free consult with a designer
+        </Link>
+        , or
+      </p>
+      <a
+        className="inline-flex min-h-9 items-center gap-2 rounded-full border-[0.5px] border-[var(--button-primary-background,#d90716)] px-4 text-sm font-medium text-[var(--button-primary-background,#d90716)] transition-colors duration-300 hover:bg-[var(--button-primary-background,#d90716)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+        href={`tel:+1${phone.replace(/\D/g, '')}`}
+      >
+        <Phone size={15} strokeWidth={1.75} />
+        Call {phone}
+      </a>
+    </div>
   );
 }
