@@ -105,7 +105,8 @@ export function ProductList({
             maxItems={maxItems}
           >
             <div className={clsx('w-full @container', className)}>
-              <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4 @7xl:grid-cols-5">
+              {/* Capped at 4 columns: pages are 12 products, which fill 2 / 3 / 4 columns exactly but not 5. */}
+              <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4">
                 {products.map((product) => (
                   <ProductCard
                     addToCartAction={addToCartAction}
@@ -147,7 +148,7 @@ export function ProductListSkeleton({
       className={clsx('group-has-data-pending/product-list:animate-pulse', className)}
       pending
     >
-      <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4 @7xl:grid-cols-5">
+      <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4">
         {Array.from({ length: placeholderCount }).map((_, index) => (
           <ProductCardSkeleton key={index} />
         ))}
@@ -169,7 +170,7 @@ export function ProductListEmptyState({
     <Skeleton.Root className={clsx('relative', className)}>
       <div
         className={clsx(
-          'mx-auto grid grid-cols-2 gap-x-4 gap-y-6 [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)] @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4 @7xl:grid-cols-5',
+          'mx-auto grid grid-cols-2 gap-x-4 gap-y-6 [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)] @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4',
         )}
       >
         {Array.from({ length: placeholderCount }).map((_, index) => (
