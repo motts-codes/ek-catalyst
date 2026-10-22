@@ -231,6 +231,7 @@ export default async function Brand(props: Props) {
     <ProductsListSection
       compareLabel={t('Compare.compare')}
       compareProducts={streamableCompareProducts}
+      density="compact"
       emptyStateSubtitle={t('Brand.Empty.subtitle')}
       emptyStateTitle={t('Brand.Empty.title')}
       filterLabel={t('FacetedSearch.filters')}

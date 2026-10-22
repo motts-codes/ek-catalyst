@@ -119,15 +119,11 @@ function cabinetTypeSearchParam(value: CabinetTypeValue | null): Record<string, 
 // and the grid narrows through the products' "Finish" custom field (a search facet, like Program).
 const FINISH_PARAM = 'finish';
 
-// Cabinet collections list hundreds of SKUs: compact cards (~220px, as many columns as fit) and
-// 24 per page instead of 12. Every other category keeps the default grid.
-function listingLayout(isCabinet: boolean): {
-  pageSize: number;
-  density: 'default' | 'compact';
-} {
-  return isCabinet
-    ? { pageSize: 24, density: 'compact' }
-    : { pageSize: DEFAULT_PAGE_SIZE, density: 'default' };
+// Every listing uses the compact grid (~220px cards, as many columns as fit, so a card is the same
+// size whether or not the filter sidebar is open). Cabinet collections list hundreds of SKUs, so
+// they page 24 at a time instead of 12.
+function listingLayout(isCabinet: boolean): { pageSize: number; density: 'compact' } {
+  return { pageSize: isCabinet ? 24 : DEFAULT_PAGE_SIZE, density: 'compact' };
 }
 
 // The collection URL with the finish set (or cleared), keeping program and type, dropping the page.

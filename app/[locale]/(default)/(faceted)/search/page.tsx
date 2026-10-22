@@ -246,6 +246,7 @@ export default async function Search(props: Props) {
       ]}
       compareLabel={t('Compare.compare')}
       compareProducts={streamableCompareProducts}
+      density="compact"
       emptyStateSubtitle={t('Search.Empty.subtitle')}
       emptyStateTitle={streamableEmptyStateTitle}
       filterLabel={t('FacetedSearch.filters')}
