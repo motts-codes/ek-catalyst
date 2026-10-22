@@ -87,7 +87,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
       />
       {/* The grey band meets the filter's rule; the cards start a little lower inside it. */}
       <CabinetLines
-        className="pt-6 @4xl:pt-8"
+        className="pt-2 @4xl:pt-3"
         lines={filterCabinetLines(lines, selectedLine)}
         program="rta"
       />

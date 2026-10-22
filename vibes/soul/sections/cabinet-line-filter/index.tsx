@@ -65,7 +65,7 @@ export function CabinetLineFilter({
                     className={clsx(
                       TAB,
                       active
-                        ? 'border-[var(--button-primary-background,#d90716)] font-bold text-foreground'
+                        ? 'border-[var(--button-primary-background,#d90716)] font-bold text-[var(--button-primary-background,#d90716)]'
                         : 'border-transparent text-contrast-500 hover:text-foreground',
                     )}
                     href={hrefFor(tab.slug)}
