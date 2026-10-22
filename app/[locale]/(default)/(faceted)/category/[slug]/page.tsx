@@ -244,6 +244,17 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
+// Cabinet collections add the program as a crumb between Cabinets and the collection
+// (Home / Cabinets / Assembled / Avon…) so "back" goes to the listing the visitor came from, not
+// the Cabinets information page. The program is the one the page is showing.
+function programCrumbs(program: Program | undefined) {
+  if (program == null) return [];
+
+  return [
+    { label: program === 'rta' ? 'RTA' : 'Assembled', href: `/cabinets/${program}-cabinets` },
+  ];
+}
+
 // Countertops are quoted, not carted: their cards link to a quote form rendered under the grid.
 const isCountertopPath = (path: string) => path.startsWith('/countertops');
 
@@ -310,7 +321,12 @@ export default async function Category(props: Props) {
   const categoryCrumbs = removeEdgesAndNodes(category.breadcrumbs)
     .map(({ name, path }) => ({ label: name, href: path ?? '#' }))
     .filter((crumb, index, all) => index === 0 || crumb.label !== all[index - 1]?.label);
-  const breadcrumbs = [{ label: 'Home', href: '/' }, ...categoryCrumbs];
+  const breadcrumbs = [
+    { label: 'Home', href: '/' },
+    ...categoryCrumbs.slice(0, -1),
+    ...programCrumbs(cabinetProgram),
+    ...categoryCrumbs.slice(-1),
+  ];
 
   const showRating = Boolean(settings?.reviews.enabled && settings.display.showProductRating);
 
