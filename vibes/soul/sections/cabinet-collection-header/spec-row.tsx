@@ -22,6 +22,13 @@ export interface BuildPoint {
 export const HEADER_COPY_CLASS =
   'prose max-w-none text-[13px] leading-[1.5] text-contrast-500 @xl:text-sm [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_a]:text-[#2162a1] [&_li]:my-1 [&_li]:text-contrast-500 [&_p]:my-2 [&_p]:leading-[1.5] [&_p]:text-contrast-500 [&_ul]:list-disc [&_ul]:pl-5';
 
+// The same copy style at a fixed 12px (no tablet bump) for the dense accordion content — the
+// "How it's built" bullets and the specification table.
+const COMPACT_COPY_CLASS = HEADER_COPY_CLASS.replace('text-[13px]', 'text-xs').replace(
+  ' @xl:text-sm',
+  '',
+);
+
 // An expandable row (Specifications, Offers): label at the link's 14px size, rotating plus, smooth
 // height animation (CSS grid rows 0fr → 1fr), optional element pinned to the row's right.
 export function AccordionRow({
@@ -42,7 +49,11 @@ export function AccordionRow({
         aria-controls={panelId}
         aria-expanded={open}
         // `.font-heading` forces bold (!important) in globals.css; use the family directly.
-        className="flex w-full cursor-pointer items-center gap-2.5 py-2.5 pr-48 text-left font-[family-name:var(--font-family-heading)] text-sm font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+        className={clsx(
+          'flex w-full cursor-pointer items-center gap-2.5 py-2.5 pr-48 text-left font-[family-name:var(--font-family-heading)] text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2',
+          // Open: the title goes medium weight and brand red, so the open row reads as selected.
+          open ? 'font-medium text-[var(--button-primary-background,#d90716)]' : 'font-normal',
+        )}
         onClick={() => setOpen((v) => !v)}
         type="button"
       >
@@ -87,7 +98,7 @@ export function HowBuiltRow({ points = [] }: { points?: BuildPoint[] }) {
 
   return (
     <AccordionRow title="How it's built">
-      <ul className={clsx(HEADER_COPY_CLASS, 'list-disc space-y-2 pl-5')}>
+      <ul className={clsx(COMPACT_COPY_CLASS, 'list-disc space-y-1.5 pl-5')}>
         {points.map((point) => (
           <li key={point.lead}>
             <span className="font-semibold text-foreground">{point.lead}</span>
@@ -102,17 +113,17 @@ export function HowBuiltRow({ points = [] }: { points?: BuildPoint[] }) {
 // The specifications as a two-column table (label, value) when the rows parsed, else the HTML.
 function SpecTable({ rows }: { rows: SpecLine[] }) {
   return (
-    <table className={clsx(HEADER_COPY_CLASS, 'w-full border-collapse')}>
+    <table className={clsx(COMPACT_COPY_CLASS, 'w-full border-collapse')}>
       <tbody className="divide-y divide-contrast-100">
         {rows.map((row) => (
           <tr className="align-top" key={row.label}>
             <th
-              className="w-[38%] py-2 pr-4 text-left font-medium text-contrast-500 @md:w-[30%]"
+              className="w-[38%] py-1.5 pr-4 text-left font-medium text-contrast-500 @md:w-[30%]"
               scope="row"
             >
               {row.label}
             </th>
-            <td className="py-2 text-foreground">{row.value}</td>
+            <td className="py-1.5 text-foreground">{row.value}</td>
           </tr>
         ))}
       </tbody>
