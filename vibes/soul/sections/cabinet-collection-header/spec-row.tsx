@@ -1,10 +1,11 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { Download, Plus } from 'lucide-react';
+import { ArrowUpRight, Download, Plus } from 'lucide-react';
 import { useId, useState } from 'react';
 
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
+import { Link } from '~/components/link';
 
 // Shared body-copy style for the collection header: the overview paragraph and the specification
 // list use the same size, colour and leading (13px on phones, 14px from tablet, 150% line-height).
@@ -99,6 +100,8 @@ export interface CollectionOffer {
   text: string;
   /** A substring of `text` picked out in black (the code, the amount). */
   highlight?: string;
+  /** Link to the full offer / terms — rendered as a small arrow after the text. */
+  href?: string;
 }
 
 function Highlighted({ text, highlight }: { text: string; highlight?: string }) {
@@ -127,6 +130,15 @@ export function OffersRow({ offers }: { offers: CollectionOffer[] }) {
           {offers.map((offer) => (
             <li key={offer.text}>
               <Highlighted highlight={offer.highlight} text={offer.text} />
+              {offer.href != null && (
+                <Link
+                  aria-label={`Offer details: ${offer.text}`}
+                  className="ml-1 inline-flex translate-y-[2px] text-contrast-400 transition-colors hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1"
+                  href={offer.href}
+                >
+                  <ArrowUpRight aria-hidden size={14} strokeWidth={2} />
+                </Link>
+              )}
             </li>
           ))}
         </ul>

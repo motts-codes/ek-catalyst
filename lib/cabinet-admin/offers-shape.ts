@@ -17,6 +17,8 @@ export interface CabinetOffer {
   text: string;
   /** A substring of `text` picked out in black (the code, the amount). Empty = none. */
   highlight: string;
+  /** Optional link to the full offer / terms (a path or URL); shown as an arrow after the text. */
+  url: string;
   scope: OfferScope;
   /** attributes.product_lines id when scope is "line". */
   lineId: string;
@@ -50,6 +52,7 @@ export function normalizeOffer(raw: unknown): CabinetOffer | null {
     id: str(row.id) || `offer-${Math.random().toString(36).slice(2, 10)}`,
     text,
     highlight: str(row.highlight),
+    url: str(row.url).trim(),
     scope: isScope(row.scope) ? row.scope : 'all',
     lineId: str(row.lineId),
     collectionId: str(row.collectionId),

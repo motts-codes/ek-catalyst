@@ -7,6 +7,8 @@ import { type CabinetOffer } from '~/lib/cabinet-admin/offers-shape';
 
 import { saveOffersAction } from '../actions';
 
+import { validateUrl } from './validators';
+
 import { Field } from './faq-editor';
 
 const toScope = (v: string): CabinetOffer['scope'] =>
@@ -20,6 +22,7 @@ function emptyOffer(): CabinetOffer {
     id: `offer-${Math.random().toString(36).slice(2, 10)}`,
     text: '',
     highlight: '',
+    url: '',
     scope: 'all',
     lineId: '',
     collectionId: '',
@@ -66,6 +69,7 @@ export function OffersEditor({
     (o) =>
       o.text.trim() === '' ||
       (o.highlight !== '' && !o.text.includes(o.highlight)) ||
+      validateUrl(o.url) != null ||
       (o.scope === 'line' && o.lineId === '') ||
       (o.scope === 'collection' && o.collectionId === ''),
   );
@@ -145,13 +149,20 @@ export function OffersEditor({
                 placeholder="Free shipping on purchases above $2,500."
                 value={offer.text}
               />
-              <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto]">
+              <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
                 <Field
                   error={highlightBad ? 'Must be part of the offer text.' : null}
                   label="Pick out in black (optional)"
                   onChange={(v) => update(i, { highlight: v })}
                   placeholder="$2,500"
                   value={offer.highlight}
+                />
+                <Field
+                  error={validateUrl(offer.url)}
+                  label="Details link (optional) — shown as an arrow after the text"
+                  onChange={(v) => update(i, { url: v })}
+                  placeholder="/promotions/free-samples"
+                  value={offer.url}
                 />
               </div>
 

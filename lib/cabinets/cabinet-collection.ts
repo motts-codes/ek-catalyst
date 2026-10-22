@@ -239,6 +239,7 @@ const CabinetAttributesQuery = graphql(`
 interface OfferRow {
   text?: string;
   highlight?: string;
+  url?: string;
   scope?: 'all' | 'line' | 'collection';
   lineId?: string;
   collectionId?: string;
@@ -251,6 +252,8 @@ interface OfferRow {
 export interface CabinetOfferLine {
   text: string;
   highlight?: string;
+  /** Link to the full offer / terms. */
+  href?: string;
 }
 
 const getCabinetOffersRegistry = cache(async (): Promise<OfferRow[]> => {
@@ -303,7 +306,11 @@ export const getCabinetOffers = cache(
     return live
       .filter(applies)
       .sort((a, b) => rank(a) - rank(b))
-      .map((o) => ({ text: o.text ?? '', highlight: o.highlight || undefined }));
+      .map((o) => ({
+        text: o.text ?? '',
+        highlight: o.highlight || undefined,
+        href: o.url || undefined,
+      }));
   },
 );
 
