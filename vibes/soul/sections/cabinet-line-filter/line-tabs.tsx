@@ -16,7 +16,7 @@ export interface LineTab {
 const RED = 'var(--button-primary-background,#d90716)';
 
 const TAB =
-  'inline-flex items-center gap-1 whitespace-nowrap px-0.5 pb-3 pt-2 text-[15px] transition-colors duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)]';
+  'inline-flex items-center gap-1 whitespace-nowrap px-0.5 pb-3 pt-2 text-base transition-colors duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)]';
 
 // The tab row, as on the home page's product tabs: one red underline that glides to the selected
 // tab instead of a border that jumps from label to label. The tabs are links (the selection lives

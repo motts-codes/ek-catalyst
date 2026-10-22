@@ -51,7 +51,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
       />
       {/* The same black-panel hero as the category pages, with the home page's program photo. */}
       <CategoryHero
-        // A program listing is a sub-page of Cabinets, so it takes the subcategory black.
+        // Brand red, like the other category pages.
         description="Built and checked in Connecticut, delivered ready to hang in three weeks. Pick a collection and finish below."
         image={{
           src: '/images/home/programs/assembled.webp',
@@ -67,7 +67,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           </Link>
         }
         title="Assembled Kitchen Cabinets"
-        tone="black"
+        tone="red"
       />
       {/* The row of program promises under the hero, as on the category pages. */}
       <CategoryPoints

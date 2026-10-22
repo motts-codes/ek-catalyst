@@ -47,7 +47,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
       />
       {/* The same black-panel hero as the category pages, with the home page's program photo. */}
       <CategoryHero
-        // A program listing is a sub-page of Cabinets, so it takes the subcategory black.
+        // Brand red, like the other category pages.
         description="The same cabinets shipped flat from Bristol in two weeks, at a lower price. Pick a collection and finish below."
         image={{
           src: '/images/home/programs/rta.webp',
@@ -63,7 +63,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
           </Link>
         }
         title="RTA Kitchen Cabinets"
-        tone="black"
+        tone="red"
       />
       {/* The row of program promises under the hero, as on the category pages. */}
       <CategoryPoints
