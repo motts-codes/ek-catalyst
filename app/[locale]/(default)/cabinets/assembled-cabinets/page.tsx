@@ -4,7 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
-import { CategoryHero } from '@/vibes/soul/sections/category-hero';
+import { CategoryHero, CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
 import { CABINET_LINE_COPY } from '~/lib/cabinets/cabinet-line-copy';
@@ -68,6 +68,16 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
         }
         title="Assembled Kitchen Cabinets"
         tone="black"
+      />
+      {/* The row of program promises under the hero, as on the category pages. */}
+      <CategoryPoints
+        points={[
+          { icon: 'clock', label: 'Save Time' },
+          { icon: 'price', label: 'Save Money' },
+          { icon: 'thumbs', label: 'Hassle-Free' },
+          { icon: 'plywood', label: 'All-Plywood Semi-Custom' },
+          { icon: 'shield', label: 'CARB2 Compliant' },
+        ]}
       />
       <CabinetLineFilter
         className="pb-8 pt-8 @4xl:pb-10 @4xl:pt-10"

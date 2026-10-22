@@ -4,12 +4,17 @@ import {
   BadgeDollarSign,
   Clock,
   Gift,
+  Hammer,
+  Layers,
   MapPin,
   PackageCheck,
   Phone,
+  ShieldCheck,
   Tag,
+  ThumbsUp,
   Truck,
   Undo2,
+  Wrench,
   Zap,
 } from 'lucide-react';
 import { type ReactNode } from 'react';
@@ -144,6 +149,12 @@ const POINT_ICONS = {
   tag: Tag,
   phone: Phone,
   zap: Zap,
+  // Cabinet program promises.
+  thumbs: ThumbsUp,
+  plywood: Layers,
+  shield: ShieldCheck,
+  wrench: Wrench,
+  hammer: Hammer,
 };
 
 interface PointsProps {
