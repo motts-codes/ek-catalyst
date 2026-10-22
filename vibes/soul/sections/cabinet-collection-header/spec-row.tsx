@@ -7,6 +7,16 @@ import { useId, useState } from 'react';
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { Link } from '~/components/link';
 
+export interface SpecLine {
+  label: string;
+  value: string;
+}
+
+export interface BuildPoint {
+  lead: string;
+  detail: string;
+}
+
 // Shared body-copy style for the collection header: the overview paragraph and the specification
 // list use the same size, colour and leading (13px on phones, 14px from tablet, 150% line-height).
 export const HEADER_COPY_CLASS =
@@ -70,11 +80,53 @@ export function AccordionRow({
 
 // Specifications (the staff-authored HTML; its own leading "Specifications" heading is hidden)
 // with the spec-sheet download pinned right. With no copy, just the link; with neither, nothing.
+// "How it's built" — the specifications in the customer's words: a short bold lead and the
+// plain-English why, one bullet per part of the cabinet. Sits above Specifications.
+export function HowBuiltRow({ points = [] }: { points?: BuildPoint[] }) {
+  if (points.length === 0) return null;
+
+  return (
+    <AccordionRow title="How it's built">
+      <ul className={clsx(HEADER_COPY_CLASS, 'list-disc space-y-2 pl-5')}>
+        {points.map((point) => (
+          <li key={point.lead}>
+            <span className="font-semibold text-foreground">{point.lead}</span>
+            {point.detail !== '' && <> {point.detail}</>}
+          </li>
+        ))}
+      </ul>
+    </AccordionRow>
+  );
+}
+
+// The specifications as a two-column table (label, value) when the rows parsed, else the HTML.
+function SpecTable({ rows }: { rows: SpecLine[] }) {
+  return (
+    <table className={clsx(HEADER_COPY_CLASS, 'w-full border-collapse')}>
+      <tbody className="divide-y divide-contrast-100">
+        {rows.map((row) => (
+          <tr className="align-top" key={row.label}>
+            <th
+              className="w-[38%] py-2 pr-4 text-left font-medium text-contrast-500 @md:w-[30%]"
+              scope="row"
+            >
+              {row.label}
+            </th>
+            <td className="py-2 text-foreground">{row.value}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
 export function SpecRow({
   specifications = '',
+  specRows = [],
   specSheetUrl = '',
 }: {
   specifications?: string;
+  specRows?: SpecLine[];
   specSheetUrl?: string;
 }) {
   const specSheetLink = specSheetUrl !== '' && (
@@ -94,13 +146,17 @@ export function SpecRow({
 
   return (
     <AccordionRow aside={specSheetLink || undefined} title="Specifications">
-      <div
-        className={clsx(
-          HEADER_COPY_CLASS,
-          '[&>h3:first-child]:hidden [&_table]:w-full [&_td]:border [&_td]:border-contrast-100 [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-contrast-100 [&_th]:px-3 [&_th]:py-1.5',
-        )}
-        dangerouslySetInnerHTML={{ __html: specifications }}
-      />
+      {specRows.length > 0 ? (
+        <SpecTable rows={specRows} />
+      ) : (
+        <div
+          className={clsx(
+            HEADER_COPY_CLASS,
+            '[&>h3:first-child]:hidden [&_table]:w-full [&_td]:border [&_td]:border-contrast-100 [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-contrast-100 [&_th]:px-3 [&_th]:py-1.5',
+          )}
+          dangerouslySetInnerHTML={{ __html: specifications }}
+        />
+      )}
     </AccordionRow>
   );
 }

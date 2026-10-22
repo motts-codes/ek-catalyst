@@ -54,6 +54,7 @@ storefront drops silently.
 | `assembly` | `videos` | `[{name, url}]` | Assembly instruction videos (YouTube) | Assembly section (embedded) |
 | `content` | `overview` | **raw HTML string** | Long copy; **replaces** the native category description | Header body |
 | `content` | `specifications` | **raw HTML string** | Specifications (table-aware) | Specifications section below grid |
+| `content` | `how_built_by_program` | `{ rta, assembled }` plain text, one point per line (first sentence bold) | Customer-facing "How it's built"; blank = derived from the spec lines by `lib/cabinets/spec-translate.ts` | Collection header, the row above Specifications (which renders the spec lines as a label/value table) |
 | `content` | `disclaimer` | **raw HTML string** | Small print | Bottom of collection content |
 | `media` | `images` | `[url, …]` (max 5, `[0]` = main) | Collection gallery | Header image gallery |
 

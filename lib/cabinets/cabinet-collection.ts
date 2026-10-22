@@ -1,4 +1,11 @@
 import { cache } from 'react';
+import {
+  type BuildPoint,
+  howItsBuilt,
+  parseHowBuiltText,
+  parseSpecLines,
+  type SpecLine,
+} from './spec-translate';
 
 import { CabinetAssemblyVideo } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeaderData } from '@/vibes/soul/sections/cabinet-collection-header';
@@ -799,6 +806,11 @@ export const getCabinetCollectionHeader = cache(
 
 export interface CabinetCollectionContent {
   specifications: string;
+  /** The specifications as label/value rows (for the table). */
+  specRows: SpecLine[];
+  /** Customer-facing "How it's built": staff-written when content.how_built_by_program has text
+   *  for the program, else derived from the specification lines. */
+  howBuilt: BuildPoint[];
   disclaimer: string;
 }
 
@@ -815,8 +827,17 @@ export const getCabinetCollectionContent = cache(
 
     const specByProgram = parseJson<{ rta?: string; assembled?: string }>(val('spec_by_program'));
     const specifications = specByProgram?.[program] ?? val('specifications');
+    const specRows = parseSpecLines(specifications);
+    const written = parseHowBuiltText(
+      parseJson<{ rta?: string; assembled?: string }>(val('how_built_by_program'))?.[program] ?? '',
+    );
 
-    return { specifications, disclaimer: val('disclaimer') };
+    return {
+      specifications,
+      specRows,
+      howBuilt: written.length > 0 ? written : howItsBuilt(specRows),
+      disclaimer: val('disclaimer'),
+    };
   },
 );
 

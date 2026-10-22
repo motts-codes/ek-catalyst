@@ -264,6 +264,20 @@ export function CollectionEditor({
               value={data.content.specifications[prog]}
             />
           ))}
+          {(['assembled', 'rta'] as const).map((prog) => (
+            <Textarea
+              key={`how-built-${prog}`}
+              label={`How it's built — ${prog === 'assembled' ? 'Assembled' : 'RTA'} (one point per line; the first sentence shows bold. Leave empty to derive from the specifications)`}
+              onChange={(v) =>
+                setData((d) => ({
+                  ...d,
+                  content: { ...d.content, howBuilt: { ...d.content.howBuilt, [prog]: v } },
+                }))
+              }
+              rows={5}
+              value={data.content.howBuilt[prog]}
+            />
+          ))}
           <Textarea
             label="Disclaimer (HTML) — small print shown at the bottom"
             onChange={(v) => setData((d) => ({ ...d, content: { ...d.content, disclaimer: v } }))}

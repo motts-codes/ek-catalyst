@@ -79,6 +79,9 @@ export interface CollectionMetafields {
     disclaimer: string;
     short_description: string;
     specifications: { rta: string; assembled: string };
+    // content.how_built_by_program = { rta, assembled }: the customer-facing "How it's built"
+    // points, one per line, first sentence bold. Empty = the storefront derives them from the specs.
+    howBuilt: { rta: string; assembled: string };
   };
   // assets.shop_now_url = { rta, assembled } — the original expresskitchens.com URL per program
   // (from Laravel; useful for reference/redirects).
@@ -117,6 +120,7 @@ export function emptyCollectionMetafields(): CollectionMetafields {
       disclaimer: '',
       short_description: '',
       specifications: { rta: '', assembled: '' },
+      howBuilt: { rta: '', assembled: '' },
     },
     shopNowUrl: { rta: '', assembled: '' },
     images: Array.from({ length: IMAGE_SLOTS }, () => ''),
@@ -195,6 +199,8 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
   const legacyAssembly = findValue(mfs, 'assembly', 'videos') as AssemblyVideo[] | undefined;
   const specByProgram = findValue(mfs, 'content', 'spec_by_program') as
     { rta?: string; assembled?: string } | undefined;
+  const howBuilt = findValue(mfs, 'content', 'how_built_by_program') as
+    { rta?: string; assembled?: string } | undefined;
   const shopNow = findValue(mfs, 'assets', 'shop_now_url') as
     { rta?: string; assembled?: string } | undefined;
   const imagesRaw = findValue(mfs, 'media', 'images') as string[] | undefined;
@@ -250,6 +256,7 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
         rta: specByProgram?.rta ?? findRaw(mfs, 'content', 'specifications'),
         assembled: specByProgram?.assembled ?? findRaw(mfs, 'content', 'specifications'),
       },
+      howBuilt: { rta: howBuilt?.rta ?? '', assembled: howBuilt?.assembled ?? '' },
     },
     shopNowUrl: { rta: shopNow?.rta ?? '', assembled: shopNow?.assembled ?? '' },
     images,
@@ -385,6 +392,20 @@ export async function writeCollectionMetafields(
       rta: data.content.specifications.rta,
       assembled: data.content.specifications.assembled,
     }),
+  );
+
+  // "How it's built" per program; both blank → the metafield is removed (derived copy shows).
+  const howBuiltValue = {
+    rta: data.content.howBuilt.rta.trim(),
+    assembled: data.content.howBuilt.assembled.trim(),
+  };
+
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'content',
+    'how_built_by_program',
+    howBuiltValue.rta === '' && howBuiltValue.assembled === '' ? '' : JSON.stringify(howBuiltValue),
   );
 
   // Shop-now URL per program (assets.shop_now_url) — reference URLs from the old site.

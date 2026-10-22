@@ -7,7 +7,15 @@ import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
-import { type CollectionOffer, HEADER_COPY_CLASS, OffersRow, SpecRow } from './spec-row';
+import {
+  type BuildPoint,
+  type CollectionOffer,
+  HEADER_COPY_CLASS,
+  HowBuiltRow,
+  OffersRow,
+  type SpecLine,
+  SpecRow,
+} from './spec-row';
 
 /**
  * Collection detail header shown ABOVE the product grid on a cabinet collection category page
@@ -115,6 +123,10 @@ interface Props {
   program?: 'assembled' | 'rta';
   /** Specifications HTML (staff-authored) for the expandable Specification row. */
   specifications?: string;
+  /** The same specifications as label/value rows; when given the row renders a table. */
+  specRows?: SpecLine[];
+  /** Customer-facing "How it's built" points (the row above Specifications). */
+  howBuilt?: BuildPoint[];
   /** The same collection in the other program ("Switch to RTA"). */
   switchHref?: string;
   /** When given, finish chips become links (multi-finish collections); null clears the finish. */
@@ -298,6 +310,8 @@ export function CabinetCollectionHeader({
   data,
   program = 'assembled',
   specifications,
+  specRows,
+  howBuilt,
   switchHref,
   finishHrefFor,
   offers = [],
@@ -389,7 +403,12 @@ export function CabinetCollectionHeader({
             {hasPricing && <PriceCard data={data} />}
 
             <div className="border-t border-contrast-100">
-              <SpecRow specSheetUrl={data.specSheetUrl} specifications={specifications} />
+              <HowBuiltRow points={howBuilt} />
+              <SpecRow
+                specRows={specRows}
+                specSheetUrl={data.specSheetUrl}
+                specifications={specifications}
+              />
               <OffersRow offers={offers} />
             </div>
 

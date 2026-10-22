@@ -586,6 +586,8 @@ export default async function Category(props: Props) {
             }
             offers={cabinetOffers}
             program={cabinetProgram}
+            howBuilt={cabinetContent?.howBuilt}
+            specRows={cabinetContent?.specRows}
             specifications={cabinetContent?.specifications}
             switchHref={
               programSwitchable ? getSwitchHref(category.path, cabinetProgram) : undefined
