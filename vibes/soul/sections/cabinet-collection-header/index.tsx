@@ -235,7 +235,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
 
   return (
     <div>
-      <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-white text-[#404040] @md:grid-cols-[auto_auto_1fr]">
+      <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-white text-[#404040] @md:grid-cols-[auto_1fr] min-[1100px]:grid-cols-[auto_auto_1fr]">
         {/* Deal price with the was-price beneath it. */}
         <div className="flex items-center px-6 py-4 @md:px-8 @md:pr-10">
           <span className="flex flex-col items-start gap-1.5">
@@ -261,7 +261,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
           </span>
         </div>
         {/* The 10×10 kitchen drawing on the card's blush background. */}
-        <div className="hidden items-center justify-center border-l border-[#fcb6bb] bg-[#fdf8f8] px-6 py-3 @md:flex">
+        <div className="hidden items-center justify-center border-l border-[#fcb6bb] bg-[#fdf8f8] px-6 py-3 min-[1100px]:flex">
           <Image
             alt="10×10 kitchen layout"
             className="h-auto w-[88px]"
