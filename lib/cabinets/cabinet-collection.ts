@@ -8,7 +8,7 @@ import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 import { getAudienceMode } from '~/lib/navigation/audience-mode';
 
-import { CABINETS_CATEGORY_ID, type CabinetProgram } from './cabinet-lines-data';
+import { type CabinetProgram, CABINETS_CATEGORY_ID } from './cabinet-lines-data';
 
 // Child categories of Cabinets are the cabinet collections (Avon, Dover, …). Only these get the
 // collection header. Fetched once (small), cached per request.
@@ -222,21 +222,103 @@ const CabinetAttributesQuery = graphql(`
             }
           }
         }
+        offers: metafields(namespace: "offers") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
       }
     }
   }
 `);
 
+// offers.list on the Cabinets parent — see lib/cabinet-admin/offers-shape.ts for the shape.
+interface OfferRow {
+  text?: string;
+  highlight?: string;
+  scope?: 'all' | 'line' | 'collection';
+  lineId?: string;
+  collectionId?: string;
+  program?: 'both' | 'assembled' | 'rta';
+  active?: boolean;
+  startsOn?: string;
+  endsOn?: string;
+}
+
+export interface CabinetOfferLine {
+  text: string;
+  highlight?: string;
+}
+
+const getCabinetOffersRegistry = cache(async (): Promise<OfferRow[]> => {
+  const { data } = await client.fetch({
+    document: CabinetAttributesQuery,
+    variables: { entityId: CABINETS_CATEGORY_ID },
+    fetchOptions: { next: { revalidate } },
+  });
+  const raw = data.site.category?.offers.edges?.find((e) => e.node.key === 'list')?.node.value;
+  const rows = parseJson<OfferRow[]>(raw);
+
+  return Array.isArray(rows) ? rows : [];
+});
+
+/** The offers that apply to a collection in a program: all-cabinet offers, then its product
+ *  line's, then its own — active ones within their dates, in registry order. */
+export const getCabinetOffers = cache(
+  async (categoryId: number, program: CabinetProgram | undefined): Promise<CabinetOfferLine[]> => {
+    if (program == null) return [];
+
+    const [rows, cat] = await Promise.all([
+      getCabinetOffersRegistry(),
+      fetchCabinetCollection(categoryId),
+    ]);
+    const lineId = parseJson<{ product_line_id?: string }>(
+      cat?.spec.edges?.find((e) => e.node.key === 'info')?.node.value,
+    )?.product_line_id;
+    const today = new Date().toISOString().slice(0, 10);
+    const live = rows.filter(
+      (o) =>
+        o.active !== false &&
+        typeof o.text === 'string' &&
+        o.text.trim() !== '' &&
+        (!o.startsOn || o.startsOn <= today) &&
+        (!o.endsOn || o.endsOn >= today),
+    );
+    const applies = (o: OfferRow) => {
+      if (o.scope === 'line') return o.lineId != null && o.lineId !== '' && o.lineId === lineId;
+      if (o.scope === 'collection')
+        return (
+          o.collectionId === String(categoryId) &&
+          (o.program == null || o.program === 'both' || o.program === program)
+        );
+
+      return true;
+    };
+    const RANK = { all: 0, line: 1, collection: 2 } as const;
+    const rank = (o: OfferRow) => RANK[o.scope ?? 'all'];
+
+    return live
+      .filter(applies)
+      .sort((a, b) => rank(a) - rank(b))
+      .map((o) => ({ text: o.text ?? '', highlight: o.highlight || undefined }));
+  },
+);
+
 interface AttrOption {
   id: string;
   name: string;
 }
+
 interface ColorOption {
   id: string;
   name: string;
   hex?: string;
   image?: string;
 }
+
 interface CabinetAttributeLists {
   productLines: AttrOption[];
   constructions: AttrOption[];
@@ -262,6 +344,7 @@ const getCabinetAttributes = cache(async (): Promise<CabinetAttributeLists> => {
 
 function parseJson<T>(value: string | undefined): T | undefined {
   if (value == null || value === '') return undefined;
+
   try {
     return JSON.parse(value) as T;
   } catch {
@@ -274,11 +357,13 @@ interface ProgramPricing {
   strike_price?: string;
   emi_text?: string;
 }
+
 interface MerchInfo {
   line?: string;
   door_style?: string;
   default_finish?: string;
 }
+
 // finishes.by_finish = { "<finish name>": { assembled?: ProgramPricing, rta?: ProgramPricing, images?: [] } }
 // Multi-finish collections (Prism) price and photograph each finish; keyed by the finish name as it
 // appears in the Cabinets colour master list.
@@ -351,6 +436,7 @@ interface FaqSide {
   headline?: string;
   items?: Array<{ q?: string; a?: string }>;
 }
+
 type FaqByProgram = Partial<Record<CabinetProgram, FaqSide>>;
 
 /**

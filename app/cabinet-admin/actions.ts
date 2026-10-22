@@ -8,14 +8,18 @@ import {
   getAdminEmail,
   isAdminAuthenticated,
 } from '~/lib/cabinet-admin/admin-auth';
-import { type CabinetAttributes, writeCabinetAttributes } from '~/lib/cabinet-admin/attributes-shape';
-import { type ProductContent, writeProductContent } from '~/lib/cabinet-admin/product-shape';
+import {
+  type CabinetAttributes,
+  writeCabinetAttributes,
+} from '~/lib/cabinet-admin/attributes-shape';
 import {
   type CollectionMetafields,
   type ProgramFaq,
   writeCollectionMetafields,
   writeProgramFaq,
 } from '~/lib/cabinet-admin/collection-shape';
+import { type CabinetOffer, writeCabinetOffers } from '~/lib/cabinet-admin/offers-shape';
+import { type ProductContent, writeProductContent } from '~/lib/cabinet-admin/product-shape';
 
 export interface ActionResult {
   ok: boolean;
@@ -78,6 +82,26 @@ export async function saveAttributesAction(data: CabinetAttributes): Promise<Act
     // Attribute changes (e.g. a hex fix) propagate to every collection page (both journeys).
     revalidatePath('/cabinets', 'layout');
     revalidatePath('/mykitchen', 'layout');
+
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Save failed.' };
+  }
+}
+
+/** Save the cabinet offers registry (category 863, offers.list). */
+export async function saveOffersAction(offers: CabinetOffer[]): Promise<ActionResult> {
+  const adminEmail = await getAdminEmail();
+
+  if (!adminEmail || !(await isAdminAuthenticated())) {
+    return { ok: false, error: 'Not authenticated.' };
+  }
+
+  try {
+    await writeCabinetOffers(offers);
+    revalidatePath('/cabinet-admin');
+    // Offers render on every collection page.
+    revalidatePath('/cabinets', 'layout');
 
     return { ok: true };
   } catch (error) {

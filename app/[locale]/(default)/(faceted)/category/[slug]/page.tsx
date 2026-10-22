@@ -24,13 +24,14 @@ import { getSessionCustomerAccessToken } from '~/auth';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import {
+  cabinetFinishContext,
   cabinetProgramContext,
   cabinetProgramSearchParam,
   getCabinetAssemblyVideos,
   getCabinetCollectionContent,
   getCabinetCollectionFaq,
-  cabinetFinishContext,
   getCabinetCollectionHeader,
+  getCabinetOffers,
   isCabinetCollection,
 } from '~/lib/cabinets/cabinet-collection';
 import {
@@ -507,6 +508,8 @@ export default async function Category(props: Props) {
       ? await getCabinetCollectionHeader(categoryId, cabinetProgram, selectedFinish)
       : null;
 
+  const cabinetOffers = await getCabinetOffers(categoryId, cabinetProgram);
+
   // Per-collection FAQ (Avon's Assembled FAQ, etc.), shown below the grid. Program-aware; null when
   // this collection has no FAQ authored for the current program.
   const cabinetFaq =
@@ -554,6 +557,7 @@ export default async function Category(props: Props) {
             finishHrefFor={(finishSlug) =>
               getFinishHref(category.path, searchParamsForLinks, finishSlug)
             }
+            offers={cabinetOffers}
             program={cabinetProgram}
             specifications={cabinetContent?.specifications}
             switchHref={

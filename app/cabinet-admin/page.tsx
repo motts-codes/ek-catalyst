@@ -8,13 +8,15 @@ import {
   readProgramFaq,
 } from '~/lib/cabinet-admin/collection-shape';
 import { listCabinetCollections } from '~/lib/cabinet-admin/metafields-api';
+import { readCabinetOffers } from '~/lib/cabinet-admin/offers-shape';
 import { readProduct } from '~/lib/cabinet-admin/product-shape';
 import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
 
 import { AdminShell, type AdminTab } from './_components/admin-shell';
+import { AttributesEditor } from './_components/attributes-editor';
 import { CollectionsTable } from './_components/collections-table';
 import { LoginForm } from './_components/login-form';
-import { AttributesEditor } from './_components/attributes-editor';
+import { OffersEditor } from './_components/offers-editor';
 import { ProductsTable } from './_components/products-table';
 import { ProgramFaqEditor } from './_components/program-faq-editor';
 
@@ -44,7 +46,7 @@ export default async function CabinetAdminPage(props: Props) {
   }
 
   const sp = await props.searchParams;
-  const validTabs: AdminTab[] = ['collections', 'products', 'attributes', 'program-faq'];
+  const validTabs: AdminTab[] = ['collections', 'products', 'attributes', 'program-faq', 'offers'];
   const tab: AdminTab = validTabs.includes(sp.tab as AdminTab)
     ? (sp.tab as AdminTab)
     : 'collections';
@@ -63,6 +65,7 @@ export default async function CabinetAdminPage(props: Props) {
       )}
       {tab === 'attributes' && <AttributesContent />}
       {tab === 'program-faq' && <ProgramFaqContent />}
+      {tab === 'offers' && <OffersContent />}
     </AdminShell>
   );
 }
@@ -71,6 +74,22 @@ async function AttributesContent() {
   const initial = await readCabinetAttributes();
 
   return <AttributesEditor initial={initial} />;
+}
+
+async function OffersContent() {
+  const [offers, attributes, collections] = await Promise.all([
+    readCabinetOffers(),
+    readCabinetAttributes(),
+    listCabinetCollections(),
+  ]);
+
+  return (
+    <OffersEditor
+      collections={collections}
+      initial={offers}
+      productLines={attributes.productLines}
+    />
+  );
 }
 
 async function ProgramFaqContent() {

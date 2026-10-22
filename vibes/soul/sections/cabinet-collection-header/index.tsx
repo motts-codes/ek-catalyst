@@ -7,7 +7,7 @@ import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
-import { HEADER_COPY_CLASS, OffersRow, SpecRow } from './spec-row';
+import { type CollectionOffer, HEADER_COPY_CLASS, OffersRow, SpecRow } from './spec-row';
 
 /**
  * Collection detail header shown ABOVE the product grid on a cabinet collection category page
@@ -117,6 +117,8 @@ interface Props {
   switchHref?: string;
   /** When given, finish chips become links (multi-finish collections); null clears the finish. */
   finishHrefFor?: (slug: string | null) => string;
+  /** Offers that apply to this collection + program (the "Offers" row; hidden when empty). */
+  offers?: CollectionOffer[];
   /** Where "Shop products" scrolls to. */
   productsHref?: string;
   className?: string;
@@ -294,6 +296,7 @@ export function CabinetCollectionHeader({
   specifications,
   switchHref,
   finishHrefFor,
+  offers = [],
   productsHref = '#products',
   className,
 }: Props) {
@@ -372,7 +375,7 @@ export function CabinetCollectionHeader({
 
             <div className="border-t border-contrast-100">
               <SpecRow specSheetUrl={data.specSheetUrl} specifications={specifications} />
-              <OffersRow />
+              <OffersRow offers={offers} />
             </div>
 
             <Actions data={data} productsHref={productsHref} />

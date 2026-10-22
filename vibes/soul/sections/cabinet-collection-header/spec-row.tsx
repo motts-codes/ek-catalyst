@@ -95,17 +95,16 @@ export function SpecRow({
   );
 }
 
-// Standing offers, the same for every collection. The key detail of each (code, threshold) is
-// picked out in black.
-export const COLLECTION_OFFERS: Array<{ text: string; highlight: string }> = [
-  { text: 'First two quarter-door samples free with code FREESAMPLES.', highlight: 'FREESAMPLES' },
-  { text: 'Free shipping on purchases above $2,500.', highlight: '$2,500' },
-];
+export interface CollectionOffer {
+  text: string;
+  /** A substring of `text` picked out in black (the code, the amount). */
+  highlight?: string;
+}
 
-function Highlighted({ text, highlight }: { text: string; highlight: string }) {
-  const i = text.indexOf(highlight);
+function Highlighted({ text, highlight }: { text: string; highlight?: string }) {
+  const i = highlight ? text.indexOf(highlight) : -1;
 
-  if (i < 0) return text;
+  if (!highlight || i < 0) return text;
 
   return (
     <>
@@ -116,12 +115,16 @@ function Highlighted({ text, highlight }: { text: string; highlight: string }) {
   );
 }
 
-export function OffersRow() {
+// The offers that apply to this collection + program (from the registry in /cabinet-admin →
+// Offers). Nothing to show → no row.
+export function OffersRow({ offers }: { offers: CollectionOffer[] }) {
+  if (offers.length === 0) return null;
+
   return (
     <AccordionRow title="Offers">
       <div className={HEADER_COPY_CLASS}>
         <ul>
-          {COLLECTION_OFFERS.map((offer) => (
+          {offers.map((offer) => (
             <li key={offer.text}>
               <Highlighted highlight={offer.highlight} text={offer.text} />
             </li>
