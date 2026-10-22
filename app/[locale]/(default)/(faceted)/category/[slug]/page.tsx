@@ -58,6 +58,7 @@ import { MAX_COMPARE_LIMIT } from '../../../compare/page-data';
 import { getCompareProducts } from '../../fetch-compare-products';
 import { fetchFacetedSearch } from '../../fetch-faceted-search';
 import {
+  DEFAULT_PAGE_SIZE,
   numberedPaginationInfo,
   PAGE_PARAM,
   pageNumber,
@@ -117,6 +118,17 @@ function cabinetTypeSearchParam(value: CabinetTypeValue | null): Record<string, 
 // Multi-finish collections (Prism): ?finish=<slug> selects a finish. Header pricing/photos follow it
 // and the grid narrows through the products' "Finish" custom field (a search facet, like Program).
 const FINISH_PARAM = 'finish';
+
+// Cabinet collections list hundreds of SKUs: compact cards (~220px, as many columns as fit) and
+// 24 per page instead of 12. Every other category keeps the default grid.
+function listingLayout(isCabinet: boolean): {
+  pageSize: number;
+  density: 'default' | 'compact';
+} {
+  return isCabinet
+    ? { pageSize: 24, density: 'compact' }
+    : { pageSize: DEFAULT_PAGE_SIZE, density: 'default' };
+}
 
 // The collection URL with the finish set (or cleared), keeping program and type, dropping the page.
 function getFinishHref(
@@ -302,6 +314,7 @@ export default async function Category(props: Props) {
     selected: selectedProgram,
     switchable: programSwitchable,
   } = await cabinetProgramContext(isCabinet, categoryId, programParam);
+  const { pageSize, density } = listingLayout(isCabinet);
   const searchParamsForLinks = await props.searchParams;
   const selectedType = selectedCabinetType(searchParamsForLinks[CABINET_TYPE_PARAM]);
   // ?finish= → the finish name (null when absent/unknown) and the grid filter for it.
@@ -362,6 +375,7 @@ export default async function Category(props: Props) {
       ...typeFilter,
       ...finishFilter,
       category: categoryId,
+      limit: pageSize,
     };
     // ?page=N is resolved to a BigCommerce cursor (paged-search.ts). Legacy ?after/?before links
     // still work when no page is given.
@@ -394,6 +408,7 @@ export default async function Category(props: Props) {
         search,
         currencyCode,
         customerAccessToken,
+        pageSize,
       });
     }
 
@@ -438,6 +453,7 @@ export default async function Category(props: Props) {
     return numberedPaginationInfo(
       search.products.collectionInfo?.totalItems ?? 0,
       pageNumber(searchParams[PAGE_PARAM]),
+      pageSize,
     );
   });
 
@@ -594,6 +610,7 @@ export default async function Category(props: Props) {
           addToCartAction={productCardAddToCartAction}
           compareLabel={t('Compare.compare')}
           compareProducts={streamableCompareProducts}
+          density={density}
           emptyStateSubtitle={t('Category.Empty.subtitle')}
           emptyStateTitle={t('Category.Empty.title')}
           filterLabel={t('FacetedSearch.filters')}

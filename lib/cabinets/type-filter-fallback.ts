@@ -73,6 +73,7 @@ export async function fetchCabinetProductsByType({
   search,
   currencyCode,
   customerAccessToken,
+  pageSize = PAGE_SIZE,
 }: {
   /** The search params the real query used, minus pagination and the type attribute. */
   searchParams: Record<string, unknown>;
@@ -81,6 +82,8 @@ export async function fetchCabinetProductsByType({
   search: FacetedSearch;
   currencyCode?: CurrencyCode;
   customerAccessToken?: string;
+  /** Products per page (the listing's page size). */
+  pageSize?: number;
 }): Promise<FacetedSearch> {
   const { after, before, page: pageParam, ...rest } = searchParams;
   const key = JSON.stringify([rest, currencyCode, Boolean(customerAccessToken)]);
@@ -96,9 +99,9 @@ export async function fetchCabinetProductsByType({
   const requested =
     typeof pageParam === 'string' && /^\d+$/.test(pageParam) ? Number(pageParam) : 0;
   const page = requested > 0 ? requested : pageFromCursor(before ?? after);
-  const start = (page - 1) * PAGE_SIZE;
-  const items = matching.slice(start, start + PAGE_SIZE);
-  const hasNextPage = start + PAGE_SIZE < matching.length;
+  const start = (page - 1) * pageSize;
+  const items = matching.slice(start, start + pageSize);
+  const hasNextPage = start + pageSize < matching.length;
   const hasPreviousPage = page > 1;
 
   return {

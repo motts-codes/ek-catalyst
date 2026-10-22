@@ -41,6 +41,8 @@ interface Props {
   paginationInfo?: Streamable<CursorPaginationInfo>;
   /** Numbered pages (?page=N). When given, replaces the cursor arrows. */
   pagination?: Streamable<NumberedPaginationInfo>;
+  /** Grid density; "compact" keeps cards ~220px wide (cabinet collections). */
+  density?: 'default' | 'compact';
   compareHref?: string;
   compareLabel?: Streamable<string>;
   showCompare?: Streamable<boolean>;
@@ -86,6 +88,7 @@ export function ProductsListSection({
   showCompare,
   paginationInfo,
   pagination,
+  density = 'default',
   filterLabel = 'Filters',
   searchPlaceholder = 'Search products',
   showFiltersLabel = 'Show filters',
@@ -245,6 +248,7 @@ export function ProductsListSection({
                 compareLabel={compareLabel}
                 compareParamName={compareParamName}
                 compareProducts={compareProducts}
+                density={density}
                 emptyStateSubtitle={emptyStateSubtitle}
                 emptyStateTitle={emptyStateTitle}
                 maxCompareLimitMessage={maxCompareLimitMessage}

@@ -30,7 +30,20 @@ interface ProductListProps {
   removeLabel?: Streamable<string>;
   maxItems?: number;
   maxCompareLimitMessage?: Streamable<string>;
+  /** "compact": columns sized from a fixed card width (~220px), so cards keep the same size
+   *  whether or not the filter sidebar is open — more columns on wider grids. Used on cabinet
+   *  collection pages, which list hundreds of SKUs. */
+  density?: 'default' | 'compact';
 }
+
+// Default: capped at 4 columns, since pages are 12 products (fill 2 / 3 / 4 columns exactly).
+// Compact: as many ~220px columns as fit.
+const GRID_CLASS = {
+  default:
+    'mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4',
+  compact:
+    'mx-auto grid grid-cols-2 gap-x-3 gap-y-5 @md:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] @md:gap-x-4 @md:gap-y-6',
+} as const;
 
 // eslint-disable-next-line valid-jsdoc
 /**
@@ -67,6 +80,7 @@ export function ProductList({
   removeLabel: streamableRemoveLabel,
   maxItems,
   maxCompareLimitMessage: streamableMaxCompareLimitMessage,
+  density = 'default',
 }: ProductListProps) {
   return (
     <Stream
@@ -105,8 +119,7 @@ export function ProductList({
             maxItems={maxItems}
           >
             <div className={clsx('w-full @container', className)}>
-              {/* Capped at 4 columns: pages are 12 products, which fill 2 / 3 / 4 columns exactly but not 5. */}
-              <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4">
+              <div className={GRID_CLASS[density]}>
                 {products.map((product) => (
                   <ProductCard
                     addToCartAction={addToCartAction}
@@ -142,13 +155,14 @@ export function ProductList({
 export function ProductListSkeleton({
   className,
   placeholderCount = 8,
-}: Pick<ProductListProps, 'className' | 'placeholderCount'>) {
+  density = 'default',
+}: Pick<ProductListProps, 'className' | 'placeholderCount' | 'density'>) {
   return (
     <Skeleton.Root
       className={clsx('group-has-data-pending/product-list:animate-pulse', className)}
       pending
     >
-      <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4">
+      <div className={GRID_CLASS[density]}>
         {Array.from({ length: placeholderCount }).map((_, index) => (
           <ProductCardSkeleton key={index} />
         ))}
