@@ -214,43 +214,46 @@ function Finishes({
 // background): price | 10×10 badge | three fact rows (kitchen, finance, lead time). The fixed-list
 // disclaimer sits under the strip.
 function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
-  const row = 'flex items-center gap-2 text-sm font-medium leading-snug';
+  const row = 'flex items-center gap-2 py-2 text-sm font-medium leading-snug';
   const icon = 'shrink-0 text-[var(--button-primary-background,#d90716)]';
 
   return (
     <div>
-      <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[auto_auto_1fr]">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-4">
-          {/* On narrow screens the 10×10 badge sits here, beside the price (the middle cell hides). */}
+      <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-white text-[#404040] @md:grid-cols-[auto_auto_1fr]">
+        {/* Was-price above the deal price. */}
+        <div className="flex items-center gap-x-3 px-5 py-4">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[9px] font-bold leading-none ring-1 ring-[#fcb6bb] @md:hidden">
             10×10
           </span>
-          <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
-            <Amount
-              cents={20}
-              formatted={`$${withCommas(data.price ?? '')}`}
-              symbol={18}
-              whole={36}
-            />
-          </span>
-          {data.strikePrice != null && data.strikePrice !== '' && (
-            <span className="leading-none text-[#6b6b6b]">
+          <span className="flex flex-col items-start gap-1">
+            {data.strikePrice != null && data.strikePrice !== '' && (
+              <span className="leading-none text-[#6b6b6b]">
+                <Amount
+                  cents={12}
+                  formatted={`$${withCommas(data.strikePrice)}`}
+                  strike
+                  symbol={12}
+                  whole={18}
+                />
+              </span>
+            )}
+            <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
               <Amount
-                cents={13}
-                formatted={`$${withCommas(data.strikePrice)}`}
-                strike
-                symbol={13}
-                whole={20}
+                cents={20}
+                formatted={`$${withCommas(data.price ?? '')}`}
+                symbol={18}
+                whole={36}
               />
             </span>
-          )}
+          </span>
         </div>
         <div className="hidden items-center justify-center border-l border-[#fcb6bb] px-5 py-3 @md:flex">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-bold leading-none ring-1 ring-[#fcb6bb]">
             10×10
           </span>
         </div>
-        <div className="flex flex-col justify-center gap-2 border-t border-[#fcb6bb] px-5 py-3.5 @md:border-l @md:border-t-0">
+        {/* Three fact rows with hairlines between them. */}
+        <div className="flex flex-col justify-center divide-y divide-[#fcb6bb] border-t border-[#fcb6bb] px-5 py-1.5 @md:border-l @md:border-t-0">
           <div className={row}>
             <LayoutGrid aria-hidden className={icon} size={16} strokeWidth={1.5} />
             <span>{data.name} 10×10 kitchen</span>
@@ -258,7 +261,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
           {data.emiText != null && data.emiText !== '' && (
             <div className={row}>
               <WalletMinimal aria-hidden className={icon} size={16} strokeWidth={1.5} />
-              <Finance text={data.emiText} />
+              <Finance cents={10} symbol={11} text={data.emiText} whole={14} />
             </div>
           )}
           {data.deliveryTime != null && data.deliveryTime !== '' && (
@@ -269,8 +272,8 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
           )}
         </div>
       </div>
-      <p className="mt-2 text-xs text-contrast-400">
-        The price is based on a fixed list of cabinets that cannot be modified.
+      <p className="mt-2 text-[10px] text-contrast-400">
+        * The price is based on a fixed list of cabinets that cannot be modified.
       </p>
     </div>
   );
