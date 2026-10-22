@@ -40,3 +40,11 @@ Gives each per-finish (Prism) colour in the 863 `attributes.colors` master list 
 (median of the centre of the finish's door photo). The storefront sorts a Prism collection's
 "Choose a finish" chips light → dark by it. Dry run by default; `--apply` writes, `--force`
 re-measures colours that already have a hex.
+
+## write-how-built.ts
+
+Writes the customer-facing "How it's built" copy (`content.how_built_by_program`) for every
+cabinet collection and program, derived from its specification lines by the storefront's own
+rules (`lib/cabinets/spec-translate.ts`) plus the finish/door-style context. Dry run by default;
+`--print` shows the full text, `--apply` writes (keeping text staff already stored), `--force`
+overwrites. Runs on Node 24 directly: `node scripts/write-how-built.ts --print`.

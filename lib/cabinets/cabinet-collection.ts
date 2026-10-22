@@ -835,7 +835,20 @@ export const getCabinetCollectionContent = cache(
     return {
       specifications,
       specRows,
-      howBuilt: written.length > 0 ? written : howItsBuilt(specRows),
+      howBuilt:
+        written.length > 0
+          ? written
+          : howItsBuilt(specRows, {
+              multiFinish:
+                Object.keys(
+                  parseJson<ByFinish>(
+                    cat?.finishes.edges?.find((e) => e.node.key === 'by_finish')?.node.value,
+                  ) ?? {},
+                ).length > 0,
+              doorStyle: parseJson<MerchInfo>(
+                cat?.merch.edges?.find((e) => e.node.key === 'info')?.node.value,
+              )?.door_style,
+            }),
       disclaimer: val('disclaimer'),
     };
   },

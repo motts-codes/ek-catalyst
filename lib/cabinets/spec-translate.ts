@@ -15,6 +15,14 @@ export interface SpecLine {
   value: string;
 }
 
+/** What the spec lines alone can't tell: whether the collection comes in several finishes
+ *  (Prism — the colour is the customer's choice, not a fact of the door) and the merchandised
+ *  door style (Euro specs carry no door line). */
+export interface BuildContext {
+  multiFinish?: boolean;
+  doorStyle?: string;
+}
+
 export interface BuildPoint {
   /** The short bold lead ("Dovetail drawers."). */
   lead: string;
@@ -144,30 +152,82 @@ function overlayNote(overlay: string): string {
   return '';
 }
 
-function doorPoint(lines: SpecLine[]): BuildPoint | null {
+// The finish as written, minus stock codes: "Painted Stratus (Stock)" → "Painted Stratus",
+// "Textured Matte Finish - Super White (SC 001)" → "Textured Matte Finish, Super White".
+function finishName(lines: SpecLine[]): string {
+  return find(lines, /^finish/i)
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/\s+-\s+/g, ', ')
+    .trim();
+}
+
+// The center panel, in the customer's words: flat recessed = shaker, raised = raised panel,
+// "reversed raised" (the profile on the back) = flat panel.
+function panelPhrase(door: string): { style: string; panel: string } {
+  if (has(door, /reversed raised/i)) return { style: 'flat-panel', panel: 'a flat center panel' };
+  if (has(door, /raised/i)) return { style: 'raised-panel', panel: 'a raised center panel' };
+
+  return { style: 'shaker', panel: 'a recessed shaker panel' };
+}
+
+// Euro finish names read as product codes ("Textured Matte Finish, Super White"); turn them into
+// prose: "Super White (textured matte)", "textured woodgrain", "lacquered high gloss".
+function euroFinish(finish: string): string {
+  const [desc, name] = finish.split(', ');
+  const plain = (desc ?? '')
+    .replace(/\bfinish\b/i, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+
+  return name ? `${name} (${plain})` : plain;
+}
+
+function doorPoint(lines: SpecLine[], ctx: BuildContext): BuildPoint | null {
   const door = find(lines, /door/i);
   const overlay = find(lines, /overlay/i);
-
-  if (door === '') return null;
-
-  const panel =
-    has(door, /raised/i) && !has(door, /reversed raised/i)
-      ? 'a raised center panel'
-      : 'a flat center panel';
+  const finish = finishName(lines);
   const pull = has(door, /finger pull/i) ? ' with a routed finger pull.' : '.';
   const slab = has(door, /slab/i) ? ` Slab drawer fronts${pull}` : '';
   const fit = overlayNote(overlay);
 
+  // Euro lines have no door line: flat laminate fronts (or the merchandised style), named by
+  // their finish.
+  if (door === '') {
+    const species = find(lines, /wood species/i);
+
+    if (!has(species, /laminat|furnitureboard/i)) return null;
+
+    const shaker = /shaker/i.test(ctx.doorStyle ?? '');
+    const look = finish ? ` in ${euroFinish(finish)}` : '';
+
+    return shaker
+      ? {
+          lead: 'Shaker doors, European style.',
+          detail: `A clean recessed-panel front${look}, with no face frame behind it.`,
+        }
+      : { lead: 'Flat slab doors.', detail: `Modern, handle-ready flat fronts${look}.` };
+  }
+
+  const { style, panel } = panelPhrase(door);
+
   if (has(door, /hdf/i)) {
+    // A multi-finish collection is painted in the customer's choice; a single-finish one in its
+    // named colour.
+    const lead = ctx.multiFinish
+      ? `Painted ${style} doors that won’t crack.`
+      : `${finish || 'Painted'} ${style} doors that won’t crack.`;
+    const choice = ctx.multiFinish ? ' Painted in the finish you pick above.' : '';
+
     return {
-      lead: 'Painted HDF doors that won’t crack.',
-      detail: `A five-piece door with ${panel}, built like wood but in HDF, which holds paint and doesn’t move with the seasons.${slab}${fit}`,
+      lead,
+      detail: `Five-piece doors built like wood, in HDF that holds paint and doesn’t move with the seasons.${choice}${slab}${fit}`,
     };
   }
 
   if (has(door, /solid birch frame/i)) {
     return {
-      lead: 'Solid birch doors.',
+      lead: finish ? `Solid birch doors in ${finish}.` : 'Solid birch doors.',
       detail: `A five-piece hardwood frame around ${panel}, joined with mortise and tenon.${slab}${fit}`,
     };
   }
@@ -258,11 +318,11 @@ function glidePoints(lines: SpecLine[]): BuildPoint[] {
 }
 
 /** The customer-facing "How it's built" bullets for a set of spec lines. */
-export function howItsBuilt(lines: SpecLine[]): BuildPoint[] {
+export function howItsBuilt(lines: SpecLine[], ctx: BuildContext = {}): BuildPoint[] {
   return [
     boxPoint(lines),
     framePoint(lines),
-    doorPoint(lines),
+    doorPoint(lines, ctx),
     drawerBoxPoint(lines),
     hingePoint(lines),
     shelfPoint(lines),
