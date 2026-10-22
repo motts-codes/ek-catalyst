@@ -237,15 +237,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
     <div>
       <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-white text-[#404040] @md:grid-cols-[auto_auto_1fr]">
         {/* Deal price with the was-price beneath it. */}
-        <div className="flex items-center gap-x-3 px-8 py-4 @md:pr-10">
-          <Image
-            alt=""
-            className="h-auto w-12 shrink-0 @md:hidden"
-            height={96}
-            src="/images/cabinets/10x10-kitchen.svg"
-            unoptimized
-            width={116}
-          />
+        <div className="flex items-center px-6 py-4 @md:px-8 @md:pr-10">
           <span className="flex flex-col items-start gap-1.5">
             <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
               <Amount
