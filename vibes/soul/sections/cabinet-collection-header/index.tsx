@@ -105,7 +105,8 @@ function SpecRow({
   );
 }
 
-// Shop products (70%) beside Order sample (30%), with the free-samples note beneath.
+// Shop products (60%) beside Order sample (40%, black outline, price in small type), with the
+// free-samples note beneath. Both stay single-line so the row keeps one height.
 function Actions({
   data,
   productsHref,
@@ -119,9 +120,9 @@ function Actions({
 
   return (
     <div>
-      <div className={clsx('grid gap-2.5', hasSample && '@md:grid-cols-[7fr_3fr]')}>
+      <div className={clsx('grid gap-2.5', hasSample && '@md:grid-cols-[3fr_2fr]')}>
         <ButtonLink
-          className="w-full [&>span]:w-full [&>span]:justify-center"
+          className="w-full whitespace-nowrap [&>span]:w-full [&>span]:justify-center"
           href={productsHref}
           shape="pill"
           size="medium"
@@ -134,13 +135,17 @@ function Actions({
         </ButtonLink>
         {hasSample && (
           <ButtonLink
-            className="w-full [&>span]:w-full [&>span]:justify-center"
+            // Same outlined-black treatment as the listing cards (fills black on hover).
+            className="w-full whitespace-nowrap !border-[0.5px] border-foreground bg-white text-foreground after:!bg-foreground hover:!text-white [&>span]:w-full [&>span]:justify-center"
             href={sampleHref}
             shape="pill"
             size="medium"
-            variant="secondary"
+            variant="tertiary"
           >
-            {samplePrice === '' ? 'Order sample' : `Order sample $${samplePrice}`}
+            <span className="inline-flex items-baseline gap-1.5">
+              Order sample
+              {samplePrice !== '' && <span className="text-xs font-normal">${samplePrice}</span>}
+            </span>
           </ButtonLink>
         )}
       </div>
@@ -187,6 +192,7 @@ function Finishes({
   // Only multi-finish collections show the chips (as the finish selector); a single finish is
   // already in the collection name and adds nothing here.
   if (!selectable) return null;
+
   const chipClass =
     'inline-flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-3 text-xs transition-colors';
   const swatch = (c: CabinetSwatch) => {
