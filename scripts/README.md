@@ -33,3 +33,10 @@ python scripts/seed-cabinet-metafields.py collection --category <avon-id> --pres
 # original bootstrap (category-by-name + product metafields) — edit LARAVEL/collection names first
 python scripts/cabinets_pilot.py
 ```
+
+## measure-finish-colors.py
+
+Gives each per-finish (Prism) colour in the 863 `attributes.colors` master list a measured `hex`
+(median of the centre of the finish's door photo). The storefront sorts a Prism collection's
+"Choose a finish" chips light → dark by it. Dry run by default; `--apply` writes, `--force`
+re-measures colours that already have a hex.

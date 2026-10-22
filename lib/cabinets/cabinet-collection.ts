@@ -432,6 +432,29 @@ function trailingGallery(
   return candidates.filter((u): u is string => u != null && !owned.has(u));
 }
 
+/** Relative luminance (0 dark … 1 light) of a #rrggbb hex, or null when it is not one. */
+function hexLuminance(hex: string | undefined): number | null {
+  const m = /^#([0-9a-f]{6})$/i.exec(hex ?? '');
+
+  if (!m?.[1]) return null;
+
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(m[1]?.slice(i, i + 2) ?? '0', 16) / 255);
+
+  return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0);
+}
+
+/** Finish chip order. A per-finish collection (Prism) lists light colours before dark ones by the
+ *  master list's measured hex (scripts/measure-finish-colors.py); colours without a hex keep
+ *  their place at the end. Other collections keep the curated spec.info order. */
+function orderFinishes(colors: ColorOption[], perFinish: boolean): ColorOption[] {
+  if (!perFinish) return colors;
+
+  return colors
+    .map((c, i) => ({ c, i, l: hexLuminance(c.hex) }))
+    .sort((a, b) => (b.l ?? -1) - (a.l ?? -1) || a.i - b.i)
+    .map(({ c }) => c);
+}
+
 /** URL slug for a finish name: "French Vanilla" -> "french-vanilla". */
 export function cabinetFinishSlug(name: string): string {
   return name
@@ -689,21 +712,22 @@ export const getCabinetCollectionHeader = cache(
     const productLine = attributes.productLines.find((o) => o.id === spec?.product_line_id)?.name;
     const construction = attributes.constructions.find((o) => o.id === spec?.construction_id)?.name;
     const colorIds = spec?.color_ids ?? [];
-    const colors = colorIds
-      .map((id) => attributes.colors.find((c) => c.id === id))
-      .filter((c): c is ColorOption => c != null)
-      .map((c) => ({
-        id: c.id,
-        name: c.name,
-        slug: cabinetFinishSlug(c.name),
-        hex: c.hex,
-        image: c.image,
-        swatch: c.image,
-        // A finish's own door photo can stand in for a missing master-list swatch; the collection's
-        // door sample only when it has a single finish (otherwise every chip would show one colour).
-        photo:
-          finishPhotos(byFinish[c.name]).door || (colorIds.length === 1 ? doorPhoto : undefined),
-      }));
+    const colors = orderFinishes(
+      colorIds
+        .map((id) => attributes.colors.find((c) => c.id === id))
+        .filter((c): c is ColorOption => c != null),
+      Object.keys(byFinish).length > 0,
+    ).map((c) => ({
+      id: c.id,
+      name: c.name,
+      slug: cabinetFinishSlug(c.name),
+      hex: c.hex,
+      image: c.image,
+      swatch: c.image,
+      // A finish's own door photo can stand in for a missing master-list swatch; the collection's
+      // door sample only when it has a single finish (otherwise every chip would show one colour).
+      photo: finishPhotos(byFinish[c.name]).door || (colorIds.length === 1 ? doorPhoto : undefined),
+    }));
 
     // Overview (staff-authored HTML metafield) replaces the native BC category description for
     // cabinet collections. Gallery images come from media.images (order: [door-sample, …, kitchen]).

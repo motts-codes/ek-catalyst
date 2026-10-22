@@ -151,8 +151,9 @@ function Finishes({
   const chipClass =
     'inline-flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-3 text-xs transition-colors';
   const swatch = (c: CabinetSwatch) => {
-    // Master-list values come through as '' when unset, so test truthiness, not nullishness.
-    const usePhoto = !c.hex && !c.swatch && Boolean(c.photo);
+    // Master-list values come through as '' when unset, so test truthiness, not nullishness. A
+    // finish's door photo beats a measured hex (the hex shows behind it while it loads).
+    const usePhoto = !c.swatch && Boolean(c.photo);
     const image = c.swatch || (usePhoto ? c.photo : undefined);
 
     return (
