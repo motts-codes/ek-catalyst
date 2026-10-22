@@ -140,6 +140,33 @@ async function withDefaultSelections<F extends { name: string; defaultValue?: un
   });
 }
 
+// Cabinet SKUs carry their program in the "Program" custom field (Assembled / RTA). Their
+// breadcrumb gets the program crumb that the collection page shows (Home / Cabinets / Assembled /
+// Avon… / product), and the collection crumb links to that program's view of the collection, so
+// "back" keeps the visitor in the journey they came from.
+function withCabinetProgramCrumb(
+  crumbs: Array<{ label: string; href: string }>,
+  customFields: Array<{ name: string; value: string }>,
+): Array<{ label: string; href: string }> {
+  const last = crumbs[crumbs.length - 1];
+  const raw = customFields
+    .find((field) => field.name === 'Program')
+    ?.value.trim()
+    .toLowerCase();
+  const PROGRAMS = { assembled: 'Assembled', rta: 'RTA' } as const;
+  const program = raw === 'rta' || raw === 'assembled' ? raw : null;
+
+  if (last == null || crumbs.length < 2 || !last.href.startsWith('/cabinets/') || program == null) {
+    return crumbs;
+  }
+
+  return [
+    ...crumbs.slice(0, -1),
+    { label: PROGRAMS[program], href: `/cabinets/${program}-cabinets` },
+    { label: last.label, href: `${last.href}?program=${program}` },
+  ];
+}
+
 export default async function Product({ params, searchParams }: Props) {
   const { locale, slug } = await params;
   const options = await searchParams;
@@ -206,7 +233,7 @@ export default async function Product({ params, searchParams }: Props) {
     : [];
   const breadcrumbs = [
     { label: 'Home', href: '/' },
-    ...categoryCrumbs,
+    ...withCabinetProgramCrumb(categoryCrumbs, removeEdgesAndNodes(baseProduct.customFields)),
     { label: baseProduct.name, href: baseProduct.path },
   ];
 
