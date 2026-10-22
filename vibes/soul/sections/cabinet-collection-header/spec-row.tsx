@@ -104,11 +104,13 @@ export const COLLECTION_OFFERS = [
 export function OffersRow() {
   return (
     <AccordionRow title="Offers">
-      <ul className={HEADER_COPY_CLASS}>
-        {COLLECTION_OFFERS.map((offer) => (
-          <li key={offer}>{offer}</li>
-        ))}
-      </ul>
+      <div className={HEADER_COPY_CLASS}>
+        <ul>
+          {COLLECTION_OFFERS.map((offer) => (
+            <li key={offer}>{offer}</li>
+          ))}
+        </ul>
+      </div>
     </AccordionRow>
   );
 }
