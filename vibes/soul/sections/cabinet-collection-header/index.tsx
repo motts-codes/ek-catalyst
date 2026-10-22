@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
-import { ArrowDown, Repeat } from 'lucide-react';
+import { ArrowDown, LayoutGrid, Repeat, Truck, WalletMinimal } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { DeliveryTruckIcon } from '@/vibes/soul/primitives/icons/delivery-truck';
+import { Amount, Finance, withCommas } from '@/vibes/soul/sections/cabinet-lines';
 import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
@@ -127,8 +127,6 @@ interface Props {
 const PROGRAM_LABEL = { assembled: 'Assembled', rta: 'RTA' };
 
 // Metafield prices arrive as plain numbers ("3289.55"); show them with thousands separators.
-const formatPrice = (value = '') => value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
 // Finish chips. Display-only on single-finish collections; on multi-finish ones (Prism) each chip
 // is a link that sets ?finish= — the price, photos and product grid follow the selection. The
 // selected chip gets the brand-red outline (plus aria-current); clicking it again clears.
@@ -212,51 +210,68 @@ function Finishes({
   );
 }
 
-// The 10×10 "basic kitchen" price for the shown program, with its fixed-list disclaimer.
-function PriceCard({
-  data,
-  program,
-}: {
-  data: CabinetCollectionHeaderData;
-  program: 'assembled' | 'rta';
-}) {
+// The 10×10 "basic kitchen" price, in the kitchen card's facts-strip style (pink hairline, blush
+// background): price | 10×10 badge | three fact rows (kitchen, finance, lead time). The fixed-list
+// disclaimer sits under the strip.
+function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
+  const row = 'flex items-center gap-2 text-sm font-medium leading-snug';
+  const icon = 'shrink-0 text-[var(--button-primary-background,#d90716)]';
+
   return (
-    <div className="flex flex-wrap items-center gap-x-5 gap-y-4 rounded-3xl border border-contrast-100 bg-[#f9fafd] p-5 @xl:p-6">
-      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-[11px] font-bold leading-none ring-1 ring-contrast-100">
-        10×10
-      </span>
-      <div className="min-w-[12rem] flex-1">
-        <p className="font-heading text-lg font-semibold leading-tight">
-          {data.name} 10×10 kitchen
-        </p>
-        <p className="mt-1 text-xs leading-relaxed text-contrast-400">
-          The price is based on a fixed list of cabinets that cannot be modified.
-        </p>
-      </div>
-      <div className="@xl:text-right">
-        <p className="flex items-baseline gap-2 @xl:justify-end">
-          <span className="font-heading text-3xl font-bold leading-none">
-            ${formatPrice(data.price)}
+    <div>
+      <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @md:grid-cols-[auto_auto_1fr]">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-4">
+          {/* On narrow screens the 10×10 badge sits here, beside the price (the middle cell hides). */}
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[9px] font-bold leading-none ring-1 ring-[#fcb6bb] @md:hidden">
+            10×10
+          </span>
+          <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
+            <Amount
+              cents={20}
+              formatted={`$${withCommas(data.price ?? '')}`}
+              symbol={18}
+              whole={36}
+            />
           </span>
           {data.strikePrice != null && data.strikePrice !== '' && (
-            <span className="text-sm text-contrast-400 line-through">
-              ${formatPrice(data.strikePrice)}
+            <span className="leading-none text-[#6b6b6b]">
+              <Amount
+                cents={13}
+                formatted={`$${withCommas(data.strikePrice)}`}
+                strike
+                symbol={13}
+                whole={20}
+              />
             </span>
           )}
-        </p>
-        {data.emiText != null && data.emiText !== '' && (
-          <p className="mt-1 text-xs text-contrast-500">{data.emiText}</p>
-        )}
-        {data.deliveryTime != null && data.deliveryTime !== '' && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-sm text-contrast-500 @xl:justify-end">
-            <DeliveryTruckIcon />
-            <span>
-              {PROGRAM_LABEL[program]} · ships in{' '}
-              <span className="font-medium text-foreground">{data.deliveryTime}</span>
-            </span>
-          </p>
-        )}
+        </div>
+        <div className="hidden items-center justify-center border-l border-[#fcb6bb] px-5 py-3 @md:flex">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-bold leading-none ring-1 ring-[#fcb6bb]">
+            10×10
+          </span>
+        </div>
+        <div className="flex flex-col justify-center gap-2 border-t border-[#fcb6bb] px-5 py-3.5 @md:border-l @md:border-t-0">
+          <div className={row}>
+            <LayoutGrid aria-hidden className={icon} size={16} strokeWidth={1.5} />
+            <span>{data.name} 10×10 kitchen</span>
+          </div>
+          {data.emiText != null && data.emiText !== '' && (
+            <div className={row}>
+              <WalletMinimal aria-hidden className={icon} size={16} strokeWidth={1.5} />
+              <Finance text={data.emiText} />
+            </div>
+          )}
+          {data.deliveryTime != null && data.deliveryTime !== '' && (
+            <div className={row}>
+              <Truck aria-hidden className={icon} size={16} strokeWidth={1.5} />
+              <span>Ships in {data.deliveryTime}</span>
+            </div>
+          )}
+        </div>
       </div>
+      <p className="mt-2 text-xs text-contrast-400">
+        The price is based on a fixed list of cabinets that cannot be modified.
+      </p>
     </div>
   );
 }
@@ -341,7 +356,7 @@ export function CabinetCollectionHeader({
 
             <Finishes colors={data.colors} hrefFor={finishHrefFor} selected={data.selectedFinish} />
 
-            {hasPricing && <PriceCard data={data} program={program} />}
+            {hasPricing && <PriceCard data={data} />}
 
             <SpecRow specSheetUrl={data.specSheetUrl} specifications={specifications} />
 

@@ -242,7 +242,7 @@ function hasFacts(line: CabinetLine): boolean {
 
 // A price as the landing page sets it: small symbol, big dollars, raised cents, each at its own
 // pixel size. Falls back to the raw string when it isn't <symbol><whole>.<cents>.
-function Amount({
+export function Amount({
   formatted,
   symbol,
   whole,
@@ -305,7 +305,7 @@ function LineName({ name }: { name: string }) {
 
 // "As Low As $50.73/Month" → the words on one line, the amount and its suffix on the next, at the
 // landing page's sizes. Anything that doesn't fit that shape renders as given.
-function Finance({ text }: { text: string }) {
+export function Finance({ text }: { text: string }) {
   const match = /^(.*?)\s*(\$[\d,]+(?:\.\d+)?)(.*)$/.exec(text);
 
   if (!match) return text;
@@ -325,7 +325,7 @@ function Finance({ text }: { text: string }) {
 
 // Add thousands separators to a raw price string ("3289.55" -> "3,289.55"). Preserves the cents and
 // is a no-op if the value already has commas.
-function withCommas(value: string): string {
+export function withCommas(value: string): string {
   const [whole = '', cents] = value.split('.');
   const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 

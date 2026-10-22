@@ -4,6 +4,8 @@ import { clsx } from 'clsx';
 import { Download, Plus } from 'lucide-react';
 import { useId, useState } from 'react';
 
+import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
+
 // Shared body-copy style for the collection header: the overview paragraph and the specification
 // list use the same size, colour and leading (13px on phones, 14px from tablet, 150% line-height).
 export const HEADER_COPY_CLASS =
@@ -25,13 +27,14 @@ export function SpecRow({
 
   const specSheetLink = specSheetUrl !== '' && (
     <a
-      className="inline-flex min-h-6 items-center gap-1.5 py-1 text-sm font-semibold underline underline-offset-4 hover:text-[var(--button-primary-background,#d90716)]"
+      className="inline-flex min-h-6 items-center gap-1.5 py-1 text-sm font-normal"
       href={specSheetUrl}
       rel="noreferrer"
       target="_blank"
     >
-      <Download size={15} strokeWidth={2} />
-      Download spec sheet
+      <Download size={15} strokeWidth={1.75} />
+      {/* The breadcrumb's animated red underline on hover. */}
+      <span className={animatedUnderlineClassName}>Download spec sheet</span>
     </a>
   );
 
@@ -52,7 +55,7 @@ export function SpecRow({
           size={18}
           strokeWidth={2}
         />
-        Specification
+        Specifications
       </button>
       <div
         className={clsx(
