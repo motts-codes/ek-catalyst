@@ -105,7 +105,7 @@ function SpecRow({
   );
 }
 
-// Shop products (60%) beside Order sample (40%, black outline, price in small type), with the
+// Shop products (60%) beside Order sample (40%, black outline, price in regular weight), with the
 // free-samples note beneath. Both stay single-line so the row keeps one height.
 function Actions({
   data,
@@ -144,7 +144,7 @@ function Actions({
           >
             <span className="inline-flex items-baseline gap-1.5">
               Order sample
-              {samplePrice !== '' && <span className="text-xs font-normal">${samplePrice}</span>}
+              {samplePrice !== '' && <span className="font-normal">${samplePrice}</span>}
             </span>
           </ButtonLink>
         )}
@@ -366,7 +366,7 @@ export function CabinetCollectionHeader({
                 <div className="flex flex-wrap gap-2">
                   {chips.map((chip) => (
                     <span
-                      className="rounded-full bg-[#C0EDF6] px-3.5 py-1.5 text-xs font-medium text-foreground"
+                      className="rounded-full bg-[#C0EDF6]/50 px-3.5 py-1.5 text-xs font-medium text-foreground"
                       key={chip}
                     >
                       {chip}
