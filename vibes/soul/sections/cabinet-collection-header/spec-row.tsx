@@ -42,7 +42,7 @@ export function AccordionRow({
         aria-controls={panelId}
         aria-expanded={open}
         // `.font-heading` forces bold (!important) in globals.css; use the family directly.
-        className="flex w-full cursor-pointer items-center gap-2.5 py-4 pr-48 text-left font-[family-name:var(--font-family-heading)] text-sm font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+        className="flex w-full cursor-pointer items-center gap-2.5 py-2.5 pr-48 text-left font-[family-name:var(--font-family-heading)] text-sm font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
         onClick={() => setOpen((v) => !v)}
         type="button"
       >
@@ -65,7 +65,7 @@ export function AccordionRow({
         <div className="min-h-0 overflow-hidden">
           <div
             className={clsx(
-              'pb-5 transition-opacity duration-300 motion-reduce:transition-none',
+              'pb-4 transition-opacity duration-300 motion-reduce:transition-none',
               open ? 'opacity-100 delay-100' : 'opacity-0',
             )}
           >
@@ -73,7 +73,7 @@ export function AccordionRow({
           </div>
         </div>
       </div>
-      {aside != null && <div className="absolute right-0 top-3.5">{aside}</div>}
+      {aside != null && <div className="absolute right-0 top-[7px]">{aside}</div>}
     </div>
   );
 }
