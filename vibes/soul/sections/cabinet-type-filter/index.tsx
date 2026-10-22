@@ -43,7 +43,7 @@ export function CabinetTypeFilter({
         {/* gap-px over the line colour draws the dividers, whatever the wrap. */}
         <ul
           className={clsx(
-            'grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-[#ffa1a4] @lg:grid-cols-3 @3xl:grid-cols-6',
+            'grid grid-cols-3 gap-px overflow-hidden rounded-xl border bg-[#ffa1a4] @3xl:grid-cols-6',
             LINE,
           )}
         >
@@ -55,7 +55,7 @@ export function CabinetTypeFilter({
                 <Link
                   aria-current={active ? 'true' : undefined}
                   className={clsx(
-                    'flex h-full flex-col items-center gap-2 px-3 pb-4 pt-3 text-center transition-colors duration-300 ease-smooth hover:bg-[#fdf3f5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)]',
+                    'flex h-full flex-col items-center gap-2 px-2 pb-3 pt-3 text-center transition-colors duration-300 ease-smooth hover:bg-[#fdf3f5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)] @lg:px-3 @lg:pb-4',
                     active && 'bg-[#fdf3f5]',
                   )}
                   href={hrefFor(active ? null : type.value)}
@@ -73,7 +73,7 @@ export function CabinetTypeFilter({
                     unoptimized
                     width={116}
                   />
-                  <span className="text-[13px] font-semibold uppercase leading-tight tracking-wide text-foreground">
+                  <span className="text-[11px] font-semibold uppercase leading-tight tracking-wide text-foreground @lg:text-[13px]">
                     {type.label}
                     {active && <span className="sr-only"> (selected)</span>}
                   </span>
