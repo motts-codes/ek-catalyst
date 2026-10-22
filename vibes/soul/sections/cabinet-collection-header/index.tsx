@@ -131,7 +131,8 @@ const PROGRAM_LABEL = { assembled: 'Assembled', rta: 'RTA' };
 // Metafield prices arrive as plain numbers ("3289.55"); show them with thousands separators.
 // Finish chips. Display-only on single-finish collections; on multi-finish ones (Prism) each chip
 // is a link that sets ?finish= — the price, photos and product grid follow the selection. The
-// selected chip gets the brand-red outline (plus aria-current); clicking it again clears.
+// selected chip gets the brand-red outline (plus aria-current). One finish is always selected on a
+// per-finish collection (the default when the URL names none), so the chips never toggle off.
 function Finishes({
   colors = [],
   selected,
@@ -198,7 +199,7 @@ function Finishes({
                   ? 'border-[0.5px] border-[var(--button-primary-background,#d90716)] font-semibold text-foreground'
                   : 'border-contrast-100 text-contrast-500 hover:border-contrast-300 hover:text-foreground',
               )}
-              href={hrefFor(active ? null : c.slug)}
+              href={hrefFor(c.slug)}
               key={c.id}
             >
               {swatch(c)}

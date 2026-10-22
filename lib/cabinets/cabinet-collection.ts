@@ -414,6 +414,24 @@ function orderGallery({
   return ordered.filter((u, i) => ordered.indexOf(u) === i);
 }
 
+/** The gallery images after the lead pair. With a finish selected, any photo that belongs to a
+ *  finish in `byFinish` is left out (one colour at a time). */
+function trailingGallery(
+  candidates: Array<string | undefined>,
+  byFinish: ByFinish,
+  finishSelected: boolean,
+): string[] {
+  const owned = new Set(
+    Object.values(finishSelected ? byFinish : {}).flatMap((f) => {
+      const { door, kitchen } = finishPhotos(f);
+
+      return [...(f.images ?? []), door, kitchen];
+    }),
+  );
+
+  return candidates.filter((u): u is string => u != null && !owned.has(u));
+}
+
 /** URL slug for a finish name: "French Vanilla" -> "french-vanilla". */
 export function cabinetFinishSlug(name: string): string {
   return name
@@ -422,22 +440,48 @@ export function cabinetFinishSlug(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
-/** Resolve a ?finish= slug to the finish name among this collection's colours, or null. */
-export const resolveCabinetFinish = cache(
-  async (categoryId: number, slug: string | null): Promise<string | null> => {
-    if (!slug) return null;
-
+/** The finish axis of a collection: its colour names, the default one, and whether it is priced
+ *  and photographed per finish (Prism: finishes.by_finish has entries). Only per-finish collections
+ *  auto-select a finish and narrow the product grid by it; multi-colour Euro collections keep their
+ *  colours as options on the product. */
+const cabinetFinishSetup = cache(
+  async (
+    categoryId: number,
+  ): Promise<{ names: string[]; defaultName: string | null; perFinish: boolean }> => {
     const cat = await fetchCabinetCollection(categoryId);
 
-    if (!cat) return null;
+    if (!cat) return { names: [], defaultName: null, perFinish: false };
 
-    const spec = parseJson<{ color_ids?: string[] }>(
+    const spec = parseJson<{ color_ids?: string[]; default_color_id?: string }>(
       cat.spec.edges?.find((e) => e.node.key === 'info')?.node.value,
     );
+    const byFinish =
+      parseJson<ByFinish>(
+        cat.finishes.edges?.find((e) => e.node.key === 'by_finish')?.node.value,
+      ) ?? {};
     const attributes = await getCabinetAttributes();
-    const names = (spec?.color_ids ?? [])
-      .map((id) => attributes.colors.find((c) => c.id === id)?.name)
-      .filter((n): n is string => n != null);
+    const colors = (spec?.color_ids ?? [])
+      .map((id) => attributes.colors.find((c) => c.id === id))
+      .filter((c): c is ColorOption => c != null);
+    const defaultName =
+      colors.find((c) => c.id === spec?.default_color_id)?.name ?? colors[0]?.name ?? null;
+
+    return {
+      names: colors.map((c) => c.name),
+      defaultName,
+      perFinish: Object.keys(byFinish).length > 0,
+    };
+  },
+);
+
+/** Resolve a ?finish= slug to the finish name among this collection's colours. With no slug, a
+ *  per-finish collection (Prism) selects its default colour (spec.info.default_color_id, else the
+ *  first); any other collection selects nothing. */
+export const resolveCabinetFinish = cache(
+  async (categoryId: number, slug: string | null): Promise<string | null> => {
+    const { names, defaultName, perFinish } = await cabinetFinishSetup(categoryId);
+
+    if (!slug) return perFinish ? defaultName : null;
 
     return names.find((n) => cabinetFinishSlug(n) === slug) ?? null;
   },
@@ -460,9 +504,14 @@ export async function cabinetFinishContext(
 ): Promise<CabinetFinishContext> {
   const first = Array.isArray(raw) ? raw[0] : raw;
   const slug = isCollection && first ? first : null;
-  const name = await resolveCabinetFinish(categoryId, slug);
+  const name = isCollection ? await resolveCabinetFinish(categoryId, slug) : null;
+  // The grid narrows by finish only where the products are split per finish (Prism).
+  const { perFinish } = isCollection ? await cabinetFinishSetup(categoryId) : { perFinish: false };
 
-  return { name, filter: name ? { [CABINET_FINISH_ATTRIBUTE_PARAM]: [name] } : {} };
+  return {
+    name,
+    filter: name && perFinish ? { [CABINET_FINISH_ATTRIBUTE_PARAM]: [name] } : {},
+  };
 }
 
 interface SampleInfo {
@@ -676,20 +725,22 @@ export const getCabinetCollectionHeader = cache(
       (!hasNamedSlots && rawImages.length > 1 ? rawImages.at(-1) : undefined);
     const others = rawImages.filter((u) => u !== doorImage && u !== kitchenImage);
 
-    // A chosen finish leads with its own door photo + kitchen render; the collection's own pair
-    // and the rest of the gallery follow.
+    // A chosen finish leads with its own door photo + kitchen render. On a per-finish collection
+    // the other finishes' photos stay out of the gallery (one colour at a time); anything else in
+    // media.images (diagrams, details) follows. Elsewhere the collection's own pair and the rest
+    // of the gallery follow.
     const audience = await getAudienceMode();
     const selected = finishPhotos(finishEntry);
+    const finishPairs = Object.values(byFinish).map(finishPhotos);
     const images = orderGallery({
       audience,
       door: selected.door ?? doorImage,
       kitchen: selected.kitchen ?? kitchenImage,
-      others: [doorImage, kitchenImage, ...others].filter((u): u is string => u != null),
+      others: trailingGallery([doorImage, kitchenImage, ...others], byFinish, finishEntry != null),
     });
 
     // Door photos (the collection's and every finish's) are tight crops: shown contained with
     // padding. Kitchen photos fill the frame; everything else fits.
-    const finishPairs = Object.values(byFinish).map(finishPhotos);
     const doorImages = [doorImage, ...finishPairs.map((f) => f.door)].filter(
       (u): u is string => u != null && u !== '',
     );
