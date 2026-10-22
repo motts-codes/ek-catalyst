@@ -3,6 +3,7 @@ import { ArrowDown, LayoutGrid, Repeat, Truck, WalletMinimal } from 'lucide-reac
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { Amount, withCommas } from '@/vibes/soul/sections/cabinet-lines';
+import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
@@ -222,9 +223,14 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
       <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-white text-[#404040] @md:grid-cols-[auto_auto_1fr]">
         {/* Deal price with the was-price beneath it. */}
         <div className="flex items-center gap-x-3 px-8 py-4 @md:pr-10">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[9px] font-bold leading-none ring-1 ring-[#fcb6bb] @md:hidden">
-            10×10
-          </span>
+          <Image
+            alt=""
+            className="h-auto w-12 shrink-0 @md:hidden"
+            height={96}
+            src="/images/cabinets/10x10-kitchen.svg"
+            unoptimized
+            width={116}
+          />
           <span className="flex flex-col items-start gap-1.5">
             <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
               <Amount
@@ -247,10 +253,16 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
             )}
           </span>
         </div>
-        <div className="hidden items-center justify-center border-l border-[#fcb6bb] px-8 py-3 @md:flex">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-bold leading-none ring-1 ring-[#fcb6bb]">
-            10×10
-          </span>
+        {/* The 10×10 kitchen drawing on the card's blush background. */}
+        <div className="hidden items-center justify-center border-l border-[#fcb6bb] bg-[#fdf8f8] px-6 py-3 @md:flex">
+          <Image
+            alt="10×10 kitchen layout"
+            className="h-auto w-[88px]"
+            height={96}
+            src="/images/cabinets/10x10-kitchen.svg"
+            unoptimized
+            width={116}
+          />
         </div>
         {/* Three fact rows with full-width hairlines between them. */}
         <div className="flex flex-col justify-center divide-y divide-[#fcb6bb] border-t border-[#fcb6bb] @md:border-l @md:border-t-0">
@@ -347,7 +359,7 @@ export function CabinetCollectionHeader({
                 </div>
                 {Boolean(switchHref) && (
                   <Link
-                    className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3.5 py-1.5 text-xs font-semibold transition-colors hover:bg-foreground hover:text-white"
+                    className="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-foreground px-3.5 py-1.5 text-xs font-semibold transition-colors hover:bg-foreground hover:text-white"
                     href={switchHref ?? '#'}
                   >
                     <Repeat size={13} strokeWidth={2.25} />
