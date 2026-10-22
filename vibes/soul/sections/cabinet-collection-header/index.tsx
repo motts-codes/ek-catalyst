@@ -41,6 +41,8 @@ export interface CabinetSwatch {
 
 export interface CabinetCollectionHeaderData {
   name: string;
+  /** The name without its colour ("Avon" for "Avon Painted White"), for "Shop Avon cabinets". */
+  shortName?: string;
   /** Overview HTML — the collection's long copy (replaces the native BC category description). */
   overview?: string;
   /** Gallery image URLs; images[0] is the main image. */
@@ -95,7 +97,7 @@ function Actions({
           variant="primary"
         >
           <span className="inline-flex items-center gap-2">
-            Shop products
+            Shop {data.shortName ?? data.name} cabinets
             <ArrowDown size={17} strokeWidth={2.25} />
           </span>
         </ButtonLink>

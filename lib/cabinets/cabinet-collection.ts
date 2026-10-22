@@ -462,6 +462,27 @@ function orderFinishes(colors: ColorOption[], perFinish: boolean): ColorOption[]
     .map(({ c }) => c);
 }
 
+/** The collection name without its colour: "Avon Painted White" → "Avon", "Derry Stratus" →
+ *  "Derry" (a colour's last word counts too, since names carry "Stratus" for "Painted Stratus").
+ *  Names with no colour in them ("Prism Avon", "Euro Max Tribeca Shaker") are unchanged. */
+export function shortCollectionName(name: string, colorNames: string[]): string {
+  const tokens = colorNames.flatMap((c) => {
+    const words = c.trim().split(/\s+/);
+
+    return words.length > 1 ? [c.trim(), words[words.length - 1] ?? ''] : [c.trim()];
+  });
+  const stripped = tokens
+    .filter((t) => t !== '')
+    .reduce(
+      (acc, t) =>
+        acc.replace(new RegExp(`\\s+${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i'), ''),
+      name,
+    )
+    .trim();
+
+  return stripped === '' ? name : stripped;
+}
+
 /** URL slug for a finish name: "French Vanilla" -> "french-vanilla". */
 export function cabinetFinishSlug(name: string): string {
   return name
@@ -781,6 +802,10 @@ export const getCabinetCollectionHeader = cache(
 
     return {
       name: cat.name,
+      shortName: shortCollectionName(
+        cat.name,
+        colors.map((c) => c.name),
+      ),
       overview: overview !== '' ? overview : undefined,
       images: images.length > 0 ? images : undefined,
       doorImages,
