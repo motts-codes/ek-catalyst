@@ -133,7 +133,8 @@ export function OffersRow({ offers }: { offers: CollectionOffer[] }) {
               {offer.href != null && (
                 <Link
                   aria-label={`Offer details: ${offer.text}`}
-                  className="ml-1 inline-flex translate-y-[2px] text-contrast-400 transition-colors hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1"
+                  // `!` beats the copy style's blue link colour.
+                  className="ml-1 inline-flex translate-y-[2px] !text-contrast-400 transition-colors hover:!text-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1"
                   href={offer.href}
                 >
                   <ArrowUpRight aria-hidden size={14} strokeWidth={2} />
