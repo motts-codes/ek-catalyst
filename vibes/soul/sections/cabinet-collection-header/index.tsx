@@ -313,15 +313,9 @@ export function CabinetCollectionHeader({
   const images = (data.images ?? []).filter((u) => u !== '');
   const other = program === 'rta' ? 'assembled' : 'rta';
 
-  // Product Line, Construction and Door Style are three DISTINCT dimensions (Laravel treats door
-  // style — e.g. "Shaker Full Overlay" — separately from construction — Framed/Frameless/Slab).
-  // Prefer the attribute selection; fall back to legacy merch.
-  const chips = [
-    data.doorStyle,
-    data.construction,
-    data.productLine || data.line,
-    data.colors?.length ? undefined : data.defaultFinish,
-  ].filter((chip): chip is string => Boolean(chip));
+  // Only the door style is shown as a chip (Arun, Oct 22 2026): product line and construction stay
+  // in the data (listing filter, admin) but not on the collection page.
+  const chips = [data.doorStyle].filter((chip): chip is string => Boolean(chip));
 
   return (
     <div className={clsx('bg-white @container', className)}>
@@ -338,11 +332,13 @@ export function CabinetCollectionHeader({
 
           {/* Right: the decision column */}
           <div className="flex flex-col gap-5">
-            <div className="flex flex-wrap items-center gap-3">
+            {/* The program tag is identification, not a highlight: small, light grey, tucked at the
+                bottom-right of the name. */}
+            <div className="flex flex-wrap items-end gap-2.5">
               <h1 className="m-0 font-heading text-3xl font-bold leading-tight @xl:text-4xl">
                 {data.name}
               </h1>
-              <span className="rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+              <span className="mb-1.5 rounded-full bg-contrast-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-foreground">
                 {PROGRAM_LABEL[program]}
               </span>
             </div>
@@ -362,7 +358,7 @@ export function CabinetCollectionHeader({
                 <div className="flex flex-wrap gap-2">
                   {chips.map((chip) => (
                     <span
-                      className="rounded-full border border-contrast-200 bg-white px-3.5 py-1.5 text-xs font-medium text-contrast-500"
+                      className="rounded-full bg-[#C0EDF6] px-3.5 py-1.5 text-xs font-medium text-foreground"
                       key={chip}
                     >
                       {chip}
