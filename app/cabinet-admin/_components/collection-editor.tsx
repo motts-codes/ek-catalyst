@@ -48,6 +48,8 @@ export function CollectionEditor({
         validatePrice(data.pricing[p].price) != null ||
         validatePrice(data.pricing[p].strike_price) != null,
     ) ||
+    validateUrl(data.doorImage) != null ||
+    validateUrl(data.kitchenImage) != null ||
     validateProductId(data.sample.product_id) != null ||
     validatePrice(data.sample.price) != null ||
     validateUrl(data.specSheets.assembled) != null ||
@@ -193,8 +195,30 @@ export function CollectionEditor({
           />
         </Group>
 
+        <Group title="Photos">
+          <p className="text-xs text-gray-500">
+            The door sample is shown contained (never cropped) in the gallery, on the listing card
+            and as the swatch fallback; the kitchen photo leads the gallery for homeowners.
+          </p>
+          <Field
+            error={validateUrl(data.doorImage)}
+            label="Door sample photo URL"
+            onChange={(v) => setData((d) => ({ ...d, doorImage: v }))}
+            value={data.doorImage}
+          />
+          <Field
+            error={validateUrl(data.kitchenImage)}
+            label="Kitchen photo URL"
+            onChange={(v) => setData((d) => ({ ...d, kitchenImage: v }))}
+            value={data.kitchenImage}
+          />
+        </Group>
+
         <Group title="Gallery Images">
-          <p className="text-xs text-gray-500">Up to 5 image URLs. The first is the main image.</p>
+          <p className="text-xs text-gray-500">
+            Up to 5 image URLs for the rest of the gallery (spec sheets, details). Shown fitted, not
+            cropped.
+          </p>
           {data.images.map((url, i) => (
             <Field
               error={validateUrl(url)}

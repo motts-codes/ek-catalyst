@@ -85,6 +85,11 @@ export interface CollectionMetafields {
   shopNowUrl: { rta: string; assembled: string };
   // media.images = [url×5] — collection gallery; images[0] is the main image.
   images: string[];
+  // media.door_image / media.kitchen_image — the two named photos the storefront keys on (door
+  // sample: shown contained, listing hover/contractor cover, swatch fallback; kitchen: the
+  // homeowner lead). Empty → the gallery's first / last image by convention.
+  doorImage: string;
+  kitchenImage: string;
 }
 
 const IMAGE_SLOTS = 5;
@@ -115,6 +120,8 @@ export function emptyCollectionMetafields(): CollectionMetafields {
     },
     shopNowUrl: { rta: '', assembled: '' },
     images: Array.from({ length: IMAGE_SLOTS }, () => ''),
+    doorImage: '',
+    kitchenImage: '',
   };
 }
 
@@ -194,6 +201,9 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
   const images = Array.from({ length: IMAGE_SLOTS }, (_, i) =>
     Array.isArray(imagesRaw) && typeof imagesRaw[i] === 'string' ? imagesRaw[i] : '',
   );
+  const doorImage = mfs.find((m) => m.namespace === 'media' && m.key === 'door_image')?.value ?? '';
+  const kitchenImage =
+    mfs.find((m) => m.namespace === 'media' && m.key === 'kitchen_image')?.value ?? '';
 
   const normalizeFaqSide = (
     side: { headline?: string; items?: FaqItem[] } | undefined,
@@ -243,6 +253,8 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
     },
     shopNowUrl: { rta: shopNow?.rta ?? '', assembled: shopNow?.assembled ?? '' },
     images,
+    doorImage,
+    kitchenImage,
   };
 }
 
@@ -393,6 +405,14 @@ export async function writeCollectionMetafields(
     'media',
     'images',
     JSON.stringify(trimmedImages.some((u) => u !== '') ? trimmedImages : []),
+  );
+  await upsertMetafield('categories', categoryId, 'media', 'door_image', data.doorImage.trim());
+  await upsertMetafield(
+    'categories',
+    categoryId,
+    'media',
+    'kitchen_image',
+    data.kitchenImage.trim(),
   );
 }
 

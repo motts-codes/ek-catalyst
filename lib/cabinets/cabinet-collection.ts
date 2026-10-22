@@ -376,8 +376,43 @@ interface MerchInfo {
 // appears in the Cabinets colour master list.
 type ByFinish = Record<
   string,
-  { assembled?: ProgramPricing; rta?: ProgramPricing; images?: string[] }
+  {
+    assembled?: ProgramPricing;
+    rta?: ProgramPricing;
+    images?: string[];
+    door_image?: string;
+    kitchen_image?: string;
+  }
 >;
+
+/** A finish's door photo and kitchen render (explicit slots, else the harvest's [door, kitchen]). */
+function finishPhotos(entry: ByFinish[string] | undefined): { door?: string; kitchen?: string } {
+  const images = (entry?.images ?? []).filter((u) => u !== '');
+
+  return {
+    door: entry?.door_image || images[0],
+    kitchen: entry?.kitchen_image || images[1],
+  };
+}
+
+/** Gallery order: the lead pair (kitchen first for homeowners, door first for contractors — of
+ *  the chosen finish when there is one), then the rest, de-duplicated. */
+function orderGallery({
+  audience,
+  door,
+  kitchen,
+  others,
+}: {
+  audience: 'homeowner' | 'pro';
+  door?: string;
+  kitchen?: string;
+  others: string[];
+}): string[] {
+  const pair = audience === 'homeowner' ? [kitchen, door] : [door, kitchen];
+  const ordered = [...pair, ...others].filter((u): u is string => u != null && u !== '');
+
+  return ordered.filter((u, i) => ordered.indexOf(u) === i);
+}
 
 /** URL slug for a finish name: "French Vanilla" -> "french-vanilla". */
 export function cabinetFinishSlug(name: string): string {
@@ -617,7 +652,8 @@ export const getCabinetCollectionHeader = cache(
         swatch: c.image,
         // A finish's own door photo can stand in for a missing master-list swatch; the collection's
         // door sample only when it has a single finish (otherwise every chip would show one colour).
-        photo: byFinish[c.name]?.images?.[0] || (colorIds.length === 1 ? doorPhoto : undefined),
+        photo:
+          finishPhotos(byFinish[c.name]).door || (colorIds.length === 1 ? doorPhoto : undefined),
       }));
 
     // Overview (staff-authored HTML metafield) replaces the native BC category description for
@@ -627,34 +663,42 @@ export const getCabinetCollectionHeader = cache(
       parseJson<string[]>(cat.media.edges?.find((e) => e.node.key === 'images')?.node.value) ?? []
     ).filter((u): u is string => typeof u === 'string' && u !== '');
 
-    // Audience-aware lead image (Gallery shows images[0] as the main): homeowners lead with the
-    // kitchen (last image) moved to the front; contractors keep the door sample (first) as-is.
-    const audience = await getAudienceMode();
-    const kitchen = rawImages.at(-1);
-    const finishImages = (finishEntry?.images ?? []).filter((u) => u !== '');
-    const homeownerOrder =
-      audience === 'homeowner' && rawImages.length > 1 && kitchen
-        ? [kitchen, ...rawImages.slice(0, -1)]
-        : rawImages;
-    // A chosen finish leads with its own door photos, then the rest of the gallery.
-    const images =
-      finishImages.length > 0
-        ? [...finishImages, ...rawImages.filter((u) => !finishImages.includes(u))]
-        : homeownerOrder;
+    // The two named photos (media.door_image / media.kitchen_image), falling back to the gallery
+    // convention (first = door sample, last = kitchen) for collections seeded before the slots.
+    const mediaValue = (key: string) =>
+      cat.media.edges?.find((e) => e.node.key === key)?.node.value;
+    const doorImage = mediaValue('door_image') || rawImages[0];
+    const kitchenImage =
+      mediaValue('kitchen_image') || (rawImages.length > 1 ? rawImages.at(-1) : undefined);
+    const others = rawImages.filter((u) => u !== doorImage && u !== kitchenImage);
 
-    // Door-sample photos (the gallery's first image by convention, plus every finish's photos) are
-    // tight crops of a door: the gallery shows them contained with padding rather than filling
-    // the frame, which kitchen photos do.
-    const doorImages = [
-      ...(rawImages[0] != null ? [rawImages[0]] : []),
-      ...Object.values(byFinish).flatMap((entry) => entry.images ?? []),
-    ].filter((u) => u !== '');
+    // A chosen finish leads with its own door photo + kitchen render; the collection's own pair
+    // and the rest of the gallery follow.
+    const audience = await getAudienceMode();
+    const selected = finishPhotos(finishEntry);
+    const images = orderGallery({
+      audience,
+      door: selected.door ?? doorImage,
+      kitchen: selected.kitchen ?? kitchenImage,
+      others: [doorImage, kitchenImage, ...others].filter((u): u is string => u != null),
+    });
+
+    // Door photos (the collection's and every finish's) are tight crops: shown contained with
+    // padding. Kitchen photos fill the frame; everything else fits.
+    const finishPairs = Object.values(byFinish).map(finishPhotos);
+    const doorImages = [doorImage, ...finishPairs.map((f) => f.door)].filter(
+      (u): u is string => u != null && u !== '',
+    );
+    const kitchenImages = [kitchenImage, ...finishPairs.map((f) => f.kitchen)].filter(
+      (u): u is string => u != null && u !== '',
+    );
 
     return {
       name: cat.name,
       overview: overview !== '' ? overview : undefined,
       images: images.length > 0 ? images : undefined,
       doorImages,
+      kitchenImages,
       line: merch?.line,
       doorStyle: merch?.door_style,
       defaultFinish: merch?.default_finish,

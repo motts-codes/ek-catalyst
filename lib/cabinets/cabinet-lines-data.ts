@@ -218,12 +218,9 @@ interface ProgramPricing {
 // last image = kitchen). Homeowners get the aspirational kitchen as the cover with the door sample
 // revealed on hover; contractors get the door sample straight up with no hover flourish.
 function pickCardImages(
-  gallery: string[],
+  { door: doorSample, kitchen }: { door?: string; kitchen?: string },
   audience: 'homeowner' | 'pro',
 ): { cover?: string; hover?: string; containCover?: boolean } {
-  const doorSample = gallery[0];
-  const kitchen = gallery.length > 1 ? gallery[gallery.length - 1] : undefined;
-
   if (audience === 'homeowner' && kitchen) {
     // Kitchen is a lifestyle shot — fill the card (object-cover).
     return { cover: kitchen, hover: doorSample };
@@ -275,11 +272,18 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
       const href = `${child.path}?program=${program}`;
 
       // media.images = [door-sample, …, kitchen]. Cover + hover are chosen by audience.
-      const galleryRaw = cat?.media?.edges?.find((e) => e.node.key === 'images')?.node.value;
-      const gallery = (parseJson<string[]>(galleryRaw) ?? []).filter(
+      const mediaValue = (key: string) =>
+        cat?.media?.edges?.find((e) => e.node.key === key)?.node.value;
+      const gallery = (parseJson<string[]>(mediaValue('images')) ?? []).filter(
         (u): u is string => typeof u === 'string' && u !== '',
       );
-      const { cover, hover, containCover } = pickCardImages(gallery, audience);
+      // Named photos (media.door_image / media.kitchen_image) win; older seeds fall back to the
+      // gallery convention (first = door sample, last = kitchen).
+      const named = {
+        door: mediaValue('door_image') || gallery[0],
+        kitchen: mediaValue('kitchen_image') || (gallery.length > 1 ? gallery.at(-1) : undefined),
+      };
+      const { cover, hover, containCover } = pickCardImages(named, audience);
       const mainSrc = cover ?? child.image?.url; // fall back to native BC category image
       const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
       const hoverImage = hover ? { src: hover, alt: `${child.name} door sample` } : undefined;

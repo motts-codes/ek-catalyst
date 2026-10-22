@@ -10,16 +10,25 @@ export function Gallery({
   images,
   name,
   doorImages = [],
+  kitchenImages = [],
 }: {
   images: string[];
   name: string;
-  /** Door-sample photos among `images`: tight crops of a door, so they're shown contained with
-   *  padding on the frame's light background instead of filling it. Kitchen photos fill. */
+  /** Door-sample photos: tight crops of a door, shown contained with generous padding. */
   doorImages?: string[];
+  /** Kitchen photos: the only images that fill (cover) the frame. Anything else — spec sheets,
+   *  detail graphics — fits inside the frame with light padding, never cropped. */
+  kitchenImages?: string[];
 }) {
   const [active, setActive] = useState(0);
   const main = images[active] ?? images[0];
-  const isDoor = (src: string | undefined) => src != null && doorImages.includes(src);
+  const fitClass = (src: string | undefined, thumb = false) => {
+    if (src != null && kitchenImages.includes(src)) return 'object-cover';
+    if (src != null && doorImages.includes(src))
+      return thumb ? 'bg-contrast-100 object-contain p-1.5' : 'object-contain p-10 @xl:p-14';
+
+    return thumb ? 'bg-contrast-100 object-contain p-0.5' : 'object-contain p-4 @xl:p-6';
+  };
 
   return (
     <div>
@@ -27,7 +36,7 @@ export function Gallery({
         {main != null && (
           <Image
             alt={name}
-            className={`size-full ${isDoor(main) ? 'object-contain p-10 @xl:p-14' : 'object-cover'}`}
+            className={`size-full ${fitClass(main)}`}
             height={900}
             sizes="(min-width: 48rem) 40vw, 100vw"
             src={main}
@@ -56,7 +65,7 @@ export function Gallery({
               <span className="relative block size-full overflow-hidden rounded-[10px]">
                 <Image
                   alt={`${name} ${i + 1}`}
-                  className={`size-full ${isDoor(src) ? 'bg-contrast-100 object-contain p-1.5' : 'object-cover'}`}
+                  className={`size-full ${fitClass(src, true)}`}
                   height={128}
                   sizes="64px"
                   src={src}

@@ -241,6 +241,10 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery
             for u in (r.get("images") or [])[:5]:
                 if isinstance(u, str) and u.strip() and u not in entry["images"]:
                     entry["images"].append(u)
+            # The harvest gives each colour [door photo, kitchen render]: name them explicitly.
+            imgs = entry["images"]
+            entry["door_image"] = imgs[0] if imgs else ""
+            entry["kitchen_image"] = imgs[1] if len(imgs) > 1 else ""
     if by_finish:
         client.upsert("categories", cat_id, "finishes", "by_finish", json.dumps(by_finish))
 
@@ -286,9 +290,20 @@ def import_collection(client, cat_id, cat_name, rta, asm, color_id_map, delivery
                   json.dumps({"rta": normalize_videos(g(rta, "assembly_instructions", [])),
                               "assembled": normalize_videos(g(asm, "assembly_instructions", []))}))
 
-    # media.images (shared, up to 5)
+    # media.images (shared, up to 5), plus the two named slots the storefront keys on:
+    # media.door_image (the harvest's first image is the door sample) and media.kitchen_image (its
+    # last image is the kitchen shot — except for colour-merged collections like Prism, whose
+    # images are all door photos, so no kitchen).
     images = [u for u in (g(src, "images", []) or []) if isinstance(u, str) and u.strip()][:5]
     client.upsert("categories", cat_id, "media", "images", json.dumps(images))
+    merged = bool((src or {}).get("_records"))
+    door_image = images[0] if images else ""
+    kitchen_image = images[-1] if len(images) > 1 and not merged else ""
+    # BigCommerce rejects an empty metafield value (422), so empty slots are simply not written.
+    if door_image:
+        client.upsert("categories", cat_id, "media", "door_image", door_image)
+    if kitchen_image:
+        client.upsert("categories", cat_id, "media", "kitchen_image", kitchen_image)
 
     # merch.info — door_style from tags[0].name (Laravel treats door-style as a tag). line/finish
     # from whatever's known; kept as the legacy fallback (attribute selection supersedes on storefront).

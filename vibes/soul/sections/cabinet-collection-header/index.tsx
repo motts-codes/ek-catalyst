@@ -38,6 +38,8 @@ export interface CabinetCollectionHeaderData {
   images?: string[];
   /** Gallery images that are door-sample photos: shown contained with padding, not cropped. */
   doorImages?: string[];
+  /** Gallery images that are kitchen photos: the only ones that fill (cover) the frame. */
+  kitchenImages?: string[];
   /** Merch info: line / door style / default finish. */
   line?: string;
   doorStyle?: string;
@@ -319,7 +321,12 @@ export function CabinetCollectionHeader({
           <div className="@3xl:self-stretch">
             <div className="@3xl:sticky @3xl:top-28">
               {images.length > 0 ? (
-                <Gallery doorImages={data.doorImages} images={images} name={data.name} />
+                <Gallery
+                  doorImages={data.doorImages}
+                  images={images}
+                  kitchenImages={data.kitchenImages}
+                  name={data.name}
+                />
               ) : (
                 <div className="flex aspect-[4/3] items-center justify-center rounded-3xl bg-contrast-100 p-6 text-center text-2xl font-bold tracking-tighter text-foreground/10">
                   {data.name} kitchen

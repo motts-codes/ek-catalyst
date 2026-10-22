@@ -69,6 +69,15 @@ export async function upsertMetafield(
     (m) => m.namespace === namespace && m.key === key,
   );
 
+  // BigCommerce rejects an empty value (422), so clearing a field removes its metafield instead.
+  if (value.trim() === '') {
+    if (existing) {
+      await apiFetch('DELETE', `/catalog/${entity}/${entityId}/metafields/${existing.id}`);
+    }
+
+    return;
+  }
+
   const body = { namespace, key, value, permission_set: 'write_and_sf_access' };
 
   if (existing) {
@@ -83,7 +92,5 @@ export async function listCabinetCollections(): Promise<Array<{ id: number; name
   const data = await apiFetch('GET', '/catalog/trees/categories?limit=250');
   const cats = (data.data ?? []) as Array<{ category_id: number; name: string; parent_id: number }>;
 
-  return cats
-    .filter((c) => c.parent_id === 863)
-    .map((c) => ({ id: c.category_id, name: c.name }));
+  return cats.filter((c) => c.parent_id === 863).map((c) => ({ id: c.category_id, name: c.name }));
 }
