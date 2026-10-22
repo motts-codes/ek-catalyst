@@ -33,7 +33,7 @@ export function Gallery({
 
   return (
     <div>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-3xl">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-[#FAFAFA]">
         {main != null && (
           <Image
             alt={name}
@@ -63,7 +63,7 @@ export function Gallery({
               onClick={() => setActive(i)}
               type="button"
             >
-              <span className="relative block size-full overflow-hidden rounded-[10px]">
+              <span className="relative block size-full overflow-hidden rounded-[10px] bg-[#FAFAFA]">
                 <Image
                   alt={`${name} ${i + 1}`}
                   className={`size-full ${fitClass(src, true)}`}
