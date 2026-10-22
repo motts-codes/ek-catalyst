@@ -326,7 +326,7 @@ export function CabinetCollectionHeader({
   return (
     <div className={clsx('bg-white @container', className)}>
       <div className="mx-auto max-w-screen-2xl px-6 pb-10 pt-4 @xl:px-9 @4xl:px-14 @4xl:pb-14">
-        <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-2 @3xl:items-start @4xl:gap-12">
+        <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-2 @3xl:items-start @3xl:gap-x-14 @4xl:gap-x-20">
           {/* Left: gallery */}
           {images.length > 0 ? (
             <Gallery containMain={data.containMainImage} images={images} name={data.name} />
@@ -350,7 +350,8 @@ export function CabinetCollectionHeader({
             {data.overview != null && data.overview !== '' && (
               // Staff-authored HTML (same trust boundary as the native BC category description).
               <div
-                className="prose prose-sm max-w-none text-contrast-500 @xl:prose-base [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_a]:text-[#2162a1] [&_li]:my-1 [&_ul]:list-disc [&_ul]:pl-5"
+                // Overview copy: 13px on phones, 14px from tablet up, 150% line-height.
+                className="prose max-w-none text-[13px] leading-[1.5] text-contrast-500 @xl:text-sm [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_a]:text-[#2162a1] [&_li]:my-1 [&_p]:my-2 [&_p]:leading-[1.5] [&_ul]:list-disc [&_ul]:pl-5"
 
                 dangerouslySetInnerHTML={{ __html: data.overview }}
               />

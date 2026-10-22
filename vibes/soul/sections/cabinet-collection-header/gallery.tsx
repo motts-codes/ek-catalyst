@@ -44,22 +44,28 @@ export function Gallery({
           {images.map((src, i) => (
             <button
               aria-label={`View image ${i + 1}`}
-              className={`relative size-16 overflow-hidden rounded-xl border-2 transition-colors ${
-                i === active ? 'border-foreground' : 'border-transparent hover:border-contrast-200'
+              // Thin brand-red outline on the active thumbnail with 2px of white inside it — the
+              // same treatment as the PDP gallery and the finish swatches.
+              className={`size-16 rounded-xl border p-[2px] transition-colors ${
+                i === active
+                  ? 'border-[var(--button-primary-background,#d90716)]'
+                  : 'border-transparent hover:border-contrast-200'
               }`}
               key={i}
               onClick={() => setActive(i)}
               type="button"
             >
-              <Image
-                alt={`${name} ${i + 1}`}
-                className="size-full object-cover"
-                height={128}
-                sizes="64px"
-                src={src}
-                unoptimized
-                width={128}
-              />
+              <span className="relative block size-full overflow-hidden rounded-[10px]">
+                <Image
+                  alt={`${name} ${i + 1}`}
+                  className="size-full object-cover"
+                  height={128}
+                  sizes="64px"
+                  src={src}
+                  unoptimized
+                  width={128}
+                />
+              </span>
             </button>
           ))}
         </div>
