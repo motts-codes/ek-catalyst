@@ -182,9 +182,11 @@ function Finishes({
   selected?: string;
   hrefFor?: (slug: string | null) => string;
 }) {
-  if (colors.length === 0) return null;
-
   const selectable = hrefFor != null && colors.length > 1;
+
+  // Only multi-finish collections show the chips (as the finish selector); a single finish is
+  // already in the collection name and adds nothing here.
+  if (!selectable) return null;
   const chipClass =
     'inline-flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-3 text-xs transition-colors';
   const swatch = (c: CabinetSwatch) => {
@@ -210,13 +212,13 @@ function Finishes({
   return (
     <div>
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
-        {selectable ? 'Choose a finish' : 'Available finishes'}
+        Choose a finish
       </p>
       <div className="flex flex-wrap gap-2">
         {colors.map((c) => {
-          const active = selectable && selected != null && c.name === selected;
+          const active = selected != null && c.name === selected;
 
-          if (!selectable || c.slug == null) {
+          if (c.slug == null) {
             return (
               <span className={clsx(chipClass, 'border-contrast-100 text-contrast-500')} key={c.id}>
                 {swatch(c)}
@@ -332,15 +334,15 @@ export function CabinetCollectionHeader({
 
           {/* Right: the decision column */}
           <div className="flex flex-col gap-5">
-            {/* The program tag is identification, not a highlight: a small light-grey label above
-                the name. */}
-            <div className="flex flex-col items-start gap-1.5">
-              <span className="rounded-full bg-contrast-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-foreground">
-                {PROGRAM_LABEL[program]}
-              </span>
+            {/* The program tag is identification, not a highlight: a small light-grey label sitting
+                on the name's baseline, bottom-right. */}
+            <div className="flex flex-wrap items-baseline gap-2.5">
               <h1 className="m-0 font-heading text-3xl font-bold leading-tight @xl:text-4xl">
                 {data.name}
               </h1>
+              <span className="rounded-full bg-contrast-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-foreground">
+                {PROGRAM_LABEL[program]}
+              </span>
             </div>
 
             {data.overview != null && data.overview !== '' && (
