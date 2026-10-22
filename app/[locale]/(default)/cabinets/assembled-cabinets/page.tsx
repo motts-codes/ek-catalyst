@@ -52,7 +52,8 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
       {/* The same black-panel hero as the category pages, with the home page's program photo. */}
       <CategoryHero
         // Brand red, like the other category pages.
-        description="Built and checked in Connecticut, delivered ready to hang in three weeks. Pick a collection and finish below."
+        description="Assembled and finished in our factory. Choose framed or frameless cabinets in shaker, modern and traditional styles, in 100+ colors, stains and finishes. Most collections ship in 3 weeks."
+        eyebrow="Assembled Kitchen Cabinets"
         image={{
           src: '/images/home/programs/assembled.webp',
           alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
@@ -66,7 +67,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
             <span className="font-semibold text-foreground">Watch the explainer ▶</span>
           </Link>
         }
-        title="Assembled Kitchen Cabinets"
+        title="The kitchen you pictured, ready to install"
         tone="red"
       />
       {/* The row of program promises under the hero, as on the category pages. */}

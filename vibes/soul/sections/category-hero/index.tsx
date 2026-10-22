@@ -39,6 +39,8 @@ interface HeroProps {
   compact?: boolean;
   /** Panel colour: brand red (default) or black. Subcategory pages ignore it (black, compact). */
   tone?: 'black' | 'red';
+  /** A small line above the headline (the category name when the headline is a promise). */
+  eyebrow?: string;
   /** Rendered over the photo, top-right (e.g. the 'Watch the explainer' pill). */
   imageOverlay?: ReactNode;
   className?: string;
@@ -56,6 +58,7 @@ export function CategoryHero({
   actions = [],
   compact = false,
   tone = 'red',
+  eyebrow,
   imageOverlay,
   className,
 }: HeroProps) {
@@ -78,6 +81,11 @@ export function CategoryHero({
                   ),
             )}
           >
+            {Boolean(eyebrow) && (
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/85">
+                {eyebrow}
+              </p>
+            )}
             <h1
               className={clsx(
                 'm-0 max-w-[26ch] font-heading font-bold leading-tight',

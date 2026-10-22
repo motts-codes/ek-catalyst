@@ -48,7 +48,8 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
       {/* The same black-panel hero as the category pages, with the home page's program photo. */}
       <CategoryHero
         // Brand red, like the other category pages.
-        description="The same cabinets shipped flat from Bristol in two weeks, at a lower price. Pick a collection and finish below."
+        description="Quality kitchen cabinets, shipped flat for you to put together and priced lower than assembled. Every one has a plywood box and soft-close doors and drawers, in framed or frameless styles. Star collections ship in 2 weeks."
+        eyebrow="RTA Kitchen Cabinets"
         image={{
           src: '/images/home/programs/rta.webp',
           alt: 'A kitchen in dark grey shaker cabinets',
@@ -62,7 +63,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
             <span className="font-semibold text-foreground">Watch the explainer ▶</span>
           </Link>
         }
-        title="RTA Kitchen Cabinets"
+        title="Your dream kitchen, for less"
         tone="red"
       />
       {/* The row of program promises under the hero, as on the category pages. */}
