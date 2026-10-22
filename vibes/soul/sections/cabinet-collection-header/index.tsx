@@ -231,9 +231,9 @@ function Finishes({
               className={clsx(
                 chipClass,
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
-                // Selected: a thin (1px) brand-red outline, plus bold text and aria-current.
+                // Selected: a hairline (half-pixel on retina) brand-red outline, bold text, aria-current.
                 active
-                  ? 'border-[var(--button-primary-background,#d90716)] font-semibold text-foreground'
+                  ? 'border-[0.5px] border-[var(--button-primary-background,#d90716)] font-semibold text-foreground'
                   : 'border-contrast-100 text-contrast-500 hover:border-contrast-300 hover:text-foreground',
               )}
               href={hrefFor(active ? null : c.slug)}
