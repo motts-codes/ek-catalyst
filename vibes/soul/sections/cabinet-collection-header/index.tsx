@@ -36,8 +36,8 @@ export interface CabinetCollectionHeaderData {
   overview?: string;
   /** Gallery image URLs; images[0] is the main image. */
   images?: string[];
-  /** Contain (not crop) the main gallery image — used for the contractor door-sample lead. */
-  containMainImage?: boolean;
+  /** Gallery images that are door-sample photos: shown contained with padding, not cropped. */
+  doorImages?: string[];
   /** Merch info: line / door style / default finish. */
   line?: string;
   doorStyle?: string;
@@ -319,7 +319,7 @@ export function CabinetCollectionHeader({
           <div className="@3xl:self-stretch">
             <div className="@3xl:sticky @3xl:top-28">
               {images.length > 0 ? (
-                <Gallery containMain={data.containMainImage} images={images} name={data.name} />
+                <Gallery doorImages={data.doorImages} images={images} name={data.name} />
               ) : (
                 <div className="flex aspect-[4/3] items-center justify-center rounded-3xl bg-contrast-100 p-6 text-center text-2xl font-bold tracking-tighter text-foreground/10">
                   {data.name} kitchen

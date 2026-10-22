@@ -642,14 +642,19 @@ export const getCabinetCollectionHeader = cache(
         ? [...finishImages, ...rawImages.filter((u) => !finishImages.includes(u))]
         : homeownerOrder;
 
-    // Contractors lead with the door sample — contain it (not crop) so it's fully visible.
-    const containMainImage = audience === 'pro';
+    // Door-sample photos (the gallery's first image by convention, plus every finish's photos) are
+    // tight crops of a door: the gallery shows them contained with padding rather than filling
+    // the frame, which kitchen photos do.
+    const doorImages = [
+      ...(rawImages[0] != null ? [rawImages[0]] : []),
+      ...Object.values(byFinish).flatMap((entry) => entry.images ?? []),
+    ].filter((u) => u !== '');
 
     return {
       name: cat.name,
       overview: overview !== '' ? overview : undefined,
       images: images.length > 0 ? images : undefined,
-      containMainImage,
+      doorImages,
       line: merch?.line,
       doorStyle: merch?.door_style,
       defaultFinish: merch?.default_finish,

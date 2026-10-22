@@ -9,19 +9,17 @@ import { Image } from '~/components/image';
 export function Gallery({
   images,
   name,
-  containMain = false,
+  doorImages = [],
 }: {
   images: string[];
   name: string;
-  // Contain (not crop) the MAIN image — for the contractor door-sample lead. Thumbnails always cover.
-  containMain?: boolean;
+  /** Door-sample photos among `images`: tight crops of a door, so they're shown contained with
+   *  padding on the frame's light background instead of filling it. Kitchen photos fill. */
+  doorImages?: string[];
 }) {
   const [active, setActive] = useState(0);
   const main = images[active] ?? images[0];
-
-  // Only the contractor door-sample lead (the first image) is scaled/contained. Once the visitor
-  // clicks a thumbnail to view any other image, it renders full (object-cover).
-  const scaleThis = containMain && active === 0;
+  const isDoor = (src: string | undefined) => src != null && doorImages.includes(src);
 
   return (
     <div>
@@ -29,7 +27,7 @@ export function Gallery({
         {main != null && (
           <Image
             alt={name}
-            className={`size-full ${scaleThis ? 'scale-75 object-contain' : 'object-cover'}`}
+            className={`size-full ${isDoor(main) ? 'object-contain p-10 @xl:p-14' : 'object-cover'}`}
             height={900}
             sizes="(min-width: 48rem) 40vw, 100vw"
             src={main}
@@ -58,7 +56,7 @@ export function Gallery({
               <span className="relative block size-full overflow-hidden rounded-[10px]">
                 <Image
                   alt={`${name} ${i + 1}`}
-                  className="size-full object-cover"
+                  className={`size-full ${isDoor(src) ? 'bg-contrast-100 object-contain p-1.5' : 'object-cover'}`}
                   height={128}
                   sizes="64px"
                   src={src}
