@@ -279,9 +279,12 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
       );
       // Named photos (media.door_image / media.kitchen_image) win; older seeds fall back to the
       // gallery convention (first = door sample, last = kitchen).
+      const hasNamedSlots = Boolean(mediaValue('door_image') || mediaValue('kitchen_image'));
       const named = {
         door: mediaValue('door_image') || gallery[0],
-        kitchen: mediaValue('kitchen_image') || (gallery.length > 1 ? gallery.at(-1) : undefined),
+        kitchen:
+          mediaValue('kitchen_image') ||
+          (!hasNamedSlots && gallery.length > 1 ? gallery.at(-1) : undefined),
       };
       const { cover, hover, containCover } = pickCardImages(named, audience);
       const mainSrc = cover ?? child.image?.url; // fall back to native BC category image

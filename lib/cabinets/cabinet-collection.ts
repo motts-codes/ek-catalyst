@@ -667,9 +667,13 @@ export const getCabinetCollectionHeader = cache(
     // convention (first = door sample, last = kitchen) for collections seeded before the slots.
     const mediaValue = (key: string) =>
       cat.media.edges?.find((e) => e.node.key === key)?.node.value;
+    // Once a collection has named slots, an absent kitchen means "no kitchen photo" (Prism), not
+    // "use the last gallery image".
+    const hasNamedSlots = Boolean(mediaValue('door_image') || mediaValue('kitchen_image'));
     const doorImage = mediaValue('door_image') || rawImages[0];
     const kitchenImage =
-      mediaValue('kitchen_image') || (rawImages.length > 1 ? rawImages.at(-1) : undefined);
+      mediaValue('kitchen_image') ||
+      (!hasNamedSlots && rawImages.length > 1 ? rawImages.at(-1) : undefined);
     const others = rawImages.filter((u) => u !== doorImage && u !== kitchenImage);
 
     // A chosen finish leads with its own door photo + kitchen render; the collection's own pair
