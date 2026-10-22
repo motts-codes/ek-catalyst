@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import { Link } from '~/components/link';
+import { LineTabs } from './line-tabs';
 
 export interface CabinetLineFilterOption {
   label: string;
@@ -23,9 +23,6 @@ interface Props {
   descriptions?: Record<string, string>;
   className?: string;
 }
-
-const TAB =
-  'inline-flex items-center gap-1 whitespace-nowrap border-b-[3px] px-0.5 pb-3 pt-2 text-[15px] transition-colors duration-300 ease-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)]';
 
 // "Filter by line" — underline tabs under the program hero on the Assembled / RTA listings, in the
 // home page's product-tabs style: one rule under the row, the selected line bold with a red
@@ -53,40 +50,10 @@ export function CabinetLineFilter({
       <div className="mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14">
         <div className="flex flex-wrap items-end gap-x-6 gap-y-2">
           <h2 className="pb-3 pt-2 font-heading text-lg font-bold leading-tight">{title}</h2>
-          {/* The row scrolls sideways on phones rather than wrapping. */}
-          <ul className="flex min-w-0 gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {tabs.map((tab) => {
-              const active = tab.slug === selected;
-
-              return (
-                <li key={tab.slug ?? 'all'}>
-                  <Link
-                    aria-current={active ? 'true' : undefined}
-                    className={clsx(
-                      TAB,
-                      active
-                        ? 'border-[var(--button-primary-background,#d90716)] font-bold text-[var(--button-primary-background,#d90716)]'
-                        : 'border-transparent text-contrast-500 hover:text-foreground',
-                    )}
-                    href={hrefFor(tab.slug)}
-                  >
-                    {tab.label}
-                    <span className="sr-only">
-                      , {tab.count} {tab.count === 1 ? 'collection' : 'collections'}
-                    </span>
-                    {active && <span className="sr-only"> (selected)</span>}
-                    {/* Count, raised like a superscript after the label: light blue circle, black text. */}
-                    <span
-                      aria-hidden
-                      className="inline-flex size-[18px] -translate-y-1.5 items-center justify-center rounded-full bg-[#C0EDF6] font-body text-[10px] font-semibold leading-none text-foreground"
-                    >
-                      {tab.count}
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+          <LineTabs
+            selected={selected}
+            tabs={tabs.map((tab) => ({ ...tab, href: hrefFor(tab.slug) }))}
+          />
           {/* The selected line's one-liner, at the right end of the row on wide screens; hidden on phones. */}
           {Boolean(description) && (
             <p
