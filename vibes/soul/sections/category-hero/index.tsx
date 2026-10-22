@@ -82,13 +82,13 @@ export function CategoryHero({
             )}
           >
             {Boolean(eyebrow) && (
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/85">
+              <p className="mb-3 inline-flex w-fit items-center rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground">
                 {eyebrow}
               </p>
             )}
             <h1
               className={clsx(
-                'm-0 max-w-[26ch] font-heading font-bold leading-tight',
+                'm-0 max-w-[26ch] font-heading font-bold leading-[1.1]',
                 compact ? 'text-[22px] @xl:text-3xl' : 'text-[26px] @xl:text-4xl',
               )}
             >
