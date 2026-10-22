@@ -95,11 +95,26 @@ export function SpecRow({
   );
 }
 
-// Standing offers, the same for every collection.
-export const COLLECTION_OFFERS = [
-  'First two quarter-door samples free with code FREESAMPLES.',
-  'Free shipping on purchases above $2,500.',
+// Standing offers, the same for every collection. The key detail of each (code, threshold) is
+// picked out in black.
+export const COLLECTION_OFFERS: Array<{ text: string; highlight: string }> = [
+  { text: 'First two quarter-door samples free with code FREESAMPLES.', highlight: 'FREESAMPLES' },
+  { text: 'Free shipping on purchases above $2,500.', highlight: '$2,500' },
 ];
+
+function Highlighted({ text, highlight }: { text: string; highlight: string }) {
+  const i = text.indexOf(highlight);
+
+  if (i < 0) return text;
+
+  return (
+    <>
+      {text.slice(0, i)}
+      <span className="font-medium text-foreground">{highlight}</span>
+      {text.slice(i + highlight.length)}
+    </>
+  );
+}
 
 export function OffersRow() {
   return (
@@ -107,7 +122,9 @@ export function OffersRow() {
       <div className={HEADER_COPY_CLASS}>
         <ul>
           {COLLECTION_OFFERS.map((offer) => (
-            <li key={offer}>{offer}</li>
+            <li key={offer.text}>
+              <Highlighted highlight={offer.highlight} text={offer.text} />
+            </li>
           ))}
         </ul>
       </div>
