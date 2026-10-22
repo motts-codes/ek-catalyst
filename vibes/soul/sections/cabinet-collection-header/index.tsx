@@ -7,7 +7,7 @@ import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
-import { HEADER_COPY_CLASS, SpecRow } from './spec-row';
+import { HEADER_COPY_CLASS, OffersRow, SpecRow } from './spec-row';
 
 /**
  * Collection detail header shown ABOVE the product grid on a cabinet collection category page
@@ -104,9 +104,6 @@ function Actions({
           </ButtonLink>
         )}
       </div>
-      <p className="mt-2.5 text-xs text-contrast-400">
-        First two quarter-door samples free with code FREESAMPLES.
-      </p>
     </div>
   );
 }
@@ -373,7 +370,10 @@ export function CabinetCollectionHeader({
 
             {hasPricing && <PriceCard data={data} />}
 
-            <SpecRow specSheetUrl={data.specSheetUrl} specifications={specifications} />
+            <div className="border-t border-contrast-100">
+              <SpecRow specSheetUrl={data.specSheetUrl} specifications={specifications} />
+              <OffersRow />
+            </div>
 
             <Actions data={data} productsHref={productsHref} />
           </div>
