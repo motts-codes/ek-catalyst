@@ -43,15 +43,24 @@ export function AccordionRow({
         />
         {title}
       </button>
+      {/* Height animates through grid rows (0fr ↔ 1fr), eased symmetrically so opening is as
+          visible as closing; the content fades in a beat behind the height. */}
       <div
         className={clsx(
-          'grid transition-[grid-template-rows] duration-300 ease-smooth',
+          'grid transition-[grid-template-rows] [transition-duration:400ms] [transition-timing-function:ease-in-out] motion-reduce:transition-none',
           open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
         )}
         id={panelId}
       >
-        <div className="overflow-hidden">
-          <div className="pb-5">{children}</div>
+        <div className="min-h-0 overflow-hidden">
+          <div
+            className={clsx(
+              'pb-5 transition-opacity duration-300 motion-reduce:transition-none',
+              open ? 'opacity-100 delay-100' : 'opacity-0',
+            )}
+          >
+            {children}
+          </div>
         </div>
       </div>
       {aside != null && <div className="absolute right-0 top-3.5">{aside}</div>}
