@@ -313,14 +313,20 @@ export function CabinetCollectionHeader({
     <div className={clsx('bg-white @container', className)}>
       <div className="mx-auto max-w-screen-2xl px-6 pb-10 pt-4 @xl:px-9 @4xl:px-14 @4xl:pb-14">
         <div className="grid grid-cols-1 gap-8 @3xl:grid-cols-2 @3xl:items-start @3xl:gap-x-14 @4xl:gap-x-20">
-          {/* Left: gallery */}
-          {images.length > 0 ? (
-            <Gallery containMain={data.containMainImage} images={images} name={data.name} />
-          ) : (
-            <div className="flex aspect-[4/3] items-center justify-center rounded-3xl bg-contrast-100 p-6 text-center text-2xl font-bold tracking-tighter text-foreground/10">
-              {data.name} kitchen
+          {/* Left: gallery. Sticky (below the pinned header) once the columns sit side by side, so
+              the photos stay in view while the longer right column — specifications, offers —
+              scrolls. */}
+          <div className="@3xl:self-stretch">
+            <div className="@3xl:sticky @3xl:top-28">
+              {images.length > 0 ? (
+                <Gallery containMain={data.containMainImage} images={images} name={data.name} />
+              ) : (
+                <div className="flex aspect-[4/3] items-center justify-center rounded-3xl bg-contrast-100 p-6 text-center text-2xl font-bold tracking-tighter text-foreground/10">
+                  {data.name} kitchen
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Right: the decision column */}
           <div className="flex flex-col gap-5">
