@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import { ArrowDown, LayoutGrid, Repeat, Truck, WalletMinimal } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { Amount, Finance, withCommas } from '@/vibes/soul/sections/cabinet-lines';
+import { Amount, withCommas } from '@/vibes/soul/sections/cabinet-lines';
 import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
@@ -214,18 +214,26 @@ function Finishes({
 // background): price | 10×10 badge | three fact rows (kitchen, finance, lead time). The fixed-list
 // disclaimer sits under the strip.
 function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
-  const row = 'flex items-center gap-2 py-2 text-sm font-medium leading-snug';
+  const row = 'flex items-center gap-2 px-4 py-2.5 text-sm font-medium leading-snug';
   const icon = 'shrink-0 text-[var(--button-primary-background,#d90716)]';
 
   return (
     <div>
       <div className="grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-white text-[#404040] @md:grid-cols-[auto_auto_1fr]">
-        {/* Was-price above the deal price. */}
+        {/* Deal price with the was-price beneath it. */}
         <div className="flex items-center gap-x-3 px-5 py-4">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[9px] font-bold leading-none ring-1 ring-[#fcb6bb] @md:hidden">
             10×10
           </span>
-          <span className="flex flex-col items-start gap-1">
+          <span className="flex flex-col items-start gap-1.5">
+            <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
+              <Amount
+                cents={20}
+                formatted={`$${withCommas(data.price ?? '')}`}
+                symbol={18}
+                whole={36}
+              />
+            </span>
             {data.strikePrice != null && data.strikePrice !== '' && (
               <span className="leading-none text-[#6b6b6b]">
                 <Amount
@@ -237,23 +245,15 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
                 />
               </span>
             )}
-            <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
-              <Amount
-                cents={20}
-                formatted={`$${withCommas(data.price ?? '')}`}
-                symbol={18}
-                whole={36}
-              />
-            </span>
           </span>
         </div>
-        <div className="hidden items-center justify-center border-l border-[#fcb6bb] px-5 py-3 @md:flex">
+        <div className="hidden items-center justify-center border-l border-[#fcb6bb] px-8 py-3 @md:flex">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-[11px] font-bold leading-none ring-1 ring-[#fcb6bb]">
             10×10
           </span>
         </div>
-        {/* Three fact rows with hairlines between them. */}
-        <div className="flex flex-col justify-center divide-y divide-[#fcb6bb] border-t border-[#fcb6bb] px-5 py-1.5 @md:border-l @md:border-t-0">
+        {/* Three fact rows with full-width hairlines between them. */}
+        <div className="flex flex-col justify-center divide-y divide-[#fcb6bb] border-t border-[#fcb6bb] @md:border-l @md:border-t-0">
           <div className={row}>
             <LayoutGrid aria-hidden className={icon} size={16} strokeWidth={1.5} />
             <span>{data.name} 10×10 kitchen</span>
@@ -261,7 +261,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
           {data.emiText != null && data.emiText !== '' && (
             <div className={row}>
               <WalletMinimal aria-hidden className={icon} size={16} strokeWidth={1.5} />
-              <Finance cents={10} symbol={11} text={data.emiText} whole={14} />
+              <span>{data.emiText}</span>
             </div>
           )}
           {data.deliveryTime != null && data.deliveryTime !== '' && (
