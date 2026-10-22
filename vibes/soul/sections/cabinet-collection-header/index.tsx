@@ -1,11 +1,12 @@
 import { clsx } from 'clsx';
-import { ArrowDown, Download, Plus, Repeat } from 'lucide-react';
+import { ArrowDown, Repeat } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { DeliveryTruckIcon } from '@/vibes/soul/primitives/icons/delivery-truck';
 import { Link } from '~/components/link';
 
 import { Gallery } from './gallery';
+import { HEADER_COPY_CLASS, SpecRow } from './spec-row';
 
 /**
  * Collection detail header shown ABOVE the product grid on a cabinet collection category page
@@ -56,53 +57,6 @@ export interface CabinetCollectionHeaderData {
   /** Order-sample link (add-to-cart of the sample product; category link fallback for now). */
   orderSampleHref?: string;
   orderSamplePrice?: string;
-}
-
-// Expandable Specification with the spec-sheet download on the same row. With no specification
-// copy, just the download link; with neither, nothing.
-function SpecRow({
-  specifications = '',
-  specSheetUrl = '',
-}: {
-  specifications?: string;
-  specSheetUrl?: string;
-}) {
-  const specSheetLink = specSheetUrl !== '' && (
-    <a
-      className="inline-flex min-h-6 items-center gap-1.5 py-1 text-sm font-semibold underline underline-offset-4 hover:text-[var(--button-primary-background,#d90716)]"
-      href={specSheetUrl}
-      rel="noreferrer"
-      target="_blank"
-    >
-      <Download size={15} strokeWidth={2} />
-      Download spec sheet
-    </a>
-  );
-
-  if (specifications === '') return specSheetLink || null;
-
-  // The download link sits beside the summary visually but outside <details>, so the summary has
-  // no focusable descendant.
-  return (
-    <div className="relative border-y border-contrast-100">
-      <details className="group">
-        <summary className="flex cursor-pointer list-none items-center gap-2.5 py-4 pr-48 font-heading text-lg font-semibold [&::-webkit-details-marker]:hidden">
-          <Plus
-            className="transition-transform duration-300 group-open:rotate-45"
-            size={18}
-            strokeWidth={2}
-          />
-          Specification
-        </summary>
-        <div
-          className="prose prose-sm max-w-none pb-5 text-contrast-500 [&_a]:text-[#2162a1] [&_li]:my-1 [&_table]:w-full [&_td]:border [&_td]:border-contrast-100 [&_td]:px-3 [&_td]:py-1.5 [&_th]:border [&_th]:border-contrast-100 [&_th]:px-3 [&_th]:py-1.5 [&_ul]:list-disc [&_ul]:pl-5"
-
-          dangerouslySetInnerHTML={{ __html: specifications }}
-        />
-      </details>
-      {Boolean(specSheetLink) && <div className="absolute right-0 top-3.5">{specSheetLink}</div>}
-    </div>
-  );
 }
 
 // Shop products (60%) beside Order sample (40%, black outline, price in regular weight), with the
@@ -354,8 +308,8 @@ export function CabinetCollectionHeader({
             {data.overview != null && data.overview !== '' && (
               // Staff-authored HTML (same trust boundary as the native BC category description).
               <div
-                // Overview copy: 13px on phones, 14px from tablet up, 150% line-height.
-                className="prose max-w-none text-[13px] leading-[1.5] text-contrast-500 @xl:text-sm [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_a]:text-[#2162a1] [&_li]:my-1 [&_p]:my-2 [&_p]:leading-[1.5] [&_ul]:list-disc [&_ul]:pl-5"
+                // Overview copy shares the specification body style (see spec-row.tsx).
+                className={HEADER_COPY_CLASS}
 
                 dangerouslySetInnerHTML={{ __html: data.overview }}
               />
