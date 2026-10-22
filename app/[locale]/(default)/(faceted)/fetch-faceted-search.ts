@@ -180,9 +180,8 @@ interface ProductSearch {
 
 const getProductSearchResults = cache(
   async (
-    // 12 per page so the grid fills evenly at 2 / 3 / 4 columns (9 left a lone item in the last row
-    // on the 4-col desktop layout).
-    { limit = 12, after, before, sort, filters }: ProductSearch,
+    // 20 per page (see paged-search.ts DEFAULT_PAGE_SIZE): fills the listing grid at 4 and 5 columns.
+    { limit = 20, after, before, sort, filters }: ProductSearch,
     currencyCode?: CurrencyCode,
     customerAccessToken?: string,
   ) => {
@@ -415,7 +414,7 @@ export const fetchFacetedSearch = cache(
     currencyCode?: CurrencyCode,
     customerAccessToken?: string,
   ) => {
-    const { after, before, limit = 12, sort, filters } = PublicToPrivateParams.parse(params);
+    const { after, before, limit = 20, sort, filters } = PublicToPrivateParams.parse(params);
 
     return getProductSearchResults(
       {

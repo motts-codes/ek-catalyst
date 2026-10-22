@@ -16,7 +16,9 @@ import { PublicSearchParamsSchema, PublicToPrivateParams } from './fetch-faceted
 // few hundred products costs a handful of light requests once, then nothing.
 
 export const PAGE_PARAM = 'page';
-export const DEFAULT_PAGE_SIZE = 12;
+// 20 per page: divides by 4 and by 5, the listing grid's column counts with the filter sidebar
+// open and hidden, so every full page fills its last row.
+export const DEFAULT_PAGE_SIZE = 20;
 
 const FETCH_SIZE = 50;
 const TTL_MS = 5 * 60 * 1000;

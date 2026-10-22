@@ -119,11 +119,10 @@ function cabinetTypeSearchParam(value: CabinetTypeValue | null): Record<string, 
 // and the grid narrows through the products' "Finish" custom field (a search facet, like Program).
 const FINISH_PARAM = 'finish';
 
-// Every listing uses the compact grid (~220px cards, as many columns as fit, so a card is the same
-// size whether or not the filter sidebar is open). Cabinet collections list hundreds of SKUs, so
-// they page 24 at a time instead of 12.
-function listingLayout(isCabinet: boolean): { pageSize: number; density: 'compact' } {
-  return { pageSize: isCabinet ? 24 : DEFAULT_PAGE_SIZE, density: 'compact' };
+// Every listing uses the compact grid (4 columns beside the filter sidebar, 5 with it hidden) and
+// pages 20 at a time, which fills both. Kept as a function so a category can diverge later.
+function listingLayout(): { pageSize: number; density: 'compact' } {
+  return { pageSize: DEFAULT_PAGE_SIZE, density: 'compact' };
 }
 
 // The collection URL with the finish set (or cleared), keeping program and type, dropping the page.
@@ -310,7 +309,7 @@ export default async function Category(props: Props) {
     selected: selectedProgram,
     switchable: programSwitchable,
   } = await cabinetProgramContext(isCabinet, categoryId, programParam);
-  const { pageSize, density } = listingLayout(isCabinet);
+  const { pageSize, density } = listingLayout();
   const searchParamsForLinks = await props.searchParams;
   const selectedType = selectedCabinetType(searchParamsForLinks[CABINET_TYPE_PARAM]);
   // ?finish= → the finish name (null when absent/unknown) and the grid filter for it.

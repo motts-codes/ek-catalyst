@@ -6,7 +6,7 @@ import { type CurrencyCode } from '~/components/header/fragment';
 type FacetedSearch = Awaited<ReturnType<typeof fetchFacetedSearch>>;
 type SearchItem = FacetedSearch['products']['items'][number];
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 20;
 // BigCommerce caps a products page at 50.
 const FETCH_SIZE = 50;
 const TTL_MS = 10 * 60 * 1000;

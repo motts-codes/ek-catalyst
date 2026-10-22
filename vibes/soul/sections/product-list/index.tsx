@@ -35,7 +35,7 @@ interface ProductListProps {
   density?: 'default' | 'compact';
 }
 
-// Default: capped at 4 columns, since pages are 12 products (fill 2 / 3 / 4 columns exactly).
+// Default (non-listing uses): capped at 4 columns.
 // Compact (listings): 4 columns beside the filter sidebar, 5 once it's hidden (the grid passes
 // 80rem), never more — so a card stays ~250px either way instead of growing or shrinking.
 const GRID_CLASS = {
