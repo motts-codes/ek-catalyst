@@ -224,9 +224,9 @@ export function OffersRow({ offers }: { offers: CollectionOffer[] }) {
   );
 }
 
-// "Need help?" under the offers: two pills on the right — a free design consult (warm cream,
-// black text) and the showroom line (thin brand-red outline, filling red on hover) — joined by
-// "or". The number is a tel: link so a tap dials; on phones the pills drop under the label.
+// "Need help?" under the offers: two small pills on the right, both on a half-strength cream
+// (#F6EBD6/50, solid on hover) — a free design consult in black and the showroom line in the thin
+// brand-red outline — joined by "or". The number is a tel: link so a tap dials; on phones the pills drop under the label.
 export function HelpRow({
   phone = '860-247-1000',
   consultHref = '/book',
@@ -235,28 +235,25 @@ export function HelpRow({
   consultHref?: string;
 }) {
   const pill =
-    'inline-flex min-h-9 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2';
+    'inline-flex min-h-7 items-center gap-1.5 rounded-full bg-[#F6EBD6]/50 px-3 text-xs font-medium transition-colors duration-300 hover:bg-[#F6EBD6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2';
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-contrast-100 py-3 text-sm text-contrast-500">
       <p className="m-0 font-medium text-foreground">Need help?</p>
       <div className="flex flex-wrap items-center gap-3">
-        <Link
-          className={clsx(pill, 'bg-[#F6EBD6] text-foreground hover:bg-[#efdfc0]')}
-          href={consultHref}
-        >
-          <CalendarCheck size={15} strokeWidth={1.75} />
+        <Link className={clsx(pill, 'text-foreground')} href={consultHref}>
+          <CalendarCheck size={13} strokeWidth={1.75} />
           Book a free design consult
         </Link>
         <span className="text-xs">or</span>
         <a
           className={clsx(
             pill,
-            'border-[0.5px] border-[var(--button-primary-background,#d90716)] text-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
+            'border-[0.5px] border-[var(--button-primary-background,#d90716)] text-[var(--button-primary-background,#d90716)]',
           )}
           href={`tel:+1${phone.replace(/\D/g, '')}`}
         >
-          <Phone size={15} strokeWidth={1.75} />
+          <Phone size={13} strokeWidth={1.75} />
           Call {phone}
         </a>
       </div>
