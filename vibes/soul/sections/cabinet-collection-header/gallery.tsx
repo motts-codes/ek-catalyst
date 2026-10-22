@@ -17,7 +17,7 @@ export function Gallery({
   /** Door-sample photos: tight crops of a door, shown contained with generous padding. */
   doorImages?: string[];
   /** Kitchen photos: the only images that fill (cover) the frame. Anything else — spec sheets,
-   *  detail graphics — fits inside the frame with light padding, never cropped. */
+   *  detail graphics — fits the frame proportionally (touching it on the long side), never cropped. */
   kitchenImages?: string[];
 }) {
   const [active, setActive] = useState(0);
@@ -27,7 +27,8 @@ export function Gallery({
     if (src != null && doorImages.includes(src))
       return thumb ? 'object-contain p-1.5' : 'object-contain p-10 @xl:p-14';
 
-    return thumb ? 'object-contain p-0.5' : 'object-contain p-4 @xl:p-6';
+    // Other images (spec sheets, graphics) fit the frame edge to edge on their long side.
+    return 'object-contain';
   };
 
   return (
