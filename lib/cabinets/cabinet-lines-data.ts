@@ -122,6 +122,30 @@ const CabinetLineMetafieldsQuery = graphql(`
             }
           }
         }
+        merch: metafields(namespace: "merch") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
+        finishes: metafields(namespace: "finishes") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
+        content: metafields(namespace: "content") {
+          edges {
+            node {
+              key
+              value
+            }
+          }
+        }
       }
     }
   }
@@ -145,18 +169,79 @@ const CabinetProductLinesQuery = graphql(`
   }
 `);
 
-const getProductLineNames = cache(async (): Promise<Map<string, string>> => {
-  const { data } = await client.fetch({
-    document: CabinetProductLinesQuery,
-    variables: { entityId: CABINETS_CATEGORY_ID },
-    fetchOptions: { next: { revalidate } },
-  });
-  const raw = data.site.category?.attributes.edges?.find((e) => e.node.key === 'product_lines')
-    ?.node.value;
-  const rows = parseJson<Array<{ id: string; name: string }>>(raw) ?? [];
+// id → name for each master list on 863 (attributes.product_lines / constructions / colors).
+const getAttributeNames = cache(
+  async (): Promise<{
+    productLines: Map<string, string>;
+    constructions: Map<string, string>;
+    colors: Map<string, string>;
+  }> => {
+    const { data } = await client.fetch({
+      document: CabinetProductLinesQuery,
+      variables: { entityId: CABINETS_CATEGORY_ID },
+      fetchOptions: { next: { revalidate } },
+    });
+    const list = (key: string) => {
+      const raw = data.site.category?.attributes.edges?.find((e) => e.node.key === key)?.node.value;
+      const rows = parseJson<Array<{ id: string; name: string }>>(raw) ?? [];
 
-  return new Map(rows.map((row) => [row.id, row.name]));
-});
+      return new Map(rows.map((row) => [row.id, row.name]));
+    };
+
+    return {
+      productLines: list('product_lines'),
+      constructions: list('constructions'),
+      colors: list('colors'),
+    };
+  },
+);
+
+/** What the listing's filter panel can narrow by, per collection. */
+export interface CabinetLineFacets {
+  /** The colours a colour filter can find this collection by: its one colour for single-finish
+   *  collections, every finish for per-finish (Prism) ones; none for collections whose colours
+   *  are options on the product (Euro Tribeca). */
+  colors: string[];
+  /** "Framed" / "Frameless". */
+  construction?: string;
+  /** "Shaker", "Raised panel", "Recessed panel", "Flat panel", "Slab". */
+  style?: string;
+  /** "Painted", "Stained", "Woodgrain", "Matte", "High gloss" (a collection can have several). */
+  finishTypes: string[];
+}
+
+// The style family from merch.door_style ("Shaker Partial Overlay" → "Shaker"), else from the
+// spec's door line (Prism carries no door_style).
+function styleOf(doorStyle: string | undefined, specHtml: string): string | undefined {
+  const merch = (doorStyle ?? '').trim();
+
+  if (/^shaker/i.test(merch)) return 'Shaker';
+  if (/^raised/i.test(merch)) return 'Raised panel';
+  if (/^recessed/i.test(merch)) return 'Recessed panel';
+  if (/^slab/i.test(merch)) return 'Slab';
+
+  const door = /Door\/Drawer Front:\s*([^<]*)/i.exec(specHtml)?.[1] ?? '';
+
+  if (/reversed raised/i.test(door)) return 'Flat panel';
+  if (/raised/i.test(door)) return 'Raised panel';
+  if (/recessed/i.test(door)) return 'Shaker';
+
+  return undefined;
+}
+
+// Finish families from the spec's Finish line.
+function finishTypesOf(specHtml: string): string[] {
+  const finish = /Finish:\s*([^<]*)/i.exec(specHtml)?.[1] ?? '';
+  const types: string[] = [];
+
+  if (/painted/i.test(finish)) types.push('Painted');
+  if (/high gloss/i.test(finish)) types.push('High gloss');
+  if (/matte/i.test(finish)) types.push('Matte');
+  if (/woodgrain|wood-look/i.test(finish)) types.push('Woodgrain');
+  if (types.length === 0 && finish.trim() !== '') types.push('Stained');
+
+  return types;
+}
 
 // Product-line filter on the Assembled / RTA listings. Options are the lines present among the
 // collections sold in that program, in this order (Arun's), so RTA shows only Star and Euro Max.
@@ -246,7 +331,8 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
 
   const root = data.site.categoryTree.find((c) => c.entityId === CABINETS_CATEGORY_ID);
   const children = root?.children ?? [];
-  const lineNames = await getProductLineNames();
+  const names = await getAttributeNames();
+  const lineNames = names.productLines;
 
   const lines = await Promise.all(
     children.map(async (child): Promise<CabinetLine> => {
@@ -293,8 +379,37 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
 
       // spec.info.product_line_id -> master-list name ("Star", "Prism", …) for the line filter.
       const specRaw = cat?.spec.edges?.find((e) => e.node.key === 'info')?.node.value;
-      const productLineId = parseJson<{ product_line_id?: string }>(specRaw)?.product_line_id;
-      const productLine = productLineId ? lineNames.get(productLineId) : undefined;
+      const spec = parseJson<{
+        product_line_id?: string;
+        construction_id?: string;
+        color_ids?: string[];
+        default_color_id?: string;
+      }>(specRaw);
+      const productLine = spec?.product_line_id ? lineNames.get(spec.product_line_id) : undefined;
+
+      // Filter-panel facets: colours (see CabinetLineFacets), construction, style, finish types.
+      const value = (ns: 'merch' | 'finishes' | 'content', key: string) =>
+        cat?.[ns].edges?.find((e) => e.node.key === key)?.node.value;
+      const perFinish =
+        Object.keys(parseJson<Record<string, unknown>>(value('finishes', 'by_finish')) ?? {})
+          .length > 0;
+      const colorIds = spec?.color_ids ?? [];
+      const colorPick = perFinish || colorIds.length === 1 ? colorIds : [];
+      const specHtml =
+        Object.values(
+          parseJson<Record<string, string>>(value('content', 'spec_by_program')) ?? {},
+        ).find((html) => html !== '') ?? '';
+      const facets: CabinetLineFacets = {
+        colors: colorPick.map((id) => names.colors.get(id)).filter((n): n is string => n != null),
+        construction: spec?.construction_id
+          ? names.constructions.get(spec.construction_id)
+          : undefined,
+        style: styleOf(
+          parseJson<{ door_style?: string }>(value('merch', 'info'))?.door_style,
+          specHtml,
+        ),
+        finishTypes: finishTypesOf(specHtml),
+      };
 
       // sample.order_sample = { product_id, price, url } — the card's "Order sample" goes to the
       // collection's own sample link; collection page when none is set.
@@ -303,6 +418,7 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
 
       return {
         productLine,
+        facets,
         entityId: child.entityId,
         name: child.name,
         href,

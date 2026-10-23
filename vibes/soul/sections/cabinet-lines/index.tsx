@@ -33,6 +33,13 @@ export interface CabinetLine {
   orderSampleHref?: string;
   /** Product line name from the Cabinets master list, e.g. "Star", "Prism", "Euro Max". */
   productLine?: string;
+  /** What the listing's filter panel can narrow by (lib/cabinets/cabinet-lines-data). */
+  facets?: {
+    colors: string[];
+    construction?: string;
+    style?: string;
+    finishTypes: string[];
+  };
 }
 
 interface Props {

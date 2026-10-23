@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CabinetFilterPanel } from '@/vibes/soul/sections/cabinet-filter-panel';
 import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { CategoryHero, CategoryPoints } from '@/vibes/soul/sections/category-hero';
@@ -10,14 +11,23 @@ import { Link } from '~/components/link';
 import { CABINET_LINE_COPY } from '~/lib/cabinets/cabinet-line-copy';
 import {
   cabinetLineOptions,
-  filterCabinetLines,
   getCabinetLines,
   getCabinetProgramFaq,
 } from '~/lib/cabinets/cabinet-lines-data';
+import {
+  applyLineFilters,
+  hasPanelFilters,
+  lineFilterGroups,
+  lineFilterHref,
+  lineTabHref,
+  panelOpen,
+  panelToggleHref,
+  parseLineFilters,
+} from '~/lib/cabinets/cabinet-lines-filter';
 
 interface Props {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ line?: string | string[] }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export const metadata: Metadata = {
@@ -30,8 +40,10 @@ export const metadata: Metadata = {
 // the child categories' BigCommerce metafields for the RTA program.
 export default async function RtaCabinets({ params, searchParams }: Props) {
   const { locale } = await params;
-  const lineParam = (await searchParams).line;
-  const selectedLine = (Array.isArray(lineParam) ? lineParam[0] : lineParam) || null;
+  const query = await searchParams;
+  const filters = parseLineFilters(query);
+  const selectedLine = filters.line;
+  const showPanel = panelOpen(query, filters);
 
   setRequestLocale(locale);
 
@@ -79,17 +91,30 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
       <CabinetLineFilter
         className="pt-8 @4xl:pt-10"
         descriptions={CABINET_LINE_COPY.rta}
-        hrefFor={(slug) =>
-          slug ? `/cabinets/rta-cabinets?line=${slug}` : '/cabinets/rta-cabinets'
-        }
+        hrefFor={(slug) => lineTabHref('/cabinets/rta-cabinets', query, slug)}
         options={cabinetLineOptions(lines)}
+        panelToggle={{
+          href: panelToggleHref('/cabinets/rta-cabinets', query, !showPanel),
+          open: showPanel,
+        }}
         selected={selectedLine}
         total={lines.length}
       />
+      {showPanel && (
+        <CabinetFilterPanel
+          className="pt-5"
+          groups={lineFilterGroups(lines, filters, '/cabinets/rta-cabinets', query)}
+          resetHref={
+            hasPanelFilters(filters)
+              ? lineFilterHref('/cabinets/rta-cabinets', query, null)
+              : undefined
+          }
+        />
+      )}
       {/* The grey band meets the filter's rule; the cards start a little lower inside it. */}
       <CabinetLines
         className="pt-2 @4xl:pt-3"
-        lines={filterCabinetLines(lines, selectedLine)}
+        lines={applyLineFilters(lines, filters)}
         program="rta"
       />
       <CabinetFaq data={faq} />
