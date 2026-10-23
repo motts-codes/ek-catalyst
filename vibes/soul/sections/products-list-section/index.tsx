@@ -53,6 +53,8 @@ interface Props {
   hideFiltersLabel?: string;
   filtersPanelTitle?: Streamable<string>;
   resetFiltersLabel?: Streamable<string>;
+  /** No sidebar, no filters toggle: for listings that carry their own filters above the grid. */
+  hideFilters?: boolean;
   showRating?: boolean;
   rangeFilterApplyLabel?: Streamable<string>;
   sortLabel?: Streamable<string | null>;
@@ -95,6 +97,7 @@ export function ProductsListSection({
   hideFiltersLabel = 'Hide filters',
   filtersPanelTitle: streamableFiltersPanelTitle = 'Filters',
   resetFiltersLabel,
+  hideFilters = false,
   rangeFilterApplyLabel,
   sortLabel: streamableSortLabel,
   sortPlaceholder: streamableSortPlaceholder,
@@ -192,54 +195,60 @@ export function ProductsListSection({
                         />
                       )}
                     </Stream>
-                    <div className="block @3xl:hidden">
-                      <SidePanel.Root>
-                        <SidePanel.Trigger asChild>
-                          <Button
-                            className="!h-8 text-xs [&>span]:!min-h-0"
-                            size="x-small"
-                            variant="secondary"
-                          >
-                            {filterLabel}
-                            <Sliders size={15} />
-                          </Button>
-                        </SidePanel.Trigger>
-                        <Stream value={streamableFiltersPanelTitle}>
-                          {(filtersPanelTitle) => (
-                            <SidePanel.Content title={filtersPanelTitle}>
-                              <FiltersPanel
-                                filters={filters}
-                                paginationInfo={paginationInfo}
-                                rangeFilterApplyLabel={rangeFilterApplyLabel}
-                                resetFiltersLabel={resetFiltersLabel}
-                              />
-                            </SidePanel.Content>
-                          )}
-                        </Stream>
-                      </SidePanel.Root>
-                    </div>
+                    {!hideFilters && (
+                      <div className="block @3xl:hidden">
+                        <SidePanel.Root>
+                          <SidePanel.Trigger asChild>
+                            <Button
+                              className="!h-8 text-xs [&>span]:!min-h-0"
+                              size="x-small"
+                              variant="secondary"
+                            >
+                              {filterLabel}
+                              <Sliders size={15} />
+                            </Button>
+                          </SidePanel.Trigger>
+                          <Stream value={streamableFiltersPanelTitle}>
+                            {(filtersPanelTitle) => (
+                              <SidePanel.Content title={filtersPanelTitle}>
+                                <FiltersPanel
+                                  filters={filters}
+                                  paginationInfo={paginationInfo}
+                                  rangeFilterApplyLabel={rangeFilterApplyLabel}
+                                  resetFiltersLabel={resetFiltersLabel}
+                                />
+                              </SidePanel.Content>
+                            )}
+                          </Stream>
+                        </SidePanel.Root>
+                      </div>
+                    )}
                     {/* Desktop: show / hide the sidebar, last in the group. */}
-                    <div className="hidden @3xl:block">
-                      <FiltersToggle hideLabel={hideFiltersLabel} showLabel={showFiltersLabel} />
-                    </div>
+                    {!hideFilters && (
+                      <div className="hidden @3xl:block">
+                        <FiltersToggle hideLabel={hideFiltersLabel} showLabel={showFiltersLabel} />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="flex items-stretch gap-8 @4xl:gap-10">
-            <FiltersAside>
-              <Stream value={streamableFiltersPanelTitle}>
-                {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
-              </Stream>
-              <FiltersPanel
-                className="sticky top-4"
-                filters={filters}
-                paginationInfo={paginationInfo}
-                rangeFilterApplyLabel={rangeFilterApplyLabel}
-                resetFiltersLabel={resetFiltersLabel}
-              />
-            </FiltersAside>
+            {!hideFilters && (
+              <FiltersAside>
+                <Stream value={streamableFiltersPanelTitle}>
+                  {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
+                </Stream>
+                <FiltersPanel
+                  className="sticky top-4"
+                  filters={filters}
+                  paginationInfo={paginationInfo}
+                  rangeFilterApplyLabel={rangeFilterApplyLabel}
+                  resetFiltersLabel={resetFiltersLabel}
+                />
+              </FiltersAside>
+            )}
 
             <div className="group-has-data-pending/products-list-section:animate-pulse flex-1">
               <ProductList

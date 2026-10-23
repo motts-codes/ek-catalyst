@@ -21,6 +21,7 @@ import { ProductsListSection } from '@/vibes/soul/sections/products-list-section
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { SeoContentSection } from '@/vibes/soul/sections/seo-content';
 import { getSessionCustomerAccessToken } from '~/auth';
+import { CabinetSizeFilter, type SizeDimension } from '@/vibes/soul/sections/cabinet-size-filter';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import {
@@ -35,7 +36,10 @@ import {
   isCabinetCollection,
 } from '~/lib/cabinets/cabinet-collection';
 import {
-  fetchCabinetProductsByType,
+  type CabinetGridFilters,
+  cabinetSizeOptions,
+  fetchCabinetProductsFiltered,
+  hasGridFilters,
   hasProductTypeFacet,
   isFallbackCursor,
 } from '~/lib/cabinets/type-filter-fallback';
@@ -103,16 +107,72 @@ function getSwitchHref(path: string, program: Program) {
 // pagination. See docs/CABINET-FACETS.md.
 const CABINET_TYPE_PARAM = 'attr_Product Type';
 
-function selectedCabinetType(value: string | string[] | undefined): CabinetTypeValue | null {
-  const first = Array.isArray(value) ? value[0] : value;
-  const match = CABINET_TYPES.find((type) => type.value === first);
+// A search param as a list: absent → [], one value → [value], repeated → all of them.
+function listParam(value: string | string[] | undefined): string[] {
+  if (Array.isArray(value)) return value;
 
-  return match ? match.value : null;
+  return value == null ? [] : [value];
 }
 
-// The facet filter for a selected type ({} when none), applied like the Program facet.
-function cabinetTypeSearchParam(value: CabinetTypeValue | null): Record<string, string[]> {
-  return value ? { [CABINET_TYPE_PARAM]: [value] } : {};
+function selectedCabinetTypes(value: string | string[] | undefined): CabinetTypeValue[] {
+  const raw = listParam(value);
+
+  return CABINET_TYPES.filter((type) => raw.includes(type.value)).map((type) => type.value);
+}
+
+// The facet filter for the selected types ({} when none), applied like the Program facet.
+function cabinetTypeSearchParam(values: string[]): Record<string, string[]> {
+  return values.length > 0 ? { [CABINET_TYPE_PARAM]: values } : {};
+}
+
+// Width / height chips on collection pages: ?width=12&width=36&height=34.5 (the products' numeric
+// "Width" / "Height" custom fields), narrowed in code with the types (type-filter-fallback).
+const SIZE_PARAM: Record<SizeDimension, string> = { width: 'width', height: 'height' };
+
+// The grid filters a collection page carries in its URL; other categories carry none.
+function cabinetGridFilters(
+  isCollection: boolean,
+  searchParams: Record<string, string | string[] | undefined>,
+): CabinetGridFilters {
+  if (!isCollection) return { types: [], widths: [], heights: [] };
+
+  return {
+    types: selectedCabinetTypes(searchParams[CABINET_TYPE_PARAM]),
+    widths: listParam(searchParams[SIZE_PARAM.width]),
+    heights: listParam(searchParams[SIZE_PARAM.height]),
+  };
+}
+
+const GRID_FILTER_PARAMS = [CABINET_TYPE_PARAM, SIZE_PARAM.width, SIZE_PARAM.height];
+
+// The collection URL with one grid-filter value toggled (or, with no key, every grid filter
+// cleared), keeping program and finish and starting from page one.
+function toggleFilterHref(
+  path: string,
+  searchParams: Record<string, string | string[] | undefined>,
+  key: string | null,
+  value?: string,
+) {
+  const params = new URLSearchParams();
+
+  Object.entries(searchParams).forEach(([k, raw]) => {
+    const dropped = key == null ? GRID_FILTER_PARAMS.includes(k) : k === key;
+
+    if (dropped || k === 'page' || k === 'after' || k === 'before' || raw == null) return;
+
+    listParam(raw).forEach((item) => params.append(k, item));
+  });
+
+  if (key != null && value != null) {
+    const current = listParam(searchParams[key]);
+    const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+
+    next.forEach((item) => params.append(key, item));
+  }
+
+  const query = params.toString();
+
+  return query ? `${path}?${query}` : path;
 }
 
 // Multi-finish collections (Prism): ?finish=<slug> selects a finish. Header pricing/photos follow it
@@ -147,35 +207,6 @@ function getFinishHref(
   });
 
   if (slug) params.set(FINISH_PARAM, slug);
-
-  const query = params.toString();
-
-  return query ? `${path}?${query}` : path;
-}
-
-// The collection URL with the type set (or cleared), keeping the program and dropping the page.
-function getTypeHref(
-  path: string,
-  searchParams: Record<string, string | string[] | undefined>,
-  value: CabinetTypeValue | null,
-) {
-  const params = new URLSearchParams();
-
-  Object.entries(searchParams).forEach(([key, raw]) => {
-    // Switching type starts from page one: drop the page and cursor params.
-    if (
-      key === CABINET_TYPE_PARAM ||
-      key === 'page' ||
-      key === 'after' ||
-      key === 'before' ||
-      raw == null
-    )
-      return;
-
-    (Array.isArray(raw) ? raw : [raw]).forEach((item) => params.append(key, item));
-  });
-
-  if (value) params.set(CABINET_TYPE_PARAM, value);
 
   const query = params.toString();
 
@@ -311,7 +342,7 @@ export default async function Category(props: Props) {
   } = await cabinetProgramContext(isCabinet, categoryId, programParam);
   const { pageSize, density } = listingLayout();
   const searchParamsForLinks = await props.searchParams;
-  const selectedType = selectedCabinetType(searchParamsForLinks[CABINET_TYPE_PARAM]);
+  const gridFilters = cabinetGridFilters(isCabinet, searchParamsForLinks);
   // ?finish= → the finish name (null when absent/unknown) and the grid filter for it.
   const { name: selectedFinish, filter: finishFilter } = await cabinetFinishContext(
     isCabinet,
@@ -357,7 +388,7 @@ export default async function Category(props: Props) {
     // program is explicitly selected via ?program=. A bare /cabinets/avon (selectedProgram null)
     // shows all products. See docs/CABINET-FACETS.md.
     const programFilter = selectedProgram ? cabinetProgramSearchParam(selectedProgram) : {};
-    const typeFilter = cabinetTypeSearchParam(selectedType);
+    const typeFilter = cabinetTypeSearchParam(gridFilters.types);
 
     // The in-code type fallback (below) pages with plain page-number cursors ("p2"), which
     // BigCommerce would reject; real cursors are opaque encoded strings. Keep those away from it.
@@ -390,8 +421,8 @@ export default async function Category(props: Props) {
 
     // Until BigCommerce indexes the Product Type facet, the attribute filter above is ignored and
     // the grid would show every type. Narrow in code instead (see lib/cabinets/type-filter-fallback).
-    if (selectedType && !hasProductTypeFacet(search)) {
-      return fetchCabinetProductsByType({
+    if (hasGridFilters(gridFilters) && !hasProductTypeFacet(search)) {
+      return fetchCabinetProductsFiltered({
         searchParams: {
           ...searchParams,
           ...parsedSearchParams,
@@ -399,7 +430,7 @@ export default async function Category(props: Props) {
           ...finishFilter,
           category: categoryId,
         },
-        type: selectedType,
+        filters: gridFilters,
         search,
         currencyCode,
         customerAccessToken,
@@ -408,6 +439,22 @@ export default async function Category(props: Props) {
     }
 
     return search;
+  });
+
+  // Width / height chips (collection pages): distinct values over the collection's products in
+  // this program / finish, counted against the other active filters.
+  const streamableSizeOptions = Streamable.from(async () => {
+    if (!isCabinet) return null;
+
+    const currencyCode = await getPreferredCurrencyCode();
+    const programFilter = selectedProgram ? cabinetProgramSearchParam(selectedProgram) : {};
+
+    return cabinetSizeOptions({
+      searchParams: { ...programFilter, ...finishFilter, category: categoryId },
+      filters: gridFilters,
+      currencyCode,
+      customerAccessToken,
+    });
   });
 
   const streamableProducts = Streamable.from(async () => {
@@ -594,9 +641,24 @@ export default async function Category(props: Props) {
             }
           />
           <CabinetTypeFilter
+            className="pb-5"
+            hrefFor={(value) =>
+              toggleFilterHref(category.path, searchParamsForLinks, CABINET_TYPE_PARAM, value)
+            }
+            resetHref={
+              hasGridFilters(gridFilters)
+                ? toggleFilterHref(category.path, searchParamsForLinks, null)
+                : undefined
+            }
+            selected={gridFilters.types}
+          />
+          <CabinetSizeFilter
             className="pb-8 @4xl:pb-10"
-            hrefFor={(value) => getTypeHref(category.path, searchParamsForLinks, value)}
-            selected={selectedType}
+            hrefFor={(dimension, value) =>
+              toggleFilterHref(category.path, searchParamsForLinks, SIZE_PARAM[dimension], value)
+            }
+            options={streamableSizeOptions}
+            selected={gridFilters}
           />
         </>
       )}
@@ -614,6 +676,7 @@ export default async function Category(props: Props) {
           filters={streamableFilters}
           filtersPanelTitle={t('FacetedSearch.filters')}
           headingLevel={2}
+          hideFilters={isCabinet}
           hideHeader={!isCabinet}
           maxCompareLimitMessage={t('Compare.maxCompareLimit')}
           maxItems={MAX_COMPARE_LIMIT}

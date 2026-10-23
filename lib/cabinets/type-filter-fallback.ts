@@ -11,13 +11,34 @@ const PAGE_SIZE = 20;
 const FETCH_SIZE = 50;
 const TTL_MS = 10 * 60 * 1000;
 
-// The "Filter by type" tiles on a cabinet collection are meant to narrow through the Product Type
-// search facet. BigCommerce has not indexed that facet (the filter is enabled, the field is on
-// every product, but the facet never appears and the attribute filter is ignored), so until it
-// does, this narrows the collection in code: fetch every product in the collection (with the
-// Program facet, which does work), keep the ones whose Product Type matches, and page through
-// those. The full list is kept for ten minutes per collection/program.
+// The "Filter by type" tiles and the width / height chips on a cabinet collection are meant to
+// narrow through search facets on the products' custom fields. BigCommerce has not indexed those
+// facets (the fields are on every product, but the facets never appear and the attribute filters
+// are ignored), so until it does, this narrows the collection in code: fetch every product in the
+// collection (with the Program facet, which does work), keep the ones matching the selection, and
+// page through those. The full list is kept for ten minutes per collection/program.
 const listCache = new Map<string, { at: number; items: Promise<SearchItem[]> }>();
+
+/** The in-code selection: any number of types, widths and heights (each empty = no narrowing). */
+export interface CabinetGridFilters {
+  types: string[];
+  widths: string[];
+  heights: string[];
+}
+
+export interface SizeOption {
+  /** The value as it appears in the URL and the custom field ("34.5"). */
+  value: string;
+  /** Shown on the chip ('34½"' style is left to the component; this is '34.5"'). */
+  label: string;
+  /** Products with this value, given the other active filters. */
+  count: number;
+}
+
+export interface CabinetSizeOptions {
+  widths: SizeOption[];
+  heights: SizeOption[];
+}
 
 async function fetchAllItems(
   params: Record<string, unknown>,
@@ -46,14 +67,19 @@ async function fetchAllItems(
   return items;
 }
 
-function productTypeOf(item: SearchItem): string | undefined {
+function customField(item: SearchItem, name: string): string | undefined {
   if (!('customFields' in item)) return undefined;
 
   return removeEdgesAndNodes(item.customFields)
-    .find((field) => field.name === 'Product Type')
-    ?.value.trim()
-    .toUpperCase();
+    .find((field) => field.name === name)
+    ?.value.trim();
 }
+
+const productTypeOf = (item: SearchItem) => customField(item, 'Product Type')?.toUpperCase();
+// The numeric "Width" / "Height" custom fields ("34.5"); "Cabinets Width" carries the same value
+// with an inch mark.
+const widthOf = (item: SearchItem) => customField(item, 'Width');
+const heightOf = (item: SearchItem) => customField(item, 'Height');
 
 // Page cursors in this mode are plain page numbers ("p2"), carried in the same after/before
 // params the real search uses, so the pagination component needs no changes.
@@ -67,25 +93,17 @@ export function hasProductTypeFacet(search: FacetedSearch): boolean {
   return search.facets.items.some((facet) => 'name' in facet && facet.name === 'Product Type');
 }
 
-export async function fetchCabinetProductsByType({
-  searchParams,
-  type,
-  search,
-  currencyCode,
-  customerAccessToken,
-  pageSize = PAGE_SIZE,
-}: {
-  /** The search params the real query used, minus pagination and the type attribute. */
-  searchParams: Record<string, unknown>;
-  type: string;
-  /** The real (un-narrowed) result; its facets are kept for the sidebar. */
-  search: FacetedSearch;
-  currencyCode?: CurrencyCode;
-  customerAccessToken?: string;
-  /** Products per page (the listing's page size). */
-  pageSize?: number;
-}): Promise<FacetedSearch> {
-  const { after, before, page: pageParam, ...rest } = searchParams;
+export const hasGridFilters = (filters: CabinetGridFilters): boolean =>
+  filters.types.length > 0 || filters.widths.length > 0 || filters.heights.length > 0;
+
+/** Every product in the collection (for the given program / finish), cached ten minutes. The
+ *  pagination and in-code filter params are dropped from the key. */
+export function fetchCabinetCollectionItems(
+  searchParams: Record<string, unknown>,
+  currencyCode?: CurrencyCode,
+  customerAccessToken?: string,
+): Promise<SearchItem[]> {
+  const { after, before, page, width, height, ...rest } = searchParams;
   const key = JSON.stringify([rest, currencyCode, Boolean(customerAccessToken)]);
   const cached = listCache.get(key);
   const fresh = cached != null && Date.now() - cached.at < TTL_MS;
@@ -93,8 +111,86 @@ export async function fetchCabinetProductsByType({
 
   if (!fresh) listCache.set(key, { at: Date.now(), items: all });
 
-  const wanted = type.trim().toUpperCase();
-  const matching = (await all).filter((item) => productTypeOf(item) === wanted);
+  return all;
+}
+
+const inSet = (value: string | undefined, wanted: string[]) =>
+  wanted.length === 0 || (value != null && wanted.includes(value));
+
+function matches(item: SearchItem, filters: CabinetGridFilters): boolean {
+  return (
+    inSet(
+      productTypeOf(item),
+      filters.types.map((t) => t.toUpperCase()),
+    ) &&
+    inSet(widthOf(item), filters.widths) &&
+    inSet(heightOf(item), filters.heights)
+  );
+}
+
+// Distinct values of one dimension, counted over the items that match every OTHER filter (the
+// usual facet behaviour: picking a width never empties the width row), sorted numerically.
+function options(
+  items: SearchItem[],
+  read: (item: SearchItem) => string | undefined,
+  others: CabinetGridFilters,
+): SizeOption[] {
+  const counts = new Map<string, number>();
+
+  items
+    .filter((item) => matches(item, others))
+    .forEach((item) => {
+      const value = read(item);
+
+      if (value) counts.set(value, (counts.get(value) ?? 0) + 1);
+    });
+
+  return [...counts.entries()]
+    .map(([value, count]) => ({ value, label: `${value}"`, count }))
+    .sort((a, b) => Number(a.value) - Number(b.value));
+}
+
+/** The width and height chips for a collection, with counts that respect the other filters. */
+export async function cabinetSizeOptions({
+  searchParams,
+  filters,
+  currencyCode,
+  customerAccessToken,
+}: {
+  searchParams: Record<string, unknown>;
+  filters: CabinetGridFilters;
+  currencyCode?: CurrencyCode;
+  customerAccessToken?: string;
+}): Promise<CabinetSizeOptions> {
+  const items = await fetchCabinetCollectionItems(searchParams, currencyCode, customerAccessToken);
+
+  return {
+    widths: options(items, widthOf, { ...filters, widths: [] }),
+    heights: options(items, heightOf, { ...filters, heights: [] }),
+  };
+}
+
+export async function fetchCabinetProductsFiltered({
+  searchParams,
+  filters,
+  search,
+  currencyCode,
+  customerAccessToken,
+  pageSize = PAGE_SIZE,
+}: {
+  /** The search params the real query used, minus pagination and the in-code filter params. */
+  searchParams: Record<string, unknown>;
+  filters: CabinetGridFilters;
+  /** The real (un-narrowed) result; its facets are kept for the sidebar. */
+  search: FacetedSearch;
+  currencyCode?: CurrencyCode;
+  customerAccessToken?: string;
+  /** Products per page (the listing's page size). */
+  pageSize?: number;
+}): Promise<FacetedSearch> {
+  const { after, before, page: pageParam } = searchParams;
+  const all = await fetchCabinetCollectionItems(searchParams, currencyCode, customerAccessToken);
+  const matching = all.filter((item) => matches(item, filters));
   // ?page=N (numbered pagination) wins; the older "p2"-style cursors still work.
   const requested =
     typeof pageParam === 'string' && /^\d+$/.test(pageParam) ? Number(pageParam) : 0;

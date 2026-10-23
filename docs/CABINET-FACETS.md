@@ -139,5 +139,14 @@ path). Per-category overrides live under `/v3/settings/search/filters/contexts` 
 
 The collection pages' **"Filter by type"** strip
 ([vibes/soul/sections/cabinet-type-filter](../vibes/soul/sections/cabinet-type-filter/index.tsx))
-links to `?attr_Product Type=<value>` and the category page applies it exactly like the Program facet
-(before pagination). Icons: `public/images/cabinets/types/*.svg`.
+links to `?attr_Product Type=<value>` (repeated for several types) and the category page applies it
+exactly like the Program facet (before pagination). Icons: `public/images/cabinets/types/*.svg`.
+
+**Width / height chips** (`vibes/soul/sections/cabinet-size-filter`) sit under the tiles and link to
+`?width=<n>&height=<n>` (the products' numeric `Width` / `Height` custom fields, repeatable). Until
+the Product Type / size facets are indexed, every grid filter on a collection page is applied in
+code by `lib/cabinets/type-filter-fallback.ts`: it fetches the whole collection (Program facet
+applied), keeps the products matching every selected type / width / height, pages through those, and
+counts the chips against the other active filters. "Clear all filters" beside the title drops the
+three params. Collection pages hide the generic facet sidebar (`hideFilters`) since these strips are
+their filters.
