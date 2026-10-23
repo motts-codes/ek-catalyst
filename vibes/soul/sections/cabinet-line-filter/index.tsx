@@ -61,6 +61,16 @@ export function CabinetLineFilter({
             selected={selected}
             tabs={tabs.map((tab) => ({ ...tab, href: hrefFor(tab.slug) }))}
           />
+          {/* The selected line's one-liner sits in the row between the tabs and the toggle (two
+              lines at most) so the row keeps one height and the grey band meets the underline. */}
+          {Boolean(description) && (
+            <p
+              aria-live="polite"
+              className="hidden min-w-0 flex-1 self-center px-4 text-center text-xs leading-snug text-contrast-500 [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box] @3xl:[display:-webkit-box]"
+            >
+              {description}
+            </p>
+          )}
           {panelToggle != null && (
             <Link
               aria-expanded={panelToggle.open}
@@ -72,17 +82,6 @@ export function CabinetLineFilter({
             </Link>
           )}
           {/* The selected line's one-liner, at the right end of the row on wide screens; hidden on phones. */}
-          {Boolean(description) && (
-            <p
-              aria-live="polite"
-              className={clsx(
-                'order-last hidden basis-full pb-3 text-xs text-contrast-500 @3xl:block @3xl:text-right',
-                panelToggle == null && '@3xl:ml-auto @3xl:max-w-md @3xl:basis-auto',
-              )}
-            >
-              {description}
-            </p>
-          )}
         </div>
       </div>
     </nav>

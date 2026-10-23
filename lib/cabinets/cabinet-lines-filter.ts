@@ -34,7 +34,8 @@ export interface LineFilterGroup {
 }
 
 export const LINE_FILTER_KEYS: LineFilterKey[] = ['color', 'construction', 'style', 'finish'];
-/** ?filters=1 opens the panel; it also opens whenever a panel filter is active. */
+/** ?filters=1 opens the sidebar and ?filters=0 closes it. With neither, it is open whenever a
+ *  panel filter is active (so a shared link with filters shows them). */
 export const FILTER_PANEL_PARAM = 'filters';
 
 const LABELS: Record<LineFilterKey, string> = {
@@ -65,8 +66,14 @@ export function parseLineFilters(searchParams: Params): LineFilterSelection {
 export const hasPanelFilters = (sel: LineFilterSelection): boolean =>
   LINE_FILTER_KEYS.some((key) => sel[key].length > 0);
 
-export const panelOpen = (searchParams: Params, sel: LineFilterSelection): boolean =>
-  list(searchParams[FILTER_PANEL_PARAM])[0] === '1' || hasPanelFilters(sel);
+export function panelOpen(searchParams: Params, sel: LineFilterSelection): boolean {
+  const flag = list(searchParams[FILTER_PANEL_PARAM])[0];
+
+  if (flag === '1') return true;
+  if (flag === '0') return false;
+
+  return hasPanelFilters(sel);
+}
 
 // The values a collection carries for a filter key.
 function valuesOf(line: CabinetLine, key: LineFilterKey): string[] {
@@ -137,7 +144,8 @@ export function lineFilterHref(
   return `${basePath}?${params.toString()}`;
 }
 
-/** The listing URL with the panel opened or closed (filters untouched). */
+/** The listing URL with the sidebar opened or closed (filters untouched; closing while filters
+ *  are ticked keeps them applied, just out of view). */
 export function panelToggleHref(basePath: string, searchParams: Params, open: boolean): string {
   const params = new URLSearchParams();
 
@@ -148,6 +156,9 @@ export function panelToggleHref(basePath: string, searchParams: Params, open: bo
   });
 
   if (open) params.set(FILTER_PANEL_PARAM, '1');
+  else if (LINE_FILTER_KEYS.some((key) => list(searchParams[key]).length > 0)) {
+    params.set(FILTER_PANEL_PARAM, '0');
+  }
 
   const query = params.toString();
 
