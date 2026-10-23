@@ -39,7 +39,8 @@ export function CabinetSizeFilter({ options, selected, hrefFor, className }: Pro
       {(data) =>
         data != null && (data.widths.length > 0 || data.heights.length > 0) ? (
           <section aria-label="Filter by size" className={clsx('@container', className)}>
-            <div className="mx-auto flex max-w-screen-2xl flex-wrap items-center gap-3 px-6 @xl:px-9 @4xl:px-14">
+            {/* Right-aligned, with the grid's sort control below it. */}
+            <div className="mx-auto flex max-w-screen-2xl flex-wrap items-center justify-end gap-3 px-6 @xl:px-9 @4xl:px-14">
               {data.widths.length > 0 && (
                 <SizeDropdown
                   label="Cabinets Width"

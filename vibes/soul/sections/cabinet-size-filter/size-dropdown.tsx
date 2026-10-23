@@ -31,10 +31,11 @@ export function SizeDropdown({ label, options }: { label: string; options: SizeC
     <Popover.Root onOpenChange={setOpen} open={open}>
       <Popover.Trigger
         className={clsx(
-          'inline-flex h-9 items-center gap-2 rounded-full border bg-white pl-4 pr-3 text-xs transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+          'inline-flex h-9 items-center gap-2 rounded-full border-[0.5px] bg-white pl-4 pr-3 text-xs transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+          // A hairline outline, black until something is ticked, then brand red.
           picked.length > 0
             ? 'border-[var(--button-primary-background,#d90716)] font-semibold text-foreground'
-            : 'border-[hsl(var(--primary)/40%)] text-foreground hover:border-[var(--button-primary-background,#d90716)]',
+            : 'border-foreground text-foreground hover:border-[var(--button-primary-background,#d90716)]',
         )}
       >
         <span>{label}</span>
