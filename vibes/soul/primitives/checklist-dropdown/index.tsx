@@ -84,6 +84,7 @@ export function ChecklistDropdown({
                     className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm transition-colors hover:bg-contrast-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-primary-background,#d90716)]"
                     href={option.href}
                     role="menuitemcheckbox"
+                    scroll={false}
                   >
                     <span
                       aria-hidden

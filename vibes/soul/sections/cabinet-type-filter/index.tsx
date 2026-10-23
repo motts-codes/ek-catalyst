@@ -60,6 +60,7 @@ export function CabinetTypeFilter({
                     active && 'bg-[#fdf3f5]',
                   )}
                   href={hrefFor(type.value)}
+                  scroll={false}
                 >
                   <Image
                     alt=""

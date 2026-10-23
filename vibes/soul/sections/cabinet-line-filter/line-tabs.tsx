@@ -71,6 +71,7 @@ export function LineTabs({ tabs, selected }: { tabs: LineTab[]; selected: string
                 if (el) refs.current.set(key, el);
                 else refs.current.delete(key);
               }}
+              scroll={false}
             >
               {tab.label}
               <span className="sr-only">

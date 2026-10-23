@@ -144,7 +144,7 @@ export function ProductsListSection({
                   className={clsx(
                     'flex items-center gap-2 font-heading',
                     headingLevel === 2
-                      ? 'text-xl font-bold leading-tight @xl:text-2xl @4xl:text-[28px]'
+                      ? 'text-lg font-bold leading-tight @xl:text-xl'
                       : 'text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl',
                   )}
                 >

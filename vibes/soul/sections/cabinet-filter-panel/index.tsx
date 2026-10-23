@@ -40,6 +40,7 @@ export function CabinetFilterPanel({ groups, resetHref, className }: Props) {
           <Link
             className="inline-flex items-center gap-1 text-xs text-contrast-500 underline decoration-contrast-300 underline-offset-4 transition-colors hover:text-foreground hover:decoration-[var(--button-primary-background,#d90716)]"
             href={resetHref}
+            scroll={false}
           >
             <X size={12} strokeWidth={2} />
             Clear all
@@ -72,6 +73,7 @@ export function CabinetFilterPanel({ groups, resetHref, className }: Props) {
                     )}
                     href={option.href}
                     role="checkbox"
+                    scroll={false}
                   >
                     <span
                       aria-hidden

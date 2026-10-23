@@ -35,6 +35,7 @@ export function ListingFiltersToggle({ href, className }: { href: string; classN
       className={className}
       href={href}
       onClick={() => setVisible(!visible)}
+      scroll={false}
     >
       <SlidersHorizontal size={13} strokeWidth={2} />
       {visible ? 'Hide filters' : 'Show all filters'}
