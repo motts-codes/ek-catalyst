@@ -141,6 +141,32 @@ const getCustomFieldValue = (
   return value !== undefined && value !== '' ? value : undefined;
 };
 
+const plural = (noun: string, count: number): string => {
+  if (count === 1) return noun;
+
+  return noun.endsWith('f') ? `${noun.slice(0, -1)}ves` : `${noun}s`;
+};
+
+// The cabinets' door_shelf_drawer custom field ("2 Door |1 Shelf | 1 Drawer") as a tidy line:
+// "2 doors · 1 shelf · 1 drawer". Zero counts are left out; absent → nothing shown.
+const getSpecLine = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+): string | undefined => {
+  const raw = getCustomFieldValue(product, 'door_shelf_drawer');
+
+  if (!raw) return undefined;
+
+  const parts = raw
+    .split('|')
+    .map((part) => /^\s*(\d+)\s*([A-Za-z]+)/.exec(part))
+    .filter((m): m is RegExpExecArray => m != null)
+    .map((m) => ({ count: Number(m[1]), noun: (m[2] ?? '').toLowerCase() }))
+    .filter(({ count }) => count > 0)
+    .map(({ count, noun }) => `${count} ${plural(noun, count)}`);
+
+  return parts.length > 0 ? parts.join(' · ') : undefined;
+};
+
 // The product's required options, with swatch colours where BigCommerce has them. The card
 // shows swatches for a single small swatch option and names the choice in the CTA otherwise.
 const getRequiredOptions = (
@@ -259,6 +285,7 @@ export const singleProductCardTransformer = (
     badges: getCardBadges(product),
     salePercent: getSalePercent(product),
     deliveryMessage: getDeliveryMessage(product),
+    specLine: getSpecLine(product),
     // Quote-only products (countertops): __quote_only = yes swaps the cart CTA for "Request a
     // quote" and hides the delivery line; __price_unit (e.g. "sq. ft.") is shown after the price.
     quoteOnly: getCustomFieldValue(product, '__quote_only')?.toLowerCase() === 'yes',

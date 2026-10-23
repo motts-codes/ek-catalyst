@@ -70,6 +70,16 @@ export const pricesTransformer = (
     };
   }
 
+  // No sale, but a retail (MRP) price above the selling price: show it struck through.
+  if (inc.retailPrice && ex.retailPrice && inc.retailPrice.value > inc.price.value) {
+    return {
+      type: 'sale',
+      previous: toMoney(inc.retailPrice, ex.retailPrice, format),
+      current: toMoney(inc.price, ex.price, format),
+      mode,
+    };
+  }
+
   return {
     type: 'plain',
     money: toMoney(inc.price, ex.price, format),

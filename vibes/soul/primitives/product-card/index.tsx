@@ -41,6 +41,8 @@ export interface Product {
   salePercent?: number;
   /** Delivery/pickup message from the __delivery custom field; shown after the price. */
   deliveryMessage?: string;
+  /** A short spec line under the title (cabinets: "2 doors · 1 shelf · 1 drawer"). */
+  specLine?: string;
   rating?: number;
   inventoryMessage?: string;
   numberOfReviews?: number;
@@ -102,6 +104,7 @@ export function ProductCard({
     id,
     title,
     subtitle,
+    specLine,
     badge,
     badges,
     salePercent,
@@ -252,6 +255,19 @@ export function ProductCard({
                   )}
                 >
                   {subtitle}
+                </span>
+              )}
+              {specLine != null && specLine !== '' && (
+                <span
+                  className={clsx(
+                    'mt-1 block text-xs font-normal',
+                    {
+                      light: 'text-contrast-500',
+                      dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
+                    }[colorScheme],
+                  )}
+                >
+                  {specLine}
                 </span>
               )}
               {/* Grey divider below the brand name, above the price (margin below the line). */}
