@@ -57,6 +57,7 @@ export function CabinetFilterPanel({ groups, resetHref, className }: Props) {
               className="w-full justify-between"
               label={`Choose ${group.label.toLowerCase()}`}
               options={group.options.map((o) => ({ ...o, label: o.value }))}
+              summary="count"
             />
           ) : (
             <ul className="flex flex-col gap-0.5">

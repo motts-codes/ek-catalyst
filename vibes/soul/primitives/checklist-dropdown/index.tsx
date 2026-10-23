@@ -24,10 +24,14 @@ export interface ChecklistChoice {
 export function ChecklistDropdown({
   label,
   options,
+  summary = 'values',
   className,
 }: {
   label: string;
   options: ChecklistChoice[];
+  /** How the trigger shows what is ticked: the values themselves (short lists like widths), or
+   *  a small red count badge (long lists like colours, where values would not fit). */
+  summary?: 'values' | 'count';
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -45,10 +49,16 @@ export function ChecklistDropdown({
             : 'border-foreground text-foreground hover:border-[var(--button-primary-background,#d90716)]',
         )}
       >
-        <span>{label}</span>
-        {picked.length > 0 && (
+        <span className="whitespace-nowrap">{label}</span>
+        {picked.length > 0 && summary === 'values' && (
           <span className="max-w-[14ch] truncate font-normal text-contrast-500">
             {picked.join(', ')}
+          </span>
+        )}
+        {picked.length > 0 && summary === 'count' && (
+          <span className="inline-flex size-[18px] items-center justify-center rounded-full bg-[var(--button-primary-background,#d90716)] text-[10px] font-semibold leading-none text-white">
+            {picked.length}
+            <span className="sr-only"> selected</span>
           </span>
         )}
         <ChevronDown
