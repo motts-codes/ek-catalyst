@@ -62,11 +62,12 @@ export function CabinetLineFilter({
             tabs={tabs.map((tab) => ({ ...tab, href: hrefFor(tab.slug) }))}
           />
           {/* The selected line's one-liner sits in the row between the tabs and the toggle (two
-              lines at most) so the row keeps one height and the grey band meets the underline. */}
+              lines at most) so the row keeps one height and the grey band meets the underline.
+              Hidden below 1100px, where the row has no room for it. */}
           {Boolean(description) && (
             <p
               aria-live="polite"
-              className="hidden min-w-0 flex-1 self-center px-4 text-center text-xs leading-snug text-contrast-500 [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box] @3xl:[display:-webkit-box]"
+              className="hidden min-w-0 flex-1 self-center px-4 text-center text-xs leading-snug text-contrast-500 [-webkit-box-orient:vertical] [-webkit-line-clamp:2] min-[1100px]:[display:-webkit-box]"
             >
               {description}
             </p>
