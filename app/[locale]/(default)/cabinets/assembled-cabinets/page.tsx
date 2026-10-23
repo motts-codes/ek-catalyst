@@ -5,6 +5,7 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetFilterPanel } from '@/vibes/soul/sections/cabinet-filter-panel';
 import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
+import { ListingFiltersProvider } from '@/vibes/soul/sections/cabinet-lines/filters-visibility';
 import { CategoryHero, CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
@@ -92,22 +93,22 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           { icon: 'shield', label: 'CARB2 Compliant' },
         ]}
       />
-      <CabinetLineFilter
-        className="pt-8 @4xl:pt-10"
-        descriptions={CABINET_LINE_COPY.assembled}
-        hrefFor={(slug) => lineTabHref('/cabinets/assembled-cabinets', query, slug)}
-        options={cabinetLineOptions(lines)}
-        panelToggle={{
-          href: panelToggleHref('/cabinets/assembled-cabinets', query, !showPanel),
-          open: showPanel,
-        }}
-        selected={selectedLine}
-        total={lines.length}
-      />
-      {/* The grey band meets the filter's rule; the cards start a little lower inside it. */}
-      <CabinetLines
-        aside={
-          showPanel ? (
+      <ListingFiltersProvider open={showPanel}>
+        <CabinetLineFilter
+          className="pt-8 @4xl:pt-10"
+          descriptions={CABINET_LINE_COPY.assembled}
+          hrefFor={(slug) => lineTabHref('/cabinets/assembled-cabinets', query, slug)}
+          options={cabinetLineOptions(lines)}
+          panelToggle={{
+            href: panelToggleHref('/cabinets/assembled-cabinets', query, !showPanel),
+            open: showPanel,
+          }}
+          selected={selectedLine}
+          total={lines.length}
+        />
+        {/* The grey band meets the filter's rule; the cards start a little lower inside it. */}
+        <CabinetLines
+          aside={
             <CabinetFilterPanel
               groups={lineFilterGroups(lines, filters, '/cabinets/assembled-cabinets', query)}
               resetHref={
@@ -116,12 +117,12 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
                   : undefined
               }
             />
-          ) : undefined
-        }
-        className="pt-2 @4xl:pt-3"
-        lines={applyLineFilters(lines, filters)}
-        program="assembled"
-      />
+          }
+          className="pt-2 @4xl:pt-3"
+          lines={applyLineFilters(lines, filters)}
+          program="assembled"
+        />
+      </ListingFiltersProvider>
       <CabinetFaq data={faq} />
     </>
   );

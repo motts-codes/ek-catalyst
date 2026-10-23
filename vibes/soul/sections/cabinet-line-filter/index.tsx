@@ -1,7 +1,6 @@
 import { clsx } from 'clsx';
-import { SlidersHorizontal } from 'lucide-react';
 
-import { Link } from '~/components/link';
+import { ListingFiltersToggle } from '@/vibes/soul/sections/cabinet-lines/filters-visibility';
 
 import { LineTabs } from './line-tabs';
 
@@ -24,8 +23,9 @@ interface Props {
   total?: number;
   /** A line of copy per slug ("all" for no selection), shown to the right of the pills. */
   descriptions?: Record<string, string>;
-  /** "Show all filters" / "Hide filters" at the right end of the row, linking to the listing with
-   *  the panel opened or closed. */
+  /** "Show all filters" / "Hide filters" at the right end of the row (a ListingFiltersToggle, so
+   *  the page must sit in a ListingFiltersProvider), linking to the listing with the sidebar
+   *  opened or closed. */
   panelToggle?: { href: string; open: boolean };
   className?: string;
 }
@@ -72,14 +72,10 @@ export function CabinetLineFilter({
             </p>
           )}
           {panelToggle != null && (
-            <Link
-              aria-expanded={panelToggle.open}
+            <ListingFiltersToggle
               className="ml-auto inline-flex items-center gap-1.5 whitespace-nowrap pb-3 pt-2 text-xs text-contrast-500 underline decoration-contrast-300 underline-offset-4 transition-colors hover:text-foreground hover:decoration-[var(--button-primary-background,#d90716)]"
               href={panelToggle.href}
-            >
-              <SlidersHorizontal size={13} strokeWidth={2} />
-              {panelToggle.open ? 'Hide filters' : 'Show all filters'}
-            </Link>
+            />
           )}
           {/* The selected line's one-liner, at the right end of the row on wide screens; hidden on phones. */}
         </div>
