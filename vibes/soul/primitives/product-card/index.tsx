@@ -260,7 +260,7 @@ export function ProductCard({
               {specLine != null && specLine !== '' && (
                 <span
                   className={clsx(
-                    'mt-1 block text-xs font-normal',
+                    'mt-2.5 block text-xs font-normal',
                     {
                       light: 'text-contrast-500',
                       dark: 'text-[var(--product-card-dark-subtitle,hsl(var(--background)/75%))]',
