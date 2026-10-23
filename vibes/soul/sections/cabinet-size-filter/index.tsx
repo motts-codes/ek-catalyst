@@ -2,11 +2,17 @@ import { clsx } from 'clsx';
 import { X } from 'lucide-react';
 
 import { Stream, type Streamable } from '@/vibes/soul/lib/streamable';
+import {
+  type ChecklistChoice,
+  ChecklistDropdown,
+} from '@/vibes/soul/primitives/checklist-dropdown';
 import { Link } from '~/components/link';
 
-import { type SizeChip, type SizeChoice, SizeDropdown } from './size-dropdown';
-
-export type { SizeChip };
+export interface SizeChip {
+  value: string;
+  label: string;
+  count: number;
+}
 
 export interface SizeFilterOptions {
   widths: SizeChip[];
@@ -31,7 +37,11 @@ interface Props {
 // that value leaves given the other filters); several can be ticked. Nothing to choose → nothing.
 export function CabinetSizeFilter({ options, selected, hrefFor, resetHref, className }: Props) {
   // Resolve each value's toggle link here (server side); the client dropdown gets plain data.
-  const choices = (dimension: SizeDimension, chips: SizeChip[], picked: string[]): SizeChoice[] =>
+  const choices = (
+    dimension: SizeDimension,
+    chips: SizeChip[],
+    picked: string[],
+  ): ChecklistChoice[] =>
     chips.map((chip) => ({
       ...chip,
       href: hrefFor(dimension, chip.value),
@@ -47,13 +57,13 @@ export function CabinetSizeFilter({ options, selected, hrefFor, resetHref, class
             {/* Dropdowns on the left, "Clear all filters" at the right end of the same row. */}
             <div className="mx-auto flex max-w-screen-2xl flex-wrap items-center gap-3 px-6 @xl:px-9 @4xl:px-14">
               {data != null && data.widths.length > 0 && (
-                <SizeDropdown
+                <ChecklistDropdown
                   label="Cabinets Width"
                   options={choices('width', data.widths, selected.widths)}
                 />
               )}
               {data != null && data.heights.length > 0 && (
-                <SizeDropdown
+                <ChecklistDropdown
                   label="Cabinets Height"
                   options={choices('height', data.heights, selected.heights)}
                 />

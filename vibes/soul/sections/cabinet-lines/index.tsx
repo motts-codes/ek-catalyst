@@ -97,8 +97,9 @@ export function CabinetLines({
         )}
 
         <div className="flex flex-col gap-8 @3xl:flex-row @3xl:items-start @4xl:gap-10">
+          {/* Sticky, and scrolls within itself when taller than the viewport. */}
           {aside != null && (
-            <aside className="shrink-0 @3xl:sticky @3xl:top-4 @3xl:w-52 @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:w-60 @4xl:pr-10">
+            <aside className="shrink-0 @3xl:sticky @3xl:top-4 @3xl:max-h-[calc(100vh-2rem)] @3xl:w-52 @3xl:overflow-y-auto @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:w-60 @4xl:pr-10">
               {aside}
             </aside>
           )}

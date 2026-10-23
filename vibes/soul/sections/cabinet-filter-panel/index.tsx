@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { Check, X } from 'lucide-react';
 
+import { ChecklistDropdown } from '@/vibes/soul/primitives/checklist-dropdown';
 import { Link } from '~/components/link';
 
 export interface FilterPanelOption {
@@ -50,38 +51,47 @@ export function CabinetFilterPanel({ groups, resetHref, className }: Props) {
           <h3 className="mb-2 font-[family-name:var(--font-family-heading)] text-sm font-medium">
             {group.label}
           </h3>
-          <ul className="flex flex-col gap-0.5">
-            {group.options.map((option) => (
-              <li key={option.value}>
-                <Link
-                  aria-checked={option.active}
-                  className={clsx(
-                    'flex items-center gap-2 rounded-md py-1 pr-1 text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
-                    option.active ? 'text-foreground' : 'text-contrast-500',
-                    option.count === 0 && !option.active && 'opacity-50',
-                  )}
-                  href={option.href}
-                  role="checkbox"
-                >
-                  <span
-                    aria-hidden
+          {/* A long group (the colours) is a dropdown checklist instead of a list of rows. */}
+          {group.options.length > 8 ? (
+            <ChecklistDropdown
+              className="w-full justify-between"
+              label={`Choose ${group.label.toLowerCase()}`}
+              options={group.options.map((o) => ({ ...o, label: o.value }))}
+            />
+          ) : (
+            <ul className="flex flex-col gap-0.5">
+              {group.options.map((option) => (
+                <li key={option.value}>
+                  <Link
+                    aria-checked={option.active}
                     className={clsx(
-                      'flex size-4 shrink-0 items-center justify-center rounded border',
-                      option.active
-                        ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white'
-                        : 'border-contrast-300 bg-white',
+                      'flex items-center gap-2 rounded-md py-1 pr-1 text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
+                      option.active ? 'text-foreground' : 'text-contrast-500',
+                      option.count === 0 && !option.active && 'opacity-50',
                     )}
+                    href={option.href}
+                    role="checkbox"
                   >
-                    {option.active && <Check size={12} strokeWidth={3} />}
-                  </span>
-                  <span className={clsx('flex-1', option.active && 'font-semibold')}>
-                    {option.value}
-                  </span>
-                  <span className="text-xs text-contrast-400">{option.count}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                    <span
+                      aria-hidden
+                      className={clsx(
+                        'flex size-4 shrink-0 items-center justify-center rounded border',
+                        option.active
+                          ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white'
+                          : 'border-contrast-300 bg-white',
+                      )}
+                    >
+                      {option.active && <Check size={12} strokeWidth={3} />}
+                    </span>
+                    <span className={clsx('flex-1', option.active && 'font-semibold')}>
+                      {option.value}
+                    </span>
+                    <span className="text-xs text-contrast-400">{option.count}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       ))}
     </div>

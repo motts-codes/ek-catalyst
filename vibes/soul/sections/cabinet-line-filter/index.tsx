@@ -30,14 +30,14 @@ interface Props {
   className?: string;
 }
 
-// "Filter by line" — underline tabs under the program hero on the Assembled / RTA listings, in the
+// "Shop by line" — underline tabs under the program hero on the Assembled / RTA listings, in the
 // home page's product-tabs style: one rule under the row, the selected line bold with a red
 // underline, the rest grey. All, then the product lines present in that program (Star, Prism,
 // Euro Value, Euro Max), each followed by a raised light blue (#C0EDF6) count circle (a fixed 18px, so
 // 7 and 37 look the same). The state also carries aria-current so it doesn't rely on colour, and
 // the count is read out as text.
 export function CabinetLineFilter({
-  title = 'Filter by line',
+  title = 'Shop by line',
   options,
   selected,
   hrefFor,

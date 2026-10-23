@@ -7,23 +7,29 @@ import { useState } from 'react';
 
 import { Link } from '~/components/link';
 
-export interface SizeChip {
+/** One row of the checklist, with its toggle link resolved on the server so this client
+ *  component gets plain data. */
+export interface ChecklistChoice {
   value: string;
   label: string;
   count: number;
-}
-
-/** A chip with its toggle link resolved (so the server can hand the client dropdown plain data). */
-export interface SizeChoice extends SizeChip {
   href: string;
   active: boolean;
 }
 
-// One size dropdown ("Cabinets Width"): a pill trigger in the sort control's style, opening a
-// checklist. Every row is a link that toggles that value (the page re-renders with the new
-// selection and the list stays open, so several can be ticked in a row). The trigger shows the
-// ticked values after the label.
-export function SizeDropdown({ label, options }: { label: string; options: SizeChoice[] }) {
+// A multi-select dropdown ("Cabinets Width", "Color"): a pill trigger in the sort control's
+// style, opening a checklist. Every row is a link that toggles that value (the page re-renders
+// with the new selection and the list stays open, so several can be ticked in a row). The trigger
+// shows the ticked values after the label.
+export function ChecklistDropdown({
+  label,
+  options,
+  className,
+}: {
+  label: string;
+  options: ChecklistChoice[];
+  className?: string;
+}) {
   const [open, setOpen] = useState(false);
   const picked = options.filter((o) => o.active).map((o) => o.label);
 
@@ -32,6 +38,7 @@ export function SizeDropdown({ label, options }: { label: string; options: SizeC
       <Popover.Trigger
         className={clsx(
           'inline-flex h-9 items-center gap-2 rounded-full border-[0.5px] bg-white pl-4 pr-3 text-xs transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+          className,
           // A hairline outline, black until something is ticked, then brand red.
           picked.length > 0
             ? 'border-[var(--button-primary-background,#d90716)] font-semibold text-foreground'
