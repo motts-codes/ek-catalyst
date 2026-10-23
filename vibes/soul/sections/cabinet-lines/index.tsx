@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { Truck, WalletMinimal } from 'lucide-react';
+import { type ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { Image } from '~/components/image';
@@ -51,6 +52,9 @@ interface Props {
   lines: CabinetLine[];
   /** "New to RTA? Watch the explainer" — the guided page for this program. */
   explainerHref?: string;
+  /** A filters sidebar beside the cards (the listings' "Show all filters" panel). On phones it
+   *  stacks above the cards. */
+  aside?: ReactNode;
   className?: string;
 }
 
@@ -60,6 +64,7 @@ export function CabinetLines({
   program = 'assembled',
   lines,
   explainerHref,
+  aside,
   className,
 }: Props) {
   return (
@@ -91,15 +96,27 @@ export function CabinetLines({
           </div>
         )}
 
-        {lines.length === 0 ? (
-          <p className="text-contrast-500">No cabinet lines found.</p>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 @xl:grid-cols-2 @4xl:grid-cols-3">
-            {lines.map((line) => (
-              <CabinetLineCard key={line.entityId} line={line} />
-            ))}
-          </div>
-        )}
+        <div className="flex flex-col gap-8 @3xl:flex-row @3xl:items-start @4xl:gap-10">
+          {aside != null && (
+            <aside className="shrink-0 @3xl:sticky @3xl:top-4 @3xl:w-52 @3xl:border-r @3xl:border-contrast-100 @3xl:pr-8 @4xl:w-60 @4xl:pr-10">
+              {aside}
+            </aside>
+          )}
+          {lines.length === 0 ? (
+            <p className="flex-1 text-contrast-500">No collections match these filters.</p>
+          ) : (
+            <div
+              className={clsx(
+                'grid min-w-0 flex-1 grid-cols-1 gap-6 @xl:grid-cols-2',
+                aside != null ? '@5xl:grid-cols-3' : '@4xl:grid-cols-3',
+              )}
+            >
+              {lines.map((line) => (
+                <CabinetLineCard key={line.entityId} line={line} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

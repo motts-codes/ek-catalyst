@@ -104,19 +104,20 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
         selected={selectedLine}
         total={lines.length}
       />
-      {showPanel && (
-        <CabinetFilterPanel
-          className="pt-5"
-          groups={lineFilterGroups(lines, filters, '/cabinets/assembled-cabinets', query)}
-          resetHref={
-            hasPanelFilters(filters)
-              ? lineFilterHref('/cabinets/assembled-cabinets', query, null)
-              : undefined
-          }
-        />
-      )}
       {/* The grey band meets the filter's rule; the cards start a little lower inside it. */}
       <CabinetLines
+        aside={
+          showPanel ? (
+            <CabinetFilterPanel
+              groups={lineFilterGroups(lines, filters, '/cabinets/assembled-cabinets', query)}
+              resetHref={
+                hasPanelFilters(filters)
+                  ? lineFilterHref('/cabinets/assembled-cabinets', query, null)
+                  : undefined
+              }
+            />
+          ) : undefined
+        }
         className="pt-2 @4xl:pt-3"
         lines={applyLineFilters(lines, filters)}
         program="assembled"
