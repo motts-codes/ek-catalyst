@@ -1,5 +1,4 @@
 import { clsx } from 'clsx';
-import { X } from 'lucide-react';
 
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -22,8 +21,6 @@ interface Props {
   selected?: string[];
   /** Builds the link that toggles a type in or out of the selection. */
   hrefFor: (value: CabinetTypeValue) => string;
-  /** "Clear all" — the collection with every grid filter removed; shown only when given. */
-  resetHref?: string;
   className?: string;
 }
 
@@ -32,30 +29,18 @@ const LINE = 'border-[#ffa1a4]';
 // "Filter by type" — six icon tiles under the collection header. One pink-ruled row on wide
 // screens (three, then two, per row below that). Hover and the selected tile tint #fdf3f5; the
 // selected one also carries a red rule under its icon and an sr-only "selected" so the state
-// doesn't rely on colour alone. Tiles toggle, so several types can be on at once; "Clear all"
-// beside the title removes every grid filter (types, widths, heights).
+// doesn't rely on colour alone. Tiles toggle, so several types can be on at once ("Clear all
+// filters" lives in the size row beneath).
 export function CabinetTypeFilter({
   title = 'Filter by type',
   selected = [],
   hrefFor,
-  resetHref,
   className,
 }: Props) {
   return (
     <nav aria-label={title} className={clsx('@container', className)}>
       <div className="mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14">
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-          <h2 className="font-heading text-lg font-bold leading-tight">{title}</h2>
-          {resetHref != null && (
-            <Link
-              className="inline-flex items-center gap-1 text-xs text-contrast-500 underline decoration-contrast-300 underline-offset-4 transition-colors hover:text-foreground hover:decoration-[var(--button-primary-background,#d90716)]"
-              href={resetHref}
-            >
-              <X size={12} strokeWidth={2} />
-              Clear all filters
-            </Link>
-          )}
-        </div>
+        <h2 className="mb-3 font-heading text-lg font-bold leading-tight">{title}</h2>
         {/* gap-px over the line colour draws the dividers, whatever the wrap. */}
         <ul
           className={clsx(

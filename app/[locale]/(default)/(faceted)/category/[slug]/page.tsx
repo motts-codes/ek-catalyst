@@ -645,11 +645,6 @@ export default async function Category(props: Props) {
             hrefFor={(value) =>
               toggleFilterHref(category.path, searchParamsForLinks, CABINET_TYPE_PARAM, value)
             }
-            resetHref={
-              hasGridFilters(gridFilters)
-                ? toggleFilterHref(category.path, searchParamsForLinks, null)
-                : undefined
-            }
             selected={gridFilters.types}
           />
           <CabinetSizeFilter
@@ -658,6 +653,11 @@ export default async function Category(props: Props) {
               toggleFilterHref(category.path, searchParamsForLinks, SIZE_PARAM[dimension], value)
             }
             options={streamableSizeOptions}
+            resetHref={
+              hasGridFilters(gridFilters)
+                ? toggleFilterHref(category.path, searchParamsForLinks, null)
+                : undefined
+            }
             selected={gridFilters}
           />
         </>
