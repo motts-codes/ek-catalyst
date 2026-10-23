@@ -142,7 +142,7 @@ export function SpecRow({
 }) {
   const specSheetLink = specSheetUrl !== '' && (
     <a
-      className="inline-flex min-h-6 items-center gap-1.5 py-1 text-sm font-normal"
+      className="inline-flex min-h-6 items-center gap-1.5 py-1 font-[family-name:var(--font-family-heading)] text-sm font-normal"
       href={specSheetUrl}
       rel="noreferrer"
       target="_blank"
