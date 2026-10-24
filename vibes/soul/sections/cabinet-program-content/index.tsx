@@ -296,7 +296,7 @@ export function CabinetProgramContentSection({
       <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
         <h2 className={H2}>{program.title}</h2>
         <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{program.intro}</p>
-        <ul className="mt-6 grid gap-x-8 gap-y-4 @xl:grid-cols-2 @4xl:grid-cols-3">
+        <ul className="mt-6 grid gap-x-8 gap-y-7 @xl:grid-cols-2 @4xl:grid-cols-3">
           {program.points.map((point) => (
             <li className="flex items-start gap-2.5" key={point.lead}>
               <Check
