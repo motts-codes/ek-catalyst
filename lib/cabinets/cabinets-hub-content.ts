@@ -1,117 +1,155 @@
+import { type ContentBlock } from '@/vibes/soul/sections/cabinet-program-content';
 import { type RowCard } from '@/vibes/soul/sections/cards-row';
 import { type FeatureRow } from '@/vibes/soul/sections/feature-rows';
 import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 
 // Default content for the Cabinets hub (/cabinets) — the education page between the home page and
 // the two program listings. Every band is a Makeswift slot on the page; this is what renders until
-// marketing replaces it. Copy follows the wireframe; "[X]" figures were left for the business.
+// marketing replaces it. Copy is Arun's v2 hub brief; "[…]" figures are left for the business.
 
 export const ASSEMBLED_LISTING_HREF = '/cabinets/assembled-cabinets';
 export const RTA_LISTING_HREF = '/cabinets/rta-cabinets';
 export const INSTALLER_HREF = '/find-a-pro';
+/** Glass-door wall cabinets are an option inside the collections, not a category: a search. */
+export const GLASS_DOORS_HREF = '/search?term=glass%20door%20wall%20cabinet';
 
 export const HUB_HERO = {
-  kicker: 'Made for the room you live in',
+  kicker: 'Kitchen cabinets',
   title: "The kitchen you've pictured, without the 14-week wait",
   description:
-    '100+ door styles in 30+ colors, built in our Connecticut factory. Assembled or ready to assemble, same cabinet either way.',
-  note: 'Twenty-three collections across four lines, every one on the same ¾-inch all-plywood box — made in Connecticut, stocked in Bristol.',
+    'Framed and frameless cabinets in shaker, modern and traditional styles, made in our own factory. Choose assembled or ready to assemble: same cabinet, your call.',
+  note: 'Four lines, plywood boxes on Star, Prism and Euro Max, and 50,000+ cabinets in stock in Bristol.',
   imageLabel: 'A finished Connecticut kitchen, wide',
 };
 
-// "Find your style" — a look first, then the collections that carry it. The collection names map
-// to live collections where they exist in the catalog; the rest show as placeholders until the
-// collection is created (see docs/CABINET-REPLICATION.md).
-export interface StyleRow extends Omit<FeatureRow, 'tiles'> {
-  collections: string[];
+// "Find your style" — a look first, then the collections that carry it. Each collection is the
+// catalog name (so the tile finds the live collection) with the short label shown on the tile.
+export interface StyleCollection {
+  name: string;
+  label: string;
 }
+
+export interface StyleRow extends Omit<FeatureRow, 'tiles'> {
+  collections: StyleCollection[];
+}
+
+const c = (name: string, label = name): StyleCollection => ({ name, label });
 
 export const STYLE_ROWS: StyleRow[] = [
   {
-    kicker: 'The style most American kitchens are built in',
-    title: 'Shaker',
+    kicker: 'The door most kitchens are built around',
+    title: 'Painted shaker',
     description:
-      'A five-piece door with a flat center panel. Classic with a stain and a knob, modern in white with a bar pull — which is why it is the door people order most.',
-    imageLabel: 'Shaker kitchen',
-    collections: ['Avon', 'Cambridge', 'Mero', 'Tribeca Shaker'],
+      'A five-piece door with a flat recessed panel, in white or cream (Avon, Barcelona, Cambridge, Mero) or gray (Derry, Edinburgh).',
+    imageLabel: 'Painted shaker kitchen',
+    collections: [
+      c('Avon Painted White', 'Avon'),
+      c('Barcelona'),
+      c('Cambridge'),
+      c('Mero'),
+      c('Derry Stratus', 'Derry'),
+      c('Edinburgh'),
+      c('Euro Max Tribeca Shaker', 'Tribeca Shaker'),
+    ],
   },
   {
     kicker: 'Flat doors, clean lines',
     title: 'Modern slab',
     description:
-      'No profile, no frame showing — full-overlay doors on a frameless box, with bar pulls or no handles at all. The European look, in stock in Bristol.',
+      'Frameless slab doors built around texture: Eden in a natural, sleek finish, Madison in a deeper matte. Both resist stains, scratches and scuffs.',
     imageLabel: 'Modern slab kitchen',
-    collections: ['Barcelona', 'Derry Stratus'],
+    collections: [
+      c('Euro Max Eden', 'EM Eden'),
+      c('Euro Value Eden', 'EV Eden'),
+      c('Euro Max Madison', 'EM Madison'),
+      c('Euro Value Madison', 'EV Madison'),
+      c('Euro Max Manhattan HG', 'Manhattan'),
+      c('Euro Max Tribeca A', 'Tribeca'),
+    ],
   },
   {
-    kicker: 'Traditional profile, stained or painted',
-    title: 'Classic raised panel',
+    kicker: 'Traditional, with more detail',
+    title: 'Raised panel',
     description:
-      'A raised center panel and a moulded edge — the look of a period house, in a stain or a painted finish.',
+      'A raised center panel and a shaped edge, for a classic look: Beacon Hill in white, Lexington in French vanilla.',
     imageLabel: 'Raised panel kitchen',
-    collections: ['Beacon Hill', 'Lexington'],
+    collections: [c('Beacon Hill'), c('Lexington')],
   },
   {
-    kicker: 'Wood grain and texture, without the upkeep',
-    title: 'Natural & textured',
+    kicker: 'Real wood grain',
+    title: 'Stained wood',
     description:
-      'Textured and wood-look finishes that bring warmth to farmhouse, cabin and Scandinavian kitchens.',
-    imageLabel: 'Natural textured kitchen',
-    collections: ['Birmingham'],
+      'Stained birch veneer, from driftwood gray and caramel to espresso, walnut and bordeaux.',
+    imageLabel: 'Stained wood kitchen',
+    collections: [
+      c('Birmingham'),
+      c('Dover'),
+      c('Dublin'),
+      c('Lasalle', 'LaSalle'),
+      c('Rochelle'),
+      c('Northampton'),
+    ],
   },
   {
-    kicker: 'Navy, sage, greige and the two-tone island',
+    kicker: 'Navy, sage, charcoal, the two-tone island',
     title: 'Painted color',
-    description:
-      "A painted shaker in a color that isn't white — on the island, on the base run, or the whole room. The Prism line is custom-painted to your color.",
+    description: 'Star doors painted in 10 colors, for the whole room or just the island.',
     imageLabel: 'Painted color kitchen',
-    collections: ['Dover', 'Rochelle'],
-  },
-  {
-    kicker: 'Glass doors, open shelves, floating uppers',
-    title: 'Glass-front & accents',
-    description:
-      'Used inside any of the styles above to break up a run of doors — a glass upper, an open shelf, a floating cabinet.',
-    imageLabel: 'Glass-front kitchen',
-    collections: [],
+    collections: [
+      c('Prism Avon'),
+      c('Prism Beacon Hill'),
+      c('Prism Cambridge'),
+      c('Prism Derry'),
+      c('Prism Edinburgh'),
+      c('Prism Lexington'),
+      c('Prism Mero'),
+    ],
   },
 ];
 
-export const LINE_ROWS: FeatureRow[] = [
+// Glass-door wall cabinets: a short band right after "Find your style" (an option inside the
+// collections, not a style and not an accessory).
+export const GLASS_BAND = {
+  title: 'Add a glass door',
+  description:
+    'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles. Frosted glass comes in [all five collections]; clear glass with a finished interior comes in Rochelle, Derry and Barcelona.',
+  note: 'Sizes: 15", 18", 24", 27", 30" and 36" wide, in 30", 36" or 42" heights.',
+  imageLabel: 'A glass-front wall cabinet in a run of shaker doors',
+  actions: [{ label: 'See glass-door cabinets', href: GLASS_DOORS_HREF }],
+};
+
+// "What's behind the door" — the four lines as compact cards.
+export const LINE_CARDS: RowCard[] = [
   {
-    kicker: 'Framed · our own brand · RTA or assembled',
-    title: 'Star Cabinetry',
+    title: 'Star',
+    meta: 'Framed · RTA or assembled',
     description:
-      'Framed cabinets, 300+ SKUs in every door style, all stocked in Bristol, CT. The default for most kitchens — and the widest choice of doors and finishes.',
-    imageLabel: 'Star Cabinetry kitchen',
-    action: { label: 'See Star collections', href: `${ASSEMBLED_LISTING_HREF}?line=star` },
+      'Our core line: classic framed cabinets with a plywood box, a solid birch face frame, and painted or birch veneer doors. The widest choice of doors and finishes, kept in stock.',
+    ctaLabel: 'See Star collections',
+    href: `${ASSEMBLED_LISTING_HREF}?line=star`,
   },
   {
-    kicker: 'Framed · custom-painted · assembled',
     title: 'Prism',
-    description:
-      'Custom-painted framed cabinets, 300+ SKUs per door style, stocked in Bristol, CT. For a painted finish matched to your color.',
-    imageLabel: 'Prism kitchen',
-    action: { label: 'See Prism collections', href: `${ASSEMBLED_LISTING_HREF}?line=prism` },
+    meta: 'Framed · Painted · Assembled',
+    description: 'Star’s framed cabinets, painted in 10 designer colors. Ships in about 8 weeks.',
+    ctaLabel: 'See Prism collections',
+    href: `${ASSEMBLED_LISTING_HREF}?line=prism`,
   },
   {
-    kicker: 'Frameless · ¾-inch plywood · RTA or assembled',
     title: 'Euro Max',
+    meta: 'Frameless · Plywood box · RTA or assembled',
     description:
-      'Frameless cabinets on ¾-inch plywood boxes, 300+ SKUs per door style, stocked in Bristol, CT. Full-overlay doors and more drawer space.',
-    imageLabel: 'Euro Max kitchen',
-    action: { label: 'See Euro Max collections', href: `${ASSEMBLED_LISTING_HREF}?line=euro-max` },
+      'European-style frameless cabinets with a ¾" plywood box: full-overlay doors and more room inside.',
+    ctaLabel: 'See Euro Max collections',
+    href: `${ASSEMBLED_LISTING_HREF}?line=euro-max`,
   },
   {
-    kicker: 'Frameless · ¾-inch plywood · assembled',
     title: 'Euro Value',
+    meta: 'Frameless · Engineered box · Assembled',
     description:
-      'Frameless cabinets on ¾-inch plywood boxes, built in Bristol, CT. 300+ SKUs per door style at the entry price.',
-    imageLabel: 'Euro Value kitchen',
-    action: {
-      label: 'See Euro Value collections',
-      href: `${ASSEMBLED_LISTING_HREF}?line=euro-value`,
-    },
+      'The same frameless doors as Euro Max, with an engineered board box, at a lower price.',
+    ctaLabel: 'See Euro Value collections',
+    href: `${ASSEMBLED_LISTING_HREF}?line=euro-value`,
   },
 ];
 
@@ -136,77 +174,108 @@ export const HUB_PROGRAM_CARDS: ProgramCard[] = [
   },
 ];
 
-export const COMPARISON_COLUMNS = ['', 'Ready to assemble', 'Factory assembled'];
+export const COMPARISON_COLUMNS = ['', 'Ready to assemble', 'Assembled'];
 
+// "!" marks the row-heading cell. The installation row keeps Arun's bracketed line until EK
+// settles the installation question.
 export const COMPARISON_ROWS: string[][] = [
   [
     '!What arrives',
     'Flat-packed boxes, doors and hardware',
-    'Built cabinets, wrapped for transport',
+    'Built cabinets, wrapped for shipping',
   ],
-  ['!Who assembles the box', 'You, or your installer', 'Our shop, in Connecticut'],
+  ['!Who builds the box', 'You, or your installer', 'We do, in our factory'],
   [
-    '!Who installs it in your kitchen',
-    'Your installer or contractor — Express Kitchens does not install cabinets',
-    'Your installer or contractor — Express Kitchens does not install cabinets',
+    '!Installation',
+    'By your installer, or [ask about EK installation for showroom orders]',
+    'By your installer, or [ask about EK installation for showroom orders]',
   ],
-  ['!Time per cabinet', 'About [X] minutes', 'None'],
-  ['!Lead time', '2 weeks', '3 weeks'],
-  ['!Price', 'Lower — about [X]% less', 'Higher — the build is done'],
-  [
-    '!Box, door, finish, warranty',
-    'Identical on the lines offered both ways',
-    'Identical — plus more options',
-  ],
-  ['!Lines available', 'Star · Euro Max', 'Star · Euro Max · Prism (custom-painted) · Euro Value'],
+  ['!Time per cabinet', 'About 45 minutes or more', 'None'],
+  ['!Ships in', '2 weeks (Star)', '3 weeks (Star)'],
+  ['!Price', 'Lower', 'Higher, because the building is done'],
+  ['!Lines', 'Star, Euro Max', 'Star, Prism, Euro Max, Euro Value'],
   [
     '!Best for',
-    'Handy homeowners, tight budgets, DIY',
-    'Anyone who wants the build done, contractors on a schedule',
+    'Handy homeowners, tighter budgets, crews who assemble on site',
+    'Anyone who wants it ready to install',
   ],
 ];
 
-export const BUILD_POINTS: RowCard[] = [
-  {
-    title: '1. All-plywood box',
-    description: '¾-inch plywood sides, top and bottom. No particle board, anywhere.',
-  },
-  {
-    title: '2. Soft-close doors',
-    description: 'Soft-close hinges on every door, fitted and adjusted before it leaves us.',
-  },
-  {
-    title: '3. Dovetail drawer boxes',
-    description: 'Solid-wood drawers with dovetail joints — the corner that never loosens.',
-  },
-  {
-    title: '4. Full-extension drawers',
-    description: 'Undermount glides, so you reach the back of every drawer.',
-  },
-  {
-    title: '5. Adjustable shelving',
-    description: '¾-inch shelves on metal pins; move them as your kitchen changes.',
-  },
-  {
-    title: '6. [X]-year warranty',
-    description: 'On the box and the door, whether you build it or we do.',
-  },
-  {
-    title: '7. Precision manufacturing',
-    description:
-      'Cut and drilled by machine in our own Connecticut factory, so every box matches the last one.',
-  },
-  {
-    title: '8. Free design help',
-    description: 'A designer draws your kitchen with you and prices it — before you buy anything.',
-  },
-];
+// "How our cabinets are built" — a bento grid (the program pages' Why cards) with a photo slot on
+// each card; the KCMA card is the tall one. Photos to come from EK; the labels mark the slots.
+export const HUB_BUILD_BLOCK: ContentBlock = {
+  type: 'why',
+  title: 'How our cabinets are built',
+  intro: 'The same build sits behind every door style. What changes is the door and the finish.',
+  reasons: [
+    {
+      icon: 'layers',
+      title: 'Plywood box',
+      detail:
+        'Not particleboard, so it holds screws and stands up to moisture. (Star, Prism and Euro Max.)',
+      imageLabel: 'Plywood box, cut away',
+    },
+    {
+      icon: 'volume-x',
+      title: 'Soft-close doors',
+      detail: 'Every door closes quietly on its own.',
+      imageLabel: 'Soft-close hinge',
+    },
+    {
+      icon: 'badge-check',
+      title: 'Tested to KCMA standards',
+      detail:
+        'Doors and drawers are opened and closed 25,000 times, and wall cabinets carry a 600 lb load. CARB2 compliant.',
+      span: 'tall',
+      imageLabel: 'KCMA test rig',
+    },
+    {
+      icon: 'blocks',
+      title: 'Dovetail drawers',
+      detail: 'Solid wood, joined like fine furniture.',
+      imageLabel: 'Dovetail joint, close up',
+    },
+    {
+      icon: 'move-horizontal',
+      title: 'Full-extension, soft-close drawers',
+      detail: 'Reach the back of every drawer, and it closes quietly, as standard.',
+      imageLabel: 'Drawer pulled fully out',
+    },
+    {
+      icon: 'archive',
+      title: 'Adjustable shelves',
+      detail: 'Thick plywood shelves you can move as your needs change.',
+      imageLabel: 'Shelf on its pins',
+    },
+    {
+      icon: 'bot',
+      title: 'Robotic manufacturing',
+      detail: 'Cut and finished by robots, so every cabinet fits the next.',
+      imageLabel: 'Robot cell in the factory',
+    },
+    {
+      icon: 'shield-check',
+      title: '1-year warranty',
+      detail: 'On every cabinet, against defects in materials and workmanship.',
+      imageLabel: 'Finished cabinet, front on',
+    },
+  ],
+};
+
+// "What will my kitchen cost?" — sets the 10×10 expectation before the collection cards.
+export const COST_BAND = {
+  title: 'What will my kitchen cost?',
+  description:
+    'Every collection shows a 10×10 price: cabinets only, for a standard L-shaped kitchen with two 10-foot walls. It’s the easiest way to compare collections. Your kitchen, with an island, a pantry, countertops or installation, will cost more.',
+  note: '[Most finished kitchens run $X–$Y.]',
+  imageLabel: 'A 10×10 kitchen drawing with the price beside it',
+};
 
 export const ACCESSORIES_BAND = {
-  title: 'Handles, tiles, fillers and organizers',
+  title: 'Handles, fillers and organizers',
   description:
-    'Matched to each collection. Handles are the deepest part of the catalog — knobs and pulls in every finish we make doors in.',
-  imageLabel: 'A pull, a knob, a backsplash tile',
+    'Knobs and pulls in every finish we make doors in, plus fillers, panels and organizers to finish the room.',
+  imageLabel: 'A pull, a knob, a filler strip',
   actions: [
     { label: 'Cabinet accessories', href: '/cabinet-hardware' },
     { label: 'Handles', href: '/cabinet-hardware/handles-knobs' },

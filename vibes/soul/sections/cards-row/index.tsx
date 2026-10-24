@@ -6,6 +6,8 @@ import { Image } from '~/components/image';
 
 export interface RowCard {
   title: string;
+  /** A small grey line under the title ("Framed · RTA or assembled"). */
+  meta?: string;
   description: string;
   ctaLabel?: string;
   href?: string;
@@ -128,6 +130,9 @@ export function CardsRow({
               <h3 className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
                 {card.title}
               </h3>
+              {card.meta != null && (
+                <p className="mt-1 text-xs font-medium text-contrast-400">{card.meta}</p>
+              )}
               <p className="mt-2.5 flex-1 text-sm leading-relaxed text-contrast-500">
                 {card.description}
               </p>

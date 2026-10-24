@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
+import { CabinetProgramContentSection } from '@/vibes/soul/sections/cabinet-program-content';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
@@ -11,13 +12,15 @@ import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import {
   ACCESSORIES_BAND,
   ASSEMBLED_LISTING_HREF,
-  BUILD_POINTS,
   COMPARISON_COLUMNS,
   COMPARISON_ROWS,
+  COST_BAND,
+  GLASS_BAND,
+  HUB_BUILD_BLOCK,
   HUB_HERO,
   HUB_PROGRAM_CARDS,
   INSTALLER_HREF,
-  LINE_ROWS,
+  LINE_CARDS,
   STYLE_ROWS,
 } from '~/lib/cabinets/cabinets-hub-content';
 import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
@@ -36,7 +39,7 @@ interface Props {
 export const metadata: Metadata = {
   title: 'Kitchen Cabinets',
   description:
-    'Find your style, pick a line, then choose assembled or ready to assemble — every cabinet built on the same all-plywood box in Connecticut.',
+    'Kitchen cabinets in shaker, modern and traditional styles. Framed or frameless, assembled or ready to assemble, from 50,000+ in stock. RTA ships in 2 weeks, assembled in 3.',
 };
 
 // The Cabinets hub: the education page between the home page and the two program listings. Not a
@@ -52,11 +55,11 @@ export default async function CabinetsHub({ params }: Props) {
   const lines = await getCabinetLines('assembled');
   const styleRows = STYLE_ROWS.map(({ collections, ...row }) => ({
     ...row,
-    tiles: collections.map((name) => {
+    tiles: collections.map(({ name, label }) => {
       const line = lines.find((candidate) => candidate.name === name);
       const image = line?.hoverImage ?? line?.image;
 
-      return { name, href: line?.href ?? ASSEMBLED_LISTING_HREF, image };
+      return { name: label, href: line?.href ?? ASSEMBLED_LISTING_HREF, image };
     }),
   }));
 
@@ -67,7 +70,7 @@ export default async function CabinetsHub({ params }: Props) {
           <StoryBand
             actions={[
               { label: 'Plan my kitchen', href: FREE_DESIGN_HREF, primary: true },
-              { label: 'Kitchen estimator', href: ESTIMATOR_HREF },
+              { label: 'Compare 10×10 prices', href: ESTIMATOR_HREF },
             ]}
             description={HUB_HERO.description}
             headingLevel={1}
@@ -86,7 +89,7 @@ export default async function CabinetsHub({ params }: Props) {
         fallback={
           <FeatureRows
             cta={{ label: 'View all collections', href: ASSEMBLED_LISTING_HREF }}
-            description="Most kitchens start with a door style, not a collection name. Pick the look; each one lists the collections that carry it."
+            description="Most kitchens start with a door, not a collection name. Pick the look you love; each one shows the collections that carry it."
             id="styles"
             rows={styleRows}
             tint
@@ -99,11 +102,27 @@ export default async function CabinetsHub({ params }: Props) {
 
       <Slot
         fallback={
-          <FeatureRows
-            description="Every collection belongs to one of four lines. The line sets the construction — framed or frameless, painted or finished; the collection sets the door and the color."
-            id="lines"
-            rows={LINE_ROWS}
-            title="Our cabinet lines"
+          <StoryBand
+            actions={GLASS_BAND.actions}
+            description={GLASS_BAND.description}
+            imageLabel={GLASS_BAND.imageLabel}
+            imagePosition="left"
+            note={GLASS_BAND.note}
+            title={GLASS_BAND.title}
+          />
+        }
+        label="Cabinets glass doors"
+        snapshotId="cabinets-glass-doors"
+      />
+
+      <Slot
+        fallback={
+          <CardsRow
+            cards={LINE_CARDS}
+            columns={4}
+            description="Every collection belongs to one of four lines, with 300+ cabinet sizes and types in each door style. The line decides how the cabinet is built; the collection decides the door and color."
+            hideImages
+            title="What’s behind the door"
           />
         }
         label="Cabinets lines"
@@ -129,13 +148,12 @@ export default async function CabinetsHub({ params }: Props) {
             columns={COMPARISON_COLUMNS}
             footnote={
               <>
-                Assembled means the cabinet box is built — not that it is fitted to your wall.
-                Hanging, levelling and connecting the plumbing is your installer&apos;s job either
-                way. <a href={INSTALLER_HREF}>Find an installer ↗</a>
+                Assembled means the cabinet is built, not installed. Your installer hangs, levels
+                and connects it. <a href={INSTALLER_HREF}>Find an installer →</a>
               </>
             }
             rows={COMPARISON_ROWS}
-            title="RTA or assembled — side by side"
+            title="RTA or assembled, side by side"
           />
         }
         label="Cabinets comparison table"
@@ -144,17 +162,27 @@ export default async function CabinetsHub({ params }: Props) {
 
       <Slot
         fallback={
-          <CardsRow
-            cards={BUILD_POINTS}
-            columns={4}
-            description="The construction is the same across all 30+ door styles — what changes is the door and the finish."
-            hideImages
-            tint
-            title="How every cabinet is built"
-          />
+          <CabinetProgramContentSection content={{ blocks: [HUB_BUILD_BLOCK] }} divider={false} />
         }
         label="Cabinets construction"
         snapshotId="cabinets-construction"
+      />
+
+      <Slot
+        fallback={
+          <StoryBand
+            actions={[
+              { label: 'Get a free quote', href: FREE_DESIGN_HREF, primary: true },
+              { label: 'Compare 10×10 prices', href: ESTIMATOR_HREF },
+            ]}
+            description={COST_BAND.description}
+            imageLabel={COST_BAND.imageLabel}
+            note={COST_BAND.note}
+            title={COST_BAND.title}
+          />
+        }
+        label="Cabinets kitchen cost"
+        snapshotId="cabinets-cost"
       />
 
       <Slot

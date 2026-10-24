@@ -32,6 +32,8 @@ import {
 import { type ReactNode } from 'react';
 
 import { ShieldHouse } from '@/vibes/soul/primitives/icons/shield-house';
+import { MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 const ICONS = {
@@ -111,6 +113,9 @@ export type ContentBlock =
         detail: string;
         /** Bento placement: a tall card spans two rows (for the longest copy). */
         span?: 'tall';
+        /** A photo at the top of the card; `imageLabel` alone shows a placeholder for it. */
+        image?: { src: string; alt: string };
+        imageLabel?: string;
       }>;
     }
   | {
@@ -406,6 +411,21 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
               )}
               key={reason.title}
             >
+              {(reason.image != null || reason.imageLabel != null) && (
+                <div className="relative -mx-2 -mt-2 aspect-[16/10] overflow-hidden rounded-xl bg-contrast-100">
+                  {reason.image ? (
+                    <Image
+                      alt={reason.image.alt}
+                      className="object-cover"
+                      fill
+                      sizes="(min-width: 56rem) 33vw, 100vw"
+                      src={reason.image.src}
+                    />
+                  ) : (
+                    <MediaPlaceholder label={reason.imageLabel ?? reason.title} />
+                  )}
+                </div>
+              )}
               <Icon
                 className="text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:text-white"
                 size={32}
@@ -547,30 +567,46 @@ function Block({ block }: { block: ContentBlock }) {
 export function CabinetProgramContentSection({
   content,
   id,
+  divider = true,
   className,
 }: {
   content: CabinetProgramContent;
   /** Anchor for the "How it's built" link in the hero. */
   id?: string;
+  /** The diamond rule above the first block (off when the blocks sit among other bands). */
+  divider?: boolean;
   className?: string;
 }) {
   return (
     <div className={clsx('scroll-mt-24 @container', className)} id={id}>
       {/* The break between the listing and the long-form content: a full-width row of outlined
           diamonds, drawn as a repeating SVG pattern so it tiles to any width. */}
-      <div aria-hidden className={clsx(CONTAINER, 'pt-6 @4xl:pt-8')}>
-        <svg
-          className="block h-4 w-full text-contrast-300 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
-          role="presentation"
-        >
-          <defs>
-            <pattern height="16" id="diamond-rule" patternUnits="userSpaceOnUse" width="16" x="50%">
-              <path d="M8 1 L15 8 L8 15 L1 8 Z" fill="none" stroke="currentColor" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect fill="url(#diamond-rule)" height="16" width="100%" />
-        </svg>
-      </div>
+      {divider && (
+        <div aria-hidden className={clsx(CONTAINER, 'pt-6 @4xl:pt-8')}>
+          <svg
+            className="block h-4 w-full text-contrast-300 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+            role="presentation"
+          >
+            <defs>
+              <pattern
+                height="16"
+                id="diamond-rule"
+                patternUnits="userSpaceOnUse"
+                width="16"
+                x="50%"
+              >
+                <path
+                  d="M8 1 L15 8 L8 15 L1 8 Z"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                />
+              </pattern>
+            </defs>
+            <rect fill="url(#diamond-rule)" height="16" width="100%" />
+          </svg>
+        </div>
+      )}
       {content.blocks.map((block) => (
         <Block block={block} key={block.title} />
       ))}
