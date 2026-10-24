@@ -29,8 +29,8 @@ interface Props {
   tint?: boolean;
   /** The blush plate offset behind the photo (off for a cleaner hero). */
   plate?: boolean;
-  /** 'short' trims the photo to about 70% of the usual height, 'medium' to about 88%. */
-  imageHeight?: 'full' | 'medium' | 'short';
+  /** 'short' trims the photo to about 70% of the usual height, 'wide' to 80%, 'medium' to 88%. */
+  imageHeight?: 'full' | 'medium' | 'wide' | 'short';
   /** 'soft' gives the photo a lighter hairline and smaller corners (photos on a white field);
    *  'none' drops the frame entirely (a cut-out on white). */
   imageFrame?: 'default' | 'soft' | 'none';
@@ -132,6 +132,7 @@ export function StoryBand({
             className={clsx('relative overflow-hidden', frameClassName(imageFrame, imageFit), {
               'aspect-[40/21]': imageHeight === 'short',
               'aspect-[3/2]': imageHeight === 'medium',
+              'aspect-[5/3]': imageHeight === 'wide',
               'aspect-[4/3]': imageHeight === 'full',
             })}
           >
