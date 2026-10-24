@@ -16,8 +16,8 @@ import {
   COMPARISON_ROWS,
   COST_BAND,
   GLASS_BAND,
-  HUB_BUILD_BLOCK,
   HUB_HERO,
+  HUB_WHY_BLOCK,
   INSTALLER_HREF,
   LINE_CARDS,
   LINE_SAMPLE_COLLECTIONS,
@@ -53,7 +53,9 @@ export default async function CabinetsHub({ params }: Props) {
 
   // Door tiles under each style come from the live collections where the names match.
   const lines = await getCabinetLines('assembled');
+
   type Line = (typeof lines)[number];
+
   const kitchenOf = (line?: Line) => (line?.image && !line.containCover ? line.image : undefined);
   // A named collection's kitchen; for per-finish lines, the named finish's kitchen.
   const kitchenFrom = (pick?: { name: string; finish?: string }) => {
@@ -108,6 +110,7 @@ export default async function CabinetsHub({ params }: Props) {
             description={HUB_HERO.description}
             headingLevel={1}
             image={HUB_HERO.image}
+            imageAlign="left"
             imageFit="contain"
             imageFrame="none"
             imageHeight="medium"
@@ -208,9 +211,9 @@ export default async function CabinetsHub({ params }: Props) {
 
       <Slot
         fallback={
-          <CabinetProgramContentSection content={{ blocks: [HUB_BUILD_BLOCK] }} divider={false} />
+          <CabinetProgramContentSection content={{ blocks: [HUB_WHY_BLOCK] }} divider={false} />
         }
-        label="Cabinets construction"
+        label="Cabinets why Express Kitchens"
         snapshotId="cabinets-construction"
       />
 

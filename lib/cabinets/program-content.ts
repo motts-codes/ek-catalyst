@@ -1,4 +1,7 @@
-import { type CabinetProgramContent } from '@/vibes/soul/sections/cabinet-program-content';
+import {
+  type CabinetProgramContent,
+  type ContentBlock,
+} from '@/vibes/soul/sections/cabinet-program-content';
 
 /**
  * The long-form content at the foot of the Assembled / RTA listings, as typed blocks (see the
@@ -84,6 +87,14 @@ const whyReasons = (program: 'assembled' | 'rta') => [
           'Every RTA cabinet is covered for one year on the cabinet box, against defects in materials and workmanship.',
       },
 ];
+
+/** The "Why buy assembled cabinets" bento; the Cabinets hub shows the same cards. */
+export const ASSEMBLED_WHY_BLOCK: Extract<ContentBlock, { type: 'why' }> = {
+  type: 'why',
+  title: 'Why buy assembled cabinets from Express Kitchens',
+  intro: WHY_INTRO,
+  reasons: whyReasons('assembled'),
+};
 
 // Collection links for the RTA copy (carrying the program so the collection opens on RTA).
 const rta = (slug: string) => `/cabinets/${slug}?program=rta`;
@@ -180,12 +191,7 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
           },
         ],
       },
-      {
-        type: 'why',
-        title: 'Why buy assembled cabinets from Express Kitchens',
-        intro: WHY_INTRO,
-        reasons: whyReasons('assembled'),
-      },
+      ASSEMBLED_WHY_BLOCK,
       {
         type: 'choose',
         title: 'How to choose the right assembled cabinets',

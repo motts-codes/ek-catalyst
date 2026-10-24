@@ -2,6 +2,7 @@ import { type ContentBlock } from '@/vibes/soul/sections/cabinet-program-content
 import { type RowCard } from '@/vibes/soul/sections/cards-row';
 import { type FeatureRow } from '@/vibes/soul/sections/feature-rows';
 import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
+import { ASSEMBLED_WHY_BLOCK } from '~/lib/cabinets/program-content';
 
 // Default content for the Cabinets hub (/cabinets) — the education page between the home page and
 // the two program listings. Every band is a Makeswift slot on the page; this is what renders until
@@ -223,66 +224,11 @@ export const COMPARISON_ROWS: string[][] = [
   ],
 ];
 
-// "How our cabinets are built" — a bento grid (the program pages' Why cards) with a photo slot on
-// each card; the KCMA card is the tall one. Photos to come from EK; the labels mark the slots.
-export const HUB_BUILD_BLOCK: ContentBlock = {
-  type: 'why',
-  kicker: 'Same build, every door',
-  title: 'How our cabinets are built',
-  intro: 'The same build sits behind every door style. What changes is the door and the finish.',
-  reasons: [
-    {
-      icon: 'layers',
-      title: 'Plywood box',
-      detail:
-        'Not particleboard, so it holds screws and stands up to moisture. (Star, Prism and Euro Max.)',
-      imageLabel: 'Plywood box, cut away',
-    },
-    {
-      icon: 'volume-x',
-      title: 'Soft-close doors',
-      detail: 'Every door closes quietly on its own.',
-      imageLabel: 'Soft-close hinge',
-    },
-    {
-      icon: 'badge-check',
-      title: 'Tested to KCMA standards',
-      detail:
-        'Doors and drawers are opened and closed 25,000 times, and wall cabinets carry a 600 lb load. CARB2 compliant.',
-      span: 'tall',
-      imageLabel: 'KCMA test rig',
-    },
-    {
-      icon: 'blocks',
-      title: 'Dovetail drawers',
-      detail: 'Solid wood, joined like fine furniture.',
-      imageLabel: 'Dovetail joint, close up',
-    },
-    {
-      icon: 'move-horizontal',
-      title: 'Full-extension, soft-close drawers',
-      detail: 'Reach the back of every drawer, and it closes quietly, as standard.',
-      imageLabel: 'Drawer pulled fully out',
-    },
-    {
-      icon: 'archive',
-      title: 'Adjustable shelves',
-      detail: 'Thick plywood shelves you can move as your needs change.',
-      imageLabel: 'Shelf on its pins',
-    },
-    {
-      icon: 'bot',
-      title: 'Robotic manufacturing',
-      detail: 'Cut and finished by robots, so every cabinet fits the next.',
-      imageLabel: 'Robot cell in the factory',
-    },
-    {
-      icon: 'shield-check',
-      title: '1-year warranty',
-      detail: 'On every cabinet, against defects in materials and workmanship.',
-      imageLabel: 'Finished cabinet, front on',
-    },
-  ],
+// "Why buy from Express Kitchens" — the assembled listing's bento, card for card, under a hub
+// eyebrow.
+export const HUB_WHY_BLOCK: ContentBlock = {
+  ...ASSEMBLED_WHY_BLOCK,
+  kicker: 'Why Express Kitchens',
 };
 
 // "What will my kitchen cost?" — sets the 10×10 expectation before the collection cards.
