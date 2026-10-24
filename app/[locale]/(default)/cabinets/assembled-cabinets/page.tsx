@@ -106,7 +106,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           { icon: 'plywood', label: 'All-Plywood Semi-Custom' },
           { icon: 'shield', label: 'CARB2 Compliant' },
         ]}
-        promisesAction={{ label: 'See how they’re built', href: '#about-assembled' }}
+        promisesAction={{ label: 'How it’s built', href: '#about-assembled' }}
         tall
         title="The kitchen you pictured, ready to install"
         tone="red"

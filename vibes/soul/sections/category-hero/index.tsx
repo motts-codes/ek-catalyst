@@ -133,31 +133,36 @@ export function CategoryHero({
               </p>
             )}
             {promises.length > 0 && (
-              // The promises in the panel: small white icon-and-label items on one line (two on
-              // phones), the link at the end.
-              <ul className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2.5 text-xs font-medium text-white/90">
-                {promises.map((point) => {
-                  const Icon = POINT_ICONS[point.icon];
+              // The promises in the panel as two stacked columns (3 + 2), with the link in a
+              // narrower third column at the right; the columns wrap under each other on phones.
+              <div className="mt-10 grid gap-x-8 gap-y-4 text-xs font-medium text-white/90 @md:grid-cols-[auto_auto_1fr] @md:items-start">
+                {[
+                  promises.slice(0, Math.ceil(promises.length / 2)),
+                  promises.slice(Math.ceil(promises.length / 2)),
+                ].map((column, index) => (
+                  <ul className="flex flex-col gap-2.5" key={index}>
+                    {column.map((point) => {
+                      const Icon = POINT_ICONS[point.icon];
 
-                  return (
-                    <li className="inline-flex items-center gap-1.5" key={point.label}>
-                      <Icon aria-hidden size={16} strokeWidth={1.75} />
-                      {point.label}
-                    </li>
-                  );
-                })}
+                      return (
+                        <li className="inline-flex items-center gap-2" key={point.label}>
+                          <Icon aria-hidden size={16} strokeWidth={1.75} />
+                          {point.label}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ))}
                 {promisesAction != null && (
-                  <li>
-                    <a
-                      className="inline-flex items-center gap-1 font-semibold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white"
-                      href={promisesAction.href}
-                    >
-                      {promisesAction.label}
-                      <ArrowDown size={14} strokeWidth={2.25} />
-                    </a>
-                  </li>
+                  <a
+                    className="inline-flex items-center gap-1 self-start font-semibold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white @md:justify-self-end"
+                    href={promisesAction.href}
+                  >
+                    {promisesAction.label}
+                    <ArrowDown size={14} strokeWidth={2.25} />
+                  </a>
                 )}
-              </ul>
+              </div>
             )}
             {actions.length > 0 && (
               <div className={clsx('flex flex-wrap gap-3', compact ? 'mt-4' : 'mt-6')}>
