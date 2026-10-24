@@ -36,6 +36,8 @@ export interface CabinetLine {
   orderSampleHref?: string;
   /** Product line name from the Cabinets master list, e.g. "Star", "Prism", "Euro Max". */
   productLine?: string;
+  /** Per-finish (Prism) collections: the finishes, for the swatch row under the name. */
+  finishSwatches?: Array<{ name: string; hex: string }>;
   /** What the listing's filter panel can narrow by (lib/cabinets/cabinet-lines-data). */
   facets?: {
     colors: string[];
@@ -172,6 +174,22 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             <LineName name={line.name} />
           </Link>
         </h2>
+        {line.finishSwatches != null && line.finishSwatches.length > 1 && (
+          // Prism: the finishes as a row of dots, so the choice is visible before the click.
+          <p className="mt-2 flex items-center gap-2 text-xs text-contrast-500">
+            <span aria-hidden className="flex items-center -space-x-1">
+              {line.finishSwatches.map((swatch) => (
+                <span
+                  className="inline-block size-3.5 rounded-full border border-white shadow-[0_0_0_1px_rgb(0_0_0/0.08)]"
+                  key={swatch.name}
+                  style={{ backgroundColor: swatch.hex || '#e5e5e5' }}
+                  title={swatch.name}
+                />
+              ))}
+            </span>
+            Choose from {line.finishSwatches.length} colors
+          </p>
+        )}
 
         {/* The facts strip, sized from the live landing page's price grid: current price, was-price,
             finance and lead time in one bordered row. Two of its colours failed WCAG on the pink

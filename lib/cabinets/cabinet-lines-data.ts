@@ -175,23 +175,30 @@ const getAttributeNames = cache(
     productLines: Map<string, string>;
     constructions: Map<string, string>;
     colors: Map<string, string>;
+    /** Colour id → hex (where the master list has one; Prism colours are measured from photos). */
+    colorHex: Map<string, string>;
   }> => {
     const { data } = await client.fetch({
       document: CabinetProductLinesQuery,
       variables: { entityId: CABINETS_CATEGORY_ID },
       fetchOptions: { next: { revalidate } },
     });
-    const list = (key: string) => {
+    const rows = (key: string) => {
       const raw = data.site.category?.attributes.edges?.find((e) => e.node.key === key)?.node.value;
-      const rows = parseJson<Array<{ id: string; name: string }>>(raw) ?? [];
 
-      return new Map(rows.map((row) => [row.id, row.name]));
+      return parseJson<Array<{ id: string; name: string; hex?: string }>>(raw) ?? [];
     };
+    const list = (key: string) => new Map(rows(key).map((row) => [row.id, row.name]));
 
     return {
       productLines: list('product_lines'),
       constructions: list('constructions'),
       colors: list('colors'),
+      colorHex: new Map(
+        rows('colors')
+          .filter((row) => row.hex)
+          .map((row) => [row.id, row.hex ?? '']),
+      ),
     };
   },
 );
@@ -454,9 +461,17 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
       const sampleRaw = cat?.sample.edges?.find((e) => e.node.key === 'order_sample')?.node.value;
       const sampleUrl = parseJson<{ url?: string }>(sampleRaw)?.url;
 
+      // Per-finish collections: the colours as swatches for the card ("Choose from 10 colors").
+      const finishSwatches = perFinish
+        ? colorIds
+            .map((id) => ({ name: names.colors.get(id) ?? '', hex: names.colorHex.get(id) ?? '' }))
+            .filter((c) => c.name !== '')
+        : undefined;
+
       return {
         productLine,
         facets,
+        finishSwatches,
         entityId: child.entityId,
         name: child.name,
         href,
