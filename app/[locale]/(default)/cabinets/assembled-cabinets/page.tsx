@@ -75,7 +75,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
         }}
         imageOverlay={
-          // A frosted-glass chip, bottom-left of the photo, to the guide page (a read, not a video).
+          // A frosted-glass chip, top-right of the photo, to the guide page; it grows leftwards on hover.
           <Link
             aria-label="Assembled explained"
             className="group inline-flex items-center gap-2 rounded-full bg-black/25 py-1.5 pl-3 pr-3.5 text-xs text-white shadow-sm ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-black/40"
@@ -95,7 +95,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
             <ArrowRight size={14} strokeWidth={2.25} />
           </Link>
         }
-        imageOverlayPosition="bottom-left"
+        imageOverlayPosition="top-right"
         title="The kitchen you pictured, ready to install"
         tone="red"
       />
