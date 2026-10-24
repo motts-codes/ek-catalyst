@@ -82,15 +82,15 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
           detail: 'Robots cut and finish every part for a precise, consistent fit.',
         },
         {
+          icon: 'check-check',
+          lead: 'Same quality on every order.',
+          detail: 'One cabinet or a full kitchen, it’s built to the same standard.',
+        },
+        {
           icon: 'badge-check',
           lead: 'KCMA tested.',
           detail:
             'Every cabinet is tested to Kitchen Cabinet Manufacturers Association (KCMA) standards before it ships.',
-        },
-        {
-          icon: 'check-check',
-          lead: 'Same quality on every order.',
-          detail: 'One cabinet or a full kitchen, it’s built to the same standard.',
         },
       ],
     },
