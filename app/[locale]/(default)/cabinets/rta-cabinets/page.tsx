@@ -7,7 +7,7 @@ import { CabinetFilterPanel } from '@/vibes/soul/sections/cabinet-filter-panel';
 import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { ListingFiltersProvider } from '@/vibes/soul/sections/cabinet-lines/filters-visibility';
-import { CategoryHero, CategoryPoints } from '@/vibes/soul/sections/category-hero';
+import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
 import { CABINET_LINE_COPY } from '~/lib/cabinets/cabinet-line-copy';
@@ -93,19 +93,16 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
           </Link>
         }
         imageOverlayPosition="top-right"
-        tall
-        title="Your dream kitchen, for less"
-        tone="red"
-      />
-      {/* The row of program promises under the hero, as on the category pages. */}
-      <CategoryPoints
-        points={[
+        promises={[
           { icon: 'price', label: 'Save Money' },
           { icon: 'wrench', label: 'Easy to Assemble' },
           { icon: 'plywood', label: 'All-Plywood' },
           { icon: 'shield', label: 'CARB2 Compliant' },
           { icon: 'hammer', label: 'DIY Friendly' },
         ]}
+        tall
+        title="Your dream kitchen, for less"
+        tone="red"
       />
       <ListingFiltersProvider open={showPanel}>
         <CabinetLineFilter

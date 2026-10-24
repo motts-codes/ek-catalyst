@@ -8,7 +8,7 @@ import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { ListingFiltersProvider } from '@/vibes/soul/sections/cabinet-lines/filters-visibility';
 import { CabinetProgramContentSection } from '@/vibes/soul/sections/cabinet-program-content';
-import { CategoryHero, CategoryPoints } from '@/vibes/soul/sections/category-hero';
+import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
 import { CABINET_LINE_COPY } from '~/lib/cabinets/cabinet-line-copy';
@@ -99,20 +99,17 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           </Link>
         }
         imageOverlayPosition="top-right"
-        tall
-        title="The kitchen you pictured, ready to install"
-        tone="red"
-      />
-      {/* The row of program promises under the hero, as on the category pages. */}
-      <CategoryPoints
-        action={{ label: 'See how they’re built', href: '#about-assembled' }}
-        points={[
+        promises={[
           { icon: 'clock', label: 'Save Time' },
           { icon: 'price', label: 'Save Money' },
           { icon: 'thumbs', label: 'Hassle-Free' },
           { icon: 'plywood', label: 'All-Plywood Semi-Custom' },
           { icon: 'shield', label: 'CARB2 Compliant' },
         ]}
+        promisesAction={{ label: 'See how they’re built', href: '#about-assembled' }}
+        tall
+        title="The kitchen you pictured, ready to install"
+        tone="red"
       />
       <ListingFiltersProvider open={showPanel}>
         <CabinetLineFilter

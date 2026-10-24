@@ -49,8 +49,31 @@ interface HeroProps {
   imageOverlayPosition?: 'top-right' | 'bottom-left';
   /** A taller panel (the Assembled / RTA listings): more vertical padding, a taller photo. */
   tall?: boolean;
+  /** Promises shown inside the panel under the description (instead of the CategoryPoints row). */
+  promises?: Array<{ icon: keyof typeof POINT_ICONS; label: string }>;
+  /** A link at the end of the promises row (e.g. "See how they're built"). */
+  promisesAction?: { label: string; href: string };
   className?: string;
 }
+
+const POINT_ICONS = {
+  truck: Truck,
+  returns: Undo2,
+  stock: PackageCheck,
+  clock: Clock,
+  pickup: MapPin,
+  price: BadgeDollarSign,
+  gift: Gift,
+  tag: Tag,
+  phone: Phone,
+  zap: Zap,
+  // Cabinet program promises.
+  thumbs: ThumbsUp,
+  plywood: Layers,
+  shield: ShieldCheck,
+  wrench: Wrench,
+  hammer: Hammer,
+};
 
 // Category page header, 50 / 50: the headline and one paragraph on a black panel, the category
 // photo beside it. Same rounded panel as the home hero. Stacks on narrow screens (text first).
@@ -68,6 +91,8 @@ export function CategoryHero({
   imageOverlay,
   imageOverlayPosition = 'top-right',
   tall = false,
+  promises = [],
+  promisesAction,
   className,
 }: HeroProps) {
   return (
@@ -106,6 +131,33 @@ export function CategoryHero({
               <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-white @xl:text-base">
                 {description}
               </p>
+            )}
+            {promises.length > 0 && (
+              // The promises in the panel: small white icon-and-label items on one line (two on
+              // phones), the link at the end.
+              <ul className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2.5 text-xs font-medium text-white/90">
+                {promises.map((point) => {
+                  const Icon = POINT_ICONS[point.icon];
+
+                  return (
+                    <li className="inline-flex items-center gap-1.5" key={point.label}>
+                      <Icon aria-hidden size={16} strokeWidth={1.75} />
+                      {point.label}
+                    </li>
+                  );
+                })}
+                {promisesAction != null && (
+                  <li>
+                    <a
+                      className="inline-flex items-center gap-1 font-semibold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white"
+                      href={promisesAction.href}
+                    >
+                      {promisesAction.label}
+                      <ArrowDown size={14} strokeWidth={2.25} />
+                    </a>
+                  </li>
+                )}
+              </ul>
             )}
             {actions.length > 0 && (
               <div className={clsx('flex flex-wrap gap-3', compact ? 'mt-4' : 'mt-6')}>
@@ -164,25 +216,6 @@ export function CategoryHero({
     </section>
   );
 }
-
-const POINT_ICONS = {
-  truck: Truck,
-  returns: Undo2,
-  stock: PackageCheck,
-  clock: Clock,
-  pickup: MapPin,
-  price: BadgeDollarSign,
-  gift: Gift,
-  tag: Tag,
-  phone: Phone,
-  zap: Zap,
-  // Cabinet program promises.
-  thumbs: ThumbsUp,
-  plywood: Layers,
-  shield: ShieldCheck,
-  wrench: Wrench,
-  hammer: Hammer,
-};
 
 interface PointsProps {
   points: Array<{ icon: keyof typeof POINT_ICONS; label: string }>;
