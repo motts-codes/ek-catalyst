@@ -151,7 +151,7 @@ export default async function CabinetsHub({ params }: Props) {
             cards={lineCards}
             columns={4}
             description="Every collection belongs to one of four lines, with 300+ cabinet sizes and types in each door style. The line decides how the cabinet is built; the collection decides the door and color."
-            imageStyle="bleed"
+            imageStyle="plain"
             title="What’s behind the door"
           />
         }
