@@ -114,6 +114,7 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
         {
           icon: 'truck',
           title: 'Ships across 45 states',
+          span: 'tall',
           detail:
             'Whether you’re in Delaware, Maryland, Virginia, Florida, Pennsylvania, North Carolina, South Carolina or Georgia, or any of the 45 states we serve, order online and we’ll ship your assembled cabinets to your door. In-stock styles ship within 1–3 business days and usually arrive in 1–2 weeks. Help is available by phone or video call wherever you are.',
         },

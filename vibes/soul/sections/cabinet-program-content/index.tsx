@@ -73,7 +73,14 @@ export interface CabinetProgramContent {
   why: {
     title: string;
     intro: string;
-    reasons: Array<{ icon: ContentIcon; title: string; note?: string; detail: string }>;
+    reasons: Array<{
+      icon: ContentIcon;
+      title: string;
+      note?: string;
+      detail: string;
+      /** Bento placement: a tall card spans two rows (for the longest copy). */
+      span?: 'tall';
+    }>;
   };
   choose: {
     title: string;
@@ -194,24 +201,39 @@ export function CabinetProgramContentSection({
       <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
         <h2 className={H2}>{why.title}</h2>
         <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{why.intro}</p>
-        <ul className="mt-6 grid items-start gap-4 @xl:grid-cols-2 @4xl:grid-cols-4">
-          {why.reasons.map((reason) => (
-            <li
-              className="flex flex-col gap-3 rounded-2xl border border-contrast-100 bg-white p-5"
-              key={reason.title}
-            >
-              <IconBadge icon={reason.icon} />
-              <h3 className="font-[family-name:var(--font-family-heading)] text-base font-semibold leading-snug">
-                {reason.title}
-                {reason.note != null && (
-                  <span className="mt-0.5 block text-xs font-normal text-contrast-400">
-                    {reason.note}
-                  </span>
+        {/* Bento grid: three columns, the tall card spanning two rows so eight cards fill nine
+            cells. Hover turns a card brand red with white text and icon. */}
+        <ul className="mt-6 grid grid-flow-dense gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">
+          {why.reasons.map((reason) => {
+            const Icon = ICONS[reason.icon];
+
+            return (
+              <li
+                className={clsx(
+                  'group flex flex-col gap-4 rounded-2xl border border-contrast-100 bg-white p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
+                  reason.span === 'tall' && '@xl:row-span-2',
                 )}
-              </h3>
-              <p className="text-sm leading-relaxed text-contrast-500">{reason.detail}</p>
-            </li>
-          ))}
+                key={reason.title}
+              >
+                <Icon
+                  className="text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:text-white"
+                  size={32}
+                  strokeWidth={1.5}
+                />
+                <h3 className="font-[family-name:var(--font-family-heading)] text-lg font-semibold leading-snug">
+                  {reason.title}
+                  {reason.note != null && (
+                    <span className="mt-0.5 block text-xs font-normal text-contrast-400 transition-colors duration-300 group-hover:text-white/80">
+                      {reason.note}
+                    </span>
+                  )}
+                </h3>
+                <p className="text-sm leading-relaxed text-contrast-500 transition-colors duration-300 group-hover:text-white/90">
+                  {reason.detail}
+                </p>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
