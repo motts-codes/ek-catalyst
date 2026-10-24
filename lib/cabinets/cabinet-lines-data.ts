@@ -316,6 +316,44 @@ function pickCardImages(
   return { cover: doorSample, hover: undefined, containCover: true };
 }
 
+interface FinishPhotos {
+  door_image?: string;
+  kitchen_image?: string;
+  images?: string[];
+}
+
+// The card's door / kitchen photos. Named photos (media.door_image / media.kitchen_image) win;
+// older seeds fall back to the gallery convention (first = door sample, last = kitchen). On a
+// per-finish (Prism) collection the default finish's photos come first (the colour the collection
+// page opens on), else the first finish that has any.
+function collectionCardPhotos({
+  mediaValue,
+  gallery,
+  byFinish,
+  defaultColor,
+}: {
+  mediaValue: (key: string) => string | undefined;
+  gallery: string[];
+  byFinish: Record<string, FinishPhotos>;
+  defaultColor?: string;
+}): { door?: string; kitchen?: string } {
+  const finishEntry =
+    (defaultColor ? byFinish[defaultColor] : undefined) ??
+    Object.values(byFinish).find((f) => f.kitchen_image || f.door_image);
+  const hasNamedSlots = Boolean(mediaValue('door_image') || mediaValue('kitchen_image'));
+  const legacyKitchen = !hasNamedSlots && gallery.length > 1 ? gallery.at(-1) : undefined;
+
+  return {
+    door:
+      finishEntry?.door_image || finishEntry?.images?.[0] || mediaValue('door_image') || gallery[0],
+    kitchen:
+      finishEntry?.kitchen_image ||
+      finishEntry?.images?.[1] ||
+      mediaValue('kitchen_image') ||
+      legacyKitchen,
+  };
+}
+
 /**
  * Fetch the cabinet lines (child categories of Cabinets) with the pricing/delivery/sample data for
  * the given program (Assembled or RTA), shaped for the CabinetLines section. Card imagery is
@@ -357,26 +395,6 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
       // the same program (Assembled / RTA) the visitor came from.
       const href = `${child.path}?program=${program}`;
 
-      // media.images = [door-sample, …, kitchen]. Cover + hover are chosen by audience.
-      const mediaValue = (key: string) =>
-        cat?.media?.edges?.find((e) => e.node.key === key)?.node.value;
-      const gallery = (parseJson<string[]>(mediaValue('images')) ?? []).filter(
-        (u): u is string => typeof u === 'string' && u !== '',
-      );
-      // Named photos (media.door_image / media.kitchen_image) win; older seeds fall back to the
-      // gallery convention (first = door sample, last = kitchen).
-      const hasNamedSlots = Boolean(mediaValue('door_image') || mediaValue('kitchen_image'));
-      const named = {
-        door: mediaValue('door_image') || gallery[0],
-        kitchen:
-          mediaValue('kitchen_image') ||
-          (!hasNamedSlots && gallery.length > 1 ? gallery.at(-1) : undefined),
-      };
-      const { cover, hover, containCover } = pickCardImages(named, audience);
-      const mainSrc = cover ?? child.image?.url; // fall back to native BC category image
-      const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
-      const hoverImage = hover ? { src: hover, alt: `${child.name} door sample` } : undefined;
-
       // spec.info.product_line_id -> master-list name ("Star", "Prism", …) for the line filter.
       const specRaw = cat?.spec.edges?.find((e) => e.node.key === 'info')?.node.value;
       const spec = parseJson<{
@@ -386,13 +404,33 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
         default_color_id?: string;
       }>(specRaw);
       const productLine = spec?.product_line_id ? lineNames.get(spec.product_line_id) : undefined;
-
-      // Filter-panel facets: colours (see CabinetLineFacets), construction, style, finish types.
       const value = (ns: 'merch' | 'finishes' | 'content', key: string) =>
         cat?.[ns].edges?.find((e) => e.node.key === key)?.node.value;
-      const perFinish =
-        Object.keys(parseJson<Record<string, unknown>>(value('finishes', 'by_finish')) ?? {})
-          .length > 0;
+      // Per-finish (Prism) collections keep their photos per finish.
+      const byFinish =
+        parseJson<
+          Record<string, { door_image?: string; kitchen_image?: string; images?: string[] }>
+        >(value('finishes', 'by_finish')) ?? {};
+      const perFinish = Object.keys(byFinish).length > 0;
+
+      // media.images = [door-sample, …, kitchen]. Cover + hover are chosen by audience.
+      const mediaValue = (key: string) =>
+        cat?.media?.edges?.find((e) => e.node.key === key)?.node.value;
+      const gallery = (parseJson<string[]>(mediaValue('images')) ?? []).filter(
+        (u): u is string => typeof u === 'string' && u !== '',
+      );
+      const named = collectionCardPhotos({
+        mediaValue,
+        gallery,
+        byFinish,
+        defaultColor: spec?.default_color_id ? names.colors.get(spec.default_color_id) : undefined,
+      });
+      const { cover, hover, containCover } = pickCardImages(named, audience);
+      const mainSrc = cover ?? child.image?.url; // fall back to native BC category image
+      const image = mainSrc ? { src: mainSrc, alt: child.name } : undefined;
+      const hoverImage = hover ? { src: hover, alt: `${child.name} door sample` } : undefined;
+
+      // Filter-panel facets: colours (see CabinetLineFacets), construction, style, finish types.
       const colorIds = spec?.color_ids ?? [];
       const colorPick = perFinish || colorIds.length === 1 ? colorIds : [];
       const specHtml =
