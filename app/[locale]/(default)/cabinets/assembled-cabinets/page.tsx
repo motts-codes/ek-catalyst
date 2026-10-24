@@ -7,6 +7,7 @@ import { CabinetFilterPanel } from '@/vibes/soul/sections/cabinet-filter-panel';
 import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { ListingFiltersProvider } from '@/vibes/soul/sections/cabinet-lines/filters-visibility';
+import { CabinetProgramContentSection } from '@/vibes/soul/sections/cabinet-program-content';
 import { CategoryHero, CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
@@ -26,6 +27,7 @@ import {
   panelToggleHref,
   parseLineFilters,
 } from '~/lib/cabinets/cabinet-lines-filter';
+import { CABINET_PROGRAM_CONTENT } from '~/lib/cabinets/program-content';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -130,6 +132,10 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           program="assembled"
         />
       </ListingFiltersProvider>
+      {/* The long-form content (styles, build quality, why Express Kitchens, how to choose). */}
+      {CABINET_PROGRAM_CONTENT.assembled != null && (
+        <CabinetProgramContentSection content={CABINET_PROGRAM_CONTENT.assembled} />
+      )}
       <CabinetFaq data={faq} />
     </>
   );
