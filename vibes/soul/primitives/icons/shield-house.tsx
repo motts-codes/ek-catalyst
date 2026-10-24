@@ -1,9 +1,8 @@
 import { type SVGProps } from 'react';
 
-// A Lucide-style "shield with a house" mark for CARB2 compliance (safe-for-the-home emissions).
-// The installed Lucide set has no shield-house icon, so this composes Lucide's shield outline
-// with a small house glyph at the same 24-unit grid, stroke and caps, so it sits beside the real
-// icons without looking different.
+// Lucide's official "shield-house" icon (path data from lucide-static 1.61), used for CARB2
+// compliance. The lucide-react version installed here predates it, so it is inlined rather than
+// imported; swap for the package export once lucide-react is upgraded.
 export function ShieldHouse({
   size = 24,
   strokeWidth = 2,
@@ -22,9 +21,9 @@ export function ShieldHouse({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-      <path d="M8.5 12.5 12 9.5l3.5 3" />
-      <path d="M9.5 11.7V16h5v-4.3" />
+      <path d="M15 22a1 1 0 0 1-1-1v-4a1 1 0 0 1 .445-.832l3-2a1 1 0 0 1 1.11 0l3 2A1 1 0 0 1 22 17v4a1 1 0 0 1-1 1z" />
+      <path d="M18 22v-3" />
+      <path d="M20 10.418V6a1 1 0 0 0-1-1c-2 0-4.49-1.19-6.24-2.72a1.17 1.17 0 0 0-1.52 0C9.5 3.8 7 5 5 5a1 1 0 0 0-1 1v7c0 4.602 2.67 7.1 6.037 8.603" />
     </svg>
   );
 }
