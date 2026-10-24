@@ -114,6 +114,11 @@ export const GLASS_BAND = {
   description:
     'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles. Frosted glass comes in [all five collections]; clear glass with a finished interior comes in Rochelle, Derry and Barcelona.',
   note: 'Sizes: 15", 18", 24", 27", 30" and 36" wide, in 30", 36" or 42" heights.',
+  // An Avon frosted-glass wall cabinet from the catalog, until marketing supplies a room shot.
+  image: {
+    src: 'https://cdn11.bigcommerce.com/s-4smdoosoqx/products/15437/images/41254/t_900_GDFW1542__31913__36615__24544__89217.1774356819__22907.1790167226.386.513.jpg?c=1',
+    alt: 'Avon frosted glass door wall cabinet',
+  },
   imageLabel: 'A glass-front wall cabinet in a run of shaker doors',
   actions: [{ label: 'See glass-door cabinets', href: GLASS_DOORS_HREF }],
 };
@@ -268,6 +273,8 @@ export const COST_BAND = {
   description:
     'Every collection shows a 10×10 price: cabinets only, for a standard L-shaped kitchen with two 10-foot walls. It’s the easiest way to compare collections. Your kitchen, with an island, a pantry, countertops or installation, will cost more.',
   note: '[Most finished kitchens run $X–$Y.]',
+  // The 10×10 drawing the collection price cards use.
+  image: { src: '/images/cabinets/10x10-kitchen.svg', alt: 'A 10×10 L-shaped kitchen plan' },
   imageLabel: 'A 10×10 kitchen drawing with the price beside it',
 };
 

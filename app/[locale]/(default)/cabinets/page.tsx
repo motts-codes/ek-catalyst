@@ -53,15 +53,25 @@ export default async function CabinetsHub({ params }: Props) {
 
   // Door tiles under each style come from the live collections where the names match.
   const lines = await getCabinetLines('assembled');
-  const styleRows = STYLE_ROWS.map(({ collections, ...row }) => ({
-    ...row,
-    tiles: collections.map(({ name, label }) => {
-      const line = lines.find((candidate) => candidate.name === name);
-      const image = line?.hoverImage ?? line?.image;
+  // Each style's big photo is the kitchen of the first collection that has one, until marketing
+  // supplies a dedicated shot.
+  const styleRows = STYLE_ROWS.map(({ collections, ...row }) => {
+    const matched = collections.map(({ name, label }) => ({
+      label,
+      line: lines.find((candidate) => candidate.name === name),
+    }));
+    const kitchen = matched.find(({ line }) => line?.image && !line.containCover)?.line?.image;
 
-      return { name: label, href: line?.href ?? ASSEMBLED_LISTING_HREF, image };
-    }),
-  }));
+    return {
+      ...row,
+      image: kitchen,
+      tiles: matched.map(({ label, line }) => ({
+        name: label,
+        href: line?.href ?? ASSEMBLED_LISTING_HREF,
+        image: line?.hoverImage ?? line?.image,
+      })),
+    };
+  });
 
   return (
     <>
@@ -105,6 +115,7 @@ export default async function CabinetsHub({ params }: Props) {
           <StoryBand
             actions={GLASS_BAND.actions}
             description={GLASS_BAND.description}
+            image={GLASS_BAND.image}
             imageLabel={GLASS_BAND.imageLabel}
             imagePosition="left"
             note={GLASS_BAND.note}
@@ -176,6 +187,7 @@ export default async function CabinetsHub({ params }: Props) {
               { label: 'Compare 10×10 prices', href: ESTIMATOR_HREF },
             ]}
             description={COST_BAND.description}
+            image={COST_BAND.image}
             imageLabel={COST_BAND.imageLabel}
             note={COST_BAND.note}
             title={COST_BAND.title}

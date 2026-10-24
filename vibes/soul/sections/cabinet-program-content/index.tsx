@@ -412,7 +412,15 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
               key={reason.title}
             >
               {(reason.image != null || reason.imageLabel != null) && (
-                <div className="relative -mx-2 -mt-2 aspect-[16/10] overflow-hidden rounded-xl bg-contrast-100">
+                // The tall card's photo grows to fill the extra row.
+                <div
+                  className={clsx(
+                    'relative -mx-2 -mt-2 overflow-hidden rounded-xl bg-contrast-100',
+                    reason.span === 'tall'
+                      ? 'aspect-[16/10] @xl:aspect-auto @xl:min-h-[16rem] @xl:flex-1'
+                      : 'aspect-[16/10]',
+                  )}
+                >
                   {reason.image ? (
                     <Image
                       alt={reason.image.alt}
