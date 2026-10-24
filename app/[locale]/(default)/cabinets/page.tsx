@@ -241,9 +241,11 @@ export default async function CabinetsHub({ params }: Props) {
         fallback={
           <StoryBand
             actions={ACCESSORIES_BAND.actions}
+            copyOffset="down"
             description={ACCESSORIES_BAND.description}
             image={ACCESSORIES_BAND.image}
             imageLabel={ACCESSORIES_BAND.imageLabel}
+            imagePosition="left"
             kicker={ACCESSORIES_BAND.kicker}
             plate={false}
             title={ACCESSORIES_BAND.title}

@@ -40,6 +40,8 @@ interface Props {
   imageAlign?: 'center' | 'left';
   /** 'even' splits copy and photo 50/50 on desktop instead of favouring the copy. */
   split?: 'default' | 'even';
+  /** 'down' nudges the copy 50px down on desktop so it sits a little below the photo's top. */
+  copyOffset?: 'none' | 'down';
   /**
    * 'red' is the boxed version: a brand-red rounded box inside the page margins, white copy on
    * the left 60%, the photo covering the right 40% top to bottom.
@@ -67,6 +69,7 @@ export function StoryBand({
   imageFit = 'cover',
   imageAlign = 'center',
   split = 'default',
+  copyOffset = 'none',
   tone = 'default',
   className,
 }: Props) {
@@ -105,7 +108,13 @@ export function StoryBand({
           split === 'even' ? '@3xl:grid-cols-2' : '@3xl:grid-cols-[1.25fr_1fr]',
         )}
       >
-        <div className={clsx('@3xl:py-6', imagePosition === 'left' && '@3xl:order-2')}>
+        <div
+          className={clsx(
+            '@3xl:py-6',
+            imagePosition === 'left' && '@3xl:order-2',
+            copyOffset === 'down' && '@3xl:translate-y-[50px]',
+          )}
+        >
           <Copy {...copy} />
         </div>
         <div className={clsx('relative', imagePosition === 'left' && '@3xl:order-1')}>
