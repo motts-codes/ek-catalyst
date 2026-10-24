@@ -26,7 +26,8 @@ interface Props {
   cta?: { label: string; href: string };
   /** Small print under the table (may include a link). */
   footnote?: ReactNode;
-  /** A compact table: the feature column fits its longest label and the whole table is capped. */
+  /** A compact table, left-aligned under the heading: the feature column fits its longest label and
+   *  the whole table is capped. */
   narrow?: boolean;
   tint?: boolean;
   className?: string;
@@ -60,8 +61,8 @@ export function DeliveryLadder({
           hairlines between rows and between every column. The first column is the feature. */}
       <div
         className={clsx(
-          'overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white @3xl:mx-auto',
-          narrow ? 'max-w-4xl' : '@3xl:w-5/6',
+          'overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white',
+          narrow ? 'max-w-4xl' : '@3xl:mx-auto @3xl:w-5/6',
         )}
       >
         <table className="w-full min-w-[40rem] border-separate border-spacing-0 text-left text-sm">
