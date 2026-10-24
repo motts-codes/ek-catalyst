@@ -81,7 +81,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
             href="/mykitchen/cabinets/assembled"
           >
             <BookOpen size={15} strokeWidth={2} />
-            New to assembled? <span className="font-semibold">Read the guide</span>
+            <span className="font-semibold">Assembled explained</span>
             <ArrowRight size={14} strokeWidth={2.25} />
           </Link>
         }

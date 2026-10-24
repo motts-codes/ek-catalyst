@@ -75,7 +75,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
             href="/mykitchen/cabinets/rta"
           >
             <BookOpen size={15} strokeWidth={2} />
-            New to RTA? <span className="font-semibold">Read the guide</span>
+            <span className="font-semibold">RTA explained</span>
             <ArrowRight size={14} strokeWidth={2.25} />
           </Link>
         }
