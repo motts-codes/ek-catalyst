@@ -18,7 +18,6 @@ import {
   GLASS_BAND,
   HUB_HERO,
   HUB_WHY_BLOCK,
-  INSTALLER_HREF,
   LINE_CARDS,
   LINE_SAMPLE_COLLECTIONS,
   STYLE_ROWS,
@@ -191,12 +190,6 @@ export default async function CabinetsHub({ params }: Props) {
         fallback={
           <DeliveryLadder
             columns={COMPARISON_COLUMNS}
-            footnote={
-              <>
-                Assembled means the cabinet is built, not installed. Your installer hangs, levels
-                and connects it. <a href={INSTALLER_HREF}>Find an installer →</a>
-              </>
-            }
             kicker="The decision, in one table"
             look="minimal"
             narrow
