@@ -87,7 +87,7 @@ export function FeatureRows({
 // the other with room around it, the door tiles as a slider.
 function FeatureCard({ row, flip }: { row: FeatureRow; flip: boolean }) {
   return (
-    <article className="grid items-center overflow-hidden rounded-3xl border border-[#fcb6bb] bg-white shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] @3xl:h-[560px] @3xl:grid-cols-2">
+    <article className="grid items-center overflow-hidden rounded-3xl bg-white shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] @3xl:h-[560px] @3xl:grid-cols-2">
       <div
         className={clsx(
           'relative aspect-[4/3] bg-contrast-100 @3xl:aspect-auto @3xl:h-full',
@@ -107,7 +107,16 @@ function FeatureCard({ row, flip }: { row: FeatureRow; flip: boolean }) {
           <MediaPlaceholder label={row.imageLabel ?? row.title} />
         )}
       </div>
-      <div className={clsx('px-7 py-9 @xl:px-10 @3xl:py-12 @4xl:px-14', flip && '@3xl:order-1')}>
+      {/* The thin red outline sits on the copy half only, open on the side that meets the photo
+          (its top on phones, where the photo is above). */}
+      <div
+        className={clsx(
+          'flex flex-col justify-center rounded-b-3xl border border-t-0 border-[#fcb6bb] px-7 py-9 @xl:px-10 @3xl:h-full @3xl:rounded-b-none @3xl:border-t @3xl:py-12 @4xl:px-14',
+          flip
+            ? '@3xl:order-1 @3xl:rounded-l-3xl @3xl:border-r-0'
+            : '@3xl:rounded-r-3xl @3xl:border-l-0',
+        )}
+      >
         {Boolean(row.kicker) && (
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
             {row.kicker}
