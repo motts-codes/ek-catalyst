@@ -347,13 +347,15 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
       <h2 className={H2}>{block.title}</h2>
       <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>
       <ul className="mt-6 grid grid-flow-dense gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">
-        {block.reasons.map((reason) => {
+        {block.reasons.map((reason, index) => {
           const Icon = ICONS[reason.icon];
 
           return (
+            // Every other card sits on the light pink so the grid reads as a pattern.
             <li
               className={clsx(
-                'group flex flex-col gap-4 rounded-2xl border border-contrast-100 bg-white p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
+                'group flex flex-col gap-4 rounded-2xl border border-contrast-100 p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
+                index % 2 === 1 ? 'bg-[#fdf3f5]' : 'bg-white',
                 reason.span === 'tall' && '@xl:row-span-2',
               )}
               key={reason.title}
