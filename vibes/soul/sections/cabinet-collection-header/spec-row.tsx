@@ -91,21 +91,29 @@ export function AccordionRow({
 
 // Specifications (the staff-authored HTML; its own leading "Specifications" heading is hidden)
 // with the spec-sheet download pinned right. With no copy, just the link; with neither, nothing.
-// "How it's built" — the specifications in the customer's words: a short bold lead and the
-// plain-English why, one bullet per part of the cabinet. Sits above Specifications.
+// "How it's built" — the specifications in the customer's words, laid out like the Specifications
+// table: the short lead (minus its full stop) on the left, the plain-English why on the right.
 export function HowBuiltRow({ points = [] }: { points?: BuildPoint[] }) {
   if (points.length === 0) return null;
 
   return (
     <AccordionRow title="How it's built">
-      <ul className={clsx(COMPACT_COPY_CLASS, 'list-disc space-y-1.5 pl-5')}>
-        {points.map((point) => (
-          <li key={point.lead}>
-            <span className="font-semibold text-foreground">{point.lead}</span>
-            {point.detail !== '' && <> {point.detail}</>}
-          </li>
-        ))}
-      </ul>
+      {/* The same two-column table as Specifications: the lead on the left, the why on the right. */}
+      <table className={clsx(COMPACT_COPY_CLASS, 'w-full border-collapse')}>
+        <tbody className="divide-y divide-contrast-100">
+          {points.map((point) => (
+            <tr className="align-top" key={point.lead}>
+              <th
+                className="w-[38%] py-1.5 pr-4 text-left font-medium text-contrast-500 @md:w-[30%]"
+                scope="row"
+              >
+                {point.lead.replace(/[.!]$/, '')}
+              </th>
+              <td className="py-1.5 text-foreground">{point.detail}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </AccordionRow>
   );
 }
