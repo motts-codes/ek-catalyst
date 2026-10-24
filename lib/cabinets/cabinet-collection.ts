@@ -338,6 +338,8 @@ interface CabinetAttributeLists {
   productLines: AttrOption[];
   constructions: AttrOption[];
   colors: ColorOption[];
+  /** The collection pages' "Recommended" type order (attributes.recommended_type_order), if set. */
+  recommendedTypeOrder: string[];
 }
 
 const getCabinetAttributes = cache(async (): Promise<CabinetAttributeLists> => {
@@ -354,8 +356,16 @@ const getCabinetAttributes = cache(async (): Promise<CabinetAttributeLists> => {
     productLines: parseJson<AttrOption[]>(val('product_lines')) ?? [],
     constructions: parseJson<AttrOption[]>(val('constructions')) ?? [],
     colors: parseJson<ColorOption[]>(val('colors')) ?? [],
+    recommendedTypeOrder: (parseJson<string[]>(val('recommended_type_order')) ?? []).filter(
+      (t) => typeof t === 'string' && t.trim() !== '',
+    ),
   };
 });
+
+/** The client's cabinet type order for "Recommended" (empty = use the built-in default). */
+export async function getRecommendedTypeOrder(): Promise<string[]> {
+  return (await getCabinetAttributes()).recommendedTypeOrder;
+}
 
 function parseJson<T>(value: string | undefined): T | undefined {
   if (value == null || value === '') return undefined;

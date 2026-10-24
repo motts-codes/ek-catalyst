@@ -33,15 +33,18 @@ import {
   getCabinetCollectionFaq,
   getCabinetCollectionHeader,
   getCabinetOffers,
+  getRecommendedTypeOrder,
   isCabinetCollection,
 } from '~/lib/cabinets/cabinet-collection';
 import {
   type CabinetGridFilters,
   cabinetSizeOptions,
+  DEFAULT_TYPE_ORDER,
   fetchCabinetProductsFiltered,
   hasGridFilters,
   hasProductTypeFacet,
   isFallbackCursor,
+  RECOMMENDED_SORT,
 } from '~/lib/cabinets/type-filter-fallback';
 import { pickFaq } from '~/lib/category/category-faq';
 import { parseSeoContent } from '~/lib/category/category-seo';
@@ -218,6 +221,39 @@ function CollectionSchema({
   });
 
   return <script dangerouslySetInnerHTML={{ __html: json }} type="application/ld+json" />;
+}
+
+// Collection pages get a "Recommended" entry at the top of the sort menu, and open on it.
+const defaultSort = (isCollection: boolean) => (isCollection ? RECOMMENDED_SORT : 'featured');
+const recommendedSortOption = (isCollection: boolean) =>
+  isCollection ? [{ value: RECOMMENDED_SORT, label: 'Recommended' }] : [];
+
+// Collection pages open in the "Recommended" cabinet order unless a sort is chosen.
+function recommendedOrderFor(
+  isCollection: boolean,
+  sort: string | string[] | undefined,
+): typeof RECOMMENDED_SORT | undefined {
+  return isCollection && (sort == null || sort === RECOMMENDED_SORT) ? RECOMMENDED_SORT : undefined;
+}
+
+// "recommended" is not a BigCommerce sort: when it is in force the sort param stays out of the
+// search (which sorts its own way; the in-code pass reorders the result).
+function withoutRecommendedSort(
+  searchParams: Record<string, string | string[] | undefined>,
+  order: typeof RECOMMENDED_SORT | undefined,
+): Record<string, string | string[] | undefined> {
+  if (order == null) return searchParams;
+
+  const { sort, ...rest } = searchParams;
+
+  return rest;
+}
+
+// The client's type order from 863, else the built-in one.
+async function recommendedTypeOrder(): Promise<string[]> {
+  const custom = await getRecommendedTypeOrder();
+
+  return custom.length > 0 ? custom : DEFAULT_TYPE_ORDER;
 }
 
 // Every listing uses the compact grid (4 columns beside the filter sidebar, 5 with it hidden) and
@@ -438,8 +474,12 @@ export default async function Category(props: Props) {
     // BigCommerce would reject; real cursors are opaque encoded strings. Keep those away from it.
     const fallbackCursors =
       isFallbackCursor(searchParams.after) || isFallbackCursor(searchParams.before);
+    // Collection pages default to the "recommended" cabinet order, applied in code (it is not a
+    // BigCommerce sort), so that value never reaches the search.
+    const order = recommendedOrderFor(isCabinet, searchParams.sort);
+    const searchParamsForSearch = withoutRecommendedSort(searchParams, order);
     const baseParams = {
-      ...searchParams,
+      ...searchParamsForSearch,
       ...parsedSearchParams,
       ...programFilter,
       ...typeFilter,
@@ -464,15 +504,17 @@ export default async function Category(props: Props) {
 
     // Until BigCommerce indexes the Product Type facet, the attribute filter above is ignored and
     // the grid would show every type. Narrow in code instead (see lib/cabinets/type-filter-fallback).
-    if (hasGridFilters(gridFilters) && !hasProductTypeFacet(search)) {
+    if ((order != null || hasGridFilters(gridFilters)) && !hasProductTypeFacet(search)) {
       return fetchCabinetProductsFiltered({
         searchParams: {
-          ...searchParams,
+          ...searchParamsForSearch,
           ...parsedSearchParams,
           ...programFilter,
           category: categoryId,
         },
         filters: gridFilters,
+        order,
+        typeOrder: await recommendedTypeOrder(),
         search,
         currencyCode,
         customerAccessToken,
@@ -731,9 +773,10 @@ export default async function Category(props: Props) {
           resetFiltersLabel={t('FacetedSearch.resetFilters')}
           showCompare={productComparisonsEnabled}
           showRating={showRating}
-          sortDefaultValue="featured"
+          sortDefaultValue={defaultSort(isCabinet)}
           sortLabel={t('SortBy.sortBy')}
           sortOptions={[
+            ...recommendedSortOption(isCabinet),
             { value: 'featured', label: t('SortBy.featuredItems') },
             { value: 'newest', label: t('SortBy.newestItems') },
             { value: 'best_selling', label: t('SortBy.bestSellingItems') },

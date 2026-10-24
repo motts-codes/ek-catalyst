@@ -31,10 +31,13 @@ export interface CabinetAttributes {
   productLines: ProductLineOption[];
   constructions: ConstructionOption[];
   colors: ColorOption[];
+  /** attributes.recommended_type_order: the cabinet types in the order collection pages show
+   *  them under "Recommended" (one per line in the editor); empty = the storefront default. */
+  recommendedTypeOrder: string[];
 }
 
 export function emptyCabinetAttributes(): CabinetAttributes {
-  return { productLines: [], constructions: [], colors: [] };
+  return { productLines: [], constructions: [], colors: [], recommendedTypeOrder: [] };
 }
 
 // Parse a metafield value into an array of loosely-typed records. Callers normalize each row into a
@@ -82,7 +85,23 @@ export async function readCabinetAttributes(): Promise<CabinetAttributes> {
       hex: str(c.hex),
       image: str(c.image),
     })),
+    recommendedTypeOrder: parseStrings(mfs, 'attributes', 'recommended_type_order'),
   };
+}
+
+// A metafield holding a JSON array of strings.
+function parseStrings(mfs: Metafield[], namespace: string, key: string): string[] {
+  const raw = mfs.find((m) => m.namespace === namespace && m.key === key)?.value;
+
+  if (raw == null || raw === '') return [];
+
+  try {
+    const parsed: unknown = JSON.parse(raw);
+
+    return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : [];
+  } catch {
+    return [];
+  }
 }
 
 /** Write the attribute master-lists back to category 863 (drops rows with no name). */
@@ -111,5 +130,16 @@ export async function writeCabinetAttributes(data: CabinetAttributes): Promise<v
     'attributes',
     'colors',
     JSON.stringify(colors),
+  );
+
+  // Blank → the metafield is removed and the storefront uses its built-in order.
+  const order = data.recommendedTypeOrder.map((t) => t.trim()).filter((t) => t !== '');
+
+  await upsertMetafield(
+    'categories',
+    CABINETS_PARENT_CATEGORY_ID,
+    'attributes',
+    'recommended_type_order',
+    order.length > 0 ? JSON.stringify(order) : '',
   );
 }

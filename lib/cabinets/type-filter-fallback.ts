@@ -100,6 +100,49 @@ export function hasProductTypeFacet(search: FacetedSearch): boolean {
   return search.facets.items.some((facet) => 'name' in facet && facet.name === 'Product Type');
 }
 
+/** The collection pages' default order: the way a kitchen is read — wall, base, sink base, tall,
+ *  vanity, then trim and accessories — and within a type by width, height, then name. */
+export const RECOMMENDED_SORT = 'recommended';
+
+/** The built-in type order; the client can change it in /cabinet-admin → Attributes
+ *  (attributes.recommended_type_order on 863). */
+export const DEFAULT_TYPE_ORDER = [
+  'WALL CABINET',
+  'BASE CABINET',
+  'SINK BASE CABINET',
+  'TALL CABINET',
+  'VANITY CABINET',
+  'TRIM & DECORATIVE',
+];
+
+const numeric = (value: string | undefined) => {
+  const n = Number.parseFloat(value ?? '');
+
+  return Number.isFinite(n) ? n : Number.POSITIVE_INFINITY;
+};
+
+// A product's "__sort" custom field pins it ahead of the type order (lower first); products
+// without it follow in the type / width / height order.
+const pinOf = (item: SearchItem) => numeric(customField(item, '__sort'));
+
+function recommendedOrder(items: SearchItem[], typeOrder: string[]): SearchItem[] {
+  const order = typeOrder.map((t) => t.trim().toUpperCase());
+  const rank = (item: SearchItem) => {
+    const index = order.indexOf(productTypeOf(item) ?? '');
+
+    return index === -1 ? order.length : index;
+  };
+
+  return [...items].sort(
+    (a, b) =>
+      pinOf(a) - pinOf(b) ||
+      rank(a) - rank(b) ||
+      numeric(widthOf(a)) - numeric(widthOf(b)) ||
+      numeric(heightOf(a)) - numeric(heightOf(b)) ||
+      a.name.localeCompare(b.name),
+  );
+}
+
 export const hasGridFilters = (filters: CabinetGridFilters): boolean =>
   filters.types.length > 0 ||
   filters.widths.length > 0 ||
@@ -187,6 +230,8 @@ export async function cabinetSizeOptions({
 export async function fetchCabinetProductsFiltered({
   searchParams,
   filters,
+  order,
+  typeOrder = DEFAULT_TYPE_ORDER,
   search,
   currencyCode,
   customerAccessToken,
@@ -195,6 +240,10 @@ export async function fetchCabinetProductsFiltered({
   /** The search params the real query used, minus pagination and the in-code filter params. */
   searchParams: Record<string, unknown>;
   filters: CabinetGridFilters;
+  /** "recommended" sorts the matches into the cabinet order; otherwise the search's own order. */
+  order?: typeof RECOMMENDED_SORT;
+  /** The cabinet type order for "recommended" (the client's, from 863, else the default). */
+  typeOrder?: string[];
   /** The real (un-narrowed) result; its facets are kept for the sidebar. */
   search: FacetedSearch;
   currencyCode?: CurrencyCode;
@@ -204,7 +253,8 @@ export async function fetchCabinetProductsFiltered({
 }): Promise<FacetedSearch> {
   const { after, before, page: pageParam } = searchParams;
   const all = await fetchCabinetCollectionItems(searchParams, currencyCode, customerAccessToken);
-  const matching = all.filter((item) => matches(item, filters));
+  const matched = all.filter((item) => matches(item, filters));
+  const matching = order === RECOMMENDED_SORT ? recommendedOrder(matched, typeOrder) : matched;
   // ?page=N (numbered pagination) wins; the older "p2"-style cursors still work.
   const requested =
     typeof pageParam === 'string' && /^\d+$/.test(pageParam) ? Number(pageParam) : 0;
