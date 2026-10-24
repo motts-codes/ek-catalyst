@@ -1,3 +1,4 @@
+import { CirclePlay } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -72,14 +73,20 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
         }}
         imageOverlay={
+          // A small translucent video chip, bottom-left of the photo: play icon, one short line.
           <Link
-            className="inline-flex items-center gap-1.5 rounded-full border border-contrast-200 bg-white px-4 py-2 text-sm text-contrast-500 shadow-sm transition-colors hover:border-foreground hover:text-foreground"
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/90 py-1.5 pl-2 pr-3 text-xs text-foreground shadow-sm backdrop-blur transition-colors hover:bg-white"
             href="/mykitchen/cabinets/assembled"
           >
-            New to assembled?
-            <span className="font-semibold text-foreground">Watch the explainer ▶</span>
+            <CirclePlay
+              className="text-[var(--button-primary-background,#d90716)]"
+              size={18}
+              strokeWidth={2}
+            />
+            New to assembled? <span className="font-semibold">Watch the explainer</span>
           </Link>
         }
+        imageOverlayPosition="bottom-left"
         title="The kitchen you pictured, ready to install"
         tone="red"
       />

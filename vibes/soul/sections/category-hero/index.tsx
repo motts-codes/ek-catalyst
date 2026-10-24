@@ -41,8 +41,10 @@ interface HeroProps {
   tone?: 'black' | 'red';
   /** A small line above the headline (the category name when the headline is a promise). */
   eyebrow?: string;
-  /** Rendered over the photo, top-right (e.g. the 'Watch the explainer' pill). */
+  /** Rendered over the photo (e.g. the 'Watch the explainer' chip). */
   imageOverlay?: ReactNode;
+  /** Where on the photo: top-right (default) or bottom-left, the usual spot for a video chip. */
+  imageOverlayPosition?: 'top-right' | 'bottom-left';
   className?: string;
 }
 
@@ -60,6 +62,7 @@ export function CategoryHero({
   tone = 'red',
   eyebrow,
   imageOverlay,
+  imageOverlayPosition = 'top-right',
   className,
 }: HeroProps) {
   return (
@@ -137,7 +140,16 @@ export function CategoryHero({
               <MediaPlaceholder className="absolute inset-0" label={imageLabel ?? title} />
             )}
             {imageOverlay != null && (
-              <div className="absolute right-4 top-4 @xl:right-5 @xl:top-5">{imageOverlay}</div>
+              <div
+                className={clsx(
+                  'absolute',
+                  imageOverlayPosition === 'bottom-left'
+                    ? 'bottom-4 left-4 @xl:bottom-5 @xl:left-5'
+                    : 'right-4 top-4 @xl:right-5 @xl:top-5',
+                )}
+              >
+                {imageOverlay}
+              </div>
             )}
           </div>
         </div>
