@@ -204,8 +204,9 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             {/* Two cells: the price (and was-price) on the left; on the right the finance line and
                 the ship line, stacked and left-aligned. Stacks top/bottom on narrow screens. */}
             <div className="mt-1.5 grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @[26rem]:grid-cols-[1fr_auto]">
+              {/* Price with the was-price always beneath it, so every strip is the same height. */}
               {line.price != null && line.price !== '' && (
-                <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 px-[13px] py-3">
+                <div className="flex min-w-0 flex-col items-start gap-y-1 px-[13px] py-3">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
                       cents={17}
