@@ -197,8 +197,7 @@ export const HUB_PROGRAM_CARDS: ProgramCard[] = [
 
 export const COMPARISON_COLUMNS = ['', 'Ready to assemble', 'Assembled'];
 
-// "!" marks the row-heading cell. The installation row keeps Arun's bracketed line until EK
-// settles the installation question.
+// "!" marks the row-heading cell.
 export const COMPARISON_ROWS: string[][] = [
   [
     '!What arrives',
@@ -206,11 +205,7 @@ export const COMPARISON_ROWS: string[][] = [
     'Built cabinets, wrapped for shipping',
   ],
   ['!Who builds the box', 'You, or your installer', 'We do, in our factory'],
-  [
-    '!Installation',
-    'By your installer, or [ask about EK installation for showroom orders]',
-    'By your installer, or [ask about EK installation for showroom orders]',
-  ],
+  ['!Installation', 'By your installer', 'By your installer'],
   ['!Time per cabinet', 'About 45 minutes or more', 'None'],
   ['!Ships in', '2 weeks (Star)', '3 weeks (Star)'],
   ['!Price', 'Lower', 'Higher, because the building is done'],
