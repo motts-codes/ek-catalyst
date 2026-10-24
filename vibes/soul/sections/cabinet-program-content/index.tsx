@@ -248,16 +248,14 @@ function Compare({ block }: { block: Extract<ContentBlock, { type: 'compare' }> 
       <h2 className={H2}>{block.title}</h2>
       {block.intro != null && <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>}
       <table className="mt-6 w-full border-collapse overflow-hidden rounded-2xl text-sm ring-1 ring-contrast-100">
-        {/* The two columns contrast: brand red vs blush headers, a divider down the middle. */}
+        {/* One blush band across the header, a divider down the middle. */}
         <thead>
-          <tr className="text-left">
+          <tr className="bg-[#fdf3f5] text-left">
             {block.columns.map((column, index) => (
               <th
                 className={clsx(
-                  'w-1/2 px-5 py-3 font-[family-name:var(--font-family-heading)] text-base font-semibold @xl:px-6',
-                  index === 0
-                    ? 'bg-[var(--button-primary-background,#d90716)] text-white'
-                    : 'border-l border-[#fcb6bb] bg-[#fdf3f5] text-foreground',
+                  'w-1/2 px-5 py-3 font-[family-name:var(--font-family-heading)] text-base font-semibold text-foreground @xl:px-6',
+                  index > 0 && 'border-l border-[#fcb6bb]',
                 )}
                 key={column}
                 scope="col"
