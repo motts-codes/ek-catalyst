@@ -169,44 +169,47 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
 
       <div className="flex flex-1 flex-col p-6">
         {/* Collection in black, the finish (any words after the first) in brand red, all caps. */}
-        <h2 className="font-heading text-[23px] font-bold uppercase leading-tight">
-          <Link className="transition-colors hover:text-contrast-500" href={line.href}>
-            <LineName name={line.name} />
-          </Link>
-        </h2>
-        {line.finishSwatches != null && line.finishSwatches.length > 1 && (
-          // Prism: the finishes as a row of dots, so the choice is visible before the click.
-          <p className="mt-2 flex items-center gap-2 text-xs text-contrast-500">
-            <span aria-hidden className="flex items-center -space-x-1">
-              {line.finishSwatches.map((swatch) => (
-                <span
-                  className="inline-block size-3.5 rounded-full border border-white shadow-[0_0_0_1px_rgb(0_0_0/0.08)]"
-                  key={swatch.name}
-                  style={{ backgroundColor: swatch.hex || '#e5e5e5' }}
-                  title={swatch.name}
-                />
-              ))}
-            </span>
-            Choose from {line.finishSwatches.length} colors
-          </p>
-        )}
+        {/* Name on the left; on a per-finish (Prism) collection the finishes sit on the right as a
+            row of dots with the count beneath. The row keeps one height on every card so the price
+            strips line up across a row. */}
+        <div className="flex min-h-[2.25rem] items-start justify-between gap-3">
+          <h2 className="font-heading text-[23px] font-bold uppercase leading-tight">
+            <Link className="transition-colors hover:text-contrast-500" href={line.href}>
+              <LineName name={line.name} />
+            </Link>
+          </h2>
+          {line.finishSwatches != null && line.finishSwatches.length > 1 && (
+            <div className="flex shrink-0 flex-col items-end gap-1 pt-0.5">
+              <span aria-hidden className="flex items-center -space-x-1">
+                {line.finishSwatches.map((swatch) => (
+                  <span
+                    className="inline-block size-3.5 rounded-full border border-white shadow-[0_0_0_1px_rgb(0_0_0/0.08)]"
+                    key={swatch.name}
+                    style={{ backgroundColor: swatch.hex || '#e5e5e5' }}
+                    title={swatch.name}
+                  />
+                ))}
+              </span>
+              <span className="text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
+                Choose from {line.finishSwatches.length} colors
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* The facts strip, sized from the live landing page's price grid: current price, was-price,
             finance and lead time in one bordered row. Two of its colours failed WCAG on the pink
             (was-price #d4d4d4, finance #f9858d) and are replaced with #6b6b6b and brand red. */}
         {hasFacts(line) && (
           <>
-            {/* Pinned to the card's foot, so the price strips line up across a row even when one
-                card has the swatch row and its neighbour doesn't. */}
-            <p className="mt-auto pt-4 text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
+            <p className="mt-4 text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
               10x10 Kitchen starting
             </p>
             {/* Two cells: the price (and was-price) on the left; on the right the finance line and
                 the ship line, stacked and left-aligned. Stacks top/bottom on narrow screens. */}
             <div className="mt-1.5 grid grid-cols-1 rounded-xl border border-[#fcb6bb] bg-[#fdf8f8] text-[#404040] @[26rem]:grid-cols-[1fr_auto]">
-              {/* Price with the was-price always beneath it, so every strip is the same height. */}
               {line.price != null && line.price !== '' && (
-                <div className="flex min-w-0 flex-col items-start gap-y-1 px-[13px] py-3">
+                <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1 px-[13px] py-3">
                   <span className="font-heading font-bold leading-none text-[var(--button-primary-background,#d90716)]">
                     <Amount
                       cents={17}
@@ -258,7 +261,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
 
         {/* CTAs pinned to the card bottom so they align across the row. Shop is the brand red;
             Order sample is outlined black and fills black on hover (the same slide as every button). */}
-        <div className="flex flex-wrap gap-2 pt-5">
+        <div className="mt-auto flex flex-wrap gap-2 pt-5">
           <ButtonLink href={line.href} shape="pill" size="small" variant="primary">
             Shop Now
           </ButtonLink>
