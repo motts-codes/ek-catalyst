@@ -39,8 +39,8 @@ interface Props {
   /** Where a contained photo sits in its frame ('left' hugs the copy). */
   imageAlign?: 'center' | 'left';
   /**
-   * 'red' is the full-bleed version: brand red edge to edge, white copy on the left 60%, the
-   * photo covering the right 40% top to bottom.
+   * 'red' is the boxed version: a brand-red rounded box inside the page margins, white copy on
+   * the left 60%, the photo covering the right 40% top to bottom.
    */
   tone?: 'default' | 'red';
   className?: string;
@@ -71,16 +71,9 @@ export function StoryBand({
 
   if (tone === 'red') {
     return (
-      <section
-        className={clsx(
-          'bg-[var(--button-primary-background,#d90716)] text-white @container',
-          className,
-        )}
-      >
-        <div className="grid @3xl:grid-cols-[3fr_2fr]">
-          {/* The copy keeps the page's left edge: the container's side padding, plus the slack
-              left over once the page column (96rem) is centred. */}
-          <div className="px-6 py-10 @xl:px-9 @3xl:py-14 @4xl:py-16 @4xl:pl-[max(3.5rem,calc((100cqw-96rem)/2+3.5rem))] @4xl:pr-14">
+      <HomeSection className={className} tint={tint}>
+        <div className="grid overflow-hidden rounded-3xl bg-[var(--button-primary-background,#d90716)] text-white @3xl:grid-cols-[3fr_2fr]">
+          <div className="px-7 py-10 @xl:px-10 @3xl:py-14 @4xl:px-14">
             <Copy {...copy} red />
           </div>
           <div className="relative min-h-[16rem] @3xl:min-h-full">
@@ -97,7 +90,7 @@ export function StoryBand({
             )}
           </div>
         </div>
-      </section>
+      </HomeSection>
     );
   }
 
