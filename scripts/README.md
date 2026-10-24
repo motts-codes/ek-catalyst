@@ -48,3 +48,10 @@ cabinet collection and program, derived from its specification lines by the stor
 rules (`lib/cabinets/spec-translate.ts`) plus the finish/door-style context. Dry run by default;
 `--print` shows the full text, `--apply` writes (keeping text staff already stored), `--force`
 overwrites. Runs on Node 24 directly: `node scripts/write-how-built.ts --print`.
+
+## set-prism-default-colors.py
+
+Sets each Prism collection's default finish (`spec.info.default_color_id`) from a mapping in the
+script, so the collection page opens on that colour and its listing card shows that colour's
+kitchen. Dry run by default; `--apply` writes. Skips a colour the collection doesn't have or has no
+kitchen photo for.
