@@ -134,7 +134,7 @@ export function CabinetProgramContentSection({
           diamonds, drawn as a repeating SVG pattern so it tiles to any width. */}
       <div aria-hidden className={clsx(CONTAINER, 'pt-6 @4xl:pt-8')}>
         <svg
-          className="block h-4 w-full text-[var(--button-primary-background,#d90716)] [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+          className="block h-4 w-full text-contrast-300 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
           role="presentation"
         >
           <defs>
