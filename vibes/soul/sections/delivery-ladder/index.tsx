@@ -200,11 +200,11 @@ function ClassicTable({ columns, rows, narrow }: TableProps) {
   );
 }
 
-// The quiet table: no box, no fills, no column rules. Small grey labels up top over a black
+// The quiet table: no box, no fills, no column rules. Small red labels up top over a black
 // rule, a hairline between rows, the feature bold on the left; rows blush on hover.
 function MinimalTable({ columns, rows, narrow }: TableProps) {
   return (
-    <div className={clsx('overflow-x-auto', narrow && 'max-w-4xl')}>
+    <div className={clsx('overflow-x-auto', narrow && 'mx-auto max-w-4xl')}>
       <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
         <colgroup>
           <col className={narrow ? 'w-0' : 'w-[34%]'} />
@@ -216,7 +216,7 @@ function MinimalTable({ columns, rows, narrow }: TableProps) {
           <tr className="border-b-2 border-foreground">
             {columns.map((column, columnIndex) => (
               <th
-                className="pb-3 pr-8 text-xs font-semibold uppercase tracking-wide text-contrast-500"
+                className="pb-3 pr-8 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]"
                 key={column || 'feature'}
                 scope="col"
               >

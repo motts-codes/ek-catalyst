@@ -105,7 +105,7 @@ export default async function CabinetsHub({ params }: Props) {
           <StoryBand
             actions={[
               { label: 'Plan my kitchen', href: FREE_DESIGN_HREF, primary: true },
-              { label: 'Compare 10×10 prices', href: ESTIMATOR_HREF },
+              { label: 'Price my kitchen', href: ESTIMATOR_HREF },
             ]}
             description={HUB_HERO.description}
             headingLevel={1}

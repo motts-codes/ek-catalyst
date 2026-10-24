@@ -148,8 +148,7 @@ export function StoryBand({
 }
 
 // The band's words: eyebrow, heading, paragraph, note and buttons. On red, everything turns
-// white and the primary button goes white too (red on red would vanish); the secondary stays
-// black.
+// white and the lead button goes white too (red on red would vanish).
 function Copy({
   kicker,
   title,
@@ -201,13 +200,19 @@ function Copy({
       )}
       {actions.length > 0 && (
         <div className="mt-7 flex flex-wrap gap-3">
-          {actions.map((action) => (
+          {actions.map((action, index) => (
             <ButtonLink
+              className={clsx(
+                index > 0 &&
+                  (red
+                    ? '[--button-ghost-border:white] [--button-ghost-text:white] hover:[--button-ghost-background-hover:rgb(255_255_255/0.12)]'
+                    : '[--button-ghost-border:hsl(var(--foreground))]'),
+              )}
               href={action.href}
               key={action.label}
               shape="pill"
               size="small"
-              variant={buttonVariant(Boolean(action.primary), red)}
+              variant={buttonVariant(Boolean(action.primary), index, red)}
             >
               {action.label}
             </ButtonLink>
@@ -218,7 +223,14 @@ function Copy({
   );
 }
 
-function buttonVariant(primary: boolean, red: boolean): 'primary' | 'secondary' | 'tertiary' {
+// The first button is solid (brand red when primary, else black; white on the red band); every
+// button after it is a thin outline, so a pair reads as lead + alternative.
+function buttonVariant(
+  primary: boolean,
+  index: number,
+  red: boolean,
+): 'primary' | 'secondary' | 'tertiary' | 'ghost' {
+  if (index > 0) return 'ghost';
   if (!primary) return 'secondary';
 
   return red ? 'tertiary' : 'primary';
