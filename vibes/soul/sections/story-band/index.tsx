@@ -23,8 +23,10 @@ interface Props {
   tint?: boolean;
   /** The blush plate offset behind the photo (off for a cleaner hero). */
   plate?: boolean;
-  /** 'short' trims the photo to about 70% of the usual height (product shots, drawings). */
-  imageHeight?: 'full' | 'short';
+  /** 'short' trims the photo to about 70% of the usual height, 'medium' to about 88%. */
+  imageHeight?: 'full' | 'medium' | 'short';
+  /** 'soft' gives the photo a lighter hairline and smaller corners (photos on a white field). */
+  imageFrame?: 'default' | 'soft';
   /** 'contain' shows a product shot whole on a white field instead of cropping it to the frame. */
   imageFit?: 'cover' | 'contain';
   className?: string;
@@ -45,6 +47,7 @@ export function StoryBand({
   tint = false,
   plate = true,
   imageHeight = 'full',
+  imageFrame = 'default',
   imageFit = 'cover',
   className,
 }: Props) {
@@ -97,9 +100,16 @@ export function StoryBand({
           )}
           <div
             className={clsx(
-              'relative overflow-hidden rounded-3xl ring-1 ring-contrast-100',
+              'relative overflow-hidden ring-1',
+              imageFrame === 'soft'
+                ? 'rounded-2xl ring-black/[0.06]'
+                : 'rounded-3xl ring-contrast-100',
               imageFit === 'contain' ? 'bg-white' : 'bg-contrast-100',
-              imageHeight === 'short' ? 'aspect-[40/21]' : 'aspect-[4/3]',
+              {
+                'aspect-[40/21]': imageHeight === 'short',
+                'aspect-[3/2]': imageHeight === 'medium',
+                'aspect-[4/3]': imageHeight === 'full',
+              },
             )}
           >
             {image ? (

@@ -108,6 +108,7 @@ export default async function CabinetsHub({ params }: Props) {
             description={HUB_HERO.description}
             headingLevel={1}
             image={HUB_HERO.image}
+            imageFrame="soft"
             imageLabel={HUB_HERO.imageLabel}
             kicker={HUB_HERO.kicker}
             note={HUB_HERO.note}
@@ -125,6 +126,7 @@ export default async function CabinetsHub({ params }: Props) {
             cta={{ label: 'View all collections', href: ASSEMBLED_LISTING_HREF }}
             description="Most kitchens start with a door, not a collection name. Pick the look you love; each one shows the collections that carry it."
             id="styles"
+            kicker="Start with the door"
             rows={styleRows}
             stacked
             tint
@@ -141,9 +143,10 @@ export default async function CabinetsHub({ params }: Props) {
             actions={GLASS_BAND.actions}
             description={GLASS_BAND.description}
             image={GLASS_BAND.image}
-            imageHeight="short"
+            imageHeight="medium"
             imageLabel={GLASS_BAND.imageLabel}
             imagePosition="left"
+            kicker={GLASS_BAND.kicker}
             note={GLASS_BAND.note}
             plate={false}
             title={GLASS_BAND.title}
@@ -160,6 +163,7 @@ export default async function CabinetsHub({ params }: Props) {
             columns={4}
             description="Every collection belongs to one of four lines, with 300+ cabinet sizes and types in each door style. The line decides how the cabinet is built; the collection decides the door and color."
             imageStyle="plain"
+            kicker="The four lines"
             title="What’s behind the door"
           />
         }
@@ -190,6 +194,7 @@ export default async function CabinetsHub({ params }: Props) {
                 and connects it. <a href={INSTALLER_HREF}>Find an installer →</a>
               </>
             }
+            kicker="The decision, in one table"
             narrow
             rows={COMPARISON_ROWS}
             title="RTA or assembled, side by side"
@@ -217,6 +222,7 @@ export default async function CabinetsHub({ params }: Props) {
             description={COST_BAND.description}
             image={COST_BAND.image}
             imageLabel={COST_BAND.imageLabel}
+            kicker={COST_BAND.kicker}
             note={COST_BAND.note}
             plate={false}
             title={COST_BAND.title}
@@ -232,6 +238,7 @@ export default async function CabinetsHub({ params }: Props) {
             actions={ACCESSORIES_BAND.actions}
             description={ACCESSORIES_BAND.description}
             imageLabel={ACCESSORIES_BAND.imageLabel}
+            kicker={ACCESSORIES_BAND.kicker}
             plate={false}
             title={ACCESSORIES_BAND.title}
           />
@@ -243,6 +250,7 @@ export default async function CabinetsHub({ params }: Props) {
       <Slot
         fallback={
           <ClosingBand
+            kicker="Ready when you are"
             primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
             showrooms={SHOWROOMS}
             tint

@@ -7,6 +7,8 @@ import { Link } from '~/components/link';
 import { ShowroomSelect } from './showroom-select';
 
 interface Props {
+  /** Small eyebrow above the heading (white, since the band is red). */
+  kicker?: string;
   title?: string;
   description?: string;
   primary?: { label: string; href: string };
@@ -24,6 +26,7 @@ const ghostButtonClassName =
 // The last ask on a page — "Ready to design your kitchen?" — as a dark panel with three ways to
 // say yes at equal weight: book the consult, visit a showroom (dropdown), or call.
 export function ClosingBand({
+  kicker,
   title = 'What would your kitchen actually cost?',
   description = 'Got your number? The next step is a person. A designer plans the layout with you on a video call, or you can see the cabinets up close at one of our six Connecticut showrooms. Either way it is free, and you leave with a plan.',
   primary = { label: 'Free design consult', href: '#' },
@@ -46,6 +49,11 @@ export function ClosingBand({
           className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white opacity-10 blur-3xl"
         />
         <div className="relative mx-auto max-w-2xl">
+          {Boolean(kicker) && (
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
+              {kicker}
+            </p>
+          )}
           <h2 className={homeHeadingClassName}>{title}</h2>
           <p className="mt-4 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

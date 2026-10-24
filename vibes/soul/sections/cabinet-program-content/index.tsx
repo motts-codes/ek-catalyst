@@ -104,6 +104,8 @@ export type ContentBlock =
     }
   | {
       type: 'why';
+      /** Small red eyebrow above the heading. */
+      kicker?: string;
       title: string;
       intro: string;
       reasons: Array<{
@@ -388,6 +390,11 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
 
   return (
     <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
+      {Boolean(block.kicker) && (
+        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+          {block.kicker}
+        </p>
+      )}
       <h2 className={H2}>{block.title}</h2>
       <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>
       <ul className="mt-6 grid grid-flow-dense gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">

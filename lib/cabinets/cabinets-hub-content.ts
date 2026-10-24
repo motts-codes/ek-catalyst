@@ -122,9 +122,10 @@ export const GLASS_BAND = {
   description:
     'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles. Frosted glass comes in [all five collections]; clear glass with a finished interior comes in Rochelle, Derry and Barcelona.',
   note: 'Sizes: 15", 18", 24", 27", 30" and 36" wide, in 30", 36" or 42" heights.',
+  kicker: 'A detail worth adding',
   image: {
-    src: '/images/cabinets/glass-doors.jpg',
-    alt: 'A couple sitting on the floor of a brick-walled kitchen with glass-front wall cabinets',
+    src: '/images/cabinets/kitchen-cost.jpg',
+    alt: 'A white kitchen with glass-front wall cabinets and a dark countertop',
   },
   imageLabel: 'A glass-front wall cabinet in a run of shaker doors',
   actions: [{ label: 'See glass-door cabinets', href: GLASS_DOORS_HREF }],
@@ -226,6 +227,7 @@ export const COMPARISON_ROWS: string[][] = [
 // each card; the KCMA card is the tall one. Photos to come from EK; the labels mark the slots.
 export const HUB_BUILD_BLOCK: ContentBlock = {
   type: 'why',
+  kicker: 'Same build, every door',
   title: 'How our cabinets are built',
   intro: 'The same build sits behind every door style. What changes is the door and the finish.',
   reasons: [
@@ -289,14 +291,16 @@ export const COST_BAND = {
   description:
     'Every collection shows a 10×10 price: cabinets only, for a standard L-shaped kitchen with two 10-foot walls. It’s the easiest way to compare collections. Your kitchen, with an island, a pantry, countertops or installation, will cost more.',
   note: '[Most finished kitchens run $X–$Y.]',
+  kicker: 'Prices, up front',
   image: {
-    src: '/images/cabinets/kitchen-cost.jpg',
-    alt: 'A white L-shaped kitchen with glass-front wall cabinets and a dark countertop',
+    src: '/images/cabinets/glass-doors.jpg',
+    alt: 'A couple sitting on the floor of their kitchen, planning on a laptop',
   },
   imageLabel: 'A 10×10 kitchen drawing with the price beside it',
 };
 
 export const ACCESSORIES_BAND = {
+  kicker: 'Finish the room',
   title: 'Handles, fillers and organizers',
   description:
     'Knobs and pulls in every finish we make doors in, plus fillers, panels and organizers to finish the room.',
