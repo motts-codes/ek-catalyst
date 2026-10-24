@@ -26,6 +26,8 @@ export interface SpecLine {
 export interface BuildContext {
   multiFinish?: boolean;
   doorStyle?: string;
+  /** On RTA, full-extension soft-close drawers are an add-on, whatever the spec line says. */
+  program?: 'assembled' | 'rta';
 }
 
 export interface BuildPoint {
@@ -274,30 +276,36 @@ function shelfPoint(lines: SpecLine[]): BuildPoint | null {
   };
 }
 
-function glidePoints(lines: SpecLine[]): BuildPoint[] {
+const UPGRADE_GLIDES: BuildPoint = {
+  lead: 'Full-extension, soft-close drawers (upgrade)',
+  detail: 'Drawers pull all the way out and close themselves. Add it to your order.',
+};
+
+function glidePoints(lines: SpecLine[], ctx: BuildContext): BuildPoint[] {
   const glides = find(lines, /drawer (glides|guides)/i);
   const upgrade = find(lines, /upgrade/i);
+  const fullExtension = has(glides, /full extension/i) && has(glides, /soft.?close/i);
   const points: BuildPoint[] = [];
 
-  if (glides !== '') {
-    points.push(
-      has(glides, /full extension/i) && has(glides, /soft.?close/i)
-        ? {
-            lead: 'Full-extension, soft-close drawers',
-            detail: 'Drawers pull all the way out and close themselves.',
-          }
-        : {
-            lead: 'Smooth drawer glides',
-            detail: 'Hidden steel glides under each drawer, so it rolls out easily.',
-          },
-    );
+  if (glides !== '' && fullExtension && ctx.program !== 'rta') {
+    points.push({
+      lead: 'Full-extension, soft-close drawers',
+      detail: 'Drawers pull all the way out and close themselves.',
+    });
+  } else if (glides !== '' && !fullExtension) {
+    points.push({
+      lead: 'Smooth drawer glides',
+      detail: 'Hidden steel glides under each drawer, so it rolls out easily.',
+    });
   }
 
-  if (upgrade !== '' && has(upgrade, /full extension/i)) {
-    points.push({
-      lead: 'Full-extension, soft-close drawers (upgrade)',
-      detail: 'Drawers pull all the way out and close themselves. Add it to your order.',
-    });
+  // The add-on row: from the spec's Upgrade line, or on RTA whenever the glides are the
+  // full-extension soft-close kind (sold as an upgrade there).
+  if (
+    (upgrade !== '' && has(upgrade, /full extension/i)) ||
+    (fullExtension && ctx.program === 'rta')
+  ) {
+    points.push(UPGRADE_GLIDES);
   }
 
   return points;
@@ -313,7 +321,7 @@ export function howItsBuilt(lines: SpecLine[], ctx: BuildContext = {}): BuildPoi
     drawerBoxPoint(lines),
     hingePoint(lines),
     shelfPoint(lines),
-    ...glidePoints(lines),
+    ...glidePoints(lines, ctx),
   ].filter((p): p is BuildPoint => p != null);
 }
 

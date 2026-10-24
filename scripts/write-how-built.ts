@@ -129,6 +129,7 @@ async function main() {
           Object.keys(parse<Record<string, unknown>>(find('finishes', 'by_finish')?.value) ?? {})
             .length > 0,
         doorStyle: parse<{ door_style?: string }>(find('merch', 'info')?.value)?.door_style,
+        program,
       });
 
       if (points.length > 0) next[program] = toText(points);

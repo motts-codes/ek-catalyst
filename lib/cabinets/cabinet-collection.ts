@@ -881,6 +881,7 @@ export const getCabinetCollectionContent = cache(
       doorStyle: parseJson<MerchInfo>(
         cat?.merch.edges?.find((e) => e.node.key === 'info')?.node.value,
       )?.door_style,
+      program,
     };
 
     return {
