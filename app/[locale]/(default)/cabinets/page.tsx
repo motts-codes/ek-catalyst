@@ -213,8 +213,8 @@ export default async function CabinetsHub({ params }: Props) {
         fallback={
           <StoryBand
             actions={[
-              { label: 'Get a free quote', href: FREE_DESIGN_HREF, primary: true },
-              { label: 'Compare 10×10 prices', href: ESTIMATOR_HREF },
+              { label: 'Plan my kitchen', href: FREE_DESIGN_HREF, primary: true },
+              { label: 'Price my kitchen', href: ESTIMATOR_HREF },
             ]}
             description={COST_BAND.description}
             image={COST_BAND.image}
