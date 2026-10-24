@@ -130,6 +130,11 @@ export function CabinetProgramContentSection({
 
   return (
     <div className={clsx('@container', className)}>
+      {/* A full-width hairline with a short brand-red centre mark: the break between the listing
+          and the long-form content. */}
+      <div aria-hidden className="relative mt-4 h-px bg-contrast-100 @4xl:mt-6">
+        <span className="absolute left-1/2 top-1/2 h-[3px] w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--button-primary-background,#d90716)]" />
+      </div>
       {/* 1. Styles: the lines as a table, the looks as tiles. */}
       <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
         <h2 className={H2}>{styles.title}</h2>
