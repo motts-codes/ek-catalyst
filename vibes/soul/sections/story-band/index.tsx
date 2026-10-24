@@ -205,8 +205,8 @@ function Copy({
               className={clsx(
                 index > 0 &&
                   (red
-                    ? '[--button-ghost-border:white] [--button-ghost-text:white] hover:[--button-ghost-background-hover:rgb(255_255_255/0.12)]'
-                    : '[--button-ghost-border:hsl(var(--foreground))]'),
+                    ? 'transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:white] [--button-ghost-text:white] hover:[--button-ghost-text:var(--button-primary-background,#d90716)]'
+                    : 'transition-colors [--button-ghost-background-hover:hsl(var(--foreground))] [--button-ghost-border:hsl(var(--foreground))] hover:[--button-ghost-text:white]'),
               )}
               href={action.href}
               key={action.label}
@@ -224,7 +224,8 @@ function Copy({
 }
 
 // The first button is solid (brand red when primary, else black; white on the red band); every
-// button after it is a thin outline, so a pair reads as lead + alternative.
+// button after it is a thin outline that fills solid on hover (black with white text; white with
+// red text on the red band), so a pair reads as lead + alternative.
 function buttonVariant(
   primary: boolean,
   index: number,
