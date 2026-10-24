@@ -217,7 +217,10 @@ function MinimalTable({ columns, rows, narrow }: TableProps) {
           <tr className="border-b-2 border-foreground">
             {columns.map((column, columnIndex) => (
               <th
-                className="pb-3 pr-8 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]"
+                className={clsx(
+                  'pb-3 pr-8 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]',
+                  columnIndex === 0 && narrow && 'whitespace-nowrap pr-10',
+                )}
                 key={column || 'feature'}
                 scope="col"
               >

@@ -1,0 +1,399 @@
+import { clsx } from 'clsx';
+import {
+  ArrowRight,
+  Check,
+  Hammer,
+  type LucideIcon,
+  Ruler,
+  ShoppingCart,
+  Sparkles,
+  Truck,
+} from 'lucide-react';
+
+import {
+  homeHeadingClassName,
+  HomeSection,
+  MediaPlaceholder,
+} from '@/vibes/soul/sections/home-section';
+import { Image } from '~/components/image';
+import { Link } from '~/components/link';
+
+// The education-first explainer sections (v2): a question answered, the two ways a cabinet can
+// arrive, what turns up, where it fits in a remodel, the same-cabinet reassurance, who it suits,
+// and a glossary. House style throughout: red eyebrow, big heading, rounded cards on blush.
+
+export type ExplainerIcon = 'cart' | 'truck' | 'hammer' | 'ruler' | 'sparkles';
+
+const ICONS: Record<ExplainerIcon, LucideIcon> = {
+  cart: ShoppingCart,
+  truck: Truck,
+  hammer: Hammer,
+  ruler: Ruler,
+  sparkles: Sparkles,
+};
+
+const RED = 'text-[var(--button-primary-background,#d90716)]';
+const EYEBROW = clsx('mb-1.5 text-xs font-semibold uppercase tracking-wide', RED);
+const BLUSH = 'bg-[#fdf8f8]';
+
+interface LinkProps {
+  label: string;
+  href: string;
+}
+
+// A red text link with the arrow that nudges on hover. Hash links use a plain anchor so the
+// browser scrolls on the same page.
+function TextLink({ label, href, className }: LinkProps & { className?: string }) {
+  const cls = clsx('group inline-flex items-center gap-1.5 text-sm font-semibold', RED, className);
+  const arrow = (
+    <ArrowRight
+      className="transition-transform group-hover:translate-x-0.5"
+      size={16}
+      strokeWidth={2.5}
+    />
+  );
+
+  return href.startsWith('#') ? (
+    <a className={cls} href={href}>
+      {label}
+      {arrow}
+    </a>
+  ) : (
+    <Link className={cls} href={href}>
+      {label}
+      {arrow}
+    </Link>
+  );
+}
+
+// A red tick in a circle, the proof-point marker the program cards use.
+function Tick() {
+  return (
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--button-primary-background,#d90716)] text-white">
+      <Check aria-hidden size={12} strokeWidth={3} />
+    </span>
+  );
+}
+
+// 1 · The hero asks the reader's question and answers it in two sentences; the photo on the
+// right shows the finished result. One soft link to the other program; no shop buttons.
+export function ExplainerIntro({
+  kicker,
+  title,
+  description,
+  link,
+  image,
+  imageLabel,
+}: {
+  kicker: string;
+  title: string;
+  description: string;
+  link: LinkProps;
+  image?: { src: string; alt: string };
+  imageLabel: string;
+}) {
+  return (
+    <HomeSection>
+      <div className="grid items-center gap-10 @3xl:grid-cols-[1.25fr_1fr] @3xl:gap-16">
+        <div className="@3xl:py-6">
+          <p className={clsx(EYEBROW, 'mb-2')}>{kicker}</p>
+          <h1 className="font-heading text-3xl font-bold leading-tight @xl:text-4xl @4xl:text-[44px]">
+            {title}
+          </h1>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+            {description}
+          </p>
+          <TextLink className="mt-6" href={link.href} label={link.label} />
+        </div>
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+          {image ? (
+            <Image
+              alt={image.alt}
+              className="object-cover"
+              fill
+              preload
+              sizes="(min-width: 56rem) 40vw, 100vw"
+              src={image.src}
+            />
+          ) : (
+            <MediaPlaceholder label={imageLabel} />
+          )}
+        </div>
+      </div>
+    </HomeSection>
+  );
+}
+
+// 2 · The core idea, once: two cards side by side, the page's own program outlined in red and
+// tagged, then the one-line truth and the rule of thumb.
+export function TwoWays({
+  kicker,
+  title,
+  ways,
+  current,
+  line,
+  rule,
+}: {
+  kicker: string;
+  title: string;
+  ways: Array<{ key: string; name: string; summary: string; visualLabel: string }>;
+  current: string;
+  line: string;
+  rule: string;
+}) {
+  return (
+    <HomeSection className={BLUSH} kicker={kicker} title={title}>
+      <div className="grid gap-5 @2xl:grid-cols-2 @3xl:gap-6">
+        {ways.map((way) => {
+          const here = way.key === current;
+
+          return (
+            <article
+              className={clsx(
+                'flex flex-col rounded-3xl border bg-white p-6 @xl:p-7',
+                here ? 'border-[#fcb6bb]' : 'border-contrast-100',
+              )}
+              key={way.key}
+            >
+              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-contrast-100">
+                <MediaPlaceholder label={way.visualLabel} />
+                {here && (
+                  <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide shadow-sm">
+                    This page
+                  </span>
+                )}
+              </div>
+              <h3 className="mt-5 font-heading text-xl font-bold leading-tight @xl:text-2xl">
+                {way.name}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+                {way.summary}
+              </p>
+            </article>
+          );
+        })}
+      </div>
+      <div className="mt-8 text-center">
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+          {line}
+        </p>
+        <p className="mt-4 inline-flex rounded-full border border-[#fcb6bb] bg-white px-5 py-2.5 font-heading text-base font-bold @xl:text-lg">
+          {rule}
+        </p>
+      </div>
+    </HomeSection>
+  );
+}
+
+// 3 · Makes it concrete: what's on the pallet (ticked), the delivery note, the photo.
+export function Arrives({
+  kicker,
+  title,
+  description,
+  items,
+  note,
+  image,
+  imageLabel,
+}: {
+  kicker: string;
+  title: string;
+  description: string;
+  items: string[];
+  note: string;
+  image?: { src: string; alt: string };
+  imageLabel: string;
+}) {
+  return (
+    <HomeSection>
+      <div className="grid items-center gap-10 @3xl:grid-cols-2 @3xl:gap-16">
+        <div>
+          <p className={EYEBROW}>{kicker}</p>
+          <h2 className={homeHeadingClassName}>{title}</h2>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+            {description}
+          </p>
+          <ul className="mt-6 space-y-3 text-sm @xl:text-base">
+            {items.map((item) => (
+              <li className="flex items-start gap-3" key={item}>
+                <Tick />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p
+            className={clsx(
+              'mt-6 max-w-xl rounded-2xl px-5 py-4 text-sm leading-relaxed text-contrast-500',
+              BLUSH,
+            )}
+          >
+            {note}
+          </p>
+        </div>
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+          {image ? (
+            <Image
+              alt={image.alt}
+              className="object-cover"
+              fill
+              sizes="(min-width: 56rem) 50vw, 100vw"
+              src={image.src}
+            />
+          ) : (
+            <MediaPlaceholder label={imageLabel} />
+          )}
+        </div>
+      </div>
+    </HomeSection>
+  );
+}
+
+// 4 · Where this step sits in a remodel: five numbered steps in a row (a column on phones).
+export function Timeline({
+  kicker,
+  title,
+  description,
+  steps,
+}: {
+  kicker: string;
+  title: string;
+  description?: string;
+  steps: Array<{ icon: ExplainerIcon; lead: string; text: string }>;
+}) {
+  return (
+    <HomeSection className={BLUSH} description={description} kicker={kicker} title={title}>
+      <ol className="grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-5">
+        {steps.map((step, index) => {
+          const Icon = ICONS[step.icon];
+
+          return (
+            <li
+              className="flex gap-4 rounded-3xl border border-contrast-100 bg-white p-5 @4xl:flex-col @4xl:gap-0 @4xl:p-6"
+              key={step.lead}
+            >
+              <div className="flex shrink-0 items-center gap-3 @4xl:justify-between">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--button-primary-background,#d90716)] font-heading text-sm font-bold text-white">
+                  {index + 1}
+                </span>
+                <Icon
+                  aria-hidden
+                  className={clsx('hidden @4xl:block', RED)}
+                  size={24}
+                  strokeWidth={1.5}
+                />
+              </div>
+              <div className="@4xl:mt-5">
+                <h3 className="font-heading text-lg font-semibold leading-tight">{step.lead}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-contrast-500">{step.text}</p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </HomeSection>
+  );
+}
+
+// 5 · The reassurance, on brand red: not a premium version, the same cabinet, with the build
+// points as ticked chips.
+export function SameCabinet({
+  kicker,
+  title,
+  description,
+  points,
+  note,
+}: {
+  kicker: string;
+  title: string;
+  description: string;
+  points: string[];
+  note?: string;
+}) {
+  return (
+    <HomeSection>
+      <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
+        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
+          {kicker}
+        </p>
+        <h2 className={homeHeadingClassName}>{title}</h2>
+        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/90 @xl:text-base">
+          {description}
+        </p>
+        <ul className="mt-7 flex flex-wrap gap-3">
+          {points.map((point) => (
+            <li
+              className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold ring-1 ring-white/30"
+              key={point}
+            >
+              <Check aria-hidden size={14} strokeWidth={3} />
+              {point}
+            </li>
+          ))}
+        </ul>
+        {Boolean(note) && <p className="mt-5 text-sm text-white/75">{note}</p>}
+      </div>
+    </HomeSection>
+  );
+}
+
+// 7 · Who it suits: the reasons as ticked cards, then the line that points the other way.
+export function Suits({
+  kicker,
+  title,
+  points,
+  line,
+  link,
+}: {
+  kicker: string;
+  title: string;
+  points: string[];
+  line: string;
+  link: LinkProps;
+}) {
+  return (
+    <HomeSection className={BLUSH} kicker={kicker} title={title}>
+      <ul className="grid gap-4 @xl:grid-cols-2">
+        {points.map((point) => (
+          <li
+            className="flex items-start gap-3 rounded-3xl border border-contrast-100 bg-white p-5 text-sm leading-relaxed @xl:p-6 @xl:text-base"
+            key={point}
+          >
+            <Tick />
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-contrast-500 @xl:text-base">
+        <span>{line}</span>
+        <TextLink href={link.href} label={link.label} />
+      </p>
+    </HomeSection>
+  );
+}
+
+// 8 · The words they'll meet on the collection pages, as a two-column definition list.
+export function Glossary({
+  id,
+  kicker,
+  title,
+  terms,
+}: {
+  id?: string;
+  kicker: string;
+  title: string;
+  terms: Array<{ term: string; definition: string }>;
+}) {
+  return (
+    <HomeSection id={id} kicker={kicker} title={title}>
+      <dl className="grid border-t border-contrast-100 @3xl:grid-cols-2 @3xl:gap-x-14">
+        {terms.map((entry) => (
+          <div className="border-b border-contrast-100 py-4 @xl:py-5" key={entry.term}>
+            <dt className="font-heading text-base font-semibold @xl:text-lg">{entry.term}</dt>
+            <dd className="mt-1 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+              {entry.definition}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </HomeSection>
+  );
+}

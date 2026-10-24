@@ -25,7 +25,10 @@ import {
   PROGRAM_NAME,
   SAME_FACTORY,
 } from '~/lib/cabinets/explainer-content';
+import { EXPLAINER_V2 } from '~/lib/cabinets/explainer-v2-content';
 import { Slot } from '~/lib/makeswift/slot';
+
+import { ExplainerV2Page } from './explainer-v2';
 
 interface Props {
   params: Promise<{ locale: string; program: string }>;
@@ -38,6 +41,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { program } = await params;
 
   if (!isProgram(program)) return {};
+
+  const v2 = EXPLAINER_V2[program];
+
+  if (v2) return v2.meta;
 
   return {
     title: `${PROGRAM_NAME[program]} cabinets explained`,
@@ -65,15 +72,32 @@ export default async function CabinetExplainer({ params }: Props) {
     getCabinetLines('assembled'),
   ]);
   const avonPrice = (lines: typeof rtaLines) => {
-    const price = lines.find((line) => line.name === 'Avon')?.price;
+    const price = Number(lines.find((line) => /^Avon\b/.test(line.name))?.price);
 
-    return price ? `$${price.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '$[X]';
+    // Whole dollars, with thousands separators: "$2,993".
+    return Number.isFinite(price) && price > 0
+      ? `$${Math.round(price).toLocaleString('en-US')}`
+      : '$[X]';
   };
   const mathRows = [
     ['!Price', avonPrice(rtaLines), avonPrice(assembledLines)],
     ...content.math.rows,
   ];
   const topCollections = (program === 'rta' ? rtaLines : assembledLines).slice(0, 6);
+
+  // The education-first rewrite (v2), where it exists; the other program keeps v1 until its
+  // copy lands.
+  const v2 = EXPLAINER_V2[program];
+
+  if (v2) {
+    return (
+      <ExplainerV2Page
+        avonPrices={[avonPrice(rtaLines), avonPrice(assembledLines)]}
+        content={v2}
+        program={program}
+      />
+    );
+  }
 
   return (
     <>

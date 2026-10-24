@@ -14,7 +14,8 @@ interface Props {
   /** Optional second button between the primary and the phone (e.g. "Visit the factory outlet"). */
   secondary?: { label: string; href: string };
   showrooms?: Array<{ name: string; href: string }>;
-  phone?: { label: string; href: string };
+  /** The call button; null hides it (a band with just the two buttons). */
+  phone?: { label: string; href: string } | null;
   tint?: boolean;
   className?: string;
 }
@@ -80,15 +81,17 @@ export function ClosingBand({
               </ButtonLink>
             )}
             {showrooms.length > 0 && <ShowroomSelect showrooms={showrooms} />}
-            <ButtonLink
-              className={outlineButtonClassName}
-              href={phone.href}
-              shape="pill"
-              size="small"
-              variant="ghost"
-            >
-              {phone.label}
-            </ButtonLink>
+            {phone && (
+              <ButtonLink
+                className={outlineButtonClassName}
+                href={phone.href}
+                shape="pill"
+                size="small"
+                variant="ghost"
+              >
+                {phone.label}
+              </ButtonLink>
+            )}
           </div>
         </div>
       </div>
