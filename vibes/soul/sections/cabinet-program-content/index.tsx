@@ -101,21 +101,6 @@ const H2 =
   'font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl';
 const COPY = 'text-sm leading-relaxed text-contrast-500 @xl:text-base';
 
-function IconBadge({ icon, className }: { icon: ContentIcon; className?: string }) {
-  const Icon = ICONS[icon];
-
-  return (
-    <span
-      className={clsx(
-        'flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f9fafd] text-[var(--button-primary-background,#d90716)] ring-1 ring-contrast-100',
-        className,
-      )}
-    >
-      <Icon size={17} strokeWidth={1.75} />
-    </span>
-  );
-}
-
 // The long-form content at the foot of a program listing, in the site's own blocks: a table of
 // the lines, look tiles, an icon grid for build quality, reason cards, a how-to-choose table and
 // a check list — rather than one long run of headings and bullets.
@@ -275,17 +260,30 @@ export function CabinetProgramContentSection({
           <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{choose.intro}</p>
           <table className="mt-6 w-full border-collapse overflow-hidden rounded-2xl bg-white text-sm ring-1 ring-contrast-100">
             <tbody className="divide-y divide-contrast-100">
-              {choose.rows.map((row) => (
-                <tr className="align-top" key={row.factor}>
-                  <th className="w-[38%] px-4 py-3 text-left @xl:w-[26%] @xl:px-5" scope="row">
-                    <span className="flex items-center gap-3 font-semibold text-foreground">
-                      <IconBadge icon={row.icon} />
-                      {row.factor}
-                    </span>
-                  </th>
-                  <td className="px-4 py-3 text-contrast-500 @xl:px-5 @xl:py-4">{row.advice}</td>
-                </tr>
-              ))}
+              {choose.rows.map((row) => {
+                const Icon = ICONS[row.icon];
+
+                return (
+                  // Rows tint light pink on hover; a bare red icon sits beside the factor.
+                  <tr
+                    className="align-top transition-colors duration-300 hover:bg-[#fdf3f5]"
+                    key={row.factor}
+                  >
+                    <th className="w-[38%] px-4 py-3 text-left @xl:w-[26%] @xl:px-5" scope="row">
+                      <span className="flex items-center gap-3 font-semibold text-foreground">
+                        <Icon
+                          aria-hidden
+                          className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+                          size={20}
+                          strokeWidth={1.75}
+                        />
+                        {row.factor}
+                      </span>
+                    </th>
+                    <td className="px-4 py-3 text-contrast-500 @xl:px-5">{row.advice}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
