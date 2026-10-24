@@ -158,7 +158,7 @@ export function CategoryHero({
                 ))}
                 {promisesAction != null && (
                   <a
-                    className="inline-flex items-center gap-1 self-start font-semibold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white @md:justify-self-end"
+                    className="inline-flex items-center gap-1 self-start font-semibold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white @md:self-end @md:justify-self-end"
                     href={promisesAction.href}
                   >
                     {promisesAction.label}
