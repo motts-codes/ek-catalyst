@@ -122,14 +122,12 @@ export const GLASS_BAND = {
   title: 'Add a glass door',
   description:
     'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles. Frosted glass comes in [all five collections]; clear glass with a finished interior comes in Rochelle, Derry and Barcelona.',
-  note: 'Sizes: 15", 18", 24", 27", 30" and 36" wide, in 30", 36" or 42" heights.',
   kicker: 'A detail worth adding',
   image: {
-    src: '/images/cabinets/kitchen-cost.jpg',
+    src: '/images/cabinets/glass-front-uppers.jpg',
     alt: 'A white kitchen with glass-front wall cabinets and a dark countertop',
   },
   imageLabel: 'A glass-front wall cabinet in a run of shaker doors',
-  actions: [{ label: 'See glass-door cabinets', href: GLASS_DOORS_HREF }],
 };
 
 // "What's behind the door" — the four lines as photo cards. Each card's photo is the kitchen of
@@ -240,7 +238,7 @@ export const COST_BAND = {
   note: '[Most finished kitchens run $X–$Y.]',
   kicker: 'Prices, up front',
   image: {
-    src: '/images/cabinets/glass-doors.jpg',
+    src: '/images/cabinets/kitchen-planning.jpg',
     alt: 'A couple sitting on the floor of their kitchen, planning on a laptop',
   },
   imageLabel: 'A 10×10 kitchen drawing with the price beside it',
@@ -248,6 +246,10 @@ export const COST_BAND = {
 
 export const ACCESSORIES_BAND = {
   kicker: 'Finish the room',
+  image: {
+    src: '/images/cabinets/accessories.jpg',
+    alt: 'A pull-out spice rack and a drawer organizer in sage green shaker cabinets',
+  },
   title: 'Handles, fillers and organizers',
   description:
     'Knobs and pulls in every finish we make doors in, plus fillers, panels and organizers to finish the room.',

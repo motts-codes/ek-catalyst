@@ -29,6 +29,8 @@ interface Props {
   /** A compact table, left-aligned under the heading: the feature column fits its longest label and
    *  the whole table is capped. */
   narrow?: boolean;
+  /** 'minimal' drops the box, fills and dividers: hairlines between rows, labels up top. */
+  look?: 'classic' | 'minimal';
   tint?: boolean;
   className?: string;
 }
@@ -46,6 +48,7 @@ export function DeliveryLadder({
   cta,
   footnote,
   narrow = false,
+  look = 'classic',
   tint = false,
   className,
 }: Props) {
@@ -57,8 +60,76 @@ export function DeliveryLadder({
       tint={tint}
       title={title}
     >
+      {look === 'minimal' ? (
+        <MinimalTable columns={columns} narrow={narrow} rows={rows} />
+      ) : (
+        <ClassicTable columns={columns} narrow={narrow} rows={rows} />
+      )}
+
+      {tiles.length > 0 && (
+        <div className="mt-6 grid gap-4 @lg:grid-cols-2 @3xl:grid-cols-4">
+          {tiles.map((tile) => (
+            <Link
+              className="group flex items-center gap-3 rounded-3xl border border-contrast-100 bg-white p-4 transition-colors hover:border-contrast-200"
+              href={tile.href}
+              key={tile.name}
+            >
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-contrast-100">
+                {tile.image ? (
+                  <Image
+                    alt={tile.image.alt}
+                    className="object-cover"
+                    fill
+                    sizes="64px"
+                    src={tile.image.src}
+                  />
+                ) : (
+                  <MediaPlaceholder className="p-1" label="Door" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate font-semibold">{tile.name}</p>
+                {Boolean(tile.meta) && <p className="text-xs text-contrast-500">{tile.meta}</p>}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {footnote != null && (
+        <p className="mt-5 max-w-3xl text-xs leading-relaxed text-contrast-400 [&_a]:underline [&_a]:underline-offset-2">
+          {footnote}
+        </p>
+      )}
+      {cta && (
+        <div className="mt-6">
+          <ButtonLink href={cta.href} shape="pill" size="small" variant="secondary">
+            {cta.label}
+          </ButtonLink>
+        </div>
+      )}
+    </HomeSection>
+  );
+}
+
+interface TableProps {
+  columns: string[];
+  rows: string[][];
+  narrow: boolean;
+}
+
+function cellText(cell: string): { bold: boolean; text: string } {
+  const bold = cell.startsWith('!');
+
+  return { bold, text: bold ? cell.slice(1) : cell };
+}
+
+// The boxed table: red header row, alternating fills, hairlines between every column.
+function ClassicTable({ columns, rows, narrow }: TableProps) {
+  return (
+    <>
       {/* Header row in brand red; body rows alternate white / light pink and tint on hover;
-          hairlines between rows and between every column. The first column is the feature. */}
+        hairlines between rows and between every column. The first column is the feature. */}
       <div
         className={clsx(
           'overflow-x-auto rounded-3xl border border-[#fcb6bb] bg-white',
@@ -67,7 +138,7 @@ export function DeliveryLadder({
       >
         <table className="w-full min-w-[40rem] border-separate border-spacing-0 text-left text-sm">
           {/* The feature column takes the room the brand columns don't need; narrow tables size
-              it to the longest feature label instead. */}
+            it to the longest feature label instead. */}
           <colgroup>
             <col className={narrow ? 'w-0' : 'w-[40%]'} />
             {columns.slice(1).map((column) => (
@@ -125,49 +196,66 @@ export function DeliveryLadder({
           </tbody>
         </table>
       </div>
+    </>
+  );
+}
 
-      {tiles.length > 0 && (
-        <div className="mt-6 grid gap-4 @lg:grid-cols-2 @3xl:grid-cols-4">
-          {tiles.map((tile) => (
-            <Link
-              className="group flex items-center gap-3 rounded-3xl border border-contrast-100 bg-white p-4 transition-colors hover:border-contrast-200"
-              href={tile.href}
-              key={tile.name}
-            >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-contrast-100">
-                {tile.image ? (
-                  <Image
-                    alt={tile.image.alt}
-                    className="object-cover"
-                    fill
-                    sizes="64px"
-                    src={tile.image.src}
-                  />
-                ) : (
-                  <MediaPlaceholder className="p-1" label="Door" />
-                )}
-              </div>
-              <div className="min-w-0">
-                <p className="truncate font-semibold">{tile.name}</p>
-                {Boolean(tile.meta) && <p className="text-xs text-contrast-500">{tile.meta}</p>}
-              </div>
-            </Link>
+// The quiet table: no box, no fills, no column rules. Small grey labels up top over a black
+// rule, a hairline between rows, the feature bold on the left; rows blush on hover.
+function MinimalTable({ columns, rows, narrow }: TableProps) {
+  return (
+    <div className={clsx('overflow-x-auto', narrow && 'max-w-4xl')}>
+      <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+        <colgroup>
+          <col className={narrow ? 'w-0' : 'w-[34%]'} />
+          {columns.slice(1).map((column) => (
+            <col key={column} />
           ))}
-        </div>
-      )}
+        </colgroup>
+        <thead>
+          <tr className="border-b-2 border-foreground">
+            {columns.map((column, columnIndex) => (
+              <th
+                className="pb-3 pr-8 text-xs font-semibold uppercase tracking-wide text-contrast-500"
+                key={column || 'feature'}
+                scope="col"
+              >
+                {columnIndex === 0 && !column ? <span className="sr-only">Feature</span> : column}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, rowIndex) => (
+            <tr
+              className="border-b border-contrast-100 transition-colors hover:bg-[#fdf8f8]"
+              key={rowIndex}
+            >
+              {row.map((cell, cellIndex) => {
+                const { bold, text } = cellText(cell);
+                const feature = cellIndex === 0;
 
-      {footnote != null && (
-        <p className="mt-5 max-w-3xl text-xs leading-relaxed text-contrast-400 [&_a]:underline [&_a]:underline-offset-2">
-          {footnote}
-        </p>
-      )}
-      {cta && (
-        <div className="mt-6">
-          <ButtonLink href={cta.href} shape="pill" size="small" variant="secondary">
-            {cta.label}
-          </ButtonLink>
-        </div>
-      )}
-    </HomeSection>
+                return (
+                  <td
+                    className={clsx(
+                      'py-4 pr-8 align-top',
+                      feature && 'text-[15px] @xl:text-base',
+                      feature && narrow && 'whitespace-nowrap pr-10',
+                      feature || bold ? 'font-semibold text-foreground' : 'text-[#404040]',
+                      !feature &&
+                        text.startsWith('✓') &&
+                        'text-[var(--button-primary-background,#d90716)]',
+                    )}
+                    key={cellIndex}
+                  >
+                    {text}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

@@ -110,7 +110,6 @@ export default async function CabinetsHub({ params }: Props) {
             description={HUB_HERO.description}
             headingLevel={1}
             image={HUB_HERO.image}
-            imageAlign="left"
             imageFit="contain"
             imageFrame="none"
             imageHeight="medium"
@@ -118,6 +117,7 @@ export default async function CabinetsHub({ params }: Props) {
             kicker={HUB_HERO.kicker}
             note={HUB_HERO.note}
             plate={false}
+            split="even"
             title={HUB_HERO.title}
           />
         }
@@ -128,13 +128,13 @@ export default async function CabinetsHub({ params }: Props) {
       <Slot
         fallback={
           <FeatureRows
+            className="bg-[#fdf8f8]"
             cta={{ label: 'View all collections', href: ASSEMBLED_LISTING_HREF }}
             description="Most kitchens start with a door, not a collection name. Pick the look you love; each one shows the collections that carry it."
             id="styles"
             kicker="Start with the door"
             rows={styleRows}
             stacked
-            tint
             title="Find your style"
           />
         }
@@ -145,14 +145,12 @@ export default async function CabinetsHub({ params }: Props) {
       <Slot
         fallback={
           <StoryBand
-            actions={GLASS_BAND.actions}
             description={GLASS_BAND.description}
             image={GLASS_BAND.image}
             imageHeight="medium"
             imageLabel={GLASS_BAND.imageLabel}
             imagePosition="left"
             kicker={GLASS_BAND.kicker}
-            note={GLASS_BAND.note}
             plate={false}
             title={GLASS_BAND.title}
           />
@@ -200,6 +198,7 @@ export default async function CabinetsHub({ params }: Props) {
               </>
             }
             kicker="The decision, in one table"
+            look="minimal"
             narrow
             rows={COMPARISON_ROWS}
             title="RTA or assembled, side by side"
@@ -243,6 +242,7 @@ export default async function CabinetsHub({ params }: Props) {
           <StoryBand
             actions={ACCESSORIES_BAND.actions}
             description={ACCESSORIES_BAND.description}
+            image={ACCESSORIES_BAND.image}
             imageLabel={ACCESSORIES_BAND.imageLabel}
             kicker={ACCESSORIES_BAND.kicker}
             plate={false}

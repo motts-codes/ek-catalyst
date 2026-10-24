@@ -38,6 +38,8 @@ interface Props {
   imageFit?: 'cover' | 'contain';
   /** Where a contained photo sits in its frame ('left' hugs the copy). */
   imageAlign?: 'center' | 'left';
+  /** 'even' splits copy and photo 50/50 on desktop instead of favouring the copy. */
+  split?: 'default' | 'even';
   /**
    * 'red' is the boxed version: a brand-red rounded box inside the page margins, white copy on
    * the left 60%, the photo covering the right 40% top to bottom.
@@ -64,6 +66,7 @@ export function StoryBand({
   imageFrame = 'default',
   imageFit = 'cover',
   imageAlign = 'center',
+  split = 'default',
   tone = 'default',
   className,
 }: Props) {
@@ -96,7 +99,12 @@ export function StoryBand({
 
   return (
     <HomeSection className={className} tint={tint}>
-      <div className="grid items-center gap-10 @3xl:grid-cols-[1.25fr_1fr] @3xl:gap-16">
+      <div
+        className={clsx(
+          'grid items-center gap-10 @3xl:gap-16',
+          split === 'even' ? '@3xl:grid-cols-2' : '@3xl:grid-cols-[1.25fr_1fr]',
+        )}
+      >
         <div className={clsx('@3xl:py-6', imagePosition === 'left' && '@3xl:order-2')}>
           <Copy {...copy} />
         </div>
