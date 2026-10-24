@@ -130,10 +130,25 @@ export function CabinetProgramContentSection({
 
   return (
     <div className={clsx('@container', className)}>
-      {/* A full-width hairline with a short brand-red centre mark: the break between the listing
-          and the long-form content. */}
-      <div aria-hidden className="relative mt-4 h-px bg-contrast-100 @4xl:mt-6">
-        <span className="absolute left-1/2 top-1/2 h-[3px] w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--button-primary-background,#d90716)]" />
+      {/* The break between the listing and the long-form content: a full-width row of outlined
+          diamonds, drawn as a repeating SVG pattern so it tiles to any width. */}
+      <div aria-hidden className={clsx(CONTAINER, 'pt-6 @4xl:pt-8')}>
+        <svg
+          className="block h-7 w-full text-contrast-300 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+          role="presentation"
+        >
+          <defs>
+            <pattern height="28" id="diamond-rule" patternUnits="userSpaceOnUse" width="28" x="50%">
+              <path
+                d="M14 1 L27 14 L14 27 L1 14 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1"
+              />
+            </pattern>
+          </defs>
+          <rect fill="url(#diamond-rule)" height="28" width="100%" />
+        </svg>
       </div>
       {/* 1. Styles: the lines as a table, the looks as tiles. */}
       <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
