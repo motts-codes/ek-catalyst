@@ -152,7 +152,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
 
         {/* Door-sample reveal: hidden bottom-right, slides up + fades in on card hover. */}
         {line.hoverImage && (
-          <div className="pointer-events-none absolute bottom-3 right-3 w-1/3 max-w-[8rem] translate-y-[130%] overflow-hidden rounded-lg border-2 border-white opacity-0 shadow-lg transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+          <div className="pointer-events-none absolute bottom-3 right-3 w-[42%] max-w-[10rem] translate-y-[130%] overflow-hidden rounded-lg border-2 border-white opacity-0 shadow-lg transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
             <div className="relative aspect-square">
               <Image
                 alt={line.hoverImage.alt}
