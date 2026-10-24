@@ -70,7 +70,7 @@ export function FeatureRows({
       {stacked ? (
         <StackedCards>{cards}</StackedCards>
       ) : (
-        <div className="flex flex-col gap-10 @3xl:gap-14">{cards}</div>
+        <div className="flex flex-col gap-20 @3xl:gap-28">{cards}</div>
       )}
       {cta != null && (
         <div className="mt-8 flex justify-center">

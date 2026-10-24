@@ -43,7 +43,7 @@ export function StackedCards({ children }: { children: ReactNode[] }) {
   }, [children.length]);
 
   return (
-    <div className="flex flex-col gap-10 @3xl:gap-14" ref={root}>
+    <div className="flex flex-col gap-20 @3xl:gap-28" ref={root}>
       {children.map((child, index) => (
         <div
           className="@3xl:sticky @3xl:top-28"
