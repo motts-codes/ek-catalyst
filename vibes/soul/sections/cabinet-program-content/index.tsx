@@ -365,7 +365,7 @@ function checkerTints(reasons: Array<{ span?: 'tall' }>, columns = 3): boolean[]
 
     for (let r = row; r < row + rows; r += 1) taken.add(`${r}:${col}`);
 
-    return (row + col) % 2 === 1;
+    return (row + col) % 2 === 0;
   });
 }
 
