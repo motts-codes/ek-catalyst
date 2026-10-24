@@ -2,7 +2,6 @@ import { clsx } from 'clsx';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { homeHeadingClassName, HomeSection } from '@/vibes/soul/sections/home-section';
-import { Link } from '~/components/link';
 
 import { ShowroomSelect } from './showroom-select';
 
@@ -20,8 +19,10 @@ interface Props {
   className?: string;
 }
 
-const ghostButtonClassName =
-  'inline-flex min-h-10 items-center justify-center rounded-full border border-white/30 px-5 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10';
+// The outline buttons as the site's sliding button: white outline, sweeping to a white fill with
+// the panel's red text on hover.
+const outlineButtonClassName =
+  'transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:rgb(255_255_255/0.3)] [--button-ghost-text:white] hover:[--button-ghost-border:white] hover:[--button-ghost-text:#9f3632] focus-visible:ring-white focus-visible:ring-offset-[#9f3632]';
 
 // The last ask on a page — "Ready to design your kitchen?" — as a dark panel with three ways to
 // say yes at equal weight: book the consult, visit a showroom (dropdown), or call.
@@ -68,14 +69,26 @@ export function ClosingBand({
               {primary.label}
             </ButtonLink>
             {secondary && (
-              <Link className={ghostButtonClassName} href={secondary.href}>
+              <ButtonLink
+                className={outlineButtonClassName}
+                href={secondary.href}
+                shape="pill"
+                size="small"
+                variant="ghost"
+              >
                 {secondary.label}
-              </Link>
+              </ButtonLink>
             )}
             {showrooms.length > 0 && <ShowroomSelect showrooms={showrooms} />}
-            <Link className={ghostButtonClassName} href={phone.href}>
+            <ButtonLink
+              className={outlineButtonClassName}
+              href={phone.href}
+              shape="pill"
+              size="small"
+              variant="ghost"
+            >
               {phone.label}
-            </Link>
+            </ButtonLink>
           </div>
         </div>
       </div>
