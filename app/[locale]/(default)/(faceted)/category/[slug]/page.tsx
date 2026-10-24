@@ -10,6 +10,7 @@ import { createCompareLoader } from '@/vibes/soul/primitives/compare-drawer/load
 import { CabinetAssembly } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CabinetSizeFilter, type SizeDimension } from '@/vibes/soul/sections/cabinet-size-filter';
 import { CabinetSpecs } from '@/vibes/soul/sections/cabinet-specs';
 import {
   CABINET_TYPES,
@@ -21,7 +22,6 @@ import { ProductsListSection } from '@/vibes/soul/sections/products-list-section
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { SeoContentSection } from '@/vibes/soul/sections/seo-content';
 import { getSessionCustomerAccessToken } from '~/auth';
-import { CabinetSizeFilter, type SizeDimension } from '@/vibes/soul/sections/cabinet-size-filter';
 import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import {
@@ -125,25 +125,35 @@ function cabinetTypeSearchParam(values: string[]): Record<string, string[]> {
   return values.length > 0 ? { [CABINET_TYPE_PARAM]: values } : {};
 }
 
-// Width / height chips on collection pages: ?width=12&width=36&height=34.5 (the products' numeric
+// Width / height / depth on collection pages: ?width=12&height=34.5&depth=24 (the products' numeric
 // "Width" / "Height" custom fields), narrowed in code with the types (type-filter-fallback).
-const SIZE_PARAM: Record<SizeDimension, string> = { width: 'width', height: 'height' };
+const SIZE_PARAM: Record<SizeDimension, string> = {
+  width: 'width',
+  height: 'height',
+  depth: 'depth',
+};
 
 // The grid filters a collection page carries in its URL; other categories carry none.
 function cabinetGridFilters(
   isCollection: boolean,
   searchParams: Record<string, string | string[] | undefined>,
 ): CabinetGridFilters {
-  if (!isCollection) return { types: [], widths: [], heights: [] };
+  if (!isCollection) return { types: [], widths: [], heights: [], depths: [] };
 
   return {
     types: selectedCabinetTypes(searchParams[CABINET_TYPE_PARAM]),
     widths: listParam(searchParams[SIZE_PARAM.width]),
     heights: listParam(searchParams[SIZE_PARAM.height]),
+    depths: listParam(searchParams[SIZE_PARAM.depth]),
   };
 }
 
-const GRID_FILTER_PARAMS = [CABINET_TYPE_PARAM, SIZE_PARAM.width, SIZE_PARAM.height];
+const GRID_FILTER_PARAMS = [
+  CABINET_TYPE_PARAM,
+  SIZE_PARAM.width,
+  SIZE_PARAM.height,
+  SIZE_PARAM.depth,
+];
 
 // The collection URL with one grid-filter value toggled (or, with no key, every grid filter
 // cleared), keeping program and finish and starting from page one.
@@ -631,9 +641,9 @@ export default async function Category(props: Props) {
             finishHrefFor={(finishSlug) =>
               getFinishHref(category.path, searchParamsForLinks, finishSlug)
             }
+            howBuilt={cabinetContent?.howBuilt}
             offers={cabinetOffers}
             program={cabinetProgram}
-            howBuilt={cabinetContent?.howBuilt}
             specRows={cabinetContent?.specRows}
             specifications={cabinetContent?.specifications}
             switchHref={

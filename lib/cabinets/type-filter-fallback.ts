@@ -19,11 +19,13 @@ const TTL_MS = 10 * 60 * 1000;
 // page through those. The full list is kept for ten minutes per collection/program.
 const listCache = new Map<string, { at: number; items: Promise<SearchItem[]> }>();
 
-/** The in-code selection: any number of types, widths and heights (each empty = no narrowing). */
+/** The in-code selection: any number of types, widths, heights and depths (each empty = no
+ *  narrowing). */
 export interface CabinetGridFilters {
   types: string[];
   widths: string[];
   heights: string[];
+  depths: string[];
 }
 
 export interface SizeOption {
@@ -38,6 +40,7 @@ export interface SizeOption {
 export interface CabinetSizeOptions {
   widths: SizeOption[];
   heights: SizeOption[];
+  depths: SizeOption[];
 }
 
 async function fetchAllItems(
@@ -80,6 +83,7 @@ const productTypeOf = (item: SearchItem) => customField(item, 'Product Type')?.t
 // with an inch mark.
 const widthOf = (item: SearchItem) => customField(item, 'Width');
 const heightOf = (item: SearchItem) => customField(item, 'Height');
+const depthOf = (item: SearchItem) => customField(item, 'Depth');
 
 // Page cursors in this mode are plain page numbers ("p2"), carried in the same after/before
 // params the real search uses, so the pagination component needs no changes.
@@ -94,7 +98,10 @@ export function hasProductTypeFacet(search: FacetedSearch): boolean {
 }
 
 export const hasGridFilters = (filters: CabinetGridFilters): boolean =>
-  filters.types.length > 0 || filters.widths.length > 0 || filters.heights.length > 0;
+  filters.types.length > 0 ||
+  filters.widths.length > 0 ||
+  filters.heights.length > 0 ||
+  filters.depths.length > 0;
 
 /** Every product in the collection (for the given program / finish), cached ten minutes. The
  *  pagination and in-code filter params are dropped from the key. */
@@ -103,7 +110,7 @@ export function fetchCabinetCollectionItems(
   currencyCode?: CurrencyCode,
   customerAccessToken?: string,
 ): Promise<SearchItem[]> {
-  const { after, before, page, width, height, ...rest } = searchParams;
+  const { after, before, page, width, height, depth, ...rest } = searchParams;
   const key = JSON.stringify([rest, currencyCode, Boolean(customerAccessToken)]);
   const cached = listCache.get(key);
   const fresh = cached != null && Date.now() - cached.at < TTL_MS;
@@ -124,7 +131,8 @@ function matches(item: SearchItem, filters: CabinetGridFilters): boolean {
       filters.types.map((t) => t.toUpperCase()),
     ) &&
     inSet(widthOf(item), filters.widths) &&
-    inSet(heightOf(item), filters.heights)
+    inSet(heightOf(item), filters.heights) &&
+    inSet(depthOf(item), filters.depths)
   );
 }
 
@@ -150,7 +158,7 @@ function options(
     .sort((a, b) => Number(a.value) - Number(b.value));
 }
 
-/** The width and height chips for a collection, with counts that respect the other filters. */
+/** The width, height and depth options for a collection, counted against the other filters. */
 export async function cabinetSizeOptions({
   searchParams,
   filters,
@@ -167,6 +175,7 @@ export async function cabinetSizeOptions({
   return {
     widths: options(items, widthOf, { ...filters, widths: [] }),
     heights: options(items, heightOf, { ...filters, heights: [] }),
+    depths: options(items, depthOf, { ...filters, depths: [] }),
   };
 }
 

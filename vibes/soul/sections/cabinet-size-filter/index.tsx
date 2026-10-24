@@ -17,14 +17,15 @@ export interface SizeChip {
 export interface SizeFilterOptions {
   widths: SizeChip[];
   heights: SizeChip[];
+  depths: SizeChip[];
 }
 
-export type SizeDimension = 'width' | 'height';
+export type SizeDimension = 'width' | 'height' | 'depth';
 
 interface Props {
   options: Streamable<SizeFilterOptions | null>;
   /** The selected values per dimension. */
-  selected: { widths: string[]; heights: string[] };
+  selected: { widths: string[]; heights: string[]; depths: string[] };
   /** Builds the link that toggles one value of one dimension. */
   hrefFor: (dimension: SizeDimension, value: string) => string;
   /** "Clear all filters" — the collection with every grid filter removed; shown only when given. */
@@ -32,7 +33,7 @@ interface Props {
   className?: string;
 }
 
-// "Cabinets Width" and "Cabinets Height" dropdowns under the type tiles on a collection page. Each
+// "Cabinets Width", "Cabinets Height" and "Cabinets Depth" dropdowns under the type tiles on a collection page. Each
 // opens a checklist of the values in the collection with a count beside each (how many products
 // that value leaves given the other filters); several can be ticked. Nothing to choose → nothing.
 export function CabinetSizeFilter({ options, selected, hrefFor, resetHref, className }: Props) {
@@ -51,7 +52,8 @@ export function CabinetSizeFilter({ options, selected, hrefFor, resetHref, class
   return (
     <Stream fallback={null} value={options}>
       {(data) =>
-        (data != null && (data.widths.length > 0 || data.heights.length > 0)) ||
+        (data != null &&
+          (data.widths.length > 0 || data.heights.length > 0 || data.depths.length > 0)) ||
         resetHref != null ? (
           <section aria-label="Filter by size" className={clsx('@container', className)}>
             {/* Dropdowns on the left, "Clear all filters" at the right end of the same row. */}
@@ -66,6 +68,12 @@ export function CabinetSizeFilter({ options, selected, hrefFor, resetHref, class
                 <ChecklistDropdown
                   label="Cabinets Height"
                   options={choices('height', data.heights, selected.heights)}
+                />
+              )}
+              {data != null && data.depths.length > 0 && (
+                <ChecklistDropdown
+                  label="Cabinets Depth"
+                  options={choices('depth', data.depths, selected.depths)}
                 />
               )}
               {resetHref != null && (
