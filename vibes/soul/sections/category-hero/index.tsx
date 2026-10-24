@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import {
   ArrowDown,
   ArrowRight,
-  BadgeDollarSign,
+  CircleDollarSign,
   Clock,
   Gift,
   Hammer,
@@ -63,7 +63,7 @@ const POINT_ICONS = {
   stock: PackageCheck,
   clock: Clock,
   pickup: MapPin,
-  price: BadgeDollarSign,
+  price: CircleDollarSign,
   gift: Gift,
   tag: Tag,
   phone: Phone,

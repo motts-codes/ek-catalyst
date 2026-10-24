@@ -13,7 +13,7 @@ const WHY_INTRO =
 
 const whyReasons = (program: 'assembled' | 'rta') => [
   {
-    icon: 'badge-dollar-sign' as const,
+    icon: 'circle-dollar-sign' as const,
     title: 'Factory-direct pricing',
     detail:
       'We make our own cabinets, so there’s no middleman’s markup. Customers typically save 30–50% compared with big-box stores.',
