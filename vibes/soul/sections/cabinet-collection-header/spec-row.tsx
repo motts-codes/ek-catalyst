@@ -136,12 +136,12 @@ function SpecTable({ rows }: { rows: SpecLine[] }) {
         {rows.map((row) => (
           <tr className="align-top" key={row.label}>
             <th
-              className="w-[38%] py-1.5 pr-4 text-left font-medium text-contrast-500 @md:w-[30%]"
+              className="w-[38%] py-1.5 pr-4 text-left font-medium text-foreground @md:w-[30%]"
               scope="row"
             >
               {row.label}
             </th>
-            <td className="py-1.5 text-foreground">{row.value}</td>
+            <td className="py-1.5 text-contrast-500">{row.value}</td>
           </tr>
         ))}
       </tbody>
