@@ -55,3 +55,11 @@ Sets each Prism collection's default finish (`spec.info.default_color_id`) from 
 script, so the collection page opens on that colour and its listing card shows that colour's
 kitchen. Dry run by default; `--apply` writes. Skips a colour the collection doesn't have or has no
 kitchen photo for.
+
+## download-collection-images.py
+
+Downloads every door and kitchen photo the collection pages use (the collection's own pair and
+each Prism finish's pair) into `~/Downloads/ek-collection-images/<collection>/`, named
+`<collection>[-<finish>]-<door|kitchen>.<ext>`, with an `index.csv` mapping each file to its
+collection, finish, kind and source URL — for swapping photos one for one. `--out <dir>` to
+choose the folder.
