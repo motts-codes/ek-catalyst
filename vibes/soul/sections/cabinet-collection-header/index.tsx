@@ -295,7 +295,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
         </div>
       </div>
       <p className="mt-2 text-[10px] text-contrast-400">
-        * The price is based on a fixed list of cabinets that cannot be modified.
+        * The price is based on a fixed SKU list that cannot be modified.
       </p>
     </div>
   );
