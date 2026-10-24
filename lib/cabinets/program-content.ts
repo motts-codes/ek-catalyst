@@ -106,7 +106,7 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
             'We make our own cabinets, so there’s no middleman’s markup. Customers typically save 30–50% compared with big-box stores.',
         },
         {
-          icon: 'shield-check',
+          icon: 'gem',
           title: 'Premium construction, standard',
           detail:
             'Every order comes with plywood boxes, dovetail drawers, soft-close hinges and full-extension glides, at no extra cost.',
@@ -143,7 +143,7 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
             'A designer plans your whole kitchen with you, by phone, video call or in a showroom, with clear pricing and no cost or obligation.',
         },
         {
-          icon: 'shield',
+          icon: 'shield-check',
           title: '1-year warranty',
           detail:
             'Every assembled cabinet is covered for one year against defects in materials and workmanship.',
