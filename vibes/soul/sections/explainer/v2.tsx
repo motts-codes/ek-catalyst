@@ -1,14 +1,5 @@
 import { clsx } from 'clsx';
-import {
-  ArrowRight,
-  Check,
-  Hammer,
-  type LucideIcon,
-  Ruler,
-  ShoppingCart,
-  Sparkles,
-  Truck,
-} from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 
 import {
   homeHeadingClassName,
@@ -18,19 +9,13 @@ import {
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
+import { Stepper, type StepperIcon } from './stepper';
+
 // The education-first explainer sections (v2): a question answered, the two ways a cabinet can
 // arrive, what turns up, where it fits in a remodel, the same-cabinet reassurance, who it suits,
 // and a glossary. House style throughout: red eyebrow, big heading, rounded cards on blush.
 
-export type ExplainerIcon = 'cart' | 'truck' | 'hammer' | 'ruler' | 'sparkles';
-
-const ICONS: Record<ExplainerIcon, LucideIcon> = {
-  cart: ShoppingCart,
-  truck: Truck,
-  hammer: Hammer,
-  ruler: Ruler,
-  sparkles: Sparkles,
-};
+export type ExplainerIcon = StepperIcon;
 
 const RED = 'text-[var(--button-primary-background,#d90716)]';
 const EYEBROW = clsx('mb-1.5 text-xs font-semibold uppercase tracking-wide', RED);
@@ -247,7 +232,7 @@ export function Arrives({
   );
 }
 
-// 4 · Where this step sits in a remodel: five numbered steps in a row (a column on phones).
+// 4 · Where this step sits in a remodel: the animated stepper (see stepper.tsx).
 export function Timeline({
   kicker,
   title,
@@ -261,34 +246,7 @@ export function Timeline({
 }) {
   return (
     <HomeSection className={BLUSH} description={description} kicker={kicker} title={title}>
-      <ol className="grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-5">
-        {steps.map((step, index) => {
-          const Icon = ICONS[step.icon];
-
-          return (
-            <li
-              className="flex gap-4 rounded-3xl border border-contrast-100 bg-white p-5 @4xl:flex-col @4xl:gap-0 @4xl:p-6"
-              key={step.lead}
-            >
-              <div className="flex shrink-0 items-center gap-3 @4xl:justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--button-primary-background,#d90716)] font-heading text-sm font-bold text-white">
-                  {index + 1}
-                </span>
-                <Icon
-                  aria-hidden
-                  className={clsx('hidden @4xl:block', RED)}
-                  size={24}
-                  strokeWidth={1.5}
-                />
-              </div>
-              <div className="@4xl:mt-5">
-                <h3 className="font-heading text-lg font-semibold leading-tight">{step.lead}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-contrast-500">{step.text}</p>
-              </div>
-            </li>
-          );
-        })}
-      </ol>
+      <Stepper steps={steps} />
     </HomeSection>
   );
 }
