@@ -166,15 +166,25 @@ export function CabinetProgramContentSection({
               {styles.looksTitle}
             </h3>
             <ul className="mt-3 flex flex-col gap-3">
-              {styles.looks.map((look) => (
-                <li className="flex items-start gap-3" key={look.name}>
-                  <IconBadge icon={look.icon} />
-                  <p className="text-sm leading-relaxed text-contrast-500">
-                    <span className="font-semibold text-foreground">{look.name}: </span>
-                    {look.summary}
-                  </p>
-                </li>
-              ))}
+              {styles.looks.map((look) => {
+                const Icon = ICONS[look.icon];
+
+                return (
+                  // A bare icon sized to the first line of text, so the two sit on one line.
+                  <li className="flex items-start gap-2.5" key={look.name}>
+                    <Icon
+                      aria-hidden
+                      className="mt-[3px] shrink-0 text-[var(--button-primary-background,#d90716)]"
+                      size={16}
+                      strokeWidth={2}
+                    />
+                    <p className="text-sm leading-relaxed text-contrast-500">
+                      <span className="font-semibold text-foreground">{look.name}: </span>
+                      {look.summary}
+                    </p>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
