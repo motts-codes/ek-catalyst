@@ -71,11 +71,21 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
         imageOverlay={
           // A frosted-glass chip, bottom-left of the photo, to the guide page (a read, not a video).
           <Link
-            className="inline-flex items-center gap-2 rounded-full bg-black/25 py-1.5 pl-3 pr-3.5 text-xs text-white shadow-sm ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-black/40"
+            aria-label="RTA explained"
+            className="group inline-flex items-center gap-2 rounded-full bg-black/25 py-1.5 pl-3 pr-3.5 text-xs text-white shadow-sm ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-black/40"
             href="/mykitchen/cabinets/rta"
           >
             <BookOpen size={15} strokeWidth={2} />
-            <span className="font-semibold">RTA explained</span>
+            <span className="font-semibold">
+              RTA
+              {/* "explained" slides open on hover. */}
+              <span
+                aria-hidden
+                className="inline-block max-w-0 overflow-hidden whitespace-nowrap align-bottom opacity-0 transition-[max-width,opacity,padding] duration-300 ease-smooth group-hover:max-w-[9ch] group-hover:pl-1 group-hover:opacity-100 motion-reduce:transition-none"
+              >
+                explained
+              </span>
+            </span>
             <ArrowRight size={14} strokeWidth={2.25} />
           </Link>
         }
