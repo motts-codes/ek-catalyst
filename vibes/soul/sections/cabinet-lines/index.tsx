@@ -341,7 +341,9 @@ export function Finance({
 
   if (!match) return text;
 
-  const [, label, amount, suffix] = match;
+  const [, label, amount, rawSuffix] = match;
+  // "/Month" in the stored text reads as "/month".
+  const suffix = (rawSuffix ?? '').replace(/\/month\b/i, '/month');
 
   return (
     <span className="inline-flex items-baseline gap-1">

@@ -283,7 +283,7 @@ function PriceCard({ data }: { data: CabinetCollectionHeaderData }) {
           {data.emiText != null && data.emiText !== '' && (
             <div className={row}>
               <WalletMinimal aria-hidden className={icon} size={16} strokeWidth={1.5} />
-              <span>{data.emiText}</span>
+              <span>{data.emiText.replace(/\/month\b/i, '/month')}</span>
             </div>
           )}
           {data.deliveryTime != null && data.deliveryTime !== '' && (
