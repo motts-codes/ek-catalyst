@@ -191,20 +191,24 @@ export function CabinetProgramContentSection({
         <p className={clsx(COPY, 'mt-6 max-w-3xl')}>{styles.outro}</p>
       </section>
 
-      {/* 2. Build quality: an icon grid on the grey band. */}
-      <section className="bg-[#f9fafd] py-12 @4xl:py-16">
-        <div className={CONTAINER}>
-          <h2 className={H2}>{build.title}</h2>
+      {/* 2. Build quality: a brand-red panel inside the page gutters, white text, bare icons. */}
+      <section className={clsx(CONTAINER, 'py-4 @4xl:py-6')}>
+        <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
+          <h2 className={clsx(H2, '!text-white')}>{build.title}</h2>
           <ul className="mt-6 grid gap-x-8 gap-y-6 @xl:grid-cols-2 @4xl:grid-cols-3">
-            {build.points.map((point) => (
-              <li className="flex items-start gap-3" key={point.lead}>
-                <IconBadge className="bg-white" icon={point.icon} />
-                <p className="text-sm leading-relaxed text-contrast-500">
-                  <span className="font-semibold text-foreground">{point.lead} </span>
-                  {point.detail}
-                </p>
-              </li>
-            ))}
+            {build.points.map((point) => {
+              const Icon = ICONS[point.icon];
+
+              return (
+                <li className="flex items-start gap-3" key={point.lead}>
+                  <Icon aria-hidden className="mt-0.5 shrink-0" size={22} strokeWidth={1.75} />
+                  <p className="text-sm leading-relaxed text-white/85">
+                    <span className="font-semibold text-white">{point.lead} </span>
+                    {point.detail}
+                  </p>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>
