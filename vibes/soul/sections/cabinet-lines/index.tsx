@@ -346,8 +346,9 @@ export function Finance({
   return (
     <span className="inline-flex items-baseline gap-1">
       {Boolean(label) && <span>{label}</span>}
-      <span aria-label={`$${amount ?? ''}${suffix ?? ''}`} className="inline-flex items-start">
-        <span className="leading-none" style={{ fontSize: symbol }}>
+      {/* Baseline-aligned with the label; only the dollar sign sits up at the top. */}
+      <span aria-label={`$${amount ?? ''}${suffix ?? ''}`} className="inline-flex items-baseline">
+        <span className="self-start leading-none" style={{ fontSize: symbol }}>
           $
         </span>
         <span className="leading-none" style={{ fontSize: whole }}>
