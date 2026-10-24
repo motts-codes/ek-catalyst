@@ -1,4 +1,4 @@
-import { CirclePlay } from 'lucide-react';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -75,17 +75,14 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
         }}
         imageOverlay={
-          // A small translucent video chip, bottom-left of the photo: play icon, one short line.
+          // A frosted-glass chip, bottom-left of the photo, to the guide page (a read, not a video).
           <Link
-            className="inline-flex items-center gap-1.5 rounded-full bg-white/90 py-1.5 pl-2 pr-3 text-xs text-foreground shadow-sm backdrop-blur transition-colors hover:bg-white"
+            className="inline-flex items-center gap-2 rounded-full bg-black/25 py-1.5 pl-3 pr-3.5 text-xs text-white shadow-sm ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-black/40"
             href="/mykitchen/cabinets/assembled"
           >
-            <CirclePlay
-              className="text-[var(--button-primary-background,#d90716)]"
-              size={18}
-              strokeWidth={2}
-            />
-            New to assembled? <span className="font-semibold">Watch the explainer</span>
+            <BookOpen size={15} strokeWidth={2} />
+            New to assembled? <span className="font-semibold">Read the guide</span>
+            <ArrowRight size={14} strokeWidth={2.25} />
           </Link>
         }
         imageOverlayPosition="bottom-left"
