@@ -105,7 +105,10 @@ export function CategoryHero({
               compact
                 ? 'bg-foreground px-6 py-6 @xl:px-10 @xl:py-7'
                 : clsx(
-                    tall ? 'px-6 py-12 @xl:px-10 @xl:py-16' : 'px-6 py-9 @xl:px-10 @xl:py-12',
+                    // Tall: the spare room goes above the promises, not under them.
+                    tall
+                      ? 'px-6 pb-8 pt-12 @xl:px-10 @xl:pb-10 @xl:pt-16'
+                      : 'px-6 py-9 @xl:px-10 @xl:py-12',
                     // Brand red (#d90716): white text sits at 5.3:1. The lighter #F20819 was tried and
                     // misses 4.5:1 for the description line.
                     tone === 'red'
@@ -135,7 +138,7 @@ export function CategoryHero({
             {promises.length > 0 && (
               // The promises in the panel as two stacked columns (3 + 2), with the link in a
               // narrower third column at the right; the columns wrap under each other on phones.
-              <div className="mt-10 grid gap-x-8 gap-y-4 text-xs font-medium text-white/90 @md:grid-cols-[auto_auto_1fr] @md:items-start">
+              <div className="mt-12 grid gap-x-8 gap-y-4 text-xs font-medium text-white/90 @md:grid-cols-[auto_auto_1fr] @md:items-start @xl:mt-14">
                 {[
                   promises.slice(0, Math.ceil(promises.length / 2)),
                   promises.slice(Math.ceil(promises.length / 2)),
