@@ -325,19 +325,19 @@ function LineName({ name }: { name: string }) {
 
 // "As Low As $50.73/Month" → the words on one line, the amount and its suffix on the next, at the
 // landing page's sizes. Anything that doesn't fit that shape renders as given.
+// "As Low As $78.10/Month": only the dollar sign is raised; the amount, cents and "/Month" run
+// on as ordinary text.
 export function Finance({
   text,
-  symbol = 10,
+  symbol = 8,
   whole = 11,
-  cents = 8,
 }: {
   text: string;
-  /** Pixel sizes for the amount's pieces (the card uses the small defaults). */
+  /** Pixel sizes for the raised dollar sign and the amount. */
   symbol?: number;
   whole?: number;
-  cents?: number;
 }) {
-  const match = /^(.*?)\s*(\$[\d,]+(?:\.\d+)?)(.*)$/.exec(text);
+  const match = /^(.*?)\s*\$([\d,]+(?:\.\d+)?)(.*)$/.exec(text);
 
   if (!match) return text;
 
@@ -346,9 +346,14 @@ export function Finance({
   return (
     <span className="inline-flex items-baseline gap-1">
       {Boolean(label) && <span>{label}</span>}
-      <span className="inline-flex items-start">
-        <Amount cents={cents} formatted={amount ?? ''} symbol={symbol} whole={whole} />
-        {suffix}
+      <span aria-label={`$${amount ?? ''}${suffix ?? ''}`} className="inline-flex items-start">
+        <span className="leading-none" style={{ fontSize: symbol }}>
+          $
+        </span>
+        <span className="leading-none" style={{ fontSize: whole }}>
+          {amount}
+          {suffix}
+        </span>
       </span>
     </span>
   );
