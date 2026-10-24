@@ -145,8 +145,9 @@ export interface CabinetProgramContent {
 }
 
 const CONTAINER = 'mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14';
-const H2 =
-  'font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl';
+const H2_BASE =
+  'font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight @xl:text-3xl';
+const H2 = `${H2_BASE} text-[var(--secondary-heading-color)]`;
 const COPY = 'text-sm leading-relaxed text-contrast-500 @xl:text-base';
 const INLINE_LINK =
   'font-medium text-foreground underline decoration-contrast-300 underline-offset-4 transition-colors hover:decoration-[var(--button-primary-background,#d90716)]';
@@ -395,7 +396,15 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
           {block.kicker}
         </p>
       )}
-      <h2 className={H2}>{block.title}</h2>
+      {/* With an eyebrow carrying the red, the heading itself reads black. */}
+      <h2
+        className={clsx(
+          H2_BASE,
+          block.kicker ? 'text-foreground' : 'text-[var(--secondary-heading-color)]',
+        )}
+      >
+        {block.title}
+      </h2>
       <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>
       <ul className="mt-6 grid grid-flow-dense gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">
         {block.reasons.map((reason, index) => {
@@ -419,25 +428,21 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
               key={reason.title}
             >
               {(reason.image != null || reason.imageLabel != null) && (
-                // The tall card's photo grows to fill the extra row.
-                <div
-                  className={clsx(
-                    'relative -mx-2 -mt-2 overflow-hidden rounded-xl bg-contrast-100',
-                    reason.span === 'tall'
-                      ? 'aspect-[16/10] @xl:aspect-auto @xl:min-h-[16rem] @xl:flex-1'
-                      : 'aspect-[16/10]',
-                  )}
-                >
+                // A small square photo, top left; the copy sits under it.
+                <div className="relative h-[150px] w-[150px] overflow-hidden rounded-xl bg-contrast-100">
                   {reason.image ? (
                     <Image
                       alt={reason.image.alt}
                       className="object-cover"
                       fill
-                      sizes="(min-width: 56rem) 33vw, 100vw"
+                      sizes="150px"
                       src={reason.image.src}
                     />
                   ) : (
-                    <MediaPlaceholder label={reason.imageLabel ?? reason.title} />
+                    <MediaPlaceholder
+                      className="[&>span]:text-xs [&>span]:tracking-normal"
+                      label={reason.imageLabel ?? reason.title}
+                    />
                   )}
                 </div>
               )}

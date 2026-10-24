@@ -25,8 +25,11 @@ interface Props {
   plate?: boolean;
   /** 'short' trims the photo to about 70% of the usual height, 'medium' to about 88%. */
   imageHeight?: 'full' | 'medium' | 'short';
-  /** 'soft' gives the photo a lighter hairline and smaller corners (photos on a white field). */
-  imageFrame?: 'default' | 'soft';
+  /** 'soft' gives the photo a lighter hairline and smaller corners (photos on a white field);
+   *  'none' drops the frame entirely (a cut-out on white). */
+  imageFrame?: 'default' | 'soft' | 'none';
+  /** 'red' sets the band on brand red with white copy, 60/40 copy to photo. */
+  tone?: 'default' | 'red';
   /** 'contain' shows a product shot whole on a white field instead of cropping it to the frame. */
   imageFit?: 'cover' | 'contain';
   className?: string;
@@ -49,14 +52,30 @@ export function StoryBand({
   imageHeight = 'full',
   imageFrame = 'default',
   imageFit = 'cover',
+  tone = 'default',
   className,
 }: Props) {
+  const red = tone === 'red';
+
   return (
-    <HomeSection className={className} tint={tint}>
-      <div className="grid items-center gap-10 @3xl:grid-cols-[1.25fr_1fr] @3xl:gap-16">
+    <HomeSection
+      className={clsx(red && 'bg-[var(--button-primary-background,#d90716)] text-white', className)}
+      tint={tint}
+    >
+      <div
+        className={clsx(
+          'grid items-center gap-10 @3xl:gap-16',
+          red ? '@3xl:grid-cols-[3fr_2fr]' : '@3xl:grid-cols-[1.25fr_1fr]',
+        )}
+      >
         <div className={clsx('@3xl:py-6', imagePosition === 'left' && '@3xl:order-2')}>
           {Boolean(kicker) && (
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+            <p
+              className={clsx(
+                'mb-2 text-xs font-semibold uppercase tracking-wide',
+                red ? 'text-white/85' : 'text-[var(--button-primary-background,#d90716)]',
+              )}
+            >
               {kicker}
             </p>
           )}
@@ -67,10 +86,24 @@ export function StoryBand({
           ) : (
             <h2 className={homeHeadingClassName}>{title}</h2>
           )}
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+          <p
+            className={clsx(
+              'mt-4 max-w-2xl text-sm leading-relaxed @xl:text-base',
+              red ? 'text-white/90' : 'text-contrast-500',
+            )}
+          >
             {description}
           </p>
-          {Boolean(note) && <p className="mt-3 max-w-2xl text-sm text-contrast-400">{note}</p>}
+          {Boolean(note) && (
+            <p
+              className={clsx(
+                'mt-3 max-w-2xl text-sm',
+                red ? 'text-white/75' : 'text-contrast-400',
+              )}
+            >
+              {note}
+            </p>
+          )}
           {actions.length > 0 && (
             <div className="mt-7 flex flex-wrap gap-3">
               {actions.map((action) => (
@@ -79,7 +112,7 @@ export function StoryBand({
                   key={action.label}
                   shape="pill"
                   size="small"
-                  variant={action.primary ? 'primary' : 'secondary'}
+                  variant={buttonVariant(Boolean(action.primary), red)}
                 >
                   {action.label}
                 </ButtonLink>
@@ -99,23 +132,16 @@ export function StoryBand({
             />
           )}
           <div
-            className={clsx(
-              'relative overflow-hidden ring-1',
-              imageFrame === 'soft'
-                ? 'rounded-2xl ring-black/[0.06]'
-                : 'rounded-3xl ring-contrast-100',
-              imageFit === 'contain' ? 'bg-white' : 'bg-contrast-100',
-              {
-                'aspect-[40/21]': imageHeight === 'short',
-                'aspect-[3/2]': imageHeight === 'medium',
-                'aspect-[4/3]': imageHeight === 'full',
-              },
-            )}
+            className={clsx('relative overflow-hidden', frameClassName(imageFrame, red, imageFit), {
+              'aspect-[40/21]': imageHeight === 'short',
+              'aspect-[3/2]': imageHeight === 'medium',
+              'aspect-[4/3]': imageHeight === 'full',
+            })}
           >
             {image ? (
               <Image
                 alt={image.alt}
-                className={imageFit === 'contain' ? 'object-contain p-4' : 'object-cover'}
+                className={imageFit === 'contain' ? 'object-contain' : 'object-cover'}
                 fill
                 sizes="(min-width: 56rem) 40vw, 100vw"
                 src={image.src}
@@ -128,4 +154,27 @@ export function StoryBand({
       </div>
     </HomeSection>
   );
+}
+
+// On the red band the primary action turns white (red on red would vanish); the secondary stays
+// black.
+function buttonVariant(primary: boolean, red: boolean): 'primary' | 'secondary' | 'tertiary' {
+  if (!primary) return 'secondary';
+
+  return red ? 'tertiary' : 'primary';
+}
+
+// The photo's frame: hairline + corners by variant, and the field behind a contained photo.
+function frameClassName(
+  frame: 'default' | 'soft' | 'none',
+  red: boolean,
+  fit: 'cover' | 'contain',
+): string {
+  if (frame === 'none') return 'bg-transparent';
+
+  const field = fit === 'contain' ? 'bg-white' : 'bg-contrast-100';
+
+  if (frame === 'soft') return `rounded-2xl ring-1 ring-black/[0.06] ${field}`;
+
+  return `rounded-3xl ring-1 ${red ? 'ring-white/20' : 'ring-contrast-100'} ${field}`;
 }

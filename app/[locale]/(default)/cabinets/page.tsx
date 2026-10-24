@@ -108,7 +108,9 @@ export default async function CabinetsHub({ params }: Props) {
             description={HUB_HERO.description}
             headingLevel={1}
             image={HUB_HERO.image}
-            imageFrame="soft"
+            imageFit="contain"
+            imageFrame="none"
+            imageHeight="medium"
             imageLabel={HUB_HERO.imageLabel}
             kicker={HUB_HERO.kicker}
             note={HUB_HERO.note}
@@ -226,6 +228,7 @@ export default async function CabinetsHub({ params }: Props) {
             note={COST_BAND.note}
             plate={false}
             title={COST_BAND.title}
+            tone="red"
           />
         }
         label="Cabinets kitchen cost"
