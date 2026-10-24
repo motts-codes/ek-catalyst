@@ -6,7 +6,7 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { FeatureRows } from '@/vibes/soul/sections/feature-rows';
-import { ProgramCards } from '@/vibes/soul/sections/program-cards';
+import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import {
@@ -18,15 +18,16 @@ import {
   GLASS_BAND,
   HUB_BUILD_BLOCK,
   HUB_HERO,
-  HUB_PROGRAM_CARDS,
   INSTALLER_HREF,
   LINE_CARDS,
+  LINE_SAMPLE_COLLECTIONS,
   STYLE_ROWS,
 } from '~/lib/cabinets/cabinets-hub-content';
 import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import {
   ESTIMATOR_HREF,
   FREE_DESIGN_HREF,
+  PROGRAM_CARDS,
   PROGRAM_FOOTNOTE,
   SHOWROOMS,
 } from '~/lib/home/home-content';
@@ -71,6 +72,20 @@ export default async function CabinetsHub({ params }: Props) {
         image: line?.hoverImage ?? line?.image,
       })),
     };
+  });
+
+  // Each line card shows a kitchen from one of its collections, with a red shop button.
+  const lineCards = LINE_CARDS.map((card) => {
+    const kitchenOf = (line?: (typeof lines)[number]) =>
+      line?.image && !line.containCover ? line.image : undefined;
+    const named = lines.find((line) => line.name === LINE_SAMPLE_COLLECTIONS[card.title]);
+    const image =
+      kitchenOf(named) ??
+      lines
+        .map(kitchenOf)
+        .find((kitchen, index) => kitchen && lines[index]?.productLine === card.title);
+
+    return { ...card, image, primary: true };
   });
 
   return (
@@ -118,9 +133,11 @@ export default async function CabinetsHub({ params }: Props) {
             actions={GLASS_BAND.actions}
             description={GLASS_BAND.description}
             image={GLASS_BAND.image}
+            imageHeight="short"
             imageLabel={GLASS_BAND.imageLabel}
             imagePosition="left"
             note={GLASS_BAND.note}
+            plate={false}
             title={GLASS_BAND.title}
           />
         }
@@ -131,10 +148,10 @@ export default async function CabinetsHub({ params }: Props) {
       <Slot
         fallback={
           <CardsRow
-            cards={LINE_CARDS}
+            cards={lineCards}
             columns={4}
             description="Every collection belongs to one of four lines, with 300+ cabinet sizes and types in each door style. The line decides how the cabinet is built; the collection decides the door and color."
-            hideImages
+            imageStyle="bleed"
             title="What’s behind the door"
           />
         }
@@ -144,8 +161,8 @@ export default async function CabinetsHub({ params }: Props) {
 
       <Slot
         fallback={
-          <ProgramCards
-            cards={HUB_PROGRAM_CARDS}
+          <ProgramSplit
+            cards={PROGRAM_CARDS}
             footnote={PROGRAM_FOOTNOTE}
             helper={{ label: 'Not sure? Talk to a designer →', href: FREE_DESIGN_HREF }}
             tint
@@ -165,6 +182,7 @@ export default async function CabinetsHub({ params }: Props) {
                 and connects it. <a href={INSTALLER_HREF}>Find an installer →</a>
               </>
             }
+            narrow
             rows={COMPARISON_ROWS}
             title="RTA or assembled, side by side"
           />
@@ -192,6 +210,7 @@ export default async function CabinetsHub({ params }: Props) {
             image={COST_BAND.image}
             imageLabel={COST_BAND.imageLabel}
             note={COST_BAND.note}
+            plate={false}
             title={COST_BAND.title}
           />
         }
@@ -205,6 +224,7 @@ export default async function CabinetsHub({ params }: Props) {
             actions={ACCESSORIES_BAND.actions}
             description={ACCESSORIES_BAND.description}
             imageLabel={ACCESSORIES_BAND.imageLabel}
+            plate={false}
             title={ACCESSORIES_BAND.title}
           />
         }

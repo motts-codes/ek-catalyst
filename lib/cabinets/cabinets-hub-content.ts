@@ -114,16 +114,25 @@ export const GLASS_BAND = {
   description:
     'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles. Frosted glass comes in [all five collections]; clear glass with a finished interior comes in Rochelle, Derry and Barcelona.',
   note: 'Sizes: 15", 18", 24", 27", 30" and 36" wide, in 30", 36" or 42" heights.',
-  // An Avon frosted-glass wall cabinet from the catalog, until marketing supplies a room shot.
+  // The front view of the Avon 30×30 frosted-glass wall cabinet (product 15553), until marketing
+  // supplies a room shot. The photo has wide white margins, so the band's crop centres on it.
   image: {
-    src: 'https://cdn11.bigcommerce.com/s-4smdoosoqx/products/15437/images/41254/t_900_GDFW1542__31913__36615__24544__89217.1774356819__22907.1790167226.386.513.jpg?c=1',
-    alt: 'Avon frosted glass door wall cabinet',
+    src: 'https://cdn11.bigcommerce.com/s-4smdoosoqx/products/15553/images/41769/g_236_GDFIW3030B_Avon_Front__72239__09404.1774356908__81522.1790167239.386.513.jpg?c=1',
+    alt: 'Avon frosted glass door wall cabinet, two doors, in painted white',
   },
   imageLabel: 'A glass-front wall cabinet in a run of shaker doors',
   actions: [{ label: 'See glass-door cabinets', href: GLASS_DOORS_HREF }],
 };
 
-// "What's behind the door" — the four lines as compact cards.
+// "What's behind the door" — the four lines as photo cards. Each card's photo is the kitchen of
+// the named collection (falling back to any collection in the line with a kitchen shot).
+export const LINE_SAMPLE_COLLECTIONS: Record<string, string> = {
+  Star: 'Avon Painted White',
+  Prism: 'Prism Mero',
+  'Euro Max': 'Euro Max Eden',
+  'Euro Value': 'Euro Value Madison',
+};
+
 export const LINE_CARDS: RowCard[] = [
   {
     title: 'Star',

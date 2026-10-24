@@ -36,7 +36,8 @@ interface Props {
 }
 
 // A row of equal cards — inset photo (or an accent bar), heading, one line, a button — with a
-// gentle lift on hover. Used for "Three ways to be sure", the Pro audience cards, the spec shelf,
+// gentle lift on hover. Store-hosted photos (absolute URLs) skip the Next optimizer, which only
+// knows the CDN hosts. Used for "Three ways to be sure", the Pro audience cards, the spec shelf,
 // the four lines and the quality grid.
 export function CardsRow({
   kicker,
@@ -90,6 +91,7 @@ export function CardsRow({
                     fill
                     sizes="(min-width: 56rem) 25vw, 100vw"
                     src={card.image.src}
+                    unoptimized={card.image.src.startsWith('http')}
                   />
                 ) : (
                   <MediaPlaceholder label={card.imageLabel ?? card.title} />
@@ -121,6 +123,7 @@ export function CardsRow({
                       fill
                       sizes="(min-width: 56rem) 33vw, 100vw"
                       src={card.image.src}
+                      unoptimized={card.image.src.startsWith('http')}
                     />
                   ) : (
                     <MediaPlaceholder label={card.imageLabel ?? card.title} />

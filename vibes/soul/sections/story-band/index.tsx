@@ -23,6 +23,10 @@ interface Props {
   tint?: boolean;
   /** The blush plate offset behind the photo (off for a cleaner hero). */
   plate?: boolean;
+  /** 'short' trims the photo to about 70% of the usual height (product shots, drawings). */
+  imageHeight?: 'full' | 'short';
+  /** 'contain' shows a product shot whole on a white field instead of cropping it to the frame. */
+  imageFit?: 'cover' | 'contain';
   className?: string;
 }
 
@@ -40,6 +44,8 @@ export function StoryBand({
   note,
   tint = false,
   plate = true,
+  imageHeight = 'full',
+  imageFit = 'cover',
   className,
 }: Props) {
   return (
@@ -89,11 +95,17 @@ export function StoryBand({
               )}
             />
           )}
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+          <div
+            className={clsx(
+              'relative overflow-hidden rounded-3xl ring-1 ring-contrast-100',
+              imageFit === 'contain' ? 'bg-white' : 'bg-contrast-100',
+              imageHeight === 'short' ? 'aspect-[40/21]' : 'aspect-[4/3]',
+            )}
+          >
             {image ? (
               <Image
                 alt={image.alt}
-                className="object-cover"
+                className={imageFit === 'contain' ? 'object-contain p-4' : 'object-cover'}
                 fill
                 sizes="(min-width: 56rem) 40vw, 100vw"
                 src={image.src}
