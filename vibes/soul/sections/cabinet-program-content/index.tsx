@@ -339,9 +339,9 @@ function Groups({ block }: { block: Extract<ContentBlock, { type: 'groups' }> })
   );
 }
 
-// Which cards sit on the light pink: a checkerboard by the card's visual row and column on the
-// three-column desktop grid, placed the way grid-flow-dense places them (a tall card takes two
-// rows), so each row alternates against the one above it.
+// Which cards sit on the light pink: a checkerboard by the card's visual row and column for a
+// grid of `columns`, placed the way grid-flow-dense places them (a tall card takes two rows), so
+// each row alternates against the one above it.
 function checkerTints(reasons: Array<{ span?: 'tall' }>, columns = 3): boolean[] {
   const taken = new Set<string>();
   const free = (row: number, col: number) => !taken.has(`${row}:${col}`);
@@ -372,7 +372,14 @@ function checkerTints(reasons: Array<{ span?: 'tall' }>, columns = 3): boolean[]
 // Bento grid: three columns, the tall card spanning two rows so eight cards fill nine cells.
 // Hover turns a card brand red with white text and icon.
 function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
-  const tints = checkerTints(block.reasons);
+  // The grid is one column on phones, two on tablets, three on desktop, so the checkerboard is
+  // worked out per layout (the tall card spans two rows from two columns up).
+  const phone = checkerTints(
+    block.reasons.map(() => ({})),
+    1,
+  );
+  const tablet = checkerTints(block.reasons, 2);
+  const desktop = checkerTints(block.reasons, 3);
 
   return (
     <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
@@ -387,7 +394,9 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
             <li
               className={clsx(
                 'group flex flex-col gap-4 rounded-2xl border border-contrast-100 p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
-                tints[index] ? 'bg-[#fdf3f5]' : 'bg-white',
+                phone[index] ? 'bg-[#fdf3f5]' : 'bg-white',
+                tablet[index] ? '@xl:bg-[#fdf3f5]' : '@xl:bg-white',
+                desktop[index] ? '@4xl:bg-[#fdf3f5]' : '@4xl:bg-white',
                 reason.span === 'tall' && '@xl:row-span-2',
               )}
               key={reason.title}
