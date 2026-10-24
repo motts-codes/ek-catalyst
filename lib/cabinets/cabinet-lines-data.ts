@@ -468,9 +468,20 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
             .filter((c) => c.name !== '')
         : undefined;
 
+      const finishKitchens = perFinish
+        ? Object.fromEntries(
+            Object.entries(byFinish).flatMap(([finish, photos]) => {
+              const kitchen = photos.kitchen_image || photos.images?.[1];
+
+              return kitchen ? [[finish, kitchen]] : [];
+            }),
+          )
+        : undefined;
+
       return {
         productLine,
         facets,
+        finishKitchens,
         finishSwatches,
         entityId: child.entityId,
         name: child.name,

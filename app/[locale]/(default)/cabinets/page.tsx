@@ -23,7 +23,6 @@ import {
   LINE_SAMPLE_COLLECTIONS,
   STYLE_ROWS,
 } from '~/lib/cabinets/cabinets-hub-content';
-import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import {
   ESTIMATOR_HREF,
   FREE_DESIGN_HREF,
@@ -54,14 +53,26 @@ export default async function CabinetsHub({ params }: Props) {
 
   // Door tiles under each style come from the live collections where the names match.
   const lines = await getCabinetLines('assembled');
-  // Each style's big photo is the kitchen of the first collection that has one, until marketing
-  // supplies a dedicated shot.
-  const styleRows = STYLE_ROWS.map(({ collections, ...row }) => {
+  type Line = (typeof lines)[number];
+  const kitchenOf = (line?: Line) => (line?.image && !line.containCover ? line.image : undefined);
+  // A named collection's kitchen; for per-finish lines, the named finish's kitchen.
+  const kitchenFrom = (pick?: { name: string; finish?: string }) => {
+    const line = lines.find((candidate) => candidate.name === pick?.name);
+    const byFinish = pick?.finish ? line?.finishKitchens?.[pick.finish] : undefined;
+
+    return byFinish && line
+      ? { src: byFinish, alt: `${line.name} ${pick?.finish}` }
+      : kitchenOf(line);
+  };
+
+  // Each style's big photo is the kitchen it names, else the first collection that has one, until
+  // marketing supplies a dedicated shot.
+  const styleRows = STYLE_ROWS.map(({ collections, kitchenFrom: pick, ...row }) => {
     const matched = collections.map(({ name, label }) => ({
       label,
       line: lines.find((candidate) => candidate.name === name),
     }));
-    const kitchen = matched.find(({ line }) => line?.image && !line.containCover)?.line?.image;
+    const kitchen = kitchenFrom(pick) ?? matched.find(({ line }) => kitchenOf(line))?.line?.image;
 
     return {
       ...row,
@@ -76,11 +87,8 @@ export default async function CabinetsHub({ params }: Props) {
 
   // Each line card shows a kitchen from one of its collections, with a red shop button.
   const lineCards = LINE_CARDS.map((card) => {
-    const kitchenOf = (line?: (typeof lines)[number]) =>
-      line?.image && !line.containCover ? line.image : undefined;
-    const named = lines.find((line) => line.name === LINE_SAMPLE_COLLECTIONS[card.title]);
     const image =
-      kitchenOf(named) ??
+      kitchenFrom(LINE_SAMPLE_COLLECTIONS[card.title]) ??
       lines
         .map(kitchenOf)
         .find((kitchen, index) => kitchen && lines[index]?.productLine === card.title);
@@ -99,7 +107,7 @@ export default async function CabinetsHub({ params }: Props) {
             ]}
             description={HUB_HERO.description}
             headingLevel={1}
-            image={CODE_PAGE_HERO_IMAGES.cabinets}
+            image={HUB_HERO.image}
             imageLabel={HUB_HERO.imageLabel}
             kicker={HUB_HERO.kicker}
             note={HUB_HERO.note}

@@ -37,6 +37,8 @@ export interface CabinetLine {
   /** Product line name from the Cabinets master list, e.g. "Star", "Prism", "Euro Max". */
   productLine?: string;
   /** Per-finish (Prism) collections: the finishes, for the swatch row under the name. */
+  /** Per-finish (Prism) collections: each finish's kitchen photo by finish name. */
+  finishKitchens?: Record<string, string>;
   finishSwatches?: Array<{ name: string; hex: string }>;
   /** What the listing's filter panel can narrow by (lib/cabinets/cabinet-lines-data). */
   facets?: {

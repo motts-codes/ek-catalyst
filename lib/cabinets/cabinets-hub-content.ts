@@ -19,6 +19,10 @@ export const HUB_HERO = {
   description:
     'Framed and frameless cabinets in shaker, modern and traditional styles, made in our own factory. Choose assembled or ready to assemble: same cabinet, your call.',
   note: 'Four lines, plywood boxes on Star, Prism and Euro Max, and 50,000+ cabinets in stock in Bristol.',
+  image: {
+    src: '/images/cabinets/hero-family.jpg',
+    alt: 'A family baking together at the island of a white shaker kitchen',
+  },
   imageLabel: 'A finished Connecticut kitchen, wide',
 };
 
@@ -31,6 +35,9 @@ export interface StyleCollection {
 
 export interface StyleRow extends Omit<FeatureRow, 'tiles'> {
   collections: StyleCollection[];
+  /** Which collection (and, for per-finish lines, which finish) supplies the big kitchen photo;
+   *  otherwise the first collection with a kitchen shot. */
+  kitchenFrom?: { name: string; finish?: string };
 }
 
 const c = (name: string, label = name): StyleCollection => ({ name, label });
@@ -95,6 +102,7 @@ export const STYLE_ROWS: StyleRow[] = [
     title: 'Painted color',
     description: 'Star doors painted in 10 colors, for the whole room or just the island.',
     imageLabel: 'Painted color kitchen',
+    kitchenFrom: { name: 'Prism Derry', finish: 'Lakehouse' },
     collections: [
       c('Prism Avon'),
       c('Prism Beacon Hill'),
@@ -114,23 +122,22 @@ export const GLASS_BAND = {
   description:
     'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles. Frosted glass comes in [all five collections]; clear glass with a finished interior comes in Rochelle, Derry and Barcelona.',
   note: 'Sizes: 15", 18", 24", 27", 30" and 36" wide, in 30", 36" or 42" heights.',
-  // The front view of the Avon 30×30 frosted-glass wall cabinet (product 15553), until marketing
-  // supplies a room shot. The photo has wide white margins, so the band's crop centres on it.
   image: {
-    src: 'https://cdn11.bigcommerce.com/s-4smdoosoqx/products/15553/images/41769/g_236_GDFIW3030B_Avon_Front__72239__09404.1774356908__81522.1790167239.386.513.jpg?c=1',
-    alt: 'Avon frosted glass door wall cabinet, two doors, in painted white',
+    src: '/images/cabinets/glass-doors.jpg',
+    alt: 'A couple sitting on the floor of a brick-walled kitchen with glass-front wall cabinets',
   },
   imageLabel: 'A glass-front wall cabinet in a run of shaker doors',
   actions: [{ label: 'See glass-door cabinets', href: GLASS_DOORS_HREF }],
 };
 
 // "What's behind the door" — the four lines as photo cards. Each card's photo is the kitchen of
-// the named collection (falling back to any collection in the line with a kitchen shot).
-export const LINE_SAMPLE_COLLECTIONS: Record<string, string> = {
-  Star: 'Avon Painted White',
-  Prism: 'Prism Mero',
-  'Euro Max': 'Euro Max Eden',
-  'Euro Value': 'Euro Value Madison',
+// the named collection (a finish for per-finish lines), falling back to any collection in the
+// line with a kitchen shot. Chosen to differ from the kitchens "Find your style" shows.
+export const LINE_SAMPLE_COLLECTIONS: Record<string, { name: string; finish?: string }> = {
+  Star: { name: 'Barcelona' },
+  Prism: { name: 'Prism Lexington', finish: 'Cappuccino' },
+  'Euro Max': { name: 'Euro Max Madison' },
+  'Euro Value': { name: 'Euro Value Eden' },
 };
 
 export const LINE_CARDS: RowCard[] = [
@@ -282,8 +289,10 @@ export const COST_BAND = {
   description:
     'Every collection shows a 10×10 price: cabinets only, for a standard L-shaped kitchen with two 10-foot walls. It’s the easiest way to compare collections. Your kitchen, with an island, a pantry, countertops or installation, will cost more.',
   note: '[Most finished kitchens run $X–$Y.]',
-  // The 10×10 drawing the collection price cards use.
-  image: { src: '/images/cabinets/10x10-kitchen.svg', alt: 'A 10×10 L-shaped kitchen plan' },
+  image: {
+    src: '/images/cabinets/kitchen-cost.jpg',
+    alt: 'A white L-shaped kitchen with glass-front wall cabinets and a dark countertop',
+  },
   imageLabel: 'A 10×10 kitchen drawing with the price beside it',
 };
 
