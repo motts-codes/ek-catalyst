@@ -134,20 +134,15 @@ export function CabinetProgramContentSection({
           diamonds, drawn as a repeating SVG pattern so it tiles to any width. */}
       <div aria-hidden className={clsx(CONTAINER, 'pt-6 @4xl:pt-8')}>
         <svg
-          className="block h-7 w-full text-contrast-300 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+          className="block h-4 w-full text-[var(--button-primary-background,#d90716)] [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
           role="presentation"
         >
           <defs>
-            <pattern height="28" id="diamond-rule" patternUnits="userSpaceOnUse" width="28" x="50%">
-              <path
-                d="M14 1 L27 14 L14 27 L1 14 Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-              />
+            <pattern height="16" id="diamond-rule" patternUnits="userSpaceOnUse" width="16" x="50%">
+              <path d="M8 1 L15 8 L8 15 L1 8 Z" fill="none" stroke="currentColor" strokeWidth="1" />
             </pattern>
           </defs>
-          <rect fill="url(#diamond-rule)" height="28" width="100%" />
+          <rect fill="url(#diamond-rule)" height="16" width="100%" />
         </svg>
       </div>
       {/* 1. Styles: the lines as a table, the looks as tiles. */}
