@@ -196,7 +196,9 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             (was-price #d4d4d4, finance #f9858d) and are replaced with #6b6b6b and brand red. */}
         {hasFacts(line) && (
           <>
-            <p className="mt-4 text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
+            {/* Pinned to the card's foot, so the price strips line up across a row even when one
+                card has the swatch row and its neighbour doesn't. */}
+            <p className="mt-auto pt-4 text-[0.583rem] font-semibold tracking-wide text-[#6b6b6b]">
               10x10 Kitchen starting
             </p>
             {/* Two cells: the price (and was-price) on the left; on the right the finance line and
