@@ -229,6 +229,7 @@ export const COMPARISON_ROWS: string[][] = [
 export const HUB_WHY_BLOCK: ContentBlock = {
   ...ASSEMBLED_WHY_BLOCK,
   kicker: 'Why Express Kitchens',
+  title: 'Why buy kitchen cabinets from Express Kitchens',
 };
 
 // "What will my kitchen cost?" — sets the 10×10 expectation before the collection cards.
