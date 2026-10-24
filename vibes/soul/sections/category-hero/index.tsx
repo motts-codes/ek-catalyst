@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import {
+  ArrowDown,
   ArrowRight,
   BadgeDollarSign,
   Clock,
@@ -19,6 +20,7 @@ import {
 } from 'lucide-react';
 import { type ReactNode } from 'react';
 
+import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -180,11 +182,13 @@ const POINT_ICONS = {
 interface PointsProps {
   points: Array<{ icon: keyof typeof POINT_ICONS; label: string }>;
   fine?: string;
+  /** A text link at the right end of the row (e.g. "See how they're built" → the content below). */
+  action?: { label: string; href: string };
   className?: string;
 }
 
 // The row of promises under the hero — stock, delivery, returns — with the small print at the end.
-export function CategoryPoints({ points, fine, className }: PointsProps) {
+export function CategoryPoints({ points, fine, action, className }: PointsProps) {
   if (points.length === 0) return null;
 
   return (
@@ -204,6 +208,17 @@ export function CategoryPoints({ points, fine, className }: PointsProps) {
             );
           })}
           {Boolean(fine) && <p className="text-xs text-contrast-400 @3xl:ml-auto">{fine}</p>}
+          {action != null && (
+            // A plain anchor: an in-page hash link scrolls natively (honouring scroll-margin and
+            // smooth scrolling), which the router link does not do reliably on the same path.
+            <a
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors hover:text-[var(--button-primary-background,#d90716)] @3xl:ml-auto"
+              href={action.href}
+            >
+              <span className={animatedUnderlineClassName}>{action.label}</span>
+              <ArrowDown size={15} strokeWidth={2.25} />
+            </a>
+          )}
         </div>
       </div>
     </section>

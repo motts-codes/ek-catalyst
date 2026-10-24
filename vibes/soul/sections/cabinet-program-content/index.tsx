@@ -106,15 +106,18 @@ const COPY = 'text-sm leading-relaxed text-contrast-500 @xl:text-base';
 // a check list — rather than one long run of headings and bullets.
 export function CabinetProgramContentSection({
   content,
+  id,
   className,
 }: {
   content: CabinetProgramContent;
+  /** Anchor for the "See how they're built" link under the hero. */
+  id?: string;
   className?: string;
 }) {
   const { styles, build, why, choose, program } = content;
 
   return (
-    <div className={clsx('@container', className)}>
+    <div className={clsx('scroll-mt-24 @container', className)} id={id}>
       {/* The break between the listing and the long-form content: a full-width row of outlined
           diamonds, drawn as a repeating SVG pattern so it tiles to any width. */}
       <div aria-hidden className={clsx(CONTAINER, 'pt-6 @4xl:pt-8')}>
@@ -269,18 +272,18 @@ export function CabinetProgramContentSection({
                     className="align-top transition-colors duration-300 hover:bg-[#fdf3f5]"
                     key={row.factor}
                   >
-                    <th className="w-[38%] px-4 py-3 text-left @xl:w-[26%] @xl:px-5" scope="row">
+                    <th className="w-[38%] px-5 py-4 text-left @xl:w-[26%] @xl:px-6" scope="row">
                       <span className="flex items-center gap-3 font-semibold text-foreground">
                         <Icon
                           aria-hidden
                           className="shrink-0 text-[var(--button-primary-background,#d90716)]"
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                         />
                         {row.factor}
                       </span>
                     </th>
-                    <td className="px-4 py-3 text-contrast-500 @xl:px-5">{row.advice}</td>
+                    <td className="px-5 py-4 text-contrast-500 @xl:px-6">{row.advice}</td>
                   </tr>
                 );
               })}

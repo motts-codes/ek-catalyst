@@ -94,6 +94,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
       />
       {/* The row of program promises under the hero, as on the category pages. */}
       <CategoryPoints
+        action={{ label: 'See how they’re built', href: '#about-assembled' }}
         points={[
           { icon: 'clock', label: 'Save Time' },
           { icon: 'price', label: 'Save Money' },
@@ -134,7 +135,10 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
       </ListingFiltersProvider>
       {/* The long-form content (styles, build quality, why Express Kitchens, how to choose). */}
       {CABINET_PROGRAM_CONTENT.assembled != null && (
-        <CabinetProgramContentSection content={CABINET_PROGRAM_CONTENT.assembled} />
+        <CabinetProgramContentSection
+          content={CABINET_PROGRAM_CONTENT.assembled}
+          id="about-assembled"
+        />
       )}
       <CabinetFaq data={faq} />
     </>
