@@ -341,7 +341,7 @@ export function Finance({
 
   if (!match) return text;
 
-  const [, label, amount, rawSuffix] = match;
+  const [, label, amount, rawSuffix = ''] = match;
   // "/Month" in the stored text reads as "/month".
   const suffix = rawSuffix.replace(/\/month\b/i, '/month');
 
