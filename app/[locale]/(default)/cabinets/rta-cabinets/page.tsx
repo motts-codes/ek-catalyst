@@ -7,6 +7,7 @@ import { CabinetFilterPanel } from '@/vibes/soul/sections/cabinet-filter-panel';
 import { CabinetLineFilter } from '@/vibes/soul/sections/cabinet-line-filter';
 import { CabinetLines } from '@/vibes/soul/sections/cabinet-lines';
 import { ListingFiltersProvider } from '@/vibes/soul/sections/cabinet-lines/filters-visibility';
+import { CabinetProgramContentSection } from '@/vibes/soul/sections/cabinet-program-content';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
@@ -26,6 +27,7 @@ import {
   panelToggleHref,
   parseLineFilters,
 } from '~/lib/cabinets/cabinet-lines-filter';
+import { CABINET_PROGRAM_CONTENT } from '~/lib/cabinets/program-content';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -100,6 +102,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
           { icon: 'shield', label: 'CARB2 Compliant' },
           { icon: 'hammer', label: 'DIY Friendly' },
         ]}
+        promisesAction={{ label: 'How it’s built', href: '#about-rta' }}
         tall
         title="Your dream kitchen, for less"
         tone="red"
@@ -134,6 +137,10 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
           program="rta"
         />
       </ListingFiltersProvider>
+      {/* The long-form content (Star vs Euro Max, build quality, styles, why Express Kitchens). */}
+      {CABINET_PROGRAM_CONTENT.rta != null && (
+        <CabinetProgramContentSection content={CABINET_PROGRAM_CONTENT.rta} id="about-rta" />
+      )}
       <CabinetFaq data={faq} />
     </>
   );

@@ -19,6 +19,7 @@ import {
   Palette,
   PencilRuler,
   Percent,
+  Scissors,
   Shield,
   ShieldCheck,
   Sparkles,
@@ -28,6 +29,9 @@ import {
   Wallet,
   Warehouse,
 } from 'lucide-react';
+import { type ReactNode } from 'react';
+
+import { Link } from '~/components/link';
 
 const ICONS = {
   archive: Archive,
@@ -47,6 +51,7 @@ const ICONS = {
   palette: Palette,
   'pencil-ruler': PencilRuler,
   percent: Percent,
+  scissors: Scissors,
   shield: Shield,
   'shield-check': ShieldCheck,
   sparkles: Sparkles,
@@ -59,63 +64,436 @@ const ICONS = {
 
 export type ContentIcon = keyof typeof ICONS;
 
-export interface CabinetProgramContent {
-  styles: {
-    title: string;
-    intro: string;
-    lines: Array<{ name: string; construction: string; summary: string }>;
-    looksTitle: string;
-    looks: Array<{ icon: ContentIcon; name: string; summary: string }>;
-    outro: string;
-  };
-  build: {
-    title: string;
-    points: Array<{ icon: ContentIcon; lead: string; detail: string }>;
-  };
-  why: {
-    title: string;
-    intro: string;
-    reasons: Array<{
-      icon: ContentIcon;
+/**
+ * The long-form content at the foot of a program listing, as a list of typed blocks so the
+ * Assembled and RTA pages can carry different shapes (a lines table on one, a comparison table
+ * and prose on the other). Text fields accept inline `[label](href)` links and `**bold**`.
+ */
+export type ContentBlock =
+  | {
+      type: 'lines';
       title: string;
-      note?: string;
-      detail: string;
-      /** Bento placement: a tall card spans two rows (for the longest copy). */
-      span?: 'tall';
-    }>;
-  };
-  choose: {
-    title: string;
-    intro: string;
-    rows: Array<{ icon: ContentIcon; factor: string; advice: string }>;
-  };
-  program: {
-    title: string;
-    intro: string;
-    points: Array<{ lead: string; detail: string }>;
-  };
+      intro: string;
+      lines: Array<{ name: string; construction: string; summary: string }>;
+      looksTitle: string;
+      looks: Array<{ icon: ContentIcon; name: string; summary: string }>;
+      outro: string;
+    }
+  | {
+      type: 'compare';
+      title: string;
+      intro?: string;
+      columns: [string, string];
+      rows: Array<[string, string]>;
+    }
+  | {
+      type: 'build';
+      title: string;
+      intro?: string;
+      points: Array<{ icon: ContentIcon; lead: string; detail: string }>;
+    }
+  | {
+      type: 'groups';
+      title: string;
+      intro?: string;
+      items: Array<{ lead: string; text: string }>;
+    }
+  | {
+      type: 'why';
+      title: string;
+      intro: string;
+      reasons: Array<{
+        icon: ContentIcon;
+        title: string;
+        note?: string;
+        detail: string;
+        /** Bento placement: a tall card spans two rows (for the longest copy). */
+        span?: 'tall';
+      }>;
+    }
+  | {
+      type: 'choose';
+      title: string;
+      intro: string;
+      rows: Array<{ icon: ContentIcon; factor: string; advice: string }>;
+    }
+  | {
+      type: 'checklist';
+      title: string;
+      intro: string;
+      points: Array<{ lead: string; detail: string }>;
+    }
+  | {
+      type: 'prose';
+      title: string;
+      paragraphs: string[];
+      /** On the grey band (so two prose blocks in a row can alternate). */
+      tint?: boolean;
+    };
+
+export interface CabinetProgramContent {
+  blocks: ContentBlock[];
 }
 
 const CONTAINER = 'mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14';
 const H2 =
   'font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl';
 const COPY = 'text-sm leading-relaxed text-contrast-500 @xl:text-base';
+const INLINE_LINK =
+  'font-medium text-foreground underline decoration-contrast-300 underline-offset-4 transition-colors hover:decoration-[var(--button-primary-background,#d90716)]';
 
-// The long-form content at the foot of a program listing, in the site's own blocks: a table of
-// the lines, look tiles, an icon grid for build quality, reason cards, a how-to-choose table and
-// a check list — rather than one long run of headings and bullets.
+// Inline markup in copy: [label](href) becomes a link, **text** becomes bold.
+function inline(text: string): ReactNode[] {
+  const parts: ReactNode[] = [];
+  const pattern = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
+  let last = 0;
+  let match = pattern.exec(text);
+
+  while (match) {
+    if (match.index > last) parts.push(text.slice(last, match.index));
+
+    if (match[1] != null && match[2] != null) {
+      parts.push(
+        <Link className={INLINE_LINK} href={match[2]} key={`${match.index}-link`}>
+          {match[1]}
+        </Link>,
+      );
+    } else if (match[3] != null) {
+      parts.push(
+        <strong className="font-semibold text-foreground" key={`${match.index}-bold`}>
+          {match[3]}
+        </strong>,
+      );
+    }
+
+    last = match.index + match[0].length;
+    match = pattern.exec(text);
+  }
+
+  if (last < text.length) parts.push(text.slice(last));
+
+  return parts;
+}
+
+function Lines({ block }: { block: Extract<ContentBlock, { type: 'lines' }> }) {
+  return (
+    <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
+      <h2 className={H2}>{block.title}</h2>
+      <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>
+      <div className="mt-6 grid gap-8 @3xl:grid-cols-[3fr_2fr] @3xl:gap-12">
+        <table className="w-full border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-contrast-200 text-left text-xs uppercase tracking-wide text-contrast-500">
+              <th className="py-2 pr-4 font-semibold" scope="col">
+                Line
+              </th>
+              <th className="py-2 pr-4 font-semibold" scope="col">
+                Construction
+              </th>
+              <th className="py-2 font-semibold" scope="col">
+                Best for
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-contrast-100">
+            {block.lines.map((line) => (
+              <tr className="align-top" key={line.name}>
+                <th className="py-3 pr-4 text-left font-semibold text-foreground" scope="row">
+                  {line.name}
+                </th>
+                <td className="py-3 pr-4 text-contrast-500">{line.construction}</td>
+                <td className="py-3 text-contrast-500">{line.summary}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div>
+          <h3 className="font-[family-name:var(--font-family-heading)] text-base font-semibold">
+            {block.looksTitle}
+          </h3>
+          <ul className="mt-3 flex flex-col gap-3">
+            {block.looks.map((look) => {
+              const Icon = ICONS[look.icon];
+
+              return (
+                // A bare icon sized to the first line of text, so the two sit on one line.
+                <li className="flex items-start gap-2.5" key={look.name}>
+                  <Icon
+                    aria-hidden
+                    className="mt-[3px] shrink-0 text-[var(--button-primary-background,#d90716)]"
+                    size={16}
+                    strokeWidth={2}
+                  />
+                  <p className="text-sm leading-relaxed text-contrast-500">
+                    <span className="font-semibold text-foreground">{look.name}: </span>
+                    {look.summary}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+      <p className={clsx(COPY, 'mt-6 max-w-3xl')}>{inline(block.outro)}</p>
+    </section>
+  );
+}
+
+// Two lines side by side, row by row (Star vs Euro Max).
+function Compare({ block }: { block: Extract<ContentBlock, { type: 'compare' }> }) {
+  return (
+    <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
+      <h2 className={H2}>{block.title}</h2>
+      {block.intro != null && <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>}
+      <table className="mt-6 w-full border-collapse overflow-hidden rounded-2xl text-sm ring-1 ring-contrast-100">
+        <thead>
+          <tr className="bg-[#f9fafd] text-left">
+            {block.columns.map((column) => (
+              <th
+                className="w-1/2 px-5 py-3 font-[family-name:var(--font-family-heading)] text-base font-semibold text-foreground @xl:px-6"
+                key={column}
+                scope="col"
+              >
+                {column}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-contrast-100">
+          {block.rows.map((row) => (
+            <tr className="align-top" key={row[0]}>
+              {row.map((cell, index) => (
+                <td className="px-5 py-4 text-contrast-500 @xl:px-6" key={index}>
+                  {inline(cell)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
+// A brand-red panel inside the page gutters, white text, bare icons.
+function Build({ block }: { block: Extract<ContentBlock, { type: 'build' }> }) {
+  return (
+    <section className={clsx(CONTAINER, 'py-4 @4xl:py-6')}>
+      <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
+        <h2 className={clsx(H2, '!text-white')}>{block.title}</h2>
+        {block.intro != null && (
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/85 @xl:text-base">
+            {block.intro}
+          </p>
+        )}
+        <ul className="mt-6 grid gap-x-12 gap-y-6 @xl:grid-cols-2 @4xl:grid-cols-3 @4xl:gap-x-16">
+          {block.points.map((point) => {
+            const Icon = ICONS[point.icon];
+
+            return (
+              <li className="flex items-start gap-3" key={point.lead}>
+                <Icon aria-hidden className="mt-0.5 shrink-0" size={22} strokeWidth={1.75} />
+                <p className="text-sm leading-relaxed text-white/85">
+                  <span className="font-semibold text-white">{point.lead} </span>
+                  {point.detail}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+// Bold lead, then copy with collection links.
+function Groups({ block }: { block: Extract<ContentBlock, { type: 'groups' }> }) {
+  return (
+    <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
+      <h2 className={H2}>{block.title}</h2>
+      {block.intro != null && <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>}
+      <ul className="mt-6 grid gap-x-10 gap-y-5 @3xl:grid-cols-2">
+        {block.items.map((item) => (
+          <li
+            className="rounded-2xl border border-contrast-100 bg-white p-5 text-sm leading-relaxed text-contrast-500 transition-colors duration-300 hover:bg-[#fdf3f5]"
+            key={item.lead}
+          >
+            <span className="font-semibold text-foreground">{item.lead} </span>
+            {inline(item.text)}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+// Bento grid: three columns, the tall card spanning two rows so eight cards fill nine cells.
+// Hover turns a card brand red with white text and icon.
+function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
+  return (
+    <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
+      <h2 className={H2}>{block.title}</h2>
+      <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>
+      <ul className="mt-6 grid grid-flow-dense gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">
+        {block.reasons.map((reason) => {
+          const Icon = ICONS[reason.icon];
+
+          return (
+            <li
+              className={clsx(
+                'group flex flex-col gap-4 rounded-2xl border border-contrast-100 bg-white p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
+                reason.span === 'tall' && '@xl:row-span-2',
+              )}
+              key={reason.title}
+            >
+              <Icon
+                className="text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:text-white"
+                size={32}
+                strokeWidth={1.5}
+              />
+              <h3 className="font-[family-name:var(--font-family-heading)] text-lg font-semibold leading-snug">
+                {reason.title}
+                {reason.note != null && (
+                  <span className="mt-0.5 block text-xs font-normal text-contrast-400 transition-colors duration-300 group-hover:text-white/80">
+                    {reason.note}
+                  </span>
+                )}
+              </h3>
+              <p className="text-sm leading-relaxed text-contrast-500 transition-colors duration-300 group-hover:text-white/90">
+                {reason.detail}
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+// A factor / advice table; rows tint light pink on hover.
+function Choose({ block }: { block: Extract<ContentBlock, { type: 'choose' }> }) {
+  return (
+    <section className="bg-[#f9fafd] py-12 @4xl:py-16">
+      <div className={CONTAINER}>
+        <h2 className={H2}>{block.title}</h2>
+        <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>
+        <table className="mt-6 w-full border-collapse overflow-hidden rounded-2xl bg-white text-sm ring-1 ring-contrast-100">
+          <tbody className="divide-y divide-contrast-100">
+            {block.rows.map((row) => {
+              const Icon = ICONS[row.icon];
+
+              return (
+                <tr
+                  className="align-top transition-colors duration-300 hover:bg-[#fdf3f5]"
+                  key={row.factor}
+                >
+                  <th className="w-[38%] px-5 py-4 text-left @xl:w-[26%] @xl:px-6" scope="row">
+                    <span className="flex items-center gap-3 font-semibold text-foreground">
+                      <Icon
+                        aria-hidden
+                        className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+                        size={18}
+                        strokeWidth={1.75}
+                      />
+                      {row.factor}
+                    </span>
+                  </th>
+                  <td className="px-5 py-4 text-contrast-500 @xl:px-6">{inline(row.advice)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function Checklist({ block }: { block: Extract<ContentBlock, { type: 'checklist' }> }) {
+  return (
+    <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
+      <h2 className={H2}>{block.title}</h2>
+      <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{inline(block.intro)}</p>
+      <ul className="mt-6 grid gap-x-8 gap-y-7 @xl:grid-cols-2 @4xl:grid-cols-3">
+        {block.points.map((point) => (
+          <li className="flex items-start gap-2.5" key={point.lead}>
+            <Check
+              className="mt-0.5 shrink-0 text-[var(--button-primary-background,#d90716)]"
+              size={18}
+              strokeWidth={2.25}
+            />
+            <p className="text-sm leading-relaxed text-contrast-500">
+              <span className="font-semibold text-foreground">{point.lead} </span>
+              {inline(point.detail)}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+// Plain paragraphs (with inline links and bold leads), on the grey band when tinted.
+function Prose({ block }: { block: Extract<ContentBlock, { type: 'prose' }> }) {
+  return (
+    <section className={clsx('py-12 @4xl:py-16', block.tint && 'bg-[#f9fafd]')}>
+      <div className={CONTAINER}>
+        <h2 className={H2}>{block.title}</h2>
+        <div className="mt-4 grid gap-5 @3xl:grid-cols-2 @3xl:gap-10">
+          {block.paragraphs.map((paragraph) => (
+            <p className={COPY} key={paragraph.slice(0, 40)}>
+              {inline(paragraph)}
+            </p>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Block({ block }: { block: ContentBlock }) {
+  switch (block.type) {
+    case 'lines':
+      return <Lines block={block} />;
+
+    case 'compare':
+      return <Compare block={block} />;
+
+    case 'build':
+      return <Build block={block} />;
+
+    case 'groups':
+      return <Groups block={block} />;
+
+    case 'why':
+      return <Why block={block} />;
+
+    case 'choose':
+      return <Choose block={block} />;
+
+    case 'checklist':
+      return <Checklist block={block} />;
+
+    case 'prose':
+      return <Prose block={block} />;
+
+    default:
+      return null;
+  }
+}
+
+// The long-form content at the foot of a program listing, block by block, in the site's own
+// blocks rather than one long run of headings and bullets.
 export function CabinetProgramContentSection({
   content,
   id,
   className,
 }: {
   content: CabinetProgramContent;
-  /** Anchor for the "See how they're built" link under the hero. */
+  /** Anchor for the "How it's built" link in the hero. */
   id?: string;
   className?: string;
 }) {
-  const { styles, build, why, choose, program } = content;
-
   return (
     <div className={clsx('scroll-mt-24 @container', className)} id={id}>
       {/* The break between the listing and the long-form content: a full-width row of outlined
@@ -133,185 +511,9 @@ export function CabinetProgramContentSection({
           <rect fill="url(#diamond-rule)" height="16" width="100%" />
         </svg>
       </div>
-      {/* 1. Styles: the lines as a table, the looks as tiles. */}
-      <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
-        <h2 className={H2}>{styles.title}</h2>
-        <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{styles.intro}</p>
-        <div className="mt-6 grid gap-8 @3xl:grid-cols-[3fr_2fr] @3xl:gap-12">
-          <table className="w-full border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-contrast-200 text-left text-xs uppercase tracking-wide text-contrast-500">
-                <th className="py-2 pr-4 font-semibold" scope="col">
-                  Line
-                </th>
-                <th className="py-2 pr-4 font-semibold" scope="col">
-                  Construction
-                </th>
-                <th className="py-2 font-semibold" scope="col">
-                  Best for
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-contrast-100">
-              {styles.lines.map((line) => (
-                <tr className="align-top" key={line.name}>
-                  <th className="py-3 pr-4 text-left font-semibold text-foreground" scope="row">
-                    {line.name}
-                  </th>
-                  <td className="py-3 pr-4 text-contrast-500">{line.construction}</td>
-                  <td className="py-3 text-contrast-500">{line.summary}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div>
-            <h3 className="font-[family-name:var(--font-family-heading)] text-base font-semibold">
-              {styles.looksTitle}
-            </h3>
-            <ul className="mt-3 flex flex-col gap-3">
-              {styles.looks.map((look) => {
-                const Icon = ICONS[look.icon];
-
-                return (
-                  // A bare icon sized to the first line of text, so the two sit on one line.
-                  <li className="flex items-start gap-2.5" key={look.name}>
-                    <Icon
-                      aria-hidden
-                      className="mt-[3px] shrink-0 text-[var(--button-primary-background,#d90716)]"
-                      size={16}
-                      strokeWidth={2}
-                    />
-                    <p className="text-sm leading-relaxed text-contrast-500">
-                      <span className="font-semibold text-foreground">{look.name}: </span>
-                      {look.summary}
-                    </p>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-        <p className={clsx(COPY, 'mt-6 max-w-3xl')}>{styles.outro}</p>
-      </section>
-
-      {/* 2. Build quality: a brand-red panel inside the page gutters, white text, bare icons. */}
-      <section className={clsx(CONTAINER, 'py-4 @4xl:py-6')}>
-        <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
-          <h2 className={clsx(H2, '!text-white')}>{build.title}</h2>
-          <ul className="mt-6 grid gap-x-12 gap-y-6 @xl:grid-cols-2 @4xl:grid-cols-3 @4xl:gap-x-16">
-            {build.points.map((point) => {
-              const Icon = ICONS[point.icon];
-
-              return (
-                <li className="flex items-start gap-3" key={point.lead}>
-                  <Icon aria-hidden className="mt-0.5 shrink-0" size={22} strokeWidth={1.75} />
-                  <p className="text-sm leading-relaxed text-white/85">
-                    <span className="font-semibold text-white">{point.lead} </span>
-                    {point.detail}
-                  </p>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </section>
-
-      {/* 3. Why Express Kitchens: reason cards. */}
-      <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
-        <h2 className={H2}>{why.title}</h2>
-        <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{why.intro}</p>
-        {/* Bento grid: three columns, the tall card spanning two rows so eight cards fill nine
-            cells. Hover turns a card brand red with white text and icon. */}
-        <ul className="mt-6 grid grid-flow-dense gap-4 @xl:grid-cols-2 @4xl:grid-cols-3">
-          {why.reasons.map((reason) => {
-            const Icon = ICONS[reason.icon];
-
-            return (
-              <li
-                className={clsx(
-                  'group flex flex-col gap-4 rounded-2xl border border-contrast-100 bg-white p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
-                  reason.span === 'tall' && '@xl:row-span-2',
-                )}
-                key={reason.title}
-              >
-                <Icon
-                  className="text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:text-white"
-                  size={32}
-                  strokeWidth={1.5}
-                />
-                <h3 className="font-[family-name:var(--font-family-heading)] text-lg font-semibold leading-snug">
-                  {reason.title}
-                  {reason.note != null && (
-                    <span className="mt-0.5 block text-xs font-normal text-contrast-400 transition-colors duration-300 group-hover:text-white/80">
-                      {reason.note}
-                    </span>
-                  )}
-                </h3>
-                <p className="text-sm leading-relaxed text-contrast-500 transition-colors duration-300 group-hover:text-white/90">
-                  {reason.detail}
-                </p>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-
-      {/* 4. How to choose: a factor / advice table. */}
-      <section className="bg-[#f9fafd] py-12 @4xl:py-16">
-        <div className={CONTAINER}>
-          <h2 className={H2}>{choose.title}</h2>
-          <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{choose.intro}</p>
-          <table className="mt-6 w-full border-collapse overflow-hidden rounded-2xl bg-white text-sm ring-1 ring-contrast-100">
-            <tbody className="divide-y divide-contrast-100">
-              {choose.rows.map((row) => {
-                const Icon = ICONS[row.icon];
-
-                return (
-                  // Rows tint light pink on hover; a bare red icon sits beside the factor.
-                  <tr
-                    className="align-top transition-colors duration-300 hover:bg-[#fdf3f5]"
-                    key={row.factor}
-                  >
-                    <th className="w-[38%] px-5 py-4 text-left @xl:w-[26%] @xl:px-6" scope="row">
-                      <span className="flex items-center gap-3 font-semibold text-foreground">
-                        <Icon
-                          aria-hidden
-                          className="shrink-0 text-[var(--button-primary-background,#d90716)]"
-                          size={18}
-                          strokeWidth={1.75}
-                        />
-                        {row.factor}
-                      </span>
-                    </th>
-                    <td className="px-5 py-4 text-contrast-500 @xl:px-6">{row.advice}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* 5. Why this program: a check list. */}
-      <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
-        <h2 className={H2}>{program.title}</h2>
-        <p className={clsx(COPY, 'mt-3 max-w-3xl')}>{program.intro}</p>
-        <ul className="mt-6 grid gap-x-8 gap-y-7 @xl:grid-cols-2 @4xl:grid-cols-3">
-          {program.points.map((point) => (
-            <li className="flex items-start gap-2.5" key={point.lead}>
-              <Check
-                className="mt-0.5 shrink-0 text-[var(--button-primary-background,#d90716)]"
-                size={18}
-                strokeWidth={2.25}
-              />
-              <p className="text-sm leading-relaxed text-contrast-500">
-                <span className="font-semibold text-foreground">{point.lead} </span>
-                {point.detail}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {content.blocks.map((block) => (
+        <Block block={block} key={block.title} />
+      ))}
     </div>
   );
 }
