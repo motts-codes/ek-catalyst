@@ -47,6 +47,8 @@ interface HeroProps {
   imageOverlay?: ReactNode;
   /** Where on the photo: top-right (default) or bottom-left, the usual spot for a video chip. */
   imageOverlayPosition?: 'top-right' | 'bottom-left';
+  /** A taller panel (the Assembled / RTA listings): more vertical padding, a taller photo. */
+  tall?: boolean;
   className?: string;
 }
 
@@ -65,6 +67,7 @@ export function CategoryHero({
   eyebrow,
   imageOverlay,
   imageOverlayPosition = 'top-right',
+  tall = false,
   className,
 }: HeroProps) {
   return (
@@ -77,7 +80,7 @@ export function CategoryHero({
               compact
                 ? 'bg-foreground px-6 py-6 @xl:px-10 @xl:py-7'
                 : clsx(
-                    'px-6 py-9 @xl:px-10 @xl:py-12',
+                    tall ? 'px-6 py-12 @xl:px-10 @xl:py-16' : 'px-6 py-9 @xl:px-10 @xl:py-12',
                     // Brand red (#d90716): white text sits at 5.3:1. The lighter #F20819 was tried and
                     // misses 4.5:1 for the description line.
                     tone === 'red'
@@ -126,7 +129,9 @@ export function CategoryHero({
           <div
             className={clsx(
               'relative bg-contrast-100',
-              compact ? 'min-h-[140px] @3xl:min-h-[190px]' : 'min-h-[200px] @3xl:min-h-[320px]',
+              compact && 'min-h-[140px] @3xl:min-h-[190px]',
+              !compact && !tall && 'min-h-[200px] @3xl:min-h-[320px]',
+              !compact && tall && 'min-h-[240px] @3xl:min-h-[400px]',
             )}
           >
             {image ? (

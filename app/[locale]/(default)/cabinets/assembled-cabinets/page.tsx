@@ -99,6 +99,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           </Link>
         }
         imageOverlayPosition="top-right"
+        tall
         title="The kitchen you pictured, ready to install"
         tone="red"
       />

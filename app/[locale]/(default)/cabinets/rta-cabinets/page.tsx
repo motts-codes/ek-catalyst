@@ -93,6 +93,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
           </Link>
         }
         imageOverlayPosition="top-right"
+        tall
         title="Your dream kitchen, for less"
         tone="red"
       />
