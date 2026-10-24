@@ -339,9 +339,41 @@ function Groups({ block }: { block: Extract<ContentBlock, { type: 'groups' }> })
   );
 }
 
+// Which cards sit on the light pink: a checkerboard by the card's visual row and column on the
+// three-column desktop grid, placed the way grid-flow-dense places them (a tall card takes two
+// rows), so each row alternates against the one above it.
+function checkerTints(reasons: Array<{ span?: 'tall' }>, columns = 3): boolean[] {
+  const taken = new Set<string>();
+  const free = (row: number, col: number) => !taken.has(`${row}:${col}`);
+
+  return reasons.map((reason) => {
+    const rows = reason.span === 'tall' ? 2 : 1;
+    let row = 0;
+    let col = 0;
+
+    // First cell, row-major, where the card fits.
+    for (;;) {
+      if (free(row, col) && (rows === 1 || free(row + 1, col))) break;
+
+      col += 1;
+
+      if (col === columns) {
+        col = 0;
+        row += 1;
+      }
+    }
+
+    for (let r = row; r < row + rows; r += 1) taken.add(`${r}:${col}`);
+
+    return (row + col) % 2 === 1;
+  });
+}
+
 // Bento grid: three columns, the tall card spanning two rows so eight cards fill nine cells.
 // Hover turns a card brand red with white text and icon.
 function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
+  const tints = checkerTints(block.reasons);
+
   return (
     <section className={clsx(CONTAINER, 'py-12 @4xl:py-16')}>
       <h2 className={H2}>{block.title}</h2>
@@ -351,11 +383,11 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
           const Icon = ICONS[reason.icon];
 
           return (
-            // Every other card sits on the light pink so the grid reads as a pattern.
+            // Checkerboard: light pink where the row + column parity says so.
             <li
               className={clsx(
                 'group flex flex-col gap-4 rounded-2xl border border-contrast-100 p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
-                index % 2 === 1 ? 'bg-[#fdf3f5]' : 'bg-white',
+                tints[index] ? 'bg-[#fdf3f5]' : 'bg-white',
                 reason.span === 'tall' && '@xl:row-span-2',
               )}
               key={reason.title}
