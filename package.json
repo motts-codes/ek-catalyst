@@ -17,6 +17,7 @@
     "deploy": "npm run generate && catalyst deploy"
   },
   "dependencies": {
+    "@bigcommerce/catalyst": "1.0.0",
     "@bigcommerce/catalyst-client": "^1.0.2",
     "@c15t/nextjs": "^1.8.2",
     "@conform-to/react": "^1.6.1",
@@ -50,13 +51,14 @@
     "clsx": "^2.1.1",
     "content-security-policy-builder": "^2.3.0",
     "deepmerge": "^4.3.1",
+    "dompurify": "^3.3.1",
     "embla-carousel": "9.0.0-rc01",
     "embla-carousel-autoplay": "9.0.0-rc01",
     "embla-carousel-fade": "9.0.0-rc01",
     "embla-carousel-react": "9.0.0-rc01",
     "gql.tada": "^1.8.10",
     "graphql": "^16.11.0",
-    "dompurify": "^3.3.1",
+    "gsap": "3.13.0",
     "jose": "^5.10.0",
     "lodash.debounce": "^4.0.8",
     "lru-cache": "^11.1.0",
@@ -79,8 +81,7 @@
     "swr": "^2.2.5",
     "tailwindcss-radix": "^3.0.5",
     "uuid": "^11.1.0",
-    "zod": "^3.25.51",
-    "@bigcommerce/catalyst": "1.0.0"
+    "zod": "^3.25.51"
   },
   "devDependencies": {
     "@0no-co/graphqlsp": "^1.12.16",

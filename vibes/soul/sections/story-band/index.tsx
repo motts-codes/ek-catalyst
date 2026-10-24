@@ -21,6 +21,8 @@ interface Props {
   /** Small line under the paragraph, e.g. a stock/line count. */
   note?: string;
   tint?: boolean;
+  /** The blush plate offset behind the photo (off for a cleaner hero). */
+  plate?: boolean;
   className?: string;
 }
 
@@ -37,6 +39,7 @@ export function StoryBand({
   headingLevel = 2,
   note,
   tint = false,
+  plate = true,
   className,
 }: Props) {
   return (
@@ -77,13 +80,15 @@ export function StoryBand({
         </div>
         <div className={clsx('relative', imagePosition === 'left' && '@3xl:order-1')}>
           {/* Tinted plate offset behind the photo */}
-          <div
-            aria-hidden
-            className={clsx(
-              'absolute -bottom-4 -top-4 -z-10 w-full rounded-[2rem] bg-[#fbe7e7]',
-              imagePosition === 'left' ? '-left-4' : '-right-4',
-            )}
-          />
+          {plate && (
+            <div
+              aria-hidden
+              className={clsx(
+                'absolute -bottom-4 -top-4 -z-10 w-full rounded-[2rem] bg-[#fbe7e7]',
+                imagePosition === 'left' ? '-left-4' : '-right-4',
+              )}
+            />
+          )}
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
             {image ? (
               <Image

@@ -88,6 +88,7 @@ export default async function CabinetsHub({ params }: Props) {
             imageLabel={HUB_HERO.imageLabel}
             kicker={HUB_HERO.kicker}
             note={HUB_HERO.note}
+            plate={false}
             title={HUB_HERO.title}
           />
         }
@@ -102,6 +103,7 @@ export default async function CabinetsHub({ params }: Props) {
             description="Most kitchens start with a door, not a collection name. Pick the look you love; each one shows the collections that carry it."
             id="styles"
             rows={styleRows}
+            stacked
             tint
             title="Find your style"
           />

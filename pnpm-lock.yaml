@@ -131,6 +131,9 @@ importers:
       graphql:
         specifier: ^16.11.0
         version: 16.14.2
+      gsap:
+        specifier: 3.13.0
+        version: 3.13.0
       jose:
         specifier: ^5.10.0
         version: 5.10.0
@@ -5293,6 +5296,9 @@ packages:
     resolution: {integrity: sha512-Chq1s4CY7jmh8gO2qvLIJyfCDIN+EHLFW/9iShnp1z8FjBQMoodWP1kDC36VAMXXIvAjj4ARa7ntfAV2BrjsbA==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
+  gsap@3.13.0:
+    resolution: {integrity: sha512-QL7MJ2WMjm1PHWsoFrAQH/J8wUeqZvMtHO58qdekHpCfhvhSL4gSiz6vJf5EeMP0LOn3ZCprL2ki/gjED8ghVw==}
+
   gzip-size@6.0.0:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
     engines: {node: '>=10'}
@@ -10086,6 +10092,15 @@ snapshots:
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
+  '@orpc/client@1.13.13(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@orpc/shared': 1.13.13(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server': 1.13.13(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server-fetch': 1.13.13(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server-peer': 1.13.13(@opentelemetry/api@1.9.1)
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+
   '@orpc/contract@1.13.13(@opentelemetry/api@1.9.0)':
     dependencies:
       '@orpc/client': 1.13.13(@opentelemetry/api@1.9.0)
@@ -10169,6 +10184,13 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
 
+  '@orpc/shared@1.13.13(@opentelemetry/api@1.9.1)':
+    dependencies:
+      radash: 12.1.1
+      type-fest: 5.8.0
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
+
   '@orpc/shared@1.14.7(@opentelemetry/api@1.9.0)':
     dependencies:
       radash: 12.1.1
@@ -10200,6 +10222,13 @@ snapshots:
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
+  '@orpc/standard-server-fetch@1.13.13(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@orpc/shared': 1.13.13(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server': 1.13.13(@opentelemetry/api@1.9.1)
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+
   '@orpc/standard-server-node@1.13.13(@opentelemetry/api@1.9.0)':
     dependencies:
       '@orpc/shared': 1.13.13(@opentelemetry/api@1.9.0)
@@ -10215,9 +10244,22 @@ snapshots:
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
+  '@orpc/standard-server-peer@1.13.13(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@orpc/shared': 1.13.13(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server': 1.13.13(@opentelemetry/api@1.9.1)
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+
   '@orpc/standard-server@1.13.13(@opentelemetry/api@1.9.0)':
     dependencies:
       '@orpc/shared': 1.13.13(@opentelemetry/api@1.9.0)
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+
+  '@orpc/standard-server@1.13.13(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@orpc/shared': 1.13.13(@opentelemetry/api@1.9.1)
     transitivePeerDependencies:
       - '@opentelemetry/api'
 
@@ -11892,7 +11934,7 @@ snapshots:
     dependencies:
       '@c15t/backend': 1.8.6(@opentelemetry/instrumentation@0.208.0(@opentelemetry/api@1.9.1))(@upstash/redis@1.38.0)(typeorm@0.3.30(babel-plugin-macros@3.1.0))(ws@8.21.0)
       '@c15t/translations': 1.8.5
-      '@orpc/client': 1.13.13(@opentelemetry/api@1.9.0)
+      '@orpc/client': 1.13.13(@opentelemetry/api@1.9.1)
       '@orpc/server': 1.13.13(@opentelemetry/api@1.9.1)(ws@8.21.0)
       zustand: 5.0.14(@types/react@19.2.17)(immer@11.1.11)(react@19.1.7)(use-sync-external-store@1.6.0(react@19.1.7))
     transitivePeerDependencies:
@@ -13206,6 +13248,8 @@ snapshots:
   graphemer@1.4.0: {}
 
   graphql@16.14.2: {}
+
+  gsap@3.13.0: {}
 
   gzip-size@6.0.0:
     dependencies:
