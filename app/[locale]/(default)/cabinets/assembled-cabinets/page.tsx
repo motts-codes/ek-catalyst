@@ -104,7 +104,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           { icon: 'price', label: 'Save Money' },
           { icon: 'thumbs', label: 'Hassle-Free' },
           { icon: 'plywood', label: 'All-Plywood Semi-Custom' },
-          { icon: 'shield', label: 'CARB2 Compliant' },
+          { icon: 'shield-house', label: 'CARB2 Compliant' },
         ]}
         promisesAction={{ label: 'How it’s built', href: '#about-assembled' }}
         tall

@@ -21,6 +21,7 @@ import {
 import { type ReactNode } from 'react';
 
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
+import { ShieldHouse } from '@/vibes/soul/primitives/icons/shield-house';
 import { MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -68,6 +69,7 @@ const POINT_ICONS = {
   phone: Phone,
   zap: Zap,
   // Cabinet program promises.
+  'shield-house': ShieldHouse,
   thumbs: ThumbsUp,
   plywood: Layers,
   shield: ShieldCheck,

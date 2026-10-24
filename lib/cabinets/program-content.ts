@@ -322,7 +322,7 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
               'Star panels are CNC cut in our Connecticut factory, so every cabinet fits the next one.',
           },
           {
-            icon: 'shield',
+            icon: 'shield-house',
             lead: 'CARB2 compliant',
             detail: 'for formaldehyde emissions.',
           },

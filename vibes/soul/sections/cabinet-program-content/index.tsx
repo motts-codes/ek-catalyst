@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { type ReactNode } from 'react';
 
+import { ShieldHouse } from '@/vibes/soul/primitives/icons/shield-house';
 import { Link } from '~/components/link';
 
 const ICONS = {
@@ -54,13 +55,14 @@ const ICONS = {
   scissors: Scissors,
   shield: Shield,
   'shield-check': ShieldCheck,
+  'shield-house': ShieldHouse,
   sparkles: Sparkles,
   square: Square,
   truck: Truck,
   'volume-x': VolumeX,
   wallet: Wallet,
   warehouse: Warehouse,
-} satisfies Record<string, LucideIcon>;
+} satisfies Record<string, LucideIcon | typeof ShieldHouse>;
 
 export type ContentIcon = keyof typeof ICONS;
 

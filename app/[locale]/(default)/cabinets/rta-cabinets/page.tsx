@@ -99,7 +99,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
           { icon: 'price', label: 'Save Money' },
           { icon: 'wrench', label: 'Easy to Assemble' },
           { icon: 'plywood', label: 'All-Plywood' },
-          { icon: 'shield', label: 'CARB2 Compliant' },
+          { icon: 'shield-house', label: 'CARB2 Compliant' },
           { icon: 'hammer', label: 'DIY Friendly' },
         ]}
         promisesAction={{ label: 'How it’s built', href: '#about-rta' }}
