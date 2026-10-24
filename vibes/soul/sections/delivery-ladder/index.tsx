@@ -206,10 +206,11 @@ function MinimalTable({ columns, rows, narrow }: TableProps) {
   return (
     <div className={clsx('overflow-x-auto', narrow && 'mx-auto max-w-4xl')}>
       <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+        {/* The two program columns share the width equally; the feature column takes the rest. */}
         <colgroup>
           <col className={narrow ? 'w-0' : 'w-[34%]'} />
           {columns.slice(1).map((column) => (
-            <col key={column} />
+            <col className={narrow ? 'w-[38%]' : undefined} key={column} />
           ))}
         </colgroup>
         <thead>

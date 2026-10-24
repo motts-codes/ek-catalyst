@@ -195,25 +195,25 @@ export const HUB_PROGRAM_CARDS: ProgramCard[] = [
   },
 ];
 
-export const COMPARISON_COLUMNS = ['', 'Ready to assemble', 'Assembled'];
+export const COMPARISON_COLUMNS = ['', 'Assembled', 'Ready to assemble'];
 
 // "!" marks the row-heading cell.
 export const COMPARISON_ROWS: string[][] = [
   [
     '!What arrives',
-    'Flat-packed boxes, doors and hardware',
     'Built cabinets, wrapped for shipping',
+    'Flat-packed boxes, doors and hardware',
   ],
-  ['!Who builds the box', 'You, or your installer', 'We do, in our factory'],
+  ['!Who builds the box', 'We do, in our factory', 'You, or your installer'],
   ['!Installation', 'By your installer', 'By your installer'],
-  ['!Time per cabinet', 'About 45 minutes or more', 'None'],
-  ['!Ships in', '2 weeks (Star)', '3 weeks (Star)'],
-  ['!Price', 'Lower', 'Higher, because the building is done'],
-  ['!Lines', 'Star, Euro Max', 'Star, Prism, Euro Max, Euro Value'],
+  ['!Time per cabinet', 'None', 'About 45 minutes or more'],
+  ['!Ships in', '3 weeks (Star)', '2 weeks (Star)'],
+  ['!Price', 'Higher, because the building is done', 'Lower'],
+  ['!Lines', 'Star, Prism, Euro Max, Euro Value', 'Star, Euro Max'],
   [
     '!Best for',
-    'Handy homeowners, tighter budgets, crews who assemble on site',
     'Anyone who wants it ready to install',
+    'Handy homeowners, tighter budgets, crews who assemble on site',
   ],
 ];
 
