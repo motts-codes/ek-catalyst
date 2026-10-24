@@ -189,6 +189,37 @@ function toggleFilterHref(
 // and the grid narrows through the products' "Finish" custom field (a search facet, like Program).
 const FINISH_PARAM = 'finish';
 
+// The build features as structured data (schema.org ProductGroup additionalProperty), so search
+// and AI see "Box material: Plywood" etc. without the copy sounding technical. Nothing without
+// properties.
+function CollectionSchema({
+  name,
+  path,
+  content,
+}: {
+  name: string;
+  path: string;
+  content: { schemaProperties: Array<{ name: string; value: string }> } | null | undefined;
+}) {
+  const properties = content?.schemaProperties ?? [];
+
+  if (properties.length === 0) return null;
+
+  const json = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ProductGroup',
+    name: `${name} cabinets`,
+    url: path,
+    additionalProperty: properties.map((property) => ({
+      '@type': 'PropertyValue',
+      name: property.name,
+      value: property.value,
+    })),
+  });
+
+  return <script dangerouslySetInnerHTML={{ __html: json }} type="application/ld+json" />;
+}
+
 // Every listing uses the compact grid (4 columns beside the filter sidebar, 5 with it hidden) and
 // pages 20 at a time, which fills both. Kept as a function so a category can diverge later.
 function listingLayout(): { pageSize: number; density: 'compact' } {
@@ -650,6 +681,7 @@ export default async function Category(props: Props) {
               programSwitchable ? getSwitchHref(category.path, cabinetProgram) : undefined
             }
           />
+          <CollectionSchema content={cabinetContent} name={category.name} path={category.path} />
           <CabinetTypeFilter
             className="pb-5"
             hrefFor={(value) =>

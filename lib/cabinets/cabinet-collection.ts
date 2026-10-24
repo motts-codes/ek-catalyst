@@ -4,6 +4,7 @@ import {
   howItsBuilt,
   parseHowBuiltText,
   parseSpecLines,
+  schemaProperties,
   type SpecLine,
 } from './spec-translate';
 
@@ -847,6 +848,8 @@ export interface CabinetCollectionContent {
   /** Customer-facing "How it's built": staff-written when content.how_built_by_program has text
    *  for the program, else derived from the specification lines. */
   howBuilt: BuildPoint[];
+  /** The same features as schema.org PropertyValue pairs for the page's structured data. */
+  schemaProperties: Array<{ name: string; value: string }>;
   disclaimer: string;
 }
 
@@ -868,23 +871,23 @@ export const getCabinetCollectionContent = cache(
       parseJson<{ rta?: string; assembled?: string }>(val('how_built_by_program'))?.[program] ?? '',
     );
 
+    const buildContext = {
+      multiFinish:
+        Object.keys(
+          parseJson<ByFinish>(
+            cat?.finishes.edges?.find((e) => e.node.key === 'by_finish')?.node.value,
+          ) ?? {},
+        ).length > 0,
+      doorStyle: parseJson<MerchInfo>(
+        cat?.merch.edges?.find((e) => e.node.key === 'info')?.node.value,
+      )?.door_style,
+    };
+
     return {
       specifications,
       specRows,
-      howBuilt:
-        written.length > 0
-          ? written
-          : howItsBuilt(specRows, {
-              multiFinish:
-                Object.keys(
-                  parseJson<ByFinish>(
-                    cat?.finishes.edges?.find((e) => e.node.key === 'by_finish')?.node.value,
-                  ) ?? {},
-                ).length > 0,
-              doorStyle: parseJson<MerchInfo>(
-                cat?.merch.edges?.find((e) => e.node.key === 'info')?.node.value,
-              )?.door_style,
-            }),
+      howBuilt: written.length > 0 ? written : howItsBuilt(specRows, buildContext),
+      schemaProperties: schemaProperties(specRows, buildContext),
       disclaimer: val('disclaimer'),
     };
   },

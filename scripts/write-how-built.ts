@@ -3,7 +3,7 @@
  *
  * For each child of 863, each program that has a specification (content.spec_by_program) gets
  * its bullets derived by the storefront's own rules (lib/cabinets/spec-translate.ts) and stored
- * in content.how_built_by_program as plain text, one point per line, first sentence bold. Staff
+ * in content.how_built_by_program as plain text, one row per line as "Feature: benefit". Staff
  * can then edit the stored text in /cabinet-admin → Collections; the storefront shows the stored
  * text and only falls back to deriving when a program's text is blank.
  *
@@ -85,9 +85,9 @@ const parse = <T>(value: string | undefined): T | undefined => {
   }
 };
 
-/** The stored text format: one point per line, "Lead. Detail". */
+/** The stored text format: one row per line, "Feature: what it means for you". */
 const toText = (points: Array<{ lead: string; detail: string }>) =>
-  points.map((p) => (p.detail ? `${p.lead} ${p.detail}` : p.lead)).join('\n');
+  points.map((p) => (p.detail ? `${p.lead}: ${p.detail}` : p.lead)).join('\n');
 
 async function main() {
   const apply = process.argv.includes('--apply') || process.argv.includes('--force');

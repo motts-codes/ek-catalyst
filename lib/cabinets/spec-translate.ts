@@ -3,11 +3,16 @@
  *
  * The staff-authored spec HTML (content.spec_by_program) is a list of "Label: value" lines in a
  * small, stable vocabulary (box, face frame, door, drawer box, shelves, hinges, glides…).
- * `parseSpecLines` turns it into label/value rows for a table, and `howItsBuilt` turns those
- * rows into the customer-facing "How it's built" bullets by rule, so every collection gets the
- * plain-English version without anyone writing forty of them — and it stays in step when a spec
- * changes. Each rule keys on the label and reads a few words of the value; anything it doesn't
- * recognise is simply left out of the bullets (it is still in the table).
+ * `parseSpecLines` turns it into label/value rows for the Specifications table, and
+ * `howItsBuilt` turns those rows into the customer-facing "How it's built" rows by rule, so every
+ * collection gets the plain-English version without anyone writing forty of them — and it stays
+ * in step when a spec changes.
+ *
+ * House rules for the rows (so search and AI treat them as the same features everywhere):
+ * short labels written the way customers search ("Plywood box", "Dovetail drawers", "Soft-close
+ * doors"), one benefit per row, no measurements (thicknesses and joint types stay in
+ * Specifications), and the door row changes with the collection (painted HDF vs solid birch).
+ * `schemaProperties` gives the same features as schema.org PropertyValues for structured data.
  */
 
 export interface SpecLine {
@@ -74,43 +79,26 @@ const find = (lines: SpecLine[], pattern: RegExp) =>
 
 const has = (value: string, pattern: RegExp) => pattern.test(value);
 
-// Thickness as a fraction of an inch, from "½”", "¾\"", "⁵⁄₈”" or "18mm (~3/4”)".
-const FRACTIONS: Record<string, string> = { '1/2': '½', '3/4': '¾', '1/4': '¼', '5/8': '⅝' };
-
-function thickness(value: string): string | null {
-  const unicode = /[¾½¼⅝]/.exec(value.replace('⁵⁄₈', '⅝'));
-
-  if (unicode) return `${unicode[0]}″`;
-
-  const ascii = /(\d\/\d)/.exec(value);
-  const fraction = ascii?.[1] ? FRACTIONS[ascii[1]] : undefined;
-
-  return fraction ? `${fraction}″` : null;
-}
+const PAINTED_DOOR =
+  'A smooth, durable painted finish that won’t crack at the joints the way solid wood can.';
 
 function boxPoint(lines: SpecLine[]): BuildPoint | null {
   const box = find(lines, /box construction/i);
-  const interior = find(lines, /cabinet interior/i);
 
   if (box === '') return null;
 
-  const inside = has(interior, /birch/i) ? 'birch' : '';
-
   if (has(box, /plywood/i)) {
-    const t = thickness(box);
-
     return {
-      lead: inside === 'birch' ? 'Plywood box, birch inside and out.' : 'Plywood box.',
-      detail: `${t ? `${t} plywood` : 'Plywood'} sides, not particleboard, so it holds screws and stands up to moisture.`,
+      lead: 'Plywood box',
+      detail: 'Not particleboard, so it holds screws tight and stands up to spills under the sink.',
     };
   }
 
   if (has(box, /melamine/i)) {
     return {
-      lead: 'Melamine-wrapped box.',
-      detail: `Furniture board in white or natural maple, edge-banded to match, with a wipe-clean ${
-        inside === 'birch' ? 'birch veneer' : 'melamine'
-      } interior.`,
+      lead: 'Melamine-wrapped box',
+      detail:
+        'Furniture board sealed in melamine on every face, so it wipes clean and shrugs off scuffs.',
     };
   }
 
@@ -123,33 +111,28 @@ function framePoint(lines: SpecLine[]): BuildPoint | null {
 
   if (frame !== '') {
     return {
-      lead: has(frame, /birch/i) ? 'Solid birch face frame.' : 'Solid hardwood face frame.',
-      detail:
-        'A ¾″ hardwood frame around every cabinet, doweled and glued, for a box that stays square.',
+      lead: has(frame, /birch/i) ? 'Solid birch face frame' : 'Solid hardwood face frame',
+      detail: 'A hardwood frame keeps every cabinet square and sturdy for years.',
     };
   }
 
   if (has(overlay, /frameless/i)) {
     return {
-      lead: 'Frameless, full-access design.',
-      detail:
-        'No face frame, so doors sit edge to edge and drawers open the full width of the box.',
+      lead: 'Frameless construction',
+      detail: 'No face frame, so doors sit edge to edge and you get full access inside.',
     };
   }
 
   return null;
 }
 
-function overlayNote(overlay: string): string {
-  if (has(overlay, /full overlay/i)) {
-    return ' Full overlay, so the doors cover the frame for a clean, built-in look.';
-  }
+// Door style from the center panel: flat recessed = shaker, raised = raised panel, "reversed
+// raised" (the profile on the back) = flat panel.
+function doorStyle(door: string): string {
+  if (has(door, /reversed raised/i)) return 'flat-panel';
+  if (has(door, /raised/i)) return 'raised-panel';
 
-  if (has(overlay, /partial overlay/i)) {
-    return ' Partial overlay, the classic look with a little frame showing between doors.';
-  }
-
-  return '';
+  return 'shaker';
 }
 
 // The finish as written, minus stock codes: "Painted Stratus (Stock)" → "Painted Stratus",
@@ -159,15 +142,6 @@ function finishName(lines: SpecLine[]): string {
     .replace(/\s*\([^)]*\)/g, '')
     .replace(/\s+-\s+/g, ', ')
     .trim();
-}
-
-// The center panel, in the customer's words: flat recessed = shaker, raised = raised panel,
-// "reversed raised" (the profile on the back) = flat panel.
-function panelPhrase(door: string): { style: string; panel: string } {
-  if (has(door, /reversed raised/i)) return { style: 'flat-panel', panel: 'a flat center panel' };
-  if (has(door, /raised/i)) return { style: 'raised-panel', panel: 'a raised center panel' };
-
-  return { style: 'shaker', panel: 'a recessed shaker panel' };
 }
 
 // Euro finish names read as product codes ("Textured Matte Finish, Super White"); turn them into
@@ -185,11 +159,7 @@ function euroFinish(finish: string): string {
 
 function doorPoint(lines: SpecLine[], ctx: BuildContext): BuildPoint | null {
   const door = find(lines, /door/i);
-  const overlay = find(lines, /overlay/i);
   const finish = finishName(lines);
-  const pull = has(door, /finger pull/i) ? ' with a routed finger pull.' : '.';
-  const slab = has(door, /slab/i) ? ` Slab drawer fronts${pull}` : '';
-  const fit = overlayNote(overlay);
 
   // Euro lines have no door line: flat laminate fronts (or the merchandised style), named by
   // their finish.
@@ -203,32 +173,50 @@ function doorPoint(lines: SpecLine[], ctx: BuildContext): BuildPoint | null {
 
     return shaker
       ? {
-          lead: 'Shaker doors, European style.',
+          lead: 'Shaker doors',
           detail: `A clean recessed-panel front${look}, with no face frame behind it.`,
         }
-      : { lead: 'Flat slab doors.', detail: `Modern, handle-ready flat fronts${look}.` };
+      : {
+          lead: 'Slab doors',
+          detail: `Flat, handle-ready fronts${look} that resist stains, scratches and scuffs.`,
+        };
   }
 
-  const { style, panel } = panelPhrase(door);
+  const style = doorStyle(door);
 
   if (has(door, /hdf/i)) {
-    // A multi-finish collection is painted in the customer's choice; a single-finish one in its
-    // named colour.
-    const lead = ctx.multiFinish
-      ? `Painted ${style} doors that won’t crack.`
-      : `${finish || 'Painted'} ${style} doors that won’t crack.`;
     const choice = ctx.multiFinish ? ' Painted in the finish you pick above.' : '';
 
-    return {
-      lead,
-      detail: `Five-piece doors built like wood, in HDF that holds paint and doesn’t move with the seasons.${choice}${slab}${fit}`,
-    };
+    return { lead: `Painted ${style} doors`, detail: `${PAINTED_DOOR}${choice}` };
   }
 
   if (has(door, /solid birch frame/i)) {
     return {
-      lead: finish ? `Solid birch doors in ${finish}.` : 'Solid birch doors.',
-      detail: `A five-piece hardwood frame around ${panel}, joined with mortise and tenon.${slab}${fit}`,
+      lead: 'Solid birch doors',
+      detail: 'Real wood with a natural grain, built strong at the joints so doors stay flat.',
+    };
+  }
+
+  return null;
+}
+
+// Overlay as its own row, only where there is a face frame to overlay.
+function overlayPoint(lines: SpecLine[]): BuildPoint | null {
+  const overlay = find(lines, /overlay/i);
+  const door = find(lines, /door/i);
+  const pull = has(door, /finger pull/i) ? ' Slab drawer fronts with a routed finger pull.' : '';
+
+  if (has(overlay, /full overlay/i)) {
+    return {
+      lead: 'Full overlay doors',
+      detail: `Doors cover the frame for a clean, built-in look.${pull}`,
+    };
+  }
+
+  if (has(overlay, /partial overlay/i)) {
+    return {
+      lead: 'Partial overlay doors',
+      detail: `A little of the frame shows between doors, the classic look.${pull}`,
     };
   }
 
@@ -242,15 +230,15 @@ function drawerBoxPoint(lines: SpecLine[]): BuildPoint | null {
 
   if (has(box, /dovetail/i)) {
     return {
-      lead: 'Dovetail drawers.',
-      detail: `Solid ${has(box, /birch/i) ? 'birch' : 'hardwood'}, joined like fine furniture, with a plywood bottom that won’t sag.`,
+      lead: 'Dovetail drawers',
+      detail: 'Solid wood drawers joined like fine furniture, with bottoms that won’t sag.',
     };
   }
 
   if (has(box, /plywood/i)) {
     return {
-      lead: 'Plywood drawer boxes.',
-      detail: 'A captured plywood bottom and plywood sides, sturdier than particleboard drawers.',
+      lead: 'Plywood drawer boxes',
+      detail: 'Sturdier than particleboard drawers, with bottoms that won’t sag.',
     };
   }
 
@@ -262,10 +250,15 @@ function hingePoint(lines: SpecLine[]): BuildPoint | null {
 
   if (hinges === '') return null;
 
-  return {
-    lead: has(hinges, /soft.?close/i) ? 'Soft-close doors.' : 'Concealed steel hinges.',
-    detail: `${has(hinges, /soft.?close/i) ? 'Close quietly, and' : 'Hidden when the door is shut, and'} adjust six ways for a perfect line.`,
-  };
+  return has(hinges, /soft.?close/i)
+    ? {
+        lead: 'Soft-close doors',
+        detail: 'Every door closes quietly on its own, with no slamming.',
+      }
+    : {
+        lead: 'Concealed hinges',
+        detail: 'Hidden when the door is shut, and adjustable for a perfect line.',
+      };
 }
 
 function shelfPoint(lines: SpecLine[]): BuildPoint | null {
@@ -273,18 +266,11 @@ function shelfPoint(lines: SpecLine[]): BuildPoint | null {
 
   if (shelves === '') return null;
 
-  const t = thickness(shelves);
-
-  if (has(shelves, /plywood/i)) {
-    return {
-      lead: 'Adjustable plywood shelves.',
-      detail: `${t ?? '¾″'} thick, so they won’t bow under heavy pots.`,
-    };
-  }
-
   return {
-    lead: 'Adjustable shelves.',
-    detail: `${t ?? '¾″'} thick on metal clips, so you set the heights you need.`,
+    lead: 'Adjustable shelves',
+    detail: has(shelves, /plywood/i)
+      ? 'Thick plywood shelves you can move to fit tall bottles or heavy pots.'
+      : 'Shelves you can move to fit tall bottles or heavy pots.',
   };
 }
 
@@ -297,32 +283,33 @@ function glidePoints(lines: SpecLine[]): BuildPoint[] {
     points.push(
       has(glides, /full extension/i) && has(glides, /soft.?close/i)
         ? {
-            lead: 'Full-extension, soft-close drawers.',
-            detail: 'Drawers pull all the way out and close themselves, as standard.',
+            lead: 'Full-extension, soft-close drawers',
+            detail: 'Drawers pull all the way out and close themselves.',
           }
         : {
-            lead: 'Smooth-rolling drawer glides.',
-            detail: 'Undermount steel glides, hidden from view, on nylon rollers.',
+            lead: 'Smooth drawer glides',
+            detail: 'Hidden steel glides under each drawer, so it rolls out easily.',
           },
     );
   }
 
   if (upgrade !== '' && has(upgrade, /full extension/i)) {
     points.push({
-      lead: 'Optional upgrade: full-extension, soft-close drawer glides.',
-      detail: 'Drawers that pull all the way out and close themselves.',
+      lead: 'Full-extension, soft-close drawers (upgrade)',
+      detail: 'Drawers pull all the way out and close themselves. Add it to your order.',
     });
   }
 
   return points;
 }
 
-/** The customer-facing "How it's built" bullets for a set of spec lines. */
+/** The customer-facing "How it's built" rows for a set of spec lines. */
 export function howItsBuilt(lines: SpecLine[], ctx: BuildContext = {}): BuildPoint[] {
   return [
     boxPoint(lines),
     framePoint(lines),
     doorPoint(lines, ctx),
+    overlayPoint(lines),
     drawerBoxPoint(lines),
     hingePoint(lines),
     shelfPoint(lines),
@@ -330,16 +317,110 @@ export function howItsBuilt(lines: SpecLine[], ctx: BuildContext = {}): BuildPoi
   ].filter((p): p is BuildPoint => p != null);
 }
 
-/** Staff-written "How it's built" (content.how_built_by_program): one point per line, the first
- *  sentence as the bold lead. Returns [] for blank text, which means "derive from the specs". */
+// The first rule whose pattern matches the value, else null.
+const pick = (value: string, rules: Array<[RegExp, string]>): string | null =>
+  rules.find(([pattern]) => pattern.test(value))?.[1] ?? null;
+
+/** The same features as schema.org PropertyValue pairs (name / value) for structured data:
+ *  "Box material: Plywood", "Drawer: Dovetail", "Hinges: Soft-close" and so on. */
+export function schemaProperties(
+  lines: SpecLine[],
+  ctx: BuildContext = {},
+): Array<{ name: string; value: string }> {
+  const door = find(lines, /door/i);
+  const frame = find(lines, /face frame/i);
+  const overlay = find(lines, /overlay/i);
+  const anyValue = /./;
+  const euroDoors = /shaker/i.test(ctx.doorStyle ?? '') ? 'Shaker' : 'Slab';
+  const props: Array<{ name: string; value: string | null }> = [
+    {
+      name: 'Box material',
+      value: pick(find(lines, /box construction/i), [
+        [/plywood/i, 'Plywood'],
+        [/melamine/i, 'Melamine furniture board'],
+      ]),
+    },
+    {
+      name: 'Construction',
+      value: frame !== '' ? 'Framed' : pick(overlay, [[/frameless/i, 'Frameless']]),
+    },
+    {
+      name: 'Face frame',
+      value: pick(frame, [
+        [/birch/i, 'Solid birch'],
+        [anyValue, 'Solid hardwood'],
+      ]),
+    },
+    {
+      name: 'Doors',
+      value:
+        door === ''
+          ? euroDoors
+          : pick(door, [
+              [/hdf/i, `Painted HDF ${doorStyle(door)}`],
+              [/solid birch frame/i, `Solid birch ${doorStyle(door)}`],
+            ]),
+    },
+    {
+      name: 'Overlay',
+      value: pick(overlay, [
+        [/full overlay/i, 'Full'],
+        [/partial overlay/i, 'Partial'],
+      ]),
+    },
+    {
+      name: 'Drawer',
+      value: pick(find(lines, /drawer box/i), [
+        [/dovetail/i, 'Dovetail'],
+        [/plywood/i, 'Plywood'],
+      ]),
+    },
+    {
+      name: 'Hinges',
+      value: pick(find(lines, /hinge/i), [
+        [/soft.?close/i, 'Soft-close'],
+        [anyValue, 'Concealed'],
+      ]),
+    },
+    {
+      name: 'Drawer glides',
+      value: pick(find(lines, /drawer (glides|guides)/i), [
+        [
+          /full extension[\s\S]*soft.?close|soft.?close[\s\S]*full extension/i,
+          'Full-extension soft-close',
+        ],
+        [anyValue, 'Undermount'],
+      ]),
+    },
+    {
+      name: 'Shelves',
+      value: pick(find(lines, /shel/i), [
+        [/plywood/i, 'Adjustable plywood'],
+        [anyValue, 'Adjustable'],
+      ]),
+    },
+  ];
+
+  return props.filter((p): p is { name: string; value: string } => p.value != null);
+}
+
+/** Staff-written "How it's built" (content.how_built_by_program): one row per line as
+ *  "Feature: what it means for you". Returns [] for blank text, which means "derive from the
+ *  specs". (Older text with a sentence-style lead, "Feature. Why.", still parses.) */
 export function parseHowBuiltText(text: string): BuildPoint[] {
   return text
     .split(/\r?\n/)
     .map((line) => line.replace(/^[-•*]\s*/, '').trim())
     .filter((line) => line !== '')
     .map((line) => {
-      const m = /^(.+?[.!?])\s+(.*)$/.exec(line);
+      const colon = /^([^:]{2,80}?):\s+(.*)$/.exec(line);
 
-      return m?.[1] && m[2] ? { lead: m[1], detail: m[2] } : { lead: line, detail: '' };
+      if (colon?.[1] && colon[2]) return { lead: colon[1], detail: colon[2] };
+
+      const sentence = /^(.+?[.!?])\s+(.*)$/.exec(line);
+
+      return sentence?.[1] && sentence[2]
+        ? { lead: sentence[1], detail: sentence[2] }
+        : { lead: line, detail: '' };
     });
 }

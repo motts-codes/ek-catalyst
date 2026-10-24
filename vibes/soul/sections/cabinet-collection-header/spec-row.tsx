@@ -100,16 +100,26 @@ export function HowBuiltRow({ points = [] }: { points?: BuildPoint[] }) {
     <AccordionRow title="How it's built">
       {/* The same two-column table as Specifications: the lead on the left, the why on the right. */}
       <table className={clsx(COMPACT_COPY_CLASS, 'w-full border-collapse')}>
+        <thead>
+          <tr className="border-b border-contrast-200 text-left text-[10px] uppercase tracking-wide text-contrast-400">
+            <th className="w-[38%] pb-1.5 pr-4 font-semibold @md:w-[30%]" scope="col">
+              Feature
+            </th>
+            <th className="pb-1.5 font-semibold" scope="col">
+              What it means for you
+            </th>
+          </tr>
+        </thead>
         <tbody className="divide-y divide-contrast-100">
           {points.map((point) => (
             <tr className="align-top" key={point.lead}>
               <th
-                className="w-[38%] py-1.5 pr-4 text-left font-medium text-contrast-500 @md:w-[30%]"
+                className="w-[38%] py-1.5 pr-4 text-left font-medium text-foreground @md:w-[30%]"
                 scope="row"
               >
                 {point.lead.replace(/[.!]$/, '')}
               </th>
-              <td className="py-1.5 text-foreground">{point.detail}</td>
+              <td className="py-1.5 text-contrast-500">{point.detail}</td>
             </tr>
           ))}
         </tbody>

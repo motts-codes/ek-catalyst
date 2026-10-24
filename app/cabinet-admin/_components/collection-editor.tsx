@@ -267,7 +267,7 @@ export function CollectionEditor({
           {(['assembled', 'rta'] as const).map((prog) => (
             <Textarea
               key={`how-built-${prog}`}
-              label={`How it's built — ${prog === 'assembled' ? 'Assembled' : 'RTA'} (one point per line; the first sentence shows bold. Leave empty to derive from the specifications)`}
+              label={`How it's built — ${prog === 'assembled' ? 'Assembled' : 'RTA'} (one row per line as "Feature: what it means for you". Leave empty to derive from the specifications)`}
               onChange={(v) =>
                 setData((d) => ({
                   ...d,
