@@ -393,10 +393,15 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
             // Checkerboard: light pink where the row + column parity says so.
             <li
               className={clsx(
-                'group flex flex-col gap-4 rounded-2xl border border-contrast-100 p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
-                phone[index] ? 'bg-[#fdf3f5]' : 'bg-white',
-                tablet[index] ? '@xl:bg-[#fdf3f5]' : '@xl:bg-white',
-                desktop[index] ? '@4xl:bg-[#fdf3f5]' : '@4xl:bg-white',
+                // Pink cards sit on their fill; white cards take the light red hairline instead.
+                'group flex flex-col gap-4 rounded-2xl border p-6 transition-colors duration-300 ease-smooth hover:border-[var(--button-primary-background,#d90716)] hover:bg-[var(--button-primary-background,#d90716)] hover:text-white',
+                phone[index] ? 'border-[#fdf3f5] bg-[#fdf3f5]' : 'border-[#fcb6bb] bg-white',
+                tablet[index]
+                  ? '@xl:border-[#fdf3f5] @xl:bg-[#fdf3f5]'
+                  : '@xl:border-[#fcb6bb] @xl:bg-white',
+                desktop[index]
+                  ? '@4xl:border-[#fdf3f5] @4xl:bg-[#fdf3f5]'
+                  : '@4xl:border-[#fcb6bb] @4xl:bg-white',
                 reason.span === 'tall' && '@xl:row-span-2',
               )}
               key={reason.title}
