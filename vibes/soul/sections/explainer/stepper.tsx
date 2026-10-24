@@ -22,11 +22,14 @@ export interface StepperStep {
 }
 
 const RED = 'var(--button-primary-background,#d90716)';
-const STEP_DELAY = 650;
+// How long the line takes to travel from one circle to the next (linear, so it reads as steady
+// motion); the next step lights up the moment the line reaches it.
+const LINE_MS = 1600;
 
 // The remodel timeline as an animated stepper. At rest only the icons, the numbered outline
 // circles and the grey line between them show. Once it scrolls into view the steps light up one
-// after another: the circle fills red, the line to it fills red, and its words fade in under it.
+// after another: the line travels from the lit circle to the next at a steady pace, and when it
+// arrives that circle fills red and its words fade in under it.
 // Click a circle to jump to that step. People who prefer reduced motion see the finished state.
 export function Stepper({ steps }: { steps: StepperStep[] }) {
   const root = useRef<HTMLOListElement>(null);
@@ -66,14 +69,14 @@ export function Stepper({ steps }: { steps: StepperStep[] }) {
 
     const timer = window.setTimeout(
       () => setLit((n) => Math.max(n, n + 1)),
-      lit === 0 ? 150 : STEP_DELAY,
+      lit === 0 ? 150 : LINE_MS,
     );
 
     return () => window.clearTimeout(timer);
   }, [started, lit, steps.length]);
 
   return (
-    <ol className="grid @3xl:grid-cols-5" ref={root}>
+    <ol className="grid [--line-ms:1600ms] @3xl:grid-cols-5" ref={root}>
       {steps.map((step, index) => {
         const active = index < lit;
         const current = index === lit - 1;
@@ -94,8 +97,8 @@ export function Stepper({ steps }: { steps: StepperStep[] }) {
                 >
                   <span
                     className={clsx(
-                      'block h-full w-full origin-top transition-transform duration-500 ease-out',
-                      index + 1 < lit ? 'scale-y-100' : 'scale-y-0',
+                      'block h-full w-full origin-top transition-transform [transition-duration:var(--line-ms)] [transition-timing-function:linear]',
+                      index < lit ? 'scale-y-100' : 'scale-y-0',
                     )}
                     style={{ backgroundColor: RED }}
                   />
@@ -106,8 +109,8 @@ export function Stepper({ steps }: { steps: StepperStep[] }) {
                 >
                   <span
                     className={clsx(
-                      'block h-full w-full origin-left transition-transform duration-500 ease-out',
-                      index + 1 < lit ? 'scale-x-100' : 'scale-x-0',
+                      'block h-full w-full origin-left transition-transform [transition-duration:var(--line-ms)] [transition-timing-function:linear]',
+                      index < lit ? 'scale-x-100' : 'scale-x-0',
                     )}
                     style={{ backgroundColor: RED }}
                   />
