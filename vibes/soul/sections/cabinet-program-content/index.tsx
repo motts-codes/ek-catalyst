@@ -195,7 +195,7 @@ export function CabinetProgramContentSection({
       <section className={clsx(CONTAINER, 'py-4 @4xl:py-6')}>
         <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
           <h2 className={clsx(H2, '!text-white')}>{build.title}</h2>
-          <ul className="mt-6 grid gap-x-8 gap-y-6 @xl:grid-cols-2 @4xl:grid-cols-3">
+          <ul className="mt-6 grid gap-x-12 gap-y-6 @xl:grid-cols-2 @4xl:grid-cols-3 @4xl:gap-x-16">
             {build.points.map((point) => {
               const Icon = ICONS[point.icon];
 
