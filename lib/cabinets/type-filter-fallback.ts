@@ -11,8 +11,8 @@ const PAGE_SIZE = 20;
 const FETCH_SIZE = 50;
 const TTL_MS = 10 * 60 * 1000;
 
-// The "Filter by type" tiles and the width / height chips on a cabinet collection are meant to
-// narrow through search facets on the products' custom fields. BigCommerce has not indexed those
+// The "Filter by type" tiles, the width / height / depth dropdowns and the finish chips on a
+// cabinet collection are meant to narrow through search facets on the products' custom fields. BigCommerce has not indexed those
 // facets (the fields are on every product, but the facets never appear and the attribute filters
 // are ignored), so until it does, this narrows the collection in code: fetch every product in the
 // collection (with the Program facet, which does work), keep the ones matching the selection, and
@@ -26,6 +26,8 @@ export interface CabinetGridFilters {
   widths: string[];
   heights: string[];
   depths: string[];
+  /** The selected finish name on a per-finish (Prism) collection, else null. */
+  finish?: string | null;
 }
 
 export interface SizeOption {
@@ -84,6 +86,7 @@ const productTypeOf = (item: SearchItem) => customField(item, 'Product Type')?.t
 const widthOf = (item: SearchItem) => customField(item, 'Width');
 const heightOf = (item: SearchItem) => customField(item, 'Height');
 const depthOf = (item: SearchItem) => customField(item, 'Depth');
+const finishOf = (item: SearchItem) => customField(item, 'Finish');
 
 // Page cursors in this mode are plain page numbers ("p2"), carried in the same after/before
 // params the real search uses, so the pagination component needs no changes.
@@ -101,7 +104,8 @@ export const hasGridFilters = (filters: CabinetGridFilters): boolean =>
   filters.types.length > 0 ||
   filters.widths.length > 0 ||
   filters.heights.length > 0 ||
-  filters.depths.length > 0;
+  filters.depths.length > 0 ||
+  Boolean(filters.finish);
 
 /** Every product in the collection (for the given program / finish), cached ten minutes. The
  *  pagination and in-code filter params are dropped from the key. */
@@ -132,7 +136,8 @@ function matches(item: SearchItem, filters: CabinetGridFilters): boolean {
     ) &&
     inSet(widthOf(item), filters.widths) &&
     inSet(heightOf(item), filters.heights) &&
-    inSet(depthOf(item), filters.depths)
+    inSet(depthOf(item), filters.depths) &&
+    (!filters.finish || finishOf(item)?.toLowerCase() === filters.finish.toLowerCase())
   );
 }
 

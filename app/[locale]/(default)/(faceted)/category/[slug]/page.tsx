@@ -383,13 +383,16 @@ export default async function Category(props: Props) {
   } = await cabinetProgramContext(isCabinet, categoryId, programParam);
   const { pageSize, density } = listingLayout();
   const searchParamsForLinks = await props.searchParams;
-  const gridFilters = cabinetGridFilters(isCabinet, searchParamsForLinks);
+  const gridFiltersBase = cabinetGridFilters(isCabinet, searchParamsForLinks);
   // ?finish= → the finish name (null when absent/unknown) and the grid filter for it.
-  const { name: selectedFinish, filter: finishFilter } = await cabinetFinishContext(
+  // The finish narrows in code (lib/cabinets/type-filter-fallback), not through the search: the
+  // products' "Finish" custom field is not an indexed facet, and a filter on it returns nothing.
+  const { name: selectedFinish } = await cabinetFinishContext(
     isCabinet,
     categoryId,
     searchParamsForLinks[FINISH_PARAM],
   );
+  const gridFilters = { ...gridFiltersBase, finish: selectedFinish };
 
   if (!category) {
     return notFound();
@@ -440,7 +443,6 @@ export default async function Category(props: Props) {
       ...parsedSearchParams,
       ...programFilter,
       ...typeFilter,
-      ...finishFilter,
       category: categoryId,
       limit: pageSize,
     };
@@ -468,7 +470,6 @@ export default async function Category(props: Props) {
           ...searchParams,
           ...parsedSearchParams,
           ...programFilter,
-          ...finishFilter,
           category: categoryId,
         },
         filters: gridFilters,
@@ -491,7 +492,7 @@ export default async function Category(props: Props) {
     const programFilter = selectedProgram ? cabinetProgramSearchParam(selectedProgram) : {};
 
     return cabinetSizeOptions({
-      searchParams: { ...programFilter, ...finishFilter, category: categoryId },
+      searchParams: { ...programFilter, category: categoryId },
       filters: gridFilters,
       currencyCode,
       customerAccessToken,

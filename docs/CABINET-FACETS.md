@@ -142,6 +142,11 @@ The collection pages' **"Filter by type"** strip
 links to `?attr_Product Type=<value>` (repeated for several types) and the category page applies it
 exactly like the Program facet (before pagination). Icons: `public/images/cabinets/types/*.svg`.
 
+**Finish** (Prism, `?finish=<slug>`) is applied in code too: the products' `Finish` custom field is
+not an indexed facet, and sending it as a search attribute filter returns *no* products (verified
+on Prism Avon), so the page never sends `attr_Finish` to the search and narrows the fetched list
+by the field instead.
+
 **Width / height chips** (`vibes/soul/sections/cabinet-size-filter`) sit under the tiles and link to
 `?width=<n>&height=<n>` (the products' numeric `Width` / `Height` custom fields, repeatable). Until
 the Product Type / size facets are indexed, every grid filter on a collection page is applied in
