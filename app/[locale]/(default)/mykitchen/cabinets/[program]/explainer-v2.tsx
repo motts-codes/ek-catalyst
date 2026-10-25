@@ -49,7 +49,7 @@ export function ExplainerV2Page({ program, content, avonPrices, avonImage, ships
     <>
       <Slot fallback={<ExplainerIntro {...content.hero} />} {...slot('hero')} />
 
-      <MetricsTicker metrics={EXPLAINER_METRICS} />
+      <MetricsTicker metrics={EXPLAINER_METRICS[program]} />
 
       <Slot
         fallback={<TwoWays current={program} kicker="The idea" {...content.twoWays} />}

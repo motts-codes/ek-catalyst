@@ -16,14 +16,20 @@ import { ASSEMBLED_BUILD_BLOCK, RTA_BUILD_BLOCK } from './program-content';
  * collection; everything else is here.
  */
 
-/** The headline figures under each explainer hero (the Why Express Kitchens ticker). */
-export const EXPLAINER_METRICS: Metric[] = [
-  { icon: 'package', value: '50,000+', label: 'Assembled cabinets, ready to ship' },
+// The headline figures under each explainer hero (the Why Express Kitchens ticker); the first
+// line speaks to the page's own program.
+const metrics = (stock: string): Metric[] => [
+  { icon: 'package', value: '50,000+', label: stock },
   { icon: 'star', value: '5,000+', label: 'Happy customer reviews' },
   { icon: 'design', value: '100K+', label: 'Kitchens designed' },
   { icon: 'pin', value: '6', label: 'Showrooms to visit' },
   { icon: 'shield', value: 'A+', label: 'BBB rating' },
 ];
+
+export const EXPLAINER_METRICS: Record<CabinetProgram, Metric[]> = {
+  assembled: metrics('Assembled cabinets, ready to ship'),
+  rta: metrics('Cabinets in stock, ready to ship'),
+};
 
 export const EXPLAINER_V2_HREF = {
   assembled: '/mykitchen/cabinets/assembled',
