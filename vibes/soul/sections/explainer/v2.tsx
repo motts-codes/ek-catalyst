@@ -378,8 +378,9 @@ export function MoneyOrTime({
   );
 }
 
-// 7 + 8 · Two panels side by side: who it suits (brand red, ticked bullets) and the glossary
-// (black, a run of words whose meaning shows beneath and cycles). The id anchors the 10×10 link.
+// 7 + 8 · A full-width band split in two: who it suits (brand red, ticked bullets) and the
+// glossary (black, a run of words whose meaning shows beneath and cycles). The id anchors the
+// 10×10 link.
 export function SuitsAndGlossary({
   id,
   suits,
@@ -395,9 +396,12 @@ export function SuitsAndGlossary({
   };
 }) {
   return (
-    <HomeSection id={id}>
-      <div className="grid gap-6 @3xl:grid-cols-2">
-        <section className="flex flex-col rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-9 text-white @xl:px-9 @xl:py-11">
+    // Full bleed: the left half red, the right half black, meeting in the middle. Each half keeps
+    // the page's side margin: the container padding plus the slack once the 96rem column is
+    // centred.
+    <div className="scroll-mt-24 @container" id={id}>
+      <div className="grid @3xl:grid-cols-2">
+        <section className="flex flex-col bg-[var(--button-primary-background,#d90716)] px-6 py-12 text-white @xl:px-9 @3xl:py-16 @4xl:pl-[max(3.5rem,calc((100cqw-96rem)/2+3.5rem))] @4xl:pr-14">
           <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
             {suits.kicker}
           </p>
@@ -427,7 +431,7 @@ export function SuitsAndGlossary({
             </Link>
           </p>
         </section>
-        <section className="rounded-3xl bg-foreground px-6 py-9 text-white @xl:px-9 @xl:py-11">
+        <section className="bg-foreground px-6 py-12 text-white @xl:px-9 @3xl:py-16 @4xl:pl-14 @4xl:pr-[max(3.5rem,calc((100cqw-96rem)/2+3.5rem))]">
           <p className={EYEBROW}>{glossary.kicker}</p>
           <h2 className={homeHeadingClassName}>{glossary.title}</h2>
           <div className="mt-6">
@@ -435,6 +439,6 @@ export function SuitsAndGlossary({
           </div>
         </section>
       </div>
-    </HomeSection>
+    </div>
   );
 }
