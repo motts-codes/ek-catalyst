@@ -107,7 +107,7 @@ export function HowBuiltRow({
   // A plain anchor, since a hash link should scroll the page rather than route.
   const videosLink = assemblyVideosHref !== '' && (
     <a
-      className="inline-flex min-h-6 items-center gap-1.5 py-1 font-[family-name:var(--font-family-heading)] text-sm font-normal"
+      className="inline-flex min-h-6 items-center gap-1.5 py-1 font-[family-name:var(--font-family-heading)] text-sm font-normal text-[#404040] transition-colors hover:text-foreground"
       href={assemblyVideosHref}
     >
       <PlayCircle size={15} strokeWidth={1.75} />
@@ -179,7 +179,7 @@ export function SpecRow({
 }) {
   const specSheetLink = specSheetUrl !== '' && (
     <a
-      className="inline-flex min-h-6 items-center gap-1.5 py-1 font-[family-name:var(--font-family-heading)] text-sm font-normal"
+      className="inline-flex min-h-6 items-center gap-1.5 py-1 font-[family-name:var(--font-family-heading)] text-sm font-normal text-[#404040] transition-colors hover:text-foreground"
       href={specSheetUrl}
       rel="noreferrer"
       target="_blank"
