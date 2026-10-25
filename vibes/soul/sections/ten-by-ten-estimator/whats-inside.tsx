@@ -66,14 +66,16 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinet[]; title:
                       on ? 'bg-[var(--button-primary-background,#d90716)]' : 'bg-contrast-200',
                     )}
                   />
-                  {item.label}
-                  {on && !still && !paused && !stopped ? (
-                    <span
-                      aria-hidden
-                      className="absolute bottom-0 left-0 h-0.5 rounded-full bg-[var(--button-primary-background,#d90716)] motion-safe:animate-[whats-inside-fill_3.2s_linear]"
-                      key={index}
-                    />
-                  ) : null}
+                  <span className="relative">
+                    {item.label}
+                    {on && !still && !paused && !stopped ? (
+                      <span
+                        aria-hidden
+                        className="absolute bottom-0 left-0 h-0.5 rounded-full bg-[var(--button-primary-background,#d90716)] motion-safe:animate-[whats-inside-fill_3.2s_linear]"
+                        key={index}
+                      />
+                    ) : null}
+                  </span>
                 </button>
               </li>
             );
