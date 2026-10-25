@@ -93,7 +93,7 @@ export const LINES: Line[] = [
   {
     id: 'star',
     label: 'Star',
-    tagline: 'Framed · painted or stained',
+    tagline: 'Framed · Standard finish',
     blurb:
       'Our core line: framed cabinets with a plywood box and a solid birch face frame, in 12 door styles. Assembled or ready to assemble.',
     href: '/cabinets/assembled-cabinets?line=star',

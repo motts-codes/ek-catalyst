@@ -16,7 +16,6 @@ import {
   dollarsAndCents,
   doorsFor,
   estimateFor,
-  fromPriceFor,
   type Line,
   type LineId,
   LINES,
@@ -342,12 +341,7 @@ function StepButtons({
 // 1 · Shape: the four layout renders; the description sits in a tooltip after the name.
 function ShapeStep({ w }: { w: Wizard }) {
   return (
-    <Panel
-      help="Shape changes the picture, not the price."
-      n={1}
-      title="What shape is your kitchen?"
-      w={w}
-    >
+    <Panel n={1} title="What shape is your kitchen?" w={w}>
       <div
         aria-label="Kitchen shape"
         className="grid grid-cols-2 gap-3 @xl:grid-cols-4 @xl:gap-4"
@@ -390,7 +384,6 @@ function LineStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
         {LINES.map((l) => (
           <PictureChoice
             aspect="aspect-[16/10]"
-            badge={`from ${dollars(fromPriceFor(l.id))}`}
             bigLabel
             key={l.id}
             label={l.label}
