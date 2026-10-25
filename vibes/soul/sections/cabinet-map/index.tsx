@@ -60,7 +60,7 @@ export function CabinetMap({ images, items, className }: Props) {
         className,
       )}
     >
-      <div className="grid gap-4 p-4 @3xl:grid-cols-2 @3xl:gap-6 @3xl:p-6">
+      <div className="grid gap-4 p-4 @3xl:grid-cols-2 @3xl:items-center @3xl:gap-6 @3xl:p-6">
         {images.map((image) => (
           <div className={OFFSETS[image.offsetY ?? 0]} key={image.src}>
             <div
