@@ -103,10 +103,10 @@ export default async (): Promise<NextConfig> => {
           permanent: false,
         },
         // The three "my kitchen" tools live together under /mykitchen (Oct 2026).
-        { source: '/free-design', destination: '/mykitchen/plan-my-kitchen', permanent: true },
+        { source: '/free-design', destination: '/mykitchen/free-design-consult', permanent: true },
         {
           source: '/free-design/confirmed',
-          destination: '/mykitchen/plan-my-kitchen/confirmed',
+          destination: '/mykitchen/free-design-consult/confirmed',
           permanent: true,
         },
         {

@@ -136,7 +136,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         breadcrumbs={[
           {
             label: pro ? 'Free design & quote' : 'Free design consult',
-            href: '/mykitchen/plan-my-kitchen',
+            href: '/mykitchen/free-design-consult',
           },
         ]}
       />

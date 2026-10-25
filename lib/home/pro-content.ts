@@ -237,7 +237,7 @@ export const DESIGN_BAND = {
   description:
     'Send us your homeowner. We do the layout, the renderings and the itemized quote for free — under your name if you want. You close the job, we supply it.',
   actions: [
-    { label: 'Book a design for your client', href: '/mykitchen/plan-my-kitchen', primary: true },
+    { label: 'Book a design for your client', href: '/mykitchen/free-design-consult', primary: true },
   ],
   imageLabel: "A rendering with the contractor's name on the title block",
 };

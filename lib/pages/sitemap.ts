@@ -36,7 +36,7 @@ export const SITEMAP: SitemapGroup[] = [
       { label: 'How assembled works', href: '/mykitchen/what-are-assembled-cabinets' },
       { label: 'Kitchen estimator', href: '/mykitchen/price-my-kitchen' },
       { label: 'Visualizer', href: '/mykitchen/visualize-my-kitchen' },
-      { label: 'Free design consult', href: '/mykitchen/plan-my-kitchen' },
+      { label: 'Free design consult', href: '/mykitchen/free-design-consult' },
       { label: 'Book a showroom appointment', href: '/book' },
       { label: 'Order samples', href: '/samples' },
       { label: 'Financing', href: '/financing' },

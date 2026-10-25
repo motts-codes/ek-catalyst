@@ -20,8 +20,8 @@ export default async function FreeDesignConfirmed({
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: 'Free design consult', href: '/mykitchen/plan-my-kitchen' },
-          { label: 'Requested', href: '/mykitchen/plan-my-kitchen/confirmed' },
+          { label: 'Free design consult', href: '/mykitchen/free-design-consult' },
+          { label: 'Requested', href: '/mykitchen/free-design-consult/confirmed' },
         ]}
       />
       <PageHero

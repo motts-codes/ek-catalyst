@@ -12,7 +12,7 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 import { type Showroom } from '@/vibes/soul/sections/showroom-band';
 
-export const FREE_DESIGN_HREF = '/mykitchen/plan-my-kitchen';
+export const FREE_DESIGN_HREF = '/mykitchen/free-design-consult';
 export const SAMPLES_HREF = '/samples';
 export const ESTIMATOR_HREF = '/mykitchen/price-my-kitchen';
 

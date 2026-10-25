@@ -243,11 +243,11 @@ export function OffersRow({ offers }: { offers: CollectionOffer[] }) {
 }
 
 // "Need help?" under the offers: two small pills on the right, both on a half-strength cream
-// (#F6EBD6/50, solid on hover) in black — a free design consult (/mykitchen/plan-my-kitchen) and the showroom
+// (#F6EBD6/50, solid on hover) in black — a free design consult (/mykitchen/free-design-consult) and the showroom
 // line — joined by "or". The number is a tel: link so a tap dials; on phones the pills drop under the label.
 export function HelpRow({
   phone = '860-247-1000',
-  consultHref = '/mykitchen/plan-my-kitchen',
+  consultHref = '/mykitchen/free-design-consult',
 }: {
   phone?: string;
   consultHref?: string;

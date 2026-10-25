@@ -64,7 +64,7 @@ export async function submitDesignLead<F extends Field>(
   formData: FormData,
 ) {
   return submitLead(
-    { form: 'free-design', confirmPath: '/mykitchen/plan-my-kitchen/confirmed' },
+    { form: 'free-design', confirmPath: '/mykitchen/free-design-consult/confirmed' },
     args,
     prevState,
     formData,

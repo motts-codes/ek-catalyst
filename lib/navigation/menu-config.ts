@@ -441,8 +441,8 @@ const menu: MenuItem[] = [
 
 /** The persistent header CTA differs per audience (label only; both share the brand-blue style). */
 export const AUDIENCE_CTA: Record<AudienceMode, { label: string; href: string }> = {
-  homeowner: { label: 'Free Design Consult', href: '/mykitchen/plan-my-kitchen' },
-  pro: { label: 'Free Design & Quote', href: '/mykitchen/plan-my-kitchen' },
+  homeowner: { label: 'Free Design Consult', href: '/mykitchen/free-design-consult' },
+  pro: { label: 'Free Design & Quote', href: '/mykitchen/free-design-consult' },
 };
 
 // The menu for one audience: the shared tree with audience-tagged links filtered to `mode`
