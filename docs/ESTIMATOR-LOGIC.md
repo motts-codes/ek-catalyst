@@ -27,8 +27,16 @@ SUMPRODUCT and writes **`lib/estimator/ten-by-ten-prices.ts`** (generated, commi
 python3 scripts/build-ten-by-ten-prices.py ~/Downloads/"Kichen estimator"/EK_10x10_Pricing_AllPrograms.xlsx
 ```
 
-The output was checked against the from-prices in EK's one-page blurb
-(`EK_10x10_Estimator_Blurb.pdf`) and matches to the cent.
+Then check it:
+
+```bash
+python3 scripts/verify-ten-by-ten-prices.py ~/Downloads/"Kichen estimator"/EK_10x10_Pricing_AllPrograms.xlsx
+```
+
+This confirms every Active row is on the site at the workbook's price, no Discontinued row leaked
+in, each Program|Door lookup matches the Source tab's total, and the per-foot and monthly maths
+reproduce the workbook's own columns for every row (668 rows, all clean on 25 Oct 2026). The
+from-prices in EK's one-page blurb (`EK_10x10_Estimator_Blurb.pdf`) match to the cent as well.
 
 ## The picks
 
