@@ -418,7 +418,7 @@ export function SuitsAndGlossary({
               </li>
             ))}
           </ul>
-          <p className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-8 text-sm text-white/85 @xl:text-base">
+          <p className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-8 text-sm text-white/85">
             <span>{suits.line}</span>
             <Link
               className="group inline-flex items-center gap-1.5 font-semibold text-white underline-offset-4 hover:underline"
