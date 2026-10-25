@@ -96,6 +96,7 @@ export default async function Book({
       />
       <PageHero
         actions={[{ label: 'Pick a time', href: '#book', primary: true }]}
+        chipStyle="red"
         chips={['60–90 minutes', 'No deposit', 'No obligation', 'Confirmed within two hours']}
         description={
           chosen

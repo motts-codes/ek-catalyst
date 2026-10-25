@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BadgeCheck } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -68,6 +68,8 @@ interface HeroProps {
   description?: string;
   /** Short facts under the paragraph ("A full layout · An itemized quote · …"). */
   chips?: string[];
+  /** 'red' shows the chips as red pills with a check badge instead of grey outlines. */
+  chipStyle?: 'outline' | 'red';
   actions?: PageAction[];
   image?: PageImage;
   imageLabel?: string;
@@ -87,6 +89,7 @@ export function PageHero({
   title,
   description,
   chips = [],
+  chipStyle = 'outline',
   actions = [],
   image,
   imageLabel,
@@ -123,9 +126,15 @@ export function PageHero({
             <ul className="mt-5 flex flex-wrap gap-2">
               {chips.map((chip) => (
                 <li
-                  className="rounded-full border border-contrast-200 bg-white px-3.5 py-1.5 text-xs font-medium text-contrast-500"
+                  className={clsx(
+                    'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs',
+                    chipStyle === 'red'
+                      ? 'bg-[var(--button-primary-background,#d90716)] font-semibold text-white'
+                      : 'border border-contrast-200 bg-white font-medium text-contrast-500',
+                  )}
                   key={chip}
                 >
+                  {chipStyle === 'red' && <BadgeCheck aria-hidden size={14} strokeWidth={2.25} />}
                   {chip}
                 </li>
               ))}
