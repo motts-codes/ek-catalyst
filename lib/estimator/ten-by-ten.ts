@@ -251,6 +251,8 @@ export function dollarsAndCents(value: number): string {
  *  a photo of the cabinet that stands for the line (EK's product shots, Oct 2026). */
 export interface TenByTenCabinet {
   label: string;
+  /** How many of the 13 this line accounts for. */
+  qty: number;
   image: { src: string; alt: string };
 }
 
@@ -262,6 +264,7 @@ const cabinetPhoto = (file: string, alt: string) => ({
 export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   {
     label: 'Three base cabinets (12", 15" and 18")',
+    qty: 3,
     image: cabinetPhoto(
       'base-cabinets-trio',
       'The 12, 15 and 18-inch base cabinets, each with a drawer over a door',
@@ -269,6 +272,7 @@ export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   },
   {
     label: 'A 36" sink base',
+    qty: 1,
     image: cabinetPhoto(
       'sink-base-36',
       'A 36-inch sink base with two false drawer fronts and two doors',
@@ -276,6 +280,7 @@ export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   },
   {
     label: 'A blind corner base',
+    qty: 1,
     image: cabinetPhoto(
       'blind-corner-base',
       'A blind corner base cabinet with one drawer and one door',
@@ -283,18 +288,22 @@ export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   },
   {
     label: 'Four wall cabinets (12", 21" × 2, 39")',
+    qty: 4,
     image: cabinetPhoto('wall-cabinets', 'The 39-inch, 12-inch and two 21-inch wall cabinets'),
   },
   {
     label: 'A diagonal corner wall cabinet',
+    qty: 1,
     image: cabinetPhoto('diagonal-corner-wall', 'A diagonal corner wall cabinet with one door'),
   },
   {
     label: 'Two bridge cabinets, over the range hood and the fridge',
+    qty: 2,
     image: cabinetPhoto('bridge-30x12', 'A 30 by 12 inch bridge wall cabinet with two doors'),
   },
   {
     label: 'A 3" base filler',
+    qty: 1,
     image: cabinetPhoto('base-filler', 'A 3-inch base filler strip'),
   },
 ];

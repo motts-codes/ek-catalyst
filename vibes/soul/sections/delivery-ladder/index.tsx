@@ -120,6 +120,8 @@ export interface TableProps {
   widths?: string[];
   /** Minimal table only: let it sit where it is placed instead of centring and capping it. */
   inline?: boolean;
+  /** Let a short table shrink to its container instead of scrolling sideways on phones. */
+  fit?: boolean;
 }
 
 function cellText(cell: string): { bold: boolean; text: string } {
@@ -206,15 +208,31 @@ function ClassicTable({ columns, rows, narrow }: TableProps) {
 
 // The quiet table: no box, no fills, no column rules. Small red labels up top over a black
 // rule, a hairline between rows, the feature bold on the left; rows blush on hover.
-export function MinimalTable({ columns, rows, narrow, widths, inline = false }: TableProps) {
+export function MinimalTable({
+  columns,
+  rows,
+  narrow,
+  widths,
+  inline = false,
+  fit = false,
+}: TableProps) {
+  let minWidth: string | undefined = inline ? 'min-w-[28rem]' : 'min-w-[36rem]';
+
+  if (fit) minWidth = undefined;
+
   return (
-    <div className={clsx('overflow-x-auto', narrow && !inline && 'mx-auto max-w-4xl')}>
-      <table
-        className={clsx(
-          'w-full border-collapse text-left text-sm',
-          inline ? 'min-w-[28rem]' : 'min-w-[36rem]',
-        )}
-      >
+    // Scrolls sideways on narrow screens, so it must be reachable from the keyboard (WCAG 2.1.1).
+    <div
+      aria-label={columns.filter(Boolean).join(', ')}
+      className={clsx(
+        'overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
+        narrow && !inline && 'mx-auto max-w-4xl',
+      )}
+      role="region"
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must be focusable
+      tabIndex={0}
+    >
+      <table className={clsx('w-full border-collapse text-left text-sm', minWidth)}>
         {/* The program columns share the width equally unless widths are given; the feature
             column takes the rest (or, narrow, just what its longest label needs). */}
         <colgroup>
