@@ -120,7 +120,7 @@ export function ExplainerIntro({
 }
 
 // 2 · The core idea, once: two plain photos side by side on white, each with a red headline and
-// a line beneath; the second sits a little lower so the pair reads as a step, not a grid.
+// a line beneath.
 export function TwoWays({
   kicker,
   title,
@@ -144,8 +144,8 @@ export function TwoWays({
   return (
     <HomeSection kicker={kicker} title={title}>
       <div className="grid gap-10 @2xl:grid-cols-2 @3xl:gap-14">
-        {ways.map((way, index) => (
-          <article className={clsx(index === 1 && '@2xl:mt-[100px]')} key={way.key}>
+        {ways.map((way) => (
+          <article key={way.key}>
             <div className="relative aspect-[16/9] overflow-hidden bg-contrast-100">
               {way.image ? (
                 <Image
