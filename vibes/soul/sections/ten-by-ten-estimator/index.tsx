@@ -431,6 +431,7 @@ function DoorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
             aspect="aspect-square"
             compact
             fit="contain"
+            inset="p-[10%]"
             label={d}
             on={w.door === d}
             onPick={() => w.pickDoor(d)}
@@ -480,6 +481,7 @@ function PictureChoice({
   badge,
   compact = false,
   bigLabel = false,
+  inset = 'p-3',
   on,
   onPick,
 }: {
@@ -493,6 +495,8 @@ function PictureChoice({
   badge?: string;
   compact?: boolean;
   bigLabel?: boolean;
+  /** Padding around a contained picture (p-3 by default; the door tiles use 10% a side). */
+  inset?: string;
   on: boolean;
   onPick: () => void;
 }) {
@@ -514,7 +518,7 @@ function PictureChoice({
         type="button"
       >
         <span
-          className={clsx('relative block w-full bg-[#f6f6f8]', aspect, fit === 'contain' && 'p-3')}
+          className={clsx('relative block w-full bg-[#f6f6f8]', aspect, fit === 'contain' && inset)}
         >
           {picture ? (
             <Image
