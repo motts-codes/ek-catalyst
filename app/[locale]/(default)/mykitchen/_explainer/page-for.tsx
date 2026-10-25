@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
 import { type CabinetProgram, getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
@@ -7,36 +6,33 @@ import { EXPLAINER_V2 } from '~/lib/cabinets/explainer-v2-content';
 
 import { ExplainerV2Page } from './explainer-v2';
 
-interface Props {
-  params: Promise<{ locale: string; program: string }>;
+// The two explainer routes (/mykitchen/what-are-rta-cabinets, /mykitchen/what-are-assembled-
+// cabinets) are thin wrappers around this: one program, one page. The education-first explainer
+// says what the idea is, what turns up, where it fits in a remodel, what the difference costs
+// and who it suits. Linked from the listing banners and the Cabinets hub; shopping stays on
+// /cabinets/<program>-cabinets. Copy lives in lib/cabinets/explainer-v2-content.ts; only the
+// priced collection's figures and photo are live.
+
+export function explainerMetadata(program: CabinetProgram): Metadata {
+  return EXPLAINER_V2[program].meta;
 }
 
-const isProgram = (value: string): value is CabinetProgram =>
-  value === 'rta' || value === 'assembled';
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { program } = await params;
-
-  return isProgram(program) ? EXPLAINER_V2[program].meta : {};
-}
-
-// The education-first explainer for one program (RTA or assembled): what the idea is, what turns
-// up, where it fits in a remodel, what the difference costs, and who it suits. Linked from the
-// listing banners and the Cabinets hub; shopping stays on /cabinets/<program>-cabinets. The copy
-// lives in lib/cabinets/explainer-v2-content.ts; only the Avon prices and photo are live.
-export default async function CabinetExplainer({ params }: Props) {
-  const { locale, program } = await params;
-
+export async function ExplainerFor({
+  program,
+  locale,
+}: {
+  program: CabinetProgram;
+  locale: string;
+}) {
   setRequestLocale(locale);
 
-  if (!isProgram(program)) return notFound();
+  const content = EXPLAINER_V2[program];
 
   // "Money or time": the priced collection's 10×10 price and lead time in each program, live.
   const [rtaLines, assembledLines] = await Promise.all([
     getCabinetLines('rta'),
     getCabinetLines('assembled'),
   ]);
-  const content = EXPLAINER_V2[program];
   const find = (lines: typeof rtaLines, name: string) =>
     lines.find((line) => line.name.startsWith(name));
   // The priced collection in each program (Avon on the assembled page, Northampton on RTA).

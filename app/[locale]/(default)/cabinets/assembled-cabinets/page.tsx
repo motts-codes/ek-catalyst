@@ -79,7 +79,7 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
           <Link
             aria-label="New to Assembled? Assembled explained"
             className="group inline-flex items-center gap-2 rounded-full bg-black/25 py-1.5 pl-3 pr-3.5 text-xs text-white shadow-sm ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-black/40"
-            href="/mykitchen/cabinets/assembled"
+            href="/mykitchen/what-are-assembled-cabinets"
           >
             <BookOpen size={15} strokeWidth={2} />
             {/* "New to Assembled" at rest; on hover it crossfades to "Assembled explained". Both sit in

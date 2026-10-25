@@ -9,7 +9,7 @@ import { ASSEMBLED_LISTING_HREF, RTA_LISTING_HREF } from './cabinets-hub-content
 import { ASSEMBLED_BUILD_BLOCK, RTA_BUILD_BLOCK } from './program-content';
 
 /**
- * The education-first explainers at /mykitchen/cabinets/{assembled|rta} (v2, Arun's brief of
+ * The education-first explainers at /mykitchen/what-are-{assembled|rta}-cabinets (v2, Arun's brief of
  * 25 Oct 2026). Written for someone who knows what a cabinet is but has never met "RTA" or
  * "assembled": explain the idea, show what turns up, say where it fits in a remodel, help them
  * choose. Shopping comes last and softly. Prices in the cost table come from the live Avon
@@ -32,8 +32,8 @@ export const EXPLAINER_METRICS: Record<CabinetProgram, Metric[]> = {
 };
 
 export const EXPLAINER_V2_HREF = {
-  assembled: '/mykitchen/cabinets/assembled',
-  rta: '/mykitchen/cabinets/rta',
+  assembled: '/mykitchen/what-are-assembled-cabinets',
+  rta: '/mykitchen/what-are-rta-cabinets',
 };
 
 export interface ExplainerLink {

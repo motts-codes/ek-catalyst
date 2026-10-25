@@ -75,7 +75,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
           <Link
             aria-label="New to RTA? RTA explained"
             className="group inline-flex items-center gap-2 rounded-full bg-black/25 py-1.5 pl-3 pr-3.5 text-xs text-white shadow-sm ring-1 ring-white/30 backdrop-blur-md transition-colors hover:bg-black/40"
-            href="/mykitchen/cabinets/rta"
+            href="/mykitchen/what-are-rta-cabinets"
           >
             <BookOpen size={15} strokeWidth={2} />
             {/* "New to RTA" at rest; on hover it crossfades to "RTA explained". Both sit in

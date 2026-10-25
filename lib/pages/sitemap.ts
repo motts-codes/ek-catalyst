@@ -32,8 +32,8 @@ export const SITEMAP: SitemapGroup[] = [
     title: 'Plan your kitchen',
     links: [
       { label: 'Explore', href: '/mykitchen' },
-      { label: 'How ready-to-assemble works', href: '/mykitchen/cabinets/rta' },
-      { label: 'How assembled works', href: '/mykitchen/cabinets/assembled' },
+      { label: 'How ready-to-assemble works', href: '/mykitchen/what-are-rta-cabinets' },
+      { label: 'How assembled works', href: '/mykitchen/what-are-assembled-cabinets' },
       { label: 'Kitchen estimator', href: '/mykitchen/calculator' },
       { label: 'Visualizer', href: '/mykitchen/visualizer' },
       { label: 'Free design consult', href: '/free-design' },

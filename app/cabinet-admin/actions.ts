@@ -58,7 +58,7 @@ export async function saveCollectionAction(
     revalidatePath('/cabinets/rta-cabinets');
     // Refresh the collection detail pages (Avon, Dover…) where the header, overview, gallery,
     // specifications, disclaimer, FAQ and assembly videos render — on both the shopping route
-    // (/cabinets/*) and the education route (/mykitchen/cabinets/*).
+    // (/cabinets/*) and the explainers (/mykitchen/what-are-*-cabinets).
     revalidatePath('/cabinets', 'layout');
     revalidatePath('/mykitchen', 'layout');
 

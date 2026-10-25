@@ -27,14 +27,14 @@ const PATHS = [
     title: '“I’ll assemble and save”',
     description:
       'The same cabinet, flat-packed and shipped in two weeks, for noticeably less. If you can use a screwdriver, you can build it.',
-    href: '/mykitchen/cabinets/rta',
+    href: '/mykitchen/what-are-rta-cabinets',
     linkLabel: 'How RTA works',
   },
   {
     title: '“I want it ready-built”',
     description:
       'Built and checked in our Connecticut shop, delivered in three weeks and ready for your installer to hang.',
-    href: '/mykitchen/cabinets/assembled',
+    href: '/mykitchen/what-are-assembled-cabinets',
     linkLabel: 'How assembled works',
   },
   {

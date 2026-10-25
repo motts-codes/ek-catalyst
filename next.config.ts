@@ -102,6 +102,17 @@ export default async (): Promise<NextConfig> => {
           // permanent: true (308) at launch so search engines pass link equity.
           permanent: false,
         },
+        // The program explainers moved to question-shaped URLs (Oct 2026).
+        {
+          source: '/mykitchen/cabinets/rta',
+          destination: '/mykitchen/what-are-rta-cabinets',
+          permanent: true,
+        },
+        {
+          source: '/mykitchen/cabinets/assembled',
+          destination: '/mykitchen/what-are-assembled-cabinets',
+          permanent: true,
+        },
       ];
     },
     // eslint-disable-next-line @typescript-eslint/require-await
