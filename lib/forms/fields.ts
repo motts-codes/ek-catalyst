@@ -25,7 +25,7 @@ export const SHOWROOM_OPTIONS = [
   { label: 'Newington', value: 'newington' },
   { label: 'Orange', value: 'orange' },
   { label: 'Stamford', value: 'stamford' },
-  { label: 'Bristol (factory outlet)', value: 'bristol' },
+  { label: 'Bristol', value: 'bristol' },
 ];
 
 export const AUDIENCE_OPTIONS = [
