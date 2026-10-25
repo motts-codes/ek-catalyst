@@ -140,7 +140,7 @@ export function CategoryHero({
             {promises.length > 0 && (
               // The promises in the panel as two stacked columns (3 + 2), with the link in a
               // narrower third column at the right; the columns wrap under each other on phones.
-              <div className="mt-12 grid gap-x-8 gap-y-4 text-xs font-medium text-white/90 @md:grid-cols-[auto_auto_1fr] @md:items-start @xl:mt-14">
+              <div className="mt-12 grid gap-x-8 gap-y-4 text-xs font-medium text-white @md:grid-cols-[auto_auto_1fr] @md:items-start @xl:mt-14">
                 {[
                   promises.slice(0, Math.ceil(promises.length / 2)),
                   promises.slice(Math.ceil(promises.length / 2)),

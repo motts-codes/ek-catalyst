@@ -404,7 +404,7 @@ export function SuitsAndGlossary({
     <div className="scroll-mt-24 @container" id={id}>
       <div className="grid @3xl:grid-cols-2">
         <section className="flex flex-col bg-[var(--button-primary-background,#d90716)] px-6 py-12 text-white @xl:px-9 @3xl:py-16 @4xl:pl-[max(3.5rem,calc((100cqw-96rem)/2+3.5rem))] @4xl:pr-14">
-          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white">
             {suits.kicker}
           </p>
           <h2 className={homeHeadingClassName}>{suits.title}</h2>
@@ -418,7 +418,7 @@ export function SuitsAndGlossary({
               </li>
             ))}
           </ul>
-          <p className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-8 text-sm text-white/85">
+          <p className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-8 text-sm text-white">
             <span>{suits.line}</span>
             <Link
               className="group inline-flex items-center gap-1.5 font-semibold text-white underline-offset-4 hover:underline"

@@ -158,7 +158,7 @@ export function StoryBand({
 }
 
 // The band's words: eyebrow, heading, paragraph, note and buttons. On red, everything turns
-// white and the lead button goes white too (red on red would vanish).
+// solid white (translucent white on brand red falls under 4.5:1) and the lead button goes white too (red on red would vanish).
 function Copy({
   kicker,
   title,
@@ -182,7 +182,7 @@ function Copy({
         <p
           className={clsx(
             'mb-2 text-xs font-semibold uppercase tracking-wide',
-            red ? 'text-white/85' : 'text-[var(--button-primary-background,#d90716)]',
+            red ? 'text-white' : 'text-[var(--button-primary-background,#d90716)]',
           )}
         >
           {kicker}
@@ -198,13 +198,13 @@ function Copy({
       <p
         className={clsx(
           'mt-4 max-w-2xl text-sm leading-relaxed @xl:text-base',
-          red ? 'text-white/90' : 'text-contrast-500',
+          red ? 'text-white' : 'text-contrast-500',
         )}
       >
         {description}
       </p>
       {Boolean(note) && (
-        <p className={clsx('mt-3 max-w-2xl text-sm', red ? 'text-white/75' : 'text-contrast-400')}>
+        <p className={clsx('mt-3 max-w-2xl text-sm', red ? 'text-white' : 'text-contrast-400')}>
           {note}
         </p>
       )}

@@ -302,7 +302,7 @@ function Build({ block }: { block: Extract<ContentBlock, { type: 'build' }> }) {
       <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
         <h2 className={clsx(H2, '!text-white')}>{block.title}</h2>
         {block.intro != null && (
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/85 @xl:text-base">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white @xl:text-base">
             {block.intro}
           </p>
         )}
@@ -313,7 +313,7 @@ function Build({ block }: { block: Extract<ContentBlock, { type: 'build' }> }) {
             return (
               <li className="flex items-start gap-3" key={point.lead}>
                 <Icon aria-hidden className="mt-0.5 shrink-0" size={22} strokeWidth={1.75} />
-                <p className="text-sm leading-relaxed text-white/85">
+                <p className="text-sm leading-relaxed text-white">
                   <span className="font-semibold text-white">{point.lead} </span>
                   {point.detail}
                 </p>
@@ -454,12 +454,12 @@ function Why({ block }: { block: Extract<ContentBlock, { type: 'why' }> }) {
               <h3 className="font-[family-name:var(--font-family-heading)] text-lg font-semibold leading-snug">
                 {reason.title}
                 {reason.note != null && (
-                  <span className="mt-0.5 block text-xs font-normal text-contrast-400 transition-colors duration-300 group-hover:text-white/80">
+                  <span className="mt-0.5 block text-xs font-normal text-contrast-500 transition-colors duration-300 group-hover:text-white">
                     {reason.note}
                   </span>
                 )}
               </h3>
-              <p className="text-sm leading-relaxed text-contrast-500 transition-colors duration-300 group-hover:text-white/90">
+              <p className="text-sm leading-relaxed text-contrast-500 transition-colors duration-300 group-hover:text-white">
                 {reason.detail}
               </p>
             </li>
