@@ -387,7 +387,7 @@ export const RTA_EXPLAINER: ExplainerV2 = {
       src: '/images/explainers/rta-hero-v2.jpg',
       alt: 'A man sitting on the floor fitting a white shaker door to a base cabinet, parts and hardware around him',
       width: 1600,
-      height: 1016,
+      height: 1000,
     },
     imageLabel: 'A flat RTA box beside the same cabinet built',
     cutout: true,

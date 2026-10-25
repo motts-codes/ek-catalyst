@@ -64,7 +64,7 @@ export default async function CabinetExplainer({ params }: Props) {
       avonPrices={[dollars(priced[0]?.price), dollars(priced[1]?.price)]}
       content={content}
       program={program}
-      shipsIn={[priced[0]?.deliveryTime, priced[1]?.deliveryTime]}
+      shipsIn={[priced[0]?.deliveryTime?.toLowerCase(), priced[1]?.deliveryTime?.toLowerCase()]}
     />
   );
 }

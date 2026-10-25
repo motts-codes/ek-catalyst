@@ -85,11 +85,14 @@ export function ExplainerIntro({
   title: string;
   description: string;
   link?: LinkProps;
-  image?: { src: string; alt: string };
+  image?: { src: string; alt: string; width?: number; height?: number };
   imageLabel: string;
-  /** A transparent render: shown whole with no frame, like a cut-out on the page. */
+  /** A transparent render: shown whole with no frame, like a cut-out on the page, at its own
+   *  proportions (so it fills the column width rather than a fixed frame). */
   cutout?: boolean;
 }) {
+  const sized = cutout && image?.width && image.height;
+
   return (
     <HomeSection>
       <div className="grid items-center gap-10 @3xl:grid-cols-2 @3xl:gap-16">
@@ -106,23 +109,33 @@ export function ExplainerIntro({
         <div
           className={clsx(
             'relative',
-            cutout
-              ? 'aspect-[16/9]'
-              : 'aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100',
+            !cutout &&
+              'aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100',
+            cutout && !sized && 'aspect-[16/9]',
           )}
         >
-          {image ? (
+          {image && sized ? (
+            <Image
+              alt={image.alt}
+              className="h-auto w-full"
+              height={image.height}
+              preload
+              sizes="(min-width: 56rem) 50vw, 100vw"
+              src={image.src}
+              width={image.width}
+            />
+          ) : null}
+          {image && !sized ? (
             <Image
               alt={image.alt}
               className={cutout ? 'object-contain' : 'object-cover'}
               fill
               preload
-              sizes="(min-width: 56rem) 40vw, 100vw"
+              sizes="(min-width: 56rem) 50vw, 100vw"
               src={image.src}
             />
-          ) : (
-            <MediaPlaceholder label={imageLabel} />
-          )}
+          ) : null}
+          {!image ? <MediaPlaceholder label={imageLabel} /> : null}
         </div>
       </div>
     </HomeSection>
