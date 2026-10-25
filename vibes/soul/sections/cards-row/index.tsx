@@ -134,7 +134,9 @@ export function CardsRow({
                 {card.title}
               </h3>
               {card.meta != null && (
-                <p className="mt-1 text-xs font-medium text-contrast-400">{card.meta}</p>
+                <p className="mt-1 text-xs font-semibold text-[var(--button-primary-background,#d90716)]">
+                  {card.meta}
+                </p>
               )}
               <p className="mt-2.5 flex-1 text-sm leading-relaxed text-contrast-500">
                 {card.description}
