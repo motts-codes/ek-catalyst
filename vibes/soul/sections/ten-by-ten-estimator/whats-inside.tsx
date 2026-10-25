@@ -41,24 +41,7 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinet[]; title:
       onMouseLeave={() => setPaused(false)}
     >
       <div>
-        <div className="flex items-center justify-between gap-4">
-          <h3 className="font-heading text-xl font-bold @xl:text-2xl">{title}</h3>
-          {still ? null : (
-            <button
-              aria-label={stopped ? 'Play the cabinet tour' : 'Pause the cabinet tour'}
-              aria-pressed={stopped}
-              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-contrast-200 bg-white text-foreground transition-colors hover:border-[#fcb6bb] hover:bg-[#fdf3f5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
-              onClick={() => setStopped((v) => !v)}
-              type="button"
-            >
-              {stopped ? (
-                <Play size={16} strokeWidth={2.5} />
-              ) : (
-                <Pause size={16} strokeWidth={2.5} />
-              )}
-            </button>
-          )}
-        </div>
+        <h3 className="font-heading text-xl font-bold @xl:text-2xl">{title}</h3>
         <ul className="mt-4 divide-y divide-contrast-100 border-y border-contrast-100">
           {items.map((item, i) => {
             const on = i === index;
@@ -112,6 +95,21 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinet[]; title:
             src={item.image.src}
           />
         ))}
+        {still ? null : (
+          <button
+            aria-label={stopped ? 'Play the cabinet tour' : 'Pause the cabinet tour'}
+            aria-pressed={stopped}
+            className="absolute bottom-3 right-3 flex h-7 w-7 items-center justify-center rounded-lg border border-contrast-200 bg-white text-foreground transition-colors hover:border-foreground focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+            onClick={() => setStopped((v) => !v)}
+            type="button"
+          >
+            {stopped ? (
+              <Play aria-hidden size={14} strokeWidth={2} />
+            ) : (
+              <Pause aria-hidden size={14} strokeWidth={2} />
+            )}
+          </button>
+        )}
         <p aria-live="polite" className="sr-only">
           {current?.label}
         </p>

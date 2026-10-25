@@ -1,4 +1,4 @@
-import { BadgeDollarSign, Ruler, Shapes } from 'lucide-react';
+import { CircleDollarSign, Ruler, Shapes } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 // The three reasons a 10×10 is the yardstick, each with its icon.
 const WHY_CARDS = [
   {
-    icon: BadgeDollarSign,
+    icon: CircleDollarSign,
     title: 'It shows what the style costs',
     body: 'Every door style is priced on the identical cabinet set, so the only thing that changes is the door and the construction. You can see which line fits your budget before anyone measures your home.',
   },
