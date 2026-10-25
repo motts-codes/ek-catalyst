@@ -30,7 +30,7 @@ interface LinkProps {
 }
 
 // A red text link with the arrow that nudges on hover. Hash links use a plain anchor so the
-// browser scrolls on the same page.
+// browser scrolls on the same page; off-site links open in a new tab.
 function TextLink({ label, href, className }: LinkProps & { className?: string }) {
   const cls = clsx('group inline-flex items-center gap-1.5 text-sm font-semibold', RED, className);
   const arrow = (
@@ -40,10 +40,17 @@ function TextLink({ label, href, className }: LinkProps & { className?: string }
       strokeWidth={2.5}
     />
   );
+  const external = /^https?:/.test(href);
 
-  return href.startsWith('#') ? (
-    <a className={cls} href={href}>
+  return href.startsWith('#') || external ? (
+    <a
+      className={cls}
+      href={href}
+      rel={external ? 'noreferrer' : undefined}
+      target={external ? '_blank' : undefined}
+    >
       {label}
+      {external ? <span className="sr-only"> (opens in a new tab)</span> : null}
       {arrow}
     </a>
   ) : (

@@ -424,7 +424,11 @@ export const RTA_EXPLAINER: ExplainerV2 = {
       label: 'One wall cabinet being built, start to finish.',
       // "How to assemble a wall cabinet", from EK's YouTube channel.
       youtubeId: 'LrShEET4g20',
-      link: { label: 'Watch all assembly videos', href: '/resources/how-to-videos' },
+      // EK's "Installation Guide" playlist on YouTube: assembly and installation, every cabinet.
+      link: {
+        label: 'Watch all assembly and installation videos',
+        href: 'https://www.youtube.com/watch?v=tYEPnjp9-w8&list=PLvW4V4-1I9cHk3a7Szu-CCISzmlaHmgvb',
+      },
     },
   },
   sameCabinet: {
