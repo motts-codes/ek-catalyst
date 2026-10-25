@@ -164,11 +164,13 @@ export function TwoWays({
       <div className="grid gap-10 @2xl:grid-cols-2 @3xl:gap-14">
         {ways.map((way) => (
           <article className="flex flex-col" key={way.key}>
-            <div className="relative aspect-[16/9] overflow-hidden bg-contrast-100">
+            {/* The 16:9 photos sit in a slightly wider frame anchored at the bottom, which trims
+                about 50px of empty space off the top at desktop width. */}
+            <div className="relative aspect-[2.07/1] overflow-hidden bg-contrast-100">
               {way.image ? (
                 <Image
                   alt={way.image.alt}
-                  className="object-cover"
+                  className="object-cover object-bottom"
                   fill
                   sizes="(min-width: 42rem) 50vw, 100vw"
                   src={way.image.src}
