@@ -39,7 +39,13 @@ export interface ExplainerV2 {
   };
   twoWays: {
     title: string;
-    ways: Array<{ key: CabinetProgram; name: string; summary: string; visualLabel: string }>;
+    ways: Array<{
+      key: CabinetProgram;
+      name: string;
+      summary: string;
+      image?: { src: string; alt: string };
+      visualLabel: string;
+    }>;
     line: string;
     rule: string;
   };
@@ -90,6 +96,10 @@ const TWO_WAYS: ExplainerV2['twoWays'] = {
       key: 'assembled',
       name: 'Assembled',
       summary: 'Built in our factory and shipped whole. You unwrap it and it’s ready to install.',
+      image: {
+        src: '/images/explainers/assembled-cabinets.jpg',
+        alt: 'A run of built white shaker base cabinets, with a tall pantry at one end',
+      },
       visualLabel: 'A wrapped, built cabinet on a pallet',
     },
     {
@@ -97,6 +107,10 @@ const TWO_WAYS: ExplainerV2['twoWays'] = {
       name: 'RTA (ready to assemble)',
       summary:
         'Shipped flat in a box, as finished panels, doors and hardware. You put it together first, then install it.',
+      image: {
+        src: '/images/explainers/rta-box-and-cabinet.jpg',
+        alt: 'An opened flat RTA box with its panels, doors and hardware, beside the same cabinet built',
+      },
       visualLabel: 'A flat RTA box',
     },
   ],

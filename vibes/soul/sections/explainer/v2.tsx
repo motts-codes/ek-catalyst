@@ -119,56 +119,61 @@ export function ExplainerIntro({
   );
 }
 
-// 2 · The core idea, once: two cards side by side, the page's own program outlined in red and
-// tagged, then the one-line truth and the rule of thumb.
+// 2 · The core idea, once: two plain photos side by side on white, each with a red headline and
+// a line beneath; the second sits a little lower so the pair reads as a step, not a grid.
 export function TwoWays({
   kicker,
   title,
   ways,
-  current,
   line,
   rule,
 }: {
   kicker: string;
   title: string;
-  ways: Array<{ key: string; name: string; summary: string; visualLabel: string }>;
+  ways: Array<{
+    key: string;
+    name: string;
+    summary: string;
+    image?: { src: string; alt: string };
+    visualLabel: string;
+  }>;
   current: string;
   line: string;
   rule: string;
 }) {
   return (
-    <HomeSection className={BLUSH} kicker={kicker} title={title}>
-      <div className="grid gap-5 @2xl:grid-cols-2 @3xl:gap-6">
-        {ways.map((way) => {
-          const here = way.key === current;
-
-          return (
-            <article
-              className={clsx(
-                'flex flex-col rounded-3xl border bg-white p-6 @xl:p-7',
-                here ? 'border-[#fcb6bb]' : 'border-contrast-100',
-              )}
-              key={way.key}
-            >
-              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-contrast-100">
+    <HomeSection kicker={kicker} title={title}>
+      <div className="grid gap-10 @2xl:grid-cols-2 @3xl:gap-14">
+        {ways.map((way, index) => (
+          <article className={clsx(index === 1 && '@2xl:mt-[100px]')} key={way.key}>
+            <div className="relative aspect-[16/9] overflow-hidden bg-contrast-100">
+              {way.image ? (
+                <Image
+                  alt={way.image.alt}
+                  className="object-cover"
+                  fill
+                  sizes="(min-width: 42rem) 50vw, 100vw"
+                  src={way.image.src}
+                />
+              ) : (
                 <MediaPlaceholder label={way.visualLabel} />
-                {here && (
-                  <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide shadow-sm">
-                    This page
-                  </span>
-                )}
-              </div>
-              <h3 className="mt-5 font-heading text-xl font-bold leading-tight @xl:text-2xl">
-                {way.name}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-contrast-500 @xl:text-base">
-                {way.summary}
-              </p>
-            </article>
-          );
-        })}
+              )}
+            </div>
+            <h3
+              className={clsx(
+                'mt-6 font-heading text-xl font-bold leading-tight @xl:text-2xl',
+                RED,
+              )}
+            >
+              {way.name}
+            </h3>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+              {way.summary}
+            </p>
+          </article>
+        ))}
       </div>
-      <div className="mt-8 text-center">
+      <div className="mt-12 text-center">
         <p className="mx-auto max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
           {line}
         </p>
