@@ -1,15 +1,27 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { Hammer, type LucideIcon, Ruler, ShoppingCart, Sparkles, Truck } from 'lucide-react';
+import {
+  Hammer,
+  type LucideIcon,
+  PackageCheck,
+  Ruler,
+  ShoppingCart,
+  Sparkles,
+  Truck,
+  Wrench,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 // Icons by name, resolved here: a server component can't hand a client one a component.
-export type StepperIcon = 'cart' | 'truck' | 'hammer' | 'ruler' | 'sparkles';
+export type StepperIcon =
+  'cart' | 'truck' | 'package-check' | 'wrench' | 'hammer' | 'ruler' | 'sparkles';
 
 const ICONS: Record<StepperIcon, LucideIcon> = {
   cart: ShoppingCart,
   truck: Truck,
+  'package-check': PackageCheck,
+  wrench: Wrench,
   hammer: Hammer,
   ruler: Ruler,
   sparkles: Sparkles,

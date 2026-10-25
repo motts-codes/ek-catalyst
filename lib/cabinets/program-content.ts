@@ -134,6 +134,53 @@ export const ASSEMBLED_BUILD_BLOCK: Extract<ContentBlock, { type: 'build' }> = {
   ],
 };
 
+/** The RTA listing's "Build quality" red panel; the RTA explainer shows it too. */
+export const RTA_BUILD_BLOCK: Extract<ContentBlock, { type: 'build' }> = {
+  type: 'build',
+  title: 'Build quality',
+  intro: 'Every RTA cabinet we sell, Star or Euro Max, is built the same way under the finish.',
+  points: [
+    {
+      icon: 'layers',
+      lead: 'Plywood boxes.',
+      detail:
+        'Not particleboard, not MDF, on either line. Plywood holds screws tighter and resists moisture better, right where cheaper boxes fail first: under the sink and next to the dishwasher.',
+    },
+    {
+      icon: 'badge-check',
+      lead: 'Tested to ANSI/KCMA A161.1.',
+      detail:
+        'Doors and drawers are opened and closed 25,000 times, wall cabinets carry a 600 lb load, and shelves hold weight for 7 days straight without sagging or the joints pulling apart.',
+    },
+    {
+      icon: 'blocks',
+      lead: 'Dovetail drawers with full-extension glides.',
+      detail: 'No stapled corners.',
+    },
+    {
+      icon: 'volume-x',
+      lead: 'Soft-close, standard.',
+      detail: 'Soft-close hinges and drawers on every door and every style. Nothing to upgrade.',
+    },
+    {
+      icon: 'scissors',
+      lead: 'Precision cut.',
+      detail:
+        'Star panels are CNC cut in our Connecticut factory, so every cabinet fits the next one.',
+    },
+    {
+      icon: 'shield-house',
+      lead: 'CARB2 compliant',
+      detail: 'for formaldehyde emissions.',
+    },
+    {
+      icon: 'shield-check',
+      lead: '1-year warranty',
+      detail: 'on the cabinet box.',
+    },
+  ],
+};
+
 /** The "Why buy assembled cabinets" bento; the Cabinets hub shows the same cards. */
 export const ASSEMBLED_WHY_BLOCK: Extract<ContentBlock, { type: 'why' }> = {
   type: 'why',
@@ -295,53 +342,7 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
           ],
         ],
       },
-      {
-        type: 'build',
-        title: 'Build quality',
-        intro:
-          'Every RTA cabinet we sell, Star or Euro Max, is built the same way under the finish.',
-        points: [
-          {
-            icon: 'layers',
-            lead: 'Plywood boxes.',
-            detail:
-              'Not particleboard, not MDF, on either line. Plywood holds screws tighter and resists moisture better, right where cheaper boxes fail first: under the sink and next to the dishwasher.',
-          },
-          {
-            icon: 'badge-check',
-            lead: 'Tested to ANSI/KCMA A161.1.',
-            detail:
-              'Doors and drawers are opened and closed 25,000 times, wall cabinets carry a 600 lb load, and shelves hold weight for 7 days straight without sagging or the joints pulling apart.',
-          },
-          {
-            icon: 'blocks',
-            lead: 'Dovetail drawers with full-extension glides.',
-            detail: 'No stapled corners.',
-          },
-          {
-            icon: 'volume-x',
-            lead: 'Soft-close, standard.',
-            detail:
-              'Soft-close hinges and drawers on every door and every style. Nothing to upgrade.',
-          },
-          {
-            icon: 'scissors',
-            lead: 'Precision cut.',
-            detail:
-              'Star panels are CNC cut in our Connecticut factory, so every cabinet fits the next one.',
-          },
-          {
-            icon: 'shield-house',
-            lead: 'CARB2 compliant',
-            detail: 'for formaldehyde emissions.',
-          },
-          {
-            icon: 'shield-check',
-            lead: '1-year warranty',
-            detail: 'on the cabinet box.',
-          },
-        ],
-      },
+      RTA_BUILD_BLOCK,
       {
         type: 'groups',
         title: 'Styles, finishes and textures',

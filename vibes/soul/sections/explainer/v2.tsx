@@ -139,6 +139,8 @@ export function TwoWays({
     summary: string;
     image?: { src: string; alt: string };
     visualLabel: string;
+    /** A soft link under the summary (the other program's card links to its page). */
+    link?: LinkProps;
   }>;
   current: string;
   line: string;
@@ -190,6 +192,7 @@ export function TwoWays({
             <p className="mt-2 max-w-[30rem] text-sm leading-relaxed text-contrast-500 @xl:text-base">
               {way.summary}
             </p>
+            {way.link && <TextLink className="mt-3" href={way.link.href} label={way.link.label} />}
             {/* A thin red rule closes each column; mt-auto keeps the two rules level. */}
             <div className="mt-auto pt-6">
               <span
@@ -273,15 +276,55 @@ export function Timeline({
   title,
   description,
   steps,
+  media,
 }: {
   kicker: string;
   title: string;
   description?: string;
   steps: Array<{ icon: ExplainerIcon; lead: string; text: string }>;
+  /** An optional clip under the steps (RTA: one base cabinet built, start to finish). */
+  media?: {
+    label: string;
+    video?: { mp4?: string; webm?: string; poster?: string; captions: string };
+    link?: LinkProps;
+  };
 }) {
   return (
     <HomeSection className={BLUSH} description={description} kicker={kicker} title={title}>
       <Stepper steps={steps} />
+      {media && (
+        <div className="mt-12 grid items-center gap-8 @3xl:grid-cols-[3fr_2fr] @3xl:gap-14">
+          <div className="relative aspect-video overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+            {media.video?.mp4 || media.video?.webm ? (
+              <video
+                className="h-full w-full object-cover"
+                controls
+                playsInline
+                poster={media.video.poster}
+                preload="metadata"
+              >
+                {media.video.webm ? <source src={media.video.webm} type="video/webm" /> : null}
+                {media.video.mp4 ? <source src={media.video.mp4} type="video/mp4" /> : null}
+                <track
+                  default
+                  kind="captions"
+                  label="English"
+                  src={media.video.captions}
+                  srcLang="en"
+                />
+              </video>
+            ) : (
+              <MediaPlaceholder label={media.label} />
+            )}
+          </div>
+          <div>
+            <p className="text-sm leading-relaxed text-contrast-500 @xl:text-base">{media.label}</p>
+            {media.link && (
+              <TextLink className="mt-4" href={media.link.href} label={media.link.label} />
+            )}
+          </div>
+        </div>
+      )}
     </HomeSection>
   );
 }
