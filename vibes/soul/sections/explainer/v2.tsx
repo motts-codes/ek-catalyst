@@ -117,11 +117,6 @@ export function ExplainerIntro({
           )}
         </div>
       </div>
-      {/* A thin red rule closes the hero. */}
-      <span
-        aria-hidden
-        className="mt-10 block h-px w-full bg-[var(--button-primary-background,#d90716)] @3xl:mt-12"
-      />
     </HomeSection>
   );
 }
