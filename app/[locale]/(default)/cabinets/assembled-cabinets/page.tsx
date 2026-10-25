@@ -67,8 +67,8 @@ export default async function AssembledCabinets({ params, searchParams }: Props)
       />
       {/* The same black-panel hero as the category pages, with the home page's program photo. */}
       <CategoryHero
-        // Trying the closing band's deeper red here (Arun, Oct 25 2026); the other category
-        // pages stay on brand red.
+        // The two program listings sit on the closing band's deeper red (Arun, Oct 25 2026); the
+        // other category pages stay on brand red.
         description="Assembled and finished in our factory. Choose framed or frameless cabinets in shaker, modern and traditional styles, in 100+ colors, stains and finishes. Most collections ship in 3 weeks."
         eyebrow="Assembled Kitchen Cabinets"
         image={{

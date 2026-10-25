@@ -105,7 +105,7 @@ export default async function RtaCabinets({ params, searchParams }: Props) {
         promisesAction={{ label: 'How it’s built', href: '#about-rta' }}
         tall
         title="Your dream kitchen, for less"
-        tone="red"
+        tone="deep-red"
       />
       <ListingFiltersProvider open={showPanel}>
         <CabinetLineFilter
