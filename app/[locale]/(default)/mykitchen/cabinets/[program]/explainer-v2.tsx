@@ -1,4 +1,5 @@
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CabinetProgramContentSection } from '@/vibes/soul/sections/cabinet-program-content';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import {
@@ -52,6 +53,13 @@ export function ExplainerV2Page({ program, content, avonPrices }: Props) {
       <Slot
         fallback={<SameCabinet kicker="Is one better made?" {...content.sameCabinet} />}
         {...slot('same-cabinet')}
+      />
+
+      <Slot
+        fallback={
+          <CabinetProgramContentSection content={{ blocks: [content.build] }} divider={false} />
+        }
+        {...slot('build')}
       />
 
       <Slot

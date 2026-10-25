@@ -1,9 +1,11 @@
+import { type ContentBlock } from '@/vibes/soul/sections/cabinet-program-content';
 import { type ExplainerIcon } from '@/vibes/soul/sections/explainer/v2';
 
 import { FREE_DESIGN_HREF } from '../home/home-content';
 
 import { type CabinetProgram } from './cabinet-lines-data';
 import { ASSEMBLED_LISTING_HREF, RTA_LISTING_HREF } from './cabinets-hub-content';
+import { ASSEMBLED_BUILD_BLOCK } from './program-content';
 
 /**
  * The education-first explainers at /mykitchen/cabinets/{assembled|rta} (v2, Arun's brief of
@@ -52,7 +54,9 @@ export interface ExplainerV2 {
     description?: string;
     steps: Array<{ icon: ExplainerIcon; lead: string; text: string }>;
   };
-  sameCabinet: { title: string; description: string; points: string[]; note?: string };
+  sameCabinet: { title: string; description: string; note?: string };
+  /** The program's "Build quality" red panel, shared with its listing page. */
+  build: Extract<ContentBlock, { type: 'build' }>;
   cost: {
     title: string;
     description: string;
@@ -206,9 +210,9 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
     title: 'Same cabinet, either way',
     description:
       'Assembled isn’t a premium version. It’s the same cabinet as RTA, from the same factory, with the same 1-year warranty. You’re paying for the building time, not for better materials.',
-    points: ['Plywood boxes', 'Dovetail drawers', 'Soft-close doors', '1-year warranty'],
-    note: 'Most of our lines have plywood boxes; Euro Value uses an engineered board box.',
+    note: 'Most of our lines have plywood boxes (Euro Value uses an engineered board box), dovetail drawers and soft-close doors.',
   },
+  build: ASSEMBLED_BUILD_BLOCK,
   cost: {
     title: 'Money or time',
     description:

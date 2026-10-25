@@ -251,44 +251,27 @@ export function Timeline({
   );
 }
 
-// 5 · The reassurance, on brand red: not a premium version, the same cabinet, with the build
-// points as ticked chips.
+// 5 · The reassurance, in plain words: not a premium version, the same cabinet. The build-quality
+// red panel from the listing page follows it on the page.
 export function SameCabinet({
   kicker,
   title,
   description,
-  points,
   note,
 }: {
   kicker: string;
   title: string;
   description: string;
-  points: string[];
   note?: string;
 }) {
   return (
-    <HomeSection>
-      <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
-        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
-          {kicker}
-        </p>
-        <h2 className={homeHeadingClassName}>{title}</h2>
-        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-white/90 @xl:text-base">
-          {description}
-        </p>
-        <ul className="mt-7 flex flex-wrap gap-3">
-          {points.map((point) => (
-            <li
-              className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold ring-1 ring-white/30"
-              key={point}
-            >
-              <Check aria-hidden size={14} strokeWidth={3} />
-              {point}
-            </li>
-          ))}
-        </ul>
-        {Boolean(note) && <p className="mt-5 text-sm text-white/75">{note}</p>}
-      </div>
+    <HomeSection halfPadding>
+      <p className={EYEBROW}>{kicker}</p>
+      <h2 className={homeHeadingClassName}>{title}</h2>
+      <p className="mt-3 max-w-3xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+        {description}
+      </p>
+      {Boolean(note) && <p className="mt-3 max-w-3xl text-sm text-contrast-400">{note}</p>}
     </HomeSection>
   );
 }

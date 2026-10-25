@@ -88,6 +88,52 @@ const whyReasons = (program: 'assembled' | 'rta') => [
       },
 ];
 
+/** The assembled listing's "Build quality" red panel; the assembled explainer shows it too. */
+export const ASSEMBLED_BUILD_BLOCK: Extract<ContentBlock, { type: 'build' }> = {
+  type: 'build',
+  title: 'Build quality',
+  points: [
+    {
+      icon: 'layers',
+      lead: 'Solid plywood construction.',
+      detail:
+        'Every cabinet box is built from ¾" plywood, not particleboard or MDF, so it holds up to daily use, moisture and weight for years.',
+    },
+    {
+      icon: 'blocks',
+      lead: 'True dovetail drawers.',
+      detail: 'Dovetail joints are stronger than glued or stapled drawer boxes.',
+    },
+    {
+      icon: 'move-horizontal',
+      lead: 'Full-extension glides.',
+      detail:
+        'Drawers slide all the way out, so you can reach everything inside, not just the front few inches.',
+    },
+    {
+      icon: 'volume-x',
+      lead: 'Soft-close, standard.',
+      detail: 'Every door and drawer closes quietly, at no extra cost. It’s not an upgrade.',
+    },
+    {
+      icon: 'bot',
+      lead: 'Robotic manufacturing.',
+      detail: 'Robots cut and finish every part for a precise, consistent fit.',
+    },
+    {
+      icon: 'check-check',
+      lead: 'Same quality on every order.',
+      detail: 'One cabinet or a full kitchen, it’s built to the same standard.',
+    },
+    {
+      icon: 'badge-check',
+      lead: 'KCMA tested.',
+      detail:
+        'Every cabinet is tested to Kitchen Cabinet Manufacturers Association (KCMA) standards before it ships.',
+    },
+  ],
+};
+
 /** The "Why buy assembled cabinets" bento; the Cabinets hub shows the same cards. */
 export const ASSEMBLED_WHY_BLOCK: Extract<ContentBlock, { type: 'why' }> = {
   type: 'why',
@@ -147,50 +193,7 @@ export const CABINET_PROGRAM_CONTENT: Record<'assembled' | 'rta', CabinetProgram
         outro:
           'Base, wall and pantry cabinets come in framed or frameless styles, in paint colors, wood stains and textures to match your floors and countertops.',
       },
-      {
-        type: 'build',
-        title: 'Build quality',
-        points: [
-          {
-            icon: 'layers',
-            lead: 'Solid plywood construction.',
-            detail:
-              'Every cabinet box is built from ¾" plywood, not particleboard or MDF, so it holds up to daily use, moisture and weight for years.',
-          },
-          {
-            icon: 'blocks',
-            lead: 'True dovetail drawers.',
-            detail: 'Dovetail joints are stronger than glued or stapled drawer boxes.',
-          },
-          {
-            icon: 'move-horizontal',
-            lead: 'Full-extension glides.',
-            detail:
-              'Drawers slide all the way out, so you can reach everything inside, not just the front few inches.',
-          },
-          {
-            icon: 'volume-x',
-            lead: 'Soft-close, standard.',
-            detail: 'Every door and drawer closes quietly, at no extra cost. It’s not an upgrade.',
-          },
-          {
-            icon: 'bot',
-            lead: 'Robotic manufacturing.',
-            detail: 'Robots cut and finish every part for a precise, consistent fit.',
-          },
-          {
-            icon: 'check-check',
-            lead: 'Same quality on every order.',
-            detail: 'One cabinet or a full kitchen, it’s built to the same standard.',
-          },
-          {
-            icon: 'badge-check',
-            lead: 'KCMA tested.',
-            detail:
-              'Every cabinet is tested to Kitchen Cabinet Manufacturers Association (KCMA) standards before it ships.',
-          },
-        ],
-      },
+      ASSEMBLED_BUILD_BLOCK,
       ASSEMBLED_WHY_BLOCK,
       {
         type: 'choose',
