@@ -42,7 +42,8 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinet[]; title:
     >
       <div>
         <h3 className="font-heading text-xl font-bold @xl:text-2xl">{title}</h3>
-        <ul className="mt-4 divide-y divide-contrast-100 border-y border-contrast-100">
+        <div aria-hidden className="mt-4 h-px w-4/5 bg-contrast-100" />
+        <ul>
           {items.map((item, i) => {
             const on = i === index;
 
@@ -66,17 +67,16 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinet[]; title:
                       on ? 'bg-[var(--button-primary-background,#d90716)]' : 'bg-contrast-200',
                     )}
                   />
-                  <span className="relative">
-                    {item.label}
-                    {on && !still && !paused && !stopped ? (
-                      <span
-                        aria-hidden
-                        className="absolute bottom-0 left-0 h-0.5 rounded-full bg-[var(--button-primary-background,#d90716)] motion-safe:animate-[whats-inside-fill_3.2s_linear]"
-                        key={index}
-                      />
-                    ) : null}
-                  </span>
+                  {item.label}
                 </button>
+                <span aria-hidden className="relative block h-px w-4/5 bg-contrast-100">
+                  {on && !still && !paused && !stopped ? (
+                    <span
+                      className="absolute inset-y-0 left-0 bg-[var(--button-primary-background,#d90716)] motion-safe:animate-[whats-inside-fill_3.2s_linear]"
+                      key={index}
+                    />
+                  ) : null}
+                </span>
               </li>
             );
           })}
