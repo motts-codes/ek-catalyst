@@ -21,6 +21,7 @@ export function TermTip({
     <Tooltip
       className="max-w-72 !border-transparent text-xs leading-relaxed text-white [--tooltip-background:var(--button-primary-background,#d90716)]"
       delayDuration={0}
+      side="right"
       trigger={
         <button
           className={clsx(
