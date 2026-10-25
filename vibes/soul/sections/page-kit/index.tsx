@@ -84,6 +84,8 @@ interface HeroProps {
   textOnly?: boolean;
   /** `2` when the page already has an h1 above (e.g. a scroll hero). */
   headingLevel?: 1 | 2;
+  /** `roomy` gives the opener the full section padding instead of the compact one. */
+  spacing?: 'compact' | 'roomy';
   className?: string;
 }
 
@@ -103,12 +105,13 @@ export function PageHero({
   imageSize = 'default',
   textOnly = false,
   headingLevel = 1,
+  spacing = 'compact',
   className,
 }: HeroProps) {
   const Heading = headingLevel === 2 ? 'h2' : 'h1';
 
   return (
-    <HomeSection className={className} compact>
+    <HomeSection className={className} compact={spacing === 'compact'}>
       <div
         className={clsx(
           'grid items-center gap-8',

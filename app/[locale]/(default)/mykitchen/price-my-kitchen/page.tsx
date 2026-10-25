@@ -63,9 +63,13 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
             in that style straight away.
           </>
         }
+        image={{
+          src: '/images/estimator/hero-kitchen.jpg',
+          alt: 'A bright white kitchen with shaker cabinets, a farmhouse sink and a wooden range hood',
+        }}
         kicker="Kitchen estimator"
         note="This isn’t a quote. It’s a ballpark, with a price per foot so you can rough out your own room. For a price on your exact layout, a designer can quote it for free."
-        textOnly
+        spacing="roomy"
         title="What would your kitchen cost? Find out in 4 steps."
       />
 
