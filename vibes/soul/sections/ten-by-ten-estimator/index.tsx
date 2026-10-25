@@ -445,19 +445,8 @@ function DoorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
 
 // 4 · Color: big swatches, standard first, the premium ones tagged.
 function ColorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
-  const premium = w.colors.some((c) => c.tier === 'premium');
-
   return (
-    <Panel
-      help={
-        premium
-          ? 'Standard colors share one price; the three premium colors cost a little more.'
-          : 'Color doesn’t change the price.'
-      }
-      n={4}
-      title={`Which color for ${w.door ?? 'the door'}?`}
-      w={w}
-    >
+    <Panel n={4} title={`Which color for ${w.door ?? 'the door'}?`} w={w}>
       <BalancedRows
         colsFor={(width) => columnsFor(width, 7, 5, 4)}
         items={w.colors}

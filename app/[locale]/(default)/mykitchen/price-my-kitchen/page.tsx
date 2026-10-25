@@ -59,7 +59,7 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
         title="See what your kitchen costs, as a 10×10"
       />
 
-      <HomeSection className="bg-[#fdf3f5]">
+      <HomeSection className="bg-[#fdf3f5] bg-[url('/images/estimator/noise.svg')] bg-repeat">
         <Stream fallback={<EstimatorSkeleton />} value={visuals}>
           {(v) => <TenByTenEstimator designHref={FREE_DESIGN_HREF} visuals={v} />}
         </Stream>
