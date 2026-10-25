@@ -376,7 +376,7 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
       },
       {
         q: 'What if a cabinet arrives damaged?',
-        a: 'Tell us within 3 days of delivery, with photos, and write the damage on the delivery receipt. We’ll replace it.',
+        a: 'Tell us within 5 days of delivery, with photos, and write the damage on the delivery receipt. We’ll replace it.',
       },
       {
         q: 'Can I mix assembled and RTA in one kitchen?',
@@ -525,7 +525,7 @@ export const RTA_EXPLAINER: ExplainerV2 = {
       },
       {
         q: 'What if a part is missing or damaged?',
-        a: 'Check every box before you build. Tell us within 3 days of delivery, with photos, and we’ll send a replacement part.',
+        a: 'Check every box before you build. Tell us within 5 days of delivery, with photos, and we’ll send a replacement part.',
       },
       {
         q: 'Can I return RTA cabinets?',
