@@ -654,18 +654,6 @@ function Segmented({
   );
 }
 
-// Light or dark check on a swatch, from the hex's luminance.
-function darkInk(hex?: string): boolean {
-  const m = /^#([0-9a-f]{6})$/i.exec(hex ?? '');
-
-  if (!m) return true;
-
-  const [r, g, b] = [0, 2, 4].map((i) => parseInt(m[1]?.slice(i, i + 2) ?? '0', 16));
-  const l = (0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0)) / 255;
-
-  return l > 0.6;
-}
-
 function Swatch({
   name,
   hex,
@@ -683,26 +671,27 @@ function Swatch({
     <button
       aria-checked={on}
       className={clsx(
-        'group flex w-full flex-col items-center gap-2 rounded-2xl bg-white p-2.5 text-center transition-[box-shadow,transform] @xl:p-3',
+        'group relative flex w-full flex-col items-center gap-2 rounded-2xl border bg-white p-2.5 text-center transition-[border-color,box-shadow,transform] @xl:p-3',
         RING,
         on
-          ? clsx(
-              CARD_SHADOW,
-              'ring-2 ring-[var(--button-primary-background,#d90716)] ring-offset-4 ring-offset-[#fdf3f5]',
-            )
-          : 'shadow-[0_18px_36px_-28px_rgb(0_0_0/0.3)] hover:-translate-y-0.5 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.35)]',
+          ? 'border-[var(--button-primary-background,#d90716)] shadow-[0_0_0_1px_var(--button-primary-background,#d90716),0_24px_48px_-28px_rgb(0_0_0/0.3)]'
+          : 'border-transparent shadow-[0_18px_36px_-28px_rgb(0_0_0/0.3)] hover:-translate-y-0.5 hover:border-[#fcb6bb] hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.35)]',
       )}
       onClick={onPick}
       role="radio"
       type="button"
     >
       <span
-        className="flex aspect-square w-full items-center justify-center rounded-xl border border-black/10"
+        className="aspect-square w-full rounded-xl border border-black/10"
         style={{ backgroundColor: hex ?? '#e5e5e5' }}
+      />
+      <span
+        className={clsx(
+          'absolute right-2 top-2 flex size-6 items-center justify-center rounded-full border border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white transition-opacity',
+          on ? 'opacity-100' : 'opacity-0',
+        )}
       >
-        {on ? (
-          <Check className={darkInk(hex) ? 'text-black' : 'text-white'} size={28} strokeWidth={3} />
-        ) : null}
+        <Check size={13} strokeWidth={3} />
       </span>
       <span
         className={clsx(
@@ -713,7 +702,7 @@ function Swatch({
         {name}
       </span>
       {premium ? (
-        <span className="-mt-2 rounded-full bg-[#F6EBD6] px-1.5 py-px text-[10px] font-semibold uppercase tracking-wide">
+        <span className="-mt-1 rounded-full bg-[#F6EBD6] px-1.5 py-px text-[10px] font-semibold uppercase tracking-wide">
           Premium
         </span>
       ) : null}
