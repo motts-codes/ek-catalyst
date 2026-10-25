@@ -60,6 +60,7 @@ export const SITEMAP: SitemapGroup[] = [
       { label: 'Measuring guide', href: '/resources/measuring-guide' },
       { label: 'What is a 10×10 kitchen', href: '/resources/ten-by-ten-kitchen' },
       { label: 'How-to videos', href: '/resources/how-to-videos' },
+      { label: 'Cabinet glossary', href: '/help/cabinet-glossary' },
       { label: 'Cabinet care', href: '/resources/cabinet-care' },
       { label: 'Compare cabinet companies', href: '/compare-cabinet-companies' },
       { label: 'Find an installer', href: '/find-a-pro' },

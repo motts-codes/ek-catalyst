@@ -3,6 +3,7 @@ import { type ExplainerIcon } from '@/vibes/soul/sections/explainer/v2';
 import { type Metric } from '@/vibes/soul/sections/why-us-scroll';
 
 import { FREE_DESIGN_HREF } from '../home/home-content';
+import { CABINET_GLOSSARY_HREF } from '../pages/cabinet-glossary';
 
 import { type CabinetProgram } from './cabinet-lines-data';
 import { ASSEMBLED_LISTING_HREF, RTA_LISTING_HREF } from './cabinets-hub-content';
@@ -204,10 +205,9 @@ const TERM = {
   },
 };
 
-// No glossary page exists yet; this is the planned address.
 const GLOSSARY_LINK: ExplainerLink = {
   label: 'See the full cabinet glossary',
-  href: '/resources/cabinet-glossary',
+  href: CABINET_GLOSSARY_HREF,
 };
 
 const GLOSSARY: ExplainerV2['glossary'] = {
