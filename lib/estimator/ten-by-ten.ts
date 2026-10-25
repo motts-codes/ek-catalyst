@@ -247,15 +247,32 @@ export function dollarsAndCents(value: number): string {
   return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-/** What's in the 13-cabinet 10x10, in plain words (from the workbook's layout tab). */
-export const TEN_BY_TEN_CABINETS = [
-  'Three base cabinets (12", 15" and 18")',
-  'A 36" sink base',
-  'A blind corner base',
-  'Four wall cabinets (12", 21" × 2, 39")',
-  'A diagonal corner wall cabinet',
-  'Two bridge cabinets, over the range hood and the fridge',
-  'A 3" base filler',
+/** What's in the 13-cabinet 10x10, in plain words (from the workbook's layout tab), each with
+ *  the product that stands for it in the photo strip (SKU search term; "Assembled" preferred). */
+export interface TenByTenCabinet {
+  label: string;
+  /** Search term that finds the representative product; the first "Assembled" hit is used. */
+  search: string;
+  /** Narrows the hits by product name (regex source), e.g. the plain base rather than a drawer base. */
+  match?: string;
+}
+
+export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
+  {
+    label: 'Three base cabinets (12", 15" and 18")',
+    search: 'B18',
+    match: '^Avon Base Cabinet 18',
+  },
+  { label: 'A 36" sink base', search: 'SB36B - AVON', match: '^Avon Sink Base Cabinet 36' },
+  { label: 'A blind corner base', search: 'BLB42/45 AVON', match: 'Blind Corner Base' },
+  {
+    label: 'Four wall cabinets (12", 21" × 2, 39")',
+    search: 'W3930 - AVON',
+    match: '^Avon Wall Cabinet 39',
+  },
+  { label: 'A diagonal corner wall cabinet', search: 'WDC2430 - AVON' },
+  { label: 'Two bridge cabinets, over the range hood and the fridge', search: 'W3012B - AVON' },
+  { label: 'A 3" base filler', search: 'BF3', match: 'Base Filler' },
 ];
 
 export const TEN_BY_TEN_FINE_PRINT =

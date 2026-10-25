@@ -76,8 +76,9 @@ interface HeroProps {
   actions?: PageAction[];
   image?: PageImage;
   imageLabel?: string;
-  /** `plain` shows the photo as it is: no frame, rounding or backdrop (for shots on white). */
-  imageStyle?: 'framed' | 'plain';
+  /** `plain` shows the photo as it is: no frame, rounding or backdrop (for shots on white);
+   *  `soft` keeps the rounded corners but drops the outline. */
+  imageStyle?: 'framed' | 'plain' | 'soft';
   /** `small` keeps a plain image to about two thirds of its column (an illustration, not a photo). */
   imageSize?: 'default' | 'small';
   /** No photo column — the copy runs the full width. */
@@ -172,7 +173,8 @@ export function PageHero({
               'relative overflow-hidden',
               imageStyle === 'plain' && image
                 ? 'aspect-[6/5]'
-                : 'aspect-[4/3] rounded-3xl bg-contrast-100 ring-1 ring-contrast-100',
+                : 'aspect-[4/3] rounded-3xl bg-contrast-100',
+              imageStyle === 'framed' && 'ring-1 ring-contrast-100',
               imageSize === 'small' && 'mx-auto w-2/3 @3xl:w-[62%]',
             )}
           >

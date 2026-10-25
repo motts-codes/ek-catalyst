@@ -7,8 +7,10 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { TenByTenEstimator } from '@/vibes/soul/sections/ten-by-ten-estimator';
+import { WhatsInside } from '@/vibes/soul/sections/ten-by-ten-estimator/whats-inside';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
-import { doorsFor, TEN_BY_TEN_CABINETS } from '~/lib/estimator/ten-by-ten';
+import { doorsFor } from '~/lib/estimator/ten-by-ten';
+import { getTenByTenCabinetPhotos } from '~/lib/estimator/ten-by-ten-bom';
 import { buildEstimatorVisuals } from '~/lib/estimator/ten-by-ten-visuals';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
@@ -67,6 +69,7 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
           src: '/images/estimator/hero-kitchen.jpg',
           alt: 'A bright white kitchen with shaker cabinets, a farmhouse sink and a wooden range hood',
         }}
+        imageStyle="soft"
         kicker="Kitchen estimator"
         note="This isn’t a quote. It’s a ballpark, with a price per foot so you can rough out your own room. For a price on your exact layout, a designer can quote it for free."
         spacing="roomy"
@@ -82,7 +85,6 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
       <HomeSection
         description="A 10×10 kitchen is not a room that measures ten by ten. It’s the industry yardstick: the same set of cabinets, priced in every door style, so you can compare lines and brands on equal terms."
         kicker="Why a 10×10"
-        tint
         title="Why we price kitchens as a 10×10"
       >
         <div className="grid gap-8 @3xl:grid-cols-3">
@@ -111,19 +113,13 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
             </p>
           </div>
         </div>
-        <div className="mt-8 rounded-3xl border border-[#fcb6bb] bg-white p-6 @xl:p-8">
-          <h3 className="font-heading text-lg font-bold">What’s in our 10×10</h3>
-          <ul className="mt-3 grid gap-x-10 gap-y-2 text-sm text-contrast-500 @xl:grid-cols-2">
-            {TEN_BY_TEN_CABINETS.map((item) => (
-              <li className="flex items-start gap-2.5" key={item}>
-                <span
-                  aria-hidden
-                  className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--button-primary-background,#d90716)]"
-                />
-                {item}
-              </li>
-            ))}
-          </ul>
+        <div className="mt-12 @3xl:mt-16">
+          <Stream
+            fallback={<div className="h-72 animate-pulse rounded-3xl bg-contrast-100" />}
+            value={Streamable.from(getTenByTenCabinetPhotos)}
+          >
+            {(items) => <WhatsInside items={items} title="What’s in our 10×10" />}
+          </Stream>
         </div>
       </HomeSection>
 
