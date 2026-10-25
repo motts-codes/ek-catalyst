@@ -17,8 +17,11 @@ import { Slot } from '~/lib/makeswift/slot';
 interface Props {
   program: CabinetProgram;
   content: ExplainerV2;
-  /** The Avon 10×10 price in each program, already formatted ("$2,993"), RTA first. */
+  /** The priced collection's 10×10 price in each program, already formatted ("$2,993"), RTA first. */
   avonPrices: [string, string];
+  /** The priced collection's lead time in each program ("2 weeks"), RTA first; blanks keep the
+   *  copy's figures. */
+  shipsIn?: [string | undefined, string | undefined];
   /** The kitchen photo beside the cost table (content.cost.imageCollection). */
   avonImage?: { src: string; alt: string };
 }
@@ -27,12 +30,19 @@ interface Props {
 // arrive, the same-cabinet reassurance and the build panel, what turns up, the remodel timeline,
 // money or time, who it suits, the glossary, the FAQ and a soft next step. Every band is a
 // Makeswift slot with the brief's copy as the fallback; the cost table's Avon row is live.
-export function ExplainerV2Page({ program, content, avonPrices, avonImage }: Props) {
+export function ExplainerV2Page({ program, content, avonPrices, avonImage, shipsIn }: Props) {
   const slot = (name: string) => ({
     label: `${program} explainer ${name}`,
     snapshotId: `explainer-${program}-${name}`,
   });
-  const costRows = [[`!${content.cost.priceRow}`, ...avonPrices], ...content.cost.rows];
+  const costRows = [
+    [`!${content.cost.priceRow}`, ...avonPrices],
+    ...content.cost.rows.map((row) =>
+      row[0] === '!Ships in' && shipsIn
+        ? [row[0], shipsIn[0] ?? row[1] ?? '', shipsIn[1] ?? row[2] ?? '']
+        : row,
+    ),
+  ];
 
   return (
     <>

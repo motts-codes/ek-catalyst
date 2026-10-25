@@ -31,32 +31,40 @@ export default async function CabinetExplainer({ params }: Props) {
 
   if (!isProgram(program)) return notFound();
 
-  // "Money or time": Avon's 10×10 price in each program, from the live collection data.
+  // "Money or time": the priced collection's 10×10 price and lead time in each program, live.
   const [rtaLines, assembledLines] = await Promise.all([
     getCabinetLines('rta'),
     getCabinetLines('assembled'),
   ]);
-  const avon = (lines: typeof rtaLines) => lines.find((line) => /^Avon\b/.test(line.name));
-  // The kitchen beside the table: the page's named collection, from its own program's listing.
   const content = EXPLAINER_V2[program];
-  const costImage = (program === 'rta' ? rtaLines : assembledLines).find((line) =>
-    line.name.startsWith(content.cost.imageCollection),
-  )?.image;
-  const avonPrice = (lines: typeof rtaLines) => {
-    const price = Number(avon(lines)?.price);
+  const find = (lines: typeof rtaLines, name: string) =>
+    lines.find((line) => line.name.startsWith(name));
+  // The priced collection in each program (Avon on the assembled page, Northampton on RTA).
+  const priced = [
+    find(rtaLines, content.cost.priceCollection),
+    find(assembledLines, content.cost.priceCollection),
+  ] as const;
+  const dollars = (raw?: string) => {
+    const price = Number(raw);
 
     // Whole dollars, with thousands separators: "$2,993".
     return Number.isFinite(price) && price > 0
       ? `$${Math.round(price).toLocaleString('en-US')}`
       : '$[X]';
   };
+  // The kitchen beside the table: the page's named collection, from its own program's listing.
+  const costImage = find(
+    program === 'rta' ? rtaLines : assembledLines,
+    content.cost.imageCollection,
+  )?.image;
 
   return (
     <ExplainerV2Page
       avonImage={costImage}
-      avonPrices={[avonPrice(rtaLines), avonPrice(assembledLines)]}
+      avonPrices={[dollars(priced[0]?.price), dollars(priced[1]?.price)]}
       content={content}
       program={program}
+      shipsIn={[priced[0]?.deliveryTime, priced[1]?.deliveryTime]}
     />
   );
 }

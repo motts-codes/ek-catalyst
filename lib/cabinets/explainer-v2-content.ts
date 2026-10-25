@@ -33,9 +33,10 @@ export interface ExplainerV2 {
     description: string;
     /** A soft text link under the paragraph (e.g. to the other program). */
     link?: ExplainerLink;
-    image?: { src: string; alt: string };
+    image?: { src: string; alt: string; width?: number; height?: number };
     imageLabel: string;
-    /** A transparent render, shown whole with no frame. */
+    /** A transparent render, shown whole with no frame at its own proportions (needs width and
+     *  height so it can fill the column). */
     cutout?: boolean;
   };
   twoWays: {
@@ -82,7 +83,10 @@ export interface ExplainerV2 {
     description: string;
     /** First cell is the table's corner label; then the two program columns. */
     columns: [string, string, string];
-    /** The Avon price row's label; its two prices come from the live collection. */
+    /** The collection the price row quotes (its live 10×10 price in each program, and its
+     *  lead times for the "Ships in" row when the listing carries them). */
+    priceCollection: string;
+    /** The price row's label. */
     priceRow: string;
     rows: string[][];
     footnote: string;
@@ -244,6 +248,8 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
     image: {
       src: '/images/explainers/assembled-kitchen-render.png',
       alt: 'A rendered L-shaped kitchen of light wood assembled cabinets with a hood, sink and fridge',
+      width: 1600,
+      height: 866,
     },
     imageLabel: 'A finished kitchen, assembled cabinets installed',
     cutout: true,
@@ -310,6 +316,7 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
     description:
       'Because we do the building, assembled costs more than RTA. RTA costs less, but you or your installer spend time putting each cabinet together, about 45 minutes for the first cabinet and 20–30 minutes for each one after.',
     columns: ['A 10×10 kitchen, cabinets only', 'RTA', 'Assembled'],
+    priceCollection: 'Avon',
     priceRow: 'Avon (white shaker)',
     rows: [
       ['!Assembly time', 'About 5–6 hours (around 12 cabinets)', 'None'],
@@ -377,8 +384,10 @@ export const RTA_EXPLAINER: ExplainerV2 = {
       'RTA stands for ready to assemble. The cabinets arrive flat in boxes, with finished doors and every part labeled, and you put them together before they’re installed. It takes time, but because you do the building, you pay less.',
     // A homeowner on the floor mid-build, fitting a shaker door, on white (shown as a cut-out).
     image: {
-      src: '/images/explainers/rta-hero.jpg',
+      src: '/images/explainers/rta-hero-v2.jpg',
       alt: 'A man sitting on the floor fitting a white shaker door to a base cabinet, parts and hardware around him',
+      width: 1600,
+      height: 1016,
     },
     imageLabel: 'A flat RTA box beside the same cabinet built',
     cutout: true,
@@ -448,7 +457,8 @@ export const RTA_EXPLAINER: ExplainerV2 = {
     description:
       'RTA costs less because you put each cabinet together yourself. The trade-off is time: about 45 minutes for the first cabinet and 20–30 minutes for each one after.',
     columns: ['A 10×10 kitchen, cabinets only', 'RTA', 'Assembled'],
-    priceRow: 'Avon (white shaker)',
+    priceCollection: 'Northampton',
+    priceRow: 'Northampton (walnut)',
     rows: [
       ['!Assembly time', 'About 5–6 hours (around 12 cabinets)', 'None'],
       ['!Ships in', '2 weeks', '3 weeks'],
