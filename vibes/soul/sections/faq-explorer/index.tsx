@@ -171,7 +171,7 @@ export function FaqExplorer({ groups, className }: { groups: FaqGroup[]; classNa
                     'group/topic flex items-center gap-2.5 whitespace-nowrap rounded-full border px-3.5 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 @3xl:rounded-xl @3xl:border-transparent @3xl:px-3 @3xl:py-2.5',
                     on
                       ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white @3xl:bg-[#fdf3f5] @3xl:text-[var(--button-primary-background,#d90716)]'
-                      : 'border-contrast-200 bg-white text-foreground hover:border-foreground @3xl:hover:bg-[#f9fafd]',
+                      : 'border-contrast-200 bg-white text-foreground hover:border-[#fcb6bb] hover:bg-[#fdf3f5] @3xl:hover:border-transparent',
                     dimmed && 'opacity-40',
                   )}
                   href={`#${group.id}`}
