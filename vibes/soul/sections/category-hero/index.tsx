@@ -41,7 +41,8 @@ interface HeroProps {
    */
   compact?: boolean;
   /** Panel colour: brand red (default) or black. Subcategory pages ignore it (black, compact). */
-  tone?: 'black' | 'red';
+  /** 'deep-red' is the closing band's #9f3632 (white text 6.9:1). */
+  tone?: 'black' | 'red' | 'deep-red';
   /** A small line above the headline (the category name when the headline is a promise). */
   eyebrow?: string;
   /** Rendered over the photo (e.g. the 'Watch the explainer' chip). */
@@ -113,9 +114,11 @@ export function CategoryHero({
                       : 'px-6 py-9 @xl:px-10 @xl:py-12',
                     // Brand red (#d90716): white text sits at 5.3:1. The lighter #F20819 was tried and
                     // misses 4.5:1 for the description line.
-                    tone === 'red'
-                      ? 'bg-[var(--button-primary-background,#d90716)]'
-                      : 'bg-foreground',
+                    {
+                      'bg-[var(--button-primary-background,#d90716)]': tone === 'red',
+                      'bg-[#9f3632]': tone === 'deep-red',
+                      'bg-foreground': tone === 'black',
+                    },
                   ),
             )}
           >
