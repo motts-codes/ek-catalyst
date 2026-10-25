@@ -262,7 +262,10 @@ const cabinetPhoto = (file: string, alt: string) => ({
 export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   {
     label: 'Three base cabinets (12", 15" and 18")',
-    image: cabinetPhoto('base-cabinets', 'Base cabinets, each with a drawer over a door'),
+    image: cabinetPhoto(
+      'base-cabinets',
+      'The 12, 15 and 18-inch base cabinets, each with a drawer over a door',
+    ),
   },
   {
     label: 'A 36" sink base',
