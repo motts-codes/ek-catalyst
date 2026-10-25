@@ -11,11 +11,12 @@ import {
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
+import { type GlossaryTerm, GlossaryWords } from './glossary-words';
 import { Stepper, type StepperIcon } from './stepper';
 
 // The education-first explainer sections (v2): a question answered, the two ways a cabinet can
-// arrive, what turns up, where it fits in a remodel, the same-cabinet reassurance, who it suits,
-// and a glossary. House style throughout: red eyebrow, big heading, rounded cards on blush.
+// arrive, what turns up, where it fits in a remodel, the same-cabinet reassurance, and who it
+// suits beside a glossary. House style throughout: red eyebrow, big heading, rounded cards on blush.
 
 export type ExplainerIcon = StepperIcon;
 
@@ -377,65 +378,63 @@ export function MoneyOrTime({
   );
 }
 
-// 7 · Who it suits: the reasons as ticked cards, then the line that points the other way.
-export function Suits({
-  kicker,
-  title,
-  points,
-  line,
-  link,
-}: {
-  kicker: string;
-  title: string;
-  points: string[];
-  line: string;
-  link: LinkProps;
-}) {
-  return (
-    <HomeSection className={BLUSH} kicker={kicker} title={title}>
-      <ul className="grid gap-4 @xl:grid-cols-2">
-        {points.map((point) => (
-          <li
-            className="flex items-start gap-3 rounded-3xl border border-contrast-100 bg-white p-5 text-sm leading-relaxed @xl:p-6 @xl:text-base"
-            key={point}
-          >
-            <Tick />
-            <span>{point}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-contrast-500 @xl:text-base">
-        <span>{line}</span>
-        <TextLink href={link.href} label={link.label} />
-      </p>
-    </HomeSection>
-  );
-}
-
-// 8 · The words they'll meet on the collection pages, as a two-column definition list.
-export function Glossary({
+// 7 + 8 · Two panels side by side: who it suits (brand red, ticked bullets) and the glossary
+// (black, a run of words whose meaning shows beneath and cycles). The id anchors the 10×10 link.
+export function SuitsAndGlossary({
   id,
-  kicker,
-  title,
-  terms,
+  suits,
+  glossary,
 }: {
   id?: string;
-  kicker: string;
-  title: string;
-  terms: Array<{ term: string; definition: string }>;
+  suits: { kicker: string; title: string; points: string[]; line: string; link: LinkProps };
+  glossary: {
+    kicker: string;
+    title: string;
+    terms: GlossaryTerm[];
+    link?: LinkProps;
+  };
 }) {
   return (
-    <HomeSection id={id} kicker={kicker} title={title}>
-      <dl className="grid border-t border-contrast-100 @3xl:grid-cols-2 @3xl:gap-x-14">
-        {terms.map((entry) => (
-          <div className="border-b border-contrast-100 py-4 @xl:py-5" key={entry.term}>
-            <dt className="font-heading text-base font-semibold @xl:text-lg">{entry.term}</dt>
-            <dd className="mt-1 text-sm leading-relaxed text-contrast-500 @xl:text-base">
-              {entry.definition}
-            </dd>
+    <HomeSection id={id}>
+      <div className="grid gap-6 @3xl:grid-cols-2">
+        <section className="flex flex-col rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-9 text-white @xl:px-9 @xl:py-11">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
+            {suits.kicker}
+          </p>
+          <h2 className={homeHeadingClassName}>{suits.title}</h2>
+          <ul className="mt-6 space-y-3.5 text-sm @xl:text-base">
+            {suits.points.map((point) => (
+              <li className="flex items-start gap-3" key={point}>
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-[var(--button-primary-background,#d90716)]">
+                  <Check aria-hidden size={12} strokeWidth={3} />
+                </span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-8 text-sm text-white/85 @xl:text-base">
+            <span>{suits.line}</span>
+            <Link
+              className="group inline-flex items-center gap-1.5 font-semibold text-white underline-offset-4 hover:underline"
+              href={suits.link.href}
+            >
+              {suits.link.label}
+              <ArrowRight
+                className="transition-transform group-hover:translate-x-0.5"
+                size={16}
+                strokeWidth={2.5}
+              />
+            </Link>
+          </p>
+        </section>
+        <section className="rounded-3xl bg-foreground px-6 py-9 text-white @xl:px-9 @xl:py-11">
+          <p className={EYEBROW}>{glossary.kicker}</p>
+          <h2 className={homeHeadingClassName}>{glossary.title}</h2>
+          <div className="mt-6">
+            <GlossaryWords link={glossary.link} terms={glossary.terms} />
           </div>
-        ))}
-      </dl>
+        </section>
+      </div>
     </HomeSection>
   );
 }

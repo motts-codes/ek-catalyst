@@ -4,10 +4,9 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import {
   Arrives,
   ExplainerIntro,
-  Glossary,
   MoneyOrTime,
   SameCabinet,
-  Suits,
+  SuitsAndGlossary,
   Timeline,
   TwoWays,
 } from '@/vibes/soul/sections/explainer/v2';
@@ -83,11 +82,15 @@ export function ExplainerV2Page({ program, content, avonPrices, avonImage }: Pro
         {...slot('cost')}
       />
 
-      <Slot fallback={<Suits kicker="Which suits you?" {...content.suits} />} {...slot('suits')} />
-
       <Slot
-        fallback={<Glossary id="glossary" kicker="Glossary" {...content.glossary} />}
-        {...slot('glossary')}
+        fallback={
+          <SuitsAndGlossary
+            glossary={{ kicker: 'Glossary', ...content.glossary }}
+            id="glossary"
+            suits={{ kicker: 'Which suits you?', ...content.suits }}
+          />
+        }
+        {...slot('suits-glossary')}
       />
 
       <CabinetFaq data={content.faq} />

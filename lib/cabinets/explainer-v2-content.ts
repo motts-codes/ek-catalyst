@@ -79,7 +79,12 @@ export interface ExplainerV2 {
     footnoteLink?: ExplainerLink;
   };
   suits: { title: string; points: string[]; line: string; link: ExplainerLink };
-  glossary: { title: string; terms: Array<{ term: string; definition: string }> };
+  glossary: {
+    title: string;
+    terms: Array<{ term: string; definition: string }>;
+    /** "See the full cabinet glossary". */
+    link?: ExplainerLink;
+  };
   faq: { headline: string; items: Array<{ q: string; a: string }> };
   next: {
     kicker: string;
@@ -124,7 +129,10 @@ const GLOSSARY: ExplainerV2['glossary'] = {
   title: 'Words you’ll see',
   terms: [
     { term: 'Assembled', definition: 'Built in our factory, ready to install.' },
-    { term: 'RTA', definition: 'Ready to assemble. Ships flat, and you build it.' },
+    {
+      term: 'RTA (ready to assemble)',
+      definition: 'Shipped flat in boxes. You build each cabinet before it’s installed.',
+    },
     {
       term: 'Installed',
       definition: 'Fixed to your wall and floor. A separate step from assembly.',
@@ -133,18 +141,17 @@ const GLOSSARY: ExplainerV2['glossary'] = {
     {
       term: 'Framed / frameless',
       definition:
-        'Framed cabinets have a solid wood frame around the front (traditional and shaker looks). Frameless cabinets don’t (modern, European look).',
+        'Framed cabinets have a solid wood frame around the front (traditional and shaker looks). Frameless cabinets don’t (a modern, European look).',
     },
-    {
-      term: 'Soft-close',
-      definition: 'Doors and drawers that slow down and close quietly on their own.',
-    },
+    { term: 'Soft-close', definition: 'Doors and drawers that slow down and close quietly.' },
     {
       term: '10×10 price',
       definition:
         'The price of a standard sample kitchen, used to compare collections. Not the price of your kitchen.',
     },
   ],
+  // No glossary page exists yet; this is the planned address.
+  link: { label: 'See the full cabinet glossary', href: '/resources/cabinet-glossary' },
 };
 
 const NEXT_STEP: ExplainerV2['next'] = {
