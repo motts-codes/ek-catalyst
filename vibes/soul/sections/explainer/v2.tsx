@@ -69,6 +69,7 @@ export function ExplainerIntro({
   link,
   image,
   imageLabel,
+  cutout = false,
 }: {
   kicker: string;
   title: string;
@@ -76,6 +77,8 @@ export function ExplainerIntro({
   link: LinkProps;
   image?: { src: string; alt: string };
   imageLabel: string;
+  /** A transparent render: shown whole with no frame, like a cut-out on the page. */
+  cutout?: boolean;
 }) {
   return (
     <HomeSection>
@@ -90,11 +93,18 @@ export function ExplainerIntro({
           </p>
           <TextLink className="mt-6" href={link.href} label={link.label} />
         </div>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+        <div
+          className={clsx(
+            'relative',
+            cutout
+              ? 'aspect-[16/9]'
+              : 'aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100',
+          )}
+        >
           {image ? (
             <Image
               alt={image.alt}
-              className="object-cover"
+              className={cutout ? 'object-contain' : 'object-cover'}
               fill
               preload
               sizes="(min-width: 56rem) 40vw, 100vw"

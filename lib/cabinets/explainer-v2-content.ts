@@ -34,6 +34,8 @@ export interface ExplainerV2 {
     link: ExplainerLink;
     image?: { src: string; alt: string };
     imageLabel: string;
+    /** A transparent render, shown whole with no frame. */
+    cutout?: boolean;
   };
   twoWays: {
     title: string;
@@ -153,12 +155,13 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
       label: 'Or read about RTA cabinets, the build-it-yourself option',
       href: EXPLAINER_V2_HREF.rta,
     },
-    // The home page's assembled-program kitchen, until a dedicated shot arrives.
+    // A rendered L-shaped kitchen of assembled cabinets, on a transparent background.
     image: {
-      src: '/images/home/programs/assembled.webp',
-      alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island',
+      src: '/images/explainers/assembled-kitchen-render.png',
+      alt: 'A rendered L-shaped kitchen of light wood assembled cabinets with a hood, sink and fridge',
     },
     imageLabel: 'A finished kitchen, assembled cabinets installed',
+    cutout: true,
   },
   twoWays: TWO_WAYS,
   arrives: {
