@@ -395,8 +395,9 @@ export const STORY = {
   ],
   imageLabel: 'The Bristol factory line',
   video: {
-    src: '/images/home/story/heritage.mp4',
-    poster: '/images/home/story/heritage-poster.jpg',
+    src: '/images/home/story/heritage-ad.mp4',
+    webm: '/images/home/story/heritage-ad.webm',
+    poster: '/images/home/story/heritage-ad-poster.jpg',
     title: 'Express Kitchens: 110 years of craft',
   },
   chapters: [

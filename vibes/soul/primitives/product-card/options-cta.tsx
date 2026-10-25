@@ -39,7 +39,7 @@ export function SwatchAddToCart({
               aria-checked={isSelected}
               aria-label={swatch.label}
               className={clsx(
-                'size-[22px] shrink-0 rounded-full border p-[2px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
+                'size-6 shrink-0 rounded-full border p-[2px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-1',
                 // ~2px of white between the colour dot and the ring: red when selected,
                 // invisible otherwise (a faint hover hint). The dot carries its own hairline so
                 // pale swatches (white) still read as dots.

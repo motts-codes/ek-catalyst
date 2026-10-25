@@ -18,7 +18,8 @@ interface Props {
   title: string;
   description: string;
   actions?: Array<{ label: string; href: string; primary?: boolean }>;
-  video: { src: string; poster?: string; title?: string };
+  /** The film: `src` is the MP4 every browser plays; `webm` is offered first where supported. */
+  video: { src: string; webm?: string; poster?: string; title?: string };
   /** Four or so captions under the film; each one jumps to its moment. */
   chapters?: FilmChapter[];
   tint?: boolean;
@@ -144,8 +145,9 @@ export function StoryFilm({
             poster={video.poster}
             preload="metadata"
             ref={videoRef}
-            src={video.src}
           >
+            {video.webm ? <source src={video.webm} type="video/webm" /> : null}
+            <source src={video.src} type="video/mp4" />
             <track kind="captions" />
           </video>
           {!started && (
