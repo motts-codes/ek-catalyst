@@ -375,7 +375,13 @@ export const RTA_EXPLAINER: ExplainerV2 = {
     title: 'What are RTA cabinets?',
     description:
       'RTA stands for ready to assemble. The cabinets arrive flat in boxes, with finished doors and every part labeled, and you put them together before they’re installed. It takes time, but because you do the building, you pay less.',
+    // A homeowner on the floor mid-build, screwdriver in hand, on white (shown as a cut-out).
+    image: {
+      src: '/images/explainers/rta-hero.jpg',
+      alt: 'A man sitting on the floor assembling a white cabinet drawer with a screwdriver',
+    },
     imageLabel: 'A flat RTA box beside the same cabinet built',
+    cutout: true,
   },
   twoWays: twoWays('rta'),
   arrives: {
