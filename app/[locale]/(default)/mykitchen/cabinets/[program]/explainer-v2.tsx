@@ -1,11 +1,11 @@
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetProgramContentSection } from '@/vibes/soul/sections/cabinet-program-content';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import {
   Arrives,
   ExplainerIntro,
   Glossary,
+  MoneyOrTime,
   SameCabinet,
   Suits,
   Timeline,
@@ -20,11 +20,15 @@ interface Props {
   content: ExplainerV2;
   /** The Avon 10×10 price in each program, already formatted ("$2,993"), RTA first. */
   avonPrices: [string, string];
+  /** The Avon kitchen photo, beside the cost table. */
+  avonImage?: { src: string; alt: string };
 }
 
-// The v2 explainer, section by section in the brief's order. Every band is a Makeswift slot with
-// the brief's copy as the fallback; the cost table's Avon row is live.
-export function ExplainerV2Page({ program, content, avonPrices }: Props) {
+// The v2 explainer, section by section: the question answered, the two ways a cabinet can
+// arrive, the same-cabinet reassurance and the build panel, what turns up, the remodel timeline,
+// money or time, who it suits, the glossary, the FAQ and a soft next step. Every band is a
+// Makeswift slot with the brief's copy as the fallback; the cost table's Avon row is live.
+export function ExplainerV2Page({ program, content, avonPrices, avonImage }: Props) {
   const slot = (name: string) => ({
     label: `${program} explainer ${name}`,
     snapshotId: `explainer-${program}-${name}`,
@@ -41,16 +45,6 @@ export function ExplainerV2Page({ program, content, avonPrices }: Props) {
       />
 
       <Slot
-        fallback={<Arrives kicker="What turns up at your door" {...content.arrives} />}
-        {...slot('arrives')}
-      />
-
-      <Slot
-        fallback={<Timeline kicker="From delivery to finished kitchen" {...content.timeline} />}
-        {...slot('timeline')}
-      />
-
-      <Slot
         fallback={<SameCabinet kicker="Is one better made?" {...content.sameCabinet} />}
         {...slot('same-cabinet')}
       />
@@ -63,21 +57,25 @@ export function ExplainerV2Page({ program, content, avonPrices }: Props) {
       />
 
       <Slot
+        fallback={<Arrives kicker="What turns up at your door" {...content.arrives} />}
+        {...slot('arrives')}
+      />
+
+      <Slot
+        fallback={<Timeline kicker="From delivery to finished kitchen" {...content.timeline} />}
+        {...slot('timeline')}
+      />
+
+      <Slot
         fallback={
-          <DeliveryLadder
+          <MoneyOrTime
             columns={content.cost.columns}
             description={content.cost.description}
-            footnote={
-              <>
-                {content.cost.footnote}{' '}
-                {content.cost.footnoteLink && (
-                  <a href={content.cost.footnoteLink.href}>{content.cost.footnoteLink.label} →</a>
-                )}
-              </>
-            }
+            footnote={content.cost.footnote}
+            footnoteLink={content.cost.footnoteLink}
+            image={avonImage}
+            imageLabel="The Avon kitchen the table prices"
             kicker="What the difference costs you"
-            look="minimal"
-            narrow
             rows={costRows}
             title={content.cost.title}
           />

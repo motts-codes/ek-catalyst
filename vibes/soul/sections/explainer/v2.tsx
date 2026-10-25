@@ -2,6 +2,7 @@ import { clsx } from 'clsx';
 import { ArrowRight, Check } from 'lucide-react';
 
 import { StarCheck } from '@/vibes/soul/primitives/icons/star-check';
+import { MinimalTable } from '@/vibes/soul/sections/delivery-ladder';
 import {
   homeHeadingClassName,
   HomeSection,
@@ -62,7 +63,7 @@ function Tick() {
 }
 
 // 1 · The hero asks the reader's question and answers it in two sentences; the photo on the
-// right shows the finished result. One soft link to the other program; no shop buttons.
+// right (an even split, so it sits centred) shows the finished result. No shop buttons.
 export function ExplainerIntro({
   kicker,
   title,
@@ -75,7 +76,7 @@ export function ExplainerIntro({
   kicker: string;
   title: string;
   description: string;
-  link: LinkProps;
+  link?: LinkProps;
   image?: { src: string; alt: string };
   imageLabel: string;
   /** A transparent render: shown whole with no frame, like a cut-out on the page. */
@@ -83,7 +84,7 @@ export function ExplainerIntro({
 }) {
   return (
     <HomeSection>
-      <div className="grid items-center gap-10 @3xl:grid-cols-[1.25fr_1fr] @3xl:gap-16">
+      <div className="grid items-center gap-10 @3xl:grid-cols-2 @3xl:gap-16">
         <div className="@3xl:py-6">
           <p className={clsx(EYEBROW, 'mb-2')}>{kicker}</p>
           <h1 className="font-heading text-3xl font-bold leading-tight @xl:text-4xl @4xl:text-[44px]">
@@ -92,7 +93,7 @@ export function ExplainerIntro({
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
             {description}
           </p>
-          <TextLink className="mt-6" href={link.href} label={link.label} />
+          {link && <TextLink className="mt-6" href={link.href} label={link.label} />}
         </div>
         <div
           className={clsx(
@@ -199,7 +200,8 @@ export function TwoWays({
   );
 }
 
-// 3 · Makes it concrete: what's on the pallet (ticked), the delivery note, the photo.
+// 3 · Makes it concrete: the photo on the left; what's on the pallet (ticked) and the delivery
+// note on the right.
 export function Arrives({
   kicker,
   title,
@@ -220,7 +222,7 @@ export function Arrives({
   return (
     <HomeSection>
       <div className="grid items-center gap-10 @3xl:grid-cols-2 @3xl:gap-16">
-        <div>
+        <div className="@3xl:order-2">
           <p className={EYEBROW}>{kicker}</p>
           <h2 className={homeHeadingClassName}>{title}</h2>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
@@ -243,7 +245,7 @@ export function Arrives({
             {note}
           </p>
         </div>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100 @3xl:order-1">
           {image ? (
             <Image
               alt={image.alt}
@@ -301,6 +303,62 @@ export function SameCabinet({
         {description}
       </p>
       {Boolean(note) && <p className="mt-3 max-w-3xl text-sm text-contrast-400">{note}</p>}
+    </HomeSection>
+  );
+}
+
+// 6 · Money or time: the quiet comparison table on the left, the Avon kitchen it prices on the
+// right, the 10×10 footnote under the table.
+export function MoneyOrTime({
+  kicker,
+  title,
+  description,
+  columns,
+  rows,
+  footnote,
+  footnoteLink,
+  image,
+  imageLabel,
+}: {
+  kicker: string;
+  title: string;
+  description: string;
+  columns: string[];
+  rows: string[][];
+  footnote: string;
+  footnoteLink?: LinkProps;
+  image?: { src: string; alt: string };
+  imageLabel: string;
+}) {
+  return (
+    <HomeSection description={description} kicker={kicker} title={title}>
+      <div className="grid items-start gap-10 @3xl:grid-cols-[3fr_2fr] @3xl:gap-16">
+        <div>
+          <MinimalTable columns={columns} narrow={false} rows={rows} />
+          <p className="mt-5 text-xs leading-relaxed text-contrast-400">
+            {footnote}{' '}
+            {footnoteLink && (
+              <a className="underline underline-offset-2" href={footnoteLink.href}>
+                {footnoteLink.label} →
+              </a>
+            )}
+          </p>
+        </div>
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+          {image ? (
+            <Image
+              alt={image.alt}
+              className="object-cover"
+              fill
+              sizes="(min-width: 56rem) 40vw, 100vw"
+              src={image.src}
+              unoptimized
+            />
+          ) : (
+            <MediaPlaceholder label={imageLabel} />
+          )}
+        </div>
+      </div>
     </HomeSection>
   );
 }

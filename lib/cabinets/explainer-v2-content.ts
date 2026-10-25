@@ -31,7 +31,8 @@ export interface ExplainerV2 {
     kicker: string;
     title: string;
     description: string;
-    link: ExplainerLink;
+    /** A soft text link under the paragraph (e.g. to the other program). */
+    link?: ExplainerLink;
     image?: { src: string; alt: string };
     imageLabel: string;
     /** A transparent render, shown whole with no frame. */
@@ -166,10 +167,6 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
     title: 'What are assembled cabinets?',
     description:
       'Kitchen cabinets that arrive already built. We put each one together in our factory (box, doors, drawers and shelves), so when it reaches you, it’s ready to install. It costs a little more than building them yourself, but it saves you days of work and gets your kitchen finished sooner.',
-    link: {
-      label: 'Or read about RTA cabinets, the build-it-yourself option',
-      href: EXPLAINER_V2_HREF.rta,
-    },
     // A rendered L-shaped kitchen of assembled cabinets, on a transparent background.
     image: {
       src: '/images/explainers/assembled-kitchen-render.png',
@@ -190,6 +187,10 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
       'Shelves in place',
     ],
     note: 'Delivery is to the ground floor. Getting them inside or upstairs is up to you, unless you’ve added a delivery service. Built cabinets take up room, so clear space in a garage or spare room to keep them until installation.',
+    image: {
+      src: '/images/explainers/assembled-wrapped-cabinet.jpg',
+      alt: 'A built white base cabinet wrapped in bubble wrap with corner protectors, standing in its opened carton',
+    },
     imageLabel: 'An unwrapped assembled base cabinet',
   },
   timeline: {

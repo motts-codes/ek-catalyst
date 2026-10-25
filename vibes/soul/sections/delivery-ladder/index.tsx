@@ -112,7 +112,7 @@ export function DeliveryLadder({
   );
 }
 
-interface TableProps {
+export interface TableProps {
   columns: string[];
   rows: string[][];
   narrow: boolean;
@@ -202,7 +202,7 @@ function ClassicTable({ columns, rows, narrow }: TableProps) {
 
 // The quiet table: no box, no fills, no column rules. Small red labels up top over a black
 // rule, a hairline between rows, the feature bold on the left; rows blush on hover.
-function MinimalTable({ columns, rows, narrow }: TableProps) {
+export function MinimalTable({ columns, rows, narrow }: TableProps) {
   return (
     <div className={clsx('overflow-x-auto', narrow && 'mx-auto max-w-4xl')}>
       <table className="w-full min-w-[36rem] border-collapse text-left text-sm">

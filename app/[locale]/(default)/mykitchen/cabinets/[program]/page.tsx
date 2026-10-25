@@ -92,6 +92,7 @@ export default async function CabinetExplainer({ params }: Props) {
   if (v2) {
     return (
       <ExplainerV2Page
+        avonImage={assembledLines.find((line) => /^Avon\b/.test(line.name))?.image}
         avonPrices={[avonPrice(rtaLines), avonPrice(assembledLines)]}
         content={v2}
         program={program}
