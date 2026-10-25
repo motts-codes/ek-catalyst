@@ -63,7 +63,7 @@ export default async function TenByTen({ params }: { params: Promise<{ locale: s
         description={TEN_BY_TEN_HERO.description}
         image={TEN_BY_TEN_HERO.image}
         imageLabel={TEN_BY_TEN_HERO.imageLabel}
-        imageStyle="plain"
+        imageStyle="soft"
         kicker={TEN_BY_TEN_HERO.kicker}
         spacing="roomy"
         title={TEN_BY_TEN_HERO.title}

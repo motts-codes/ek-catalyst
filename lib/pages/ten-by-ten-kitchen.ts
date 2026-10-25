@@ -22,10 +22,10 @@ export const TEN_BY_TEN_HERO = {
   description:
     'When you see a kitchen cabinet price, it’s almost always for the same sample room: two 10-foot walls in an L shape, about 20 feet of cabinets. It’s called a 10×10, and the whole industry uses it to compare prices. Every 10×10 price on our site is that kitchen, cabinets only, in that collection. Ours has 13 cabinets.',
   image: {
-    src: '/images/estimator/layout-l-shaped.jpg',
-    alt: 'The 10×10 kitchen: white shaker cabinets along two walls meeting in a corner',
+    src: '/images/estimator/ten-by-ten-hero.jpg',
+    alt: 'A bright white shaker kitchen with an island, pendant lights and a built-in fridge',
   },
-  imageLabel: 'The 10×10 kitchen, Avon in white',
+  imageLabel: 'A white shaker kitchen',
   actions: [
     { label: 'Price my kitchen', href: ESTIMATOR_HREF, primary: true },
     { label: 'Browse collections', href: '/cabinets/assembled-cabinets', style: 'outline' },
@@ -41,15 +41,15 @@ export const TEN_BY_TEN_LIST = {
 
 // The numbers on the renders. Two 21" walls share the number 7, so 12 lines make 13 cabinets.
 export const TEN_BY_TEN_MAP_ITEMS = [
-  { n: 1, label: '12" base' },
-  { n: 2, label: '15" base' },
-  { n: 3, label: '18" base' },
-  { n: 4, label: '36" sink base' },
-  { n: 5, label: 'Blind corner base' },
-  { n: 6, label: '12" wall' },
-  { n: 7, label: '21" wall (two of them)' },
-  { n: 8, label: '39" wall' },
-  { n: 9, label: 'Diagonal corner wall' },
+  { n: 1, label: '12" base cabinet' },
+  { n: 2, label: '15" base cabinet' },
+  { n: 3, label: '18" base cabinet' },
+  { n: 4, label: '36" sink base cabinet' },
+  { n: 5, label: 'Blind corner base cabinet' },
+  { n: 6, label: '12" wall cabinet' },
+  { n: 7, label: '21" wall cabinet (two of them)' },
+  { n: 8, label: '39" wall cabinet' },
+  { n: 9, label: 'Diagonal corner wall cabinet' },
   { n: 10, label: 'Bridge cabinet over the range hood' },
   { n: 11, label: 'Bridge cabinet over the fridge' },
   { n: 12, label: '3" base filler' },
@@ -85,6 +85,7 @@ export const TEN_BY_TEN_MAP_IMAGES: [CabinetMapImage, CabinetMapImage] = [
   {
     src: '/images/estimator/single-wall-numbered.jpg',
     name: 'Straight',
+    offsetY: 25,
     alt: 'The same cabinets along a single wall, each cabinet numbered',
     width: 2720,
     height: 1536,

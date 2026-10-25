@@ -23,11 +23,20 @@ export interface CabinetMapImage {
   alt: string;
   /** The kitchen shape, in a red pill at the top-left ("L-Shaped", "Straight"). */
   name: string;
+  /** Nudges the picture down on desktop to line it up with its neighbour. */
+  offsetY?: 0 | 25 | 50;
   /** The picture's own proportions; the frame takes them so percent positions stay true. */
   width: number;
   height: number;
   markers: CabinetMapMarker[];
 }
+
+// Desktop-only nudges (Tailwind needs the classes spelled out).
+const OFFSETS: Record<0 | 25 | 50, string | undefined> = {
+  0: undefined,
+  25: '@3xl:mt-[25px]',
+  50: '@3xl:mt-[50px]',
+};
 
 interface Props {
   /** Two pictures, left and right, half and half. */
@@ -53,7 +62,7 @@ export function CabinetMap({ images, items, className }: Props) {
     >
       <div className="grid gap-4 p-4 @3xl:grid-cols-2 @3xl:gap-6 @3xl:p-6">
         {images.map((image) => (
-          <div key={image.src}>
+          <div className={OFFSETS[image.offsetY ?? 0]} key={image.src}>
             <div
               className="relative overflow-hidden rounded-2xl bg-white"
               style={{ aspectRatio: `${image.width} / ${image.height}` }}
