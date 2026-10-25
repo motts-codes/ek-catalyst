@@ -67,10 +67,7 @@ export function CabinetMap({ images, items, className }: Props) {
               {image.name}
             </span>
             <div
-              className={clsx(
-                'relative overflow-hidden rounded-2xl bg-white',
-                OFFSETS[image.offsetY ?? 0],
-              )}
+              className={clsx('relative rounded-2xl bg-white', OFFSETS[image.offsetY ?? 0])}
               style={{ aspectRatio: `${image.width} / ${image.height}` }}
             >
               <Image
@@ -91,7 +88,7 @@ export function CabinetMap({ images, items, className }: Props) {
                     className={clsx(
                       'absolute flex aspect-square w-[4.5%] min-w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-shadow',
                       on &&
-                        'z-10 shadow-[0_0_0_3px_white,0_0_0_5px_var(--button-primary-background,#d90716)]',
+                        'z-20 shadow-[0_0_0_3px_white,0_0_0_5px_var(--button-primary-background,#d90716)]',
                     )}
                     data-n={marker.n}
                     key={`${marker.n}-${index}`}
