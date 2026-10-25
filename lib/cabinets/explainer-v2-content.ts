@@ -67,7 +67,9 @@ export interface ExplainerV2 {
     /** A clip under the steps; a placeholder until the video is supplied. */
     media?: {
       label: string;
-      /** The clip, with a WebVTT captions file (WCAG 1.2.2). */
+      /** A YouTube video id (embedded privacy-enhanced; YouTube carries the captions). */
+      youtubeId?: string;
+      /** Or a self-hosted clip, with a WebVTT captions file (WCAG 1.2.2). */
       video?: { mp4?: string; webm?: string; poster?: string; captions: string };
       link?: ExplainerLink;
     };
@@ -419,7 +421,9 @@ export const RTA_EXPLAINER: ExplainerV2 = {
       },
     ],
     media: {
-      label: 'One base cabinet being built, start to finish.',
+      label: 'One wall cabinet being built, start to finish.',
+      // "How to assemble a wall cabinet", from EK's YouTube channel.
+      youtubeId: 'LrShEET4g20',
       link: { label: 'Watch all assembly videos', href: '/resources/how-to-videos' },
     },
   },

@@ -285,6 +285,7 @@ export function Timeline({
   /** An optional clip under the steps (RTA: one base cabinet built, start to finish). */
   media?: {
     label: string;
+    youtubeId?: string;
     video?: { mp4?: string; webm?: string; poster?: string; captions: string };
     link?: LinkProps;
   };
@@ -295,27 +296,7 @@ export function Timeline({
       {media && (
         <div className="mt-12 grid items-center gap-8 @3xl:grid-cols-[3fr_2fr] @3xl:gap-14">
           <div className="relative aspect-video overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
-            {media.video?.mp4 || media.video?.webm ? (
-              <video
-                className="h-full w-full object-cover"
-                controls
-                playsInline
-                poster={media.video.poster}
-                preload="metadata"
-              >
-                {media.video.webm ? <source src={media.video.webm} type="video/webm" /> : null}
-                {media.video.mp4 ? <source src={media.video.mp4} type="video/mp4" /> : null}
-                <track
-                  default
-                  kind="captions"
-                  label="English"
-                  src={media.video.captions}
-                  srcLang="en"
-                />
-              </video>
-            ) : (
-              <MediaPlaceholder label={media.label} />
-            )}
+            <TimelineMedia media={media} />
           </div>
           <div>
             <p className="text-sm leading-relaxed text-contrast-500 @xl:text-base">{media.label}</p>
@@ -327,6 +308,42 @@ export function Timeline({
       )}
     </HomeSection>
   );
+}
+
+type TimelineMediaProps = NonNullable<Parameters<typeof Timeline>[0]['media']>;
+
+// The clip itself: a YouTube embed, a self-hosted video with captions, or the placeholder.
+function TimelineMedia({ media }: { media: TimelineMediaProps }) {
+  if (media.youtubeId) {
+    return (
+      <iframe
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="absolute inset-0 size-full"
+        loading="lazy"
+        src={`https://www.youtube-nocookie.com/embed/${media.youtubeId}`}
+        title={media.label}
+      />
+    );
+  }
+
+  if (media.video?.mp4 || media.video?.webm) {
+    return (
+      <video
+        className="h-full w-full object-cover"
+        controls
+        playsInline
+        poster={media.video.poster}
+        preload="metadata"
+      >
+        {media.video.webm ? <source src={media.video.webm} type="video/webm" /> : null}
+        {media.video.mp4 ? <source src={media.video.mp4} type="video/mp4" /> : null}
+        <track default kind="captions" label="English" src={media.video.captions} srcLang="en" />
+      </video>
+    );
+  }
+
+  return <MediaPlaceholder label={media.label} />;
 }
 
 // 5 · The reassurance, in plain words: not a premium version, the same cabinet. The build-quality
