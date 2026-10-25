@@ -1,19 +1,21 @@
 'use client';
 
 import { clsx } from 'clsx';
+import { Pause, Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Image } from '~/components/image';
-import type { TenByTenCabinetPhoto } from '~/lib/estimator/ten-by-ten-bom';
+import type { TenByTenCabinet } from '~/lib/estimator/ten-by-ten';
 
 const DWELL_MS = 3200;
 
 // "What's in our 10×10": the cabinet list on the left, one line per cabinet group separated by
 // rules, the current one red; its product photo on the right. Cycles on its own, pauses while
 // hovered or focused, and any line can be clicked. Still under reduced motion.
-export function WhatsInside({ items, title }: { items: TenByTenCabinetPhoto[]; title: string }) {
+export function WhatsInside({ items, title }: { items: TenByTenCabinet[]; title: string }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [stopped, setStopped] = useState(false);
   const [still, setStill] = useState(false);
 
   useEffect(() => {
@@ -21,12 +23,12 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinetPhoto[]; t
   }, []);
 
   useEffect(() => {
-    if (paused || still || items.length < 2) return;
+    if (paused || stopped || still || items.length < 2) return;
 
     const timer = window.setInterval(() => setIndex((i) => (i + 1) % items.length), DWELL_MS);
 
     return () => window.clearInterval(timer);
-  }, [paused, still, items.length, index]);
+  }, [paused, stopped, still, items.length, index]);
 
   const current = items[index];
 
@@ -39,7 +41,24 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinetPhoto[]; t
       onMouseLeave={() => setPaused(false)}
     >
       <div>
-        <h3 className="font-heading text-xl font-bold @xl:text-2xl">{title}</h3>
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="font-heading text-xl font-bold @xl:text-2xl">{title}</h3>
+          {still ? null : (
+            <button
+              aria-label={stopped ? 'Play the cabinet tour' : 'Pause the cabinet tour'}
+              aria-pressed={stopped}
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-contrast-200 bg-white text-foreground transition-colors hover:border-[#fcb6bb] hover:bg-[#fdf3f5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+              onClick={() => setStopped((v) => !v)}
+              type="button"
+            >
+              {stopped ? (
+                <Play size={16} strokeWidth={2.5} />
+              ) : (
+                <Pause size={16} strokeWidth={2.5} />
+              )}
+            </button>
+          )}
+        </div>
         <ul className="mt-4 divide-y divide-contrast-100 border-y border-contrast-100">
           {items.map((item, i) => {
             const on = i === index;
@@ -65,7 +84,7 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinetPhoto[]; t
                     )}
                   />
                   {item.label}
-                  {on && !still && !paused ? (
+                  {on && !still && !paused && !stopped ? (
                     <span
                       aria-hidden
                       className="absolute bottom-0 left-0 h-0.5 rounded-full bg-[var(--button-primary-background,#d90716)] motion-safe:animate-[whats-inside-fill_3.2s_linear]"
@@ -79,22 +98,20 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinetPhoto[]; t
         </ul>
       </div>
       <div className="relative mx-auto aspect-square w-full max-w-md">
-        {items.map((item, i) =>
-          item.image ? (
-            <Image
-              alt={item.image.alt}
-              aria-hidden={i !== index}
-              className={clsx(
-                'object-contain transition-opacity duration-500',
-                i === index ? 'opacity-100' : 'opacity-0',
-              )}
-              fill
-              key={item.label}
-              sizes="(min-width: 56rem) 28rem, 100vw"
-              src={item.image.src}
-            />
-          ) : null,
-        )}
+        {items.map((item, i) => (
+          <Image
+            alt={item.image.alt}
+            aria-hidden={i !== index}
+            className={clsx(
+              'object-contain transition-opacity duration-500',
+              i === index ? 'opacity-100' : 'opacity-0',
+            )}
+            fill
+            key={item.label}
+            sizes="(min-width: 56rem) 28rem, 100vw"
+            src={item.image.src}
+          />
+        ))}
         <p aria-live="polite" className="sr-only">
           {current?.label}
         </p>

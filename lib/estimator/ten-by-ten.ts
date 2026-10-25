@@ -248,31 +248,52 @@ export function dollarsAndCents(value: number): string {
 }
 
 /** What's in the 13-cabinet 10x10, in plain words (from the workbook's layout tab), each with
- *  the product that stands for it in the photo strip (SKU search term; "Assembled" preferred). */
+ *  a photo of the cabinet that stands for the line (EK's product shots, Oct 2026). */
 export interface TenByTenCabinet {
   label: string;
-  /** Search term that finds the representative product; the first "Assembled" hit is used. */
-  search: string;
-  /** Narrows the hits by product name (regex source), e.g. the plain base rather than a drawer base. */
-  match?: string;
+  image: { src: string; alt: string };
 }
+
+const cabinetPhoto = (file: string, alt: string) => ({
+  src: `/images/estimator/cabinets/${file}.jpg`,
+  alt,
+});
 
 export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   {
     label: 'Three base cabinets (12", 15" and 18")',
-    search: 'B18',
-    match: '^Avon Base Cabinet 18',
+    image: cabinetPhoto('base-18', 'An 18-inch base cabinet with one drawer over one door'),
   },
-  { label: 'A 36" sink base', search: 'SB36B - AVON', match: '^Avon Sink Base Cabinet 36' },
-  { label: 'A blind corner base', search: 'BLB42/45 AVON', match: 'Blind Corner Base' },
+  {
+    label: 'A 36" sink base',
+    image: cabinetPhoto(
+      'sink-base-36',
+      'A 36-inch sink base with two false drawer fronts and two doors',
+    ),
+  },
+  {
+    label: 'A blind corner base',
+    image: cabinetPhoto(
+      'blind-corner-base',
+      'A blind corner base cabinet with one drawer and one door',
+    ),
+  },
   {
     label: 'Four wall cabinets (12", 21" × 2, 39")',
-    search: 'W3930 - AVON',
-    match: '^Avon Wall Cabinet 39',
+    image: cabinetPhoto('wall-39', 'A 39-inch wall cabinet with two doors'),
   },
-  { label: 'A diagonal corner wall cabinet', search: 'WDC2430 - AVON' },
-  { label: 'Two bridge cabinets, over the range hood and the fridge', search: 'W3012B - AVON' },
-  { label: 'A 3" base filler', search: 'BF3', match: 'Base Filler' },
+  {
+    label: 'A diagonal corner wall cabinet',
+    image: cabinetPhoto('diagonal-corner-wall', 'A diagonal corner wall cabinet with one door'),
+  },
+  {
+    label: 'Two bridge cabinets, over the range hood and the fridge',
+    image: cabinetPhoto('bridge-30x12', 'A 30 by 12 inch bridge wall cabinet with two doors'),
+  },
+  {
+    label: 'A 3" base filler',
+    image: cabinetPhoto('base-filler', 'A 3-inch base filler strip'),
+  },
 ];
 
 export const TEN_BY_TEN_FINE_PRINT =

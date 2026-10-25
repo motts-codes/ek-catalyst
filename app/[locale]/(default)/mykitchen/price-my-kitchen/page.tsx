@@ -1,3 +1,4 @@
+import { BadgeDollarSign, Ruler, Shapes } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -9,8 +10,7 @@ import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { TenByTenEstimator } from '@/vibes/soul/sections/ten-by-ten-estimator';
 import { WhatsInside } from '@/vibes/soul/sections/ten-by-ten-estimator/whats-inside';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
-import { doorsFor } from '~/lib/estimator/ten-by-ten';
-import { getTenByTenCabinetPhotos } from '~/lib/estimator/ten-by-ten-bom';
+import { doorsFor, TEN_BY_TEN_CABINETS } from '~/lib/estimator/ten-by-ten';
 import { buildEstimatorVisuals } from '~/lib/estimator/ten-by-ten-visuals';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
@@ -19,6 +19,25 @@ export const metadata: Metadata = {
   description:
     'Pick a kitchen shape, a cabinet line, a door style and a color, and see the 10×10 price, the price per linear foot and a monthly payment. No email, no sales call.',
 };
+
+// The three reasons a 10×10 is the yardstick, each with its icon.
+const WHY_CARDS = [
+  {
+    icon: BadgeDollarSign,
+    title: 'It shows what the style costs',
+    body: 'Every door style is priced on the identical cabinet set, so the only thing that changes is the door and the construction. You can see which line fits your budget before anyone measures your home.',
+  },
+  {
+    icon: Ruler,
+    title: 'It scales with your kitchen',
+    body: 'Cabinet cost tracks linear footage. A kitchen with about twice the cabinet run lands near twice the 10×10 price, and a smaller run comes in under it. That’s why we show the price per linear foot too.',
+  },
+  {
+    icon: Shapes,
+    title: 'Shape doesn’t change the price',
+    body: 'L-shape, U-shape, galley or single wall, the estimator uses the same 10×10 cabinet mix. Your designer fine-tunes the exact cabinets for your layout at the free design appointment.',
+  },
+];
 
 // The 10x10 estimator: a short intro on why kitchens are priced as a 10x10, the four picks, the
 // price. Copy is the client's one-page explainer (Oct 2026); prices come from EK's workbook via
@@ -87,39 +106,19 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
         kicker="Why a 10×10"
         title="Why we price kitchens as a 10×10"
       >
-        <div className="grid gap-8 @3xl:grid-cols-3">
-          <div className="rounded-3xl border border-contrast-100 bg-white p-6">
-            <h3 className="font-heading text-lg font-bold">It shows what the style costs</h3>
-            <p className="mt-2 text-sm leading-relaxed text-contrast-500">
-              Every door style is priced on the identical cabinet set, so the only thing that
-              changes is the door and the construction. You can see which line fits your budget
-              before anyone measures your home.
-            </p>
-          </div>
-          <div className="rounded-3xl border border-contrast-100 bg-white p-6">
-            <h3 className="font-heading text-lg font-bold">It scales with your kitchen</h3>
-            <p className="mt-2 text-sm leading-relaxed text-contrast-500">
-              Cabinet cost tracks linear footage. A kitchen with about twice the cabinet run lands
-              near twice the 10×10 price, and a smaller run comes in under it. That’s why we show
-              the price per linear foot too.
-            </p>
-          </div>
-          <div className="rounded-3xl border border-contrast-100 bg-white p-6">
-            <h3 className="font-heading text-lg font-bold">Shape doesn’t change the price</h3>
-            <p className="mt-2 text-sm leading-relaxed text-contrast-500">
-              L-shape, U-shape, galley or single wall, the estimator uses the same 10×10 cabinet
-              mix. Your designer fine-tunes the exact cabinets for your layout at the free design
-              appointment.
-            </p>
-          </div>
+        <div className="grid gap-10 @3xl:grid-cols-3 @3xl:gap-12">
+          {WHY_CARDS.map((card) => (
+            <div key={card.title}>
+              <span className="flex size-12 items-center justify-center rounded-full bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]">
+                <card.icon aria-hidden size={24} strokeWidth={2} />
+              </span>
+              <h3 className="mt-4 font-heading text-lg font-bold">{card.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-contrast-500">{card.body}</p>
+            </div>
+          ))}
         </div>
         <div className="mt-12 @3xl:mt-16">
-          <Stream
-            fallback={<div className="h-72 animate-pulse rounded-3xl bg-contrast-100" />}
-            value={Streamable.from(getTenByTenCabinetPhotos)}
-          >
-            {(items) => <WhatsInside items={items} title="What’s in our 10×10" />}
-          </Stream>
+          <WhatsInside items={TEN_BY_TEN_CABINETS} title="What’s in our 10×10" />
         </div>
       </HomeSection>
 
