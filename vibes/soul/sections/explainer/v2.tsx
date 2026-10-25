@@ -117,6 +117,11 @@ export function ExplainerIntro({
           )}
         </div>
       </div>
+      {/* A thin red rule closes the hero. */}
+      <span
+        aria-hidden
+        className="mt-10 block h-px w-full bg-[var(--button-primary-background,#d90716)] @3xl:mt-12"
+      />
     </HomeSection>
   );
 }
@@ -245,11 +250,11 @@ export function Arrives({
             {note}
           </p>
         </div>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100 @3xl:order-1">
+        <div className="relative aspect-[4/3] @3xl:order-1">
           {image ? (
             <Image
               alt={image.alt}
-              className="object-cover"
+              className="object-contain"
               fill
               sizes="(min-width: 56rem) 50vw, 100vw"
               src={image.src}
@@ -307,8 +312,8 @@ export function SameCabinet({
   );
 }
 
-// 6 · Money or time: the quiet comparison table on the left, the Avon kitchen it prices on the
-// right, the 10×10 footnote under the table.
+// 6 · Money or time: an even split. Heading, paragraph, the quiet table and the 10×10 footnote
+// on the left; the Avon kitchen the table prices fills the whole right-hand column.
 export function MoneyOrTime({
   kicker,
   title,
@@ -331,10 +336,24 @@ export function MoneyOrTime({
   imageLabel: string;
 }) {
   return (
-    <HomeSection description={description} kicker={kicker} title={title}>
-      <div className="grid items-start gap-10 @3xl:grid-cols-[3fr_2fr] @3xl:gap-16">
+    <HomeSection>
+      <div className="grid gap-10 @3xl:grid-cols-2 @3xl:gap-16">
         <div>
-          <MinimalTable columns={columns} narrow={false} rows={rows} />
+          <p className={EYEBROW}>{kicker}</p>
+          <h2 className={homeHeadingClassName}>{title}</h2>
+          <p className="mt-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+            {description}
+          </p>
+          <div className="mt-8">
+            {/* The feature column fits its labels; RTA runs a little wider than Assembled. */}
+            <MinimalTable
+              columns={columns}
+              inline
+              narrow
+              rows={rows}
+              widths={['w-[36%]', 'w-[28%]']}
+            />
+          </div>
           <p className="mt-5 text-xs leading-relaxed text-contrast-400">
             {footnote}{' '}
             {footnoteLink && (
@@ -344,13 +363,13 @@ export function MoneyOrTime({
             )}
           </p>
         </div>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100">
+        <div className="relative min-h-[18rem] overflow-hidden rounded-3xl bg-contrast-100 ring-1 ring-contrast-100 @3xl:min-h-full">
           {image ? (
             <Image
               alt={image.alt}
               className="object-cover"
               fill
-              sizes="(min-width: 56rem) 40vw, 100vw"
+              sizes="(min-width: 56rem) 50vw, 100vw"
               src={image.src}
               unoptimized
             />

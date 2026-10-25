@@ -116,6 +116,10 @@ export interface TableProps {
   columns: string[];
   rows: string[][];
   narrow: boolean;
+  /** Minimal table only: width classes for the columns after the feature column. */
+  widths?: string[];
+  /** Minimal table only: let it sit where it is placed instead of centring and capping it. */
+  inline?: boolean;
 }
 
 function cellText(cell: string): { bold: boolean; text: string } {
@@ -202,15 +206,21 @@ function ClassicTable({ columns, rows, narrow }: TableProps) {
 
 // The quiet table: no box, no fills, no column rules. Small red labels up top over a black
 // rule, a hairline between rows, the feature bold on the left; rows blush on hover.
-export function MinimalTable({ columns, rows, narrow }: TableProps) {
+export function MinimalTable({ columns, rows, narrow, widths, inline = false }: TableProps) {
   return (
-    <div className={clsx('overflow-x-auto', narrow && 'mx-auto max-w-4xl')}>
-      <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
-        {/* The two program columns share the width equally; the feature column takes the rest. */}
+    <div className={clsx('overflow-x-auto', narrow && !inline && 'mx-auto max-w-4xl')}>
+      <table
+        className={clsx(
+          'w-full border-collapse text-left text-sm',
+          inline ? 'min-w-[28rem]' : 'min-w-[36rem]',
+        )}
+      >
+        {/* The program columns share the width equally unless widths are given; the feature
+            column takes the rest (or, narrow, just what its longest label needs). */}
         <colgroup>
           <col className={narrow ? 'w-0' : 'w-[34%]'} />
-          {columns.slice(1).map((column) => (
-            <col className={narrow ? 'w-[38%]' : undefined} key={column} />
+          {columns.slice(1).map((column, index) => (
+            <col className={widths?.[index] ?? (narrow ? 'w-[38%]' : undefined)} key={column} />
           ))}
         </colgroup>
         <thead>
