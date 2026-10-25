@@ -148,7 +148,7 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
     kicker: 'Cabinets explained',
     title: 'What are assembled cabinets?',
     description:
-      'Kitchen cabinets that arrive already built. We put each one together in our factory (box, doors, drawers and shelves), so when it reaches you, it’s ready to be installed on your wall.',
+      'Kitchen cabinets that arrive already built. We put each one together in our factory (box, doors, drawers and shelves), so when it reaches you, it’s ready to install. It costs a little more than building them yourself, but it saves you days of work and gets your kitchen finished sooner.',
     link: {
       label: 'Or read about RTA cabinets, the build-it-yourself option',
       href: EXPLAINER_V2_HREF.rta,

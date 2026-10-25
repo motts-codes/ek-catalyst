@@ -26,8 +26,8 @@ const RED = 'var(--button-primary-background,#d90716)';
 // motion); the next step lights up the moment the line reaches it.
 const LINE_MS = 1600;
 
-// The remodel timeline as an animated stepper. At rest only the icons, the numbered outline
-// circles and the grey line between them show. Once it scrolls into view the steps light up one
+// The remodel timeline as an animated stepper. At rest only the outline circles (each holding
+// its step's icon) and the grey line between them show. Once it scrolls into view the steps light up one
 // after another: the line travels from the lit circle to the next at a steady pace, and when it
 // arrives that circle fills red and its words fade in under it.
 // Click a circle to jump to that step. People who prefer reduced motion see the finished state.
@@ -93,7 +93,7 @@ export function Stepper({ steps }: { steps: StepperStep[] }) {
               <>
                 <span
                   aria-hidden
-                  className="absolute left-5 top-10 h-full w-0.5 -translate-x-1/2 bg-contrast-200 @3xl:hidden"
+                  className="absolute left-[22px] top-11 h-full w-0.5 -translate-x-1/2 bg-contrast-200 @3xl:hidden"
                 >
                   <span
                     className={clsx(
@@ -105,7 +105,7 @@ export function Stepper({ steps }: { steps: StepperStep[] }) {
                 </span>
                 <span
                   aria-hidden
-                  className="absolute left-1/2 top-[56px] hidden h-0.5 w-full bg-contrast-200 @3xl:block"
+                  className="absolute left-1/2 top-[22px] hidden h-0.5 w-full bg-contrast-200 @3xl:block"
                 >
                   <span
                     className={clsx(
@@ -118,21 +118,11 @@ export function Stepper({ steps }: { steps: StepperStep[] }) {
               </>
             )}
 
-            <Icon
-              aria-hidden
-              className={clsx(
-                'mb-3 hidden transition-colors duration-300 @3xl:block',
-                active ? 'text-[var(--button-primary-background,#d90716)]' : 'text-contrast-300',
-              )}
-              size={24}
-              strokeWidth={1.5}
-            />
-
             <button
               aria-current={current ? 'step' : undefined}
               aria-label={`Step ${index + 1}: ${step.lead}`}
               className={clsx(
-                'relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 font-heading text-sm font-bold transition-[background-color,border-color,color,box-shadow] duration-300',
+                'relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 transition-[background-color,border-color,color,box-shadow] duration-300',
                 active
                   ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white'
                   : 'border-contrast-300 bg-white text-contrast-500 hover:border-contrast-400',
@@ -141,7 +131,7 @@ export function Stepper({ steps }: { steps: StepperStep[] }) {
               onClick={() => setLit(index + 1)}
               type="button"
             >
-              {index + 1}
+              <Icon aria-hidden size={20} strokeWidth={2} />
             </button>
 
             <div
