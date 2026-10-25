@@ -459,8 +459,7 @@ function ColorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
       w={w}
     >
       <BalancedRows
-        colsFor={(width) => columnsFor(width, 5)}
-        gap={20}
+        colsFor={(width) => columnsFor(width, 7, 5, 4)}
         items={w.colors}
         keyOf={(c) => c.name}
         label="Color"
@@ -684,7 +683,7 @@ function Swatch({
     <button
       aria-checked={on}
       className={clsx(
-        'group flex w-full flex-col items-center gap-3 rounded-2xl bg-white p-3 text-center transition-[box-shadow,transform] @xl:p-4',
+        'group flex w-full flex-col items-center gap-2 rounded-2xl bg-white p-2.5 text-center transition-[box-shadow,transform] @xl:p-3',
         RING,
         on
           ? clsx(
@@ -707,7 +706,7 @@ function Swatch({
       </span>
       <span
         className={clsx(
-          'font-heading text-sm font-bold leading-tight @xl:text-base',
+          'font-heading text-sm font-bold leading-tight',
           on ? RED : 'text-foreground',
         )}
       >
@@ -761,11 +760,11 @@ function BalancedRows<T>({
 
 // Columns at the container-query breakpoints (@3xl = 56rem, @xl = 36rem): `wide` on desktop,
 // four on a tablet, three on a phone.
-function columnsFor(width: number, wide: number): number {
+function columnsFor(width: number, wide: number, mid = 4, narrow = 3): number {
   if (width >= 896) return wide;
-  if (width >= 576) return 4;
+  if (width >= 576) return mid;
 
-  return 3;
+  return narrow;
 }
 
 function balancedRows<T>(items: T[], cols: number): T[][] {
