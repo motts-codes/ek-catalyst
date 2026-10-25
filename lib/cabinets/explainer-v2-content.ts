@@ -335,7 +335,7 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
     priceCollection: 'Avon',
     priceRow: 'Avon (white shaker)',
     rows: [
-      ['!Assembly time', 'About 5–6 hours (around 12 cabinets)', 'None'],
+      ['!Assembly time', 'About 6 hours (13 cabinets)', 'None'],
       ['!Ships in', '2 weeks', '3 weeks'],
     ],
     footnote:
@@ -480,11 +480,11 @@ export const RTA_EXPLAINER: ExplainerV2 = {
     priceCollection: 'Northampton',
     priceRow: 'Northampton (walnut)',
     rows: [
-      ['!Assembly time', 'About 5–6 hours (around 12 cabinets)', 'None'],
+      ['!Assembly time', 'About 6 hours (13 cabinets)', 'None'],
       ['!Ships in', '2 weeks', '3 weeks'],
     ],
     footnote:
-      'A 10×10 kitchen is about 12 cabinets, so plan on most of a day. The bigger the kitchen, the more you save, and the more hours you’ll spend building.',
+      'A 10×10 kitchen is 13 cabinets, so plan on most of a day. The bigger the kitchen, the more you save, and the more hours you’ll spend building.',
     footnoteLink: { label: 'What’s a 10×10?', href: '#glossary' },
     imageCollection: 'Northampton',
   },
