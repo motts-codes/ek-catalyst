@@ -85,6 +85,7 @@ export const TEN_BY_TEN_MAP_IMAGES: [CabinetMapImage, CabinetMapImage] = [
   {
     src: '/images/estimator/single-wall-numbered.jpg',
     name: 'Straight',
+    offsetY: 50,
     alt: 'The same cabinets along a single wall, each cabinet numbered',
     width: 2720,
     height: 1536,

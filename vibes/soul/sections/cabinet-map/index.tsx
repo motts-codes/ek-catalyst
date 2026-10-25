@@ -60,11 +60,17 @@ export function CabinetMap({ images, items, className }: Props) {
         className,
       )}
     >
-      <div className="grid gap-4 p-4 @3xl:grid-cols-2 @3xl:items-center @3xl:gap-6 @3xl:p-6">
+      <div className="grid gap-4 p-4 @3xl:grid-cols-2 @3xl:gap-6 @3xl:p-6">
         {images.map((image) => (
-          <div className={OFFSETS[image.offsetY ?? 0]} key={image.src}>
+          <div className="relative" key={image.src}>
+            <span className="absolute left-3 top-3 z-10 rounded-full bg-[var(--button-primary-background,#d90716)] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm">
+              {image.name}
+            </span>
             <div
-              className="relative overflow-hidden rounded-2xl bg-white"
+              className={clsx(
+                'relative overflow-hidden rounded-2xl bg-white',
+                OFFSETS[image.offsetY ?? 0],
+              )}
               style={{ aspectRatio: `${image.width} / ${image.height}` }}
             >
               <Image
@@ -74,9 +80,6 @@ export function CabinetMap({ images, items, className }: Props) {
                 sizes="(min-width: 56rem) 40rem, 100vw"
                 src={image.src}
               />
-              <span className="absolute left-3 top-3 z-10 rounded-full bg-[var(--button-primary-background,#d90716)] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm">
-                {image.name}
-              </span>
               {image.markers.map((marker, index) => {
                 const on = active === marker.n;
 
