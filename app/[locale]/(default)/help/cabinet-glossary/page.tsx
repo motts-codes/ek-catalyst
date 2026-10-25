@@ -73,11 +73,11 @@ export default async function CabinetGlossary({ params }: { params: Promise<{ lo
             },
           },
         ]}
-        className="bg-[#fdf8f8]"
         columns={3}
         imageStyle="plain"
         kicker="Where next"
         title="Put the words to work"
+        tone="red"
       />
     </>
   );

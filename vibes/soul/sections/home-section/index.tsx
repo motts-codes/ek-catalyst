@@ -35,6 +35,8 @@ interface Props {
   tightTop?: boolean;
   /** `small`: an h3-sized title, for a band that shouldn't compete with the hero. */
   headingStyle?: 'default' | 'small';
+  /** `red`: the band on brand red with the heading row in white. */
+  tone?: 'default' | 'red';
   className?: string;
   children: ReactNode;
 }
@@ -55,6 +57,7 @@ export function HomeSection({
   headingStyle = 'default',
   className,
   children,
+  tone = 'default',
 }: Props) {
   let verticalPadding = 'py-10 @4xl:py-14';
 
@@ -65,13 +68,28 @@ export function HomeSection({
   const hasHeading = Boolean(kicker || title || description || action);
 
   return (
-    <section className={clsx('@container', tint && 'bg-[#f9fafd]', className)} id={id}>
+    <section
+      className={clsx(
+        '@container',
+        tint && 'bg-[#f9fafd]',
+        tone === 'red' && 'bg-[var(--button-primary-background,#d90716)] text-white',
+        className,
+      )}
+      id={id}
+    >
       <div className={clsx('mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14', verticalPadding)}>
         {hasHeading && (
           <div className="mb-5 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 @4xl:mb-6">
             <div className="max-w-3xl">
               {Boolean(kicker) && (
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+                <p
+                  className={clsx(
+                    'mb-1.5 text-xs font-semibold uppercase tracking-wide',
+                    tone === 'red'
+                      ? 'text-white'
+                      : 'text-[var(--button-primary-background,#d90716)]',
+                  )}
+                >
                   {kicker}
                 </p>
               )}
@@ -85,7 +103,12 @@ export function HomeSection({
                 </h2>
               )}
               {Boolean(description) && (
-                <p className="mt-2 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+                <p
+                  className={clsx(
+                    'mt-2 text-sm leading-relaxed @xl:text-base',
+                    tone === 'red' ? 'text-white' : 'text-contrast-500',
+                  )}
+                >
                   {description}
                 </p>
               )}

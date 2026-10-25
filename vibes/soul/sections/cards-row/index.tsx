@@ -32,6 +32,8 @@ interface Props {
    */
   imageStyle?: 'inset' | 'bleed' | 'plain';
   tint?: boolean;
+  /** `red`: the band on brand red, the copy reversed to white (plain photo cards). */
+  tone?: 'default' | 'red';
   className?: string;
 }
 
@@ -48,10 +50,12 @@ export function CardsRow({
   hideImages = false,
   imageStyle = 'inset',
   tint = false,
+  tone = 'default',
   className,
 }: Props) {
   const bleed = imageStyle === 'bleed' && !hideImages;
   const plain = imageStyle === 'plain' && !hideImages;
+  const red = tone === 'red';
 
   return (
     <HomeSection
@@ -60,6 +64,7 @@ export function CardsRow({
       kicker={kicker}
       tint={tint}
       title={title}
+      tone={tone}
     >
       <div
         className={clsx(
@@ -130,7 +135,12 @@ export function CardsRow({
                   )}
                 </div>
               )}
-              <h3 className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
+              <h3
+                className={clsx(
+                  'font-heading text-lg font-semibold leading-tight @xl:text-xl',
+                  red && 'text-white',
+                )}
+              >
                 {card.title}
               </h3>
               {card.meta != null && (
@@ -138,7 +148,12 @@ export function CardsRow({
                   {card.meta}
                 </p>
               )}
-              <p className="mt-2.5 flex-1 text-sm leading-relaxed text-contrast-500">
+              <p
+                className={clsx(
+                  'mt-2.5 flex-1 text-sm leading-relaxed',
+                  red ? 'text-white' : 'text-contrast-500',
+                )}
+              >
                 {card.description}
               </p>
               {Boolean(card.ctaLabel) && Boolean(card.href) && (
