@@ -2,7 +2,7 @@
 
 import { clsx } from 'clsx';
 import { ArrowLeft, ArrowRight, Check, HandCoins, Info, RotateCcw } from 'lucide-react';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, type RefObject, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/vibes/soul/primitives/button';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -425,25 +425,25 @@ function DoorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
 
   return (
     <Panel n={3} title="Which door style?" w={w}>
-      <div
-        aria-label="Door style"
-        className="grid grid-cols-3 gap-3 @xl:grid-cols-4 @3xl:grid-cols-6 @3xl:gap-4"
-        role="radiogroup"
+      <BalancedRows
+        colsFor={(width) => columnsFor(width, 6)}
+        items={doors}
+        keyOf={(d) => d}
+        label="Door style"
       >
-        {doors.map((d) => (
+        {(d) => (
           <PictureChoice
             aspect="aspect-square"
             compact
             fit="contain"
-            key={d}
             label={d}
             on={w.door === d}
             onPick={() => w.pickDoor(d)}
             picture={w.line ? visuals.doors[doorKey(w.line.id, d)] : undefined}
             sizes="(min-width: 56rem) 11rem, 30vw"
           />
-        ))}
-      </div>
+        )}
+      </BalancedRows>
     </Panel>
   );
 }
@@ -463,18 +463,23 @@ function ColorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
       title={`Which color for ${w.door ?? 'the door'}?`}
       w={w}
     >
-      <div aria-label="Color" className="flex flex-wrap gap-x-5 gap-y-6" role="radiogroup">
-        {w.colors.map((c) => (
+      <BalancedRows
+        colsFor={(width) => columnsFor(width, 5)}
+        gap={20}
+        items={w.colors}
+        keyOf={(c) => c.name}
+        label="Color"
+      >
+        {(c) => (
           <Swatch
             hex={visuals.colors[c.name]?.hex}
-            key={c.name}
             name={c.name}
             on={w.color === c.name}
             onPick={() => w.pickColor(c.name)}
             premium={c.tier === 'premium'}
           />
-        ))}
-      </div>
+        )}
+      </BalancedRows>
     </Panel>
   );
 }
@@ -575,7 +580,8 @@ function PictureChoice({
       {info ? (
         <span className="absolute bottom-3 right-3">
           <Tooltip
-            className="max-w-56 text-xs leading-relaxed"
+            className="max-w-56 !border-transparent text-xs leading-relaxed text-white [--tooltip-background:var(--button-primary-background,#d90716)]"
+            delayDuration={0}
             trigger={
               <button
                 aria-label={`About ${label}`}
@@ -682,34 +688,128 @@ function Swatch({
   return (
     <button
       aria-checked={on}
-      className={clsx('group flex w-24 flex-col items-center gap-2 rounded-2xl text-center', RING)}
+      className={clsx(
+        'group flex w-full flex-col items-center gap-3 rounded-2xl bg-white p-3 text-center transition-[box-shadow,transform] @xl:p-4',
+        RING,
+        on
+          ? clsx(
+              CARD_SHADOW,
+              'ring-2 ring-[var(--button-primary-background,#d90716)] ring-offset-4 ring-offset-[#fdf3f5]',
+            )
+          : 'shadow-[0_18px_36px_-28px_rgb(0_0_0/0.3)] hover:-translate-y-0.5 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.35)]',
+      )}
       onClick={onPick}
       role="radio"
       type="button"
     >
       <span
-        className={clsx(
-          'flex size-20 items-center justify-center rounded-full border border-black/10 transition-[transform,box-shadow]',
-          on
-            ? 'scale-105 shadow-[0_0_0_3px_white,0_0_0_5px_var(--button-primary-background,#d90716),0_24px_48px_-28px_rgb(0_0_0/0.5)]'
-            : 'shadow-inner group-hover:scale-105',
-        )}
+        className="flex aspect-square w-full items-center justify-center rounded-xl border border-black/10"
         style={{ backgroundColor: hex ?? '#e5e5e5' }}
       >
         {on ? (
-          <Check className={darkInk(hex) ? 'text-black' : 'text-white'} size={24} strokeWidth={3} />
+          <Check className={darkInk(hex) ? 'text-black' : 'text-white'} size={28} strokeWidth={3} />
         ) : null}
       </span>
-      <span className={clsx('text-xs font-semibold leading-tight', on ? RED : 'text-foreground')}>
+      <span
+        className={clsx(
+          'font-heading text-sm font-bold leading-tight @xl:text-base',
+          on ? RED : 'text-foreground',
+        )}
+      >
         {name}
       </span>
       {premium ? (
-        <span className="-mt-1 rounded-full bg-[#F6EBD6] px-1.5 py-px text-[10px] font-semibold uppercase tracking-wide">
+        <span className="-mt-2 rounded-full bg-[#F6EBD6] px-1.5 py-px text-[10px] font-semibold uppercase tracking-wide">
           Premium
         </span>
       ) : null}
     </button>
   );
+}
+
+// Rows of equal tiles, centred, balanced so a short last row doesn't sit alone on the left:
+// 7 doors at 6 per row become 4 + 3. Columns follow the measured width (the container queries'
+// breakpoints), tile width follows the columns.
+function BalancedRows<T>({
+  items,
+  keyOf,
+  colsFor,
+  gap = 16,
+  label,
+  children,
+}: {
+  items: T[];
+  keyOf: (item: T) => string;
+  colsFor: (width: number) => number;
+  gap?: number;
+  label: string;
+  children: (item: T) => ReactNode;
+}) {
+  const [ref, width] = useContainerWidth<HTMLDivElement>();
+  const cols = colsFor(width || 1200);
+  const tile = width ? (width - gap * (cols - 1)) / cols : undefined;
+
+  return (
+    <div aria-label={label} className="flex flex-col" ref={ref} role="radiogroup" style={{ gap }}>
+      {balancedRows(items, cols).map((row) => (
+        <div className="flex justify-center" key={row.map(keyOf).join('|')} style={{ gap }}>
+          {row.map((item) => (
+            <div className="shrink-0" key={keyOf(item)} style={{ width: tile }}>
+              {children(item)}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Columns at the container-query breakpoints (@3xl = 56rem, @xl = 36rem): `wide` on desktop,
+// four on a tablet, three on a phone.
+function columnsFor(width: number, wide: number): number {
+  if (width >= 896) return wide;
+  if (width >= 576) return 4;
+
+  return 3;
+}
+
+function balancedRows<T>(items: T[], cols: number): T[][] {
+  const rows = Math.max(1, Math.ceil(items.length / cols));
+  const base = Math.floor(items.length / rows);
+  let extra = items.length % rows;
+  const out: T[][] = [];
+  let i = 0;
+
+  for (let r = 0; r < rows; r += 1) {
+    const n = base + (extra > 0 ? 1 : 0);
+
+    if (extra > 0) extra -= 1;
+    out.push(items.slice(i, i + n));
+    i += n;
+  }
+
+  return out;
+}
+
+function useContainerWidth<T extends HTMLElement>(): [RefObject<T | null>, number] {
+  const ref = useRef<T>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+
+    if (!el) return;
+
+    const observer = new ResizeObserver((entries) => {
+      setWidth(entries[0]?.contentRect.width ?? 0);
+    });
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, width];
 }
 
 // What the color pick reads as on the card.
@@ -886,6 +986,7 @@ function Result({
 
   return (
     <div>
+      <p className="text-xs font-medium text-contrast-500">Your 10×10 kitchen</p>
       <p className={clsx('font-heading text-5xl font-bold tabular-nums', RED)}>{dollars(shown)}</p>
       <p className="mt-1 text-xs text-contrast-500">
         Cabinets only · 13 cabinets · about {estimate.linearFeet} linear feet
