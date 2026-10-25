@@ -399,6 +399,8 @@ export const STORY = {
     webm: '/images/home/story/heritage-ad.webm',
     poster: '/images/home/story/heritage-ad-poster.jpg',
     title: 'Express Kitchens: 110 years of craft',
+    width: 1556,
+    height: 642,
   },
   chapters: [
     { label: '110+ years legacy', start: 0 },

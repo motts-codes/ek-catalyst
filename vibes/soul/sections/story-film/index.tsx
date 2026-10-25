@@ -18,8 +18,16 @@ interface Props {
   title: string;
   description: string;
   actions?: Array<{ label: string; href: string; primary?: boolean }>;
-  /** The film: `src` is the MP4 every browser plays; `webm` is offered first where supported. */
-  video: { src: string; webm?: string; poster?: string; title?: string };
+  /** The film: `src` is the MP4 every browser plays; `webm` is offered first where supported.
+   *  `width` and `height` are the clip's pixel size, so the frame takes its shape uncropped. */
+  video: {
+    src: string;
+    webm?: string;
+    poster?: string;
+    title?: string;
+    width?: number;
+    height?: number;
+  };
   /** Four or so captions under the film; each one jumps to its moment. */
   chapters?: FilmChapter[];
   tint?: boolean;
@@ -137,7 +145,14 @@ export function StoryFilm({
 
       {/* The film, centred at 80% of the band on wide screens, chapters aligned under it. */}
       <div className="mx-auto mt-10 w-full @3xl:w-4/5 @4xl:mt-14">
-        <div className="relative aspect-[35/18] overflow-hidden rounded-3xl bg-contrast-100">
+        <div
+          className="relative aspect-[35/18] overflow-hidden rounded-3xl bg-contrast-100"
+          style={
+            video.width && video.height
+              ? { aspectRatio: `${video.width} / ${video.height}` }
+              : undefined
+          }
+        >
           <video
             className="h-full w-full object-cover"
             controls={started}
