@@ -19,7 +19,7 @@ interface Props {
   content: ExplainerV2;
   /** The Avon 10×10 price in each program, already formatted ("$2,993"), RTA first. */
   avonPrices: [string, string];
-  /** The Avon kitchen photo, beside the cost table. */
+  /** The kitchen photo beside the cost table (content.cost.imageCollection). */
   avonImage?: { src: string; alt: string };
 }
 
@@ -73,7 +73,7 @@ export function ExplainerV2Page({ program, content, avonPrices, avonImage }: Pro
             footnote={content.cost.footnote}
             footnoteLink={content.cost.footnoteLink}
             image={avonImage}
-            imageLabel="The Avon kitchen the table prices"
+            imageLabel={`A ${content.cost.imageCollection} kitchen`}
             kicker="What the difference costs you"
             rows={costRows}
             title={content.cost.title}

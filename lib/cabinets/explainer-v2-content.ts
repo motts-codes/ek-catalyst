@@ -85,6 +85,8 @@ export interface ExplainerV2 {
     rows: string[][];
     footnote: string;
     footnoteLink?: ExplainerLink;
+    /** The collection whose kitchen photo sits beside the table (the table itself prices Avon). */
+    imageCollection: string;
   };
   suits: { title: string; points: string[]; line: string; link: ExplainerLink };
   glossary: {
@@ -133,10 +135,12 @@ const twoWays = (current: CabinetProgram): ExplainerV2['twoWays'] => {
   ];
   const rules = ['Assembled saves time.', 'RTA saves money.'];
 
+  // The page's own program comes first; its card needs no link to itself, the other one does.
+  const ordered = ways.map((way) => (way.key === current ? { ...way, link: undefined } : way));
+
   return {
     title: 'Every cabinet we sell comes one of two ways',
-    // The page's own card needs no link to itself; the other one does.
-    ways: ways.map((way) => (way.key === current ? { ...way, link: undefined } : way)),
+    ways: current === 'rta' ? [...ordered].reverse() : ordered,
     line: 'It’s the same cabinet either way. The only question is who builds it: us, or you.',
     rules: current === 'rta' ? [...rules].reverse() : rules,
   };
@@ -312,6 +316,7 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
     footnote:
       'A 10×10 is a standard comparison kitchen: two 10-foot walls in an L shape. A real kitchen with an island or a pantry will cost more.',
     footnoteLink: { label: 'What’s a 10×10?', href: '#glossary' },
+    imageCollection: 'Avon',
   },
   suits: {
     title: 'Assembled is usually the right call if…',
@@ -437,6 +442,7 @@ export const RTA_EXPLAINER: ExplainerV2 = {
     footnote:
       'A 10×10 kitchen is about 12 cabinets, so plan on most of a day. The bigger the kitchen, the more you save, and the more hours you’ll spend building.',
     footnoteLink: { label: 'What’s a 10×10?', href: '#glossary' },
+    imageCollection: 'Northampton',
   },
   suits: {
     title: 'RTA is usually the right call if…',

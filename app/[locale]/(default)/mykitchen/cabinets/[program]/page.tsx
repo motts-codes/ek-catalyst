@@ -37,6 +37,11 @@ export default async function CabinetExplainer({ params }: Props) {
     getCabinetLines('assembled'),
   ]);
   const avon = (lines: typeof rtaLines) => lines.find((line) => /^Avon\b/.test(line.name));
+  // The kitchen beside the table: the page's named collection, from its own program's listing.
+  const content = EXPLAINER_V2[program];
+  const costImage = (program === 'rta' ? rtaLines : assembledLines).find((line) =>
+    line.name.startsWith(content.cost.imageCollection),
+  )?.image;
   const avonPrice = (lines: typeof rtaLines) => {
     const price = Number(avon(lines)?.price);
 
@@ -48,9 +53,9 @@ export default async function CabinetExplainer({ params }: Props) {
 
   return (
     <ExplainerV2Page
-      avonImage={avon(assembledLines)?.image}
+      avonImage={costImage}
       avonPrices={[avonPrice(rtaLines), avonPrice(assembledLines)]}
-      content={EXPLAINER_V2[program]}
+      content={content}
       program={program}
     />
   );
