@@ -130,6 +130,8 @@ interface Props {
   specRows?: SpecLine[];
   /** Customer-facing "How it's built" points (the row above Specifications). */
   howBuilt?: BuildPoint[];
+  /** In-page link to the assembly videos section, when the collection has videos. */
+  assemblyVideosHref?: string;
   /** The same collection in the other program ("Switch to RTA"). */
   switchHref?: string;
   /** When given, finish chips become links (multi-finish collections); null clears the finish. */
@@ -307,6 +309,7 @@ export function CabinetCollectionHeader({
   specifications,
   specRows,
   howBuilt,
+  assemblyVideosHref,
   switchHref,
   finishHrefFor,
   offers = [],
@@ -398,7 +401,7 @@ export function CabinetCollectionHeader({
             {hasPricing && <PriceCard data={data} />}
 
             <div className="border-t border-contrast-100">
-              <HowBuiltRow points={howBuilt} />
+              <HowBuiltRow assemblyVideosHref={assemblyVideosHref} points={howBuilt} />
               <SpecRow
                 specRows={specRows}
                 specSheetUrl={data.specSheetUrl}

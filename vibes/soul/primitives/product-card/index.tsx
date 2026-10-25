@@ -325,7 +325,7 @@ export function ProductCard({
         {showCompare && (
           // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
           // so the small box doesn't read as a circle.
-          <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-3.5 [&_button]:!rounded-[3px] [&_label]:!text-xs [&_svg]:!size-2.5">
+          <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-6 [&_button]:!rounded-[4px] [&_label]:!text-xs [&_svg]:!size-3.5">
             <Compare
               colorScheme={colorScheme}
               label={compareLabel}

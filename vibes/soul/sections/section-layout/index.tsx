@@ -2,6 +2,8 @@ import { clsx } from 'clsx';
 import { ReactNode } from 'react';
 
 export interface SectionLayoutProps {
+  /** Anchor id for in-page links. */
+  id?: string;
   className?: string;
   children: ReactNode;
   containerSize?: 'md' | 'lg' | 'xl' | '2xl' | 'full';
@@ -21,9 +23,14 @@ export interface SectionLayoutProps {
  * }
  * ```
  */
-export function SectionLayout({ className, children, containerSize = '2xl' }: SectionLayoutProps) {
+export function SectionLayout({
+  id,
+  className,
+  children,
+  containerSize = '2xl',
+}: SectionLayoutProps) {
   return (
-    <section className={clsx('overflow-hidden @container', className)}>
+    <section className={clsx('overflow-hidden @container', className)} id={id}>
       <div
         className={clsx(
           'mx-auto px-6 py-10 @xl:px-9 @xl:py-14 @4xl:px-14 @4xl:py-20',

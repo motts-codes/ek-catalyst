@@ -1,4 +1,9 @@
+import { clsx } from 'clsx';
+
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
+
+/** The section's anchor; the collection header's "View assembly videos" link targets it. */
+export const ASSEMBLY_VIDEOS_ID = 'assembly-videos';
 
 export interface CabinetAssemblyVideo {
   name: string;
@@ -13,17 +18,20 @@ interface Props {
   className?: string;
 }
 
-/**
- * Assembly-instruction videos for a cabinet collection (name + YouTube link, authored per
- * collection). Renders nothing when there are no videos.
- */
+// Assembly-instruction videos for a cabinet collection (name + YouTube link, authored per
+// collection). Renders nothing when there are no videos.
 export function CabinetAssembly({ videos, className }: Props) {
   const usable = videos.filter((v) => v.name.trim() !== '' || v.url.trim() !== '');
 
   if (usable.length === 0) return null;
 
   return (
-    <SectionLayout className={className} containerSize="2xl">
+    // scroll-mt clears the sticky header when "View assembly videos" jumps here.
+    <SectionLayout
+      className={clsx('scroll-mt-24', className)}
+      containerSize="2xl"
+      id={ASSEMBLY_VIDEOS_ID}
+    >
       <h2 className="mb-6 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
         Assembly Instructions
       </h2>

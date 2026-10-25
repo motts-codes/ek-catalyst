@@ -151,6 +151,7 @@ function ArrowLink({
         aria-disabled
         aria-label={label}
         className={clsx(LINK_CLASS, 'border border-contrast-100 text-contrast-300')}
+        role="link"
       >
         {children}
       </span>

@@ -7,7 +7,7 @@ import { cache } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { createCompareLoader } from '@/vibes/soul/primitives/compare-drawer/loader';
-import { CabinetAssembly } from '@/vibes/soul/sections/cabinet-assembly';
+import { ASSEMBLY_VIDEOS_ID, CabinetAssembly } from '@/vibes/soul/sections/cabinet-assembly';
 import { CabinetCollectionHeader } from '@/vibes/soul/sections/cabinet-collection-header';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CabinetSizeFilter, type SizeDimension } from '@/vibes/soul/sections/cabinet-size-filter';
@@ -711,6 +711,7 @@ export default async function Category(props: Props) {
       {cabinetHeader != null && cabinetProgram != null && (
         <>
           <CabinetCollectionHeader
+            assemblyVideosHref={assemblyAnchor(cabinetAssembly.length)}
             data={cabinetHeader}
             finishHrefFor={(finishSlug) =>
               getFinishHref(category.path, searchParamsForLinks, finishSlug)
@@ -815,4 +816,9 @@ export default async function Category(props: Props) {
       </Stream>
     </>
   );
+}
+
+// The "View assembly videos" link in the collection header, only when the page has videos.
+function assemblyAnchor(videoCount: number): string | undefined {
+  return videoCount > 0 ? `#${ASSEMBLY_VIDEOS_ID}` : undefined;
 }

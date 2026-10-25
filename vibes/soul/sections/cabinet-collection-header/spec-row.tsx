@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { ArrowUpRight, CalendarCheck, Download, Phone, Plus } from 'lucide-react';
+import { ArrowUpRight, CalendarCheck, Download, Phone, PlayCircle, Plus } from 'lucide-react';
 import { useId, useState } from 'react';
 
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
@@ -93,11 +93,30 @@ export function AccordionRow({
 // with the spec-sheet download pinned right. With no copy, just the link; with neither, nothing.
 // "How it's built" — the specifications in the customer's words, laid out like the Specifications
 // table: the short lead (minus its full stop) on the left, the plain-English why on the right.
-export function HowBuiltRow({ points = [] }: { points?: BuildPoint[] }) {
+export function HowBuiltRow({
+  points = [],
+  assemblyVideosHref = '',
+}: {
+  points?: BuildPoint[];
+  /** In-page link to the assembly videos section (RTA collections that have videos). */
+  assemblyVideosHref?: string;
+}) {
   if (points.length === 0) return null;
 
+  // Same shape as the spec sheet link on Specifications: icon, heading font, animated underline.
+  // A plain anchor, since a hash link should scroll the page rather than route.
+  const videosLink = assemblyVideosHref !== '' && (
+    <a
+      className="inline-flex min-h-6 items-center gap-1.5 py-1 font-[family-name:var(--font-family-heading)] text-sm font-normal"
+      href={assemblyVideosHref}
+    >
+      <PlayCircle size={15} strokeWidth={1.75} />
+      <span className={animatedUnderlineClassName}>View assembly videos</span>
+    </a>
+  );
+
   return (
-    <AccordionRow title="How it's built">
+    <AccordionRow aside={videosLink || undefined} title="How it's built">
       {/* The same two-column table as Specifications: the lead on the left, the why on the right. */}
       <table className={clsx(COMPACT_COPY_CLASS, 'w-full border-collapse')}>
         <thead>
