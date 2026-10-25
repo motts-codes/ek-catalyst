@@ -116,8 +116,8 @@ const twoWays = (current: CabinetProgram): ExplainerV2['twoWays'] => {
       name: 'Assembled',
       summary: 'Built in our factory and shipped whole. You unwrap it and it’s ready to install.',
       image: {
-        src: '/images/explainers/assembled-cabinets.jpg',
-        alt: 'A run of built white shaker base cabinets, with a tall pantry at one end',
+        src: '/images/explainers/assembled-cabinets-espresso.jpg',
+        alt: 'A run of built espresso shaker base cabinets, with a tall pantry at one end',
       },
       visualLabel: 'A wrapped, built cabinet on a pallet',
       link: { label: 'Read about assembled', href: EXPLAINER_V2_HREF.assembled },
@@ -128,8 +128,8 @@ const twoWays = (current: CabinetProgram): ExplainerV2['twoWays'] => {
       summary:
         'Shipped flat in a box, as finished panels, doors and hardware. You put it together first, then install it.',
       image: {
-        src: '/images/explainers/rta-box-and-cabinet.jpg',
-        alt: 'An opened flat RTA box with its panels, doors and hardware, beside the same cabinet built',
+        src: '/images/explainers/rta-box-and-cabinet-espresso.jpg',
+        alt: 'An opened flat RTA box with its espresso panels, doors and hardware, beside the same cabinet built',
       },
       visualLabel: 'A flat RTA box',
       link: { label: 'Read about RTA', href: EXPLAINER_V2_HREF.rta },
