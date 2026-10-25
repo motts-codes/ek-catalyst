@@ -233,7 +233,7 @@ export const THREE_WAYS: RowCard[] = [
   {
     title: 'I want a number',
     description:
-      'Answer four quick questions and get a real price range for your kitchen. No email, no sales call.',
+      'Pick a shape, a line, a door style and a color, and see the 10×10 price. No email, no sales call.',
     ctaLabel: 'Price my kitchen',
     href: ESTIMATOR_HREF,
     image: {

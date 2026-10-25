@@ -1,92 +1,82 @@
 # Kitchen estimator — how the number is calculated
 
-The estimator at `/mykitchen/calculator` gives a visitor a price range for their kitchen in four
-steps: layout, measurements, package, estimate. The wireframe specified the flow but not the maths;
-this document is the maths. All constants live in `lib/estimator/config.ts`; the calculation is a
-pure function in `lib/estimator/estimate.ts` with unit tests in `lib/estimator/estimate.test.ts`.
+The estimator at `/mykitchen/price-my-kitchen` shows the price of a **standard 10×10 kitchen** in the
+cabinet line, door style and color the visitor picks. Version 1 (client brief, 25 Oct 2026) prices
+nothing larger than the 10×10 and nothing but cabinets. The visitor sees three figures: the 10×10
+price, the price per linear foot, and an "as low as $X/month" GreenSky payment, then a button to
+book a free design.
 
-## The approach (and why)
+## Where the numbers come from
 
-Every cabinet estimator on the market — CliqStudios, Lowe's, the big RTA sellers — works the same
-way: turn the kitchen into **linear feet of cabinet run**, multiply by a **price per linear foot**,
-and show a **range** because door style and finish move the number. The industry anchor for the
-rate is the **10×10 kitchen**: two 10-foot walls in an L, 20 linear feet of cabinets. A seller's
-10×10 price divided by 20 is their price per linear foot.
+EK's workbook `EK_10x10_Pricing_AllPrograms.xlsx` (Oct 2026) has three tabs that matter:
 
-Express Kitchens already publishes a 10×10 price on every collection, so the estimator scales
-**EK's own live prices** rather than a generic rate. That keeps the estimator honest: the number on
-the estimator and the number on the collection card come from the same place.
+- **Source Pricing (DB)** — one row per program × door style × color with the SalesPrice of each of
+  the 13 cabinets in the 10×10 BOM (columns G–R, the W2130 wall cabinet counted twice via the
+  quantity row). Some rows are group-fills (`=R27` style references to another row). The APR, term
+  and linear feet live in B3–B5.
+- **Active 10x10** — the rows the estimator may offer, with a formula pointing at the Source row.
+- **Estimator** — the maths: `10x10 = SUMPRODUCT(qty, prices)`, `per ft = 10x10 / 20`,
+  `monthly = PMT(APR/12, term, 10x10)`.
 
-## Inputs
+`scripts/build-ten-by-ten-prices.py` reads the workbook, resolves the references, applies the
+SUMPRODUCT and writes **`lib/estimator/ten-by-ten-prices.ts`** (generated, committed): 668 rows of
+`{ program, door, color, tier, code, price }` plus `TEN_BY_TEN_APR`, `TEN_BY_TEN_TERM_MONTHS` and
+`TEN_BY_TEN_LINEAR_FEET`. Re-run it when EK sends a new workbook:
 
-| Step | Input | Values |
-| --- | --- | --- |
-| 1 | Layout | `l` (two walls), `straight` (one wall), `u` (three walls), `galley` (two facing walls) |
-| 2 | Wall lengths, ft | A; A+B for L and galley; A+B+C for U. Each 3–40 ft |
-| 2 | Ceiling height, ft | 8, 9, 10+ |
-| 2 | Island | yes / no |
-| 3 | Package | `essentials`, `premium`, `luxe` |
+```bash
+python3 scripts/build-ten-by-ten-prices.py ~/Downloads/"Kichen estimator"/EK_10x10_Pricing_AllPrograms.xlsx
+```
 
-## Calculation
+The output was checked against the from-prices in EK's one-page blurb
+(`EK_10x10_Estimator_Blurb.pdf`) and matches to the cent.
 
-1. **Linear feet of run (LF).** Sum of the walls, minus 2 ft per inside corner (a corner cabinet
-   serves both walls): L −2, U −4, straight and galley 0. Clamped to a minimum of 6 ft.
-2. **Cabinet price per foot.** `rate = package10x10 / 20`, where `package10x10` is the 10×10 price
-   of the collections in that package, taken from the live assembled collection data:
-   - Essentials = the lowest 10×10 price in the catalog
-   - Premium = the median
-   - Luxe = the highest
-   Fallbacks (used when the catalog has fewer than two priced collections) are in the config.
-3. **Cabinets.** `cabinets = LF × rate × ceilingFactor`. Ceiling factor: 8 ft → 1.00 (30 in. wall
-   cabinets, as in the 10×10); 9 ft → 1.08 (36 in.); 10 ft+ → 1.15 (42 in.).
-4. **Island.** Adds `6 ft × rate × 0.6`: a typical island is about six feet of base cabinets, and
-   base cabinets are roughly 60% of the per-foot cost (no wall cabinets above them).
-5. **Countertop.** `sqft = LF × 2.1` (a 25-inch-deep counter) `+ 18` if there is an island.
-   Priced per square foot by package: Essentials laminate, Premium and Luxe quartz. The granite and
-   quartz rates are EK's published prices ($49.99 / $59.99); the laminate rate is a placeholder.
-6. **Extras by package.** Essentials: standard handles. Premium: sink & faucet. Luxe: sink &
-   faucet, handles, and an appliance bundle (range, hood, dishwasher, fridge). Handle count is
-   `LF × 1.6` (about one knob or pull per 7–8 in. of run).
-7. **Total and range.** `total = cabinets + island + countertop + extras`.
-   `low = total × 0.90`, `high = total × 1.15`: collections inside a package band sit a little
-   either side of the band's reference price, and finishes add on top.
-8. **RTA saving.** Shown as a line, not a second estimate: `cabinets × (1 − rtaRatio)`, where
-   `rtaRatio` is the live Avon RTA 10×10 divided by Avon assembled (about 0.91 in the sandbox).
+## The picks
 
-**Excluded, and said so on screen:** installation (EK never installs), delivery and tax.
+| Step | Pick                                                    | Effect on price                                                                                       |
+| ---- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 1    | Shape: L, U, galley, single wall                        | **None.** Swaps the kitchen render only; every shape uses the same 13-cabinet mix.                    |
+| 2    | Line: Star, Prism, Euro, then a build or tier inside it | Sets the workbook program (see below).                                                                |
+| 3    | Door style                                              | Sets the price, with the program.                                                                     |
+| 4    | Color                                                   | **None** within a door style, except Prism, where three premium colors use the Prism Premium program. |
 
-## The breakdown table
+Line → workbook program:
 
-Cabinets are split for display only: wall cabinets 40%, base cabinets 50%, trim and fillers 10%
-of the cabinet figure. Quantities are shown as feet of run, not cabinet counts, to avoid false
-precision. Countertop shows square feet; sink/faucet and the appliance bundle show as one line each.
+- **Star** → `Framed Star Assembled` or `Framed Star RTA` (12 door styles).
+- **Prism** → `Framed Prism` for the seven standard colors, `Framed Prism Premium` for Charcoal,
+  Hurricane and Midnight (7 door styles).
+- **Euro** → `Frameless Euro Value`, `Frameless Euro Max`, `Frameless Euro Max Custom` or
+  `Frameless Euro Max RTA` (7 door styles; RTA is Eden only).
 
-## Constants to confirm with the business
+A door style that comes in a single finish (most stained Star doors) skips the color step: the one
+finish is chosen for the visitor and the panel reads "Standard finish".
 
-In `lib/estimator/config.ts`, marked `// confirm`:
+## The maths (`lib/estimator/ten-by-ten.ts`)
 
-- Laminate countertop rate per sq ft (placeholder $19.99)
-- Sink & faucet allowance (placeholder $450)
-- Handle price (placeholder $6 standard, $9 Luxe)
-- Appliance bundle (placeholder $4,500)
-- Fallback 10×10 prices when the catalog is empty (Essentials $2,800, Premium $3,300, Luxe $4,100)
-- The range factors (0.90 / 1.15), the ceiling factors and the island rule
+```
+price    = TEN_BY_TEN_ROWS row for (program, door, color).price
+perFoot  = price / 20                                   # TEN_BY_TEN_LINEAR_FEET
+r        = 11.99 / 1200                                  # TEN_BY_TEN_APR, monthly rate
+monthly  = price · r(1+r)^180 / ((1+r)^180 − 1)          # TEN_BY_TEN_TERM_MONTHS, GreenSky plan 1519
+```
 
-Everything else comes from the live collection data and EK's published countertop prices.
+Both derived figures are rounded to the cent; the 10×10 price is shown in whole dollars. The "from
+$X" badge on each line card is the lowest row in that line's programs.
 
-## Worked example
+## What the 10×10 is
 
-L-shaped, walls 10 ft and 12 ft, 8 ft ceiling, no island, Premium (Avon-level 10×10 = $3,289.55):
+13 cabinets, about 20 linear feet: three base cabinets (12", 15", 18"), a 36" sink base, a blind
+corner base, four wall cabinets (12", two 21", 39"), a diagonal corner wall, two bridge cabinets
+(over the hood and the fridge) and a 3" filler. `TEN_BY_TEN_CABINETS` lists these on the page.
 
-- LF = 10 + 12 − 2 = 20 ft; rate = 3,289.55 / 20 = $164.48/ft
-- cabinets = 20 × 164.48 × 1.00 = $3,290
-- countertop = 20 × 2.1 = 42 sq ft × $59.99 = $2,520
-- sink & faucet = $450
-- total = $6,259 → **range $5,630 – $7,200** (range rounded to $10)
-- RTA would save about $300 on the cabinets
+## Fine print
 
-## Sources
+`TEN_BY_TEN_FINE_PRINT` is the PDF's disclaimer: cabinets only, no countertops / appliances /
+hardware / delivery / installation; GreenSky at 11.99% APR for 180 months, subject to credit
+approval, showrooms only; final pricing after a free design consultation; prices as of 16 Oct 2026.
+Update the date when the workbook is refreshed.
 
-- CliqStudios estimator (linear-foot averaging, range output): https://www.cliqstudios.com/kitchen-cabinet-estimator-tool/
-- 10×10 scaling rule (10×10 price ÷ 20 = per-foot rate): https://www.prefinishedcabinets.com/understandingbasic10x10kitchenprici
-- Industry per-linear-foot bands for context: https://kitchencabinetkings.com/guides/kitchen-cabinet-costs
+## Not in v1 (parked)
+
+Room measurements, ceiling height, islands, countertops and the old low/high range. The previous
+linear-foot estimator (`lib/estimator/config.ts`, `estimate.ts`, `kitchen-estimator` section) was
+removed in Oct 2026; its approach is in git history if a bigger-than-10×10 mode is ever wanted.
