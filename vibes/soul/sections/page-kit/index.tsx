@@ -25,6 +25,17 @@ export interface PageAction {
   label: string;
   href: string;
   primary?: boolean;
+  /** `outline`: thin black outline, solid black on hover (the site's secondary button). */
+  style?: 'solid' | 'outline';
+}
+
+const OUTLINE_BUTTON =
+  'transition-colors [--button-ghost-background:white] [--button-ghost-background-hover:hsl(var(--foreground))] [--button-ghost-border:hsl(var(--foreground))] hover:[--button-ghost-text:white]';
+
+function actionVariant(action: PageAction): 'primary' | 'secondary' | 'ghost' {
+  if (action.primary) return 'primary';
+
+  return action.style === 'outline' ? 'ghost' : 'secondary';
 }
 
 // Breadcrumb at the top of a page. Small and grey like the PDP's, at a size/grey that passes AA.
@@ -50,11 +61,12 @@ export function Actions({ actions, className }: { actions: PageAction[]; classNa
     <div className={clsx('flex flex-wrap gap-3', className)}>
       {actions.map((action) => (
         <ButtonLink
+          className={action.style === 'outline' && !action.primary ? OUTLINE_BUTTON : undefined}
           href={action.href}
           key={action.label}
           shape="pill"
           size="small"
-          variant={action.primary ? 'primary' : 'secondary'}
+          variant={actionVariant(action)}
         >
           {action.label}
         </ButtonLink>

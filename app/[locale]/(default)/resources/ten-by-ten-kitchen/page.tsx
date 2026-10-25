@@ -17,7 +17,6 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { SHOWROOMS } from '~/lib/home/home-content';
 import {
   TEN_BY_TEN_CLOSING,
   TEN_BY_TEN_COVERS,
@@ -169,7 +168,6 @@ export default async function TenByTen({ params }: { params: Promise<{ locale: s
         description={TEN_BY_TEN_CLOSING.description}
         primary={TEN_BY_TEN_CLOSING.primary}
         secondary={TEN_BY_TEN_CLOSING.secondary}
-        showrooms={SHOWROOMS}
         tint
         title={TEN_BY_TEN_CLOSING.title}
       />

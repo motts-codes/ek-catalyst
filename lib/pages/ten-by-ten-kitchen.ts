@@ -1,4 +1,5 @@
 import type { CabinetMapImage } from '@/vibes/soul/sections/cabinet-map';
+import type { PageAction } from '@/vibes/soul/sections/page-kit';
 import { dollars, LINES, rowFor } from '~/lib/estimator/ten-by-ten';
 import { TEN_BY_TEN_LINEAR_FEET, TEN_BY_TEN_ROWS } from '~/lib/estimator/ten-by-ten-prices';
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF } from '~/lib/home/home-content';
@@ -27,8 +28,8 @@ export const TEN_BY_TEN_HERO = {
   imageLabel: 'The 10×10 kitchen, Avon in white',
   actions: [
     { label: 'Price my kitchen', href: ESTIMATOR_HREF, primary: true },
-    { label: 'Browse collections', href: '/cabinets/assembled-cabinets' },
-  ],
+    { label: 'Browse collections', href: '/cabinets/assembled-cabinets', style: 'outline' },
+  ] satisfies PageAction[],
 };
 
 export const TEN_BY_TEN_LIST = {
@@ -62,7 +63,6 @@ export const TEN_BY_TEN_MAP_IMAGES: [CabinetMapImage, CabinetMapImage] = [
   {
     src: '/images/estimator/l-shaped-numbered.jpg',
     alt: 'The 10×10 kitchen as an L, each cabinet numbered',
-    label: 'As an L: two 10-foot walls, all 13 cabinets',
     width: 2352,
     height: 1760,
     markers: [
@@ -84,7 +84,6 @@ export const TEN_BY_TEN_MAP_IMAGES: [CabinetMapImage, CabinetMapImage] = [
   {
     src: '/images/estimator/single-wall-numbered.jpg',
     alt: 'The same cabinets along a single wall, each cabinet numbered',
-    label: 'Along a single wall: the same cabinets, no corner pieces',
     width: 2720,
     height: 1536,
     markers: [

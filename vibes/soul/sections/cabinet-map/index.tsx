@@ -21,7 +21,6 @@ export interface CabinetMapMarker {
 export interface CabinetMapImage {
   src: string;
   alt: string;
-  label: string;
   /** The picture's own proportions; the frame takes them so percent positions stay true. */
   width: number;
   height: number;
@@ -29,7 +28,7 @@ export interface CabinetMapImage {
 }
 
 interface Props {
-  /** Two pictures, left and right; the split is 40 / 60. */
+  /** Two pictures, left and right, half and half. */
   images: [CabinetMapImage, CabinetMapImage];
   items: CabinetMapItem[];
   className?: string;
@@ -50,9 +49,9 @@ export function CabinetMap({ images, items, className }: Props) {
         className,
       )}
     >
-      <div className="grid gap-4 p-4 @3xl:grid-cols-[2fr_3fr] @3xl:gap-6 @3xl:p-6">
+      <div className="grid gap-4 p-4 @3xl:grid-cols-2 @3xl:gap-6 @3xl:p-6">
         {images.map((image) => (
-          <figure key={image.src}>
+          <div key={image.src}>
             <div
               className="relative overflow-hidden rounded-2xl bg-white"
               style={{ aspectRatio: `${image.width} / ${image.height}` }}
@@ -92,10 +91,7 @@ export function CabinetMap({ images, items, className }: Props) {
                 );
               })}
             </div>
-            <figcaption className="mt-2 text-center text-xs text-contrast-500">
-              {image.label}
-            </figcaption>
-          </figure>
+          </div>
         ))}
       </div>
       <ol className="grid border-t border-contrast-100 @xl:grid-cols-2">
