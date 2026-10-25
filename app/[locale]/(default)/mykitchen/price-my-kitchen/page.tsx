@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
+import { TermTip } from '@/vibes/soul/primitives/term-tip';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
@@ -12,7 +13,7 @@ import { buildEstimatorVisuals } from '~/lib/estimator/ten-by-ten-visuals';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'Kitchen Estimator: your 10×10 price in four picks',
+  title: 'Kitchen Estimator: what would your kitchen cost?',
   description:
     'Pick a kitchen shape, a cabinet line, a door style and a color, and see the 10×10 price, the price per linear foot and a monthly payment. No email, no sales call.',
 };
@@ -51,12 +52,21 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
         ]}
       />
       <PageHero
-        chipStyle="checks"
-        chips={['Cabinets only', 'Four picks', 'No email, no sales call']}
-        description="Every cabinet company quotes a 10×10: a standard set of cabinets covering two 10-foot walls, about 20 linear feet. Ours is 13 cabinets. Pick a shape, a line, a door style and a color, and you’ll see what that kitchen costs in the collection you like, plus the price per foot so you can rough out your own room."
+        description={
+          <>
+            Pick a shape, a cabinet line, a door style and a color, and see the price of a{' '}
+            <TermTip term="10×10 kitchen">
+              A 10×10 is the sample kitchen every cabinet company uses to compare prices: two
+              10-foot walls in an L shape, cabinets only. Ours has 13 cabinets. Countertops,
+              appliances and installation aren’t included.
+            </TermTip>{' '}
+            in that style straight away.
+          </>
+        }
         kicker="Kitchen estimator"
+        note="This isn’t a quote. It’s a ballpark, with a price per foot so you can rough out your own room. For a price on your exact layout, a designer can quote it for free."
         textOnly
-        title="See what your kitchen costs, as a 10×10"
+        title="What would your kitchen cost? Find out in 4 steps."
       />
 
       <HomeSection className="bg-[#fdf3f5] bg-[url('/images/estimator/noise.svg')] bg-repeat">

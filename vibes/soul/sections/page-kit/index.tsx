@@ -66,7 +66,9 @@ export function Actions({ actions, className }: { actions: PageAction[]; classNa
 interface HeroProps {
   kicker?: string;
   title: string;
-  description?: string;
+  description?: ReactNode;
+  /** Small print under the paragraph (what the number is and isn't). */
+  note?: ReactNode;
   /** Short facts under the paragraph ("A full layout · An itemized quote · …"). */
   chips?: string[];
   /** 'checks' drops the pills: a red star-check before each fact, plain text after it. */
@@ -91,6 +93,7 @@ export function PageHero({
   kicker,
   title,
   description,
+  note,
   chips = [],
   chipStyle = 'outline',
   actions = [],
@@ -125,6 +128,9 @@ export function PageHero({
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
               {description}
             </p>
+          )}
+          {Boolean(note) && (
+            <p className="mt-3 max-w-2xl text-xs leading-relaxed text-contrast-500">{note}</p>
           )}
           {chips.length > 0 && (
             <ul
