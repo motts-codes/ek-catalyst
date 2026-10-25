@@ -186,7 +186,7 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
       'Drawers already fitted',
       'Shelves in place',
     ],
-    note: 'Delivery is to the ground floor. Getting them inside or upstairs is up to you, unless you’ve added a delivery service. Built cabinets take up room, so clear space in a garage or spare room to keep them until installation.',
+    note: 'Delivery is curbside: the driver unloads the pallet at the curb or the end of your driveway. Getting the cabinets inside is up to you, unless you’ve added a delivery service, so line up a hand or two for delivery day. Built cabinets take up room, too, so clear space in a garage or spare room to keep them until installation.',
     image: {
       src: '/images/explainers/assembled-wrapped-cabinet.jpg',
       alt: 'A built white base cabinet wrapped in bubble wrap with corner protectors, standing in its opened carton',
