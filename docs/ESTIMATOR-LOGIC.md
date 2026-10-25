@@ -47,8 +47,16 @@ Line → workbook program:
 - **Euro** → `Frameless Euro Value`, `Frameless Euro Max`, `Frameless Euro Max Custom` or
   `Frameless Euro Max RTA` (7 door styles; RTA is Eden only).
 
-A door style that comes in a single finish (most stained Star doors) skips the color step: the one
-finish is chosen for the visitor and the panel reads "Standard finish".
+The page is a multi-step form: one pick on screen at a time (shape renders, a kitchen per line,
+door-sample photos, color swatches), then the price card. The pictures come from the live cabinet
+collections at request time (`lib/estimator/ten-by-ten-visuals.ts` maps workbook door names to
+collections: "Avon" → the Avon collection, "Prism Avon", "Euro Max Tribeca A"), so a new door photo
+in BigCommerce shows up here without a deploy.
+
+Two cases skip the color step: a door style with a single finish (all Star doors, Euro Eden) is
+chosen for the visitor and reads "Standard finish"; a Euro laminate door (Manhattan, Tribeca) has
+up to ~50 named finishes at one price and no swatches, so the card reads "Your choice of N
+finishes" rather than listing them.
 
 ## The maths (`lib/estimator/ten-by-ten.ts`)
 

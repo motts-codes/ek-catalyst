@@ -1,11 +1,14 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
+import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { TenByTenEstimator } from '@/vibes/soul/sections/ten-by-ten-estimator';
-import { TEN_BY_TEN_CABINETS } from '~/lib/estimator/ten-by-ten';
+import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
+import { doorsFor, TEN_BY_TEN_CABINETS } from '~/lib/estimator/ten-by-ten';
+import { buildEstimatorVisuals } from '~/lib/estimator/ten-by-ten-visuals';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -21,6 +24,23 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
   const { locale } = await params;
 
   setRequestLocale(locale);
+
+  // The pictures the picks are made with: a kitchen per line, a door sample per door style and
+  // a swatch per color, from the live cabinet collections (assembled + RTA).
+  const visuals = Streamable.from(async () => {
+    const [assembled, rta] = await Promise.all([
+      getCabinetLines('assembled'),
+      getCabinetLines('rta'),
+    ]);
+    const seen = new Set(assembled.map((l) => l.entityId));
+    const collections = [...assembled, ...rta.filter((l) => !seen.has(l.entityId))];
+
+    return buildEstimatorVisuals(collections, {
+      star: doorsFor('star'),
+      prism: doorsFor('prism'),
+      euro: doorsFor('euro'),
+    });
+  });
 
   return (
     <>
@@ -40,7 +60,9 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
       />
 
       <HomeSection tightTop>
-        <TenByTenEstimator designHref={FREE_DESIGN_HREF} />
+        <Stream fallback={<EstimatorSkeleton />} value={visuals}>
+          {(v) => <TenByTenEstimator designHref={FREE_DESIGN_HREF} visuals={v} />}
+        </Stream>
       </HomeSection>
 
       <HomeSection
@@ -98,5 +120,21 @@ export default async function PriceMyKitchen({ params }: { params: Promise<{ loc
         title="Ready for the real number?"
       />
     </>
+  );
+}
+
+// The wizard's first step, as grey boxes, while the collection photos load.
+function EstimatorSkeleton() {
+  return (
+    <div aria-busy className="@container">
+      <div className="mb-10 h-7 w-2/3 rounded-full bg-contrast-100" />
+      <div className="h-4 w-24 rounded bg-contrast-100" />
+      <div className="mt-3 h-8 w-80 max-w-full rounded bg-contrast-100" />
+      <div className="mt-8 grid grid-cols-2 gap-4 @xl:grid-cols-4">
+        {[0, 1, 2, 3].map((i) => (
+          <div className="aspect-[4/3] rounded-2xl bg-contrast-100" key={i} />
+        ))}
+      </div>
+    </div>
   );
 }
