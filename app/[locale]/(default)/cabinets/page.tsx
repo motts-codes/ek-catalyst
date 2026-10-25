@@ -77,7 +77,8 @@ export default async function CabinetsHub({ params }: Props) {
 
     return {
       ...row,
-      image: kitchen,
+      // A row's own photo wins; otherwise the kitchen it names, else the first with one.
+      image: row.image ?? kitchen,
       tiles: matched.map(({ label, line }) => ({
         name: label,
         href: line?.href ?? ASSEMBLED_LISTING_HREF,

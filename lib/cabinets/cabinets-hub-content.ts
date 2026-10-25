@@ -89,6 +89,10 @@ export const STYLE_ROWS: StyleRow[] = [
     description:
       'Stained birch veneer, from driftwood gray and caramel to espresso, walnut and bordeaux.',
     imageLabel: 'Stained wood kitchen',
+    image: {
+      src: '/images/cabinets/stained-wood-kitchen.jpg',
+      alt: 'A kitchen in dark stained shaker cabinets with a granite island and pendant lights',
+    },
     collections: [
       c('Birmingham'),
       c('Dover'),
