@@ -45,8 +45,10 @@ export default async function Faq({ params }: { params: Promise<{ locale: string
       <PageHero
         actions={FAQ_HERO.actions}
         description={FAQ_HERO.description}
+        image={FAQ_HERO.image}
+        imageSize="small"
+        imageStyle="plain"
         kicker={FAQ_HERO.kicker}
-        textOnly
         title={FAQ_HERO.title}
       />
       <HomeSection tightTop>

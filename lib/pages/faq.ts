@@ -41,6 +41,8 @@ export const FAQ_HERO = {
     { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
     { label: 'Send us a message', href: '/contact' },
   ],
+  // Decorative: two speech bubbles, one with a question mark, on white.
+  image: { src: '/images/faq/questions.png', alt: '' },
 };
 
 export const FAQ_META_DESCRIPTION =

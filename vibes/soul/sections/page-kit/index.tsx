@@ -76,6 +76,8 @@ interface HeroProps {
   imageLabel?: string;
   /** `plain` shows the photo as it is: no frame, rounding or backdrop (for shots on white). */
   imageStyle?: 'framed' | 'plain';
+  /** `small` keeps a plain image to about two thirds of its column (an illustration, not a photo). */
+  imageSize?: 'default' | 'small';
   /** No photo column — the copy runs the full width. */
   textOnly?: boolean;
   /** `2` when the page already has an h1 above (e.g. a scroll hero). */
@@ -95,6 +97,7 @@ export function PageHero({
   image,
   imageLabel,
   imageStyle = 'framed',
+  imageSize = 'default',
   textOnly = false,
   headingLevel = 1,
   className,
@@ -161,6 +164,7 @@ export function PageHero({
               imageStyle === 'plain' && image
                 ? 'aspect-[6/5]'
                 : 'aspect-[4/3] rounded-3xl bg-contrast-100 ring-1 ring-contrast-100',
+              imageSize === 'small' && 'mx-auto w-2/3 @3xl:w-[62%]',
             )}
           >
             {image ? (
