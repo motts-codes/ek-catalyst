@@ -122,7 +122,7 @@ const TWO_WAYS: ExplainerV2['twoWays'] = {
     },
   ],
   line: 'It’s the same cabinet either way. The only question is who builds it: us, or you.',
-  rules: ['RTA saves money.', 'Assembled saves time.'],
+  rules: ['Assembled saves time.', 'RTA saves money.'],
 };
 
 const GLOSSARY: ExplainerV2['glossary'] = {
