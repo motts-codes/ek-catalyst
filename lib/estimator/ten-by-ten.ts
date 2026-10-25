@@ -85,6 +85,8 @@ export interface Line {
    * Max RTA). Prism has none: its tier follows the color (standard or premium).
    */
   variants: LineVariant[];
+  /** The variant the toggle starts on (Star: Assembled; Euro: Euro Max). */
+  defaultProgram?: string;
 }
 
 export const LINES: Line[] = [
@@ -95,6 +97,7 @@ export const LINES: Line[] = [
     blurb:
       'Our core line: framed cabinets with a plywood box and a solid birch face frame, in 12 door styles. Assembled or ready to assemble.',
     href: '/cabinets/assembled-cabinets?line=star',
+    defaultProgram: 'Framed Star Assembled',
     variants: [
       { program: 'Framed Star Assembled', label: 'Assembled', note: 'Built in our factory' },
       { program: 'Framed Star RTA', label: 'Ready to assemble', note: 'You build it, you save' },
@@ -116,6 +119,7 @@ export const LINES: Line[] = [
     blurb:
       'European-style frameless cabinets: full-overlay doors, more room inside. Euro Value is the lower price; Euro Max adds a plywood box.',
     href: '/cabinets/assembled-cabinets?line=euro-max',
+    defaultProgram: 'Frameless Euro Max',
     variants: [
       { program: 'Frameless Euro Value', label: 'Euro Value', note: 'Engineered board box' },
       { program: 'Frameless Euro Max', label: 'Euro Max', note: 'Plywood box' },

@@ -1,9 +1,10 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { ArrowLeft, ArrowRight, Check, Info, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, HandCoins, Info, RotateCcw } from 'lucide-react';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 
+import { Button } from '@/vibes/soul/primitives/button';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { Tooltip } from '@/vibes/soul/primitives/tooltip';
 import { Image } from '~/components/image';
@@ -38,6 +39,9 @@ interface Props {
 const RED = 'text-[var(--button-primary-background,#d90716)]';
 const RING =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2';
+const CARD_SHADOW = 'shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]';
+const OUTLINE_BUTTON =
+  'transition-colors [--button-ghost-background:white] [--button-ghost-background-hover:hsl(var(--foreground))] [--button-ghost-border:hsl(var(--foreground))] hover:[--button-ghost-text:white]';
 const STEPS = ['Shape', 'Line', 'Door style', 'Color'] as const;
 const SINGLE_FINISH = 'Standard finish (single color)';
 const RESULT = 5;
@@ -57,7 +61,11 @@ interface Wizard {
   estimate: TenByTenEstimate | null;
   /** The furthest step the picks so far allow. */
   reach: number;
+  /** Whether the current step's pick is made, so Continue is live. */
+  canContinue: boolean;
   go: (step: number) => void;
+  next: () => void;
+  back: () => void;
   pickShape: (id: ShapeId) => void;
   pickLine: (id: LineId) => void;
   pickProgram: (program: string) => void;
@@ -82,7 +90,6 @@ function useWizard(visuals: EstimatorVisuals): Wizard {
   const [program, setProgram] = useState<string | undefined>(undefined);
   const [door, setDoor] = useState<string | null>(null);
   const [color, setColor] = useState<string | null>(null);
-  const timer = useRef<number | undefined>(undefined);
 
   const line = LINES.find((l) => l.id === lineId);
   const lineReady = line !== undefined && (line.variants.length === 0 || program !== undefined);
@@ -97,13 +104,7 @@ function useWizard(visuals: EstimatorVisuals): Wizard {
   if (door) reach = colorMode === 'pick' ? 4 : RESULT;
   if (estimate) reach = RESULT;
 
-  // A short beat after a pick so the selection is seen before the next step slides in.
-  const goSoon = (next: number) => {
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setStep(next), 320);
-  };
-
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const canContinue = [true, lineReady, door !== null, color !== null][step - 1] ?? false;
 
   return {
     step,
@@ -116,40 +117,32 @@ function useWizard(visuals: EstimatorVisuals): Wizard {
     colorMode,
     estimate,
     reach,
+    canContinue,
     go: setStep,
-    pickShape: (id) => {
-      setShape(id);
-      goSoon(2);
-    },
+    // Door → price when there is no color to pick; otherwise one step on.
+    next: () => setStep(step === 3 && colorMode !== 'pick' ? RESULT : step + 1),
+    back: () => setStep(step === RESULT && colorMode !== 'pick' ? 3 : step - 1),
+    pickShape: setShape,
     pickLine: (id) => {
-      const next = LINES.find((l) => l.id === id);
-
       setLineId(id);
-      setProgram(undefined);
+      setProgram(LINES.find((l) => l.id === id)?.defaultProgram);
       setDoor(null);
       setColor(null);
-
-      if (next?.variants.length === 0) goSoon(3);
     },
     pickProgram: (p) => {
       setProgram(p);
       setDoor(null);
       setColor(null);
-      goSoon(3);
     },
     pickDoor: (d) => {
       const next = line ? colorsFor(line.id, program, d) : [];
       const mode = colorModeFor(next, visuals);
 
       setDoor(d);
-      // One finish, or a laminate list with nothing to show: decide it and go to the price.
+      // One finish, or a laminate list with nothing to show: decided for them.
       setColor(mode === 'pick' ? null : (next[0]?.name ?? null));
-      goSoon(mode === 'pick' ? 4 : RESULT);
     },
-    pickColor: (c) => {
-      setColor(c);
-      goSoon(RESULT);
-    },
+    pickColor: setColor,
     reset: () => {
       setLineId(null);
       setProgram(undefined);
@@ -161,8 +154,8 @@ function useWizard(visuals: EstimatorVisuals): Wizard {
 }
 
 // The estimator as a multi-step form: one question on screen at a time (shape, line, door style,
-// color), each answered by picking a picture, then the price card. Picks advance the step;
-// the rail at the top and the Back link go back.
+// color), each answered by picking a picture, then the price card. Continue moves on once the
+// pick is made; Back and the rail at the top go back.
 export function TenByTenEstimator({ designHref, visuals, className }: Props) {
   const w = useWizard(visuals);
   const top = useRef<HTMLDivElement>(null);
@@ -177,10 +170,16 @@ export function TenByTenEstimator({ designHref, visuals, className }: Props) {
   }, [w.step]);
 
   return (
-    <div className={clsx('scroll-mt-24 @container', className)} ref={top}>
+    <div
+      className={clsx(
+        'flex min-h-[70svh] scroll-mt-24 flex-col @container @3xl:min-h-[78svh]',
+        className,
+      )}
+      ref={top}
+    >
       <Rail current={w.step} go={w.go} reach={w.reach} />
       <div
-        className="motion-safe:duration-300 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2"
+        className="flex flex-1 flex-col motion-safe:duration-300 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2"
         key={w.step}
       >
         {w.step === 1 ? <ShapeStep w={w} /> : null}
@@ -241,7 +240,7 @@ function Rail({ current, reach, go }: { current: number; reach: number; go: (n: 
               </span>
             </button>
             {index < STEPS.length - 1 ? (
-              <span className="h-0.5 min-w-4 flex-1 rounded-full bg-contrast-100">
+              <span className="h-0.5 min-w-4 flex-1 rounded-full bg-white">
                 <span
                   className={clsx(
                     'block h-full rounded-full bg-[var(--button-primary-background,#d90716)] transition-[width] duration-500',
@@ -257,22 +256,23 @@ function Rail({ current, reach, go }: { current: number; reach: number; go: (n: 
   );
 }
 
-// A step's frame: "Step n of 4", the question, one line of help, the choices, and Back.
+// A step's frame: "Step n of 4", the question, one line of help, the choices, and the Back /
+// Continue buttons pinned to the bottom. Continue is live once the step's pick is made.
 function Panel({
   n,
   title,
   help,
-  back,
+  w,
   children,
 }: {
   n: number;
   title: string;
   help?: string;
-  back?: () => void;
+  w: Wizard;
   children: ReactNode;
 }) {
   return (
-    <section aria-labelledby={`estimator-step-${n}`}>
+    <section aria-labelledby={`estimator-step-${n}`} className="flex flex-1 flex-col">
       <p className={clsx('text-xs font-semibold uppercase tracking-wide', RED)}>
         Step {n} of {STEPS.length}
       </p>
@@ -284,24 +284,58 @@ function Panel({
       </h2>
       {help ? <p className="mt-2 max-w-2xl text-sm text-contrast-500">{help}</p> : null}
       <div className="mt-6">{children}</div>
-      {back ? <BackLink onClick={back} /> : null}
+      <StepButtons
+        canContinue={w.canContinue}
+        onBack={n > 1 ? w.back : undefined}
+        onContinue={w.next}
+      />
     </section>
   );
 }
 
-function BackLink({ onClick, label = 'Back' }: { onClick: () => void; label?: string }) {
+// Back (white outline) on the left, Continue (red) on the right.
+function StepButtons({
+  onBack,
+  onContinue,
+  canContinue,
+  continueLabel = 'Continue',
+}: {
+  onBack?: () => void;
+  onContinue?: () => void;
+  canContinue: boolean;
+  continueLabel?: string;
+}) {
   return (
-    <button
-      className={clsx(
-        'mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-contrast-500 hover:text-foreground',
-        RING,
+    <div className="mt-auto flex items-center justify-between gap-4 pt-10">
+      {onBack ? (
+        <Button
+          className={OUTLINE_BUTTON}
+          onClick={onBack}
+          shape="pill"
+          size="small"
+          type="button"
+          variant="ghost"
+        >
+          <ArrowLeft size={16} strokeWidth={2.5} />
+          Back
+        </Button>
+      ) : (
+        <span />
       )}
-      onClick={onClick}
-      type="button"
-    >
-      <ArrowLeft size={15} strokeWidth={2.5} />
-      {label}
-    </button>
+      {onContinue ? (
+        <Button
+          disabled={!canContinue}
+          onClick={onContinue}
+          shape="pill"
+          size="small"
+          type="button"
+          variant="primary"
+        >
+          {continueLabel}
+          <ArrowRight size={16} strokeWidth={2.5} />
+        </Button>
+      ) : null}
+    </div>
   );
 }
 
@@ -312,6 +346,7 @@ function ShapeStep({ w }: { w: Wizard }) {
       help="Shape changes the picture, not the price."
       n={1}
       title="What shape is your kitchen?"
+      w={w}
     >
       <div
         aria-label="Kitchen shape"
@@ -336,16 +371,16 @@ function ShapeStep({ w }: { w: Wizard }) {
   );
 }
 
-// 2 · Line: a kitchen per line, then the build or tier inside it.
+// 2 · Line: a kitchen per line, then the build (Star) or tier (Euro) as a toggle.
 function LineStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
   const variants = w.line?.variants ?? [];
 
   return (
     <Panel
-      back={() => w.go(1)}
       help="The line decides how the cabinet is built. You'll pick the door and color next."
       n={2}
       title="Which cabinet line?"
+      w={w}
     >
       <div
         aria-label="Cabinet line"
@@ -356,6 +391,7 @@ function LineStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
           <PictureChoice
             aspect="aspect-[16/10]"
             badge={`from ${dollars(fromPriceFor(l.id))}`}
+            bigLabel
             key={l.id}
             label={l.label}
             note={l.tagline}
@@ -367,26 +403,16 @@ function LineStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
         ))}
       </div>
       {w.line && variants.length > 0 ? (
-        <div className="mt-6 motion-safe:duration-300 motion-safe:animate-in motion-safe:fade-in">
-          <p className="mb-2 text-sm font-semibold">
+        <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 motion-safe:duration-300 motion-safe:animate-in motion-safe:fade-in">
+          <p className="text-sm font-semibold" id="estimator-variant-label">
             {w.line.id === 'star' ? 'How should it arrive?' : 'Which Euro?'}
           </p>
-          <div
-            aria-label={w.line.id === 'star' ? 'How should it arrive' : 'Which Euro'}
-            className="flex flex-wrap gap-2"
-            role="radiogroup"
-          >
-            {variants.map((v) => (
-              <Pill
-                key={v.program}
-                note={v.note}
-                on={w.program === v.program}
-                onPick={() => w.pickProgram(v.program)}
-              >
-                {v.label}
-              </Pill>
-            ))}
-          </div>
+          <Segmented
+            labelledBy="estimator-variant-label"
+            onPick={w.pickProgram}
+            options={variants.map((v) => ({ value: v.program, label: v.label, note: v.note }))}
+            value={w.program}
+          />
         </div>
       ) : null}
     </Panel>
@@ -398,7 +424,7 @@ function DoorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
   const doors = w.line ? doorsFor(w.line.id, w.program) : [];
 
   return (
-    <Panel back={() => w.go(2)} n={3} title="Which door style?">
+    <Panel n={3} title="Which door style?" w={w}>
       <div
         aria-label="Door style"
         className="grid grid-cols-3 gap-3 @xl:grid-cols-4 @3xl:grid-cols-6 @3xl:gap-4"
@@ -428,7 +454,6 @@ function ColorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
 
   return (
     <Panel
-      back={() => w.go(3)}
       help={
         premium
           ? 'Standard colors share one price; the three premium colors cost a little more.'
@@ -436,6 +461,7 @@ function ColorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
       }
       n={4}
       title={`Which color for ${w.door ?? 'the door'}?`}
+      w={w}
     >
       <div aria-label="Color" className="flex flex-wrap gap-x-5 gap-y-6" role="radiogroup">
         {w.colors.map((c) => (
@@ -454,7 +480,7 @@ function ColorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
 }
 
 // A picture to pick: the image on top, the name (and an optional tooltip) beneath. Chosen =
-// red ring and a red check.
+// red outline, a red check and the kitchen-card shadow.
 function PictureChoice({
   label,
   picture,
@@ -465,6 +491,7 @@ function PictureChoice({
   info,
   badge,
   compact = false,
+  bigLabel = false,
   on,
   onPick,
 }: {
@@ -477,6 +504,7 @@ function PictureChoice({
   info?: string;
   badge?: string;
   compact?: boolean;
+  bigLabel?: boolean;
   on: boolean;
   onPick: () => void;
 }) {
@@ -488,8 +516,10 @@ function PictureChoice({
           'group flex w-full flex-col overflow-hidden rounded-2xl border bg-white text-left transition-[border-color,box-shadow]',
           RING,
           on
-            ? 'border-[var(--button-primary-background,#d90716)] shadow-[0_0_0_1px_var(--button-primary-background,#d90716)]'
-            : 'border-contrast-200 hover:border-[#fcb6bb]',
+            ? clsx(
+                'border-[var(--button-primary-background,#d90716)] shadow-[0_0_0_1px_var(--button-primary-background,#d90716),0_24px_48px_-28px_rgb(0_0_0/0.3)]',
+              )
+            : 'border-contrast-200 hover:border-[#fcb6bb] hover:shadow-[0_18px_36px_-28px_rgb(0_0_0/0.3)]',
         )}
         onClick={onPick}
         role="radio"
@@ -517,14 +547,16 @@ function PictureChoice({
               on ? 'opacity-100' : 'opacity-0',
             )}
           >
-            {on ? <Check size={13} strokeWidth={3} /> : null}
+            <Check size={13} strokeWidth={3} />
           </span>
         </span>
         <span className={clsx('block w-full', compact ? 'px-2 py-2 text-center' : 'px-4 py-3')}>
           <span
             className={clsx(
               'block font-heading font-bold leading-tight',
-              compact ? 'text-sm' : 'text-base',
+              compact && 'text-sm',
+              !compact && !bigLabel && 'text-base',
+              bigLabel && clsx('text-xl @xl:text-2xl', RED),
               info && 'pr-6',
             )}
           >
@@ -565,45 +597,60 @@ function PictureChoice({
   );
 }
 
-function Pill({
-  on,
+// A toggle between a few options (Assembled / Ready to assemble; the Euro tiers): one white
+// track, the chosen option a red pill.
+function Segmented({
+  options,
+  value,
   onPick,
-  note,
-  children,
+  labelledBy,
 }: {
-  on: boolean;
-  onPick: () => void;
-  note?: string;
-  children: ReactNode;
+  options: Array<{ value: string; label: string; note?: string }>;
+  value?: string;
+  onPick: (value: string) => void;
+  labelledBy: string;
 }) {
   return (
-    <button
-      aria-checked={on}
-      className={clsx(
-        'inline-flex min-h-11 items-center gap-2 rounded-full border px-5 py-2 text-sm font-semibold transition-colors',
-        RING,
-        on
-          ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white'
-          : 'border-contrast-200 bg-white text-foreground hover:border-[#fcb6bb] hover:bg-[#fdf3f5]',
-      )}
-      onClick={onPick}
-      role="radio"
-      type="button"
+    <div
+      aria-labelledby={labelledBy}
+      className="inline-flex flex-wrap gap-1 rounded-full border border-contrast-200 bg-white p-1"
+      role="radiogroup"
     >
-      {children}
-      {note ? (
-        <span
-          className={clsx(
-            'rounded-full px-1.5 py-px text-[10px] font-semibold uppercase tracking-wide',
-            on
-              ? 'bg-white text-[var(--button-primary-background,#d90716)]'
-              : 'bg-[#F6EBD6] text-foreground',
-          )}
-        >
-          {note}
-        </span>
-      ) : null}
-    </button>
+      {options.map((o) => {
+        const on = o.value === value;
+
+        return (
+          <button
+            aria-checked={on}
+            className={clsx(
+              'inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors',
+              RING,
+              on
+                ? 'bg-[var(--button-primary-background,#d90716)] text-white shadow-sm'
+                : 'text-foreground hover:bg-[#fdf3f5]',
+            )}
+            key={o.value}
+            onClick={() => onPick(o.value)}
+            role="radio"
+            type="button"
+          >
+            {o.label}
+            {o.note ? (
+              <span
+                className={clsx(
+                  'hidden rounded-full px-1.5 py-px text-[10px] font-semibold uppercase tracking-wide @xl:inline',
+                  on
+                    ? 'bg-white text-[var(--button-primary-background,#d90716)]'
+                    : 'bg-[#F6EBD6] text-foreground',
+                )}
+              >
+                {o.note}
+              </span>
+            ) : null}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -642,10 +689,10 @@ function Swatch({
     >
       <span
         className={clsx(
-          'flex size-20 items-center justify-center rounded-full border border-black/10 shadow-inner transition-[transform,box-shadow]',
+          'flex size-20 items-center justify-center rounded-full border border-black/10 transition-[transform,box-shadow]',
           on
-            ? 'scale-105 shadow-[0_0_0_3px_white,0_0_0_5px_var(--button-primary-background,#d90716)]'
-            : 'group-hover:scale-105',
+            ? 'scale-105 shadow-[0_0_0_3px_white,0_0_0_5px_var(--button-primary-background,#d90716),0_24px_48px_-28px_rgb(0_0_0/0.5)]'
+            : 'shadow-inner group-hover:scale-105',
         )}
         style={{ backgroundColor: hex ?? '#e5e5e5' }}
       >
@@ -692,7 +739,7 @@ function ResultStep({
   if (!w.estimate || !shape) return null;
 
   return (
-    <section aria-labelledby="estimator-result">
+    <section aria-labelledby="estimator-result" className="flex flex-1 flex-col">
       <p className={clsx('text-xs font-semibold uppercase tracking-wide', RED)}>Your 10×10 price</p>
       <h2
         className="mt-1 font-heading text-2xl font-bold leading-tight @xl:text-3xl"
@@ -700,7 +747,12 @@ function ResultStep({
       >
         Here’s what that kitchen costs
       </h2>
-      <div className="mt-6 overflow-hidden rounded-3xl border border-contrast-100 bg-white shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]">
+      <div
+        className={clsx(
+          'mt-6 overflow-hidden rounded-3xl border border-contrast-100 bg-white',
+          CARD_SHADOW,
+        )}
+      >
         <div className="grid @3xl:grid-cols-[1.1fr_1fr]">
           <div className="relative aspect-[4/3] bg-[#f9fafd] @3xl:aspect-auto @3xl:min-h-[26rem]">
             <Image
@@ -756,10 +808,21 @@ function ResultStep({
           </div>
         </div>
       </div>
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-        <p className="max-w-3xl text-[11px] leading-relaxed text-contrast-400">
-          {TEN_BY_TEN_FINE_PRINT}
-        </p>
+      <p className="mt-5 max-w-3xl text-[11px] leading-relaxed text-contrast-500">
+        {TEN_BY_TEN_FINE_PRINT}
+      </p>
+      <div className="mt-auto flex items-center justify-between gap-4 pt-8">
+        <Button
+          className={OUTLINE_BUTTON}
+          onClick={w.back}
+          shape="pill"
+          size="small"
+          type="button"
+          variant="ghost"
+        >
+          <ArrowLeft size={16} strokeWidth={2.5} />
+          Back
+        </Button>
         <button
           className={clsx(
             'inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-contrast-500 hover:text-foreground',
@@ -808,8 +871,8 @@ function PickRow({
   );
 }
 
-// The price, counting up to the figure; per foot and the monthly payment beneath; then the one
-// next step.
+// The price, counting up to the figure; per foot and the monthly payment beneath; the financing
+// note in a green band; then the one next step.
 function Result({
   estimate,
   designHref,
@@ -846,8 +909,9 @@ function Result({
           </dd>
         </div>
       </dl>
-      <p className="mt-2 text-[11px] text-contrast-500">
-        GreenSky at {estimate.apr}% APR for {estimate.months} months, in showrooms only.
+      <p className="mt-3 flex items-center gap-2.5 rounded-2xl bg-[#e4f3e8] px-4 py-2.5 text-xs font-medium text-[#1f4d2b]">
+        <HandCoins aria-hidden className="shrink-0" size={18} strokeWidth={2} />
+        GreenSky financing at {estimate.apr}% APR for {estimate.months} months, in showrooms only.
       </p>
       <div className="mt-5 flex flex-col gap-2 @md:flex-row @md:items-center">
         <ButtonLink
