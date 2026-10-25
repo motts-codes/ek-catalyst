@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
+import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { GlossaryExplorer } from '@/vibes/soul/sections/glossary-explorer';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { LinkCards, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { EXPLAINER_V2_HREF } from '~/lib/cabinets/explainer-v2-content';
 import { ESTIMATOR_HREF } from '~/lib/home/home-content';
 import { CABINET_GLOSSARY, CABINET_GLOSSARY_HREF } from '~/lib/pages/cabinet-glossary';
@@ -38,29 +39,42 @@ export default async function CabinetGlossary({ params }: { params: Promise<{ lo
       <HomeSection tightTop>
         <GlossaryExplorer groups={CABINET_GLOSSARY} />
       </HomeSection>
-      <LinkCards
+      <CardsRow
         cards={[
           {
             title: 'What are RTA cabinets?',
             description:
               'The flat-pack option: what arrives, how long it takes to build, what you save.',
+            ctaLabel: 'Read the explainer',
             href: EXPLAINER_V2_HREF.rta,
-            linkLabel: 'Read the explainer',
+            image: {
+              src: '/images/explainers/rta-box-and-cabinet-espresso.jpg',
+              alt: 'An opened flat RTA box with its espresso panels, doors and hardware, beside the same cabinet built',
+            },
           },
           {
             title: 'What are assembled cabinets?',
             description: 'Built in our factory, ready to install. Where it fits in your remodel.',
+            ctaLabel: 'Read the explainer',
             href: EXPLAINER_V2_HREF.assembled,
-            linkLabel: 'Read the explainer',
+            image: {
+              src: '/images/explainers/assembled-cabinets-espresso.jpg',
+              alt: 'A run of built espresso shaker base cabinets, with a tall pantry at one end',
+            },
           },
           {
             title: 'Price my kitchen',
             description: 'A real number for your layout in about two minutes, no quote needed.',
+            ctaLabel: 'Open the estimator',
             href: ESTIMATOR_HREF,
-            linkLabel: 'Open the estimator',
+            image: {
+              src: '/images/home/ways/estimator.webp',
+              alt: 'A couple at their kitchen island, checking a price range on a phone',
+            },
           },
         ]}
         columns={3}
+        imageStyle="plain"
         kicker="Where next"
         tint
         title="Put the words to work"
