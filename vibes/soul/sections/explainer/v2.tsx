@@ -146,6 +146,21 @@ export function TwoWays({
 }) {
   return (
     <HomeSection kicker={kicker} title={title}>
+      {/* The one-line truth and the rule of thumb sit under the heading, above the photos. */}
+      <div className="-mt-1 mb-10 @3xl:mb-12">
+        <p className="max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">{line}</p>
+        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+          {rules.map((rule) => (
+            <li
+              className="inline-flex items-center gap-2 font-heading text-base font-bold @xl:text-lg"
+              key={rule}
+            >
+              <StarCheck aria-hidden className={clsx('shrink-0', RED)} size={20} />
+              {rule}
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="grid gap-10 @2xl:grid-cols-2 @3xl:gap-14">
         {ways.map((way) => (
           <article className="flex flex-col" key={way.key}>
@@ -182,20 +197,6 @@ export function TwoWays({
             </div>
           </article>
         ))}
-      </div>
-      <div className="mt-12">
-        <p className="max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">{line}</p>
-        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-          {rules.map((rule) => (
-            <li
-              className="inline-flex items-center gap-2 font-heading text-base font-bold @xl:text-lg"
-              key={rule}
-            >
-              <StarCheck aria-hidden className={clsx('shrink-0', RED)} size={20} />
-              {rule}
-            </li>
-          ))}
-        </ul>
       </div>
     </HomeSection>
   );

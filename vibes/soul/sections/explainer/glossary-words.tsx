@@ -57,10 +57,10 @@ export function GlossaryWords({
                 <button
                   aria-selected={on}
                   className={clsx(
-                    'rounded-full px-3 py-1 font-heading text-sm font-semibold transition-colors duration-300',
+                    'rounded-full border px-3 py-1 font-heading text-sm font-semibold transition-colors duration-300',
                     on
-                      ? 'bg-[var(--button-primary-background,#d90716)] text-white'
-                      : 'text-foreground/70 hover:text-foreground',
+                      ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white'
+                      : 'border-white text-foreground/80 hover:bg-white/50 hover:text-foreground',
                   )}
                   onClick={() => {
                     setActive(index);
