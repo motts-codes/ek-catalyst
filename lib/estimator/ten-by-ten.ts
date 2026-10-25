@@ -263,7 +263,7 @@ export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   {
     label: 'Three base cabinets (12", 15" and 18")',
     image: cabinetPhoto(
-      'base-cabinets',
+      'base-cabinets-trio',
       'The 12, 15 and 18-inch base cabinets, each with a drawer over a door',
     ),
   },

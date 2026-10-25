@@ -82,7 +82,7 @@ export function WhatsInside({ items, title }: { items: TenByTenCabinet[]; title:
           })}
         </ul>
       </div>
-      <div className="relative mx-auto aspect-square w-full max-w-md">
+      <div className="relative mx-auto aspect-square w-full max-w-md @3xl:mx-0">
         {items.map((item, i) => (
           <Image
             alt={item.image.alt}
