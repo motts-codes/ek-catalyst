@@ -1,15 +1,22 @@
 import { clsx } from 'clsx';
-import { CircleCheck, CircleX } from 'lucide-react';
+import {
+  CircleCheck,
+  CircleX,
+  ClipboardCheck,
+  LayoutGrid,
+  type LucideIcon,
+  Ruler,
+} from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CabinetMap } from '@/vibes/soul/sections/cabinet-map';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { DeliveryLadder, MinimalTable } from '@/vibes/soul/sections/delivery-ladder';
+import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { Image } from '~/components/image';
 import { SHOWROOMS } from '~/lib/home/home-content';
 import {
   TEN_BY_TEN_CLOSING,
@@ -19,6 +26,8 @@ import {
   TEN_BY_TEN_HOW,
   TEN_BY_TEN_LINES,
   TEN_BY_TEN_LIST,
+  TEN_BY_TEN_MAP_IMAGES,
+  TEN_BY_TEN_MAP_ITEMS,
   TEN_BY_TEN_META,
   TEN_BY_TEN_PAGE_HREF,
 } from '~/lib/pages/ten-by-ten-kitchen';
@@ -26,9 +35,14 @@ import {
 export const metadata: Metadata = TEN_BY_TEN_META;
 
 const RED = 'text-[var(--button-primary-background,#d90716)]';
-// The site's outline button: thin black outline, solid black on hover.
-const OUTLINE_BUTTON =
-  'transition-colors [--button-ghost-background:white] [--button-ghost-background-hover:hsl(var(--foreground))] [--button-ghost-border:hsl(var(--foreground))] hover:[--button-ghost-text:white]';
+// The site's outline button on red: white outline, filling white with red text on hover.
+const RED_OUTLINE_BUTTON =
+  'transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:white] [--button-ghost-text:white] hover:[--button-ghost-text:var(--button-primary-background,#d90716)]';
+const HOW_ICONS: Record<(typeof TEN_BY_TEN_HOW.steps)[number]['icon'], LucideIcon> = {
+  compare: LayoutGrid,
+  scale: Ruler,
+  quote: ClipboardCheck,
+};
 
 // What a 10×10 kitchen is: the 13 cabinets (from the estimator's data), what the price covers,
 // how to scale it to your room, the lines priced from the workbook, FAQ, then the estimator.
@@ -62,30 +76,7 @@ export default async function TenByTen({ params }: { params: Promise<{ locale: s
         kicker={TEN_BY_TEN_LIST.kicker}
         title={TEN_BY_TEN_LIST.title}
       >
-        <div className="grid items-center gap-10 @3xl:grid-cols-2 @3xl:gap-14">
-          <MinimalTable
-            columns={TEN_BY_TEN_LIST.columns}
-            fit
-            inline
-            narrow
-            rows={TEN_BY_TEN_LIST.rows}
-            widths={['w-[76%]', 'w-[12%]']}
-          />
-          <figure>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-white">
-              <Image
-                alt={TEN_BY_TEN_HERO.image.alt}
-                className="object-contain"
-                fill
-                sizes="(min-width: 56rem) 40rem, 100vw"
-                src={TEN_BY_TEN_HERO.image.src}
-              />
-            </div>
-            <figcaption className="mt-3 text-center text-xs text-contrast-500">
-              {TEN_BY_TEN_LIST.renderLabel}
-            </figcaption>
-          </figure>
-        </div>
+        <CabinetMap images={TEN_BY_TEN_MAP_IMAGES} items={TEN_BY_TEN_MAP_ITEMS} />
       </HomeSection>
 
       <HomeSection title={TEN_BY_TEN_COVERS.title}>
@@ -121,37 +112,45 @@ export default async function TenByTen({ params }: { params: Promise<{ locale: s
         </div>
       </HomeSection>
 
-      <HomeSection tint title={TEN_BY_TEN_HOW.title}>
-        <ol className="grid gap-8 @3xl:grid-cols-3 @3xl:gap-12">
-          {TEN_BY_TEN_HOW.steps.map((step, index) => (
-            <li className="flex items-start gap-3" key={step.title}>
-              <span className={clsx('font-heading text-sm font-bold leading-6', RED)}>
-                0{index + 1}
-              </span>
-              <div>
-                <h3 className="font-heading text-lg font-bold leading-tight">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-contrast-500">{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-        <p className="mt-10 max-w-3xl rounded-2xl border-l-4 border-[var(--button-primary-background,#d90716)] bg-white px-5 py-4 text-sm leading-relaxed text-foreground">
-          <span className="font-semibold">For example: </span>
-          {TEN_BY_TEN_HOW.example}
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          {TEN_BY_TEN_HOW.actions.map((action) => (
-            <ButtonLink
-              className={action.primary ? undefined : OUTLINE_BUTTON}
-              href={action.href}
-              key={action.label}
-              shape="pill"
-              size="small"
-              variant={action.primary ? 'primary' : 'ghost'}
-            >
-              {action.label}
-            </ButtonLink>
-          ))}
+      <HomeSection>
+        <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @3xl:px-14 @3xl:py-14">
+          <h2 className="font-heading text-2xl font-bold leading-tight @xl:text-3xl">
+            {TEN_BY_TEN_HOW.title}
+          </h2>
+          <ol className="mt-8 grid gap-8 @3xl:grid-cols-3 @3xl:gap-12">
+            {TEN_BY_TEN_HOW.steps.map((step) => {
+              const Icon = HOW_ICONS[step.icon];
+
+              return (
+                <li key={step.title}>
+                  <span className="flex size-12 items-center justify-center rounded-full bg-white/15">
+                    <Icon aria-hidden size={24} strokeWidth={2} />
+                  </span>
+                  <h3 className="mt-4 font-heading text-lg font-bold leading-tight">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white">{step.body}</p>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="mt-8 flex flex-wrap gap-3">
+            {TEN_BY_TEN_HOW.actions.map((action) => (
+              <ButtonLink
+                className={action.primary ? undefined : RED_OUTLINE_BUTTON}
+                href={action.href}
+                key={action.label}
+                shape="pill"
+                size="small"
+                variant={action.primary ? 'secondary' : 'ghost'}
+              >
+                {action.label}
+              </ButtonLink>
+            ))}
+          </div>
+          <p className="mt-8 max-w-3xl text-xs leading-relaxed text-white">
+            {TEN_BY_TEN_HOW.footnote}
+          </p>
         </div>
       </HomeSection>
 

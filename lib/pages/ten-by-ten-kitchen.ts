@@ -1,4 +1,5 @@
-import { dollars, LINES, rowFor, TEN_BY_TEN_CABINETS } from '~/lib/estimator/ten-by-ten';
+import type { CabinetMapImage } from '@/vibes/soul/sections/cabinet-map';
+import { dollars, LINES, rowFor } from '~/lib/estimator/ten-by-ten';
 import { TEN_BY_TEN_LINEAR_FEET, TEN_BY_TEN_ROWS } from '~/lib/estimator/ten-by-ten-prices';
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF } from '~/lib/home/home-content';
 
@@ -34,14 +35,73 @@ export const TEN_BY_TEN_LIST = {
   kicker: 'What’s in it',
   title: 'The 13 cabinets in our 10×10',
   description:
-    'The same 13 cabinets, priced in every door style, so the only thing that changes is the door and the line.',
-  columns: ['#', 'Cabinet', 'Qty'],
-  rows: [
-    ...TEN_BY_TEN_CABINETS.map((c, i) => [`!${i + 1}`, c.label, String(c.qty)]),
-    ['!Total', '', `!${TEN_BY_TEN_CABINETS.reduce((n, c) => n + c.qty, 0)}`],
-  ],
-  renderLabel: 'The 10×10 kitchen as an L: two 10-foot walls, about 20 feet of cabinets',
+    'The same 13 cabinets, priced in every door style, so the only thing that changes is the door and the line. Hover a number to see the cabinet.',
 };
+
+// The numbers on the renders. Two 21" walls share the number 7, so 12 lines make 13 cabinets.
+export const TEN_BY_TEN_MAP_ITEMS = [
+  { n: 1, label: '12" base' },
+  { n: 2, label: '15" base' },
+  { n: 3, label: '18" base' },
+  { n: 4, label: '36" sink base' },
+  { n: 5, label: 'Blind corner base' },
+  { n: 6, label: '12" wall' },
+  { n: 7, label: '21" wall (two of them)' },
+  { n: 8, label: '39" wall' },
+  { n: 9, label: 'Diagonal corner wall' },
+  { n: 10, label: 'Bridge cabinet over the range hood' },
+  { n: 11, label: 'Bridge cabinet over the fridge' },
+  { n: 12, label: '3" base filler' },
+];
+
+// Marker positions, percent of each render's width and height. Approximate: the renders are
+// illustrations, not to-scale plans. Nudge here when a number sits off its cabinet.
+// Where the numbers sit on EK's two numbered renders, as percent of width and height. The single
+// wall has no corner pieces (5 and 9), so those two numbers appear on the L only.
+export const TEN_BY_TEN_MAP_IMAGES: [CabinetMapImage, CabinetMapImage] = [
+  {
+    src: '/images/estimator/l-shaped-numbered.jpg',
+    alt: 'The 10×10 kitchen as an L, each cabinet numbered',
+    label: 'As an L: two 10-foot walls, all 13 cabinets',
+    width: 2352,
+    height: 1760,
+    markers: [
+      { n: 11, x: 29.3, y: 29.7 },
+      { n: 7, x: 37.1, y: 30.7 },
+      { n: 10, x: 43.2, y: 25 },
+      { n: 6, x: 49.3, y: 26.2 },
+      { n: 9, x: 55, y: 25.2 },
+      { n: 7, x: 62.3, y: 27.9 },
+      { n: 8, x: 72.2, y: 32.8 },
+      { n: 3, x: 39.2, y: 53.1 },
+      { n: 1, x: 50, y: 49.5 },
+      { n: 5, x: 52.7, y: 44.5 },
+      { n: 12, x: 55.5, y: 49.7 },
+      { n: 4, x: 60, y: 50.1 },
+      { n: 2, x: 71.4, y: 58.2 },
+    ],
+  },
+  {
+    src: '/images/estimator/single-wall-numbered.jpg',
+    alt: 'The same cabinets along a single wall, each cabinet numbered',
+    label: 'Along a single wall: the same cabinets, no corner pieces',
+    width: 2720,
+    height: 1536,
+    markers: [
+      { n: 11, x: 15.4, y: 21.1 },
+      { n: 6, x: 30.7, y: 33.7 },
+      { n: 8, x: 46, y: 30 },
+      { n: 7, x: 62.2, y: 33.7 },
+      { n: 10, x: 74.2, y: 23.5 },
+      { n: 7, x: 86.1, y: 33.7 },
+      { n: 12, x: 25.9, y: 82.8 },
+      { n: 1, x: 31, y: 82.8 },
+      { n: 4, x: 45.9, y: 84 },
+      { n: 3, x: 62.2, y: 84 },
+      { n: 2, x: 88.5, y: 84 },
+    ],
+  },
+];
 
 export const TEN_BY_TEN_COVERS = {
   title: 'What the price covers',
@@ -67,24 +127,27 @@ export const TEN_BY_TEN_HOW = {
   title: 'How to use a 10×10 price',
   steps: [
     {
+      icon: 'compare',
       title: 'Compare styles.',
       body: 'Every door style is priced on the same 13 cabinets, so a higher 10×10 price means a pricier door or line, not more cabinets.',
     },
     {
+      icon: 'scale',
       title: 'Scale it to your room.',
-      body: `Cabinet cost follows the length of your cabinet run. Divide the 10×10 price by ${TEN_BY_TEN_LINEAR_FEET} for a price per foot, then multiply it by your own run. The estimator does this for you.`,
+      body: `Cabinet cost follows the length of your cabinet run. Divide the 10×10 price by ${TEN_BY_TEN_LINEAR_FEET} for a price per foot, then multiply it by your own run. The estimator does this for you.*`,
     },
     {
+      icon: 'quote',
       title: 'Get the real number.',
       body: 'An island, a pantry or extra trim changes the total. A designer prices your exact layout for free.',
     },
   ],
-  example: `An assembled Avon 10×10 is ${dollars(AVON_PRICE)}, or about ${dollars(AVON_PER_FOOT)} per foot. For a kitchen with ${EXAMPLE_FEET} feet of cabinets, that’s roughly ${roughly(AVON_PER_FOOT * EXAMPLE_FEET)} in cabinets.`,
+  footnote: `* An assembled Avon 10×10 is ${dollars(AVON_PRICE)}, or about ${dollars(AVON_PER_FOOT)} per foot. For a kitchen with ${EXAMPLE_FEET} feet of cabinets, that’s roughly ${roughly(AVON_PER_FOOT * EXAMPLE_FEET)} in cabinets.`,
   actions: [
     { label: 'Price my kitchen', href: ESTIMATOR_HREF, primary: true },
-    { label: 'Book a free design consult', href: FREE_DESIGN_HREF },
+    { label: 'Book a free design consult', href: FREE_DESIGN_HREF, primary: false },
   ],
-};
+} as const;
 
 // The lowest 10×10 price in a workbook program, as "$2,370"; "n/a" when the program isn't sold.
 function fromPrice(program: string): string {
