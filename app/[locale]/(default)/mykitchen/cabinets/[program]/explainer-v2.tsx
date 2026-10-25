@@ -10,8 +10,9 @@ import {
   Timeline,
   TwoWays,
 } from '@/vibes/soul/sections/explainer/v2';
+import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { type CabinetProgram } from '~/lib/cabinets/cabinet-lines-data';
-import { type ExplainerV2 } from '~/lib/cabinets/explainer-v2-content';
+import { EXPLAINER_METRICS, type ExplainerV2 } from '~/lib/cabinets/explainer-v2-content';
 import { Slot } from '~/lib/makeswift/slot';
 
 interface Props {
@@ -47,6 +48,8 @@ export function ExplainerV2Page({ program, content, avonPrices, avonImage, ships
   return (
     <>
       <Slot fallback={<ExplainerIntro {...content.hero} />} {...slot('hero')} />
+
+      <MetricsTicker metrics={EXPLAINER_METRICS} />
 
       <Slot
         fallback={<TwoWays current={program} kicker="The idea" {...content.twoWays} />}

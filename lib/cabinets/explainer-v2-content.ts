@@ -1,5 +1,6 @@
 import { type ContentBlock } from '@/vibes/soul/sections/cabinet-program-content';
 import { type ExplainerIcon } from '@/vibes/soul/sections/explainer/v2';
+import { type Metric } from '@/vibes/soul/sections/why-us-scroll';
 
 import { FREE_DESIGN_HREF } from '../home/home-content';
 
@@ -14,6 +15,15 @@ import { ASSEMBLED_BUILD_BLOCK, RTA_BUILD_BLOCK } from './program-content';
  * choose. Shopping comes last and softly. Prices in the cost table come from the live Avon
  * collection; everything else is here.
  */
+
+/** The headline figures under each explainer hero (the Why Express Kitchens ticker). */
+export const EXPLAINER_METRICS: Metric[] = [
+  { icon: 'package', value: '50,000+', label: 'Assembled cabinets, ready to ship' },
+  { icon: 'star', value: '5,000+', label: 'Happy customer reviews' },
+  { icon: 'design', value: '100K+', label: 'Kitchens designed' },
+  { icon: 'pin', value: '6', label: 'Showrooms to visit' },
+  { icon: 'shield', value: 'A+', label: 'BBB rating' },
+];
 
 export const EXPLAINER_V2_HREF = {
   assembled: '/mykitchen/cabinets/assembled',
@@ -404,6 +414,10 @@ export const RTA_EXPLAINER: ExplainerV2 = {
       'Screws, fittings and instructions, with every part labeled',
     ],
     note: 'Delivery is curbside: the driver unloads the pallet at the curb or the end of your driveway. Getting the boxes inside is up to you, unless you’ve added a delivery service, so line up a hand or two for delivery day. Flat boxes stack, so they take less room than built cabinets while they wait.',
+    image: {
+      src: '/images/explainers/rta-flatlay-espresso.jpg',
+      alt: 'An opened RTA carton laid flat: espresso shaker door and drawer front, panels, a handle, hinges, dowels and an Allen key',
+    },
     imageLabel: 'A flat-lay of one opened RTA box',
   },
   timeline: {
