@@ -60,7 +60,7 @@ export function GlossaryWords({
                     'rounded-full border px-3 py-1 font-heading text-sm font-semibold transition-colors duration-300',
                     on
                       ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white'
-                      : 'border-white text-foreground/80 hover:bg-white/50 hover:text-foreground',
+                      : 'border-[#2162a1] text-foreground/80 hover:bg-white/50 hover:text-foreground',
                   )}
                   onClick={() => {
                     setActive(index);
