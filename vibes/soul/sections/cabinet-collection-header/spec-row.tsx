@@ -51,8 +51,11 @@ export function AccordionRow({
         // `.font-heading` forces bold (!important) in globals.css; use the family directly.
         className={clsx(
           'flex w-full cursor-pointer items-center gap-2.5 py-2.5 pr-48 text-left font-[family-name:var(--font-family-heading)] text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2',
-          // Open: the title goes medium weight and brand red, so the open row reads as selected.
-          open ? 'font-medium text-[var(--button-primary-background,#d90716)]' : 'font-normal',
+          // Open: the title goes medium weight and brand red, so the open row reads as selected;
+          // closed rows turn red on hover too, so the row reads as clickable.
+          open
+            ? 'font-medium text-[var(--button-primary-background,#d90716)]'
+            : 'font-normal hover:text-[var(--button-primary-background,#d90716)]',
         )}
         onClick={() => setOpen((v) => !v)}
         type="button"
