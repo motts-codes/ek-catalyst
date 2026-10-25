@@ -1,8 +1,9 @@
 import { clsx } from 'clsx';
-import { ArrowRight, BadgeCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+import { StarCheck } from '@/vibes/soul/primitives/icons/star-check';
 import { type Breadcrumb, Breadcrumbs } from '@/vibes/soul/sections/breadcrumbs';
 import {
   homeHeadingClassName,
@@ -68,8 +69,8 @@ interface HeroProps {
   description?: string;
   /** Short facts under the paragraph ("A full layout · An itemized quote · …"). */
   chips?: string[];
-  /** 'red' shows the chips as red pills with a check badge instead of grey outlines. */
-  chipStyle?: 'outline' | 'red';
+  /** 'checks' drops the pills: a red star-check before each fact, plain text after it. */
+  chipStyle?: 'outline' | 'checks';
   actions?: PageAction[];
   image?: PageImage;
   imageLabel?: string;
@@ -123,18 +124,29 @@ export function PageHero({
             </p>
           )}
           {chips.length > 0 && (
-            <ul className="mt-5 flex flex-wrap gap-2">
+            <ul
+              className={clsx(
+                'mt-5 flex flex-wrap',
+                chipStyle === 'checks' ? 'gap-x-6 gap-y-2.5' : 'gap-2',
+              )}
+            >
               {chips.map((chip) => (
                 <li
                   className={clsx(
-                    'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs',
-                    chipStyle === 'red'
-                      ? 'bg-[var(--button-primary-background,#d90716)] font-semibold text-white'
-                      : 'border border-contrast-200 bg-white font-medium text-contrast-500',
+                    'inline-flex items-center gap-2',
+                    chipStyle === 'checks'
+                      ? 'text-sm font-medium'
+                      : 'rounded-full border border-contrast-200 bg-white px-3.5 py-1.5 text-xs font-medium text-contrast-500',
                   )}
                   key={chip}
                 >
-                  {chipStyle === 'red' && <BadgeCheck aria-hidden size={14} strokeWidth={2.25} />}
+                  {chipStyle === 'checks' && (
+                    <StarCheck
+                      aria-hidden
+                      className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+                      size={18}
+                    />
+                  )}
                   {chip}
                 </li>
               ))}
