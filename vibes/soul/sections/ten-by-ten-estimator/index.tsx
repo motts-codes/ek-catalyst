@@ -240,7 +240,7 @@ function Rail({ current, reach, go }: { current: number; reach: number; go: (n: 
               </span>
             </button>
             {index < STEPS.length - 1 ? (
-              <span className="h-0.5 min-w-4 flex-1 rounded-full bg-white">
+              <span className="h-0.5 min-w-4 flex-1 rounded-full bg-[#f5cdd2]">
                 <span
                   className={clsx(
                     'block h-full rounded-full bg-[var(--button-primary-background,#d90716)] transition-[width] duration-500',
