@@ -146,7 +146,7 @@ export function TwoWays({
     <HomeSection kicker={kicker} title={title}>
       <div className="grid gap-10 @2xl:grid-cols-2 @3xl:gap-14">
         {ways.map((way) => (
-          <article key={way.key}>
+          <article className="flex flex-col" key={way.key}>
             <div className="relative aspect-[16/9] overflow-hidden bg-contrast-100">
               {way.image ? (
                 <Image
@@ -168,9 +168,16 @@ export function TwoWays({
             >
               {way.name}
             </h3>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
+            <p className="mt-2 max-w-[30rem] text-sm leading-relaxed text-contrast-500 @xl:text-base">
               {way.summary}
             </p>
+            {/* A thin red rule closes each column; mt-auto keeps the two rules level. */}
+            <div className="mt-auto pt-6">
+              <span
+                aria-hidden
+                className="block h-px w-full bg-[var(--button-primary-background,#d90716)]"
+              />
+            </div>
           </article>
         ))}
       </div>
