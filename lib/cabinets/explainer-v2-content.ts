@@ -47,7 +47,8 @@ export interface ExplainerV2 {
       visualLabel: string;
     }>;
     line: string;
-    rule: string;
+    /** The rule of thumb, one clause per entry ("RTA saves money.", "Assembled saves time."). */
+    rules: string[];
   };
   arrives: {
     title: string;
@@ -115,7 +116,7 @@ const TWO_WAYS: ExplainerV2['twoWays'] = {
     },
   ],
   line: 'It’s the same cabinet either way. The only question is who builds it: us, or you.',
-  rule: 'RTA saves money. Assembled saves time.',
+  rules: ['RTA saves money.', 'Assembled saves time.'],
 };
 
 const GLOSSARY: ExplainerV2['glossary'] = {

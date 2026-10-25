@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { ArrowRight, Check } from 'lucide-react';
 
+import { StarCheck } from '@/vibes/soul/primitives/icons/star-check';
 import {
   homeHeadingClassName,
   HomeSection,
@@ -126,7 +127,7 @@ export function TwoWays({
   title,
   ways,
   line,
-  rule,
+  rules,
 }: {
   kicker: string;
   title: string;
@@ -139,7 +140,7 @@ export function TwoWays({
   }>;
   current: string;
   line: string;
-  rule: string;
+  rules: string[];
 }) {
   return (
     <HomeSection kicker={kicker} title={title}>
@@ -173,13 +174,19 @@ export function TwoWays({
           </article>
         ))}
       </div>
-      <div className="mt-12 text-center">
-        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
-          {line}
-        </p>
-        <p className="mt-4 inline-flex rounded-full border border-[#fcb6bb] bg-white px-5 py-2.5 font-heading text-base font-bold @xl:text-lg">
-          {rule}
-        </p>
+      <div className="mt-12">
+        <p className="max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">{line}</p>
+        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+          {rules.map((rule) => (
+            <li
+              className="inline-flex items-center gap-2 font-heading text-base font-bold @xl:text-lg"
+              key={rule}
+            >
+              <StarCheck aria-hidden className={clsx('shrink-0', RED)} size={20} />
+              {rule}
+            </li>
+          ))}
+        </ul>
       </div>
     </HomeSection>
   );
