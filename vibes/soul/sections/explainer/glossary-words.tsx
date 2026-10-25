@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Pause, Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Link } from '~/components/link';
@@ -13,9 +13,10 @@ export interface GlossaryTerm {
 
 const CYCLE_MS = 3500;
 
-// The glossary as a run of words: the active one is lit, its meaning sits beneath, and the
-// active word moves on every few seconds until someone points at or picks a word themselves.
-// People who prefer reduced motion get a still list that only changes on click.
+// The glossary as a run of words: the active one is lit red, its meaning sits beneath, and the
+// active word moves on every few seconds. Pointing at the words or picking one holds it, and the
+// pause button stops the cycling outright (WCAG 2.2.2). People who prefer reduced motion get a
+// still list that only changes on click. Drawn for a light panel: dark text, red accent.
 export function GlossaryWords({
   terms,
   link,
@@ -24,58 +25,83 @@ export function GlossaryWords({
   link?: { label: string; href: string };
 }) {
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
+  // Hovering or picking a word holds the cycle; the pause button stops it until pressed again.
+  const [held, setHeld] = useState(false);
+  const [stopped, setStopped] = useState(false);
 
   useEffect(() => {
-    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setStopped(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (held || stopped) return;
 
     const timer = window.setInterval(() => setActive((i) => (i + 1) % terms.length), CYCLE_MS);
 
     return () => window.clearInterval(timer);
-  }, [paused, terms.length]);
+  }, [held, stopped, terms.length]);
 
   const current = terms[active];
 
   return (
-    <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      <ul className="flex flex-wrap gap-x-2 gap-y-2" role="tablist">
-        {terms.map((entry, index) => {
-          const on = index === active;
+    <div onMouseEnter={() => setHeld(true)} onMouseLeave={() => setHeld(false)}>
+      <div className="flex items-start justify-between gap-4">
+        <ul className="flex flex-wrap gap-x-2 gap-y-2" role="tablist">
+          {terms.map((entry, index) => {
+            const on = index === active;
 
-          return (
-            <li key={entry.term} role="presentation">
-              <button
-                aria-selected={on}
-                className={clsx(
-                  'rounded-full px-3 py-1 font-heading text-sm font-semibold transition-colors duration-300',
-                  on
-                    ? 'bg-[var(--button-primary-background,#d90716)] text-white'
-                    : 'text-white/70 hover:text-white',
-                )}
-                onClick={() => {
-                  setActive(index);
-                  setPaused(true);
-                }}
-                onFocus={() => setActive(index)}
-                role="tab"
-                type="button"
-              >
-                {entry.term}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+            return (
+              <li key={entry.term} role="presentation">
+                <button
+                  aria-selected={on}
+                  className={clsx(
+                    'rounded-full px-3 py-1 font-heading text-sm font-semibold transition-colors duration-300',
+                    on
+                      ? 'bg-[var(--button-primary-background,#d90716)] text-white'
+                      : 'text-foreground/70 hover:text-foreground',
+                  )}
+                  onClick={() => {
+                    setActive(index);
+                    setStopped(true);
+                  }}
+                  onFocus={() => setActive(index)}
+                  role="tab"
+                  type="button"
+                >
+                  {entry.term}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <button
+          aria-label={
+            stopped ? 'Resume cycling through the words' : 'Pause cycling through the words'
+          }
+          aria-pressed={stopped}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-foreground/30 bg-white/60 text-foreground transition-colors hover:bg-white focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-foreground"
+          onClick={() => setStopped((v) => !v)}
+          type="button"
+        >
+          {stopped ? (
+            <Play aria-hidden size={14} strokeWidth={2} />
+          ) : (
+            <Pause aria-hidden size={14} strokeWidth={2} />
+          )}
+        </button>
+      </div>
       {/* A fixed-height well so the panel doesn't jump as definitions change length. */}
-      <div className="mt-6 min-h-[5.5rem]" role="tabpanel">
-        <p className="font-heading text-lg font-semibold text-white">{current?.term}</p>
-        <p className="mt-1 text-sm leading-relaxed text-white/80 @xl:text-base">
+      <div aria-live="polite" className="mt-6 min-h-[5.5rem]" role="tabpanel">
+        <p className="font-heading text-lg font-semibold text-foreground">{current?.term}</p>
+        <p className="mt-1 text-sm leading-relaxed text-[#404040] @xl:text-base">
           {current?.definition}
         </p>
       </div>
       {link && (
         <Link
-          className="group mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-white underline-offset-4 hover:underline"
+          className="group mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground underline-offset-4 hover:underline"
           href={link.href}
         >
           {link.label}
