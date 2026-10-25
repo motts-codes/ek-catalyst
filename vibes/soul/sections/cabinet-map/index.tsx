@@ -21,6 +21,8 @@ export interface CabinetMapMarker {
 export interface CabinetMapImage {
   src: string;
   alt: string;
+  /** The kitchen shape, in a red pill at the top-left ("L-Shaped", "Straight"). */
+  name: string;
   /** The picture's own proportions; the frame takes them so percent positions stay true. */
   width: number;
   height: number;
@@ -63,6 +65,9 @@ export function CabinetMap({ images, items, className }: Props) {
                 sizes="(min-width: 56rem) 40rem, 100vw"
                 src={image.src}
               />
+              <span className="absolute left-3 top-3 z-10 rounded-full bg-[var(--button-primary-background,#d90716)] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm">
+                {image.name}
+              </span>
               {image.markers.map((marker, index) => {
                 const on = active === marker.n;
 
@@ -72,7 +77,7 @@ export function CabinetMap({ images, items, className }: Props) {
                   <span
                     aria-hidden
                     className={clsx(
-                      'absolute flex size-[4.5%] min-h-6 min-w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-shadow',
+                      'absolute flex aspect-square w-[4.5%] min-w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-shadow',
                       on &&
                         'z-10 shadow-[0_0_0_3px_white,0_0_0_5px_var(--button-primary-background,#d90716)]',
                     )}
@@ -97,7 +102,7 @@ export function CabinetMap({ images, items, className }: Props) {
       <ol className="grid border-t border-contrast-100 @xl:grid-cols-2">
         {items.map((item, index) => {
           const on = active === item.n;
-          const rightColumn = index >= Math.ceil(items.length / 2);
+          const rightColumn = index % 2 === 1;
 
           return (
             <li
