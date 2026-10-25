@@ -262,10 +262,7 @@ const cabinetPhoto = (file: string, alt: string) => ({
 export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   {
     label: 'Three base cabinets (12", 15" and 18")',
-    image: cabinetPhoto(
-      'base-trio',
-      'The 12, 15 and 18-inch base cabinets, each with a drawer over a door',
-    ),
+    image: cabinetPhoto('base-cabinets', 'Base cabinets, each with a drawer over a door'),
   },
   {
     label: 'A 36" sink base',
@@ -283,7 +280,7 @@ export const TEN_BY_TEN_CABINETS: TenByTenCabinet[] = [
   },
   {
     label: 'Four wall cabinets (12", 21" × 2, 39")',
-    image: cabinetPhoto('wall-39', 'A 39-inch wall cabinet with two doors'),
+    image: cabinetPhoto('wall-cabinets', 'The 39-inch, 12-inch and two 21-inch wall cabinets'),
   },
   {
     label: 'A diagonal corner wall cabinet',
