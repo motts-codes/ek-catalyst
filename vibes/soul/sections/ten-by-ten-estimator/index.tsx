@@ -27,6 +27,8 @@ import {
 } from '~/lib/estimator/ten-by-ten';
 import { doorKey, type EstimatorVisuals, type Picture } from '~/lib/estimator/ten-by-ten-visuals';
 
+import { fireConfetti } from './confetti';
+
 interface Props {
   /** Where "Book a free design" goes. */
   designHref: string;
@@ -828,6 +830,9 @@ function ResultStep({
   const build = w.line?.variants.find((v) => v.program === w.program)?.label;
   const door = w.line && w.door ? visuals.doors[doorKey(w.line.id, w.door)] : undefined;
   const hex = w.color ? visuals.colors[w.color]?.hex : undefined;
+
+  // A little celebration the moment the price lands.
+  useEffect(() => fireConfetti(), []);
 
   if (!w.estimate || !shape) return null;
 
