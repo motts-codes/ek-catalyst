@@ -369,12 +369,12 @@ const menu: MenuItem[] = [
         links: [
           {
             label: 'Kitchen Estimator',
-            href: '/mykitchen/calculator',
+            href: '/mykitchen/price-my-kitchen',
             image: nav('kitchen-estimator', 'The estimator on a phone'),
           },
           {
             label: 'Kitchen Visualizer',
-            href: '/mykitchen/visualizer',
+            href: '/mykitchen/visualize-my-kitchen',
             image: nav('kitchen-visualizer', 'A kitchen on a tablet with colour swatches'),
           },
           {
@@ -441,8 +441,8 @@ const menu: MenuItem[] = [
 
 /** The persistent header CTA differs per audience (label only; both share the brand-blue style). */
 export const AUDIENCE_CTA: Record<AudienceMode, { label: string; href: string }> = {
-  homeowner: { label: 'Free Design Consult', href: '/free-design' },
-  pro: { label: 'Free Design & Quote', href: '/free-design' },
+  homeowner: { label: 'Free Design Consult', href: '/mykitchen/plan-my-kitchen' },
+  pro: { label: 'Free Design & Quote', href: '/mykitchen/plan-my-kitchen' },
 };
 
 // The menu for one audience: the shared tree with audience-tagged links filtered to `mode`

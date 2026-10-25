@@ -23,7 +23,7 @@ export default async function Visualizer({ params }: { params: Promise<{ locale:
       <PageBreadcrumbs
         breadcrumbs={[
           { label: 'Explore', href: '/mykitchen' },
-          { label: 'Visualizer', href: '/mykitchen/visualizer' },
+          { label: 'Visualizer', href: '/mykitchen/visualize-my-kitchen' },
         ]}
       />
       <PageHero

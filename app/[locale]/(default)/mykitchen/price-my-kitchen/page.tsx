@@ -43,7 +43,7 @@ export default async function Calculator({ params }: { params: Promise<{ locale:
       <PageBreadcrumbs
         breadcrumbs={[
           { label: 'Explore', href: '/mykitchen' },
-          { label: 'Estimator', href: '/mykitchen/calculator' },
+          { label: 'Estimator', href: '/mykitchen/price-my-kitchen' },
         ]}
       />
       <PageHero

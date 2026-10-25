@@ -12,9 +12,9 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 import { type Showroom } from '@/vibes/soul/sections/showroom-band';
 
-export const FREE_DESIGN_HREF = '/free-design';
+export const FREE_DESIGN_HREF = '/mykitchen/plan-my-kitchen';
 export const SAMPLES_HREF = '/samples';
-export const ESTIMATOR_HREF = '/mykitchen/calculator';
+export const ESTIMATOR_HREF = '/mykitchen/price-my-kitchen';
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
@@ -223,7 +223,7 @@ export const THREE_WAYS: RowCard[] = [
     description:
       'Try door styles and colours on a kitchen like yours, and swap them until it looks right.',
     ctaLabel: 'Visualize my kitchen',
-    href: '/mykitchen/visualizer',
+    href: '/mykitchen/visualize-my-kitchen',
     image: {
       src: '/images/home/ways/visualizer.webp',
       alt: 'A homeowner holding a tablet up to her kitchen, trying sage-green doors on it',

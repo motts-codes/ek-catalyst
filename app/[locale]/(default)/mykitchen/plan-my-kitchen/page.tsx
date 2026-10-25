@@ -134,7 +134,10 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: pro ? 'Free design & quote' : 'Free design consult', href: '/free-design' },
+          {
+            label: pro ? 'Free design & quote' : 'Free design consult',
+            href: '/mykitchen/plan-my-kitchen',
+          },
         ]}
       />
       <PageHero

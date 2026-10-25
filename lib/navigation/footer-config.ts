@@ -39,8 +39,8 @@ export const FOOTER_SECTIONS: Section[] = [
   {
     title: 'Resources',
     links: [
-      { label: 'Free design consult', href: '/free-design' },
-      { label: 'Kitchen estimator', href: '/mykitchen/calculator' },
+      { label: 'Free design consult', href: '/mykitchen/plan-my-kitchen' },
+      { label: 'Kitchen estimator', href: '/mykitchen/price-my-kitchen' },
       { label: 'Blog', href: '/blog' },
       { label: 'Order samples', href: '/samples' },
       { label: 'Financing', href: '/financing' },

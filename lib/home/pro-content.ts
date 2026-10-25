@@ -236,7 +236,9 @@ export const DESIGN_BAND = {
   title: 'We design, you win the job',
   description:
     'Send us your homeowner. We do the layout, the renderings and the itemized quote for free — under your name if you want. You close the job, we supply it.',
-  actions: [{ label: 'Book a design for your client', href: '/free-design', primary: true }],
+  actions: [
+    { label: 'Book a design for your client', href: '/mykitchen/plan-my-kitchen', primary: true },
+  ],
   imageLabel: "A rendering with the contractor's name on the title block",
 };
 

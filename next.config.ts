@@ -102,6 +102,23 @@ export default async (): Promise<NextConfig> => {
           // permanent: true (308) at launch so search engines pass link equity.
           permanent: false,
         },
+        // The three "my kitchen" tools live together under /mykitchen (Oct 2026).
+        { source: '/free-design', destination: '/mykitchen/plan-my-kitchen', permanent: true },
+        {
+          source: '/free-design/confirmed',
+          destination: '/mykitchen/plan-my-kitchen/confirmed',
+          permanent: true,
+        },
+        {
+          source: '/mykitchen/calculator',
+          destination: '/mykitchen/price-my-kitchen',
+          permanent: true,
+        },
+        {
+          source: '/mykitchen/visualizer',
+          destination: '/mykitchen/visualize-my-kitchen',
+          permanent: true,
+        },
         // The program explainers moved to question-shaped URLs (Oct 2026).
         {
           source: '/mykitchen/cabinets/rta',

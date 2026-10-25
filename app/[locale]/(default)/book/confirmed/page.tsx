@@ -51,7 +51,7 @@ export default async function BookConfirmed({ params }: { params: Promise<{ loca
             title: 'Get a rough number',
             description:
               'Two minutes with the estimator and you’ll know what range to expect before you sit down.',
-            href: '/mykitchen/calculator',
+            href: '/mykitchen/price-my-kitchen',
             linkLabel: 'Price my kitchen',
           },
         ]}
