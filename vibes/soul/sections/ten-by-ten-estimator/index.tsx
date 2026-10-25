@@ -517,15 +517,13 @@ function PictureChoice({
         role="radio"
         type="button"
       >
-        <span
-          className={clsx('relative block w-full bg-[#f6f6f8]', aspect, fit === 'contain' && inset)}
-        >
+        <span className={clsx('relative block w-full bg-[#f6f6f8]', aspect)}>
           {picture ? (
             <Image
               alt=""
               className={clsx(
                 'transition-transform duration-500 group-hover:scale-[1.03]',
-                fit === 'contain' ? 'object-contain' : 'object-cover',
+                fit === 'contain' ? clsx('object-contain', inset) : 'object-cover',
               )}
               fill
               sizes={sizes}
