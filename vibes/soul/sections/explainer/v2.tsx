@@ -380,7 +380,7 @@ export function MoneyOrTime({
 }
 
 // 7 + 8 · A full-width band split in two: who it suits (brand red, ticked bullets) and the
-// glossary (the collection pages' light blue, a run of words whose meaning shows beneath and
+// glossary (a light tint of the collection pages' blue, a run of words whose meaning shows beneath and
 // cycles). The id anchors the
 // 10×10 link.
 export function SuitsAndGlossary({
@@ -433,7 +433,7 @@ export function SuitsAndGlossary({
             </Link>
           </p>
         </section>
-        <section className="bg-[#C0EDF6] px-6 py-12 text-foreground @xl:px-9 @3xl:py-16 @4xl:pl-14 @4xl:pr-[max(3.5rem,calc((100cqw-96rem)/2+3.5rem))]">
+        <section className="bg-[#C0EDF6]/40 px-6 py-12 text-foreground @xl:px-9 @3xl:py-16 @4xl:pl-14 @4xl:pr-[max(3.5rem,calc((100cqw-96rem)/2+3.5rem))]">
           <p className={EYEBROW}>{glossary.kicker}</p>
           <h2 className={homeHeadingClassName}>{glossary.title}</h2>
           <div className="mt-6">
