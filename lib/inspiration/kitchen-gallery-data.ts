@@ -23,8 +23,8 @@ function kitchenPhoto(line: CabinetLine): string | undefined {
   return line.containCover ? line.hoverImage?.src : line.image?.src;
 }
 
-/** Prism shows the same kitchen in ten colours; one per collection keeps the wall varied. */
-const FINISHES_PER_COLLECTION = 1;
+/** Prism shows the same kitchen in ten colours; a few per collection keeps the wall varied. */
+const FINISHES_PER_COLLECTION = 3;
 
 // Every kitchen photo worth showing: one per collection, a couple per finish for the per-finish
 // (Prism) collections, with photos shared between collections (Euro Max and Euro Value use the
@@ -41,7 +41,10 @@ function allKitchens(lines: CabinetLine[]): GalleryKitchen[] {
       deliveryTime: line.deliveryTime,
       href: line.href,
     };
-    const perFinish = Object.entries(line.finishKitchens ?? {}).slice(0, FINISHES_PER_COLLECTION);
+    const finishes = Object.entries(line.finishKitchens ?? {});
+    const step = Math.max(1, Math.floor(finishes.length / FINISHES_PER_COLLECTION));
+    // Spaced through the list, so the chosen colours differ (a white, a mid-tone, a dark).
+    const perFinish = finishes.filter((_f, i) => i % step === 0).slice(0, FINISHES_PER_COLLECTION);
 
     if (perFinish.length > 0) {
       return perFinish.map(([finish, photo]) => ({
