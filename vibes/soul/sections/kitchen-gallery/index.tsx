@@ -108,8 +108,10 @@ export function KitchenGallery({ kitchens, screens = 6, className }: Props) {
     return () => context.revert();
   }, [still, columns, kitchens.length]);
 
+  // Each column takes a run of the list, so the Star-first weave holds within every column.
+  const perColumn = Math.ceil(kitchens.length / columns);
   const byColumn = Array.from({ length: columns }, (_, c) =>
-    kitchens.filter((_kitchen, i) => i % columns === c),
+    kitchens.slice(c * perColumn, (c + 1) * perColumn),
   );
 
   return (
@@ -220,7 +222,7 @@ function Details({ kitchen, onClose }: { kitchen: GalleryKitchen | null; onClose
 
   return (
     <Modal
-      className="w-full max-w-4xl"
+      className="w-full max-w-5xl [&>div>div:last-child]:!m-0 [&>div>div:last-child]:!p-0"
       hideHeader
       isOpen={kitchen !== null}
       setOpen={(isOpen) => {
@@ -229,8 +231,8 @@ function Details({ kitchen, onClose }: { kitchen: GalleryKitchen | null; onClose
       title={kitchen ? `${kitchen.name} kitchen` : 'Kitchen'}
     >
       {kitchen ? (
-        <div className="grid gap-6 @3xl:grid-cols-[1.2fr_1fr] @3xl:gap-8">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#efeee6]">
+        <div className="grid @3xl:grid-cols-2">
+          <div className="relative aspect-[4/3] bg-[#f3f2ee] @3xl:aspect-auto @3xl:min-h-[30rem]">
             <Image
               alt={kitchen.image.alt}
               className="object-cover"
@@ -240,7 +242,7 @@ function Details({ kitchen, onClose }: { kitchen: GalleryKitchen | null; onClose
               unoptimized={kitchen.image.src.startsWith('http')}
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col p-7 @xl:p-9 @3xl:p-12">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
               Best seller
             </p>
