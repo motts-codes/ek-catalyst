@@ -19,8 +19,9 @@ interface Props {
   className?: string;
 }
 
-// Each column drifts at its own pace; the page's scroll drives them all.
-const SPEEDS = [1, 1.6, 0.75, 1.3];
+// Every column travels the same distance, but each eases to its target over a different
+// duration (the reference's 0.5 / 0.8 / 0.6 / 0.2s, power3), so the slow ones trail and catch up.
+const DURATIONS = [0.5, 0.8, 0.6, 0.2];
 const COLUMNS = { base: 2, md: 3, lg: 4 };
 // Tile heights vary so the wall reads as a gallery, not a grid; adjacent columns start at
 // different points in the cycle.
@@ -34,10 +35,10 @@ function columnCount(width: number): number {
   return COLUMNS.base;
 }
 
-// A wall of kitchen photos, cream tiles on black, in columns that scroll at different speeds and
-// loop without end while the section is pinned. Click a kitchen for its details (no prices) and a
+// A wall of kitchen photos on white, in columns that follow the page's scroll with different
+// lags and loop without end while the section is pinned. Click a kitchen for its details (no prices) and a
 // way into the collection. With reduced motion, or no JavaScript, it's a plain grid.
-export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
+export function KitchenGallery({ kitchens, screens = 5, className }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<GalleryKitchen | null>(null);
   const [columns, setColumns] = useState(COLUMNS.lg);
@@ -67,20 +68,35 @@ export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
 
     const cols = Array.from(container.querySelectorAll<HTMLElement>('[data-gallery-col]'));
     const context = gsap.context(() => {
+      // Each column follows the same target with its own duration and ease; its position wraps
+      // at half the column's height (every column holds its photos twice), so the loop never ends.
+      const followers = cols.map((col, index) => {
+        const state = { travel: 0 };
+        const place = () => {
+          gsap.set(col, { y: gsap.utils.wrap(-col.scrollHeight / 2, 0, state.travel) });
+        };
+
+        return (travel: number) => {
+          gsap.to(state, {
+            travel,
+            duration: DURATIONS[index % DURATIONS.length] ?? 0.5,
+            ease: 'power3',
+            overwrite: true,
+            onUpdate: place,
+          });
+        };
+      });
+
       ScrollTrigger.create({
         trigger: container,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 0.6,
         onUpdate: (self) => {
-          const travel = self.progress * (container.offsetHeight - window.innerHeight) * 1.4;
+          // The page's scroll is the input, as the wheel is in the reference.
+          const travel = -self.progress * (container.offsetHeight - window.innerHeight);
 
-          cols.forEach((col, index) => {
-            // Each column holds its photos twice; wrapping at half its height loops it seamlessly.
-            const half = col.scrollHeight / 2;
-            const speed = SPEEDS[index % SPEEDS.length] ?? 1;
-
-            gsap.set(col, { y: gsap.utils.wrap(-half, 0, -travel * speed) });
+          followers.forEach((follow) => {
+            follow(travel);
           });
         },
       });
@@ -96,7 +112,8 @@ export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
   return (
     <>
       <div
-        className={clsx('bg-black', className)}
+        className={clsx('bg-white', className)}
+        data-gallery-root
         ref={root}
         style={still ? undefined : { height: `${screens * 100}svh` }}
       >
@@ -158,7 +175,7 @@ function Tile({
       aria-hidden={duplicate || undefined}
       aria-label={`${kitchen.name} kitchen: see details`}
       className={clsx(
-        'group relative block w-full shrink-0 overflow-hidden rounded-lg bg-[#efeee6] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white',
+        'group relative block w-full shrink-0 overflow-hidden rounded-lg bg-[#f3f2ee] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--button-primary-background,#d90716)]',
         shape,
       )}
       onClick={onOpen}
