@@ -18,8 +18,10 @@ import {
   writeCollectionMetafields,
   writeProgramFaq,
 } from '~/lib/cabinet-admin/collection-shape';
+import { writeGalleryConfig } from '~/lib/cabinet-admin/gallery-shape';
 import { type CabinetOffer, writeCabinetOffers } from '~/lib/cabinet-admin/offers-shape';
 import { type ProductContent, writeProductContent } from '~/lib/cabinet-admin/product-shape';
+import type { GalleryConfig } from '~/lib/inspiration/kitchen-gallery-config';
 
 export interface ActionResult {
   ok: boolean;
@@ -149,6 +151,25 @@ export async function saveProgramFaqAction(data: ProgramFaq): Promise<ActionResu
     revalidatePath('/cabinets/assembled-cabinets');
     revalidatePath('/cabinets/rta-cabinets');
     revalidatePath('/mykitchen', 'layout');
+
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Save failed.' };
+  }
+}
+
+// Save the best-sellers gallery layout (category 863, gallery.best_sellers).
+export async function saveGalleryAction(config: GalleryConfig): Promise<ActionResult> {
+  const adminEmail = await getAdminEmail();
+
+  if (!adminEmail || !(await isAdminAuthenticated())) {
+    return { ok: false, error: 'Not authenticated.' };
+  }
+
+  try {
+    await writeGalleryConfig(config);
+    revalidatePath('/cabinet-admin');
+    revalidatePath('/inspiration/best-sellers');
 
     return { ok: true };
   } catch (error) {

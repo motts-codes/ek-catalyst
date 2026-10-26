@@ -14,6 +14,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface Props {
   kitchens: GalleryKitchen[];
+  /** A hand-picked layout (from the admin): these columns, in this order, on tablet and up. */
+  layout?: GalleryKitchen[][];
   /** The fewest screens of scrolling the gallery pins for (it pins longer to play one full loop). */
   screens?: number;
   className?: string;
@@ -40,7 +42,7 @@ function columnCount(width: number): number {
 // A wall of kitchen photos on white, in columns that follow the page's scroll with different
 // lags and loop without end while the section is pinned. Click a kitchen for its details (no prices) and a
 // way into the collection. With reduced motion, or no JavaScript, it's a plain grid.
-export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
+export function KitchenGallery({ kitchens, layout, screens = 4, className }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<GalleryKitchen | null>(null);
   const [columns, setColumns] = useState(COLUMNS.lg);
@@ -124,13 +126,17 @@ export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
     }, container);
 
     return () => context.revert();
-  }, [still, columns, kitchens.length, screens]);
+  }, [still, columns, kitchens.length, layout, screens]);
 
-  // Each column takes a run of the list, so the Star-first weave holds within every column.
-  const perColumn = Math.ceil(kitchens.length / columns);
-  const byColumn = Array.from({ length: columns }, (_, c) =>
-    kitchens.slice(c * perColumn, (c + 1) * perColumn),
-  );
+  // A hand-picked layout is used as laid out on tablet and up; on a phone (two columns) its
+  // kitchens are re-dealt in order. Otherwise each column takes a run of the list, so the
+  // Star-first weave holds within every column.
+  const usePreset = layout !== undefined && layout.length > 0 && columns >= COLUMNS.md;
+  const count = usePreset ? layout.length : columns;
+  const perColumn = Math.ceil(kitchens.length / count);
+  const byColumn = usePreset
+    ? layout
+    : Array.from({ length: count }, (_, c) => kitchens.slice(c * perColumn, (c + 1) * perColumn));
 
   return (
     <>
@@ -143,7 +149,7 @@ export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
         <div className={clsx('px-5 @xl:px-8', !still && 'sticky top-0 h-svh overflow-hidden')}>
           <div
             className="grid h-full gap-5 @xl:gap-8"
-            style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+            style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
           >
             {byColumn.map((items, c) => (
               <div

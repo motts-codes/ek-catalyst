@@ -7,7 +7,8 @@ import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
-import { galleryKitchens } from '~/lib/inspiration/kitchen-gallery-data';
+import { galleryKitchens, resolveGalleryColumns } from '~/lib/inspiration/kitchen-gallery-data';
+import { getBestSellersGallery } from '~/lib/inspiration/kitchen-gallery-read';
 
 export const metadata: Metadata = {
   title: 'Best-Selling Kitchen Designs',
@@ -20,7 +21,13 @@ export default async function BestSellers({ params }: { params: Promise<{ locale
 
   setRequestLocale(locale);
 
-  const kitchens = galleryKitchens(await getCabinetLines('assembled'));
+  // The admin's hand-picked layout when one is saved; otherwise the page's own Star-led mix.
+  const [lines, config] = await Promise.all([
+    getCabinetLines('assembled'),
+    getBestSellersGallery(),
+  ]);
+  const layout = config ? resolveGalleryColumns(config, lines) : [];
+  const kitchens = layout.length > 0 ? layout.flat() : galleryKitchens(lines);
 
   return (
     <>
@@ -44,7 +51,7 @@ export default async function BestSellers({ params }: { params: Promise<{ locale
           Kitchens will appear here as collections are added.
         </p>
       ) : (
-        <KitchenGallery kitchens={kitchens} />
+        <KitchenGallery kitchens={kitchens} layout={layout.length > 0 ? layout : undefined} />
       )}
       <ReviewMarquee
         action={{ label: 'Read all reviews', href: '/reviews' }}

@@ -7,14 +7,18 @@ import {
   readCollectionMetafields,
   readProgramFaq,
 } from '~/lib/cabinet-admin/collection-shape';
+import { readGalleryConfig } from '~/lib/cabinet-admin/gallery-shape';
 import { listCabinetCollections } from '~/lib/cabinet-admin/metafields-api';
 import { readCabinetOffers } from '~/lib/cabinet-admin/offers-shape';
 import { readProduct } from '~/lib/cabinet-admin/product-shape';
 import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
+import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
+import { galleryKitchens, kitchenOptions } from '~/lib/inspiration/kitchen-gallery-data';
 
 import { AdminShell, type AdminTab } from './_components/admin-shell';
 import { AttributesEditor } from './_components/attributes-editor';
 import { CollectionsTable } from './_components/collections-table';
+import { GalleryEditor } from './_components/gallery-editor';
 import { LoginForm } from './_components/login-form';
 import { OffersEditor } from './_components/offers-editor';
 import { ProductsTable } from './_components/products-table';
@@ -46,7 +50,14 @@ export default async function CabinetAdminPage(props: Props) {
   }
 
   const sp = await props.searchParams;
-  const validTabs: AdminTab[] = ['collections', 'products', 'attributes', 'program-faq', 'offers'];
+  const validTabs: AdminTab[] = [
+    'collections',
+    'products',
+    'attributes',
+    'program-faq',
+    'offers',
+    'gallery',
+  ];
   const tab: AdminTab = validTabs.includes(sp.tab as AdminTab)
     ? (sp.tab as AdminTab)
     : 'collections';
@@ -66,6 +77,7 @@ export default async function CabinetAdminPage(props: Props) {
       {tab === 'attributes' && <AttributesContent />}
       {tab === 'program-faq' && <ProgramFaqContent />}
       {tab === 'offers' && <OffersContent />}
+      {tab === 'gallery' && <GalleryContent />}
     </AdminShell>
   );
 }
@@ -90,6 +102,23 @@ async function OffersContent() {
       productLines={attributes.productLines}
     />
   );
+}
+
+async function GalleryContent() {
+  const [config, lines] = await Promise.all([readGalleryConfig(), getCabinetLines('assembled')]);
+  const options = kitchenOptions(lines).map((k) => ({
+    ref: k.ref,
+    name: k.name,
+    src: k.image.src,
+  }));
+  // The page's own mix, dealt into three columns, as a starting point when nothing is saved.
+  const mix = galleryKitchens(lines);
+  const per = Math.ceil(mix.length / 3);
+  const suggested = [0, 1, 2].map((c) =>
+    mix.slice(c * per, (c + 1) * per).map((k) => ({ ref: k.ref })),
+  );
+
+  return <GalleryEditor initial={config} options={options} suggested={suggested} />;
 }
 
 async function ProgramFaqContent() {

@@ -9,6 +9,7 @@ const TABS = [
   { key: 'attributes', label: 'Attributes', href: '/cabinet-admin?tab=attributes' },
   { key: 'program-faq', label: 'Cabinet Assembly', href: '/cabinet-admin?tab=program-faq' },
   { key: 'offers', label: 'Offers', href: '/cabinet-admin?tab=offers' },
+  { key: 'gallery', label: 'Best sellers', href: '/cabinet-admin?tab=gallery' },
 ] as const;
 
 export type AdminTab = (typeof TABS)[number]['key'];
