@@ -21,14 +21,14 @@ interface Props {
 
 // Every column travels the same distance, but each eases to its target over a different
 // duration (the reference's 0.5 / 0.8 / 0.6 / 0.2s, power3), so the slow ones trail and catch up.
-const DURATIONS = [0.5, 0.8, 0.6, 0.2];
+const DURATIONS = [0.5, 0.8, 0.3];
 // Column travel per pixel scrolled (the reference's deltaY / 2).
 const PACE = 0.5;
-const COLUMNS = { base: 2, md: 3, lg: 4 };
+const COLUMNS = { base: 2, md: 3, lg: 3 };
 // Tile heights vary so the wall reads as a gallery, not a grid; adjacent columns start at
 // different points in the cycle.
-const SHAPES = ['aspect-[4/3]', 'aspect-[3/4]', 'aspect-square', 'aspect-[5/4]', 'aspect-[4/5]'];
-const START_OFFSETS = ['pt-0', 'pt-24', 'pt-10', 'pt-36'];
+const SHAPES = ['aspect-[4/3]', 'aspect-[16/10]', 'aspect-[5/4]', 'aspect-[3/2]', 'aspect-square'];
+const START_OFFSETS = ['pt-0', 'pt-28', 'pt-12'];
 
 function columnCount(width: number): number {
   if (width >= 896) return COLUMNS.lg;
@@ -192,7 +192,7 @@ function Tile({
         className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
         fill
         loading={eager ? 'eager' : 'lazy'}
-        sizes="(min-width: 56rem) 25vw, (min-width: 40rem) 33vw, 50vw"
+        sizes="(min-width: 40rem) 33vw, 50vw"
         src={kitchen.image.src}
         unoptimized={kitchen.image.src.startsWith('http')}
       />
