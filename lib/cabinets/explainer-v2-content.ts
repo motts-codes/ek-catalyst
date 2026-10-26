@@ -130,16 +130,37 @@ export interface ExplainerV2 {
 
 // Shared across both pages: the core idea (the other program's card carries a link to its page,
 // and the rule of thumb leads with the page's own program), the glossary, the soft next step.
+// The idea section's photos: white kitchens on the assembled page, espresso on the RTA page.
+const IDEA_PHOTOS: Record<CabinetProgram, Record<CabinetProgram, { src: string; alt: string }>> = {
+  assembled: {
+    assembled: {
+      src: '/images/explainers/assembled-cabinets-white.jpg',
+      alt: 'A white shaker kitchen with an island, built and installed',
+    },
+    rta: {
+      src: '/images/explainers/rta-cabinets-white.jpg',
+      alt: 'A white shaker kitchen with glass-front wall cabinets and an island',
+    },
+  },
+  rta: {
+    assembled: {
+      src: '/images/explainers/assembled-cabinets-espresso.jpg',
+      alt: 'A run of built espresso shaker base cabinets, with a tall pantry at one end',
+    },
+    rta: {
+      src: '/images/explainers/rta-box-and-cabinet-espresso.jpg',
+      alt: 'An opened flat RTA box with its espresso panels, doors and hardware, beside the same cabinet built',
+    },
+  },
+};
+
 const twoWays = (current: CabinetProgram): ExplainerV2['twoWays'] => {
   const ways: ExplainerV2['twoWays']['ways'] = [
     {
       key: 'assembled',
       name: 'Assembled',
       summary: 'Built in our factory and shipped whole. You unwrap it and it’s ready to install.',
-      image: {
-        src: '/images/explainers/assembled-cabinets-espresso.jpg',
-        alt: 'A run of built espresso shaker base cabinets, with a tall pantry at one end',
-      },
+      image: IDEA_PHOTOS[current].assembled,
       visualLabel: 'A wrapped, built cabinet on a pallet',
       link: { label: 'Read about assembled', href: EXPLAINER_V2_HREF.assembled },
     },
@@ -148,10 +169,7 @@ const twoWays = (current: CabinetProgram): ExplainerV2['twoWays'] => {
       name: 'RTA (ready to assemble)',
       summary:
         'Shipped flat in a box, as finished panels, doors and hardware. You put it together first, then install it.',
-      image: {
-        src: '/images/explainers/rta-box-and-cabinet-espresso.jpg',
-        alt: 'An opened flat RTA box with its espresso panels, doors and hardware, beside the same cabinet built',
-      },
+      image: IDEA_PHOTOS[current].rta,
       visualLabel: 'A flat RTA box',
       link: { label: 'Read about RTA', href: EXPLAINER_V2_HREF.rta },
     },
