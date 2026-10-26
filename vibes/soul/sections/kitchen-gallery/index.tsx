@@ -20,11 +20,14 @@ interface Props {
 }
 
 // Each column drifts at its own pace; the page's scroll drives them all.
-const SPEEDS = [1, 1.55, 0.8, 1.3, 1.1];
-const COLUMNS = { base: 2, md: 3, lg: 4, xl: 5 };
+const SPEEDS = [1, 1.6, 0.75, 1.3];
+const COLUMNS = { base: 2, md: 3, lg: 4 };
+// Tile heights vary so the wall reads as a gallery, not a grid; adjacent columns start at
+// different points in the cycle.
+const SHAPES = ['aspect-[4/3]', 'aspect-[3/4]', 'aspect-square', 'aspect-[5/4]', 'aspect-[4/5]'];
+const START_OFFSETS = ['pt-0', 'pt-24', 'pt-10', 'pt-36'];
 
 function columnCount(width: number): number {
-  if (width >= 1280) return COLUMNS.xl;
   if (width >= 896) return COLUMNS.lg;
   if (width >= 640) return COLUMNS.md;
 
@@ -97,22 +100,19 @@ export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
         ref={root}
         style={still ? undefined : { height: `${screens * 100}svh` }}
       >
-        <div
-          className={clsx(
-            'mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14',
-            !still && 'sticky top-0 h-svh overflow-hidden',
-          )}
-        >
+        <div className={clsx('px-5 @xl:px-8', !still && 'sticky top-0 h-svh overflow-hidden')}>
           <div
-            className="grid h-full gap-4 @xl:gap-6"
+            className="grid h-full gap-5 @xl:gap-8"
             style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
           >
             {byColumn.map((items, c) => (
               <div
-                className="flex flex-col gap-4 will-change-transform @xl:gap-6"
+                className={clsx(
+                  'flex flex-col gap-5 will-change-transform @xl:gap-8',
+                  !still && START_OFFSETS[c % START_OFFSETS.length],
+                )}
                 data-gallery-col
                 key={c}
-                style={still ? undefined : { paddingTop: `${(c % 3) * 4}rem` }}
               >
                 {(still ? [items] : [items, items]).map((set, copy) => (
                   <div className="contents" key={copy}>
@@ -123,6 +123,7 @@ export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
                         key={`${kitchen.id}-${copy}`}
                         kitchen={kitchen}
                         onOpen={() => setOpen(kitchen)}
+                        shape={SHAPES[(row + c * 2) % SHAPES.length] ?? 'aspect-[4/3]'}
                       />
                     ))}
                   </div>
@@ -144,17 +145,22 @@ function Tile({
   onOpen,
   duplicate,
   eager,
+  shape,
 }: {
   kitchen: GalleryKitchen;
   onOpen: () => void;
   duplicate: boolean;
   eager: boolean;
+  shape: string;
 }) {
   return (
     <button
       aria-hidden={duplicate || undefined}
       aria-label={`${kitchen.name} kitchen: see details`}
-      className="group relative block aspect-[4/3] w-full shrink-0 overflow-hidden rounded-lg bg-[#efeee6] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white"
+      className={clsx(
+        'group relative block w-full shrink-0 overflow-hidden rounded-lg bg-[#efeee6] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white',
+        shape,
+      )}
       onClick={onOpen}
       tabIndex={duplicate ? -1 : 0}
       type="button"
@@ -164,7 +170,7 @@ function Tile({
         className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
         fill
         loading={eager ? 'eager' : 'lazy'}
-        sizes="(min-width: 80rem) 20vw, (min-width: 56rem) 25vw, (min-width: 40rem) 33vw, 50vw"
+        sizes="(min-width: 56rem) 25vw, (min-width: 40rem) 33vw, 50vw"
         src={kitchen.image.src}
         unoptimized={kitchen.image.src.startsWith('http')}
       />
