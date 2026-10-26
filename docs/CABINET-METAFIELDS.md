@@ -37,6 +37,18 @@ storefront drops silently.
 
 ---
 
+### gallery.best_sellers (added Oct 2026)
+
+The hand-picked layout for `/inspiration/best-sellers`, edited on the admin's **Best sellers**
+tab. JSON: `{ "columns": [ [slot, …], [slot, …], … ] }` where a slot is `{ "ref": "c:<id>" }`
+(a collection's kitchen photo), `{ "ref": "f:<id>:<Finish>" }` (one finish's kitchen on a
+per-finish collection) or `{ "ref": "custom", "src", "name", "href" }` (a picture by URL).
+Columns show in this order on tablet and up and are re-dealt into two on phones; a slot whose
+collection or finish no longer exists is skipped. Absent or empty → the page builds its own
+Star-led mix. Code: `lib/inspiration/kitchen-gallery-config.ts` (types, parsing),
+`lib/cabinet-admin/gallery-shape.ts` (read/write), `lib/inspiration/kitchen-gallery-read.ts`
+(storefront read).
+
 ## On each collection category (Avon = 864, Dover, …)
 
 | namespace | key | value shape | Purpose | Renders |
