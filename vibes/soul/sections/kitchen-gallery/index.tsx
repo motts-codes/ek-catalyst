@@ -22,6 +22,8 @@ interface Props {
 // Every column travels the same distance, but each eases to its target over a different
 // duration (the reference's 0.5 / 0.8 / 0.6 / 0.2s, power3), so the slow ones trail and catch up.
 const DURATIONS = [0.5, 0.8, 0.6, 0.2];
+// Column travel per pixel scrolled (the reference's deltaY / 2).
+const PACE = 0.5;
 const COLUMNS = { base: 2, md: 3, lg: 4 };
 // Tile heights vary so the wall reads as a gallery, not a grid; adjacent columns start at
 // different points in the cycle.
@@ -38,7 +40,7 @@ function columnCount(width: number): number {
 // A wall of kitchen photos on white, in columns that follow the page's scroll with different
 // lags and loop without end while the section is pinned. Click a kitchen for its details (no prices) and a
 // way into the collection. With reduced motion, or no JavaScript, it's a plain grid.
-export function KitchenGallery({ kitchens, screens = 5, className }: Props) {
+export function KitchenGallery({ kitchens, screens = 6, className }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<GalleryKitchen | null>(null);
   const [columns, setColumns] = useState(COLUMNS.lg);
@@ -92,8 +94,9 @@ export function KitchenGallery({ kitchens, screens = 5, className }: Props) {
         start: 'top top',
         end: 'bottom bottom',
         onUpdate: (self) => {
-          // The page's scroll is the input, as the wheel is in the reference.
-          const travel = -self.progress * (container.offsetHeight - window.innerHeight);
+          // The page's scroll is the input, as the wheel is in the reference, and like the
+          // reference the columns move at half of it.
+          const travel = -self.progress * (container.offsetHeight - window.innerHeight) * PACE;
 
           followers.forEach((follow) => {
             follow(travel);
