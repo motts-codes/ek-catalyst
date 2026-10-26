@@ -134,12 +134,12 @@ export interface ExplainerV2 {
 const IDEA_PHOTOS: Record<CabinetProgram, Record<CabinetProgram, { src: string; alt: string }>> = {
   assembled: {
     assembled: {
-      src: '/images/explainers/assembled-cabinets-white.jpg',
-      alt: 'A white shaker kitchen with an island, built and installed',
+      src: '/images/explainers/assembled-cabinet-run-white.jpg',
+      alt: 'A run of built white shaker base cabinets, with a tall pantry at one end',
     },
     rta: {
-      src: '/images/explainers/rta-cabinets-white.jpg',
-      alt: 'A white shaker kitchen with glass-front wall cabinets and an island',
+      src: '/images/explainers/rta-box-and-cabinet-white.jpg',
+      alt: 'An opened flat RTA box with its white panels, doors and hardware, beside the same cabinet built',
     },
   },
   rta: {
