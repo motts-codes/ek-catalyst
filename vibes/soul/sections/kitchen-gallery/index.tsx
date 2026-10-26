@@ -14,7 +14,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface Props {
   kitchens: GalleryKitchen[];
-  /** How many screens of scrolling the gallery pins for. */
+  /** The fewest screens of scrolling the gallery pins for (it pins longer to play one full loop). */
   screens?: number;
   className?: string;
 }
@@ -40,7 +40,7 @@ function columnCount(width: number): number {
 // A wall of kitchen photos on white, in columns that follow the page's scroll with different
 // lags and loop without end while the section is pinned. Click a kitchen for its details (no prices) and a
 // way into the collection. With reduced motion, or no JavaScript, it's a plain grid.
-export function KitchenGallery({ kitchens, screens = 6, className }: Props) {
+export function KitchenGallery({ kitchens, screens = 4, className }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<GalleryKitchen | null>(null);
   const [columns, setColumns] = useState(COLUMNS.lg);
@@ -74,11 +74,18 @@ export function KitchenGallery({ kitchens, screens = 6, className }: Props) {
       // at half the column's height (every column holds its photos twice), so the loop never ends.
       const followers = cols.map((col, index) => {
         const state = { travel: 0 };
+        // The loop's period is the exact distance from a tile to its copy (one set plus one
+        // gap); half the scroll height would be off by the column's top offset and the gap.
+        const tiles = col.querySelectorAll<HTMLElement>('[data-gallery-tile]');
+        const first = tiles[0];
+        const twin = tiles[tiles.length / 2];
+        const period = first && twin ? twin.offsetTop - first.offsetTop : col.scrollHeight / 2;
         const place = () => {
-          gsap.set(col, { y: gsap.utils.wrap(-col.scrollHeight / 2, 0, state.travel) });
+          // wrap() treats 0 as exclusive and would snap a resting column up a whole period.
+          gsap.set(col, { y: state.travel >= 0 ? 0 : gsap.utils.wrap(-period, 0, state.travel) });
         };
 
-        return (travel: number) => {
+        const move = (travel: number) => {
           gsap.to(state, {
             travel,
             duration: DURATIONS[index % DURATIONS.length] ?? 0.5,
@@ -87,7 +94,18 @@ export function KitchenGallery({ kitchens, screens = 6, className }: Props) {
             onUpdate: place,
           });
         };
+
+        return { move, period };
       });
+      const periods = followers.map((f) => f.period);
+
+      // Pin for exactly one loop of the longest column, so every kitchen passes once and the
+      // last frame is the first: the section then releases to the content below.
+      const longest = Math.max(...periods);
+      const pinDistance = Math.max(longest / PACE, (screens - 1) * window.innerHeight);
+
+      container.style.height = `${pinDistance + window.innerHeight}px`;
+      ScrollTrigger.refresh();
 
       ScrollTrigger.create({
         trigger: container,
@@ -96,17 +114,17 @@ export function KitchenGallery({ kitchens, screens = 6, className }: Props) {
         onUpdate: (self) => {
           // The page's scroll is the input, as the wheel is in the reference, and like the
           // reference the columns move at half of it.
-          const travel = -self.progress * (container.offsetHeight - window.innerHeight) * PACE;
+          const travel = -self.progress * pinDistance * PACE;
 
           followers.forEach((follow) => {
-            follow(travel);
+            follow.move(travel);
           });
         },
       });
     }, container);
 
     return () => context.revert();
-  }, [still, columns, kitchens.length]);
+  }, [still, columns, kitchens.length, screens]);
 
   // Each column takes a run of the list, so the Star-first weave holds within every column.
   const perColumn = Math.ceil(kitchens.length / columns);
@@ -120,7 +138,7 @@ export function KitchenGallery({ kitchens, screens = 6, className }: Props) {
         className={clsx('bg-white', className)}
         data-gallery-root
         ref={root}
-        style={still ? undefined : { height: `${screens * 100}svh` }}
+        style={still ? undefined : { minHeight: `${screens * 100}svh` }}
       >
         <div className={clsx('px-5 @xl:px-8', !still && 'sticky top-0 h-svh overflow-hidden')}>
           <div
@@ -183,6 +201,7 @@ function Tile({
         'group relative block w-full shrink-0 overflow-hidden rounded-lg bg-[#f3f2ee] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--button-primary-background,#d90716)]',
         shape,
       )}
+      data-gallery-tile
       onClick={onOpen}
       tabIndex={duplicate ? -1 : 0}
       type="button"
