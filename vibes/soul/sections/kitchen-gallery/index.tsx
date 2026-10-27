@@ -1,8 +1,10 @@
 'use client';
 
+import * as Dialog from '@radix-ui/react-dialog';
 import { clsx } from 'clsx';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { X } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -256,7 +258,16 @@ function Details({ kitchen, onClose }: { kitchen: GalleryKitchen | null; onClose
       title={kitchen ? `${kitchen.name} kitchen` : 'Kitchen'}
     >
       {kitchen ? (
-        <div className="grid @3xl:grid-cols-2">
+        <div className="relative grid @3xl:grid-cols-2">
+          <Dialog.Close asChild>
+            <button
+              aria-label="Close"
+              className="absolute right-3 top-3 z-10 flex size-10 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+              type="button"
+            >
+              <X aria-hidden size={20} strokeWidth={2} />
+            </button>
+          </Dialog.Close>
           <div className="relative aspect-[4/3] bg-[#f3f2ee] @3xl:aspect-auto @3xl:min-h-[30rem]">
             <Image
               alt={kitchen.image.alt}
