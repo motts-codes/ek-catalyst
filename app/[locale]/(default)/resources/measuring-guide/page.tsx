@@ -7,6 +7,7 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { Image } from '~/components/image';
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
@@ -20,34 +21,33 @@ export const metadata: Metadata = {
 // who designs the kitchen with the customer. Turnaround times are typical and to be confirmed.
 const STEPS = [
   {
-    title: '1 · Sketch the room',
+    title: 'Sketch the room',
     description:
-      "Draw the kitchen as if you're looking down from the ceiling. Label each wall A, B, C, and mark the doors and windows. It doesn't need to be neat.",
+      "Draw it from above, label walls A, B, C and mark doors and windows. Neat doesn't matter.",
   },
   {
-    title: '2 · Measure each wall three times',
-    description:
-      'Measure corner to corner at the floor, at counter height (36") and near the ceiling. Write down the smallest number, because that\'s the one your cabinets have to fit. Measure to the wall itself, not to the baseboard.',
+    title: 'Measure each wall three times',
+    description: 'Floor, counter height and ceiling, corner to corner. Keep the smallest number.',
   },
   {
-    title: "3 · Mark what can't move",
+    title: "Mark what can't move",
     description:
-      'For each window and door, note its width, height and distance from the corner, and the height of the window sill. Mark the sink pipes, gas line, outlets, switches, vents and radiators.',
+      'Every window and door: width, height, distance to the corner. Plus pipes, outlets, vents.',
   },
   {
-    title: '4 · Measure the ceiling height',
+    title: 'Measure the ceiling height',
     description:
-      "Measure it in three places. If there's a boxed-in section above where the wall cabinets go (a soffit), note how deep it is and how far down it comes.",
+      'In three places. A soffit above the wall cabinets? Note how deep and how far down.',
   },
   {
-    title: '5 · Measure your appliances',
+    title: 'Measure your appliances',
     description:
-      'Note the width, height and depth of the fridge, range, dishwasher and microwave. Buying new ones? Use the spec sheet. Note which way the fridge door opens.',
+      'Fridge, range, dishwasher, microwave: width, height, depth. Note the fridge door swing.',
   },
   {
-    title: '6 · Photograph every wall',
+    title: 'Photograph every wall',
     description:
-      "Stand back and take one photo of each wall, plus one of the whole room. Photos show your project manager what a sketch can't.",
+      "Each wall from a few steps back, plus the whole room. Photos show what a sketch can't.",
   },
 ];
 
@@ -71,11 +71,12 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         ]}
         description="All you need is a tape measure and your phone. Don't worry about getting it perfect: a project manager checks every number before anything is ordered. Follow the six steps, one wall at a time, and if you get stuck, call or text 860-247-1000 and we'll talk you through it."
         image={{
-          src: '/images/pages/measuring/hero-measuring-range.jpg',
+          src: '/images/pages/measuring/hero-measuring-range-2.jpg',
           alt: 'A sketched kitchen with a homeowner in a red top measuring the width of the range with a tape measure',
         }}
         imageStyle="plain"
         kicker="Measuring guide"
+        split="even"
         title="Measure your kitchen like a pro, in 20 minutes"
       />
       <CategoryPoints
@@ -115,22 +116,17 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         title="Four things, one of them your phone"
       />
       <HomeSection id="steps" kicker="Step by step" title="Six steps, one wall at a time">
-        <Image
-          alt="A sketched kitchen with walls A and B labeled and the measuring points marked: wall lengths, cabinet widths, ceiling height, the window, outlets, the sink, the hood and the fridge depth and door swing"
-          className="mb-8 h-auto w-full rounded-3xl border border-contrast-100"
-          height={1643}
-          sizes="(min-width: 80rem) 72rem, 100vw"
-          src="/images/pages/measuring/room-plan-annotated.jpg"
-          width={2720}
-        />
-        <ol className="grid gap-5 @xl:grid-cols-2 @4xl:grid-cols-3">
-          {STEPS.map((step) => (
-            <li className="rounded-3xl border border-contrast-100 bg-white p-6" key={step.title}>
-              <h3 className="font-heading text-lg font-semibold leading-tight">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-contrast-500">{step.description}</p>
-            </li>
-          ))}
-        </ol>
+        <div className="grid items-start gap-8 @3xl:grid-cols-[13fr_7fr] @3xl:gap-10">
+          <Image
+            alt="A sketched kitchen with walls A and B labeled and the measuring points marked: wall lengths, cabinet widths, ceiling height, the window, outlets, the sink, the hood and the fridge depth and door swing"
+            className="h-auto w-full rounded-3xl"
+            height={1643}
+            sizes="(min-width: 56rem) 60vw, 100vw"
+            src="/images/pages/measuring/room-plan-annotated.jpg"
+            width={2720}
+          />
+          <StepsAccordion steps={STEPS} />
+        </div>
       </HomeSection>
       <CardsRow
         cards={[

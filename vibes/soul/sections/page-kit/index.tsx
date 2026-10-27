@@ -99,6 +99,8 @@ interface HeroProps {
   headingLevel?: 1 | 2;
   /** `roomy` gives the opener the full section padding instead of the compact one. */
   spacing?: 'compact' | 'roomy';
+  /** `even` splits copy and photo 50/50 instead of giving the copy the wider column. */
+  split?: 'default' | 'even';
   className?: string;
 }
 
@@ -119,6 +121,7 @@ export function PageHero({
   textOnly = false,
   headingLevel = 1,
   spacing = 'compact',
+  split = 'default',
   className,
 }: HeroProps) {
   const Heading = headingLevel === 2 ? 'h2' : 'h1';
@@ -128,7 +131,8 @@ export function PageHero({
       <div
         className={clsx(
           'grid items-center gap-8',
-          !textOnly && '@3xl:grid-cols-[1.2fr_1fr] @3xl:gap-14',
+          !textOnly && '@3xl:gap-14',
+          !textOnly && (split === 'even' ? '@3xl:grid-cols-2' : '@3xl:grid-cols-[1.2fr_1fr]'),
         )}
       >
         <div className={clsx(textOnly && 'max-w-3xl')}>
