@@ -205,10 +205,9 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             description:
               'Any angle, from your phone. It tells your designer more about your room than a sketch can.',
             image: {
-              src: '/images/pages/design-consult/phone-photo.jpg',
-              alt: 'A hand photographing a kitchen with a phone',
+              src: '/images/book/photo.webp',
+              alt: 'Someone photographing their current kitchen on a phone',
             },
-            imageLabel: 'A phone photo of a kitchen',
           },
           {
             title: 'Rough wall lengths',
@@ -216,20 +215,18 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             ctaLabel: 'How to measure',
             href: '/resources/measuring-guide',
             image: {
-              src: '/images/pages/design-consult/tape-measure-wall.jpg',
-              alt: 'A tape measure stretched along a kitchen wall',
+              src: '/images/book/measure.webp',
+              alt: 'A tape measure held along a wall, a sketch on a notepad below',
             },
-            imageLabel: 'A tape measure along a wall',
           },
           {
             title: 'Or just bring an idea',
             description:
               "A screenshot, a color, a kitchen you liked. That's a good place to start.",
             image: {
-              src: '/images/pages/design-consult/saved-screenshots.jpg',
-              alt: 'A phone showing saved kitchen photos',
+              src: '/images/book/inspiration.webp',
+              alt: 'A phone showing a grid of saved kitchen photos',
             },
-            imageLabel: 'Saved kitchen screenshots on a phone',
           },
         ]}
         imageStyle="plain"
