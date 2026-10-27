@@ -10,6 +10,7 @@ import {
   SplitCardGrid,
   StepsRow,
 } from '@/vibes/soul/sections/page-kit';
+import { Image } from '~/components/image';
 import { FREE_DESIGN_HREF } from '~/lib/home/home-content';
 import { FINANCING_PLANS, monthlyExample } from '~/lib/pages/financing';
 
@@ -22,8 +23,8 @@ export const metadata: Metadata = {
 const SHOWROOMS_HREF = '/showrooms';
 
 // Financing per EK's policy (Arun's brief of 27 Oct 2026): no 0% plan, no online financing, no
-// rate check. Four GreenSky plans, applied for in a showroom with a designer. Disclosure text
-// still to come from GreenSky / EK.
+// rate check. Four GreenSky plans, applied for in a showroom with a designer. The full GreenSky
+// disclosure (lender names) is still to come; until then one line: subject to credit approval.
 export default async function Financing({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -38,10 +39,16 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
         ]}
       />
       <PageHero
-        actions={[
-          { label: 'Find a showroom', href: SHOWROOMS_HREF, primary: true },
-          { label: 'Book a free design consult', href: FREE_DESIGN_HREF },
-        ]}
+        actions={[{ label: 'Find a showroom', href: SHOWROOMS_HREF, primary: true }]}
+        actionsAside={
+          <Image
+            alt="GreenSky"
+            className="h-9 w-auto"
+            height={152}
+            src="/images/pages/financing/greensky-logo.png"
+            width={565}
+          />
+        }
         chipStyle="checks"
         chips={[
           'Fixed rates from 9.99% APR',
@@ -122,11 +129,7 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
           ],
         }}
       />
-      <FinePrint>
-        <strong>Disclosures.</strong> Financing for GreenSky® consumer loan programs is provided by
-        [lender/bank names]. Subject to credit approval. [Full disclosure text to come from GreenSky
-        / Express Kitchens.]
-      </FinePrint>
+      <FinePrint variant="plain">Financing subject to credit approval.</FinePrint>
       <ClosingBand
         description="Visit a showroom and your designer will price your kitchen and walk you through the plans."
         primary={{ label: 'Find a showroom', href: SHOWROOMS_HREF }}

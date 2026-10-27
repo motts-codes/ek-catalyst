@@ -101,6 +101,8 @@ interface HeroProps {
   spacing?: 'compact' | 'roomy';
   /** `even` splits copy and photo 50/50 instead of giving the copy the wider column. */
   split?: 'default' | 'even';
+  /** Sits beside the buttons (a partner logo, say). */
+  actionsAside?: ReactNode;
   className?: string;
 }
 
@@ -122,6 +124,7 @@ export function PageHero({
   headingLevel = 1,
   spacing = 'compact',
   split = 'default',
+  actionsAside,
   className,
 }: HeroProps) {
   const Heading = headingLevel === 2 ? 'h2' : 'h1';
@@ -185,7 +188,14 @@ export function PageHero({
               ))}
             </ul>
           )}
-          <Actions actions={actions} className="mt-7" />
+          {actionsAside == null ? (
+            <Actions actions={actions} className="mt-7" />
+          ) : (
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Actions actions={actions} />
+              {actionsAside}
+            </div>
+          )}
         </div>
         {!textOnly && (
           <div
@@ -628,8 +638,8 @@ export interface SplitCard {
 }
 
 // Copy on the left (about a third), a 2 x 2 of numbered cards on the right (about two thirds).
-// Every other card is brand red with white copy, checkerboard fashion, so the four read as a
-// set. Used for the financing plans.
+// Every other card is brand red with white copy, checkerboard fashion, and the rest are white
+// with a red outline, so the four read as a set. Used for the financing plans.
 export function SplitCardGrid({
   kicker,
   title,
@@ -676,7 +686,7 @@ export function SplitCardGrid({
                   'flex h-full flex-col rounded-3xl p-6 @xl:p-7',
                   red
                     ? 'bg-[var(--button-primary-background,#d90716)] text-white'
-                    : 'border border-contrast-100 bg-white',
+                    : 'border border-[var(--button-primary-background,#d90716)] bg-white',
                 )}
                 key={card.title}
               >
