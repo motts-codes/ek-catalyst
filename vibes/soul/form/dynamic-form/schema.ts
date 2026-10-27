@@ -131,6 +131,19 @@ type CardRadioField = {
   }>;
 } & FormField;
 
+type PictureRadioField = {
+  type: 'picture-radio-group';
+  defaultValue?: string;
+  /** Tiles per row from the small breakpoint up (two or three on phones). */
+  columns?: 2 | 3 | 4 | 5;
+  options: Array<{
+    value: string;
+    label: string;
+    image?: { src: string; alt?: string };
+    disabled?: boolean;
+  }>;
+} & FormField;
+
 type ButtonRadioField = {
   type: 'button-radio-group';
   defaultValue?: string;
@@ -166,6 +179,7 @@ export type Field =
   | DateField
   | SwatchRadioField
   | CardRadioField
+  | PictureRadioField
   | ButtonRadioField
   | SelectField
   | PasswordField

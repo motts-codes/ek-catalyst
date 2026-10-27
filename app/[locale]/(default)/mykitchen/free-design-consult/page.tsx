@@ -8,6 +8,7 @@ import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { PageBreadcrumbs, PageHero, StepsRow } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
+import { SHAPES } from '~/lib/estimator/ten-by-ten';
 import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitDesignLead } from '~/lib/forms/submit-lead';
 import { HOME_REVIEWS, SAMPLES_HREF } from '~/lib/home/home-content';
@@ -43,27 +44,17 @@ const HOW_IT_WORKS = [
 const FIELDS: Array<Field | Field[]> = [
   ...contactRows(),
   {
-    type: 'checkbox-group',
-    name: 'rooms',
-    label: 'Which rooms are you planning?',
-    required: true,
-    options: [
-      { label: 'Kitchen', value: 'kitchen' },
-      { label: 'Bathroom', value: 'bath' },
-      { label: 'Closets', value: 'closets' },
-      { label: 'Windows', value: 'windows' },
-    ],
-  },
-  {
-    type: 'radio-group',
+    type: 'picture-radio-group',
     name: 'layout',
     label: 'Your layout, if you know it',
+    columns: 5,
     options: [
-      { label: 'L-shaped', value: 'l' },
-      { label: 'U-shaped', value: 'u' },
-      { label: 'Galley', value: 'galley' },
-      { label: 'Single wall', value: 'single-wall' },
-      { label: 'Not sure yet', value: 'unsure' },
+      ...SHAPES.map((shape) => ({
+        value: shape.id,
+        label: shape.label,
+        image: { src: shape.image.src, alt: '' },
+      })),
+      { value: 'unsure', label: 'Not sure yet' },
     ],
   },
   {
@@ -149,8 +140,9 @@ const PRO_FIELDS: Array<Field | Field[]> = [
 ];
 
 // The design consult request: hero, a compact "how it works" row, then the form second on the
-// page in four steps (project, details, how to meet, about you) so nobody faces every field at
-// once, followed by what to bring, reviews and the samples nudge.
+// page (photo left, like the countertop quote) in four steps (your kitchen, details, how to
+// meet, about you) so nobody faces every field at once; then what to bring, reviews, samples.
+// Kitchens only: EK's consults are kitchen remodels, so there's no "which rooms" question.
 export default async function FreeDesign({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -189,7 +181,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
       <StepsRow steps={HOW_IT_WORKS} title="How it works" />
       <LeadFormCard
         action={submitDesignLead}
-        description="Two minutes. Only your contact details and the rooms are required."
+        description="Two minutes. Only how you'd like to meet and your contact details are required."
         fields={pro ? PRO_FIELDS : FIELDS}
         fine={
           <>
@@ -198,9 +190,13 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
           </>
         }
         id="request"
+        image={{
+          src: '/images/pages/design-consult/form-kitchen-island.jpg',
+          alt: 'A modern kitchen with a white quartz island, two stools and light oak cabinets',
+        }}
         kicker="Request your consult"
         steps={[
-          { title: 'Your project', names: ['rooms', 'layout', 'island'] },
+          { title: 'Your kitchen', names: ['layout', 'island'] },
           { title: 'Details', names: ['timing', 'budget', 'notes'] },
           { title: 'How to meet', names: ['format', 'showroom', 'days', 'time'] },
           { title: 'About you', names: ['name', 'email', 'phone', 'zip', 'company'] },

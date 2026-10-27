@@ -34,6 +34,7 @@ import { DatePicker } from '@/vibes/soul/form/date-picker';
 import { FormStatus } from '@/vibes/soul/form/form-status';
 import { Input } from '@/vibes/soul/form/input';
 import { NumberInput } from '@/vibes/soul/form/number-input';
+import { PictureRadioGroup } from '@/vibes/soul/form/picture-radio-group';
 import { RadioGroup } from '@/vibes/soul/form/radio-group';
 import { Select } from '@/vibes/soul/form/select';
 import { SwatchRadioGroup } from '@/vibes/soul/form/swatch-radio-group';
@@ -507,6 +508,24 @@ function DynamicFormField({
     case 'swatch-radio-group':
       return (
         <SwatchRadioGroup
+          errors={formField.errors}
+          id={formField.id}
+          key={field.name}
+          label={field.label}
+          name={formField.name}
+          onBlur={controls.blur}
+          onFocus={controls.focus}
+          onValueChange={controls.change}
+          options={field.options}
+          required={formField.required}
+          value={typeof controls.value === 'string' ? controls.value : ''}
+        />
+      );
+
+    case 'picture-radio-group':
+      return (
+        <PictureRadioGroup
+          columns={field.columns}
           errors={formField.errors}
           id={formField.id}
           key={field.name}
