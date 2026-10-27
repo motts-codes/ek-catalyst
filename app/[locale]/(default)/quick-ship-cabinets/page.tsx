@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   title: 'Quick-Ship Cabinets',
   description:
     'In a hurry? Everything here ships in two weeks or less, straight from stock in Bristol.',
+  // Hidden at the client's request (27 Oct 2026): out of the nav, footer and sitemap, not indexed.
+  robots: { index: false },
 };
 
 export default async function QuickShip({ params }: { params: Promise<{ locale: string }> }) {

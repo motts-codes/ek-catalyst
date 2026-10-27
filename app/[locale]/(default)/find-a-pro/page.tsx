@@ -80,7 +80,6 @@ export default async function FindAPro({ params }: { params: Promise<{ locale: s
         title="Get the room ready"
       />
       <Prose
-        actions={[{ label: 'Join the Pro Program', href: '/pro-program', primary: true }]}
         body={[
           'Pro Program members can be listed here free. We pass on the inquiry and you deal with the homeowner direct. (Program decision pending: a verified installer directory, or a referral partner.)',
         ]}

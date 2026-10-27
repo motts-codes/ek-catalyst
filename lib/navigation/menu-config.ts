@@ -74,11 +74,7 @@ const menu: MenuItem[] = [
             image: nav('assembled', 'Assembled kitchen cabinets'),
           },
           { label: 'RTA', href: RTA_LISTING, image: nav('rta', 'Ready-to-assemble cabinets') },
-          {
-            label: 'Quick Ship',
-            href: '/quick-ship-cabinets',
-            image: nav('quick-ship', 'Quick-ship cabinets'),
-          },
+          // Quick Ship (/quick-ship-cabinets) is hidden at the client's request (27 Oct 2026).
         ],
       },
       {

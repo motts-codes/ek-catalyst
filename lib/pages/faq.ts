@@ -268,7 +268,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         'Is there a faster option?',
-        'Some collections are marked "Ships next day". Order by [time] for next-business-day dispatch. [confirm] [Quick-ship cabinets](/quick-ship-cabinets)',
+        'Some collections are marked "Ships next day". Order by [time] for next-business-day dispatch. [confirm]',
       ),
     ],
   },

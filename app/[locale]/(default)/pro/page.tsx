@@ -19,13 +19,13 @@ import {
   PRO_AUDIENCES,
   PRO_HERO_SLIDES,
   PRO_PROGRAM_CARDS,
-  PRO_PROGRAM_HREF,
   PRO_REVIEWS,
   PROGRAM_TIERS,
   PROGRAM_TIERS_FOOTNOTE,
   QUALITY_POINTS,
   QUICK_SHIP_TILES,
   SPEC_SHELF,
+  TRADE_CONTACT_HREF,
   WINDOWS_OFFER,
 } from '~/lib/home/pro-content';
 import { EditableSection } from '~/lib/makeswift/components/editable-section';
@@ -144,7 +144,6 @@ export default async function Pro({ params }: Props) {
       <Slot
         fallback={
           <ProgramTiers
-            cta={{ label: 'Join the program', href: PRO_PROGRAM_HREF }}
             footnote={PROGRAM_TIERS_FOOTNOTE}
             id="pro-program"
             lede="Silver from your first $5,000 invoice. Diamond at $50,000 a year. Both get a text-enabled support line only contractors have, free design and design audits, and sales-tax exemption with your form on file."
@@ -226,9 +225,9 @@ export default async function Pro({ params }: Props) {
       <Slot
         fallback={
           <ClosingBand
-            description="Two-minute form, then our trade team calls to verify your license and set you up — pricing, tax exemption and a text line that answers."
+            description="Get in touch and our trade team calls to verify your license and set you up — pricing, tax exemption and a text line that answers."
             phone={{ label: 'Call or text 860-247-1000', href: 'tel:+18602471000' }}
-            primary={{ label: 'Join the program', href: PRO_PROGRAM_HREF }}
+            primary={{ label: 'Talk to the trade team', href: TRADE_CONTACT_HREF }}
             secondary={{ label: 'Visit the factory outlet ↗', href: FACTORY_OUTLET_URL }}
             tint={false}
             title="Ready to set up your trade account?"

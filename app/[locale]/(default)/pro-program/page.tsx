@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   title: 'Contractor Program',
   description:
     'Two tiers, real discounts. Silver from your first $5,000 invoice, Diamond at $50,000 a year. Contractor-only support, free design and sales-tax exemption.',
+  // Hidden at the client's request (27 Oct 2026): no nav, footer or sitemap links, not indexed.
+  robots: { index: false },
 };
 
 const FIELDS: Array<Field | Field[]> = [

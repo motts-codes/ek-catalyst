@@ -13,7 +13,6 @@ export const SITEMAP: SitemapGroup[] = [
       { label: 'Cabinets', href: '/cabinets' },
       { label: 'Assembled cabinets', href: '/cabinets/assembled-cabinets' },
       { label: 'Ready-to-assemble cabinets', href: '/cabinets/rta-cabinets' },
-      { label: 'Quick Ship cabinets', href: '/quick-ship-cabinets' },
       { label: 'Cabinet hardware', href: '/cabinet-hardware' },
       { label: 'Sinks & faucets', href: '/sinks-faucets' },
       { label: 'Countertops', href: '/countertops' },
@@ -70,7 +69,6 @@ export const SITEMAP: SitemapGroup[] = [
     title: 'For the trade',
     links: [
       { label: 'Pro', href: '/pro' },
-      { label: 'Pro Program', href: '/pro-program' },
       { label: 'Industries', href: '/industry' },
       { label: 'Multifamily', href: '/industry/multifamily' },
       { label: 'Commercial', href: '/industry/commercial' },

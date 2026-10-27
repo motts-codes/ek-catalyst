@@ -9,7 +9,10 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type ProgramTier } from '@/vibes/soul/sections/program-tiers';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 
+/** The Pro Program page is hidden at the client's request (27 Oct 2026); nothing links to it. */
 export const PRO_PROGRAM_HREF = '/pro-program';
+/** Where trade calls to action go while the program page is hidden. */
+export const TRADE_CONTACT_HREF = '/contact';
 export const FACTORY_OUTLET_URL = 'https://expresskitchensfactoryoutlet.com/';
 export const WHOLESALE_URL = 'https://kunalkitchens.com/';
 
@@ -18,20 +21,20 @@ export const PRO_HERO_SLIDES: HeroSlide[] = [
   {
     title: 'Built for contractors.\nTrade pricing, dates you can quote.',
     image: { src: '', alt: 'a job site or warehouse racking' },
-    href: PRO_PROGRAM_HREF,
-    ctaLabel: 'Join Pro',
+    href: TRADE_CONTACT_HREF,
+    ctaLabel: 'Talk to the trade team',
   },
   {
     title: 'Built for interior designers.\nSpec it, price it, ship it.',
     image: { src: '', alt: 'a designer reviewing a kitchen plan' },
-    href: PRO_PROGRAM_HREF,
-    ctaLabel: 'Join Pro',
+    href: TRADE_CONTACT_HREF,
+    ctaLabel: 'Talk to the trade team',
   },
   {
     title: 'Built for multifamily and commercial.\nOne spec per unit, delivered floor by floor.',
     image: { src: '', alt: 'cabinets staged on a multifamily floor' },
-    href: PRO_PROGRAM_HREF,
-    ctaLabel: 'Join Pro',
+    href: TRADE_CONTACT_HREF,
+    ctaLabel: 'Talk to the trade team',
   },
 ];
 
@@ -237,7 +240,11 @@ export const DESIGN_BAND = {
   description:
     'Send us your homeowner. We do the layout, the renderings and the itemized quote for free — under your name if you want. You close the job, we supply it.',
   actions: [
-    { label: 'Book a design for your client', href: '/mykitchen/free-design-consult', primary: true },
+    {
+      label: 'Book a design for your client',
+      href: '/mykitchen/free-design-consult',
+      primary: true,
+    },
   ],
   imageLabel: "A rendering with the contractor's name on the title block",
 };
