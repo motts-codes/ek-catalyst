@@ -10,7 +10,7 @@ import type { Video } from '~/lib/pages/projects';
 export const metadata: Metadata = {
   title: 'How-To Videos',
   description:
-    'Watch our cabinets go together, step by step: base cabinets, lazy susans, corner walls, tall utility cabinets and roll-out trays. Filmed by Express Kitchens.',
+    'Watch our cabinets and closet units go together, step by step: base cabinets, lazy susans, corner walls, tall utility cabinets, roll-out trays and four closet units. Filmed by Express Kitchens.',
 };
 
 const YOUTUBE_CHANNEL = 'https://www.youtube.com/@expresskitchensct';
@@ -36,7 +36,15 @@ const INSTALLATION_VIDEOS: Video[] = [
   },
 ];
 
-// The video library: one playlist for now, each film opening in a dialog on the page.
+// EK's closet assembly films (Oct 2026), by unit.
+const CLOSET_VIDEOS: Video[] = [
+  { youtubeId: 'MwfIgOi_SZc', title: 'Double hanging unit', meta: 'DHW24, DHW30, DHW36' },
+  { youtubeId: 'mDC1TannblY', title: 'Tall hanging unit', meta: 'THW18, THW24, THW30, THW36' },
+  { youtubeId: '8I0a2RgOXbw', title: 'Low hanging unit', meta: 'LHW18, LHW24, LHW30, LHW36' },
+  { youtubeId: 'vch7U07131c', title: 'Tower unit', meta: 'TW18, TW24, TW30' },
+];
+
+// The video library: cabinets, then closets, each film opening in a dialog on the page.
 export default async function HowToVideos({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -55,7 +63,7 @@ export default async function HowToVideos({ params }: { params: Promise<{ locale
           { label: 'Watch the videos', href: '#videos', primary: true },
           { label: 'Our YouTube channel ↗', href: YOUTUBE_CHANNEL, style: 'outline' },
         ]}
-        description="Short films that show you rather than tell you: how a base cabinet goes together, how a lazy susan and a corner wall cabinet fit, how a tall utility cabinet stands up, and how roll-out trays go in. Watch one before you open the box and the build goes faster."
+        description="Short films that show you rather than tell you: how a base cabinet goes together, how a lazy susan and a corner wall cabinet fit, how a tall utility cabinet stands up, how roll-out trays go in, and how each closet unit is built. Watch one before you open the box and the build goes faster."
         image={{
           src: '/images/pages/how-to/hands-assembling.jpg',
           alt: 'Hands assembling a cabinet box on a workbench',
@@ -72,6 +80,14 @@ export default async function HowToVideos({ params }: { params: Promise<{ locale
         tint
         title="Build your ready-to-assemble cabinets"
         videos={INSTALLATION_VIDEOS}
+      />
+      <div id="closets" />
+      <VideoGrid
+        columns={2}
+        description="The four closet units, each built on camera from the flat pack. The codes match your box label."
+        kicker="Closets"
+        title="Build your closet units"
+        videos={CLOSET_VIDEOS}
       />
       <Prose
         actions={[{ label: 'Subscribe on YouTube ↗', href: YOUTUBE_CHANNEL }]}
