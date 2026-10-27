@@ -14,9 +14,11 @@ export const metadata: Metadata = {
     'Real customers, filmed in the kitchens we built for them. No script: what they wanted, what they worried about and how it turned out.',
 };
 
-// EK's YouTube testimonials (Oct 2026). Names and towns are as the video titles give them.
+// The featured film is EK's own "Happiness is crafted" (self-hosted, Oct 2026); the rest are
+// EK's YouTube testimonials. Names and towns are as the video titles give them.
 const FEATURED = {
-  youtubeId: '4ec_4LOe35s',
+  src: '/images/testimonials/happiness-is-crafted.mp4',
+  poster: '/images/testimonials/happiness-is-crafted-poster.jpg',
   title: 'Express Kitchens customers share their stories',
 };
 
@@ -83,15 +85,19 @@ export default async function Testimonials({ params }: { params: Promise<{ local
         tint
         title={FEATURED.title}
       >
-        <div className="mx-auto aspect-video w-full max-w-4xl overflow-hidden rounded-3xl bg-black shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]">
-          <iframe
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
+        <div className="mx-auto aspect-[1200/626] w-full max-w-4xl overflow-hidden rounded-3xl bg-black shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]">
+          {/* Captions still to come: the film has speech, so WCAG 1.2.2 needs a track. */}
+          {/* eslint-disable-next-line jsx-a11y/media-has-caption -- caption file pending from EK */}
+          <video
             className="h-full w-full"
-            loading="lazy"
-            src={`https://www.youtube-nocookie.com/embed/${FEATURED.youtubeId}?rel=0`}
+            controls
+            playsInline
+            poster={FEATURED.poster}
+            preload="metadata"
             title={FEATURED.title}
-          />
+          >
+            <source src={FEATURED.src} type="video/mp4" />
+          </video>
         </div>
       </HomeSection>
       <VideoGrid columns={3} title="More stories" videos={VIDEOS} />
