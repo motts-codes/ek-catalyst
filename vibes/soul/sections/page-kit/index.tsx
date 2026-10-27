@@ -155,8 +155,11 @@ export function PageHero({
           {chips.length > 0 && (
             <ul
               className={clsx(
-                'mt-5 flex flex-wrap',
-                chipStyle === 'checks' ? 'gap-x-6 gap-y-2.5' : 'gap-2',
+                'mt-5',
+                // Star-checks sit in two columns (a 2 x 2 for four promises); pills wrap freely.
+                chipStyle === 'checks'
+                  ? 'grid max-w-xl gap-x-8 gap-y-2.5 @sm:grid-cols-2'
+                  : 'flex flex-wrap gap-2',
               )}
             >
               {chips.map((chip) => (

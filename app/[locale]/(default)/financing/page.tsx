@@ -42,7 +42,7 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
           'Fixed rates from 9.99% APR',
           'Promo plans that waive interest',
           'Terms up to 180 months',
-          'Apply in-store with your designer',
+          'About 20% deposit',
         ]}
         description="Spread the cost of your kitchen with financing through GreenSky. Apply in any Express Kitchens showroom, and your designer will help you pick the plan that fits your budget."
         image={{
@@ -61,7 +61,7 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
           description: `${plan.what} Plan ${plan.plan}.`,
         }))}
         columns={4}
-        description="Monthly examples are for a $10,000 kitchen. Your designer will show you the exact figures for your order."
+        description="Plans start with a deposit of about 20%, and you finance the rest. Monthly examples are for $10,000 financed (for example, a $12,500 kitchen with a 20% deposit). Your designer will show you the exact figures for your order."
         hideImages
         kicker="The plans"
         tint
@@ -81,7 +81,8 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
           },
           {
             title: 'Apply in the showroom.',
-            description: 'Your designer helps you apply with GreenSky and choose a plan.',
+            description:
+              'Pay a deposit of about 20%, and your designer helps you apply with GreenSky for the rest and choose a plan.',
           },
           {
             title: "Order when you're ready.",
@@ -105,6 +106,10 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
             {
               q: 'Which plan should I choose?',
               a: "If you can pay it all off within 12 or 18 months, a promo plan waives the interest. If you'd rather keep monthly payments low, a fixed-rate plan spreads it over 10 or 15 years. Your designer will compare them for your order.",
+            },
+            {
+              q: 'Do I need a deposit?',
+              a: 'Yes, about 20% of your order. The rest is financed over the plan you choose.',
             },
             {
               q: 'How long is my approval good for?',

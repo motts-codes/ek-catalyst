@@ -41,7 +41,7 @@ export const FINANCING_PLANS: FinancingPlan[] = [
   },
 ];
 
-/** The kitchen price the page's monthly examples are worked on. */
+/** The amount financed in the page's monthly examples (after the deposit of about 20%). */
 export const FINANCING_EXAMPLE_AMOUNT = 10_000;
 
 // "about $132/month" for a plan on an amount.
