@@ -175,11 +175,11 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
             imageLabel: 'Cabinets wrapped on a pallet',
           },
         ]}
+        className="bg-[#fdf3f5]"
         columns={4}
         description="Here's what happens after you send your measurements, and how long each step takes."
         imageStyle="plain"
         kicker="What happens next"
-        tint
         title="From your numbers to cabinets on order"
       />
       <HomeSection>
