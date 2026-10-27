@@ -10,41 +10,43 @@ import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'How to Measure Your Kitchen',
+  title: 'How to measure your kitchen for cabinets',
   description:
-    'Six steps, wall by wall, with only a tape measure. Every measurement is checked by a Project Manager before anything is ordered.',
+    'Measure your kitchen in 20 minutes with a tape measure and your phone. Six simple steps, and a project manager checks every number before you order.',
 };
 
+// Arun's copy of 27 Oct 2026. "Project manager" is EK's real role: the showroom staff member
+// who designs the kitchen with the customer. Turnaround times are typical and to be confirmed.
 const STEPS = [
   {
     title: '1 · Sketch the room',
     description:
-      'Draw the outline from above and label each wall A, B, C. Mark the door, and where you stand when you cook.',
+      "Draw the kitchen as if you're looking down from the ceiling. Label each wall A, B, C, and mark the doors and windows. It doesn't need to be neat.",
   },
   {
     title: '2 · Measure each wall three times',
     description:
-      'At the floor, at counter height (36 in.) and at the ceiling, and use the smallest. Corner to corner, to the wall rather than the trim.',
+      'Measure corner to corner at the floor, at counter height (36") and near the ceiling. Write down the smallest number, because that\'s the one your cabinets have to fit. Measure to the wall itself, not to the baseboard.',
   },
   {
     title: "3 · Mark what can't move",
     description:
-      'Windows and doors (width, height and distance from the corner), the sink waste, gas line, radiator and vents.',
+      'For each window and door, note its width, height and distance from the corner, and the height of the window sill. Mark the sink pipes, gas line, outlets, switches, vents and radiators.',
   },
   {
-    title: '4 · Note the ceiling',
+    title: '4 · Measure the ceiling height',
     description:
-      'Height in three places. If there are soffits or bulkheads, how deep they are and how far down they come.',
+      "Measure it in three places. If there's a boxed-in section above where the wall cabinets go (a soffit), note how deep it is and how far down it comes.",
   },
   {
-    title: '5 · Measure the appliances',
+    title: '5 · Measure your appliances',
     description:
-      "Width, height and depth of the fridge, range, dishwasher and microwave, or the spec sheet if you're buying new. Note which way the fridge door swings.",
+      'Note the width, height and depth of the fridge, range, dishwasher and microwave. Buying new ones? Use the spec sheet. Note which way the fridge door opens.',
   },
   {
     title: '6 · Photograph every wall',
     description:
-      'Stand back and take one photo per wall and one of the whole room. Your designer will use them more than the numbers.',
+      "Stand back and take one photo of each wall, plus one of the whole room. Photos show your project manager what a sketch can't.",
   },
 ];
 
@@ -63,42 +65,41 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
       />
       <PageHero
         actions={[
-          { label: 'Get started', href: '#steps', primary: true },
-          { label: 'Already have measurements? Send them', href: FREE_DESIGN_HREF },
+          { label: 'Start measuring', href: '#steps', primary: true },
+          { label: 'Already measured? Send your numbers', href: FREE_DESIGN_HREF },
         ]}
-        description="Measuring your kitchen takes about twenty minutes and a tape measure, and you don't need to get it perfect: every number you send us is checked by a Project Manager before anything is ordered. Follow the six steps below, wall by wall, and if you get stuck at any point, call or text 860-247-1000 and we'll talk you through it."
+        description="All you need is a tape measure and your phone. Don't worry about getting it perfect: a project manager checks every number before anything is ordered. Follow the six steps, one wall at a time, and if you get stuck, call or text 860-247-1000 and we'll talk you through it."
         image={{
           src: '/images/pages/measuring/tape-across-wall.jpg',
           alt: 'A tape measure across an empty kitchen wall',
         }}
         imageLabel="A tape measure across a kitchen wall"
         kicker="Measuring guide"
-        title="How to measure like a pro"
+        title="Measure your kitchen like a pro, in 20 minutes"
       />
       <CategoryPoints
         points={[
-          { icon: 'stock', label: 'A designer reviews your measurements' },
-          { icon: 'clock', label: 'First design back in [X] business days' },
+          { icon: 'stock', label: 'A project manager checks every measurement' },
+          { icon: 'clock', label: 'First design in about 2 business days' },
           { icon: 'phone', label: 'Stuck? Call or text 860-247-1000' },
         ]}
       />
       <CardsRow
         cards={[
-          { title: 'Tape measure', description: 'A 25 ft one if you have it.' },
-          { title: 'Pencil and paper', description: 'Or the printable template.' },
-          { title: 'Level', description: 'Floors and ceilings are rarely flat.' },
-          { title: 'Your phone', description: 'For photos of every wall.' },
-          { title: 'Laser measure', description: 'Optional, but faster and more exact.' },
+          { title: 'Tape measure', description: 'A 25 ft one is ideal.' },
+          { title: 'Pencil and paper', description: 'Or print our template.' },
+          { title: 'Your phone', description: 'For a photo of every wall.' },
+          { title: 'A level (optional)', description: 'Floors and ceilings are rarely flat.' },
         ]}
-        columns={5}
+        columns={4}
         hideImages
-        kicker="You will need"
+        kicker="You'll need"
         tint
-        title="Five things, one of them your phone"
+        title="Four things, one of them your phone"
       />
-      <HomeSection id="steps" kicker="Step by step" title="Six steps, wall by wall">
+      <HomeSection id="steps" kicker="Step by step" title="Six steps, one wall at a time">
         <div className="relative mb-8 aspect-[21/9] overflow-hidden rounded-3xl bg-contrast-100">
-          <MediaPlaceholder label="Diagram — room plan with walls A, B, C labelled and the measurement points marked" />
+          <MediaPlaceholder label="A room plan with walls A, B and C labeled and the measuring points marked" />
         </div>
         <ol className="grid gap-5 @xl:grid-cols-2 @4xl:grid-cols-3">
           {STEPS.map((step) => (
@@ -112,19 +113,21 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
       <CardsRow
         cards={[
           {
-            title: "You're matched with a Project Manager",
+            title: 'A project manager takes it from here',
+            meta: 'Within 1 business day',
             description:
-              "Within 1 business day. Send the sketch, numbers and photos. A Project Manager at your nearest showroom picks them up, checks them and calls about anything the sketch doesn't show.",
+              "Send your sketch, numbers and photos. A project manager at your nearest showroom, who'll design your kitchen with you, checks them and calls you about anything that isn't clear.",
             image: {
               src: '/images/pages/measuring/pm-with-sketch.jpg',
               alt: "A project manager reviewing a customer's kitchen sketch",
             },
-            imageLabel: "A Project Manager with a customer's sketch",
+            imageLabel: "A project manager with a customer's sketch",
           },
           {
             title: 'Your first design',
+            meta: 'About 2 business days',
             description:
-              '2 business days on average. A 3D design of your kitchen, overhead and in perspective, with the cabinet list and an itemized price in your collection, RTA or assembled.',
+              'A 3D design of your kitchen, from above and in perspective, with the full cabinet list and an itemized price, RTA or assembled.',
             image: {
               src: '/images/pages/measuring/3d-kitchen-design.jpg',
               alt: 'A 3D kitchen design on a monitor',
@@ -132,9 +135,10 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
             imageLabel: 'A 3D kitchen design',
           },
           {
-            title: "Changes, until it's right",
+            title: "Changes until it's right",
+            meta: '1–3 business days each',
             description:
-              '1–3 business days per revision. Move the sink, swap a collection, add an island. Revisions are free and unlimited; most kitchens settle in two rounds.',
+              'Move the sink, try another style, add an island. Changes are free, and most kitchens are settled in two rounds.',
             image: {
               src: '/images/pages/measuring/designer-customer-screen.jpg',
               alt: 'A designer and a customer looking at a kitchen design on a screen',
@@ -142,9 +146,10 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
             imageLabel: 'Designer and customer at a screen',
           },
           {
-            title: 'Order with confidence',
+            title: 'Order',
+            meta: 'Ships in 2–8 weeks',
             description:
-              'Ships in 2–3 weeks. The final itemized quote is what you pay, online or with your Project Manager. RTA ships in two weeks, assembled in three, from Bristol.',
+              'The final itemized quote is what you pay. Most collections ship in 2–3 weeks (Euro in 4, Prism painted colors in 8), then 7–10 days in transit.',
             image: {
               src: '/images/pages/measuring/cabinets-wrapped-pallet.jpg',
               alt: 'Assembled cabinets wrapped on a pallet',
@@ -153,73 +158,76 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
           },
         ]}
         columns={4}
-        description="Four steps from your numbers to a kitchen on order, with how long each one takes. (Turnaround times to confirm.)"
-        kicker="What's next"
+        description="Here's what happens after you send your measurements, and how long each step takes."
+        kicker="What happens next"
         tint
-        title="After the measurements"
+        title="From your numbers to cabinets on order"
       />
       <DeliveryLadder
         columns={['Cabinet', 'Depth', 'Height']}
         rows={[
-          ['!Base cabinets', '24 in.', '34½ in. (+1½ in. countertop)'],
-          ['!Wall cabinets', '12 in.', '30, 36 or 42 in.'],
-          ['!Tall / pantry', '24 in.', '84, 90 or 96 in.'],
-          ['!Widths', '9 to 48 in., in 3 in. steps', ''],
+          ['!Base cabinets', '24"', '34½" (36" with the countertop)'],
+          ['!Wall cabinets', '12"', '30", 36" or 42"'],
+          ['!Tall / pantry cabinets', '24"', '84", 90" or 96"'],
+          ['!Widths', '9" to 48", in 3" steps', ''],
         ]}
         title="Sizes worth knowing"
       />
       <DeliveryLadder
-        columns={['Between', 'Minimum']}
-        footnote="Standard sizes for Express Kitchens cabinets, to confirm against the spec sheets."
+        columns={['Between', 'At least']}
         rows={[
-          ['!Countertop and wall cabinets', '18 in.'],
-          ['!Cabinets and major appliances', '1–2 in.'],
-          ['!A walkway', '36 in.'],
-          ['!An island, two cooks', '42–48 in.'],
+          ['!Countertop and wall cabinets', '18"'],
+          ['!Cabinets and large appliances', '1–2"'],
+          ['!A walkway', '36"'],
+          ['!Island and counter, with two cooks', '42–48"'],
         ]}
         tint
-        title="Clearances"
+        title="Space to leave"
       />
       <CardsRow
         cards={[
           {
-            title: 'Measuring to the trim',
-            description: 'Measure to the wall. Baseboard and casing come off or get scribed.',
+            title: 'Measuring to the baseboard',
+            description:
+              'Measure to the wall itself. Baseboards and door trim can be trimmed or worked around.',
           },
           {
             title: 'Trusting the floor',
-            description: 'Check level. Floors and ceilings in older Connecticut homes rarely are.',
+            description:
+              'Check it with a level. Floors and ceilings in older homes are rarely flat.',
           },
           {
             title: 'Missing the soffit',
-            description: 'Vents, pipes and bulkheads decide wall-cabinet height.',
+            description:
+              'A boxed-in section above the cabinets, or a vent or pipe, decides how tall your wall cabinets can be.',
           },
           {
             title: 'Forgetting the appliances',
             description:
-              'A fridge that is an inch deeper than the cabinet beside it is the most common reorder.',
+              'A fridge just an inch deeper than the cabinet beside it is the most common reorder.',
           },
           {
             title: 'Skipping the photos',
             description:
-              'A photo shows the designer what no sketch can: the window trim, the radiator, the light.',
+              'A photo shows your project manager what no sketch can: window trim, radiators, outlets.',
           },
         ]}
         columns={5}
         hideImages
         kicker="Common mistakes"
-        title="The five that cause reorders"
+        title="Five mistakes that cause reorders"
       />
       <FinePrint>
-        Turnaround times and standard sizes are to be confirmed by Express Kitchens before launch.
+        Turnaround times are typical, not guaranteed. Standard sizes may vary by collection; your
+        project manager confirms every size before you order.
       </FinePrint>
       <ClosingBand
-        description="Twenty minutes with a tape measure, then the estimator turns the 10×10 into your kitchen."
-        primary={{ label: 'Price my kitchen', href: ESTIMATOR_HREF }}
-        secondary={{ label: 'Send my measurements', href: FREE_DESIGN_HREF }}
+        description="Send your sketch, numbers and photos, and a project manager will turn them into a 3D design with an exact price. It's free, with no obligation to buy."
+        primary={{ label: 'Send my measurements', href: FREE_DESIGN_HREF }}
+        secondary={{ label: 'Price my kitchen', href: ESTIMATOR_HREF }}
         showrooms={SHOWROOMS}
         tint
-        title="Measured? Now price it."
+        title="Measured? Send it to a project manager."
       />
     </>
   );
