@@ -101,16 +101,8 @@ const FIELDS: Array<Field | Field[]> = [
     label: 'How would you like to meet?',
     required: true,
     options: [
-      {
-        label: 'Virtual video call',
-        description: 'Send photos and measurements, and plan it on screen',
-        value: 'video',
-      },
-      {
-        label: 'Showroom',
-        description: 'See the displays and leave with a plan and a price',
-        value: 'showroom',
-      },
+      { label: 'Virtual video call', value: 'video' },
+      { label: 'Showroom', value: 'showroom' },
     ],
   },
   { type: 'select', name: 'showroom', label: 'Nearest showroom', options: SHOWROOM_OPTIONS },
