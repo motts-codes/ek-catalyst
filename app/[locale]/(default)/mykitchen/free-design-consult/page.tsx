@@ -5,7 +5,7 @@ import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
-import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero, StepsRow } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitDesignLead } from '~/lib/forms/submit-lead';
@@ -15,8 +15,29 @@ import { getAudienceMode } from '~/lib/navigation/audience-mode';
 export const metadata: Metadata = {
   title: 'Free Kitchen Design Consult',
   description:
-    'A Project Manager plans your kitchen with you, prices every cabinet both ways and gives you a delivery date. Free, no deposit, no obligation.',
+    'A designer plans your kitchen with you: a layout for your room, every cabinet priced RTA and assembled, and a ship date. Free, no deposit, no obligation.',
 };
+
+// Arun's brief of 27 Oct 2026. To confirm with EK: that design changes are free and unlimited,
+// how soon the first design arrives (the measuring guide says about 2 business days), home
+// visits (removed until confirmed) and the one review figure used across the site.
+const HOW_IT_WORKS = [
+  {
+    title: 'We call you.',
+    description:
+      "Within 1 business day, a designer calls to set up a day, a time and how you'd like to meet.",
+  },
+  {
+    title: 'You plan it together.',
+    description:
+      'In a showroom or on a video call, usually 60–90 minutes. Bring a photo, rough measurements, or just an idea.',
+  },
+  {
+    title: 'You get your design and price.',
+    description:
+      "A 3D layout of your kitchen with an itemized price, RTA or assembled. Changes are free until it's right.",
+  },
+];
 
 const FIELDS: Array<Field | Field[]> = [
   ...contactRows(),
@@ -27,9 +48,9 @@ const FIELDS: Array<Field | Field[]> = [
     required: true,
     options: [
       { label: 'Kitchen', value: 'kitchen' },
-      { label: 'Bath', value: 'bath' },
+      { label: 'Bathroom', value: 'bath' },
       { label: 'Closets', value: 'closets' },
-      { label: 'Windows and doors', value: 'windows-doors' },
+      { label: 'Windows', value: 'windows' },
     ],
   },
   {
@@ -38,11 +59,20 @@ const FIELDS: Array<Field | Field[]> = [
     label: 'Your layout, if you know it',
     options: [
       { label: 'L-shaped', value: 'l' },
-      { label: 'Straight', value: 'straight' },
       { label: 'U-shaped', value: 'u' },
       { label: 'Galley', value: 'galley' },
-      { label: 'With an island', value: 'island' },
-      { label: "I'm not sure yet", value: 'unsure' },
+      { label: 'Single wall', value: 'single-wall' },
+      { label: 'Not sure yet', value: 'unsure' },
+    ],
+  },
+  {
+    type: 'radio-group',
+    name: 'island',
+    label: 'Do you want an island?',
+    options: [
+      { label: 'Yes', value: 'yes' },
+      { label: 'No', value: 'no' },
+      { label: 'Not sure', value: 'unsure' },
     ],
   },
   {
@@ -70,7 +100,8 @@ const FIELDS: Array<Field | Field[]> = [
   {
     type: 'textarea',
     name: 'notes',
-    label: 'Anything else you want the designer to know?',
+    label: "Anything else you'd like the designer to know?",
+    placeholder: 'Your style, appliances you’re keeping, a link to a kitchen you love…',
   },
   {
     type: 'radio-group',
@@ -79,15 +110,11 @@ const FIELDS: Array<Field | Field[]> = [
     required: true,
     options: [
       {
-        label: 'In a showroom — walk the displays and leave with a plan and a price',
+        label: 'In a showroom: see the displays and leave with a plan and a price',
         value: 'showroom',
       },
       {
-        label: 'At my home — the designer measures and plans in your kitchen (Connecticut)',
-        value: 'home',
-      },
-      {
-        label: 'On a video call — send photos and measurements first, plan it on screen',
+        label: 'On a video call: send photos and measurements, and plan it on screen',
         value: 'video',
       },
     ],
@@ -120,8 +147,8 @@ const PRO_FIELDS: Array<Field | Field[]> = [
   ...FIELDS.slice(contactRows().length),
 ];
 
-// The design consult request: who you are, what you're planning, how you'd like to meet. One
-// form rather than the wireframe's three steps, so nothing is hidden behind a Next button.
+// The design consult request: hero, a compact "how it works" row, then the form second on the
+// page, followed by what to bring, reviews and the samples nudge.
 export default async function FreeDesign({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -141,46 +168,43 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         ]}
       />
       <PageHero
-        actions={[{ label: 'Book my consult', href: '#request', primary: true }]}
-        chips={['A full layout', 'An itemized quote', 'A delivery date', 'Free, no obligation']}
+        actions={[{ label: 'Book my free consult', href: '#request', primary: true }]}
+        chips={['A full layout', 'An itemized price', 'A ship date', 'Free, no obligation']}
         description={
           pro
-            ? "Send us the job and a designer will lay it out, price every cabinet both ways and give you a delivery date you can put in front of your client — under your name if you want it. You close the job; we supply it. There's no charge and no deposit."
-            : "Tell us a little about your kitchen and a Project Manager will plan it with you: a layout drawn for your room, every cabinet priced both ways, and a delivery date you can plan around. It's free, there's no deposit, and you keep the plan whether you buy from us or not. Meet in a showroom, at your home or on a call — whichever is easier for you."
+            ? 'Send us the job and a designer will lay it out, price every cabinet both ways, and give you a ship date you can put in front of your client. No charge, no deposit. Ask about special pricing for contractors.'
+            : "Tell us a little about your kitchen and a designer will plan it with you: a layout drawn for your room, every cabinet priced both ways (RTA and assembled), and a ship date you can plan around. Meet in one of our showrooms, or on a video call from anywhere we ship. It's free, there's no deposit, and the plan is yours to keep whether you buy from us or not."
         }
         image={{
           src: '/images/pages/design-consult/plan-and-quote.jpg',
           alt: 'A printed kitchen plan and quote on a table',
         }}
         imageLabel="A printed plan and quote on a table"
-        kicker={pro ? 'Free design & quote for the trade' : 'Free design consult'}
-        title={
-          pro
-            ? 'We design it. You win the job.'
-            : 'Plan your kitchen with someone who does it every day'
-        }
+        kicker={pro ? 'Free design and quote for the trade' : 'Free design consult'}
+        title={pro ? 'We design it. You win the job.' : 'Plan your kitchen with a designer, free'}
       />
+      <StepsRow steps={HOW_IT_WORKS} title="How it works" />
       <LeadFormCard
         action={submitDesignLead}
-        description="Only your contact details and the rooms are required."
+        description="Two minutes. Only your contact details and the rooms are required."
         fields={pro ? PRO_FIELDS : FIELDS}
         fine={
           <>
-            A designer will call within one business day to confirm the day, time and format.
-            You&apos;ll speak to a designer, not a call center. No deposit, no obligation.
+            A designer will call you within 1 business day. You&apos;ll talk to a real designer, not
+            a call center. No deposit, no obligation.
           </>
         }
         id="request"
         kicker="Request your consult"
         submitLabel="Request my free consult"
-        title="Tell us about your project"
+        title="Tell us about your kitchen"
       />
       <CardsRow
         cards={[
           {
             title: 'Bring a photo',
             description:
-              'Any angle, from your phone. It tells the designer more about your room than a sketch ever could.',
+              'Any angle, from your phone. It tells your designer more about your room than a sketch can.',
             image: {
               src: '/images/pages/design-consult/phone-photo.jpg',
               alt: 'A hand photographing a kitchen with a phone',
@@ -188,9 +212,10 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             imageLabel: 'A phone photo of a kitchen',
           },
           {
-            title: 'Rough wall lengths help',
-            description:
-              'A tape measure, corner to corner. Twenty minutes of your time, and rough is absolutely fine.',
+            title: 'Rough wall lengths',
+            description: 'Corner to corner with a tape measure. Twenty minutes, and rough is fine.',
+            ctaLabel: 'How to measure',
+            href: '/resources/measuring-guide',
             image: {
               src: '/images/pages/design-consult/tape-measure-wall.jpg',
               alt: 'A tape measure stretched along a kitchen wall',
@@ -198,9 +223,9 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             imageLabel: 'A tape measure along a wall',
           },
           {
-            title: 'Or bring nothing at all',
+            title: 'Or just bring an idea',
             description:
-              "If all you have is a feeling about what you want, that's a perfectly good place to start. We'll take it from there.",
+              "A screenshot, a color, a kitchen you liked. That's a good place to start.",
             image: {
               src: '/images/pages/design-consult/saved-screenshots.jpg',
               alt: 'A phone showing saved kitchen photos',
@@ -209,22 +234,22 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
           },
         ]}
         kicker="Before you meet"
-        title="Three things that make the consult even better"
+        title="Three things that help (all optional)"
       />
       <ReviewMarquee
         reviews={HOME_REVIEWS}
         summary="4.5 · 360+ Google reviews"
         tint
-        title="What the consult was like for other people"
+        title="What other people said about their consult"
       />
       <HomeSection
         action={{ label: 'Order free samples', href: SAMPLES_HREF }}
         compact
-        title="Want to hold a door first?"
+        title="Want to see the door first?"
       >
         <p className="max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
-          Your first two quarter-door samples are free with the code FREESAMPLES. Order them now and
-          they&apos;ll be with you before your consult.
+          Your first two door samples are free with the code FREESAMPLES. Order now and they&apos;ll
+          arrive before your consult.
         </p>
       </HomeSection>
     </>

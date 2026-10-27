@@ -571,6 +571,48 @@ export function FinePrint({
   );
 }
 
+export interface RowStep {
+  title: string;
+  description: string;
+}
+
+// A single compact row of numbered steps ("How it works"): big red number, bold title, one
+// line. Compact padding so it never pushes what follows (usually a form) far down the page.
+export function StepsRow({
+  kicker,
+  title,
+  steps,
+  tint = false,
+}: {
+  kicker?: string;
+  title: string;
+  steps: RowStep[];
+  tint?: boolean;
+}) {
+  return (
+    <HomeSection compact kicker={kicker} tint={tint} title={title}>
+      <ol className="grid gap-6 @xl:grid-cols-3 @xl:gap-8">
+        {steps.map((step, i) => (
+          <li className="flex gap-4" key={step.title}>
+            <span
+              aria-hidden
+              className="font-heading text-4xl font-bold leading-none text-[var(--button-primary-background,#d90716)]"
+            >
+              {i + 1}
+            </span>
+            <div className="pt-1">
+              <h3 className="font-heading text-base font-semibold leading-tight @xl:text-lg">
+                {step.title}
+              </h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-contrast-500">{step.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </HomeSection>
+  );
+}
+
 // The card every lead form sits in: pale rose, red rule top and bottom, soft shadow, with the
 // privacy line underneath. Pass the form as children; anything after it (notes) goes in `after`.
 export function FormCard({ children, after }: { children: ReactNode; after?: ReactNode }) {
