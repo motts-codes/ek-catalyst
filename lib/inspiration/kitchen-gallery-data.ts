@@ -66,7 +66,7 @@ function allKitchens(
         ref: finishRef(line.entityId, finish),
         name: `${line.name} · ${finish}`,
         finish,
-        image: { src: photo, alt: `A ${line.name} kitchen in ${finish}` },
+        image: { src: photo, alt: `${line.name} kitchen in ${finish}` },
       }));
     }
 
@@ -79,7 +79,7 @@ function allKitchens(
             id: String(line.entityId),
             ref: collectionRef(line.entityId),
             name: line.name,
-            image: { src, alt: `A ${line.name} kitchen` },
+            image: { src, alt: `${line.name} kitchen` },
           },
         ]
       : [];
@@ -145,7 +145,7 @@ export function resolveGalleryColumns(
                   finishTypes: [],
                   colorCount: 0,
                   href: slot.href || '/cabinets/assembled-cabinets',
-                  image: { src: slot.src, alt: slot.name ? `A ${slot.name} kitchen` : 'A kitchen' },
+                  image: { src: slot.src, alt: slot.name ? `${slot.name} kitchen` : 'A kitchen' },
                 },
               ]
             : [];
