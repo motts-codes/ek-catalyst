@@ -41,7 +41,7 @@ export default async function BestSellers({ params }: { params: Promise<{ locale
         actions={[
           { label: 'Shop all collections', href: '/cabinets/assembled-cabinets', primary: true },
         ]}
-        description="If you'd like to know what other people chose, this is the honest answer: the collections that actually ship from Bristol, not the ones we'd most like to sell. Scroll through the kitchens, tap one for the collection, finish and how it's built, then open the collection for prices and samples."
+        description="The collections our customers order most, in real kitchens. Tap a kitchen to see the collection, finish and how it's built, then view the collection."
         kicker="Best-selling designs"
         textOnly
         title="The kitchens people order most"
