@@ -46,10 +46,10 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
         ]}
         description="Spread the cost of your kitchen with financing through GreenSky. Apply in any Express Kitchens showroom, and your designer will help you pick the plan that fits your budget."
         image={{
-          src: '/images/pages/financing/family-kitchen.jpg',
-          alt: 'A family at the island of their finished white kitchen',
+          src: '/images/pages/financing/hero-couple-cabinets.jpg',
+          alt: 'A couple holding white cabinet drawers with a red piggy bank and a 0% financing, $299 per month badge',
         }}
-        imageLabel="A family in a finished kitchen"
+        imageStyle="plain"
         kicker="Financing"
         note="Financing is available in our showrooms only. It isn't available on online orders or at our Factory Outlet."
         title="Pay for your kitchen over time"
