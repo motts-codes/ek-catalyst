@@ -148,6 +148,10 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             ? "Send us the job and a designer will lay it out, price every cabinet both ways and give you a delivery date you can put in front of your client — under your name if you want it. You close the job; we supply it. There's no charge and no deposit."
             : "Tell us a little about your kitchen and a Project Manager will plan it with you: a layout drawn for your room, every cabinet priced both ways, and a delivery date you can plan around. It's free, there's no deposit, and you keep the plan whether you buy from us or not. Meet in a showroom, at your home or on a call — whichever is easier for you."
         }
+        image={{
+          src: '/images/pages/design-consult/plan-and-quote.jpg',
+          alt: 'A printed kitchen plan and quote on a table',
+        }}
         imageLabel="A printed plan and quote on a table"
         kicker={pro ? 'Free design & quote for the trade' : 'Free design consult'}
         title={
@@ -177,18 +181,30 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             title: 'Bring a photo',
             description:
               'Any angle, from your phone. It tells the designer more about your room than a sketch ever could.',
+            image: {
+              src: '/images/pages/design-consult/phone-photo.jpg',
+              alt: 'A hand photographing a kitchen with a phone',
+            },
             imageLabel: 'A phone photo of a kitchen',
           },
           {
             title: 'Rough wall lengths help',
             description:
               'A tape measure, corner to corner. Twenty minutes of your time, and rough is absolutely fine.',
+            image: {
+              src: '/images/pages/design-consult/tape-measure-wall.jpg',
+              alt: 'A tape measure stretched along a kitchen wall',
+            },
             imageLabel: 'A tape measure along a wall',
           },
           {
             title: 'Or bring nothing at all',
             description:
               "If all you have is a feeling about what you want, that's a perfectly good place to start. We'll take it from there.",
+            image: {
+              src: '/images/pages/design-consult/saved-screenshots.jpg',
+              alt: 'A phone showing saved kitchen photos',
+            },
             imageLabel: 'Saved kitchen screenshots on a phone',
           },
         ]}

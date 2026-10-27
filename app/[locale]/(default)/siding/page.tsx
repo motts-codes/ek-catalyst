@@ -72,11 +72,43 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
       />
       <SubcategoryTiles
         items={[
-          { name: 'Clapboard', href: '#quote' },
-          { name: 'Dutch lap', href: '#quote' },
-          { name: 'Board & batten', href: '#quote' },
-          { name: 'Shake', href: '#quote' },
-          { name: 'Trim & accessories', href: '#quote' },
+          {
+            name: 'Clapboard',
+            href: '#quote',
+            image: {
+              src: '/images/pages/siding/clapboard.jpg',
+              alt: 'Clapboard vinyl siding, close up',
+            },
+          },
+          {
+            name: 'Dutch lap',
+            href: '#quote',
+            image: {
+              src: '/images/pages/siding/dutch-lap.jpg',
+              alt: 'Dutch lap vinyl siding, close up',
+            },
+          },
+          {
+            name: 'Board & batten',
+            href: '#quote',
+            image: {
+              src: '/images/pages/siding/board-and-batten.jpg',
+              alt: 'Board & batten vinyl siding, close up',
+            },
+          },
+          {
+            name: 'Shake',
+            href: '#quote',
+            image: { src: '/images/pages/siding/shake.jpg', alt: 'Shake vinyl siding, close up' },
+          },
+          {
+            name: 'Trim & accessories',
+            href: '#quote',
+            image: {
+              src: '/images/pages/siding/trim.jpg',
+              alt: 'Trim & accessories vinyl siding, close up',
+            },
+          },
         ]}
         title="Shop by siding type"
       />

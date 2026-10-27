@@ -37,6 +37,10 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         ]}
         chips={['100,000+ units delivered', '300+ property managers', '5-day standard']}
         description="Every day a unit sits empty during a renovation is rent you'll never get back. We deliver complete kitchens in five days from more than 50,000 cabinets in stock, so your units are back on the market before most suppliers' orders have even shipped. One spec per unit type, one PO, one accountable partner."
+        image={{
+          src: '/images/pages/industry/apartment-kitchen-units.jpg',
+          alt: 'A finished apartment kitchen, the next identical unit visible beyond',
+        }}
         imageLabel="A finished apartment kitchen, one of many identical units"
         kicker="Multifamily"
         title="Five-day kitchens. Fewer vacant days. More rental income."

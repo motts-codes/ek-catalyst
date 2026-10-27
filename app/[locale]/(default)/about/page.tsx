@@ -34,6 +34,10 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           { label: 'Visit a showroom', href: '/showrooms' },
         ]}
         description="We've been Connecticut's kitchen company since 1916. Based in Bristol, we build our own cabinetry — Star Cabinetry, made right here — cut and polish our own stone countertops, and sell it all from six showrooms you can walk into. That's the difference between us and a website with a warehouse somewhere: when you buy from us, you're buying from the people who made it, at a manufacturer-direct price, with the cabinets already on the shelf."
+        image={{
+          src: '/images/pages/about/factory-floor.jpg',
+          alt: 'The factory floor, cabinets on the line',
+        }}
         imageLabel="The factory floor, cabinets on the line"
         kicker="About Express Kitchens"
         title="Made in Connecticut. Sold by the people who make it."
@@ -54,24 +58,40 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             title: 'Our own factory',
             description:
               'A robotic line in Bristol cuts, drills and finishes every cabinet to the same tolerance, and keeps 50,000 cabinets in stock so yours can ship in two weeks rather than two months.',
+            image: {
+              src: '/images/pages/about/robotic-line.jpg',
+              alt: 'A robotic arm placing a panel on the cabinet line',
+            },
             imageLabel: 'Robotic line',
           },
           {
             title: 'Six showrooms',
             description:
               'Newington, Orange, New London, Brookfield, Stamford and Bristol. Full kitchens on display, real finishes to touch, and a Project Manager at each one who will plan your kitchen with you.',
+            image: {
+              src: '/images/pages/about/showroom-display.jpg',
+              alt: 'A white shaker display kitchen in the showroom',
+            },
             imageLabel: 'Showroom display',
           },
           {
             title: 'The factory outlet',
             description:
               "In Bristol you'll also find our outlet: floor models, overstock and clearance sets at outlet prices, and the pickup point for windows and appliances.",
+            image: {
+              src: '/images/pages/about/factory-outlet.jpg',
+              alt: 'Cabinet sets on display at the factory outlet',
+            },
             imageLabel: 'Factory outlet',
           },
           {
             title: 'People who know the work',
             description:
               'Cabinetmakers, stone finishers, designers and Project Managers, many of whom have been with us for well over a decade. They are the people our customers name in their reviews.',
+            image: {
+              src: '/images/pages/about/team-at-work.jpg',
+              alt: 'Two cabinetmakers fitting a door at a workbench',
+            },
             imageLabel: 'The team at work',
           },
         ]}
@@ -153,18 +173,30 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             title: 'Cabinets, built in Connecticut',
             description:
               'Star Cabinetry is our own brand: all-plywood boxes and five-piece doors, built by our own cabinetmakers in Bristol. Because we make it, we can price it manufacturer-direct and keep 50,000 cabinets in stock for you.',
+            image: {
+              src: '/images/pages/about/cabinetmaker-at-line.jpg',
+              alt: 'A cabinetmaker inspecting a painted door at the line',
+            },
             imageLabel: 'A cabinetmaker at the line',
           },
           {
             title: 'Countertops, cut and polished here',
             description:
               'Granite and quartz from quarries around the world, templated, cut and hand-polished at our own facility in Bristol, in a wide choice of colours and at a price to fit your budget.',
+            image: {
+              src: '/images/pages/about/stone-polishing.jpg',
+              alt: 'A quartz slab being polished in the stone shop',
+            },
             imageLabel: 'Stone polishing',
           },
           {
             title: 'Brands we carry alongside our own',
             description:
               "If you have your heart set on a particular national cabinet brand, we carry several, at some of the most affordable prices you'll find.",
+            image: {
+              src: '/images/pages/about/showroom-display.jpg',
+              alt: 'A white shaker display kitchen in the showroom',
+            },
             imageLabel: 'Showroom display',
           },
         ]}

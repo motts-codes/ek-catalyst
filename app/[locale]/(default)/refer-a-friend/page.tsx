@@ -40,6 +40,10 @@ export default async function ReferAFriend({ params }: { params: Promise<{ local
       <PageHero
         actions={[{ label: 'Get my link', href: '#link', primary: true }]}
         description="If someone you know is planning a kitchen, send them our way and you'll both do well out of it. They get $[X] off their first order over $[X], and you get $[X] when it ships, as a credit toward your next order or a gift card, whichever you prefer. There's no limit on how many friends you refer, and nothing for your friend to fill in."
+        image={{
+          src: '/images/pages/refer/neighbours-kitchen.jpg',
+          alt: 'Two neighbours having coffee at the island of a new kitchen',
+        }}
         imageLabel="Two neighbours in a finished kitchen"
         kicker="Refer a friend"
         title="Give $[X]. Get $[X]."

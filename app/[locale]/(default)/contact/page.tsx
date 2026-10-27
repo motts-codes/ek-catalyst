@@ -63,6 +63,10 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
           { label: 'Read the FAQ', href: '/faq' },
         ]}
         description="Whether it's a question about an order, a product you're weighing up or a project you're planning, send it here and the right person will reply within one business day. If it can't wait, call or text us any time, day or night. And if you're wondering about delivery, returns or how samples work, the FAQ may already have your answer."
+        image={{
+          src: '/images/pages/contact/bristol-factory-exterior.jpg',
+          alt: 'The factory and outlet building from outside',
+        }}
         imageLabel="The Bristol factory and outlet, wide"
         kicker="Contact"
         title="Talk to Express Kitchens"

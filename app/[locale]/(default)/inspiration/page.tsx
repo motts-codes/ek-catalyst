@@ -36,6 +36,10 @@ export default async function Inspiration({ params }: { params: Promise<{ locale
           { label: 'Best-selling designs', href: '/inspiration/best-sellers' },
         ]}
         description="These are real kitchens in real Connecticut homes, photographed after the dust settled. Every photo tells you the collection and the finish, so when something catches your eye you can go straight to it. Open any one for the story behind it: what the family wanted, what it cost and how long it took."
+        image={{
+          src: '/images/pages/inspiration/connecticut-kitchen-wide.jpg',
+          alt: 'A finished white shaker kitchen with an island and French doors',
+        }}
         imageLabel="A finished Connecticut kitchen, wide"
         kicker="Inspiration"
         title="Kitchens we've finished, in homes like yours"

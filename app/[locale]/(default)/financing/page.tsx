@@ -41,6 +41,10 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
           'First payment after your order ships',
         ]}
         description="You don't have to wait until you've saved every dollar to have the kitchen you want. With 0% financing from $299 a month, you can order now and spread the cost over a term that suits you, on qualifying orders and subject to approval. Checking your rate takes about two minutes and won't touch your credit score, so there's no risk in finding out. Wherever you see an “as low as” monthly figure on this site, this is where it comes from."
+        image={{
+          src: '/images/pages/financing/family-kitchen.jpg',
+          alt: 'A family at the island of their finished white kitchen',
+        }}
         imageLabel="A family in a finished kitchen"
         kicker="0% financing from $299 a month"
         title="Buy the kitchen now. Pay for it monthly."

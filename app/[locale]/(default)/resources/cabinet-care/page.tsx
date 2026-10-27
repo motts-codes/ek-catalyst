@@ -4,8 +4,9 @@ import { setRequestLocale } from 'next-intl/server';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { Image } from '~/components/image';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -46,6 +47,10 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
           { label: 'What not to use', href: '#avoid' },
         ]}
         description="We build cabinets to last and check every one before it leaves Bristol, but a kitchen that gets used every day will still want the odd wipe, a hinge adjustment now and then, and the occasional touch-up. Here's how to do each one, by finish, and the short list of things never to use on them."
+        image={{
+          src: '/images/pages/cabinet-care/wiping-shaker-door.jpg',
+          alt: 'A hand wiping a painted shaker door with a microfiber cloth',
+        }}
         imageLabel="A hand wiping a painted shaker door with a microfiber cloth"
         kicker="Cabinet care & maintenance"
         title="Keep your kitchen looking new"
@@ -64,18 +69,30 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
             title: 'Painted doors',
             description:
               'Mild dish soap diluted in warm water, on a microfiber cloth. Wipe, then dry with a second cloth. Nothing abrasive: paint scratches before stain does.',
+            image: {
+              src: '/images/pages/cabinet-care/painted-white-door.jpg',
+              alt: 'A painted white cabinet door being wiped',
+            },
             imageLabel: 'A painted white door being wiped',
           },
           {
             title: 'Stained and natural wood',
             description:
               'A mild wood cleaner diluted in warm water. Wipe with the grain and dry immediately. Once or twice a year, a thorough clean one small area at a time.',
+            image: {
+              src: '/images/pages/cabinet-care/stained-oak-door.jpg',
+              alt: 'A stained oak shaker cabinet door',
+            },
             imageLabel: 'A stained oak door',
           },
           {
             title: 'Laminate and textured',
             description:
               'Warm water and a drop of dish soap, dried at once. Standing water at the edges is what lifts laminate.',
+            image: {
+              src: '/images/pages/cabinet-care/laminate-slab-door.jpg',
+              alt: 'A light grey laminate slab cabinet door',
+            },
             imageLabel: 'A laminate slab door',
           },
         ]}
@@ -124,6 +141,10 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
         body={[
           'Every collection has a matching touch-up kit: a fill stick and a colour marker, free with every kitchen order (to confirm). Soften the stick in your hand, fill with a back-and-forth motion, then blend the marker with a fingertip. Practise on the inside of a door first. Paint is harder to blend than stain, so if the damage is bigger than a coin, send us a photo before you start.',
         ]}
+        image={{
+          src: '/images/pages/cabinet-care/touch-up-kit.jpg',
+          alt: 'A touch-up kit beside a chipped cabinet door',
+        }}
         imageLabel="A touch-up kit beside a chipped door"
         kicker="Touch-ups"
         title="Chips and scratches: the kit in the drawer"
@@ -191,7 +212,13 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
             title="Never on a cabinet"
           />
           <div className="relative min-h-[220px] overflow-hidden rounded-3xl bg-contrast-100">
-            <MediaPlaceholder label="The cleaners to avoid, lined up" />
+            <Image
+              alt="Plain spray bottles and a scouring pad, the cleaners to avoid"
+              className="object-cover"
+              fill
+              sizes="(min-width: 56rem) 40rem, 100vw"
+              src="/images/pages/cabinet-care/cleaners-to-avoid.jpg"
+            />
           </div>
         </div>
       </HomeSection>

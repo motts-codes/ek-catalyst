@@ -21,6 +21,10 @@ export default async function Industry({ params }: { params: Promise<{ locale: s
       <PageBreadcrumbs breadcrumbs={[{ label: 'Industry', href: '/industry' }]} />
       <PageHero
         description="Most people meet us through a showroom or this site, but the same cabinets, made in the same Connecticut factory, go out at a very different scale: whole apartment buildings, hotel kitchenettes, office break rooms and wholesale supply for dealers. If you're buying by the unit, the pallet or the project rather than the kitchen, start here and we'll point you to the right team."
+        image={{
+          src: '/images/pages/industry/multifamily-kitchen.jpg',
+          alt: 'A compact apartment kitchen with grey shaker cabinets',
+        }}
         imageLabel="A multifamily kitchen, one of many"
         kicker="Industry"
         title="The same cabinets, at a different scale"

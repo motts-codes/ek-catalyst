@@ -143,6 +143,10 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
         body={[
           "We build Star Cabinetry in our own Bristol factory and sell it in our own showrooms, so there's no distributor and no dealer margin in the price you see. When a cheaper quote turns up, it usually turns out to be a different cabinet — a particle-board box, ¾ overlay instead of full, no soft-close — or a seller with no phone number. Compare the cabinet list, not just the number, and you'll see why this guarantee rarely gets used.",
         ]}
+        image={{
+          src: '/images/pages/price-match/box-comparison.jpg',
+          alt: 'A plywood cabinet box beside a particle-board one, both cut open',
+        }}
         imageLabel="An Express Kitchens box beside a particle-board box, cut open"
         kicker="Why it rarely comes up"
         title="The price has a reason"

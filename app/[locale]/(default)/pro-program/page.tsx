@@ -48,6 +48,10 @@ export default async function ProProgram({ params }: { params: Promise<{ locale:
           { label: 'See the discounts', href: '#tiers' },
         ]}
         description="If you fit kitchens for a living, you should be buying them at a contractor's price from people who know your jobs. The Contractor Program gives you that: Silver from your first $5,000 invoice, Diamond once you reach twenty invoices or $50,000 in a year, and in both tiers a text-enabled support line only contractors have, free design on every job and sales-tax exemption with your form on file. Fill in the two-minute form and your showroom sets the account up."
+        image={{
+          src: '/images/pages/pro/contractor-will-call.jpg',
+          alt: 'A contractor signing for boxed cabinets at the will-call counter',
+        }}
         imageLabel="A contractor collecting at will-call"
         kicker="The Contractor Program"
         title="Trade pricing, dates you can quote, and a rep who picks up"

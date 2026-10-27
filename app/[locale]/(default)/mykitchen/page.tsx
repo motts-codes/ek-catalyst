@@ -143,6 +143,10 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
           'Everyone in this business prices cabinets on a “10×10”: a standard kitchen with two ten-foot walls in an L, about twelve cabinets. It is the fairest way to compare one seller with another, and every “from” price on this site is that kitchen in that collection.',
           `Ours start at ${lowest.rta ?? '$[X]'} ready-to-assemble and ${lowest.assembled ?? '$[X]'} assembled. Yours will differ, of course, and the estimator scales those prices to your own walls in about two minutes.`,
         ]}
+        image={{
+          src: '/images/estimator/layout-l-shaped.jpg',
+          alt: 'The 10×10 kitchen as an L: two 10-foot walls of white shaker cabinets',
+        }}
         imageLabel="The 10×10 kitchen, drawn in plan"
         kicker="What a kitchen actually costs"
         title="One honest number to start from"

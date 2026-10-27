@@ -34,6 +34,10 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
           { label: 'What counts as a defect', href: '#defects' },
         ]}
         description="Because we build the cabinets ourselves, we can stand behind them properly: a [X]-year limited warranty on the box, doors and finish and [X] years on hinges and glides, for the original purchaser, from the day of delivery. Windows, appliances, countertops and hardware carry their own terms, and you'll find all of them on this page, along with the plain-English numbers for what counts as a defect."
+        image={{
+          src: '/images/pages/warranty/checking-door-line.jpg',
+          alt: 'A cabinetmaker checking a painted door on the line',
+        }}
         imageLabel="A cabinetmaker checking a door on the line"
         kicker="Warranty"
         title="We made it, so we stand behind it"

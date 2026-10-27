@@ -39,17 +39,29 @@ export default async function FreeDesignConfirmed({
           {
             title: 'A photo of the room',
             description: 'Any angle, from your phone. It tells the designer more than a sketch.',
+            image: {
+              src: '/images/pages/design-consult/phone-photo.jpg',
+              alt: 'A hand photographing a kitchen with a phone',
+            },
             imageLabel: 'A phone photo of a kitchen',
           },
           {
             title: 'Rough wall lengths',
             description: 'Corner to corner with a tape measure. Twenty minutes, and rough is fine.',
+            image: {
+              src: '/images/pages/design-consult/tape-measure-wall.jpg',
+              alt: 'A tape measure stretched along a kitchen wall',
+            },
             imageLabel: 'A tape measure along a wall',
           },
           {
             title: 'Anything you have saved',
             description:
               'Screenshots, a colour, a kitchen you liked. It gives us a starting point.',
+            image: {
+              src: '/images/pages/design-consult/saved-screenshots.jpg',
+              alt: 'A phone showing saved kitchen photos',
+            },
             imageLabel: 'Saved kitchen screenshots on a phone',
           },
         ]}

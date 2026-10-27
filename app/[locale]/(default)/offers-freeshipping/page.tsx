@@ -38,6 +38,10 @@ export default async function FreeShippingOffer({
           { label: 'The terms', href: '#terms' },
         ]}
         description="Cabinets are heavy, and shipping them is not cheap. On any cabinet order above $2,500 we cover it: assembled or ready-to-assemble, every collection, delivered to your door. The discount applies itself at checkout once your cart passes the threshold."
+        image={{
+          src: '/images/pages/offers/delivery-truck-house.jpg',
+          alt: 'A delivery truck unloading wrapped cabinets in a driveway',
+        }}
         imageLabel="A delivery truck unloading wrapped cabinets at a house"
         kicker="Current offer"
         title="Free shipping above $2,500."

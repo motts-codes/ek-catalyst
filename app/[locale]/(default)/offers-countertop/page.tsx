@@ -38,6 +38,10 @@ export default async function CountertopOffer({ params }: { params: Promise<{ lo
           { label: 'The terms', href: '#terms' },
         ]}
         description="Cabinets and the countertop that sits on them are one decision, so we price them that way. Order Star Cabinets worth $3,000 or more, assembled or ready-to-assemble, and we put up to $500 toward your countertop. Granite starts at $49.99 a square foot, quartz at $59.99, and the credit comes off your countertop quote."
+        image={{
+          src: '/images/pages/offers/countertop-install.jpg',
+          alt: 'Installers lowering a quartz countertop onto white shaker base cabinets',
+        }}
         imageLabel="A white quartz countertop being lowered onto Star shaker base cabinets"
         kicker="Current offer, Star Cabinets"
         title="Up to $500 toward your countertop."

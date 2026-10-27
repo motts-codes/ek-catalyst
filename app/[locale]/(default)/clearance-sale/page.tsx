@@ -16,31 +16,55 @@ export const metadata: Metadata = {
 const SETS = [
   {
     title: '7FT Mocha Shaker Cabinet Set',
+    image: {
+      src: '/images/pages/clearance/set-mocha-shaker-7ft.jpg',
+      alt: '7FT Mocha Shaker Cabinet Set',
+    },
     description:
       'A warm 7-foot set in a rich mocha finish with classic shaker doors, a practical mix of wall and base cabinets. Countertops not included. Floor model · Bristol.',
   },
   {
     title: '10FT White Shaker Cabinet Set with Island',
+    image: {
+      src: '/images/pages/clearance/set-white-shaker-island-10ft.jpg',
+      alt: '10FT White Shaker Cabinet Set with Island',
+    },
     description:
       'A full 10-foot run of white shaker wall and base cabinets with a matching island, the layout most kitchens ask for, at a floor-model price. Soft-close throughout. Floor model · Bristol.',
   },
   {
     title: '8FT Gray Slab Cabinet Set',
+    image: {
+      src: '/images/pages/clearance/set-gray-slab-8ft.jpg',
+      alt: '8FT Gray Slab Cabinet Set',
+    },
     description:
       'Flat-front gray doors on a frameless box for a clean, modern run. Eight feet of wall and base cabinets with full-extension drawers. Overstock · Bristol.',
   },
   {
     title: '36 in. Espresso Bathroom Vanity Set with Top',
+    image: {
+      src: '/images/pages/clearance/vanity-espresso-36.jpg',
+      alt: '36 in. Espresso Bathroom Vanity Set with Top',
+    },
     description:
       'A 36-inch vanity in espresso with a white quartz top, undermount basin and matching side splash. One unit, ready to collect. Floor model · Bristol.',
   },
   {
     title: '9FT Painted White Shaker Set with Pantry',
+    image: {
+      src: '/images/pages/clearance/set-painted-white-pantry-9ft.jpg',
+      alt: '9FT Painted White Shaker Set with Pantry',
+    },
     description:
       'Nine feet of painted white shaker with a tall pantry at one end, from a showroom display and lightly handled. Floor model · Newington.',
   },
   {
     title: '7FT Natural Oak Slab Cabinet Set',
+    image: {
+      src: '/images/pages/clearance/set-natural-oak-slab-7ft.jpg',
+      alt: '7FT Natural Oak Slab Cabinet Set',
+    },
     description:
       'A textured oak-look slab set, seven feet, with a lazy Susan corner base. Overstock from a multifamily order, new in box. Overstock · Bristol.',
   },
@@ -68,6 +92,10 @@ export default async function Clearance({ params }: { params: Promise<{ locale: 
           },
         ]}
         description="Floor-model and overstock kitchen and bath sets at deeply discounted prices, most of them at the Bristol factory outlet. Each one is a single set, sold as is with no returns or refunds, so the only way to be sure it's still there is to call. If it is, you'll have a whole kitchen for a fraction of the price."
+        image={{
+          src: '/images/pages/clearance/outlet-floor-sets.jpg',
+          alt: 'Floor-model kitchen sets on the outlet floor',
+        }}
         imageLabel="Floor-model kitchen sets at the Bristol outlet"
         kicker="Clearance"
         title="Floor-model and overstock sets"

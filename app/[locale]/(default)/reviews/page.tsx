@@ -31,6 +31,10 @@ export default async function Reviews({ params }: { params: Promise<{ locale: st
           { label: 'Watch the video testimonials', href: '/testimonials' },
         ]}
         description="Every review here came from a real order, and we keep the critical ones too, because a page of nothing but five stars reads as fake. Read what people say about the designers, the delivery, the price and the cabinets themselves, and then decide for yourself."
+        image={{
+          src: '/images/pages/financing/family-kitchen.jpg',
+          alt: 'A family at the island of their finished white kitchen',
+        }}
         imageLabel="A family in their new kitchen"
         kicker="Reviews"
         title="4.5 out of 5, from 360+ Connecticut kitchens"

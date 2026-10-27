@@ -37,6 +37,10 @@ export default async function FreeSamplesOffer({
           { label: 'The terms', href: '#terms' },
         ]}
         description="A finish looks different on a screen, under showroom lights and in your kitchen at 7am. So before you commit to a collection, hold the real door. Your first two quarter-door samples are on us: pick any two collections, use code FREESAMPLES at checkout, and they ship to your door."
+        image={{
+          src: '/images/pages/offers/two-samples-counter.jpg',
+          alt: 'Two quarter-door samples on a kitchen counter',
+        }}
         imageLabel="Two quarter-door samples, white shaker and grey slab, on a kitchen counter"
         kicker="Current offer"
         title="Your first two door samples are free."

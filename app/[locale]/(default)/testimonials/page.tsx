@@ -60,6 +60,10 @@ export default async function Testimonials({ params }: { params: Promise<{ local
           { label: 'Read written reviews', href: '/reviews' },
         ]}
         description="We asked customers to tell their story on camera, in the kitchens we built for them, with no script. What they wanted, what they worried about before they ordered, and how it turned out. If you're weighing the same decision, these are the people to hear from."
+        image={{
+          src: '/images/pages/testimonials/customer-kitchen.jpg',
+          alt: 'A homeowner at the counter of their finished white kitchen',
+        }}
         imageLabel="A customer in their finished kitchen, mid-sentence"
         kicker="Testimonials"
         title="In their own words, on camera"

@@ -48,6 +48,10 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
           { label: 'Report damage instead', href: '/warranty' },
         ]}
         description="Changed your mind, or measured a wall wrong? Unopened items can come back to us within 30 days, with a 30% restocking fee. If something arrived damaged, faulty or simply not what you ordered, that's not a return at all: we replace it free, with no fee and no return shipping. Here is exactly what qualifies and how to do it."
+        image={{
+          src: '/images/pages/returns/unopened-box-dock.jpg',
+          alt: 'An unopened cabinet box on a pallet at the loading dock',
+        }}
         imageLabel="An unopened cabinet box on a pallet at the Bristol dock"
         kicker="Returns"
         title="If it's not right, here's how to put it right"
@@ -164,6 +168,10 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
         body={[
           "If something arrived damaged, faulty or not what you ordered, we replace it free. That's a claim, not a return, so there's no restocking fee and no return shipping. Note visible damage on the driver's paperwork, send us photos of the whole item within 5 days for concealed damage, and please don't assemble a damaged cabinet. Replacement parts ship first, and if three replacements fail to fix it, we refund the cabinet.",
         ]}
+        image={{
+          src: '/images/pages/returns/replacement-door-unwrapped.jpg',
+          alt: 'A replacement cabinet door being unwrapped',
+        }}
         imageLabel="A replacement door being unwrapped"
         kicker="Not a return"
         tint

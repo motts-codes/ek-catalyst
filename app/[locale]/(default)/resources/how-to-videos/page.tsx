@@ -57,6 +57,10 @@ export default async function HowToVideos({ params }: { params: Promise<{ locale
           { label: 'Our YouTube channel ↗', href: '#' },
         ]}
         description="Short films, made in our own factory and showrooms, that show you rather than tell you: how a cabinet goes together, how to measure your kitchen in two minutes, what happens at a design consult, and what a good installation looks like. Pick a topic below, or jump straight to the video for your exact cabinet."
+        image={{
+          src: '/images/pages/how-to/hands-assembling.jpg',
+          alt: 'Hands assembling a cabinet box on a workbench',
+        }}
         imageLabel="Hands assembling a cabinet on a workbench"
         kicker="Video library"
         title="Watch it done, then do it yourself"

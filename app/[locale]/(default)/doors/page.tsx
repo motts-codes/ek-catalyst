@@ -47,9 +47,27 @@ export default async function Doors({ params }: { params: Promise<{ locale: stri
       />
       <SubcategoryTiles
         items={[
-          { name: 'Slab', href: '#products' },
-          { name: 'Slab + jamb', href: '#products' },
-          { name: 'Prehung', href: '#products' },
+          {
+            name: 'Slab',
+            href: '#products',
+            image: { src: '/images/pages/doors/slab.jpg', alt: 'A plain white slab interior door' },
+          },
+          {
+            name: 'Slab + jamb',
+            href: '#products',
+            image: {
+              src: '/images/pages/doors/slab-jamb.jpg',
+              alt: 'A white slab door hung in its jamb',
+            },
+          },
+          {
+            name: 'Prehung',
+            href: '#products',
+            image: {
+              src: '/images/pages/doors/prehung.jpg',
+              alt: 'A white prehung door unit with jamb and hinges',
+            },
+          },
         ]}
         title="Interior doors"
       />
@@ -58,18 +76,30 @@ export default async function Doors({ params }: { params: Promise<{ locale: stri
           {
             title: 'Hollow core',
             description: 'Light and affordable. The standard for bedrooms, closets and most rooms.',
+            image: {
+              src: '/images/pages/doors/hollow-core.jpg',
+              alt: 'A hollow-core door with its honeycomb core shown',
+            },
             imageLabel: 'A hollow-core slab',
           },
           {
             title: 'Solid core',
             description:
               'Dense for sound control and a solid feel. Ideal for bedrooms, baths and offices.',
+            image: {
+              src: '/images/pages/doors/solid-core.jpg',
+              alt: 'A solid-core door with its dense core shown',
+            },
             imageLabel: 'A solid-core door',
           },
           {
             title: 'Fire-rated',
             description:
               'A 20-minute rated assembly for code-required openings, supplied primed and paint-ready.',
+            image: {
+              src: '/images/pages/doors/fire-rated.jpg',
+              alt: 'A fire-rated door in a steel frame at a garage entry',
+            },
             imageLabel: 'A fire-rated door to a garage',
           },
         ]}
@@ -82,6 +112,10 @@ export default async function Doors({ params }: { params: Promise<{ locale: stri
         items={['1-panel', '2-panel', '3-panel', '5-panel', '6-panel'].map((name) => ({
           name,
           href: '#products',
+          image: {
+            src: `/images/pages/doors/panel-${name.split('-')[0]}.jpg`,
+            alt: `A white ${name} interior door`,
+          },
         }))}
         title="By number of panels"
       />

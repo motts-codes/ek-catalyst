@@ -21,6 +21,10 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
       <PageBreadcrumbs breadcrumbs={[{ label: 'Promotions', href: '/promotions' }]} />
       <PageHero
         description="Everything we're offering right now, in one place: what it is, who qualifies, how to claim it and when it ends. Each one takes you straight to the page where it applies."
+        image={{
+          src: '/images/pages/promotions/offer-kitchen.jpg',
+          alt: 'A finished sage green shaker kitchen with a white island',
+        }}
         imageLabel="A kitchen with an offer tag in the corner"
         kicker="Promotions"
         title="Current offers"
@@ -33,6 +37,10 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
             ctaLabel: 'See the offer',
             href: '/windows',
             primary: true,
+            image: {
+              src: '/images/pages/promotions/double-hung-window.jpg',
+              alt: 'A white vinyl double-hung window',
+            },
             imageLabel: 'A white double-hung window',
           },
           {
@@ -47,6 +55,10 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
             description: 'On purchases over $[X] · subject to approval',
             ctaLabel: 'Check my rate',
             href: '/financing',
+            image: {
+              src: '/images/pages/promotions/family-island.jpg',
+              alt: 'A family at the island of a finished navy and white kitchen',
+            },
             imageLabel: 'A finished kitchen, family at the island',
           },
           {
@@ -54,6 +66,10 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
             description: 'Quarter-door samples · code FREESAMPLES at checkout',
             ctaLabel: 'Order samples',
             href: SAMPLES_HREF,
+            image: {
+              src: '/images/pages/offers/two-samples-counter.jpg',
+              alt: 'Two quarter-door samples on a kitchen counter',
+            },
             imageLabel: 'Two quarter-door samples',
           },
           {
@@ -69,6 +85,10 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
             description: 'A Project Manager plans and prices your kitchen · no deposit',
             ctaLabel: 'Book a consult',
             href: FREE_DESIGN_HREF,
+            image: {
+              src: '/images/pages/promotions/designer-homeowner.jpg',
+              alt: 'A designer showing a homeowner a door sample',
+            },
             imageLabel: 'A designer with a homeowner',
           },
         ]}

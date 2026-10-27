@@ -3,6 +3,7 @@ import { Play, Star } from 'lucide-react';
 
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
+import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import { type Project, projectHref, type Video } from '~/lib/pages/projects';
 
@@ -50,7 +51,17 @@ export function ProjectGrid({
               href={projectHref(project.slug)}
             >
               <span className="relative block aspect-[4/3] bg-contrast-100">
-                <MediaPlaceholder label={project.imageLabel} />
+                {project.image ? (
+                  <Image
+                    alt={project.image.alt}
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    fill
+                    sizes="(min-width: 64rem) 25vw, (min-width: 36rem) 50vw, 100vw"
+                    src={project.image.src}
+                  />
+                ) : (
+                  <MediaPlaceholder label={project.imageLabel} />
+                )}
               </span>
               <span className="block p-5">
                 <span className="block font-heading text-lg font-semibold leading-tight">

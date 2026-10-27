@@ -28,6 +28,10 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
       />
       <PageHero
         description="When you order from us online, your payment runs through a checkout certified to the highest standard in the payments industry. Your card details are encrypted the moment you type them and never touch our servers: we see your order, never your card. Here's what that means in practice, and what else protects you."
+        image={{
+          src: '/images/pages/secure-shopping/padlock-card.jpg',
+          alt: 'A padlock and a payment card beside a laptop',
+        }}
         imageLabel="A padlock, a card and the checkout screen"
         kicker="Secure shopping"
         title="Your payment is protected, start to finish"

@@ -45,6 +45,17 @@ export default async function Projects({ params }: { params: Promise<{ locale: s
             ? "Apartment buildings, senior living, hotels and offices we've fitted out across the Northeast. Each project shows the collection, the program, the unit count and the per-unit cost, so you can see what we've delivered at your scale before you send us a scope."
             : 'Every kitchen here was finished for a family in Connecticut. Each one tells you the collection, the finish and whether it was ready to assemble or assembled, and the story inside shows you the cabinet list and what it cost, so you can picture your own.'
         }
+        image={
+          pro
+            ? {
+                src: '/images/pages/industry/apartment-kitchen-units.jpg',
+                alt: 'A finished apartment kitchen, the next identical unit visible beyond',
+              }
+            : {
+                src: '/images/pages/inspiration/connecticut-kitchen-wide.jpg',
+                alt: 'A finished white shaker kitchen with an island and French doors',
+              }
+        }
         imageLabel={
           pro ? 'A finished multifamily kitchen, wide' : 'A finished Connecticut kitchen, wide'
         }

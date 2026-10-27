@@ -78,6 +78,10 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
       <PageHero
         actions={[{ label: 'Choose your samples', href: '#collections', primary: true }]}
         description="A photo can only tell you so much about a door. The colour shifts with the light in your kitchen, the grain shows differently up close, and the feel of the finish under your hand is something a screen can't give you. So we post you a piece of the real door, in the real finish, to hold at home before you decide. Your first two quarter-door samples are free with the code FREESAMPLES; further quarter doors, and half and full doors, are priced per sample."
+        image={{
+          src: '/images/pages/samples/quarter-doors-fanned.jpg',
+          alt: 'Eight quarter-door samples fanned on a white worktop',
+        }}
         imageLabel="Quarter-door samples fanned on a worktop"
         kicker="Door samples"
         title="Hold the real door before you choose it"

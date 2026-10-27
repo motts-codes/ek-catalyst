@@ -37,6 +37,10 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
         ]}
         chips={['WBE / MBE certified', '$40M+ delivered', '50,000+ cabinets in stock']}
         description="Cabinet delays shouldn't be the reason your project misses its date. Because we manufacture, stock and deliver from our own facilities, we can commit to a delivery date and keep it, and more than $40 million in delivered commercial work is the proof. Send us the scope and you'll have detailed pricing back within 48 hours."
+        image={{
+          src: '/images/pages/industry/site-delivery.jpg',
+          alt: 'Pallets of cabinets being wheeled into a building under construction',
+        }}
         imageLabel="A commercial site, cabinets being delivered on schedule"
         kicker="Commercial division"
         title="Schedule certainty, from the people who make the cabinets"

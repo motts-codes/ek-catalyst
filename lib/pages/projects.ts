@@ -21,6 +21,8 @@ export interface Project {
   story: string[];
   products: ProjectProduct[];
   quote?: { text: string; name: string };
+  /** The project's photo; the label stands in until one is set. */
+  image?: { src: string; alt: string };
   imageLabel: string;
 }
 
@@ -144,6 +146,10 @@ export const PROJECTS: Project[] = [
     summary: '[One line about the project.]',
     story: ['[Project story to come.]'],
     products: [],
+    image: {
+      src: '/images/pages/industry/multifamily-kitchen.jpg',
+      alt: 'A compact apartment kitchen with grey shaker cabinets',
+    },
     imageLabel: 'A multifamily kitchen, one of many',
   },
   {
@@ -159,6 +165,10 @@ export const PROJECTS: Project[] = [
     summary: '[One line about the project.]',
     story: ['[Project story to come.]'],
     products: [],
+    image: {
+      src: '/images/pages/industry/office-break-room.jpg',
+      alt: 'An office break room with white slab cabinets',
+    },
     imageLabel: 'An office break room',
   },
   {
@@ -174,6 +184,10 @@ export const PROJECTS: Project[] = [
     summary: '[One line about the project.]',
     story: ['[Project story to come.]'],
     products: [],
+    image: {
+      src: '/images/pages/industry/hotel-kitchenette.jpg',
+      alt: 'A hotel kitchenette with light oak cabinets',
+    },
     imageLabel: 'A hotel kitchenette',
   },
 ];

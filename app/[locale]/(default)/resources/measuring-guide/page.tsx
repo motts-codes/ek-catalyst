@@ -67,6 +67,10 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
           { label: 'Already have measurements? Send them', href: FREE_DESIGN_HREF },
         ]}
         description="Measuring your kitchen takes about twenty minutes and a tape measure, and you don't need to get it perfect: every number you send us is checked by a Project Manager before anything is ordered. Follow the six steps below, wall by wall, and if you get stuck at any point, call or text 860-247-1000 and we'll talk you through it."
+        image={{
+          src: '/images/pages/measuring/tape-across-wall.jpg',
+          alt: 'A tape measure across an empty kitchen wall',
+        }}
         imageLabel="A tape measure across a kitchen wall"
         kicker="Measuring guide"
         title="How to measure like a pro"
@@ -111,24 +115,40 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
             title: "You're matched with a Project Manager",
             description:
               "Within 1 business day. Send the sketch, numbers and photos. A Project Manager at your nearest showroom picks them up, checks them and calls about anything the sketch doesn't show.",
+            image: {
+              src: '/images/pages/measuring/pm-with-sketch.jpg',
+              alt: "A project manager reviewing a customer's kitchen sketch",
+            },
             imageLabel: "A Project Manager with a customer's sketch",
           },
           {
             title: 'Your first design',
             description:
               '2 business days on average. A 3D design of your kitchen, overhead and in perspective, with the cabinet list and an itemized price in your collection, RTA or assembled.',
+            image: {
+              src: '/images/pages/measuring/3d-kitchen-design.jpg',
+              alt: 'A 3D kitchen design on a monitor',
+            },
             imageLabel: 'A 3D kitchen design',
           },
           {
             title: "Changes, until it's right",
             description:
               '1–3 business days per revision. Move the sink, swap a collection, add an island. Revisions are free and unlimited; most kitchens settle in two rounds.',
+            image: {
+              src: '/images/pages/measuring/designer-customer-screen.jpg',
+              alt: 'A designer and a customer looking at a kitchen design on a screen',
+            },
             imageLabel: 'Designer and customer at a screen',
           },
           {
             title: 'Order with confidence',
             description:
               'Ships in 2–3 weeks. The final itemized quote is what you pay, online or with your Project Manager. RTA ships in two weeks, assembled in three, from Bristol.',
+            image: {
+              src: '/images/pages/measuring/cabinets-wrapped-pallet.jpg',
+              alt: 'Assembled cabinets wrapped on a pallet',
+            },
             imageLabel: 'Cabinets wrapped on a pallet',
           },
         ]}

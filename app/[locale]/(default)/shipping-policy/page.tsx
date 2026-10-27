@@ -7,9 +7,10 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ShippingMap } from '@/vibes/soul/sections/shipping-map';
+import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 import { doorRange, SHIP_CATEGORIES } from '~/lib/pages/shipping';
@@ -57,6 +58,10 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
           { label: 'Delivery day, step by step', href: '#delivery-day' },
         ]}
         description="Everything you buy from us leaves our own factory in Bristol, Connecticut, not a warehouse somewhere, so we can tell you exactly how it gets to you. Cabinets ship to your curb or you collect them; windows and appliances are pickup only. The lead times on this page are from checkout to your door, not to the ship date, so you can plan around them."
+        image={{
+          src: '/images/pages/shipping/pallet-off-truck.jpg',
+          alt: 'A pallet of wrapped cabinets coming off a truck in a driveway',
+        }}
         imageLabel="A pallet of wrapped cabinets coming off the truck in a driveway"
         kicker="Shipping, delivery & pickup"
         title="How your order gets to you"
@@ -246,7 +251,13 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
             </div>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100">
-            <MediaPlaceholder label="The Bristol loading dock, a customer's pickup truck being loaded" />
+            <Image
+              alt="A pickup truck being loaded with boxed cabinets at the loading dock"
+              className="object-cover"
+              fill
+              sizes="(min-width: 56rem) 40rem, 100vw"
+              src="/images/pages/shipping/loading-dock-pickup.jpg"
+            />
           </div>
         </div>
       </HomeSection>
