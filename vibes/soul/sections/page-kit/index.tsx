@@ -118,6 +118,18 @@ interface HeroProps {
   className?: string;
 }
 
+// How the hero photo is drawn. Plain cutouts sit on white: multiply drops their near-white
+// backdrop so no box shows and keeps the soft floor shadows; a higher quality keeps those shadows.
+function heroImageProps(imageStyle: HeroProps['imageStyle']): {
+  className: string;
+  quality?: number;
+} {
+  if (imageStyle === 'plain')
+    return { className: 'object-contain mix-blend-multiply', quality: 90 };
+
+  return { className: 'object-cover' };
+}
+
 // Page opener: kicker, h1, one paragraph, optional chips and buttons; a photo beside it unless
 // `textOnly`.
 export function PageHero({
@@ -223,11 +235,11 @@ export function PageHero({
             {image ? (
               <Image
                 alt={image.alt}
-                className={imageStyle === 'plain' ? 'object-contain' : 'object-cover'}
                 fill
                 preload
                 sizes="(min-width: 56rem) 45vw, 100vw"
                 src={image.src}
+                {...heroImageProps(imageStyle)}
               />
             ) : (
               <MediaPlaceholder label={imageLabel ?? title} />
