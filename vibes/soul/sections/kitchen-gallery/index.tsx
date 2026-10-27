@@ -258,7 +258,7 @@ function Details({ kitchen, onClose }: { kitchen: GalleryKitchen | null; onClose
       title={kitchen ? `${kitchen.name} kitchen` : 'Kitchen'}
     >
       {kitchen ? (
-        <div className="relative grid @3xl:grid-cols-2">
+        <div className="relative grid @3xl:grid-cols-[65fr_35fr]">
           <Dialog.Close asChild>
             <button
               aria-label="Close"
@@ -283,20 +283,20 @@ function Details({ kitchen, onClose }: { kitchen: GalleryKitchen | null; onClose
               unoptimized={kitchen.image.src.startsWith('http')}
             />
           </div>
-          <div className="flex flex-col p-7 @xl:p-9 @3xl:p-12">
+          <div className="flex flex-col p-6 @xl:p-8 @3xl:p-9">
             <p className="text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
               Best seller
             </p>
             <h2 className="mt-1 font-heading text-2xl font-bold leading-tight">{kitchen.name}</h2>
-            <dl className="mt-5 divide-y divide-contrast-100 border-y border-contrast-100 text-sm">
+            <dl className="mt-4 divide-y divide-contrast-100 border-y border-contrast-100 text-sm">
               {facts.map(([label, value]) => (
-                <div className="flex items-baseline justify-between gap-4 py-2.5" key={label}>
+                <div className="flex items-baseline justify-between gap-3 py-1.5" key={label}>
                   <dt className="text-contrast-500">{label}</dt>
                   <dd className="text-right font-semibold">{value}</dd>
                 </div>
               ))}
             </dl>
-            <div className="mt-6 flex flex-wrap gap-3 @3xl:mt-auto @3xl:pt-6">
+            <div className="mt-5 flex flex-wrap gap-3 @3xl:mt-auto @3xl:pt-5">
               <ButtonLink href={kitchen.href} shape="pill" size="small" variant="primary">
                 View collection
               </ButtonLink>
