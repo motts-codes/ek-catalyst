@@ -79,7 +79,7 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
         actions={[{ label: 'Choose your samples', href: '#collections', primary: true }]}
         description="A photo can only tell you so much about a door. The colour shifts with the light in your kitchen, the grain shows differently up close, and the feel of the finish under your hand is something a screen can't give you. So we post you a piece of the real door, in the real finish, to hold at home before you decide. Your first two quarter-door samples are free with the code FREESAMPLES; further quarter doors, and half and full doors, are priced per sample."
         image={{
-          src: '/images/pages/samples/hero-door-samples-table.jpg',
+          src: '/images/pages/samples/hero-door-samples-table-2.jpg',
           alt: 'A designer in a red top and a customer at a table, comparing door samples in white, sage, navy and walnut',
         }}
         imageStyle="plain"
