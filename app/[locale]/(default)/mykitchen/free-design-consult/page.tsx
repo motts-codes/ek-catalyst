@@ -17,27 +17,25 @@ import { getAudienceMode } from '~/lib/navigation/audience-mode';
 export const metadata: Metadata = {
   title: 'Free Kitchen Design Consult',
   description:
-    'A designer plans your kitchen with you: a layout for your room, every cabinet priced RTA and assembled, and a ship date. Free, no deposit, no obligation.',
+    'A designer goes through your kitchen with you and gives you an itemized quote, priced RTA and assembled. In a showroom or on a video call from any state. Free, no deposit, no obligation.',
 };
 
-// Arun's brief of 27 Oct 2026. To confirm with EK: that design changes are free and unlimited,
-// how soon the first design arrives (the measuring guide says about 2 business days), home
-// visits (removed until confirmed) and the one review figure used across the site.
+// Arun's brief of 27 Oct 2026 (revised the same day: quote-led copy, same-day reply, the $85
+// Connecticut measuring visit). To confirm with EK: the one review figure used across the site.
 const HOW_IT_WORKS = [
   {
-    title: 'We call you.',
-    description:
-      "Within 1 business day, a designer calls to set up a day, a time and how you'd like to meet.",
+    title: 'We get back to you the same day.',
+    description: "A designer contacts you to set up a time and how you'd like to meet.",
   },
   {
-    title: 'You plan it together.',
+    title: 'You go through it together.',
     description:
-      'In a showroom or on a video call, usually 60–90 minutes. Bring a photo, rough measurements, or just an idea.',
+      'In a showroom (walk-ins welcome) or on a video call, weekdays 9 AM–5 PM ET. Bring a photo, your measurements, or just an idea.',
   },
   {
-    title: 'You get your design and price.',
+    title: 'You get your quote.',
     description:
-      "A 3D layout of your kitchen with an itemized price, RTA or assembled. Changes are free until it's right.",
+      'An itemized price for your kitchen, RTA or assembled, so you know exactly what it costs before you order.',
   },
 ];
 
@@ -101,8 +99,12 @@ const FIELDS: Array<Field | Field[]> = [
     label: 'How would you like to meet?',
     required: true,
     options: [
-      { label: 'Virtual video call', value: 'video' },
-      { label: 'Showroom', value: 'showroom' },
+      { label: 'In a showroom: see the displays and leave with a quote', value: 'showroom' },
+      {
+        label:
+          'On a video call (9 AM–5 PM ET): send photos and measurements, and go through it on screen',
+        value: 'video',
+      },
     ],
   },
   { type: 'select', name: 'showroom', label: 'Nearest showroom', options: SHOWROOM_OPTIONS },
@@ -158,19 +160,28 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
       <PageHero
         actions={[{ label: 'Book my free consult', href: '#request', primary: true }]}
         chipStyle="checks"
-        chips={['A full layout', 'An itemized price', 'A ship date', 'Free, no obligation']}
+        chips={[
+          'An itemized quote',
+          'Priced RTA and assembled',
+          'Video consults in every state',
+          'Free, no obligation',
+        ]}
         description={
           pro
-            ? 'Send us the job and a designer will lay it out, price every cabinet both ways, and give you a ship date you can put in front of your client. No charge, no deposit. Ask about special pricing for contractors.'
-            : "Tell us a little about your kitchen and a designer will plan it with you: a layout drawn for your room, every cabinet priced both ways (RTA and assembled), and a ship date you can plan around. Meet in one of our showrooms, or on a video call from anywhere we ship. It's free, there's no deposit, and the plan is yours to keep whether you buy from us or not."
+            ? 'Send us your plans or measurements and a designer will price every cabinet, RTA and assembled, so you can put a number in front of your client. No charge, no deposit. Ask about special pricing for contractors.'
+            : "Tell us about your kitchen and a designer will go through it with you: the style, the cabinets your room needs, and an itemized quote, priced both RTA and assembled. Meet in one of our showrooms, or on a video call from any state. It's free, with no deposit and no obligation to buy."
         }
         image={{
           src: '/images/pages/design-consult/hero-designer-couple.jpg',
           alt: 'A designer in a red top drawing a kitchen plan at a table with a smiling couple, door samples beside them',
         }}
         imageStyle="plain"
-        kicker={pro ? 'Free design and quote for the trade' : 'Free design consult'}
-        title={pro ? 'We design it. You win the job.' : 'Plan your kitchen with a designer, free'}
+        kicker={pro ? 'Free quote for the trade' : 'Free design consult'}
+        title={
+          pro
+            ? "Send us the job. We'll price it."
+            : 'Plan and price your kitchen with a designer, free'
+        }
       />
       <StepsRow className="bg-[#fdf3f5]" steps={HOW_IT_WORKS} title="How it works" />
       <LeadFormCard
@@ -179,8 +190,8 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         fields={pro ? PRO_FIELDS : FIELDS}
         fine={
           <>
-            A designer will call you within 1 business day. You&apos;ll talk to a real designer, not
-            a call center. No deposit, no obligation.
+            We&apos;ll get back to you the same day. You&apos;ll talk to a real designer, not a call
+            center. No deposit, no obligation. Prefer to call? Call or text 860-247-1000, any time.
           </>
         }
         id="request"
@@ -201,17 +212,9 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
       <CardsRow
         cards={[
           {
-            title: 'Bring a photo',
+            title: 'Your measurements',
             description:
-              'Any angle, from your phone. It tells your designer more about your room than a sketch can.',
-            image: {
-              src: '/images/book/photo.webp',
-              alt: 'Someone photographing their current kitchen on a phone',
-            },
-          },
-          {
-            title: 'Rough wall lengths',
-            description: 'Corner to corner with a tape measure. Twenty minutes, and rough is fine.',
+              'Wall lengths corner to corner, plus windows, doors and appliances. The more accurate they are, the more accurate your quote.',
             ctaLabel: 'How to measure',
             href: '/resources/measuring-guide',
             image: {
@@ -220,18 +223,35 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             },
           },
           {
-            title: 'Or just bring an idea',
+            title: 'In Connecticut? We can measure for you',
             description:
-              "A screenshot, a color, a kitchen you liked. That's a good place to start.",
+              "For $85, in CT and greater-CT zip codes, we'll measure your kitchen after your showroom visit, so your quote is exact. The fee is separate from your order.",
+            image: {
+              src: '/images/pages/measuring/tape-across-wall.jpg',
+              alt: 'A tape measure across an empty kitchen wall',
+            },
+          },
+          {
+            title: 'A photo of the room',
+            description: "Any angle, from your phone. It shows your designer what numbers can't.",
+            image: {
+              src: '/images/book/photo.webp',
+              alt: 'Someone photographing their current kitchen on a phone',
+            },
+          },
+          {
+            title: "Ideas you've saved",
+            description: "A screenshot, a color, a kitchen you liked. It's a good starting point.",
             image: {
               src: '/images/book/inspiration.webp',
               alt: 'A phone showing a grid of saved kitchen photos',
             },
           },
         ]}
+        columns={4}
         imageStyle="plain"
         kicker="Before you meet"
-        title="Three things that help (all optional)"
+        title="What helps us quote accurately"
       />
       <ReviewMarquee
         reviews={HOME_REVIEWS}
