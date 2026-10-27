@@ -102,12 +102,14 @@ const FIELDS: Array<Field | Field[]> = [
     required: true,
     options: [
       {
-        label: 'In a showroom: see the displays and leave with a plan and a price',
-        value: 'showroom',
+        label: 'Virtual video call',
+        description: 'Send photos and measurements, and plan it on screen',
+        value: 'video',
       },
       {
-        label: 'On a video call: send photos and measurements, and plan it on screen',
-        value: 'video',
+        label: 'Showroom',
+        description: 'See the displays and leave with a plan and a price',
+        value: 'showroom',
       },
     ],
   },
