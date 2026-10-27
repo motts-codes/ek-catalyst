@@ -9,14 +9,17 @@ type SearchItem = FacetedSearch['products']['items'][number];
 const PAGE_SIZE = 20;
 // BigCommerce caps a products page at 50.
 const FETCH_SIZE = 50;
-const TTL_MS = 10 * 60 * 1000;
+const TTL_MS = 30 * 60 * 1000;
 
 // The "Filter by type" tiles, the width / height / depth dropdowns and the finish chips on a
 // cabinet collection are meant to narrow through search facets on the products' custom fields. BigCommerce has not indexed those
 // facets (the fields are on every product, but the facets never appear and the attribute filters
 // are ignored), so until it does, this narrows the collection in code: fetch every product in the
 // collection (with the Program facet, which does work), keep the ones matching the selection, and
-// page through those. The full list is kept for ten minutes per collection/program.
+// page through those. The full list is kept for thirty minutes per collection/program, and every
+// type / size / finish selection shares it (those params never reach the search). Next's own
+// cache (`unstable_cache`) can't wrap the walk: the GraphQL client reads request headers, which
+// is not allowed inside it; the walk's page fetches are data-cached for five minutes instead.
 const listCache = new Map<string, { at: number; items: Promise<SearchItem[]> }>();
 
 /** The in-code selection: any number of types, widths, heights and depths (each empty = no
@@ -150,20 +153,41 @@ export const hasGridFilters = (filters: CabinetGridFilters): boolean =>
   filters.depths.length > 0 ||
   Boolean(filters.finish);
 
-/** Every product in the collection (for the given program / finish), cached ten minutes. The
- *  pagination and in-code filter params are dropped from the key. */
+// The URL params the in-code narrowing handles itself; they never reach the search, and they
+// must stay out of the cache key or every type click walks the collection again.
+const IN_CODE_PARAMS = [
+  'after',
+  'before',
+  'page',
+  'width',
+  'height',
+  'depth',
+  'finish',
+  'attr_Product Type',
+];
+
+// Every product in the collection (for the given program), cached thirty minutes. The pagination
+// and in-code filter params are dropped from the key, so one walk serves every type / size /
+// finish selection.
 export function fetchCabinetCollectionItems(
   searchParams: Record<string, unknown>,
   currencyCode?: CurrencyCode,
   customerAccessToken?: string,
 ): Promise<SearchItem[]> {
-  const { after, before, page, width, height, depth, ...rest } = searchParams;
+  const rest = Object.fromEntries(
+    Object.entries(searchParams).filter(([name]) => !IN_CODE_PARAMS.includes(name)),
+  );
   const key = JSON.stringify([rest, currencyCode, Boolean(customerAccessToken)]);
   const cached = listCache.get(key);
   const fresh = cached != null && Date.now() - cached.at < TTL_MS;
-  const all = fresh ? cached.items : fetchAllItems(rest, currencyCode, customerAccessToken);
 
-  if (!fresh) listCache.set(key, { at: Date.now(), items: all });
+  if (fresh) return cached.items;
+
+  const all = fetchAllItems(rest, currencyCode, customerAccessToken);
+
+  listCache.set(key, { at: Date.now(), items: all });
+  // A failed walk must not be served for the next thirty minutes.
+  all.catch(() => listCache.delete(key));
 
   return all;
 }
@@ -206,7 +230,7 @@ function options(
     .sort((a, b) => Number(a.value) - Number(b.value));
 }
 
-/** The width, height and depth options for a collection, counted against the other filters. */
+// The width, height and depth options for a collection, counted against the other filters.
 export async function cabinetSizeOptions({
   searchParams,
   filters,

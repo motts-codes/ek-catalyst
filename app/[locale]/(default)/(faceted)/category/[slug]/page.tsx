@@ -151,6 +151,25 @@ function cabinetGridFilters(
   };
 }
 
+// The params a collection walk (lib/cabinets/type-filter-fallback) is keyed and fetched by: the
+// URL's search params (minus the in-code "recommended" sort), the parsed facet params and the
+// Program facet, scoped to the category. The grid and the size chips must build the same object
+// so they share one cached walk.
+function collectionWalkParams(
+  categoryId: number,
+  searchParams: Record<string, string | string[] | undefined>,
+  parsedSearchParams: Record<string, unknown>,
+  programFilter: Record<string, string[]>,
+  order: ReturnType<typeof recommendedOrderFor>,
+): Record<string, unknown> {
+  return {
+    ...withoutRecommendedSort(searchParams, order),
+    ...parsedSearchParams,
+    ...programFilter,
+    category: categoryId,
+  };
+}
+
 const GRID_FILTER_PARAMS = [
   CABINET_TYPE_PARAM,
   SIZE_PARAM.width,
@@ -398,36 +417,34 @@ export default async function Category(props: Props) {
 
   const categoryId = Number(slug);
 
-  const { category, settings, categoryTree } = await getCategoryPageData(
-    categoryId,
-    customerAccessToken,
-  );
+  // The category record and the "is this a cabinet collection?" lookup are independent: one
+  // round trip, not two.
+  const [{ category, settings, categoryTree }, isCabinet] = await Promise.all([
+    getCategoryPageData(categoryId, customerAccessToken),
+    isCabinetCollection(categoryId),
+  ]);
 
   // Cabinet collection pages (Avon, Dover). Two program notions:
   //  - cabinetProgram: always concrete (defaults to Assembled) — drives the header/pricing/FAQ,
   //    which must show something.
   //  - selectedProgram: the EXPLICIT ?program= selection, or null when absent — drives the GRID
   //    filter, so a bare /cabinets/avon (no ?program) shows ALL products (both programs).
-  const isCabinet = await isCabinetCollection(categoryId);
-  const programParam = (await props.searchParams).program;
+  const searchParamsForLinks = await props.searchParams;
+  const programParam = searchParamsForLinks.program;
   // A collection sold in one program only (Prism, Euro Value, Rochelle…) ignores a request for the
   // other: header, pricing, FAQ and grid all fall back to the program it actually has.
-  const {
-    program: cabinetProgram,
-    selected: selectedProgram,
-    switchable: programSwitchable,
-  } = await cabinetProgramContext(isCabinet, categoryId, programParam);
-  const { pageSize, density } = listingLayout();
-  const searchParamsForLinks = await props.searchParams;
-  const gridFiltersBase = cabinetGridFilters(isCabinet, searchParamsForLinks);
   // ?finish= → the finish name (null when absent/unknown) and the grid filter for it.
   // The finish narrows in code (lib/cabinets/type-filter-fallback), not through the search: the
   // products' "Finish" custom field is not an indexed facet, and a filter on it returns nothing.
-  const { name: selectedFinish } = await cabinetFinishContext(
-    isCabinet,
-    categoryId,
-    searchParamsForLinks[FINISH_PARAM],
-  );
+  const [
+    { program: cabinetProgram, selected: selectedProgram, switchable: programSwitchable },
+    { name: selectedFinish },
+  ] = await Promise.all([
+    cabinetProgramContext(isCabinet, categoryId, programParam),
+    cabinetFinishContext(isCabinet, categoryId, searchParamsForLinks[FINISH_PARAM]),
+  ]);
+  const { pageSize, density } = listingLayout();
+  const gridFiltersBase = cabinetGridFilters(isCabinet, searchParamsForLinks);
   const gridFilters = { ...gridFiltersBase, finish: selectedFinish };
 
   if (!category) {
@@ -477,15 +494,14 @@ export default async function Category(props: Props) {
     // Collection pages default to the "recommended" cabinet order, applied in code (it is not a
     // BigCommerce sort), so that value never reaches the search.
     const order = recommendedOrderFor(isCabinet, searchParams.sort);
-    const searchParamsForSearch = withoutRecommendedSort(searchParams, order);
-    const baseParams = {
-      ...searchParamsForSearch,
-      ...parsedSearchParams,
-      ...programFilter,
-      ...typeFilter,
-      category: categoryId,
-      limit: pageSize,
-    };
+    const walkParams = collectionWalkParams(
+      categoryId,
+      searchParams,
+      parsedSearchParams,
+      programFilter,
+      order,
+    );
+    const baseParams = { ...walkParams, ...typeFilter, limit: pageSize };
     // ?page=N is resolved to a BigCommerce cursor (paged-search.ts). Legacy ?after/?before links
     // still work when no page is given.
     const page = pageNumber(searchParams[PAGE_PARAM]);
@@ -506,12 +522,7 @@ export default async function Category(props: Props) {
     // the grid would show every type. Narrow in code instead (see lib/cabinets/type-filter-fallback).
     if ((order != null || hasGridFilters(gridFilters)) && !hasProductTypeFacet(search)) {
       return fetchCabinetProductsFiltered({
-        searchParams: {
-          ...searchParamsForSearch,
-          ...parsedSearchParams,
-          ...programFilter,
-          category: categoryId,
-        },
+        searchParams: walkParams,
         filters: gridFilters,
         order,
         typeOrder: await recommendedTypeOrder(),
@@ -527,14 +538,28 @@ export default async function Category(props: Props) {
 
   // Width / height chips (collection pages): distinct values over the collection's products in
   // this program / finish, counted against the other active filters.
+  // Built on the same walk params as the product grid, so both read one cached collection walk.
   const streamableSizeOptions = Streamable.from(async () => {
     if (!isCabinet) return null;
 
+    const searchParams = await props.searchParams;
     const currencyCode = await getPreferredCurrencyCode();
+    const loadSearchParams = await createCategorySearchParamsLoader(
+      categoryId,
+      customerAccessToken,
+    );
+    const parsedSearchParams = loadSearchParams?.(searchParams) ?? {};
     const programFilter = selectedProgram ? cabinetProgramSearchParam(selectedProgram) : {};
+    const order = recommendedOrderFor(isCabinet, searchParams.sort);
 
     return cabinetSizeOptions({
-      searchParams: { ...programFilter, category: categoryId },
+      searchParams: collectionWalkParams(
+        categoryId,
+        searchParams,
+        parsedSearchParams,
+        programFilter,
+        order,
+      ),
       filters: gridFilters,
       currencyCode,
       customerAccessToken,
@@ -661,31 +686,26 @@ export default async function Category(props: Props) {
 
   // Cabinet collections (Avon, Dover) show a metafield-driven collection header above the grid,
   // scoped to the same program (Assembled / RTA) the visitor arrived with.
-  const cabinetHeader =
-    isCabinet && cabinetProgram
-      ? await getCabinetCollectionHeader(categoryId, cabinetProgram, selectedFinish)
-      : null;
-
-  const cabinetOffers = await getCabinetOffers(categoryId, cabinetProgram);
-
-  // Per-collection FAQ (Avon's Assembled FAQ, etc.), shown below the grid. Program-aware; null when
-  // this collection has no FAQ authored for the current program.
-  const cabinetFaq =
-    isCabinet && cabinetProgram ? await getCabinetCollectionFaq(categoryId, cabinetProgram) : null;
+  // The header, offers, FAQ, assembly videos and content are five independent metafield reads:
+  // one round trip together, not five in a row.
+  const cabinetScoped = isCabinet && cabinetProgram;
+  const [cabinetHeader, cabinetOffers, cabinetFaq, cabinetAssembly, cabinetContent] =
+    await Promise.all([
+      cabinetScoped ? getCabinetCollectionHeader(categoryId, cabinetProgram, selectedFinish) : null,
+      getCabinetOffers(categoryId, cabinetProgram),
+      // Per-collection FAQ (Avon's Assembled FAQ, etc.), shown below the grid. Program-aware; null
+      // when this collection has no FAQ authored for the current program.
+      cabinetScoped ? getCabinetCollectionFaq(categoryId, cabinetProgram) : null,
+      // Assembly-instruction videos + specifications are PER-PROGRAM — scoped to the current
+      // program (defaults to Assembled via cabinetProgram, matching the header/pricing).
+      cabinetScoped ? getCabinetAssemblyVideos(categoryId, cabinetProgram) : [],
+      cabinetScoped ? getCabinetCollectionContent(categoryId, cabinetProgram) : null,
+    ]);
 
   // Every other category: the generic FAQ authored as the `faq.list` metafield (seeded by
   // scripts/seed-categories-and-faqs.py). Same accordion as the cabinet pages.
   const faq = pickFaq(cabinetFaq, category.faq.edges);
   const seoContent = parseSeoContent(category.seoContent.edges);
-
-  // Assembly-instruction videos + specifications are PER-PROGRAM — scoped to the current program
-  // (defaults to Assembled via cabinetProgram, matching the header/pricing).
-  const cabinetAssembly =
-    isCabinet && cabinetProgram ? await getCabinetAssemblyVideos(categoryId, cabinetProgram) : [];
-  const cabinetContent =
-    isCabinet && cabinetProgram
-      ? await getCabinetCollectionContent(categoryId, cabinetProgram)
-      : null;
 
   return (
     <>
