@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Check, X } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -750,6 +750,51 @@ export function SplitCardGrid({
         </ol>
       </div>
     </HomeSection>
+  );
+}
+
+export interface CheckItem {
+  text: string;
+  /** A don't: red cross instead of the check. */
+  no?: boolean;
+}
+
+// A checklist in the quiet table look: small red label over a black rule, a hairline between
+// rows, a red check (or cross for a don't) before each line. No box, fill or rounding.
+export function CheckTable({ title, items }: { title: string; items: Array<CheckItem | string> }) {
+  const rows = items.map((item) => (typeof item === 'string' ? { text: item } : item));
+
+  return (
+    <div>
+      <h3 className="border-b-2 border-foreground pb-3 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+        {title}
+      </h3>
+      <ul>
+        {rows.map((row) => (
+          <li
+            className="flex items-start gap-3 border-b border-contrast-100 py-3.5 text-sm leading-relaxed text-[#404040]"
+            key={row.text.slice(0, 40)}
+          >
+            {row.no ? (
+              <X
+                aria-label="Don't"
+                className="mt-0.5 shrink-0 text-[var(--button-primary-background,#d90716)]"
+                size={18}
+                strokeWidth={2.5}
+              />
+            ) : (
+              <Check
+                aria-label="Do"
+                className="mt-0.5 shrink-0 text-[var(--button-primary-background,#d90716)]"
+                size={18}
+                strokeWidth={2.5}
+              />
+            )}
+            <span>{row.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

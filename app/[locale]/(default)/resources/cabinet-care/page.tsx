@@ -1,3 +1,4 @@
+import { Droplets, Flame, Sun } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -5,7 +6,7 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { CheckTable, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
 
 export const metadata: Metadata = {
@@ -20,19 +21,6 @@ const WARRANTY_HREF = '/warranty';
 // Arun's brief of 27 Oct 2026. EK has confirmed there is no free touch-up kit and no care PDF;
 // stained doors are birch veneer; the warranty is 1 year and excludes water damage, misuse and
 // improper installation. To confirm with EK: whether they sell touch-up markers by finish.
-function Checklist({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div className="rounded-3xl border border-contrast-100 bg-white p-6">
-      <h3 className="font-heading text-lg font-semibold">{title}</h3>
-      <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-contrast-500">
-        {items.map((item) => (
-          <li key={item.slice(0, 30)}>{item}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 export default async function CabinetCare({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -73,17 +61,20 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
         tint
         title="The first two weeks"
       >
-        <div className="grid gap-5 @xl:grid-cols-2">
-          <Checklist
+        <div className="grid gap-8 @xl:grid-cols-2 @xl:gap-12">
+          <CheckTable
             items={[
-              "Don't take out your old kitchen until the new cabinets have arrived and you've checked them.",
+              {
+                text: "Don't take out your old kitchen until the new cabinets have arrived and you've checked them.",
+                no: true,
+              },
               'Unbox with two people and check every piece against your packing list. If anything was damaged in transit, file a claim with the carrier, then call us at 860-247-1000.',
               'Store cabinets somewhere dry, ideally at 40–50% humidity. Very dry or very damp rooms cause problems.',
               'Let the cabinets sit in the room for a day or two before they go on the wall.',
             ]}
             title="Before installation"
           />
-          <Checklist
+          <CheckTable
             items={[
               'Wipe the construction dust off inside and out with a damp microfiber cloth, one area at a time, drying as you go.',
               'Expect doors and drawers to need a small adjustment as they settle.',
@@ -125,19 +116,20 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
           },
         ]}
         description="Painted and stained doors need different care."
+        imageStyle="plain"
         kicker="Cleaning"
         title="By finish"
       />
       <div id="avoid" />
       <HomeSection kicker="What not to use" tint title="The short list">
-        <div className="grid gap-5 @xl:grid-cols-2">
-          <Checklist
+        <div className="grid gap-8 @xl:grid-cols-2 @xl:gap-12">
+          <CheckTable
             items={[
-              'Abrasive cleaners, scouring pads or powders',
-              'Bleach, ammonia, solvents, or anything labeled "degreaser"',
-              'Wax or silicone polishes. They build up and turn yellow.',
-              "Magic-eraser sponges on painted doors. They're a fine abrasive.",
-              'Steam cleaners, or any cleaner left to sit',
+              { text: 'Abrasive cleaners, scouring pads or powders', no: true },
+              { text: 'Bleach, ammonia, solvents, or anything labeled "degreaser"', no: true },
+              { text: 'Wax or silicone polishes. They build up and turn yellow.', no: true },
+              { text: "Magic-eraser sponges on painted doors. They're a fine abrasive.", no: true },
+              { text: 'Steam cleaners, or any cleaner left to sit', no: true },
             ]}
             title="Never on a cabinet"
           />
@@ -153,17 +145,23 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
         </div>
       </HomeSection>
       <HomeSection kicker="Routine care" title="Every day, and once or twice a year">
-        <div className="grid gap-5 @xl:grid-cols-2">
-          <Checklist
+        <div className="grid gap-8 @xl:grid-cols-2 @xl:gap-12">
+          <CheckTable
             items={[
               'Wipe up spills, drips and grease as they happen. Food and water left standing can stain the finish.',
               'Dust with a dry microfiber cloth.',
-              "Never hang a wet dish towel over a door. It's the most common cause of finish damage under the sink.",
-              "Don't clean cabinets with your dishcloth. It carries detergent and grease.",
+              {
+                text: "Never hang a wet dish towel over a door. It's the most common cause of finish damage under the sink.",
+                no: true,
+              },
+              {
+                text: "Don't clean cabinets with your dishcloth. It carries detergent and grease.",
+                no: true,
+              },
             ]}
             title="Every day"
           />
-          <Checklist
+          <CheckTable
             items={[
               'Give every cabinet front a thorough clean, one small area at a time, with a damp cloth, drying as you go.',
               'Tighten hinge screws and realign doors.',
@@ -203,16 +201,19 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
       <CardsRow
         cards={[
           {
+            icon: Droplets,
             title: 'Humidity',
             description:
               'Keep the kitchen ventilated and the cabinets dry all year, including in vacation homes. Damp, closed-up rooms are hard on any finish.',
           },
           {
+            icon: Sun,
             title: 'Sunlight',
             description:
               'Strong direct sun can lighten or darken the doors it reaches over time. Blinds help.',
           },
           {
+            icon: Flame,
             title: 'Heat',
             description:
               'Self-cleaning ovens, kettles and toasters under a wall cabinet give off heat and steam. Pull small appliances forward when you use them.',

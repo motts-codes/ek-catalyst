@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import type { LucideIcon } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
@@ -16,6 +17,8 @@ export interface RowCard {
   image?: { src: string; alt: string };
   /** Placeholder caption shown until a photo is supplied. */
   imageLabel?: string;
+  /** Text-only cards (`hideImages`): a red icon in a pale disc in place of the accent bar. */
+  icon?: LucideIcon;
 }
 
 interface Props {
@@ -108,7 +111,7 @@ export function CardsRow({
               </div>
             )}
             <div className={clsx('flex flex-1 flex-col', plain ? 'p-0' : 'p-6 @xl:p-7')}>
-              {hideImages && <CardLead number={numbered ? i + 1 : undefined} />}
+              {hideImages && <CardLead icon={card.icon} number={numbered ? i + 1 : undefined} />}
               {insetImage && (
                 <div
                   className={clsx(
@@ -175,9 +178,17 @@ export function CardsRow({
   );
 }
 
-// What tops a text-only card: a big red number when the row is numbered, else the short red
-// accent bar.
-function CardLead({ number }: { number?: number }) {
+// What tops a text-only card: a big red number when the row is numbered, an icon in a pale
+// red disc when the card has one, else the short red accent bar.
+function CardLead({ icon: Icon, number }: { icon?: LucideIcon; number?: number }) {
+  if (Icon) {
+    return (
+      <span className="mb-4 flex size-12 items-center justify-center rounded-full bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]">
+        <Icon aria-hidden size={24} strokeWidth={2} />
+      </span>
+    );
+  }
+
   if (number != null) {
     return (
       <span className="mb-3 block font-heading text-4xl font-bold leading-none text-[var(--button-primary-background,#d90716)]">
