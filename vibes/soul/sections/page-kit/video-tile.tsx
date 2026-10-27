@@ -7,7 +7,7 @@ import { Modal } from '@/vibes/soul/primitives/modal';
 import { Image } from '~/components/image';
 import type { Video } from '~/lib/pages/projects';
 
-// A YouTube video as a tile: its thumbnail with a play mark, the title and meta beneath. Clicking
+// A YouTube video as a tile: its thumbnail with a red play mark (white ring), the title and meta beneath. Clicking
 // opens the video in a dialog (privacy-enhanced embed, autoplaying) rather than leaving the page.
 export function VideoTile({ video }: { video: Video & { youtubeId: string } }) {
   const [open, setOpen] = useState(false);
@@ -29,8 +29,8 @@ export function VideoTile({ video }: { video: Video & { youtubeId: string } }) {
             unoptimized
           />
           <span className="absolute inset-0 flex items-center justify-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-foreground shadow-md transition-transform group-hover:scale-110">
-              <Play aria-hidden className="ml-0.5" size={20} strokeWidth={2.5} />
+            <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white bg-[var(--button-primary-background,#d90716)] text-white shadow-md transition-transform group-hover:scale-110">
+              <Play aria-hidden className="ml-0.5" fill="currentColor" size={20} strokeWidth={2} />
             </span>
           </span>
           {video.duration ? (

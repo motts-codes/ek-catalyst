@@ -144,7 +144,7 @@ export function VideoGrid({
     >
       <ul
         className={clsx(
-          'grid gap-5',
+          'grid gap-6',
           {
             2: '@xl:grid-cols-2',
             3: '@xl:grid-cols-2 @4xl:grid-cols-3',
