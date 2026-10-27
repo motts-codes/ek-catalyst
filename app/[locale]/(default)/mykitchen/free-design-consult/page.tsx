@@ -7,6 +7,7 @@ import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { PageBreadcrumbs, PageHero, StepsRow } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
+import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitDesignLead } from '~/lib/forms/submit-lead';
 import { HOME_REVIEWS, SAMPLES_HREF } from '~/lib/home/home-content';
@@ -148,7 +149,8 @@ const PRO_FIELDS: Array<Field | Field[]> = [
 ];
 
 // The design consult request: hero, a compact "how it works" row, then the form second on the
-// page, followed by what to bring, reviews and the samples nudge.
+// page in four steps (project, details, how to meet, about you) so nobody faces every field at
+// once, followed by what to bring, reviews and the samples nudge.
 export default async function FreeDesign({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -196,6 +198,12 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         }
         id="request"
         kicker="Request your consult"
+        steps={[
+          { title: 'Your project', names: ['rooms', 'layout', 'island'] },
+          { title: 'Details', names: ['timing', 'budget', 'notes'] },
+          { title: 'How to meet', names: ['format', 'showroom', 'days', 'time'] },
+          { title: 'About you', names: ['name', 'email', 'phone', 'zip', 'company'] },
+        ]}
         submitLabel="Request my free consult"
         title="Tell us about your kitchen"
       />
@@ -233,6 +241,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             imageLabel: 'Saved kitchen screenshots on a phone',
           },
         ]}
+        imageStyle="plain"
         kicker="Before you meet"
         title="Three things that help (all optional)"
       />
@@ -242,15 +251,16 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         tint
         title="What other people said about their consult"
       />
-      <HomeSection
-        action={{ label: 'Order free samples', href: SAMPLES_HREF }}
-        compact
-        title="Want to see the door first?"
-      >
-        <p className="max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
-          Your first two door samples are free with the code FREESAMPLES. Order now and they&apos;ll
-          arrive before your consult.
-        </p>
+      <HomeSection compact>
+        <SamplesCallout
+          cta={{ label: 'Order free samples', href: SAMPLES_HREF }}
+          description="Your first two door samples are free with the code FREESAMPLES. Order now and they'll arrive before your consult."
+          video={{
+            webm: '/images/home/samples/samples.webm',
+            mp4: '/images/home/samples/samples.mp4',
+            poster: '/images/home/samples/samples-poster.jpg',
+          }}
+        />
       </HomeSection>
     </>
   );
