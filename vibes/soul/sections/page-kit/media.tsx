@@ -7,6 +7,8 @@ import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import { type Project, projectHref, type Video } from '~/lib/pages/projects';
 
+import { VideoTile } from './video-tile';
+
 // Photo tiles for finished kitchens: photo, title, collection line, cost. Tall by default; `compact`
 // for the three-up "featured" row.
 export function ProjectGrid({
@@ -152,27 +154,35 @@ export function VideoGrid({
         )}
       >
         {videos.map((video) => (
-          <li key={video.title}>
-            <Link
-              className="group block focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
-              href={video.href ?? '#'}
-            >
-              <span className="relative block aspect-video overflow-hidden rounded-2xl bg-contrast-100">
-                <MediaPlaceholder label="" />
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-foreground shadow-md transition-transform group-hover:scale-110">
-                    <Play aria-hidden className="ml-0.5" size={20} strokeWidth={2.5} />
+          <li key={video.youtubeId ?? video.title}>
+            {video.youtubeId ? (
+              <VideoTile video={{ ...video, youtubeId: video.youtubeId }} />
+            ) : (
+              <Link
+                className="group block focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                href={video.href ?? '#'}
+              >
+                <span className="relative block aspect-video overflow-hidden rounded-2xl bg-contrast-100">
+                  <MediaPlaceholder label="" />
+                  <span className="absolute inset-0 flex items-center justify-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-foreground shadow-md transition-transform group-hover:scale-110">
+                      <Play aria-hidden className="ml-0.5" size={20} strokeWidth={2.5} />
+                    </span>
                   </span>
+                  {video.duration ? (
+                    <span className="absolute bottom-2 right-2 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white">
+                      {video.duration}
+                    </span>
+                  ) : null}
                 </span>
-                <span className="absolute bottom-2 right-2 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold text-white">
-                  {video.duration}
+                <span className="mt-2.5 block text-sm font-semibold leading-snug">
+                  {video.title}
                 </span>
-              </span>
-              <span className="mt-2.5 block text-sm font-semibold leading-snug">{video.title}</span>
-              {Boolean(video.meta) && (
-                <span className="mt-0.5 block text-xs text-contrast-500">{video.meta}</span>
-              )}
-            </Link>
+                {Boolean(video.meta) && (
+                  <span className="mt-0.5 block text-xs text-contrast-500">{video.meta}</span>
+                )}
+              </Link>
+            )}
           </li>
         ))}
       </ul>

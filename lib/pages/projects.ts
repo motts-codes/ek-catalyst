@@ -198,6 +198,9 @@ export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug
 export interface Video {
   title: string;
   meta?: string;
-  duration: string;
+  /** Shown as a badge on the tile when known. */
+  duration?: string;
   href?: string;
+  /** A YouTube video: the tile shows its thumbnail and plays it in a dialog. */
+  youtubeId?: string;
 }
