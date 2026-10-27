@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   title: 'Refer a Friend',
   description:
     'Know someone planning a kitchen? Send them to us. They get $[X] off their first order; you get $[X] when it ships. No limit.',
+  // Removed at the client's request (27 Oct 2026): no footer or sitemap link, not indexed.
+  robots: { index: false },
 };
 
 const FIELDS: Array<Field | Field[]> = [
