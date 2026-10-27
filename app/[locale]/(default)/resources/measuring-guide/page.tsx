@@ -5,8 +5,9 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { Image } from '~/components/image';
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -70,10 +71,10 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         ]}
         description="All you need is a tape measure and your phone. Don't worry about getting it perfect: a project manager checks every number before anything is ordered. Follow the six steps, one wall at a time, and if you get stuck, call or text 860-247-1000 and we'll talk you through it."
         image={{
-          src: '/images/pages/measuring/tape-across-wall.jpg',
-          alt: 'A tape measure across an empty kitchen wall',
+          src: '/images/pages/measuring/hero-measuring-range.jpg',
+          alt: 'A sketched kitchen with a homeowner in a red top measuring the width of the range with a tape measure',
         }}
-        imageLabel="A tape measure across a kitchen wall"
+        imageStyle="plain"
         kicker="Measuring guide"
         title="Measure your kitchen like a pro, in 20 minutes"
       />
@@ -114,9 +115,14 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         title="Four things, one of them your phone"
       />
       <HomeSection id="steps" kicker="Step by step" title="Six steps, one wall at a time">
-        <div className="relative mb-8 aspect-[21/9] overflow-hidden rounded-3xl bg-contrast-100">
-          <MediaPlaceholder label="A room plan with walls A, B and C labeled and the measuring points marked" />
-        </div>
+        <Image
+          alt="A sketched kitchen with walls A and B labeled and the measuring points marked: wall lengths, cabinet widths, ceiling height, the window, outlets, the sink, the hood and the fridge depth and door swing"
+          className="mb-8 h-auto w-full rounded-3xl border border-contrast-100"
+          height={1643}
+          sizes="(min-width: 80rem) 72rem, 100vw"
+          src="/images/pages/measuring/room-plan-annotated.jpg"
+          width={2720}
+        />
         <ol className="grid gap-5 @xl:grid-cols-2 @4xl:grid-cols-3">
           {STEPS.map((step) => (
             <li className="rounded-3xl border border-contrast-100 bg-white p-6" key={step.title}>
