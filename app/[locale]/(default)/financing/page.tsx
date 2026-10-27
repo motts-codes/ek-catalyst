@@ -4,18 +4,21 @@ import { setRequestLocale } from 'next-intl/server';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
+import { FinePrint, PageBreadcrumbs, PageHero, StepsRow } from '@/vibes/soul/sections/page-kit';
+import { FREE_DESIGN_HREF } from '~/lib/home/home-content';
+import { FINANCING_PLANS, monthlyExample } from '~/lib/pages/financing';
 
 export const metadata: Metadata = {
-  title: '0% Financing from $299 a Month',
+  title: 'Kitchen Financing through GreenSky',
   description:
-    'Buy your kitchen now and pay for it monthly. 0% APR for qualified buyers, a decision in seconds, and checking your rate will not affect your credit score.',
+    'Spread the cost of your kitchen with GreenSky financing: fixed rates from 9.99% APR, promo plans that waive interest, terms up to 180 months. Apply in any Express Kitchens showroom.',
 };
 
-const CHECK_RATE_HREF = '#';
+const SHOWROOMS_HREF = '/showrooms';
 
+// Financing per EK's policy (Arun's brief of 27 Oct 2026): no 0% plan, no online financing, no
+// rate check. Four GreenSky plans, applied for in a showroom with a designer. Disclosure text
+// still to come from GreenSky / EK.
 export default async function Financing({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -31,155 +34,100 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
       />
       <PageHero
         actions={[
-          { label: 'Check my rate — no credit impact', href: CHECK_RATE_HREF, primary: true },
-          { label: 'See what a kitchen costs per month', href: '#monthly' },
+          { label: 'Find a showroom', href: SHOWROOMS_HREF, primary: true },
+          { label: 'Book a free design consult', href: FREE_DESIGN_HREF },
         ]}
+        chipStyle="checks"
         chips={[
-          '0% APR for qualified buyers',
-          'Decision in seconds',
-          'No hidden fees, no prepayment penalty',
-          'First payment after your order ships',
+          'Fixed rates from 9.99% APR',
+          'Promo plans that waive interest',
+          'Terms up to 180 months',
+          'Apply in-store with your designer',
         ]}
-        description="You don't have to wait until you've saved every dollar to have the kitchen you want. With 0% financing from $299 a month, you can order now and spread the cost over a term that suits you, on qualifying orders and subject to approval. Checking your rate takes about two minutes and won't touch your credit score, so there's no risk in finding out. Wherever you see an “as low as” monthly figure on this site, this is where it comes from."
+        description="Spread the cost of your kitchen with financing through GreenSky. Apply in any Express Kitchens showroom, and your designer will help you pick the plan that fits your budget."
         image={{
           src: '/images/pages/financing/family-kitchen.jpg',
           alt: 'A family at the island of their finished white kitchen',
         }}
         imageLabel="A family in a finished kitchen"
-        kicker="0% financing from $299 a month"
-        title="Buy the kitchen now. Pay for it monthly."
+        kicker="Financing"
+        note="Financing is available in our showrooms only. It isn't available on online orders or at our Factory Outlet."
+        title="Pay for your kitchen over time"
       />
       <CardsRow
-        cards={[
-          {
-            title: 'Transparent',
-            description:
-              "You'll see the total you'll pay before you commit, and that number never goes up afterwards.",
-          },
-          {
-            title: 'Simple',
-            description:
-              "Five pieces of information and you'll have a decision in seconds. It's a soft check, so your credit score isn't affected.",
-          },
-          {
-            title: 'Fair',
-            description:
-              "No late fees, no hidden fees, and no penalty if you'd like to pay it off early.",
-          },
-        ]}
-        hideImages
-        tint
-      />
-      <CardsRow
-        cards={[
-          {
-            title: 'Check your rate',
-            description:
-              "Enter a few details and you'll get a real-time decision. It's a soft check only, with no impact on your credit score.",
-            imageLabel: 'Step 1',
-          },
-          {
-            title: 'Choose your plan',
-            description:
-              'Pick the term that fits your budget, from [X] to [X] months, with 0% APR options for qualified buyers.',
-            imageLabel: 'Step 2',
-          },
-          {
-            title: 'Order your kitchen',
-            description:
-              "Check out as you normally would. Your first payment isn't due until after your order ships.",
-            imageLabel: 'Step 3',
-          },
-        ]}
-        hideImages
-        kicker="How it works"
-        title="Three steps, and the kitchen is yours"
-      />
-      <DeliveryLadder
-        columns={[
-          'Kitchen price',
-          '12 months · 0% APR',
-          '24 months · 0% APR',
-          '48 months · [X]% APR',
-        ]}
-        description="These are real kitchen prices rather than a $1,000 example. Your own figure will depend on approval, the term you choose and the APR, so treat these as a guide: the exact payment is shown before you commit."
-        footnote="Examples only. Loan maximum $[X]. The exact payment is shown before you commit."
-        rows={[
-          ['!$5,000', '$417 / mo', '$208 / mo', '$[X] / mo'],
-          ['!$9,000', '$750 / mo', '$375 / mo', '$[X] / mo'],
-          ['!$15,000', '$1,250 / mo', '$625 / mo', '$[X] / mo'],
-          ['!$25,000', '$2,083 / mo', '$1,042 / mo', '$[X] / mo'],
-        ]}
-        tint
-        title="What a kitchen costs per month"
-      />
-      <CardsRow
-        cards={[
-          {
-            title: 'Keep your savings where they are',
-            description:
-              'Remodels have a way of turning up surprises — a floor, a wall, a pipe. Keeping cash in hand while you spread the cost of the cabinets is the safe way to do it.',
-          },
-          {
-            title: '0% APR options',
-            description:
-              'For qualified buyers, the kitchen costs exactly the same spread over [X] months as it does paid up front. You simply pay it in pieces.',
-          },
-          {
-            title: 'Pay it off whenever you like',
-            description:
-              "There's no penalty for paying early. Clear it when a bonus lands or the sale goes through, and keep the interest.",
-          },
-          {
-            title: 'At your own pace',
-            description:
-              'Terms from [X] to [X] months, with the monthly figure fixed from day one, so you always know where you stand.',
-          },
-        ]}
+        cards={FINANCING_PLANS.map((plan) => ({
+          title: plan.title,
+          meta: monthlyExample(plan),
+          description: `${plan.what} Plan ${plan.plan}.`,
+        }))}
         columns={4}
+        description="Monthly examples are for a $10,000 kitchen. Your designer will show you the exact figures for your order."
         hideImages
-        kicker="Why finance a kitchen?"
-        title="A few good reasons"
+        kicker="The plans"
+        tint
+        title="Four ways to pay"
+      />
+      <FinePrint variant="plain">
+        Once you&apos;re approved, you have 6 months to use your credit line, so you can plan your
+        kitchen without rushing. Subject to credit approval by GreenSky.
+      </FinePrint>
+      <StepsRow
+        className="bg-[#fdf3f5]"
+        steps={[
+          {
+            title: 'Plan your kitchen.',
+            description:
+              'Visit a showroom, or start on a video call. Your designer prices your kitchen.',
+          },
+          {
+            title: 'Apply in the showroom.',
+            description: 'Your designer helps you apply with GreenSky and choose a plan.',
+          },
+          {
+            title: "Order when you're ready.",
+            description: "Once you're approved, you have 6 months to use your credit line.",
+          },
+        ]}
+        title="How it works"
       />
       <CabinetFaq
         data={{
-          headline: 'Questions people ask about financing',
+          headline: 'Questions about financing',
           items: [
             {
-              q: 'Does checking my rate affect my credit score?',
-              a: 'No. Checking your rate is a soft check and has no impact on your score. A hard check happens only if you accept a plan.',
+              q: 'Can I finance an online order?',
+              a: "No. Financing is available in our showrooms only. If you've planned your kitchen online, bring your quote to a showroom and apply there.",
             },
             {
-              q: 'What do I need to apply?',
-              a: "Your name, address, date of birth, phone number and the last four digits of your Social Security number. It's a soft check, so nothing is reported unless you go ahead.",
+              q: 'Can I use financing at the Factory Outlet?',
+              a: "No. The Factory Outlet isn't a showroom, so financing isn't available there.",
             },
             {
-              q: 'When is my first payment?',
-              a: "After your order ships. You aren't paying for a kitchen you don't have yet.",
-            },
-            { q: 'Can I pay it off early?', a: 'Yes, at any time, with no penalty.' },
-            {
-              q: 'Can I return something I financed?',
-              a: 'Yes. The normal returns policy applies, and the refund goes back against your plan.',
+              q: 'Which plan should I choose?',
+              a: "If you can pay it all off within 12 or 18 months, a promo plan waives the interest. If you'd rather keep monthly payments low, a fixed-rate plan spreads it over 10 or 15 years. Your designer will compare them for your order.",
             },
             {
-              q: "I'm a contractor. Is there something for trade accounts?",
-              a: 'Yes. Pro Program members can ask their trade rep about account terms; see the Pro Program page.',
+              q: 'How long is my approval good for?',
+              a: 'You have 6 months from approval to use your credit line.',
+            },
+            {
+              q: 'Why does the estimator show a monthly payment?',
+              a: "It's an example based on Plan 1519 (11.99% APR for 180 months), to give you a feel for the monthly cost. Your actual payment depends on the plan you choose and on approval.",
             },
           ],
         }}
       />
       <FinePrint>
-        <strong>Disclosures.</strong> [Required lender disclosure — APR range, example payment per
-        $1,000, term range, loan minimum and maximum, lender name and issuing bank. To be supplied
-        by the lender and approved by Express Kitchens.]
+        <strong>Disclosures.</strong> Financing for GreenSky® consumer loan programs is provided by
+        [lender/bank names]. Subject to credit approval. [Full disclosure text to come from GreenSky
+        / Express Kitchens.]
       </FinePrint>
       <ClosingBand
-        primary={{ label: 'Check my rate', href: CHECK_RATE_HREF }}
-        secondary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
-        showrooms={SHOWROOMS}
+        description="Visit a showroom and your designer will price your kitchen and walk you through the plans."
+        primary={{ label: 'Find a showroom', href: SHOWROOMS_HREF }}
+        secondary={{ label: 'Book a free design consult', href: FREE_DESIGN_HREF }}
         tint
-        title="Ready to see what your kitchen would cost a month?"
+        title="Ready to talk numbers?"
       />
     </>
   );
