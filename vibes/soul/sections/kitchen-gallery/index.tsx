@@ -262,10 +262,15 @@ function Details({ kitchen, onClose }: { kitchen: GalleryKitchen | null; onClose
           <Dialog.Close asChild>
             <button
               aria-label="Close"
-              className="absolute right-3 top-3 z-10 flex size-10 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+              className="group absolute right-3 top-3 z-10 flex size-10 items-center justify-center rounded-full text-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]"
               type="button"
             >
-              <X aria-hidden size={20} strokeWidth={2} />
+              <X
+                aria-hidden
+                className="transition-transform duration-300 group-hover:rotate-90"
+                size={24}
+                strokeWidth={2.5}
+              />
             </button>
           </Dialog.Close>
           <div className="relative aspect-[4/3] bg-[#f3f2ee] @3xl:aspect-auto @3xl:min-h-[30rem]">
