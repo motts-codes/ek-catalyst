@@ -73,11 +73,11 @@ export const PictureRadioGroup = React.forwardRef<
             key={option.value}
             value={option.value}
           >
-            <span className="relative block aspect-[4/3] w-full bg-[#f6f6f8]">
+            <span className="relative block aspect-[4/3] w-full bg-white">
               {option.image ? (
                 <Image
                   alt={option.image.alt ?? ''}
-                  className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.03]"
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   fill
                   sizes="(min-width: 48rem) 12rem, 45vw"
                   src={option.image.src}
