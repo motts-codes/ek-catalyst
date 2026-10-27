@@ -128,6 +128,8 @@ export interface TableProps {
   inline?: boolean;
   /** Let a short table shrink to its container instead of scrolling sideways on phones. */
   fit?: boolean;
+  /** Tighter rows and smaller type, for a pair of tables side by side. */
+  compact?: boolean;
 }
 
 function cellText(cell: string): { bold: boolean; text: string } {
@@ -221,6 +223,7 @@ export function MinimalTable({
   widths,
   inline = false,
   fit = false,
+  compact = false,
 }: TableProps) {
   let minWidth: string | undefined = inline ? 'min-w-[28rem]' : 'min-w-[36rem]';
 
@@ -252,7 +255,8 @@ export function MinimalTable({
             {columns.map((column, columnIndex) => (
               <th
                 className={clsx(
-                  'pb-3 pr-8 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]',
+                  'pr-8 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]',
+                  compact ? 'pb-2 text-[11px]' : 'pb-3',
                   columnIndex === 0 && narrow && 'whitespace-nowrap pr-10',
                 )}
                 key={column || 'feature'}
@@ -276,8 +280,9 @@ export function MinimalTable({
                 return (
                   <td
                     className={clsx(
-                      'py-4 pr-8 align-top',
-                      feature && 'text-[15px] @xl:text-base',
+                      'pr-8 align-top',
+                      compact ? 'py-2.5' : 'py-4',
+                      feature && !compact && 'text-[15px] @xl:text-base',
                       feature && narrow && 'whitespace-nowrap pr-10',
                       feature || bold ? 'font-semibold text-foreground' : 'text-[#404040]',
                       !feature &&

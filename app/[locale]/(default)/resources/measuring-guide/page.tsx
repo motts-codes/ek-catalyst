@@ -4,8 +4,8 @@ import { setRequestLocale } from 'next-intl/server';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
+import { MinimalTable } from '@/vibes/soul/sections/delivery-ladder';
+import { homeHeadingClassName, HomeSection } from '@/vibes/soul/sections/home-section';
 import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { Image } from '~/components/image';
@@ -71,7 +71,7 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         ]}
         description="All you need is a tape measure and your phone. Don't worry about getting it perfect: a project manager checks every number before anything is ordered. Follow the six steps, one wall at a time, and if you get stuck, call or text 860-247-1000 and we'll talk you through it."
         image={{
-          src: '/images/pages/measuring/hero-measuring-range-2.jpg',
+          src: '/images/pages/measuring/hero-measuring-range-3.jpg',
           alt: 'A sketched kitchen with a homeowner in a red top measuring the width of the range with a tape measure',
         }}
         imageStyle="plain"
@@ -182,33 +182,48 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         tint
         title="From your numbers to cabinets on order"
       />
-      <DeliveryLadder
-        columns={['Cabinet', 'Depth', 'Height']}
-        inline
-        look="minimal"
-        narrow
-        rows={[
-          ['!Base cabinets', '24"', '34½" (36" with the countertop)'],
-          ['!Wall cabinets', '12"', '30", 36" or 42"'],
-          ['!Tall / pantry cabinets', '24"', '84", 90" or 96"'],
-          ['!Widths', '9" to 48", in 3" steps', ''],
-        ]}
-        title="Sizes worth knowing"
-      />
-      <DeliveryLadder
-        columns={['Between', 'At least']}
-        inline
-        look="minimal"
-        narrow
-        rows={[
-          ['!Countertop and wall cabinets', '18"'],
-          ['!Cabinets and large appliances', '1–2"'],
-          ['!A walkway', '36"'],
-          ['!Island and counter, with two cooks', '42–48"'],
-        ]}
-        tint
-        title="Space to leave"
-      />
+      <HomeSection>
+        <div className="grid gap-10 @3xl:grid-cols-2 @3xl:gap-16">
+          <div>
+            <h2 className={homeHeadingClassName}>Sizes worth knowing</h2>
+            <div className="mt-6">
+              <MinimalTable
+                columns={['Cabinet', 'Depth', 'Height']}
+                compact
+                fit
+                inline
+                narrow
+                rows={[
+                  ['!Base cabinets', '24"', '34½" (36" with the countertop)'],
+                  ['!Wall cabinets', '12"', '30", 36" or 42"'],
+                  ['!Tall / pantry cabinets', '24"', '84", 90" or 96"'],
+                  ['!Widths', '9" to 48"', 'In 3" steps'],
+                ]}
+                widths={['w-[30%]', 'w-[44%]']}
+              />
+            </div>
+          </div>
+          <div>
+            <h2 className={homeHeadingClassName}>Space to leave</h2>
+            <div className="mt-6">
+              <MinimalTable
+                columns={['Between', 'At least']}
+                compact
+                fit
+                inline
+                narrow
+                rows={[
+                  ['!Countertop and wall cabinets', '18"'],
+                  ['!Cabinets and large appliances', '1–2"'],
+                  ['!A walkway', '36"'],
+                  ['!Island and counter, with two cooks', '42–48"'],
+                ]}
+                widths={['w-[40%]']}
+              />
+            </div>
+          </div>
+        </div>
+      </HomeSection>
       <CardsRow
         cards={[
           {
