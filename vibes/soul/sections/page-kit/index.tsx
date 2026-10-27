@@ -185,8 +185,10 @@ export function PageHero({
                 'mt-5',
                 // Star-checks sit in two columns (a 2 x 2 for four promises), each column as wide
                 // as its longest line so the pair reads as one block; pills wrap freely.
+                // One column on phones; two content-sized columns once the copy column is wide
+                // enough for the longest pair (the @lg container breakpoint, 32rem).
                 chipStyle === 'checks'
-                  ? 'grid w-fit gap-x-10 gap-y-2.5 @sm:grid-cols-[max-content_max-content]'
+                  ? 'grid w-fit max-w-full gap-x-10 gap-y-2.5 @lg:grid-cols-[max-content_max-content]'
                   : 'flex flex-wrap gap-2',
               )}
             >

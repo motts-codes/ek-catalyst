@@ -257,7 +257,7 @@ export function MinimalTable({
                 className={clsx(
                   'pr-8 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]',
                   compact ? 'pb-2 text-[11px]' : 'pb-3',
-                  columnIndex === 0 && narrow && 'whitespace-nowrap pr-10',
+                  columnIndex === 0 && narrow && !fit && 'whitespace-nowrap pr-10',
                 )}
                 key={column || 'feature'}
                 scope="col"
@@ -283,7 +283,8 @@ export function MinimalTable({
                       'pr-8 align-top',
                       compact ? 'py-2.5' : 'py-4',
                       feature && !compact && 'text-[15px] @xl:text-base',
-                      feature && narrow && 'whitespace-nowrap pr-10',
+                      // A fitted table must be able to wrap its feature column on phones.
+                      feature && narrow && !fit && 'whitespace-nowrap pr-10',
                       feature || bold ? 'font-semibold text-foreground' : 'text-[#404040]',
                       !feature &&
                         text.startsWith('✓') &&
