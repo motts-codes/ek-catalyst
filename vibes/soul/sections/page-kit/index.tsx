@@ -156,9 +156,10 @@ export function PageHero({
             <ul
               className={clsx(
                 'mt-5',
-                // Star-checks sit in two columns (a 2 x 2 for four promises); pills wrap freely.
+                // Star-checks sit in two columns (a 2 x 2 for four promises), each column as wide
+                // as its longest line so the pair reads as one block; pills wrap freely.
                 chipStyle === 'checks'
-                  ? 'grid max-w-xl gap-x-8 gap-y-2.5 @sm:grid-cols-2'
+                  ? 'grid w-fit gap-x-10 gap-y-2.5 @sm:grid-cols-[max-content_max-content]'
                   : 'flex flex-wrap gap-2',
               )}
             >
