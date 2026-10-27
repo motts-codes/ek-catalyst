@@ -171,6 +171,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
       />
       <PageHero
         actions={[{ label: 'Book my free consult', href: '#request', primary: true }]}
+        chipStyle="checks"
         chips={['A full layout', 'An itemized price', 'A ship date', 'Free, no obligation']}
         description={
           pro
@@ -178,10 +179,10 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             : "Tell us a little about your kitchen and a designer will plan it with you: a layout drawn for your room, every cabinet priced both ways (RTA and assembled), and a ship date you can plan around. Meet in one of our showrooms, or on a video call from anywhere we ship. It's free, there's no deposit, and the plan is yours to keep whether you buy from us or not."
         }
         image={{
-          src: '/images/pages/design-consult/plan-and-quote.jpg',
-          alt: 'A printed kitchen plan and quote on a table',
+          src: '/images/pages/design-consult/hero-designer-couple.jpg',
+          alt: 'A designer in a red top drawing a kitchen plan at a table with a smiling couple, door samples beside them',
         }}
-        imageLabel="A printed plan and quote on a table"
+        imageStyle="plain"
         kicker={pro ? 'Free design and quote for the trade' : 'Free design consult'}
         title={pro ? 'We design it. You win the job.' : 'Plan your kitchen with a designer, free'}
       />
