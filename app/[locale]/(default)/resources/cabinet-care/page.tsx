@@ -48,10 +48,9 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
         ]}
         description="We build cabinets to last and check every one before it leaves Bristol, but a kitchen that gets used every day will still want the odd wipe, a hinge adjustment now and then, and the occasional touch-up. Here's how to do each one, by finish, and the short list of things never to use on them."
         image={{
-          src: '/images/pages/cabinet-care/wiping-shaker-door.jpg',
-          alt: 'A hand wiping a painted shaker door with a microfiber cloth',
+          src: '/images/pages/cabinet-care/hero-wiping-door.jpg',
+          alt: 'A smiling woman in yellow gloves wiping a grey cabinet door with a cloth, spray bottle in hand',
         }}
-        imageLabel="A hand wiping a painted shaker door with a microfiber cloth"
         kicker="Cabinet care & maintenance"
         title="Keep your kitchen looking new"
       />
