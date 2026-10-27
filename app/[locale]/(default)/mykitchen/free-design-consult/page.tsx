@@ -172,7 +172,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
             : "Tell us about your kitchen and a designer will go through it with you: the style, the cabinets your room needs, and an itemized quote, priced both RTA and assembled. Meet in one of our showrooms, or on a video call from any state. It's free, with no deposit and no obligation to buy."
         }
         image={{
-          src: '/images/pages/design-consult/hero-designer-couple-2.jpg',
+          src: '/images/pages/design-consult/hero-designer-couple-3.jpg',
           alt: 'A designer in a red top drawing a kitchen plan at a table with a smiling couple, door samples beside them',
         }}
         imageStyle="plain"
