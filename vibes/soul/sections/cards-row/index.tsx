@@ -26,6 +26,8 @@ interface Props {
   columns?: 2 | 3 | 4 | 5;
   /** Hide the image area (text-only reasons-to-believe cards get an accent bar instead). */
   hideImages?: boolean;
+  /** With `hideImages`: a big red number (1, 2, 3…) in place of the accent bar. */
+  numbered?: boolean;
   /**
    * 'inset' (default) keeps the photo inside the card padding; 'bleed' runs it edge to edge;
    * 'plain' drops the card chrome: a wide (5:3) rounded photo with the copy straight beneath it.
@@ -48,6 +50,7 @@ export function CardsRow({
   cards,
   columns = 3,
   hideImages = false,
+  numbered = false,
   imageStyle = 'inset',
   tint = false,
   tone = 'default',
@@ -55,6 +58,7 @@ export function CardsRow({
 }: Props) {
   const bleed = imageStyle === 'bleed' && !hideImages;
   const plain = imageStyle === 'plain' && !hideImages;
+  const insetImage = !hideImages && !bleed;
   const red = tone === 'red';
 
   return (
@@ -77,7 +81,7 @@ export function CardsRow({
           }[columns],
         )}
       >
-        {cards.map((card) => (
+        {cards.map((card, i) => (
           <article
             className={clsx(
               'flex h-full flex-col',
@@ -104,13 +108,8 @@ export function CardsRow({
               </div>
             )}
             <div className={clsx('flex flex-1 flex-col', plain ? 'p-0' : 'p-6 @xl:p-7')}>
-              {hideImages && (
-                <span
-                  aria-hidden
-                  className="mb-5 block h-0.5 w-10 rounded-full bg-[var(--button-primary-background,#d90716)]"
-                />
-              )}
-              {!hideImages && !bleed && (
+              {hideImages && <CardLead number={numbered ? i + 1 : undefined} />}
+              {insetImage && (
                 <div
                   className={clsx(
                     'relative mb-6 overflow-hidden bg-contrast-100',
@@ -173,5 +172,24 @@ export function CardsRow({
         ))}
       </div>
     </HomeSection>
+  );
+}
+
+// What tops a text-only card: a big red number when the row is numbered, else the short red
+// accent bar.
+function CardLead({ number }: { number?: number }) {
+  if (number != null) {
+    return (
+      <span className="mb-3 block font-heading text-4xl font-bold leading-none text-[var(--button-primary-background,#d90716)]">
+        {number}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      aria-hidden
+      className="mb-5 block h-0.5 w-10 rounded-full bg-[var(--button-primary-background,#d90716)]"
+    />
   );
 }

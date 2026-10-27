@@ -548,12 +548,12 @@ export function LinkCards({
 // Small print (disclosures, legal notes) at the end of a section.
 export function FinePrint({
   children,
-  style = 'box',
+  variant = 'box',
   className,
 }: {
   children: ReactNode;
   /** `plain` drops the grey box: a bare footnote line that starts with an asterisk. */
-  style?: 'box' | 'plain';
+  variant?: 'box' | 'plain';
   className?: string;
 }) {
   return (
@@ -561,10 +561,10 @@ export function FinePrint({
       <p
         className={clsx(
           'max-w-3xl text-xs leading-relaxed text-contrast-500',
-          style === 'box' && 'rounded-2xl border border-contrast-100 bg-[#f9fafd] px-5 py-4',
+          variant === 'box' && 'rounded-2xl border border-contrast-100 bg-[#f9fafd] px-5 py-4',
         )}
       >
-        {style === 'plain' && '*'}
+        {variant === 'plain' && '*'}
         {children}
       </p>
     </HomeSection>

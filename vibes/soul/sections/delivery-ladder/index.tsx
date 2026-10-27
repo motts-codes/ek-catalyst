@@ -31,6 +31,8 @@ interface Props {
   narrow?: boolean;
   /** 'minimal' drops the box, fills and dividers: hairlines between rows, labels up top. */
   look?: 'classic' | 'minimal';
+  /** Minimal only: sit left under the heading (the "Money or time" look) instead of centring. */
+  inline?: boolean;
   tint?: boolean;
   className?: string;
 }
@@ -49,6 +51,7 @@ export function DeliveryLadder({
   footnote,
   narrow = false,
   look = 'classic',
+  inline = false,
   tint = false,
   className,
 }: Props) {
@@ -61,7 +64,10 @@ export function DeliveryLadder({
       title={title}
     >
       {look === 'minimal' ? (
-        <MinimalTable columns={columns} narrow={narrow} rows={rows} />
+        // Inline tables sit left under the heading at the width of an explainer's half column.
+        <div className={clsx(inline && 'max-w-3xl')}>
+          <MinimalTable columns={columns} inline={inline} narrow={narrow} rows={rows} />
+        </div>
       ) : (
         <ClassicTable columns={columns} narrow={narrow} rows={rows} />
       )}

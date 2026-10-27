@@ -9,7 +9,7 @@ import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { Image } from '~/components/image';
-import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
+import { ESTIMATOR_HREF, FREE_DESIGN_HREF } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'How to measure your kitchen for cabinets',
@@ -184,6 +184,9 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
       />
       <DeliveryLadder
         columns={['Cabinet', 'Depth', 'Height']}
+        inline
+        look="minimal"
+        narrow
         rows={[
           ['!Base cabinets', '24"', '34½" (36" with the countertop)'],
           ['!Wall cabinets', '12"', '30", 36" or 42"'],
@@ -194,6 +197,9 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
       />
       <DeliveryLadder
         columns={['Between', 'At least']}
+        inline
+        look="minimal"
+        narrow
         rows={[
           ['!Countertop and wall cabinets', '18"'],
           ['!Cabinets and large appliances', '1–2"'],
@@ -234,9 +240,10 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         columns={5}
         hideImages
         kicker="Common mistakes"
+        numbered
         title="Five mistakes that cause reorders"
       />
-      <FinePrint style="plain">
+      <FinePrint variant="plain">
         Turnaround times are typical, not guaranteed. Standard sizes may vary by collection; your
         project manager confirms every size before you order.
       </FinePrint>
@@ -244,7 +251,6 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         description="Send your sketch, numbers and photos, and a project manager will turn them into a 3D design with an exact price. It's free, with no obligation to buy."
         primary={{ label: 'Send my measurements', href: FREE_DESIGN_HREF }}
         secondary={{ label: 'Price my kitchen', href: ESTIMATOR_HREF }}
-        showrooms={SHOWROOMS}
         tint
         title="Measured? Send it to a project manager."
       />
