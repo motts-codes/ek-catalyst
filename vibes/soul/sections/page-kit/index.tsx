@@ -583,14 +583,17 @@ export function StepsRow({
   title,
   steps,
   tint = false,
+  className,
 }: {
   kicker?: string;
   title: string;
   steps: RowStep[];
   tint?: boolean;
+  /** For a band colour other than the grey tint (the light red `bg-[#fdf3f5]`, say). */
+  className?: string;
 }) {
   return (
-    <HomeSection compact kicker={kicker} tint={tint} title={title}>
+    <HomeSection className={className} compact kicker={kicker} tint={tint} title={title}>
       <ol className="grid gap-6 @xl:grid-cols-3 @xl:gap-8">
         {steps.map((step, i) => (
           <li className="flex gap-4" key={step.title}>

@@ -172,7 +172,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         kicker={pro ? 'Free design and quote for the trade' : 'Free design consult'}
         title={pro ? 'We design it. You win the job.' : 'Plan your kitchen with a designer, free'}
       />
-      <StepsRow steps={HOW_IT_WORKS} title="How it works" />
+      <StepsRow className="bg-[#fdf3f5]" steps={HOW_IT_WORKS} title="How it works" />
       <LeadFormCard
         action={submitDesignLead}
         description="Two minutes. Only how you'd like to meet and your contact details are required."
