@@ -26,16 +26,28 @@ export interface PageAction {
   href: string;
   primary?: boolean;
   /** `outline`: thin black outline, solid black on hover (the site's secondary button). */
-  style?: 'solid' | 'outline';
+  style?: 'solid' | 'outline' | 'outline-red';
 }
 
 const OUTLINE_BUTTON =
   'transition-colors [--button-ghost-background:white] [--button-ghost-background-hover:hsl(var(--foreground))] [--button-ghost-border:hsl(var(--foreground))] hover:[--button-ghost-text:white]';
+// Brand-red outline and text, filling red on hover.
+const OUTLINE_RED_BUTTON =
+  'transition-colors [--button-ghost-background:white] [--button-ghost-background-hover:var(--button-primary-background,#d90716)] [--button-ghost-border:var(--button-primary-background,#d90716)] [--button-ghost-text:var(--button-primary-background,#d90716)] hover:[--button-ghost-text:white]';
+
+// The outline styles ride on the ghost variant with their own colours.
+function outlineClass(action: PageAction): string | undefined {
+  if (action.primary) return undefined;
+  if (action.style === 'outline') return OUTLINE_BUTTON;
+  if (action.style === 'outline-red') return OUTLINE_RED_BUTTON;
+
+  return undefined;
+}
 
 function actionVariant(action: PageAction): 'primary' | 'secondary' | 'ghost' {
   if (action.primary) return 'primary';
 
-  return action.style === 'outline' ? 'ghost' : 'secondary';
+  return action.style === 'outline' || action.style === 'outline-red' ? 'ghost' : 'secondary';
 }
 
 // Breadcrumb at the top of a page. Small and grey like the PDP's, at a size/grey that passes AA.
@@ -61,7 +73,7 @@ export function Actions({ actions, className }: { actions: PageAction[]; classNa
     <div className={clsx('flex flex-wrap gap-3', className)}>
       {actions.map((action) => (
         <ButtonLink
-          className={action.style === 'outline' && !action.primary ? OUTLINE_BUTTON : undefined}
+          className={outlineClass(action)}
           href={action.href}
           key={action.label}
           shape="pill"

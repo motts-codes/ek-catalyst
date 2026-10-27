@@ -4,8 +4,8 @@ import { setRequestLocale } from 'next-intl/server';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { ReviewGrid, VideoGrid } from '@/vibes/soul/sections/page-kit/media';
-import { FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
+import { VideoGrid } from '@/vibes/soul/sections/page-kit/media';
+import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 import type { Video } from '~/lib/pages/projects';
 
 export const metadata: Metadata = {
@@ -67,14 +67,13 @@ export default async function Testimonials({ params }: { params: Promise<{ local
       <PageHero
         actions={[
           { label: 'Watch the featured film', href: '#featured', primary: true },
-          { label: 'Read written reviews', href: '/reviews' },
+          { label: 'Read written reviews', href: '/reviews', style: 'outline-red' },
         ]}
         description="We asked customers to tell their story on camera, in the kitchens we built for them, with no script. What they wanted, what they worried about before they ordered, and how it turned out. If you're weighing the same decision, these are the people to hear from."
         image={{
-          src: '/images/pages/testimonials/customer-kitchen.jpg',
-          alt: 'A homeowner at the counter of their finished white kitchen',
+          src: '/images/pages/testimonials/hero-couple-floor.jpg',
+          alt: 'A couple sitting on the floor of their white kitchen, laughing with mugs of tea',
         }}
-        imageLabel="A customer in their finished kitchen, mid-sentence"
         kicker="Testimonials"
         title="In their own words, on camera"
       />
@@ -101,12 +100,6 @@ export default async function Testimonials({ params }: { params: Promise<{ local
         </div>
       </HomeSection>
       <VideoGrid columns={3} title="More stories" videos={VIDEOS} />
-      <ReviewGrid
-        action={{ label: 'Read all reviews', href: '/reviews' }}
-        reviews={HOME_REVIEWS.slice(0, 3)}
-        tint
-        title="Written reviews"
-      />
       <ClosingBand
         primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}
