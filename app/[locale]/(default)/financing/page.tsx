@@ -2,9 +2,14 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
-import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { FinePrint, PageBreadcrumbs, PageHero, StepsRow } from '@/vibes/soul/sections/page-kit';
+import {
+  FinePrint,
+  PageBreadcrumbs,
+  PageHero,
+  SplitCardGrid,
+  StepsRow,
+} from '@/vibes/soul/sections/page-kit';
 import { FREE_DESIGN_HREF } from '~/lib/home/home-content';
 import { FINANCING_PLANS, monthlyExample } from '~/lib/pages/financing';
 
@@ -46,7 +51,7 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
         ]}
         description="Spread the cost of your kitchen with financing through GreenSky. Apply in any Express Kitchens showroom, and your designer will help you pick the plan that fits your budget."
         image={{
-          src: '/images/pages/financing/hero-couple-cabinets.jpg',
+          src: '/images/pages/financing/hero-couple-cabinets-2.jpg',
           alt: 'A couple holding white cabinet drawers with a red piggy bank and a 0% financing, $299 per month badge',
         }}
         imageStyle="plain"
@@ -54,23 +59,18 @@ export default async function Financing({ params }: { params: Promise<{ locale: 
         note="Financing is available in our showrooms only. It isn't available on online orders or at our Factory Outlet."
         title="Pay for your kitchen over time"
       />
-      <CardsRow
+      <SplitCardGrid
         cards={FINANCING_PLANS.map((plan) => ({
           title: plan.title,
           meta: monthlyExample(plan),
           description: `${plan.what} Plan ${plan.plan}.`,
         }))}
-        columns={4}
         description="Plans start with a deposit of about 20%, and you finance the rest. Monthly examples are for $10,000 financed (for example, a $12,500 kitchen with a 20% deposit). Your designer will show you the exact figures for your order."
-        hideImages
+        footnote="*Once you're approved, you have 6 months to use your credit line, so you can plan your kitchen without rushing. Subject to credit approval by GreenSky."
         kicker="The plans"
         tint
         title="Four ways to pay"
       />
-      <FinePrint variant="plain">
-        Once you&apos;re approved, you have 6 months to use your credit line, so you can plan your
-        kitchen without rushing. Subject to credit approval by GreenSky.
-      </FinePrint>
       <StepsRow
         className="bg-[#fdf3f5]"
         steps={[

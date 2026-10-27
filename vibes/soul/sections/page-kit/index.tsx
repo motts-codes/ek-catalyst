@@ -620,6 +620,105 @@ export function StepsRow({
   );
 }
 
+export interface SplitCard {
+  title: string;
+  /** A short red line under the title (the monthly example, say). */
+  meta?: string;
+  description: string;
+}
+
+// Copy on the left (about a third), a 2 x 2 of numbered cards on the right (about two thirds).
+// Every other card is brand red with white copy, checkerboard fashion, so the four read as a
+// set. Used for the financing plans.
+export function SplitCardGrid({
+  kicker,
+  title,
+  description,
+  footnote,
+  cards,
+  tint = false,
+}: {
+  kicker?: string;
+  title: string;
+  description?: string;
+  /** Small print under the copy on the left. */
+  footnote?: ReactNode;
+  cards: SplitCard[];
+  tint?: boolean;
+}) {
+  return (
+    <HomeSection tint={tint}>
+      <div className="grid gap-10 @3xl:grid-cols-[1fr_2fr] @3xl:gap-16">
+        <div>
+          {Boolean(kicker) && (
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+              {kicker}
+            </p>
+          )}
+          <h2 className={homeHeadingClassName}>{title}</h2>
+          {Boolean(description) && (
+            <p className="mt-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+              {description}
+            </p>
+          )}
+          {footnote != null && (
+            <p className="mt-5 text-xs leading-relaxed text-contrast-500">{footnote}</p>
+          )}
+        </div>
+        <ol className="grid gap-5 @xl:grid-cols-2">
+          {cards.map((card, i) => {
+            // Checkerboard: the 2nd and 3rd of four are red.
+            const red = i % 3 !== 0;
+
+            return (
+              <li
+                className={clsx(
+                  'flex h-full flex-col rounded-3xl p-6 @xl:p-7',
+                  red
+                    ? 'bg-[var(--button-primary-background,#d90716)] text-white'
+                    : 'border border-contrast-100 bg-white',
+                )}
+                key={card.title}
+              >
+                <span
+                  aria-hidden
+                  className={clsx(
+                    'mb-3 block font-heading text-4xl font-bold leading-none',
+                    red ? 'text-white' : 'text-[var(--button-primary-background,#d90716)]',
+                  )}
+                >
+                  {i + 1}
+                </span>
+                <h3 className="font-heading text-lg font-semibold leading-tight @xl:text-xl">
+                  {card.title}
+                </h3>
+                {card.meta != null && (
+                  <p
+                    className={clsx(
+                      'mt-1 text-xs font-semibold',
+                      red ? 'text-white' : 'text-[var(--button-primary-background,#d90716)]',
+                    )}
+                  >
+                    {card.meta}
+                  </p>
+                )}
+                <p
+                  className={clsx(
+                    'mt-2.5 text-sm leading-relaxed',
+                    red ? 'text-white' : 'text-contrast-500',
+                  )}
+                >
+                  {card.description}
+                </p>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </HomeSection>
+  );
+}
+
 // The card every lead form sits in: pale rose, red rule top and bottom, soft shadow, with the
 // privacy line underneath. Pass the form as children; anything after it (notes) goes in `after`.
 export function FormCard({ children, after }: { children: ReactNode; after?: ReactNode }) {
