@@ -7,14 +7,19 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
-import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'Cabinet Care & Maintenance',
   description:
-    'How to clean painted, stained and laminate doors, adjust hinges and drawers, touch up a chip, and what never to use.',
+    'How to clean painted, stained and slab doors, adjust hinges and drawers, touch up a chip, what never to use, and what the warranty covers.',
 };
 
+const CONTACT_HREF = '/contact';
+const WARRANTY_HREF = '/warranty';
+
+// Arun's brief of 27 Oct 2026. EK has confirmed there is no free touch-up kit and no care PDF;
+// stained doors are birch veneer; the warranty is 1 year and excludes water damage, misuse and
+// improper installation. To confirm with EK: whether they sell touch-up markers by finish.
 function Checklist({ title, items }: { title: string; items: string[] }) {
   return (
     <div className="rounded-3xl border border-contrast-100 bg-white p-6">
@@ -43,159 +48,85 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
       />
       <PageHero
         actions={[
-          { label: 'Download the care guide (PDF)', href: '#', primary: true },
-          { label: 'What not to use', href: '#avoid' },
+          { label: 'What never to use', href: '#avoid', primary: true },
+          { label: 'Adjusting doors and drawers', href: '#adjusting', style: 'outline' },
         ]}
-        description="We build cabinets to last and check every one before it leaves Bristol, but a kitchen that gets used every day will still want the odd wipe, a hinge adjustment now and then, and the occasional touch-up. Here's how to do each one, by finish, and the short list of things never to use on them."
+        description="A kitchen that's used every day needs a wipe, the odd hinge adjustment and a touch-up now and then. Here's how to do each one, by finish, plus the short list of things never to use."
         image={{
           src: '/images/pages/cabinet-care/hero-wiping-door.jpg',
           alt: 'A smiling woman in yellow gloves wiping a grey cabinet door with a cloth, spray bottle in hand',
         }}
-        kicker="Cabinet care & maintenance"
+        kicker="Cabinet care"
         title="Keep your kitchen looking new"
       />
       <CategoryPoints
         points={[
           { icon: 'stock', label: 'Cleaning, by finish' },
+          { icon: 'tag', label: 'What never to use' },
           { icon: 'returns', label: 'Adjusting hinges and drawers' },
-          { icon: 'tag', label: 'Touch-ups and kits' },
           { icon: 'clock', label: 'Humidity, light and heat' },
         ]}
       />
+      <HomeSection
+        description="A few minutes at the start saves most problems later."
+        kicker="New cabinets? Start here"
+        tint
+        title="The first two weeks"
+      >
+        <div className="grid gap-5 @xl:grid-cols-2">
+          <Checklist
+            items={[
+              "Don't take out your old kitchen until the new cabinets have arrived and you've checked them.",
+              'Unbox with two people and check every piece against your packing list. If anything was damaged in transit, file a claim with the carrier, then call us at 860-247-1000.',
+              'Store cabinets somewhere dry, ideally at 40–50% humidity. Very dry or very damp rooms cause problems.',
+              'Let the cabinets sit in the room for a day or two before they go on the wall.',
+            ]}
+            title="Before installation"
+          />
+          <Checklist
+            items={[
+              'Wipe the construction dust off inside and out with a damp microfiber cloth, one area at a time, drying as you go.',
+              'Expect doors and drawers to need a small adjustment as they settle.',
+              'Adjust everything before you fit knobs and pulls.',
+              "Keep the packaging until you're sure everything is right. Unopened items can be returned within 30 days.",
+            ]}
+            title="After installation"
+          />
+        </div>
+      </HomeSection>
       <CardsRow
         cards={[
           {
             title: 'Painted doors',
             description:
-              'Mild dish soap diluted in warm water, on a microfiber cloth. Wipe, then dry with a second cloth. Nothing abrasive: paint scratches before stain does.',
+              'Mild dish soap in warm water, on a microfiber cloth. Wipe, then dry with a second cloth. Nothing abrasive: paint scratches more easily than stain.',
             image: {
               src: '/images/pages/cabinet-care/painted-white-door.jpg',
               alt: 'A painted white cabinet door being wiped',
             },
-            imageLabel: 'A painted white door being wiped',
           },
           {
-            title: 'Stained and natural wood',
+            title: 'Stained wood',
             description:
-              'A mild wood cleaner diluted in warm water. Wipe with the grain and dry immediately. Once or twice a year, a thorough clean one small area at a time.',
+              'A mild wood cleaner in warm water. Wipe with the grain and dry right away. Once or twice a year, give it a thorough clean, one small area at a time.',
             image: {
-              src: '/images/pages/cabinet-care/stained-oak-door.jpg',
-              alt: 'A stained oak shaker cabinet door',
+              src: '/images/pages/cabinet-care/stained-birch-door-2.jpg',
+              alt: 'Stained birch shaker doors and a drawer on a kitchen island',
             },
-            imageLabel: 'A stained oak door',
           },
           {
-            title: 'Laminate and textured',
+            title: 'Slab and textured doors',
             description:
-              'Warm water and a drop of dish soap, dried at once. Standing water at the edges is what lifts laminate.',
+              'Warm water and a drop of dish soap, dried straight away. Water left standing at the edges can lift the finish.',
             image: {
               src: '/images/pages/cabinet-care/laminate-slab-door.jpg',
-              alt: 'A light grey laminate slab cabinet door',
+              alt: 'A light grey slab cabinet door',
             },
-            imageLabel: 'A laminate slab door',
           },
         ]}
-        description="Painted and stained doors want different things."
+        description="Painted and stained doors need different care."
         kicker="Cleaning"
-        tint
         title="By finish"
-      />
-      <HomeSection compact>
-        <div className="grid gap-5 @xl:grid-cols-2">
-          <Checklist
-            items={[
-              'Wipe spills, drips and grease as they happen; food and water left standing discolour the finish.',
-              'Dust with a dry microfiber cloth.',
-              'Never hang a wet dish towel over a door. It is the most common cause of finish damage under the sink.',
-              "Don't clean cabinets with the dishcloth; it carries detergent and grease.",
-            ]}
-            title="Every day"
-          />
-          <Checklist
-            items={[
-              'A thorough clean of every exterior, one small area at a time, with a damp cloth dried immediately.',
-              'Tighten hinge screws and re-align doors.',
-              'Check that drawer glides run full and level.',
-              'Clean inside the sink base and under the range hood, where grease collects.',
-            ]}
-            title="Once or twice a year"
-          />
-        </div>
-      </HomeSection>
-      <Prose
-        actions={[
-          { label: 'Watch: adjusting a soft-close hinge', href: '/resources/how-to-videos#care' },
-        ]}
-        body={[
-          'Hinges and drawers are meant to be adjusted. Wood moves with the seasons and hardware settles after installation. Every hinge has three screws — side-to-side, up-down and in-out — and every drawer glide can be re-levelled with a screwdriver. Do it after installation and before fitting knobs and pulls, and check the glides before a cabinet goes on the wall.',
-        ]}
-        imageLabel="Diagram — a soft-close hinge with the three adjustment screws labelled"
-        imagePosition="left"
-        kicker="Adjusting"
-        tint
-        title="Doors and drawers are meant to move"
-      />
-      <Prose
-        actions={[{ label: 'Send a photo to support', href: '/contact' }]}
-        body={[
-          'Every collection has a matching touch-up kit: a fill stick and a colour marker, free with every kitchen order (to confirm). Soften the stick in your hand, fill with a back-and-forth motion, then blend the marker with a fingertip. Practise on the inside of a door first. Paint is harder to blend than stain, so if the damage is bigger than a coin, send us a photo before you start.',
-        ]}
-        image={{
-          src: '/images/pages/cabinet-care/touch-up-kit.jpg',
-          alt: 'A touch-up kit beside a chipped cabinet door',
-        }}
-        imageLabel="A touch-up kit beside a chipped door"
-        kicker="Touch-ups"
-        title="Chips and scratches: the kit in the drawer"
-      />
-      <HomeSection
-        description="The first two weeks matter most."
-        kicker="Before and after installation"
-        tint
-        title="Give the cabinets a good start"
-      >
-        <div className="grid gap-5 @xl:grid-cols-2">
-          <Checklist
-            items={[
-              "Don't take the old kitchen out until the new cabinets have arrived and been inspected.",
-              'Unbox with two people, check every piece, then keep them boxed until install.',
-              'Store dry, at 40–50% relative humidity; below 20% or above 70% causes problems.',
-              'Give the cabinets a day or two in the room to acclimatise before they go on the wall.',
-            ]}
-            title="Before"
-          />
-          <Checklist
-            items={[
-              'Wipe construction dust off every interior and exterior with a damp microfiber cloth, one area at a time, dried as you go.',
-              'Expect doors and drawers to need a small adjustment as they settle.',
-              'Adjust everything before fitting knobs and pulls.',
-              'Keep the packaging until you are sure, then recycle the cardboard.',
-            ]}
-            title="After"
-          />
-        </div>
-      </HomeSection>
-      <CardsRow
-        cards={[
-          {
-            title: 'Humidity',
-            description:
-              'Keep the kitchen ventilated and the cabinets dry all year round, vacation homes included. Poorly ventilated rooms are hard on a finish.',
-          },
-          {
-            title: 'Sunlight',
-            description:
-              'Every finish has UV inhibitors, but strong direct light will still lighten or darken the doors it reaches. Blinds help; so does rotating a sample door to compare.',
-          },
-          {
-            title: 'Heat',
-            description:
-              "Self-cleaning ovens, kettles and toasters under a wall cabinet release heat and steam. Pull small appliances forward when they're on.",
-          },
-        ]}
-        hideImages
-        kicker="The room"
-        title="Wood moves. Here's what to expect."
       />
       <div id="avoid" />
       <HomeSection kicker="What not to use" tint title="The short list">
@@ -203,9 +134,9 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
           <Checklist
             items={[
               'Abrasive cleaners, scouring pads or powders',
-              'Bleach, ammonia, solvents or anything with "degreaser" on the label',
-              'Wax or silicone polishes, which build up and yellow',
-              'Magic-eraser sponges on painted doors; they are a fine abrasive',
+              'Bleach, ammonia, solvents, or anything labeled "degreaser"',
+              'Wax or silicone polishes. They build up and turn yellow.',
+              "Magic-eraser sponges on painted doors. They're a fine abrasive.",
               'Steam cleaners, or any cleaner left to sit',
             ]}
             title="Never on a cabinet"
@@ -221,9 +152,91 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
           </div>
         </div>
       </HomeSection>
+      <HomeSection kicker="Routine care" title="Every day, and once or twice a year">
+        <div className="grid gap-5 @xl:grid-cols-2">
+          <Checklist
+            items={[
+              'Wipe up spills, drips and grease as they happen. Food and water left standing can stain the finish.',
+              'Dust with a dry microfiber cloth.',
+              "Never hang a wet dish towel over a door. It's the most common cause of finish damage under the sink.",
+              "Don't clean cabinets with your dishcloth. It carries detergent and grease.",
+            ]}
+            title="Every day"
+          />
+          <Checklist
+            items={[
+              'Give every cabinet front a thorough clean, one small area at a time, with a damp cloth, drying as you go.',
+              'Tighten hinge screws and realign doors.',
+              'Check that drawers run smoothly and sit level.',
+              'Clean inside the sink base and under the range hood, where grease collects.',
+            ]}
+            title="Once or twice a year"
+          />
+        </div>
+      </HomeSection>
+      <Prose
+        actions={[
+          { label: 'Watch: adjusting a soft-close hinge', href: '/resources/how-to-videos' },
+        ]}
+        body={[
+          'Wood moves with the seasons, and hardware settles after installation. Each hinge has three screws: one moves the door side to side, one up and down, and one in and out. Drawer glides can be leveled with a screwdriver. Make your adjustments after installation and before you fit knobs and pulls.',
+        ]}
+        id="adjusting"
+        imageLabel="A soft-close hinge with the three adjustment screws labeled"
+        imagePosition="left"
+        kicker="Adjusting"
+        tint
+        title="Doors and drawers are meant to be adjusted"
+      />
+      <Prose
+        actions={[{ label: 'Send us a photo', href: CONTACT_HREF }]}
+        body={[
+          'For small chips and scratches, a fill stick and a touch-up marker in a matching color, from most hardware stores, will hide most marks. Soften the stick in your hand, fill with a back-and-forth motion, then blend with the marker. Practice on the inside of a door first. Paint is harder to blend than stain, so if the damage is bigger than a coin, send us a photo before you start.',
+        ]}
+        image={{
+          src: '/images/pages/cabinet-care/touch-up-kit.jpg',
+          alt: 'A fill stick and touch-up marker beside a chipped cabinet door',
+        }}
+        kicker="Touch-ups"
+        title="Chips and scratches"
+      />
+      <CardsRow
+        cards={[
+          {
+            title: 'Humidity',
+            description:
+              'Keep the kitchen ventilated and the cabinets dry all year, including in vacation homes. Damp, closed-up rooms are hard on any finish.',
+          },
+          {
+            title: 'Sunlight',
+            description:
+              'Strong direct sun can lighten or darken the doors it reaches over time. Blinds help.',
+          },
+          {
+            title: 'Heat',
+            description:
+              'Self-cleaning ovens, kettles and toasters under a wall cabinet give off heat and steam. Pull small appliances forward when you use them.',
+          },
+        ]}
+        hideImages
+        kicker="The room"
+        tint
+        title="Humidity, sunlight and heat"
+      />
+      <Prose
+        actions={[{ label: 'Read the full warranty', href: WARRANTY_HREF, style: 'outline' }]}
+        body={[
+          "Every cabinet is covered for 1 year from purchase against defects in materials and workmanship. The warranty doesn't cover normal wear, accidents, misuse, dirt, water damage or improper installation, which is why the care above matters.",
+        ]}
+        kicker="Warranty"
+        title="Covered for a year"
+      />
       <ClosingBand
-        primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
-        showrooms={SHOWROOMS}
+        description="Send us a photo, and we'll tell you how to fix it or whether it's covered. Call or text 860-247-1000, any time."
+        primary={{ label: 'Send us a message', href: CONTACT_HREF }}
+        secondary={{ label: 'Read the warranty', href: WARRANTY_HREF }}
+        tint
+        title="Something not right?"
       />
     </>
   );
