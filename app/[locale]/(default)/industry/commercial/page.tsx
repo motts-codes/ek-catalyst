@@ -137,7 +137,6 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
         title="From scope to delivery"
       />
       <ProjectGrid
-        action={{ label: 'All commercial projects', href: '/inspiration/projects' }}
         projects={PROJECTS.filter((p) => p.industry === 'Commercial').slice(0, 3)}
         tint
         title="Recent projects"

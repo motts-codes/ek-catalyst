@@ -21,7 +21,7 @@ export default async function Reviews({ params }: { params: Promise<{ locale: st
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: 'Inspiration', href: '/inspiration' },
+          { label: 'Inspiration', href: '/inspiration/best-sellers' },
           { label: 'Reviews', href: '/reviews' },
         ]}
       />

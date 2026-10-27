@@ -35,10 +35,10 @@ export default async function Visualizer({ params }: { params: Promise<{ locale:
       <LinkCards
         cards={[
           {
-            title: 'See finished kitchens',
+            title: 'See our best-selling kitchens',
             description:
               'Real rooms, named collections and finishes, so you can find the look you’re after and see what it’s made of.',
-            href: '/inspiration/projects',
+            href: '/inspiration/best-sellers',
             linkLabel: 'Browse the gallery',
           },
           {

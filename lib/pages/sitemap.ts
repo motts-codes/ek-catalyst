@@ -44,9 +44,7 @@ export const SITEMAP: SitemapGroup[] = [
   {
     title: 'Inspiration',
     links: [
-      { label: 'Inspiration', href: '/inspiration' },
       { label: 'Best-selling designs', href: '/inspiration/best-sellers' },
-      { label: 'Finished kitchens', href: '/inspiration/projects' },
       { label: 'Reviews', href: '/reviews' },
       { label: 'Testimonials', href: '/testimonials' },
       { label: 'Blog', href: '/blog' },

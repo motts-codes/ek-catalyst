@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: 'Finished Kitchens — Inspiration',
   description:
     'Real kitchens in Connecticut homes. Every photo names the collection and finish and links to it; open one for the project story.',
+  // Hidden at the client's request (27 Oct 2026): out of the nav, footer and sitemap, not indexed.
+  robots: { index: false },
 };
 
 export default async function Inspiration({ params }: { params: Promise<{ locale: string }> }) {

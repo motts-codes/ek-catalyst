@@ -19,8 +19,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = getProject((await params).slug);
 
+  // Projects are hidden at the client's request (27 Oct 2026): still reachable, not indexed.
   return project
-    ? { title: `${project.title} — ${project.meta}`, description: project.summary }
+    ? {
+        title: `${project.title} — ${project.meta}`,
+        description: project.summary,
+        robots: { index: false },
+      }
     : {};
 }
 

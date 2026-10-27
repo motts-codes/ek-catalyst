@@ -317,7 +317,9 @@ const menu: MenuItem[] = [
   // ── Content cluster (rendered after the "│" divider) ─────────────────────────────────────
   {
     label: 'Inspiration',
-    href: '/inspiration',
+    // The finished-kitchens hub (/inspiration) is hidden at the client's request (27 Oct 2026);
+    // the heading goes to the best sellers instead.
+    href: '/inspiration/best-sellers',
     group: 'content',
     groups: [
       {
@@ -328,11 +330,12 @@ const menu: MenuItem[] = [
             href: '/inspiration/best-sellers',
             image: nav('best-selling-designs', 'The most-ordered kitchen, Avon in white'),
           },
-          {
-            label: 'Projects',
-            href: '/inspiration/projects',
-            image: nav('projects', 'A finished customer kitchen'),
-          },
+          // Projects (/inspiration/projects) is hidden at the client's request (27 Oct 2026).
+          // {
+          //   label: 'Projects',
+          //   href: '/inspiration/projects',
+          //   image: nav('projects', 'A finished customer kitchen'),
+          // },
         ],
       },
       {

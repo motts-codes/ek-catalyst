@@ -103,7 +103,6 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         title="Property managers who order here"
       />
       <ProjectGrid
-        action={{ label: 'All multifamily projects', href: '/inspiration/projects' }}
         projects={PROJECTS.filter((p) => p.industry === 'Multifamily').slice(0, 3)}
         title="Recent projects"
       />

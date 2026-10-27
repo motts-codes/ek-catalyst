@@ -33,7 +33,7 @@ export default async function BestSellers({ params }: { params: Promise<{ locale
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: 'Inspiration', href: '/inspiration' },
+          { label: 'Inspiration', href: '/inspiration/best-sellers' },
           { label: 'Best-selling designs', href: '/inspiration/best-sellers' },
         ]}
       />

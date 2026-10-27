@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   title: 'Projects',
   description:
     'Every kitchen we have finished: homes, apartment buildings, hotels and offices. Each one names the collection and finish, with the story, the cabinet list and what it cost.',
+  // Hidden at the client's request (27 Oct 2026): out of the nav, footer and sitemap, not indexed.
+  robots: { index: false },
 };
 
 export default async function Projects({ params }: { params: Promise<{ locale: string }> }) {

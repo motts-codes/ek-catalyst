@@ -29,8 +29,6 @@ export const FOOTER_SECTIONS: Section[] = [
     title: 'Inspiration',
     links: [
       { label: 'Best-selling designs', href: '/inspiration/best-sellers' },
-      { label: 'Finished kitchens', href: '/inspiration' },
-      { label: 'Projects', href: '/inspiration/projects' },
       { label: 'Reviews', href: '/reviews' },
       { label: 'Testimonials', href: '/testimonials' },
     ],

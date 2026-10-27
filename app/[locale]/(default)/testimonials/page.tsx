@@ -60,7 +60,7 @@ export default async function Testimonials({ params }: { params: Promise<{ local
     <>
       <PageBreadcrumbs
         breadcrumbs={[
-          { label: 'Inspiration', href: '/inspiration' },
+          { label: 'Inspiration', href: '/inspiration/best-sellers' },
           { label: 'Testimonials', href: '/testimonials' },
         ]}
       />

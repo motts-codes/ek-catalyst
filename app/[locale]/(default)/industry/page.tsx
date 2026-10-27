@@ -77,7 +77,6 @@ export default async function Industry({ params }: { params: Promise<{ locale: s
         title="Five ways Express Kitchens works"
       />
       <ProjectGrid
-        action={{ label: 'All projects', href: '/inspiration/projects' }}
         projects={PROJECTS.filter((p) => p.industry !== 'Residential').slice(0, 3)}
         tint
         title="Recent projects"

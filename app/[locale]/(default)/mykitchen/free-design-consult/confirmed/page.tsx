@@ -27,7 +27,7 @@ export default async function FreeDesignConfirmed({
       <PageHero
         actions={[
           { label: 'Order free samples', href: SAMPLES_HREF, primary: true },
-          { label: 'See finished kitchens', href: '/inspiration' },
+          { label: 'See our best-selling kitchens', href: '/inspiration/best-sellers' },
         ]}
         description="Thank you. A designer will call you within one business day to confirm the day, the time and the way you'd like to meet. Until then, there's nothing you need to do — bring a photo of the room, rough measurements if you have them, or nothing at all."
         kicker="Request received"
