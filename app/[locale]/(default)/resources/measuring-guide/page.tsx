@@ -116,12 +116,12 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         title="Four things, one of them your phone"
       />
       <HomeSection id="steps" kicker="Step by step" title="Six steps, one wall at a time">
-        <div className="grid items-start gap-8 @3xl:grid-cols-[13fr_7fr] @3xl:gap-10">
+        <div className="grid items-start gap-8 @3xl:grid-cols-[7fr_3fr] @3xl:gap-10">
           <Image
             alt="A sketched kitchen with walls A and B labeled and the measuring points marked: wall lengths, cabinet widths, ceiling height, the window, outlets, the sink, the hood and the fridge depth and door swing"
             className="h-auto w-full rounded-3xl"
             height={1643}
-            sizes="(min-width: 56rem) 60vw, 100vw"
+            sizes="(min-width: 56rem) 66vw, 100vw"
             src="/images/pages/measuring/room-plan-annotated.jpg"
             width={2720}
           />
