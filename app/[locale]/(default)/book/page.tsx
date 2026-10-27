@@ -104,8 +104,8 @@ export default async function Book({
             : "Every showroom has a Project Manager who plans and prices your kitchen with you. Pick the showroom, a day and a time that suit you, and you'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy."
         }
         image={{
-          src: '/images/book/hero.webp',
-          alt: 'A designer and a homeowner at a table choosing between door samples',
+          src: '/images/book/hero-door-samples-table.jpg',
+          alt: 'A designer in a red top and a customer at a table, comparing door samples in white, sage, navy and walnut',
         }}
         imageStyle="plain"
         kicker="Schedule a showroom appointment"
