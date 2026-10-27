@@ -121,6 +121,7 @@ export function VideoGrid({
   videos,
   action,
   columns = 3,
+  gap = 'default',
   tint,
   compact,
 }: {
@@ -130,6 +131,8 @@ export function VideoGrid({
   videos: Video[];
   action?: { label: string; href: string };
   columns?: 2 | 3 | 4 | 5;
+  /** `wide` opens the rows and columns up (big tiles in a 2 x 2, say). */
+  gap?: 'default' | 'wide';
   tint?: boolean;
   compact?: boolean;
 }) {
@@ -144,7 +147,8 @@ export function VideoGrid({
     >
       <ul
         className={clsx(
-          'grid gap-6',
+          'grid',
+          gap === 'wide' ? 'gap-8 @xl:gap-10' : 'gap-6',
           {
             2: '@xl:grid-cols-2',
             3: '@xl:grid-cols-2 @4xl:grid-cols-3',

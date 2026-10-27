@@ -85,6 +85,7 @@ export default async function HowToVideos({ params }: { params: Promise<{ locale
       <VideoGrid
         columns={2}
         description="The four closet units, each built on camera from the flat pack. The codes match your box label."
+        gap="wide"
         kicker="Closets"
         title="Build your closet units"
         videos={CLOSET_VIDEOS}
