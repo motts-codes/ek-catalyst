@@ -86,13 +86,29 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
       />
       <CardsRow
         cards={[
-          { title: 'Tape measure', description: 'A 25 ft one is ideal.' },
-          { title: 'Pencil and paper', description: 'Or print our template.' },
-          { title: 'Your phone', description: 'For a photo of every wall.' },
-          { title: 'A level (optional)', description: 'Floors and ceilings are rarely flat.' },
+          {
+            title: 'Tape measure',
+            description: 'A 25 ft one is ideal.',
+            image: { src: '/images/pages/measuring/tool-tape-measure.jpg', alt: '' },
+          },
+          {
+            title: 'Pencil and paper',
+            description: 'Or print our template.',
+            image: { src: '/images/pages/measuring/tool-pencil-paper.jpg', alt: '' },
+          },
+          {
+            title: 'Your phone',
+            description: 'For a photo of every wall.',
+            image: { src: '/images/pages/measuring/tool-phone.jpg', alt: '' },
+          },
+          {
+            title: 'A level (optional)',
+            description: 'Floors and ceilings are rarely flat.',
+            image: { src: '/images/pages/measuring/tool-level.jpg', alt: '' },
+          },
         ]}
         columns={4}
-        hideImages
+        imageStyle="bleed"
         kicker="You'll need"
         tint
         title="Four things, one of them your phone"
@@ -159,6 +175,7 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         ]}
         columns={4}
         description="Here's what happens after you send your measurements, and how long each step takes."
+        imageStyle="plain"
         kicker="What happens next"
         tint
         title="From your numbers to cabinets on order"
