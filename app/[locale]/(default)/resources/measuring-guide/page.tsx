@@ -236,7 +236,7 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         kicker="Common mistakes"
         title="Five mistakes that cause reorders"
       />
-      <FinePrint>
+      <FinePrint style="plain">
         Turnaround times are typical, not guaranteed. Standard sizes may vary by collection; your
         project manager confirms every size before you order.
       </FinePrint>
