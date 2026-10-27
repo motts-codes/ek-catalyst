@@ -67,7 +67,7 @@ export default async function Testimonials({ params }: { params: Promise<{ local
       <PageHero
         actions={[
           { label: 'Watch the featured film', href: '#featured', primary: true },
-          { label: 'Read written reviews', href: '/reviews', style: 'outline-red' },
+          { label: 'Read written reviews', href: '/reviews', style: 'outline' },
         ]}
         description="We asked customers to tell their story on camera, in the kitchens we built for them, with no script. What they wanted, what they worried about before they ordered, and how it turned out. If you're weighing the same decision, these are the people to hear from."
         image={{
