@@ -146,7 +146,7 @@ export function RedBox({
     <div
       className={clsx(
         'relative overflow-hidden rounded-3xl bg-[#9f3632] text-white',
-        media ? 'p-5 @xl:p-6' : 'px-6 py-10 @xl:px-12 @xl:py-14',
+        !media && 'px-6 py-10 @xl:px-12 @xl:py-14',
         className,
       )}
     >
@@ -155,9 +155,10 @@ export function RedBox({
         className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white opacity-10 blur-3xl"
       />
       {media ? (
-        <div className="relative grid gap-6 @3xl:grid-cols-[7fr_3fr] @3xl:items-center">
-          <div className="px-1 py-4 @xl:px-6 @xl:py-6">{copy}</div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[14rem] @3xl:self-stretch">
+        // The photo covers the right 30% edge to edge, no gap; the copy keeps the panel's padding.
+        <div className="relative grid @3xl:grid-cols-[7fr_3fr]">
+          <div className="px-6 py-10 @xl:px-12 @xl:py-12">{copy}</div>
+          <div className="relative aspect-[16/9] bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[14rem]">
             {media.image ? (
               <Image
                 alt={media.image.alt}

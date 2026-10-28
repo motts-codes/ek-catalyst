@@ -62,7 +62,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
       <PageHero
         actions={[
           { label: 'What shipping costs', href: '#cost', primary: true },
-          { label: 'Delivery day, step by step', href: '#delivery-day' },
+          { label: 'Delivery day, step by step', href: '#delivery-day', style: 'outline' },
         ]}
         description="Cabinets ship by freight to the 48 contiguous states, or you can pick them up in Bristol. Closets ship nationwide. Windows and appliances are pickup only, for Connecticut customers. Here's how long each takes, where it's delivered and what to check on delivery day."
         image={{
@@ -97,7 +97,12 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
       <HomeSection compact>
         <RedBox
           kicker="Free shipping"
-          media={{ imageLabel: 'A pallet of cabinets on the way' }}
+          media={{
+            image: {
+              src: '/images/pages/shipping/free-shipping-truck.jpg',
+              alt: 'An Express Kitchens tractor-trailer pulling out from the showroom at dusk',
+            },
+          }}
           title="Free shipping on all orders over $2,500"
         >
           <p className="max-w-xl text-sm leading-relaxed text-white/85 @xl:text-base">
