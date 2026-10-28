@@ -174,8 +174,6 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
             },
             description:
               'Each hinge has three adjustment screws. Two minutes with a screwdriver fixes most doors that look warped.',
-            ctaLabel: 'Watch the video',
-            href: '/resources/how-to-videos',
           },
           {
             title: 'A drawer sticks or sits crooked',
