@@ -110,8 +110,8 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
             description:
               'Warm water and a drop of dish soap, dried straight away. Water left standing at the edges can lift the finish.',
             image: {
-              src: '/images/pages/cabinet-care/laminate-slab-door.jpg',
-              alt: 'A light grey slab cabinet door',
+              src: '/images/pages/cabinet-care/walnut-slab-door.jpg',
+              alt: 'Walnut slab doors and drawers with slim black pulls under a white countertop',
             },
           },
         ]}
