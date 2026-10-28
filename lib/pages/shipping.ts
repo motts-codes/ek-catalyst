@@ -312,10 +312,10 @@ export type TransitDays = 7 | 8 | 9 | 10;
 
 export const isOffshore = (state: string) => state === 'AK' || state === 'HI';
 
-// Transit band by distance. Alaska and Hawaii sit in the far band when a category ships
-// nationwide, and get null (not shipped) when it only goes to the contiguous states.
-export function transitDays(state: string, reach: ShipReach = 'contiguous'): TransitDays | null {
-  if (isOffshore(state)) return reach === 'nationwide' ? 10 : null;
+// Transit band by distance. Alaska and Hawaii return null: the map doesn't plot a delivery
+// there for any category.
+export function transitDays(state: string): TransitDays | null {
+  if (isOffshore(state)) return null;
 
   const miles = milesFromHub(state);
 

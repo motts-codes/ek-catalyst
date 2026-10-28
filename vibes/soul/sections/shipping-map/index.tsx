@@ -7,12 +7,10 @@ import { HomeSection } from '@/vibes/soul/sections/home-section';
 import {
   doorRange,
   formatDuration,
-  isOffshore,
   MAP_CATEGORIES,
   SHIP_STATE_GRID,
   SHIP_STATE_NAMES,
   type ShipCategory,
-  type ShipReach,
   transitDays,
 } from '~/lib/pages/shipping';
 
@@ -45,7 +43,7 @@ const TILE_CLASS: Record<Hue, Record<Band, string>> = {
     d9: 'bg-[#c1363f] text-white',
     d10: 'bg-[#7f1f26] text-white',
     pickup: 'bg-[#7f1f26] text-white',
-    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+    none: 'border border-dashed border-contrast-300 bg-white text-contrast-500',
   },
   blue: {
     d7: 'bg-[#e4ecf9] text-[#1a1a1a]',
@@ -53,7 +51,7 @@ const TILE_CLASS: Record<Hue, Record<Band, string>> = {
     d9: 'bg-[#3f63a8] text-white',
     d10: 'bg-[#1e3461] text-white',
     pickup: 'bg-[#1e3461] text-white',
-    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+    none: 'border border-dashed border-contrast-300 bg-white text-contrast-500',
   },
   cream: {
     d7: 'bg-[#fbf5ea] text-[#1a1a1a]',
@@ -61,7 +59,7 @@ const TILE_CLASS: Record<Hue, Record<Band, string>> = {
     d9: 'bg-[#e5cfa3] text-[#1a1a1a]',
     d10: 'bg-[#8a6a3a] text-white',
     pickup: 'bg-[#f6ebd6] text-[#1a1a1a]',
-    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+    none: 'border border-dashed border-contrast-300 bg-white text-contrast-500',
   },
   black: {
     d7: 'bg-[#efefef] text-[#1a1a1a]',
@@ -69,7 +67,7 @@ const TILE_CLASS: Record<Hue, Record<Band, string>> = {
     d9: 'bg-[#6a6a6a] text-white',
     d10: 'bg-[#1a1a1a] text-white',
     pickup: 'bg-[#1a1a1a] text-white',
-    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+    none: 'border border-dashed border-contrast-300 bg-white text-contrast-500',
   },
 };
 
@@ -101,20 +99,15 @@ const TRANSIT_LEGEND: Array<{ band: Band; label: string }> = [
   { band: 'd10', label: 'West and far — +10 days' },
 ];
 
-const LEGEND: Record<ShipReach | 'pickup', Array<{ band: Band; label: string }>> = {
-  contiguous: [
-    ...TRANSIT_LEGEND,
-    { band: 'none', label: "Alaska and Hawaii — cabinets don't ship here" },
-  ],
-  nationwide: TRANSIT_LEGEND,
+const LEGEND: Record<ShipCategory['mode'], Array<{ band: Band; label: string }>> = {
+  national: [...TRANSIT_LEGEND, { band: 'none', label: 'Alaska and Hawaii — not shipped' }],
   pickup: [
     { band: 'pickup', label: 'Pickup point (Bristol, CT)' },
     { band: 'none', label: 'Not shipped' },
   ],
 };
 
-const legendFor = (category: ShipCategory) =>
-  category.mode === 'pickup' ? LEGEND.pickup : LEGEND[category.reach ?? 'contiguous'];
+const legendFor = (category: ShipCategory) => LEGEND[category.mode];
 
 function tileFor(state: string, category: ShipCategory): Tile {
   const name = SHIP_STATE_NAMES[state] ?? state;
@@ -126,15 +119,10 @@ function tileFor(state: string, category: ShipCategory): Tile {
   }
 
   const lead = category.lead ?? 0;
-  const days = transitDays(state, category.reach);
+  const days = transitDays(state);
 
   if (days === null) {
-    return {
-      state,
-      band: 'none',
-      label: 'no',
-      detail: `${name}: cabinets don't ship here`,
-    };
+    return { state, band: 'none', label: 'no', detail: `${name}: not shipped` };
   }
 
   const total = formatDuration(lead + days);
@@ -143,7 +131,7 @@ function tileFor(state: string, category: ShipCategory): Tile {
     state,
     band: `d${days}`,
     label: total,
-    detail: `${name}: about ${total} to your door (ships in ${category.ship}, plus ${days} days transit)${isOffshore(state) ? ', closets only' : ''}`,
+    detail: `${name}: about ${total} to your door (ships in ${category.ship}, plus ${days} days transit)`,
   };
 }
 
@@ -188,10 +176,7 @@ function Panel({ category }: { category: ShipCategory }) {
               className={clsx(
                 'inline-block h-3.5 w-3.5 shrink-0 rounded-sm',
                 item.band === 'none'
-                  ? clsx(
-                      'border border-dashed',
-                      hue === 'cream' ? 'border-black/40' : 'border-white/60',
-                    )
+                  ? 'border border-dashed border-contrast-300 bg-white'
                   : clsx(tiles[item.band], 'ring-1', look.swatchRing),
               )}
             />
@@ -256,7 +241,7 @@ export function ShippingMap({
       </div>
       {/* From tablet width the map and card shrink together to 0.8x (CSS zoom scales layout and
           type alike) and sit centred; phones keep the full size so the tiles stay readable. */}
-      <div className="mt-6 grid gap-6 @3xl:mx-auto @3xl:max-w-[80%] @3xl:grid-cols-[1fr_300px] @3xl:items-start @3xl:[zoom:0.8]">
+      <div className="mt-6 grid gap-6 @3xl:mx-auto @3xl:max-w-[80%] @3xl:grid-cols-[1fr_300px] @3xl:items-start @3xl:gap-12 @3xl:[zoom:0.8]">
         {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
             any width. The duration label appears once a tile is wide enough to hold it. */}
         <ul
@@ -269,7 +254,7 @@ export function ShippingMap({
             return (
               <li
                 className={clsx(
-                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[11px] @xl:rounded-lg @xl:pb-2 @xl:text-xs',
+                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[11px] @xl:rounded-lg @xl:pb-3 @xl:text-xs',
                   tileClass[tile.band],
                 )}
                 key={tile.state}
@@ -279,7 +264,7 @@ export function ShippingMap({
                 <span aria-hidden>{tile.state}</span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0.5 hidden truncate text-center text-[8px] font-semibold @xl:block @xl:text-[9px]"
+                  className="absolute inset-x-0 bottom-1.5 hidden truncate text-center text-[10px] font-semibold leading-none @xl:block"
                 >
                   {tile.label}
                 </span>
@@ -292,8 +277,7 @@ export function ShippingMap({
           <Panel category={category} />
           <p className="mt-3 text-xs leading-relaxed text-contrast-500">
             Hover a state for the estimate. Transit takes about 7 days near Connecticut, and up to
-            10 farther away, after your order ships. Closets ship to every state; cabinets
-            don&apos;t ship to Alaska or Hawaii.
+            10 farther away, after your order ships.
           </p>
         </div>
       </div>
