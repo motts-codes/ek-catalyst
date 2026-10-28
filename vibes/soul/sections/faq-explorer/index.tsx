@@ -153,7 +153,7 @@ export function FaqExplorer({ groups, className }: { groups: FaqGroup[]; classNa
       className={clsx('grid gap-10 @container @3xl:grid-cols-[17rem_1fr] @3xl:gap-14', className)}
     >
       {/* Contents: a column on desktop that sticks while you scroll; a pill row on phones. */}
-      <nav aria-label="FAQ topics" className="@3xl:sticky @3xl:top-6 @3xl:self-start">
+      <nav aria-label="FAQ topics" className="min-w-0 @3xl:sticky @3xl:top-6 @3xl:self-start">
         <p className="mb-3 hidden text-xs font-semibold uppercase tracking-wide text-contrast-500 @3xl:block">
           Topics
         </p>

@@ -7,8 +7,9 @@ import { CABINET_GLOSSARY_HREF } from './cabinet-glossary';
 
 /**
  * The site-wide FAQ at /faq (Arun's final copy, 25 Oct 2026), built on the client's policy page,
- * the RTA / assembled content and the answers already on the site. The ten groups follow the
- * customer's journey: plan, choose, order, delivery, install, after the sale. Answers take
+ * the RTA / assembled content and the answers already on the site, revised 28 Oct 2026. The nine
+ * groups follow the customer's journey: plan, choose, order, delivery, after the sale. Installation
+ * is deliberately not mentioned anywhere on the site. Answers take
  * inline `[label](href)` links. Anything still pending with EK is marked [confirm]; the list is
  * at the end of this file.
  */
@@ -36,7 +37,7 @@ export const FAQ_HERO = {
   kicker: 'Help',
   title: 'Questions, answered',
   description:
-    "Most of what people ask us before and after they order is answered here, from how delivery works to what to do if a box arrives damaged. Pick a topic, and if your question isn't covered, call or text us and a real person will answer.",
+    "Most of what people ask us before and after they order is answered here, from how delivery works to what to do if a box arrives damaged. Pick a topic, and if your question isn't covered, call or text us at 860-247-1000, any time, and a real person will answer.",
   actions: [
     { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
     { label: 'Send us a message', href: '/contact' },
@@ -46,7 +47,7 @@ export const FAQ_HERO = {
 };
 
 export const FAQ_META_DESCRIPTION =
-  'Answers on design help, RTA vs assembled, materials, ordering, financing, shipping, installation, returns, damage claims and the 1-year warranty.';
+  'Answers on design help, RTA vs assembled, materials, ordering, financing, shipping, returns, damage claims and the 1-year warranty.';
 
 const q = (question: string, answer: string): CabinetFaqItem => ({ q: question, a: answer });
 
@@ -58,7 +59,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       q(
         'Do you offer design help?',
-        `Yes, and it's free. A designer plans your kitchen with you, in a showroom or on a video call, and gives you an itemized price. There's no deposit and no obligation to buy. [Book a free design consult](${FREE_DESIGN_HREF})`,
+        `Yes, and it's free. A designer goes through your kitchen with you, in a showroom or on a video call, and gives you an itemized quote. There's no deposit and no obligation to buy. [Book a free design consult](${FREE_DESIGN_HREF})`,
       ),
       q(
         'Do I need a showroom appointment?',
@@ -66,15 +67,15 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         "I'm not in Connecticut. Can I still get design help?",
-        'Yes. A designer can plan your kitchen with you on a video call, wherever we ship.',
+        'Yes. Video consults are available in every state, weekdays 9 AM–5 PM ET. Send us your measurements and photos, and a designer will go through it with you and quote it.',
       ),
       q(
         'How do I measure my kitchen?',
-        "You need three numbers per wall, and the position of anything that can't move, such as windows, doors and plumbing. The measuring guide has six steps and a printable template. A designer checks every measurement before anything is ordered. [Measuring guide](/resources/measuring-guide)",
+        "You need three numbers per wall, and the position of anything that can't move, such as windows, doors and plumbing. The measuring guide has six steps and a printable template. The more accurate your numbers, the more accurate your quote. [Measuring guide](/resources/measuring-guide)",
       ),
       q(
         'Do you measure my kitchen for me?',
-        'In Connecticut, we can measure your kitchen as part of a showroom order. [confirm] Everywhere else, use the measuring guide and your designer will check the numbers.',
+        'In Connecticut and greater-CT zip codes, yes. After your showroom visit, we can send someone to measure your kitchen for $85, so your quote is exact. The fee is separate from your order. Everywhere else, the measuring guide walks you through it in about 20 minutes. [How to measure](/resources/measuring-guide)',
       ),
       q(
         'I already know what I want. Can you check my list?',
@@ -104,13 +105,16 @@ export const FAQ_GROUPS: FaqGroup[] = [
         `It's the same cabinet either way. RTA (ready to assemble) arrives flat in boxes for you to build. Assembled arrives built in our factory, ready to install. RTA saves money. Assembled saves time. [Read about RTA](${EXPLAINER_V2_HREF.rta}) · [Read about assembled](${EXPLAINER_V2_HREF.assembled})`,
       ),
       q('Which lines come RTA?', 'Star and Euro Max. Prism and Euro Value come assembled only.'),
+      // EK's figure is a median of 53% across the Star lines sold both ways. The Avon 10×10 prices
+      // in the workbook and the collection data show only a 5–10% gap, so spot-check a few
+      // collections before this goes live.
       q(
         'How much do I save with RTA?',
-        'It depends on the line. On a 10×10 Avon kitchen, RTA is $2,993 and assembled is $3,290. The bigger the kitchen, the more you save.',
+        'About half. Across the Star cabinets we sell both ways, RTA is typically around 50% less than assembled. Each collection page shows both prices.',
       ),
       q(
         'How long does an RTA cabinet take to build?',
-        "About 45 minutes for your first cabinet, then 20–30 minutes each once you've got the hang of it. A 10×10 kitchen (about 12 cabinets) takes most of a day.",
+        '30 minutes or less per cabinet. A 10×10 kitchen (13 cabinets) takes about 6 hours.',
       ),
       q(
         'What tools do I need?',
@@ -131,6 +135,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
       q(
         'Can I mix RTA and assembled in one kitchen?',
         'Yes, on lines offered both ways. The box, door and finish match.',
+      ),
+      q(
+        'Does assembled mean installed?',
+        'No. Assembled means the cabinet is built. Installing (fixing it to your wall and floor, leveling and joining) is a separate step.',
       ),
     ],
   },
@@ -201,7 +209,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       q(
         'How can I pay?',
-        'We take MasterCard, Visa, Discover and American Express. Your card is charged when you place the order.',
+        'We take MasterCard, Visa, Discover and American Express. Most customers pay in full, and your card is charged when you place the order. In our showrooms, you can also finance through GreenSky, with a deposit of about 20%.',
       ),
       q(
         'Can I finance my kitchen?',
@@ -224,7 +232,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
         'Do you have current offers?',
         'Yes. See the Promotions page for current sales, the $179.99 double hung window and free door samples. Sign up for the newsletter to hear about new offers first. [Current promotions](/promotions)',
       ),
-      q('How long is a quote good for?', 'Until the end of the month. [confirm]'),
+      q(
+        'How long is a quote good for?',
+        "As long as the prices don't change. If a price changes before you order, we'll update your quote.",
+      ),
     ],
   },
   {
@@ -237,7 +248,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
         'Each collection page shows its own ship time. Star RTA: 2 weeks. Star assembled: 3 weeks. Euro Max RTA and Euro assembled: 4 weeks. Tribeca Shaker: 2 weeks. Prism painted colors: 8 weeks. Windows and appliances are ready for pickup in 2 days.',
       ),
       q('How long is transit once it ships?', 'Usually 7–10 days more.'),
-      q('Which states do you ship to?', '45 states. [confirm] Door samples ship free.'),
+      q(
+        'Which states do you ship to?',
+        "Cabinets ship to the 48 contiguous states. We can't ship cabinets to Alaska or Hawaii. Closets ship nationwide. Door samples ship free.",
+      ),
       q(
         'How much is delivery?',
         'Free on orders over $2,500. [confirm] Below that, your designer includes delivery in your quote. [Shipping policy](/shipping-policy)',
@@ -248,7 +262,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         'Where is it delivered?',
-        "To the ground floor. At a house, the truck delivers to the curb or your driveway, wherever the driver judges safest. Moving it inside or upstairs is up to you. Delivery inside your home, assembly and installation aren't included unless you add them to your order.",
+        "To the ground floor. At a house, the truck delivers to the curb or your driveway, wherever the driver judges safest. Moving it inside or upstairs is up to you. Delivery inside your home and assembly aren't included unless you add them to your order.",
       ),
       q(
         'What does end-of-truck delivery mean?',
@@ -265,33 +279,6 @@ export const FAQ_GROUPS: FaqGroup[] = [
       q(
         "What's pickup only?",
         "Windows and appliances, from Bristol, usually ready in 2 days. They're for Connecticut customers.",
-      ),
-      q(
-        'Is there a faster option?',
-        'Some collections are marked "Ships next day". Order by [time] for next-business-day dispatch. [confirm]',
-      ),
-    ],
-  },
-  {
-    id: 'installation',
-    title: 'Installation',
-    icon: 'hammer',
-    items: [
-      q(
-        'Do you install?',
-        "In Connecticut, yes, when you order through one of our showrooms. Your designer can include installation in your quote. Online orders and orders outside Connecticut don't include installation, so you or your installer fit the cabinets.",
-      ),
-      q(
-        'Does assembled mean installed?',
-        'No. Assembled means the cabinet is built. Installing (fixing it to your wall and floor, leveling and joining) is a separate step.',
-      ),
-      q(
-        'Can you recommend an installer?',
-        'See Find an installer for local contractors in your area. [confirm] [Find an installer](/find-a-pro)',
-      ),
-      q(
-        'Does using my own installer affect the warranty?',
-        "No, but the warranty covers the cabinet, not the installation. Damage from improper installation isn't covered.",
       ),
     ],
   },
@@ -315,7 +302,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         'I mis-measured. Can I return a cabinet?',
-        "Yes, if it's unopened, within 30 days, and isn't on the list above. The 30% restocking fee applies. That's why your designer checks every measurement before you order.",
+        "Yes, if it's unopened, within 30 days, and isn't on the list above. The 30% restocking fee applies, so double-check your measurements before you order.",
       ),
       q(
         "I don't like the finish. Can I return my order?",
@@ -342,15 +329,15 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       q(
         'It arrived damaged. What do I do?',
-        "Don't refuse the delivery. Write the damage on the driver's delivery receipt (the Bill of Lading), have the driver sign it, keep a copy, then call us at (860) 247-1000. Damage that isn't noted on the receipt can't be claimed from the carrier.",
+        "Don't refuse the delivery. Write the damage on the driver's delivery receipt (the Bill of Lading), have the driver sign it and keep a copy. Then file a claim with the carrier that delivered your order. Once you've done that, call us at 860-247-1000 and we'll help with the rest.",
       ),
       q(
         'How long do I have to check for hidden damage?',
-        '5 days from delivery. Open every box and check each part, before you build anything.',
+        'Check every box as soon as it arrives, before you build anything, and report any damage to the carrier straight away. Returns must reach us within 30 days of purchase.',
       ),
       q(
-        'What happens next?',
-        "Send us photos of the whole item with your order number. We review claims within 2 business days and ship replacement parts first. If three replacements don't fix it, we refund the cabinet.",
+        'Do I pay a restocking fee on damaged items?',
+        'No. The 30% restocking fee and return shipping apply to regular returns, not to items damaged in transit.',
       ),
       q(
         "Who's responsible once it leaves your warehouse?",
@@ -391,6 +378,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
         'Does a replacement get a new warranty?',
         'No. A repaired or replaced cabinet keeps the time left on the original warranty.',
       ),
+      q(
+        'Does installation affect the warranty?',
+        "The warranty covers the cabinet, not the installation. Damage caused by improper installation isn't covered.",
+      ),
     ],
   },
   {
@@ -404,12 +395,13 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         "What's the Factory Outlet?",
-        "Our outlet at 18 Main Street, Bristol, for floor models, overstock and clearance. It isn't a showroom, so price match and financing aren't available there.",
+        "Our outlet at 18 Main Street, Bristol. It sells clearance and brand-new products at a discount: quick-ship cabinets (Eden, Madison, Avon and Derry), discontinued and clearance cabinets, closets, in-stock appliances, windows, vanities, countertops, siding and interior doors. It isn't a showroom, so price match and financing aren't available there.",
       ),
       q(
         "What can I do in a showroom that I can't do online?",
-        'See and touch full kitchens, plan your room with a designer, use price match on Star cabinets and countertops, apply for financing, and (in Connecticut) add installation to your order.',
+        'See and touch full kitchens, go through your kitchen with a designer, use price match on Star cabinets and countertops, and apply for financing. Walk-ins are welcome.',
       ),
+      q('Can I call or text you?', 'Yes. Call or text 860-247-1000. Phones are answered 24/7.'),
     ],
   },
 ];
@@ -426,16 +418,11 @@ export { ESTIMATOR_HREF };
 
 /*
  * Still to confirm with EK (each is marked [confirm] in the answer above):
- *  1. Home measuring: offered? free? in which areas?
- *  2. Soft-close, full-extension glides: standard or upgrade? EK's copy says standard; the Avon
+ *  1. Soft-close, full-extension glides: standard or upgrade? EK's copy says standard; the Avon
  *     spec says upgrade.
- *  3. Shipping coverage: 45 states (client content) or the 48 contiguous states (current site)?
- *  4. Free shipping over $2,500: the conditions.
- *  5. Pickup hours in Bristol: Mon–Fri 8–6 and Sat 8–5?
- *  6. Quick-ship: which collections, and the order cutoff time.
- *  7. How long a quote is valid.
- *  8. Return rules by product: windows, appliances and countertops.
- *  9. The "Find an installer" directory: does it exist?
- * 10. The damage window: the current site says 5 days, the explainer pages assumed 3. The FAQ
- *     uses 5 days to match the current site.
+ *  2. Free shipping over $2,500: the conditions.
+ *  3. Pickup hours in Bristol: Mon–Fri 8–6 and Sat 8–5?
+ *  4. Return rules by product: windows, appliances and countertops.
+ * Before publishing: the "about half" RTA saving is EK's median (53%); the Avon 10×10 prices show
+ * a 5–10% gap, so spot-check a few collections.
  */
