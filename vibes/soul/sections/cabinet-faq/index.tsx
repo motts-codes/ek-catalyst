@@ -1,10 +1,11 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { FaqSchema } from '@/vibes/soul/sections/faq/faq-schema';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
+import { Link } from '~/components/link';
 
 export interface CabinetFaqItem {
   q: string;
@@ -21,6 +22,11 @@ interface Props {
   className?: string;
 }
 
+const LINK = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+// Answers may carry inline `[label](href)` links (the same shorthand the site FAQ uses).
+const plain = (answer: string) => answer.replace(LINK, '$1');
+
 // Collapsible FAQ section for category and cabinet pages (per-collection, per-program and the
 // generic `faq.list`); the data source differs, the presentation is the same. The first row opens
 // by default; FAQPage JSON-LD is emitted from the same items. Renders nothing without rows.
@@ -33,7 +39,9 @@ export function CabinetFaq({ data, className }: Props) {
 
   return (
     <SectionLayout className={className} containerSize="2xl">
-      <FaqSchema faq={{ headline: data.headline, items }} />
+      <FaqSchema
+        faq={{ headline: data.headline, items: items.map((i) => ({ q: i.q, a: plain(i.a) })) }}
+      />
       <h2 className="mb-6 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
         {data.headline || 'Frequently Asked Questions'}
       </h2>
@@ -83,10 +91,33 @@ function FaqRow({ q, a, defaultOpen = false }: CabinetFaqItem & { defaultOpen?: 
       >
         <div className="min-h-0">
           <p className="leading-relaxed text-[var(--product-detail-secondary-text,hsl(var(--contrast-500)))]">
-            {a}
+            <Answer text={a} />
           </p>
         </div>
       </dd>
     </div>
   );
+}
+
+function Answer({ text }: { text: string }) {
+  const parts = text.split(LINK);
+
+  // split() with two capture groups yields [text, label, href, text, label, href, …].
+  return parts.map((part, i) => {
+    if (i % 3 === 1) {
+      return (
+        <Link
+          className="font-semibold text-[var(--button-primary-background,#d90716)] underline underline-offset-4 hover:no-underline"
+          href={parts[i + 1] ?? '#'}
+          key={i}
+        >
+          {part}
+        </Link>
+      );
+    }
+
+    if (i % 3 === 2) return null;
+
+    return <Fragment key={i}>{part}</Fragment>;
+  });
 }

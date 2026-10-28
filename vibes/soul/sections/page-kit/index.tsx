@@ -265,6 +265,8 @@ interface ProseProps {
   imageLabel?: string;
   imagePosition?: 'left' | 'right';
   tint?: boolean;
+  /** Almost no top padding: a short follow-on to the section above (a "still not right?" line). */
+  tightTop?: boolean;
   children?: ReactNode;
   className?: string;
 }
@@ -281,6 +283,7 @@ export function Prose({
   imageLabel,
   imagePosition = 'right',
   tint,
+  tightTop,
   children,
   className,
 }: ProseProps) {
@@ -308,14 +311,14 @@ export function Prose({
 
   if (!hasMedia) {
     return (
-      <HomeSection className={className} id={id} tint={tint}>
+      <HomeSection className={className} id={id} tightTop={tightTop} tint={tint}>
         {copy}
       </HomeSection>
     );
   }
 
   return (
-    <HomeSection className={className} id={id} tint={tint}>
+    <HomeSection className={className} id={id} tightTop={tightTop} tint={tint}>
       <div className="grid items-center gap-8 @3xl:grid-cols-2 @3xl:gap-14">
         <div className={clsx(imagePosition === 'left' && '@3xl:order-2')}>{copy}</div>
         <div
@@ -622,12 +625,18 @@ export function StepsRow({
   kicker,
   title,
   steps,
+  actions = [],
+  note,
   tint = false,
   className,
 }: {
   kicker?: string;
   title: string;
   steps: RowStep[];
+  /** Buttons under the steps ("Start a claim"). */
+  actions?: PageAction[];
+  /** One quiet line beside or under the buttons ("Prefer to talk? Call or text…"). */
+  note?: string;
   tint?: boolean;
   /** For a band colour other than the grey tint (the light red `bg-[#fdf3f5]`, say). */
   className?: string;
@@ -652,6 +661,12 @@ export function StepsRow({
           </li>
         ))}
       </ol>
+      {(actions.length > 0 || Boolean(note)) && (
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Actions actions={actions} />
+          {Boolean(note) && <p className="text-sm text-contrast-500">{note}</p>}
+        </div>
+      )}
     </HomeSection>
   );
 }
