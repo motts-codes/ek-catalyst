@@ -112,6 +112,12 @@ export function Actions({
 // "EK red box content": a section's content inset in a rounded deep-red panel with white copy,
 // instead of a full-width band. The same panel as the closing band: #9F3632, on which white text
 // is 6.9:1, with a soft white glow in one corner. Pass `onRed` to any `Actions` inside it.
+const MEDIA_SPLIT = {
+  '70/30': '@3xl:grid-cols-[7fr_3fr]',
+  '60/40': '@3xl:grid-cols-[3fr_2fr]',
+  '50/50': '@3xl:grid-cols-2',
+};
+
 export function RedBox({
   kicker,
   title,
@@ -122,8 +128,8 @@ export function RedBox({
   kicker?: string;
   title?: string;
   children: ReactNode;
-  /** A photo (or its placeholder) in the right 30% of the panel, the copy in the left 70%. */
-  media?: { image?: PageImage; imageLabel?: string };
+  /** A photo (or its placeholder) on the right of the panel, the copy on the left. */
+  media?: { image?: PageImage; imageLabel?: string; split?: '70/30' | '60/40' | '50/50' };
   className?: string;
 }) {
   const copy = (
@@ -155,8 +161,8 @@ export function RedBox({
         className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white opacity-10 blur-3xl"
       />
       {media ? (
-        // The photo covers the right 30% edge to edge, no gap; the copy keeps the panel's padding.
-        <div className="relative grid @3xl:grid-cols-[7fr_3fr]">
+        // The photo covers its column edge to edge, no gap; the copy keeps the panel's padding.
+        <div className={clsx('relative grid', MEDIA_SPLIT[media.split ?? '70/30'])}>
           <div className="px-6 py-10 @xl:px-12 @xl:py-12">{copy}</div>
           <div className="relative aspect-[16/9] bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[14rem]">
             {media.image ? (
@@ -164,7 +170,7 @@ export function RedBox({
                 alt={media.image.alt}
                 className="object-cover"
                 fill
-                sizes="(min-width: 56rem) 30vw, 100vw"
+                sizes="(min-width: 56rem) 50vw, 100vw"
                 src={media.image.src}
               />
             ) : (

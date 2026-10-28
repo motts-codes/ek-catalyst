@@ -99,9 +99,10 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
           kicker="Free shipping"
           media={{
             image: {
-              src: '/images/pages/shipping/free-shipping-truck.jpg',
+              src: '/images/pages/shipping/free-shipping-truck-wide.jpg',
               alt: 'An Express Kitchens tractor-trailer pulling out from the showroom at dusk',
             },
+            split: '50/50',
           }}
           title="Free shipping on all orders over $2,500"
         >
