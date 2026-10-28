@@ -7,7 +7,7 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
+import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import {
   Actions,
   FinePrint,
@@ -162,47 +162,43 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
       <HomeSection
         kicker="Before you throw anything away"
         tint
-        title="Three things worth knowing on the day"
+        title="Three things to know on the day"
       >
-        <div className="grid gap-5 @3xl:grid-cols-3">
-          <div className="rounded-3xl border border-contrast-100 bg-white p-6">
-            <h3 className="font-heading text-lg font-semibold">
-              Things people mistake for packaging
-            </h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-contrast-500">
-              <li>Finished end panels packed flat under cardboard at the bottom of the pallet.</li>
-              <li>Trim, fillers and toe kick arriving as a separate loose carton.</li>
-              <li>Hinges and glides in a small box inside a base cabinet.</li>
-            </ul>
+        <div className="grid gap-6 @3xl:grid-cols-2 @3xl:gap-8">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100 @3xl:aspect-auto @3xl:min-h-full">
+            <MediaPlaceholder label="A phone with a delivery notification" />
           </div>
-          <div className="rounded-3xl border border-contrast-100 bg-white p-6">
-            <h3 className="font-heading text-lg font-semibold">Please don&apos;t</h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-contrast-500">
-              <li>
-                Refuse a damaged delivery. Accept it, note the damage on the receipt, and file a
-                claim with the carrier.
-              </li>
-              <li>
-                Take out your old kitchen before the new cabinets have arrived and been checked.
-              </li>
-              <li>
-                Sign clean if you couldn&apos;t check a box. Write “unable to inspect” instead.
-              </li>
-            </ul>
-          </div>
-          <div className="flex flex-col rounded-3xl border border-contrast-100 bg-white p-6">
-            <h3 className="font-heading text-lg font-semibold">Damage or shortage</h3>
-            <p className="mt-3 text-sm leading-relaxed text-contrast-500">
-              Once your order is with the carrier, the carrier is responsible for loss or damage in
-              transit. Note any damage on the delivery receipt, then file a claim with the carrier
-              that delivered your order. After that, call us at 860-247-1000 and we&apos;ll help
-              with the rest. Open and check every box as soon as you can. There&apos;s no restocking
-              fee on items damaged in transit.
-            </p>
-            <div className="mt-4">
-              <ButtonLink href={PHONE.href} shape="pill" size="small" variant="primary">
-                Call 860-247-1000
-              </ButtonLink>
+          <div className="grid gap-4">
+            <div className="rounded-3xl border border-contrast-100 bg-white p-6">
+              <h3 className="font-heading text-lg font-semibold">Don&apos;t throw these away</h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-contrast-500">
+                <li>End panels, packed flat at the bottom of the pallet</li>
+                <li>Trim, fillers and toe kick, in a separate carton</li>
+                <li>Hinges and glides, in a small box inside a base cabinet</li>
+              </ul>
+            </div>
+            <div className="rounded-3xl border border-contrast-100 bg-white p-6">
+              <h3 className="font-heading text-lg font-semibold">Please don&apos;t</h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-contrast-500">
+                <li>Refuse a damaged delivery. Accept it and note the damage.</li>
+                <li>
+                  Sign “received in good condition” if you couldn&apos;t check a box. Write “unable
+                  to inspect”.
+                </li>
+                <li>Take out your old kitchen before the new one has arrived and been checked.</li>
+              </ul>
+            </div>
+            <div className="rounded-3xl border border-contrast-100 bg-white p-6">
+              <h3 className="font-heading text-lg font-semibold">If something&apos;s damaged</h3>
+              <p className="mt-3 text-sm leading-relaxed text-contrast-500">
+                Note it on the delivery receipt, file a claim with the carrier, then call us at
+                860-247-1000. There&apos;s no restocking fee on items damaged in transit.
+              </p>
+              <div className="mt-4">
+                <ButtonLink href={PHONE.href} shape="pill" size="small" variant="primary">
+                  Call 860-247-1000
+                </ButtonLink>
+              </div>
             </div>
           </div>
         </div>
