@@ -61,9 +61,10 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
         ]}
         description="Every cabinet we make or supply is covered for 1 year from the date of purchase against defects in materials and workmanship. If something's wrong, tell us and we'll repair it, send a replacement part, or replace the cabinet."
         image={{
-          src: '/images/pages/warranty/checking-door-line.jpg',
-          alt: 'A cabinetmaker checking a painted door on the line',
+          src: '/images/pages/warranty/one-year-walnut.jpg',
+          alt: 'A smiling Express Kitchens designer beside a walnut base cabinet, with a 1-year warranty badge',
         }}
+        imageStyle="plain"
         kicker="Warranty"
         title="A 1-year warranty on every cabinet"
       />
