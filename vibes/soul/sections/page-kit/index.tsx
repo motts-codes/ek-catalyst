@@ -67,23 +67,86 @@ export function PageBreadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) 
   );
 }
 
-export function Actions({ actions, className }: { actions: PageAction[]; className?: string }) {
+// Buttons inside the red box: black primary (the brand-red button would sit at 1.3:1 on the
+// panel) and white-outline secondaries, as on the closing band.
+const RED_BOX_PRIMARY_BUTTON =
+  'border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground focus-visible:ring-white focus-visible:ring-offset-[#9f3632] [&>span]:mix-blend-normal';
+const RED_BOX_OUTLINE_BUTTON =
+  'transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:rgb(255_255_255/0.3)] [--button-ghost-text:white] hover:[--button-ghost-border:white] hover:[--button-ghost-text:#9f3632] focus-visible:ring-white focus-visible:ring-offset-[#9f3632]';
+
+const redBoxClass = (action: PageAction) =>
+  action.primary ? RED_BOX_PRIMARY_BUTTON : RED_BOX_OUTLINE_BUTTON;
+const redBoxVariant = (action: PageAction): 'secondary' | 'ghost' =>
+  action.primary ? 'secondary' : 'ghost';
+
+export function Actions({
+  actions,
+  className,
+  onRed = false,
+}: {
+  actions: PageAction[];
+  className?: string;
+  /** Inside a `RedBox`: black primary, white outlines. */
+  onRed?: boolean;
+}) {
   if (actions.length === 0) return null;
 
   return (
     <div className={clsx('flex flex-wrap gap-3', className)}>
       {actions.map((action) => (
         <ButtonLink
-          className={outlineClass(action)}
+          className={onRed ? redBoxClass(action) : outlineClass(action)}
           href={action.href}
           key={action.label}
           shape="pill"
           size="small"
-          variant={actionVariant(action)}
+          variant={onRed ? redBoxVariant(action) : actionVariant(action)}
         >
           {action.label}
         </ButtonLink>
       ))}
+    </div>
+  );
+}
+
+// "EK red box content": a section's content inset in a rounded deep-red panel with white copy,
+// instead of a full-width band. The same panel as the closing band: #9F3632, on which white text
+// is 6.9:1, with a soft white glow in one corner. Pass `onRed` to any `Actions` inside it.
+export function RedBox({
+  kicker,
+  title,
+  children,
+  className,
+}: {
+  kicker?: string;
+  title?: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={clsx(
+        'relative overflow-hidden rounded-3xl bg-[#9f3632] px-6 py-10 text-white @xl:px-12 @xl:py-14',
+        className,
+      )}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white opacity-10 blur-3xl"
+      />
+      <div className="relative">
+        {(Boolean(kicker) || Boolean(title)) && (
+          <div className="mb-6 max-w-3xl @4xl:mb-8">
+            {Boolean(kicker) && (
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
+                {kicker}
+              </p>
+            )}
+            {Boolean(title) && <h2 className={homeHeadingClassName}>{title}</h2>}
+          </div>
+        )}
+        {children}
+      </div>
     </div>
   );
 }
@@ -629,6 +692,7 @@ export function StepsRow({
   actions = [],
   note,
   tint = false,
+  look = 'band',
   className,
 }: {
   kicker?: string;
@@ -639,17 +703,23 @@ export function StepsRow({
   /** One quiet line beside or under the buttons ("Prefer to talk? Call or text…"). */
   note?: string;
   tint?: boolean;
+  /** `red-box`: the steps inset in the EK red box (white copy) instead of a full-width band. */
+  look?: 'band' | 'red-box';
   /** For a band colour other than the grey tint (the light red `bg-[#fdf3f5]`, say). */
   className?: string;
 }) {
-  return (
-    <HomeSection className={className} compact kicker={kicker} tint={tint} title={title}>
+  const onRed = look === 'red-box';
+  const body = (
+    <>
       <ol className="grid gap-6 @xl:grid-cols-3 @xl:gap-8">
         {steps.map((step, i) => (
           <li className="flex gap-4" key={step.title}>
             <span
               aria-hidden
-              className="font-heading text-4xl font-bold leading-none text-[var(--button-primary-background,#d90716)]"
+              className={clsx(
+                'font-heading text-4xl font-bold leading-none',
+                onRed ? 'text-white' : 'text-[var(--button-primary-background,#d90716)]',
+              )}
             >
               {i + 1}
             </span>
@@ -657,17 +727,42 @@ export function StepsRow({
               <h3 className="font-heading text-base font-semibold leading-tight @xl:text-lg">
                 {step.title}
               </h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-contrast-500">{step.description}</p>
+              <p
+                className={clsx(
+                  'mt-1.5 text-sm leading-relaxed',
+                  onRed ? 'text-white/85' : 'text-contrast-500',
+                )}
+              >
+                {step.description}
+              </p>
             </div>
           </li>
         ))}
       </ol>
       {(actions.length > 0 || Boolean(note)) && (
         <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Actions actions={actions} />
-          {Boolean(note) && <p className="text-sm text-contrast-500">{note}</p>}
+          <Actions actions={actions} onRed={onRed} />
+          {Boolean(note) && (
+            <p className={clsx('text-sm', onRed ? 'text-white/85' : 'text-contrast-500')}>{note}</p>
+          )}
         </div>
       )}
+    </>
+  );
+
+  if (onRed) {
+    return (
+      <HomeSection className={className} compact tint={tint}>
+        <RedBox kicker={kicker} title={title}>
+          {body}
+        </RedBox>
+      </HomeSection>
+    );
+  }
+
+  return (
+    <HomeSection className={className} compact kicker={kicker} tint={tint} title={title}>
+      {body}
     </HomeSection>
   );
 }

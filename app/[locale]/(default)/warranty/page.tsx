@@ -111,8 +111,8 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
       </HomeSection>
       <StepsRow
         actions={[{ label: 'Start a claim', href: CLAIM_HREF, primary: true }]}
-        className="bg-[#fdf3f5]"
         kicker="Claims"
+        look="red-box"
         note="Prefer to talk? Call or text 860-247-1000, any time."
         steps={[
           {
@@ -195,17 +195,16 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
               'Very dry or very damp air moves wood. Keep the kitchen ventilated, and most doors settle on their own.',
           },
         ]}
-        className="[&>div]:pb-2"
+        className="bg-[#fdf3f5] [&>div]:pb-2"
         imageStyle="plain"
         kicker="Before you claim: is it just an adjustment?"
-        tint
         title="Most door and drawer problems are a quick fix"
       />
       <Prose
         actions={[{ label: 'Send us a photo', href: CLAIM_HREF, style: 'outline' }]}
         body={["Still not right? Send us a photo and we'll tell you whether it's covered."]}
+        className="bg-[#fdf3f5]"
         tightTop
-        tint
       />
       <CabinetFaq
         data={{
