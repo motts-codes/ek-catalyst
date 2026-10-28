@@ -168,7 +168,10 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
         cards={[
           {
             title: 'A door looks out of line',
-            imageLabel: 'Photo: adjusting a hinge screw',
+            image: {
+              src: '/images/pages/warranty/hinge-screwdriver.jpg',
+              alt: 'A screwdriver turning the adjustment screw on a soft-close cabinet hinge',
+            },
             description:
               'Each hinge has three adjustment screws. Two minutes with a screwdriver fixes most doors that look warped.',
             ctaLabel: 'Watch the video',
@@ -176,12 +179,18 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
           },
           {
             title: 'A drawer sticks or sits crooked',
-            imageLabel: 'Photo: leveling a drawer glide',
+            image: {
+              src: '/images/pages/warranty/drawer-glide-screwdriver.jpg',
+              alt: 'A hand with a red screwdriver adjusting the glide on an open white drawer',
+            },
             description: 'Drawer glides can be leveled with a screwdriver.',
           },
           {
             title: 'Doors move with the seasons',
-            imageLabel: 'Photo: a kitchen with the window open',
+            image: {
+              src: '/images/pages/warranty/kitchen-window-open.jpg',
+              alt: 'A bright white kitchen with the window over the sink open to the garden',
+            },
             description:
               'Very dry or very damp air moves wood. Keep the kitchen ventilated, and most doors settle on their own.',
           },
