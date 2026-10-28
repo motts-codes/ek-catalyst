@@ -112,6 +112,7 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
       <StepsRow
         actions={[{ label: 'Start a return', href: '#request', primary: true }]}
         kicker="How to return"
+        look="red-box"
         steps={[
           {
             title: 'Get approval first',
@@ -129,7 +130,6 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
               'We check that it can be sold as new, then refund the price, less the 30% restocking fee.',
           },
         ]}
-        tint
         title="Three steps"
       />
       <LeadFormCard
@@ -137,6 +137,10 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
         description="We'll get back to you with your return authorization. Prefer to talk? Call or text 860-247-1000, any time."
         fields={FIELDS}
         id="request"
+        image={{
+          src: '/images/pages/returns/form-box-at-dock.jpg',
+          alt: 'An unopened cabinet box on a pallet at the loading dock',
+        }}
         kicker="Request a return authorization"
         submitLabel="Request authorization"
         title="Tell us what's coming back"
@@ -168,6 +172,7 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
         columns={4}
         hideImages
         kicker="Before you return"
+        numbered
         title="Four things worth knowing"
       />
       <div className="scroll-mt-24" id="damaged" />
@@ -184,12 +189,12 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
           "If something was damaged on the way to you, don't return it. Note the damage on the delivery receipt before the driver leaves, then file a claim with the carrier that delivered your order. Once you've done that, call us at 860-247-1000 and we'll help with the rest.",
           "The 30% restocking fee and return shipping don't apply to items damaged in transit. Please don't assemble a damaged cabinet.",
         ]}
+        className="bg-[#fdf3f5]"
         image={{
           src: '/images/pages/returns/replacement-door-unwrapped.jpg',
           alt: 'A replacement cabinet door being unwrapped',
         }}
         kicker="Not a return"
-        tint
         title="Arrived damaged? That's not a return"
       >
         <p className="mt-6 text-sm text-contrast-500">
