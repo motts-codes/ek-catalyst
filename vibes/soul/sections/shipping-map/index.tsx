@@ -81,6 +81,19 @@ const CHIP_CLASS: Record<Hue, string> = {
   black: 'border-[#1a1a1a] bg-[#1a1a1a] text-white',
 };
 
+// The detail card matches the map: the category's deep shade with white text (6.9:1 on the red,
+// higher on the blue and black), or the cream with near-black text (14.7:1).
+const PANEL_CLASS: Record<Hue, { panel: string; muted: string; swatchRing: string }> = {
+  red: { panel: 'bg-[#9f3632] text-white', muted: 'text-white/85', swatchRing: 'ring-white/40' },
+  blue: { panel: 'bg-[#1e3461] text-white', muted: 'text-white/85', swatchRing: 'ring-white/40' },
+  cream: {
+    panel: 'bg-[#f6ebd6] text-[#1a1a1a]',
+    muted: 'text-[#4a4a4a]',
+    swatchRing: 'ring-black/15',
+  },
+  black: { panel: 'bg-[#1a1a1a] text-white', muted: 'text-white/85', swatchRing: 'ring-white/40' },
+};
+
 const TRANSIT_LEGEND: Array<{ band: Band; label: string }> = [
   { band: 'd7', label: 'Northeast — +7 days' },
   { band: 'd8', label: 'Mid-Atlantic / Southeast — +8 days' },
@@ -150,32 +163,41 @@ const PANEL_COPY: Record<
 
 function Panel({ category }: { category: ShipCategory }) {
   const { headline, sub } = PANEL_COPY[category.mode](category);
-  const tiles = TILE_CLASS[hueFor(category)];
+  const hue = hueFor(category);
+  const tiles = TILE_CLASS[hue];
+  const look = PANEL_CLASS[hue];
 
   return (
-    // The EK red box: white text is 6.9:1 on #9F3632.
     <div
       aria-live="polite"
-      className="relative flex flex-col gap-1.5 overflow-hidden rounded-3xl bg-[#9f3632] p-6 text-white"
+      className={clsx(
+        'relative flex flex-col gap-1 overflow-hidden rounded-3xl p-5 @xl:p-6',
+        look.panel,
+      )}
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white opacity-10 blur-3xl"
+        className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-white opacity-10 blur-3xl"
       />
-      <h3 className="relative font-heading text-lg font-semibold">{category.name}</h3>
-      <p className="relative text-sm text-white/85">{category.method}</p>
-      <p className="relative mt-2 font-heading text-2xl font-bold leading-tight">{headline}</p>
-      <p className="relative text-sm text-white/85">{sub}</p>
-      <ul className="relative mt-4 space-y-2 text-sm">
+      <h3 className="relative font-heading text-base font-semibold @xl:text-lg">{category.name}</h3>
+      <p className={clsx('relative text-xs @xl:text-sm', look.muted)}>{category.method}</p>
+      <p className="relative mt-2 font-heading text-xl font-bold leading-tight @xl:text-2xl">
+        {headline}
+      </p>
+      <p className={clsx('relative text-xs @xl:text-sm', look.muted)}>{sub}</p>
+      <ul className="relative mt-3 space-y-1.5 text-xs @xl:text-sm">
         {legendFor(category).map((item) => (
           <li className="flex items-center gap-2.5" key={item.label}>
             <span
               aria-hidden
               className={clsx(
-                'inline-block h-3.5 w-3.5 shrink-0 rounded-sm',
+                'inline-block h-3 w-3 shrink-0 rounded-sm',
                 item.band === 'none'
-                  ? 'border border-dashed border-white/60'
-                  : clsx(tiles[item.band], 'ring-1 ring-white/40'),
+                  ? clsx(
+                      'border border-dashed',
+                      hue === 'cream' ? 'border-black/40' : 'border-white/60',
+                    )
+                  : clsx(tiles[item.band], 'ring-1', look.swatchRing),
               )}
             />
             {item.label}
@@ -237,12 +259,12 @@ export function ShippingMap({
           </div>
         ))}
       </div>
-      <div className="mt-6 grid gap-6 @3xl:grid-cols-[1fr_300px] @3xl:items-start">
+      <div className="mt-6 grid max-w-4xl gap-5 @3xl:grid-cols-[1fr_250px] @3xl:items-start">
         {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
             any width. The duration label appears once a tile is wide enough to hold it. */}
         <ul
           aria-label={`Delivery time for ${category.name}, by state`}
-          className="grid grid-cols-12 gap-1 @md:gap-1.5 @3xl:gap-2"
+          className="grid grid-cols-12 gap-1 @md:gap-1.5"
         >
           {tiles.map((tile) => {
             const [row, column] = SHIP_STATE_GRID[tile.state] ?? [1, 1];
@@ -250,7 +272,7 @@ export function ShippingMap({
             return (
               <li
                 className={clsx(
-                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[11px] @xl:rounded-lg @xl:pb-2 @xl:text-xs',
+                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[10px] @xl:rounded-lg @xl:pb-1.5 @xl:text-[11px]',
                   tileClass[tile.band],
                 )}
                 key={tile.state}
@@ -260,7 +282,7 @@ export function ShippingMap({
                 <span aria-hidden>{tile.state}</span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0.5 hidden truncate text-center text-[8px] font-semibold @xl:block @xl:text-[9px]"
+                  className="absolute inset-x-0 bottom-0.5 hidden truncate text-center text-[8px] font-semibold @xl:block"
                 >
                   {tile.label}
                 </span>
