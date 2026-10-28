@@ -171,7 +171,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
               className="object-cover"
               fill
               sizes="(min-width: 56rem) 50vw, 100vw"
-              src="/images/pages/shipping/delivery-day-phone.jpg"
+              src="/images/pages/shipping/delivery-day-phone-2.jpg"
             />
           </div>
           <div className="grid gap-4">
