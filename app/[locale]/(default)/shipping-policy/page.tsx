@@ -205,14 +205,15 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
       >
         <div className="grid gap-8 @3xl:grid-cols-[1.2fr_1fr] @3xl:items-start">
           <div className="grid gap-4 @xl:grid-cols-2">
-            <div className="rounded-3xl border border-contrast-100 bg-white p-6 text-sm">
+            {/* The EK red box: white text is 6.9:1 on #9F3632. */}
+            <div className="rounded-3xl bg-[#9f3632] p-6 text-sm text-white">
               <h3 className="font-heading text-lg font-semibold">
                 {outlet?.name ?? 'Express Kitchens factory outlet'}
               </h3>
-              <p className="mt-2 text-contrast-500">
+              <p className="mt-2 text-white/85">
                 {bristol?.address ?? '[Address], Bristol, CT 06010'}
               </p>
-              <ul className="mt-2 space-y-0.5 text-contrast-500">
+              <ul className="mt-2 space-y-0.5 text-white/85">
                 {(outlet?.hours ?? []).map((h) => (
                   <li key={h.days}>
                     {h.days}: {h.time}
@@ -221,7 +222,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
               </ul>
               {Boolean(bristol) && (
                 <Link
-                  className="mt-3 inline-block font-semibold underline underline-offset-4"
+                  className="mt-3 inline-block font-semibold text-white underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#9f3632]"
                   href={directionsHref(bristol?.address ?? '')}
                   rel="noopener"
                   target="_blank"
@@ -230,7 +231,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
                 </Link>
               )}
             </div>
-            <div className="rounded-3xl border border-contrast-100 bg-white p-6 text-sm">
+            <div className="rounded-3xl bg-[#fdf3f5] p-6 text-sm">
               <h3 className="font-heading text-lg font-semibold">Pickup timing</h3>
               <p className="mt-2 leading-relaxed text-contrast-500">
                 Windows and appliances are usually ready in 2 days. Cabinets are ready when they
