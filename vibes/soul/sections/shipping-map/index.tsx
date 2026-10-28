@@ -170,28 +170,23 @@ function Panel({ category }: { category: ShipCategory }) {
   return (
     <div
       aria-live="polite"
-      className={clsx(
-        'relative flex flex-col gap-1 overflow-hidden rounded-3xl p-5 @xl:p-6',
-        look.panel,
-      )}
+      className={clsx('relative flex flex-col gap-1.5 overflow-hidden rounded-3xl p-6', look.panel)}
     >
       <div
         aria-hidden
         className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-white opacity-10 blur-3xl"
       />
-      <h3 className="relative font-heading text-base font-semibold @xl:text-lg">{category.name}</h3>
-      <p className={clsx('relative text-xs @xl:text-sm', look.muted)}>{category.method}</p>
-      <p className="relative mt-2 font-heading text-xl font-bold leading-tight @xl:text-2xl">
-        {headline}
-      </p>
-      <p className={clsx('relative text-xs @xl:text-sm', look.muted)}>{sub}</p>
-      <ul className="relative mt-3 space-y-1.5 text-xs @xl:text-sm">
+      <h3 className="relative font-heading text-lg font-semibold">{category.name}</h3>
+      <p className={clsx('relative text-sm', look.muted)}>{category.method}</p>
+      <p className="relative mt-2 font-heading text-2xl font-bold leading-tight">{headline}</p>
+      <p className={clsx('relative text-sm', look.muted)}>{sub}</p>
+      <ul className="relative mt-4 space-y-2 text-sm">
         {legendFor(category).map((item) => (
           <li className="flex items-center gap-2.5" key={item.label}>
             <span
               aria-hidden
               className={clsx(
-                'inline-block h-3 w-3 shrink-0 rounded-sm',
+                'inline-block h-3.5 w-3.5 shrink-0 rounded-sm',
                 item.band === 'none'
                   ? clsx(
                       'border border-dashed',
@@ -259,12 +254,12 @@ export function ShippingMap({
           </div>
         ))}
       </div>
-      <div className="mt-6 grid max-w-4xl gap-5 @3xl:grid-cols-[1fr_250px] @3xl:items-start">
+      <div className="mt-6 grid max-w-[62rem] gap-5 @3xl:grid-cols-[1fr_270px] @3xl:items-start">
         {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
             any width. The duration label appears once a tile is wide enough to hold it. */}
         <ul
           aria-label={`Delivery time for ${category.name}, by state`}
-          className="grid grid-cols-12 gap-1 @md:gap-1.5"
+          className="grid grid-cols-12 gap-1 @md:gap-1.5 @3xl:gap-2"
         >
           {tiles.map((tile) => {
             const [row, column] = SHIP_STATE_GRID[tile.state] ?? [1, 1];
@@ -272,7 +267,7 @@ export function ShippingMap({
             return (
               <li
                 className={clsx(
-                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[10px] @xl:rounded-lg @xl:pb-1.5 @xl:text-[11px]',
+                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[11px] @xl:rounded-lg @xl:pb-2 @xl:text-xs',
                   tileClass[tile.band],
                 )}
                 key={tile.state}
@@ -282,7 +277,7 @@ export function ShippingMap({
                 <span aria-hidden>{tile.state}</span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0.5 hidden truncate text-center text-[8px] font-semibold @xl:block"
+                  className="absolute inset-x-0 bottom-0.5 hidden truncate text-center text-[8px] font-semibold @xl:block @xl:text-[9px]"
                 >
                   {tile.label}
                 </span>
