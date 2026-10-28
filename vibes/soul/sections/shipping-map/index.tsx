@@ -254,7 +254,9 @@ export function ShippingMap({
           </div>
         ))}
       </div>
-      <div className="mt-6 grid gap-6 @3xl:grid-cols-[1fr_300px] @3xl:items-start">
+      {/* From tablet width the map and card shrink together to 0.8x (CSS zoom scales layout and
+          type alike) and sit centred; phones keep the full size so the tiles stay readable. */}
+      <div className="mt-6 grid gap-6 @3xl:mx-auto @3xl:max-w-[80%] @3xl:grid-cols-[1fr_300px] @3xl:items-start @3xl:[zoom:0.8]">
         {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
             any width. The duration label appears once a tile is wide enough to hold it. */}
         <ul
