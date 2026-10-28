@@ -1,100 +1,135 @@
 // Shipping data behind /shipping-policy: what each category is, how it ships, and how long it
-// takes to reach each state. Lead times are the wireframe's per-line figures (to confirm against
-// product data); transit bands are estimates by distance from the Bristol, CT hub.
+// takes to reach each state. Ship times are per collection, from EK (Oct 2026); transit bands
+// are estimates by distance from the Bristol, CT hub. Cabinets, hardware and sinks ship to the
+// 48 contiguous states; closets ship nationwide; windows and appliances are pickup only. No rush
+// or next-day times online: EK doesn't offer them.
 
-export type ShipMode = 'national' | 'zone' | 'pickup';
+export type ShipMode = 'national' | 'pickup';
+
+export type ShipReach = 'contiguous' | 'nationwide';
 
 export interface ShipCategory {
   id: string;
   group: string;
   name: string;
   mode: ShipMode;
-  /** Make-and-ship lead time as copy ("2 weeks"). Absent for pickup. */
+  /** Where freight goes: the 48 contiguous states, or every state. Absent for pickup. */
+  reach?: ShipReach;
+  /** Ship time as copy ("2 weeks"). Absent for pickup, or when it ships with the order. */
   ship?: string;
-  /** Make-and-ship lead time in days. Absent for pickup. */
+  /** A qualifier printed after the ship time ("Tribeca Shaker: 2 weeks"). */
+  note?: string;
+  /** Ship time in days, for the map. Absent for pickup and for items without a time of their own. */
   lead?: number;
   method: string;
 }
 
+const CONTIGUOUS = 'Ships to the 48 contiguous states';
+const NATIONWIDE = 'Ships nationwide';
+const PICKUP = 'Pickup only';
+
 export const SHIP_CATEGORIES: ShipCategory[] = [
   {
-    group: 'Ships nationwide',
-    id: 'rta',
-    name: 'RTA cabinets',
+    group: CONTIGUOUS,
+    id: 'rta-star',
+    name: 'RTA — Star',
     mode: 'national',
+    reach: 'contiguous',
     ship: '2 weeks',
     lead: 14,
     method: 'Freight, flat-packed and ready to ship',
   },
   {
-    group: 'Ships nationwide',
+    group: CONTIGUOUS,
+    id: 'rta-euro',
+    name: 'RTA — Euro Max',
+    mode: 'national',
+    reach: 'contiguous',
+    ship: '4 weeks',
+    lead: 28,
+    method: 'Freight, flat-packed and ready to ship',
+  },
+  {
+    group: CONTIGUOUS,
     id: 'star',
     name: 'Assembled — Star',
     mode: 'national',
+    reach: 'contiguous',
     ship: '3 weeks',
     lead: 21,
-    method: 'Freight, assembled to order in our Connecticut shop',
+    method: 'Freight, assembled in our factory',
   },
   {
-    group: 'Ships nationwide',
+    group: CONTIGUOUS,
     id: 'euro',
     name: 'Assembled — Euro',
     mode: 'national',
+    reach: 'contiguous',
     ship: '4 weeks',
+    note: 'Tribeca Shaker: 2 weeks',
     lead: 28,
-    method: 'Freight, Euro lines made to order',
+    method: 'Freight, assembled in our factory',
   },
   {
-    group: 'Ships nationwide',
+    group: CONTIGUOUS,
     id: 'prism',
     name: 'Prism (painted)',
     mode: 'national',
+    reach: 'contiguous',
     ship: '8 weeks',
     lead: 56,
-    method: 'Made to order, painted, all-plywood',
+    method: 'Freight, painted to order',
   },
   {
-    group: 'Ships nationwide',
+    group: CONTIGUOUS,
     id: 'hardware',
     name: 'Cabinet hardware',
     mode: 'national',
-    ship: '1–2 days',
-    lead: 2,
-    method: 'Small parcel by UPS or FedEx Ground',
+    reach: 'contiguous',
+    ship: 'Ships with your order',
+    method: 'With your cabinets, or small parcel on its own',
   },
   {
-    group: 'Ships nationwide',
+    group: CONTIGUOUS,
     id: 'kb',
     name: 'Sinks, faucets & bath',
     mode: 'national',
-    ship: '2 days',
-    lead: 2,
-    method: 'Small parcel, then transit',
+    reach: 'contiguous',
+    ship: 'Ships with your order',
+    method: 'With your cabinets, or small parcel on its own',
   },
   {
-    group: 'Connecticut zone',
+    group: NATIONWIDE,
     id: 'closets',
     name: 'Closets',
-    mode: 'zone',
+    mode: 'national',
+    reach: 'nationwide',
     ship: '2 weeks',
     lead: 14,
-    method: 'Freight, inside the Connecticut delivery zone',
+    method: 'Freight, nationwide',
   },
   {
-    group: 'Pickup only',
+    group: PICKUP,
     id: 'appliances',
     name: 'Appliances',
     mode: 'pickup',
-    method: 'Collect from the Bristol factory outlet',
+    method: 'Pickup from our Bristol Factory Outlet, for Connecticut customers',
   },
   {
-    group: 'Pickup only',
+    group: PICKUP,
     id: 'windows',
     name: 'Windows',
     mode: 'pickup',
-    method: 'Collect from the Bristol factory outlet',
+    method: 'Pickup from our Bristol Factory Outlet, for Connecticut customers',
   },
 ];
+
+// The "Ships in" cell of the by-product table: the ship time, with its qualifier if there is one.
+export const shipsIn = (category: ShipCategory): string =>
+  category.ship == null ? '—' : `${category.ship}${category.note ? ` (${category.note})` : ''}`;
+
+// Categories the map can plot: anything with a ship time of its own, plus the pickup-only ones.
+export const MAP_CATEGORIES = SHIP_CATEGORIES.filter((c) => c.mode === 'pickup' || c.lead != null);
 
 // Tile-map position [row, column] on a 12-column grid, roughly where the state sits.
 export const SHIP_STATE_GRID: Record<string, [number, number]> = {
@@ -275,9 +310,12 @@ export function milesFromHub(state: string): number {
 
 export type TransitDays = 7 | 8 | 9 | 10;
 
-// Transit band by distance. Null for Alaska and Hawaii (quoted).
-export function transitDays(state: string): TransitDays | null {
-  if (state === 'AK' || state === 'HI') return null;
+export const isOffshore = (state: string) => state === 'AK' || state === 'HI';
+
+// Transit band by distance. Alaska and Hawaii sit in the far band when a category ships
+// nationwide, and get null (not shipped) when it only goes to the contiguous states.
+export function transitDays(state: string, reach: ShipReach = 'contiguous'): TransitDays | null {
+  if (isOffshore(state)) return reach === 'nationwide' ? 10 : null;
 
   const miles = milesFromHub(state);
 
@@ -288,9 +326,6 @@ export function transitDays(state: string): TransitDays | null {
   return 10;
 }
 
-export const inDeliveryZone = (state: string) =>
-  state !== 'AK' && state !== 'HI' && milesFromHub(state) <= 200;
-
 // "17 days" under three weeks, otherwise "3.5 wks".
 export function formatDuration(days: number): string {
   if (days < 21) return `${Math.round(days)} days`;
@@ -300,10 +335,9 @@ export function formatDuration(days: number): string {
   return `${weeks % 1 === 0 ? weeks.toFixed(0) : weeks.toFixed(1)} wks`;
 }
 
-// The "Total to your door" column of the by-product table.
+// When it could arrive, as a range: the ship time plus 7–10 days of transit.
 export function doorRange(category: ShipCategory): string {
-  if (category.mode === 'pickup' || category.lead == null) return 'Ready in 2 days';
-  if (category.mode === 'zone') return `${formatDuration(category.lead + 7)} in zone`;
+  if (category.mode === 'pickup' || category.lead == null) return 'Usually ready in 2 days';
 
   return `${formatDuration(category.lead + 7)} – ${formatDuration(category.lead + 10)}`;
 }

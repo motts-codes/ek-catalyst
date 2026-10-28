@@ -7,11 +7,12 @@ import { HomeSection } from '@/vibes/soul/sections/home-section';
 import {
   doorRange,
   formatDuration,
-  inDeliveryZone,
-  SHIP_CATEGORIES,
+  isOffshore,
+  MAP_CATEGORIES,
   SHIP_STATE_GRID,
   SHIP_STATE_NAMES,
   type ShipCategory,
+  type ShipReach,
   transitDays,
 } from '~/lib/pages/shipping';
 
@@ -37,23 +38,27 @@ const BAND_CLASS: Record<Band, string> = {
   none: 'border-dashed bg-transparent text-contrast-500',
 };
 
-const LEGEND: Record<ShipCategory['mode'], Array<{ band: Band; label: string }>> = {
-  national: [
-    { band: 'd7', label: 'Northeast — +7 days' },
-    { band: 'd8', label: 'Mid-Atlantic / Southeast — +8 days' },
-    { band: 'd9', label: 'Central / South — +9 days' },
-    { band: 'd10', label: 'West and far — +10 days' },
-    { band: 'none', label: 'Alaska and Hawaii — contact us' },
+const TRANSIT_LEGEND: Array<{ band: Band; label: string }> = [
+  { band: 'd7', label: 'Northeast — +7 days' },
+  { band: 'd8', label: 'Mid-Atlantic / Southeast — +8 days' },
+  { band: 'd9', label: 'Central / South — +9 days' },
+  { band: 'd10', label: 'West and far — +10 days' },
+];
+
+const LEGEND: Record<ShipReach | 'pickup', Array<{ band: Band; label: string }>> = {
+  contiguous: [
+    ...TRANSIT_LEGEND,
+    { band: 'none', label: "Alaska and Hawaii — cabinets don't ship here" },
   ],
-  zone: [
-    { band: 'd7', label: 'Delivering today' },
-    { band: 'none', label: 'Not yet — zone expanding' },
-  ],
+  nationwide: TRANSIT_LEGEND,
   pickup: [
     { band: 'pickup', label: 'Pickup point (Bristol, CT)' },
     { band: 'none', label: 'Not shipped' },
   ],
 };
+
+const legendFor = (category: ShipCategory) =>
+  category.mode === 'pickup' ? LEGEND.pickup : LEGEND[category.reach ?? 'contiguous'];
 
 function tileFor(state: string, category: ShipCategory): Tile {
   const name = SHIP_STATE_NAMES[state] ?? state;
@@ -65,22 +70,15 @@ function tileFor(state: string, category: ShipCategory): Tile {
   }
 
   const lead = category.lead ?? 0;
-
-  if (category.mode === 'zone') {
-    return inDeliveryZone(state)
-      ? {
-          state,
-          band: 'd7',
-          label: formatDuration(lead + 7),
-          detail: `${name}: about ${formatDuration(lead + 7)} to your door`,
-        }
-      : { state, band: 'none', label: 'soon', detail: `${name}: not yet, delivery zone expanding` };
-  }
-
-  const days = transitDays(state);
+  const days = transitDays(state, category.reach);
 
   if (days === null) {
-    return { state, band: 'none', label: 'call', detail: `${name}: contact us for a quote` };
+    return {
+      state,
+      band: 'none',
+      label: 'no',
+      detail: `${name}: cabinets don't ship here`,
+    };
   }
 
   const total = formatDuration(lead + days);
@@ -89,7 +87,7 @@ function tileFor(state: string, category: ShipCategory): Tile {
     state,
     band: `d${days}`,
     label: total,
-    detail: `${name}: about ${total} to your door (${category.ship} make and ship plus ${days} days transit)`,
+    detail: `${name}: about ${total} to your door (ships in ${category.ship}, plus ${days} days transit)${isOffshore(state) ? ', closets only' : ''}`,
   };
 }
 
@@ -97,14 +95,13 @@ const PANEL_COPY: Record<
   ShipCategory['mode'],
   (c: ShipCategory) => { headline: string; sub: string }
 > = {
-  pickup: () => ({ headline: 'Pickup', sub: 'Ready in 2 days at Express Kitchens, Bristol, CT' }),
-  zone: (c) => ({
-    headline: `${c.ship} + about 7 days`,
-    sub: 'Make and ship, then transit inside the zone',
+  pickup: () => ({
+    headline: 'Pickup',
+    sub: 'Usually ready in 2 days at our Bristol Factory Outlet',
   }),
   national: (c) => ({
     headline: doorRange(c),
-    sub: `To your door: ${c.ship} make and ship + 7–10 days transit`,
+    sub: `Ships in ${c.ship}, then 7–10 days in transit`,
   }),
 };
 
@@ -121,7 +118,7 @@ function Panel({ category }: { category: ShipCategory }) {
       <p className="mt-2 font-heading text-2xl font-bold leading-tight">{headline}</p>
       <p className="text-sm text-contrast-500">{sub}</p>
       <ul className="mt-3 space-y-1.5 text-sm">
-        {LEGEND[category.mode].map((item) => (
+        {legendFor(category).map((item) => (
           <li className="flex items-center gap-2" key={item.label}>
             <span
               aria-hidden
@@ -153,12 +150,12 @@ export function ShippingMap({
   description,
   tint,
 }: Props) {
-  const [selected, setSelected] = useState(SHIP_CATEGORIES[0]?.id ?? 'rta');
-  const category = SHIP_CATEGORIES.find((c) => c.id === selected) ?? SHIP_CATEGORIES[0];
+  const [selected, setSelected] = useState(MAP_CATEGORIES[0]?.id ?? 'rta-star');
+  const category = MAP_CATEGORIES.find((c) => c.id === selected) ?? MAP_CATEGORIES[0];
 
   if (!category) return null;
 
-  const groups = [...new Set(SHIP_CATEGORIES.map((c) => c.group))];
+  const groups = [...new Set(MAP_CATEGORIES.map((c) => c.group))];
   const tiles = Object.keys(SHIP_STATE_GRID).map((state) => tileFor(state, category));
 
   return (
@@ -169,7 +166,7 @@ export function ShippingMap({
             <span className="mr-1 w-full text-xs font-semibold uppercase tracking-wide text-contrast-500 @xl:w-auto">
               {group}
             </span>
-            {SHIP_CATEGORIES.filter((c) => c.group === group).map((c) => (
+            {MAP_CATEGORIES.filter((c) => c.group === group).map((c) => (
               <button
                 aria-pressed={c.id === category.id}
                 className={clsx(
@@ -223,9 +220,9 @@ export function ShippingMap({
         <Panel category={category} />
       </div>
       <p className="mt-3 text-xs text-contrast-500">
-        Hover a state for the estimate. Transit is about 7 days near our Connecticut hub and up to
-        10 at the far edge; the category&apos;s lead time is added on top. Alaska and Hawaii:
-        contact us for a quote.
+        Hover a state for the estimate. Transit takes about 7 days near Connecticut, and up to 10
+        farther away, after your order ships. Closets ship to every state; cabinets don&apos;t ship
+        to Alaska or Hawaii.
       </p>
     </HomeSection>
   );

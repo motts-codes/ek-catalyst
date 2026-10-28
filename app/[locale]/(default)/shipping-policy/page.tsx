@@ -12,28 +12,29 @@ import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page
 import { ShippingMap } from '@/vibes/soul/sections/shipping-map';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
-import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
-import { doorRange, SHIP_CATEGORIES } from '~/lib/pages/shipping';
+import { SHIP_CATEGORIES, shipsIn } from '~/lib/pages/shipping';
 import { directionsHref, getShowroom } from '~/lib/pages/showrooms';
 
+const PHONE = { label: 'Call or text 860-247-1000', href: 'tel:+18602471000' };
+
 const DELIVERY_CELL = {
-  pickup: 'Pickup at the Bristol factory outlet',
-  zone: 'Within the Connecticut delivery zone',
+  pickup: 'Pickup at our Bristol Factory Outlet',
   national: '+ 7–10 days transit',
 };
 
 // Each row of the by-product table comes from the same data as the map, so they never disagree.
-const SHIP_ROWS = SHIP_CATEGORIES.map((c) => [
-  `!${c.name}`,
-  c.ship ?? '—',
-  DELIVERY_CELL[c.mode],
-  doorRange(c),
-]);
+const SHIP_ROWS = SHIP_CATEGORIES.map((c) => [`!${c.name}`, shipsIn(c), DELIVERY_CELL[c.mode]]);
 
+// Built on EK's shipping policy and its answers of 27 Oct 2026: ground-floor delivery to the 48
+// contiguous states (closets nationwide; windows and appliances pickup only, Connecticut), the
+// carrier responsible once an order leaves EK, transit damage claimed with the carrier. Nothing
+// EK hasn't said: no booking call, delivery-window text, truck size, access or redelivery fees,
+// damage windows, replacement promise, or rush shipping. Installation isn't mentioned, except in
+// the fine print, which is EK's own policy wording. Free-shipping conditions still to confirm.
 export const metadata: Metadata = {
   title: 'Shipping, Delivery & Pickup',
   description:
-    'How each thing you buy gets to you, what it costs and how long it takes, from our Bristol factory. Free shipping over $2,500; free pickup on any order.',
+    'How cabinets, closets, windows and appliances get to you: ship times, ground-floor delivery to the 48 contiguous states, pickup in Bristol, and what to check on delivery day.',
 };
 
 export default async function ShippingPolicy({ params }: { params: Promise<{ locale: string }> }) {
@@ -57,7 +58,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
           { label: 'What shipping costs', href: '#cost', primary: true },
           { label: 'Delivery day, step by step', href: '#delivery-day' },
         ]}
-        description="Everything you buy from us leaves our own factory in Bristol, Connecticut, not a warehouse somewhere, so we can tell you exactly how it gets to you. Cabinets ship to your curb or you collect them; windows and appliances are pickup only. The lead times on this page are from checkout to your door, not to the ship date, so you can plan around them."
+        description="Cabinets ship by freight to the 48 contiguous states, or you can pick them up in Bristol. Closets ship nationwide. Windows and appliances are pickup only, for Connecticut customers. Here's how long each takes, where it's delivered and what to check on delivery day."
         image={{
           src: '/images/pages/shipping/ek-truck-unloading.jpg',
           alt: 'A driver unloading a shrink-wrapped pallet of cabinets from the liftgate of an Express Kitchens truck',
@@ -67,12 +68,12 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
         title="How your order gets to you"
       />
       <CategoryPoints
-        fine="Thresholds, fees and windows to be confirmed."
+        fine="Free-shipping conditions to be confirmed."
         points={[
           { icon: 'truck', label: 'Free shipping on orders over $2,500' },
-          { icon: 'stock', label: 'Free pickup from Bristol, any order' },
-          { icon: 'returns', label: 'Free damage protection on every delivery' },
-          { icon: 'clock', label: '30 days to report concealed damage' },
+          { icon: 'pickup', label: 'Pickup from Bristol' },
+          { icon: 'stock', label: 'Delivered to the ground floor' },
+          { icon: 'tag', label: 'Ships to the 48 contiguous states' },
         ]}
       />
       <HomeSection compact>
@@ -87,80 +88,55 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
         </div>
       </HomeSection>
       <DeliveryLadder
-        columns={['Category', 'Make & ship', 'Delivery', 'Total to your door']}
-        description="The total to your door is the make-and-ship lead time plus 7–10 days of transit, depending on your distance from Connecticut. If something is out of stock we tell you before you pay, and you choose whether to ship the rest now, wait for everything together, or swap. Installation is not included on anything."
-        footnote={
-          <>
-            Lead times are per line from the product data; transit bands are estimates to be
-            confirmed. Installation is not included on anything:{' '}
-            <Link className="underline underline-offset-4" href="/find-a-pro">
-              find an installer
-            </Link>
-            .
-          </>
-        }
+        columns={['Category', 'Ships in', 'Delivery']}
+        description="Each product ships in the time shown, then spends 7–10 days in transit, depending on how far you are from Connecticut. If something is out of stock, we'll tell you, and you choose whether to ship the rest now, wait for everything together, or swap."
+        footnote="Ship times are per collection. Transit times are estimates."
+        look="minimal"
         rows={SHIP_ROWS}
         tint
         title="How you get each thing"
       />
       <ShippingMap
-        description="Transit is about 7 days near our Connecticut hub and up to 10 at the far edge; the lead time for what you're buying is added on top."
-        title="Pick what you're buying. The map shows the total to your door."
+        description="Transit takes about 7 days near Connecticut, and up to 10 farther away, after your order ships."
+        title="Pick what you're buying to see when it could arrive"
       />
       <div className="scroll-mt-24" id="cost" />
       <DeliveryLadder
         columns={['Order total', 'Shipping']}
-        description="Free shipping applies to orders of $2,500 or more after discounts, delivered curbside by freight to a standard-access address in the contiguous 48 states. It excludes pickup-only items, clearance and special orders. Trim over 84 in. and oversized pallets carry a $[X] minimum."
+        description="Free shipping applies to orders of $2,500 or more after discounts, delivered curbside by freight to a standard-access address in the contiguous 48 states."
+        inline
+        look="minimal"
+        narrow
         rows={[
-          ['!Under $[X]', '$[X]'],
-          ['!$[X] – $2,499', '$[X]'],
+          ['!Under $2,500', 'Calculated at checkout'],
           ['!$2,500 and over', 'Free'],
           ['!Pickup from Bristol, any total', 'Free'],
         ]}
         title="What shipping costs"
       />
-      <DeliveryLadder
-        columns={['Your address', 'Delivery', 'Fee']}
-        description="Tell us at checkout if your street is one of the second two. Finding out on delivery day costs everyone a second trip."
-        rows={[
-          ['!A 53-ft truck can reach the driveway or curb', 'Curbside, lift-gate', 'Included'],
-          [
-            '!Narrow road, no turning, gated community, steep drive',
-            'Smaller truck, arranged with you',
-            '$[X]',
-          ],
-          ['!Ferry, island, no vehicle access', 'Call us before you order', 'Quoted'],
-        ]}
-        tint
-        title="Where the truck can go"
-      />
       <div className="scroll-mt-24" id="delivery-day" />
       <CardsRow
         cards={[
           {
-            title: '1 · We call to book',
+            title: 'Be there to sign',
             description:
-              'When your order is ready we call to agree a day. An adult (18 or over) needs to be there to sign.',
+              'Someone 18 or over needs to be home to accept the delivery. Tell us before you order if your street is hard for a large truck to reach.',
           },
           {
-            title: '2 · The night before',
+            title: 'Delivery is to the ground floor',
             description:
-              'You get a text with your delivery window: up to eight hours for freight, narrower for our own trucks.',
+              "The driver brings the pallet to your curb or driveway. Moving it inside or upstairs is up to you, so have a helper ready, since cabinets can weigh over 100 lb. Delivery inside your home and assembly aren't included unless you add them to your order.",
           },
           {
-            title: '3 · 30–60 minutes out',
+            title: 'Check before the driver leaves',
             description:
-              'The driver calls. The truck delivers to your curb or driveway with a lift-gate; from there the pallet is yours to unload. Cabinets can weigh over 100 lb, so have a helper ready.',
-          },
-          {
-            title: '4 · Before the driver leaves',
-            description:
-              "Count the pieces and check every box for visible damage. Note anything on the driver's paperwork (the Bill of Lading), have them sign it, and keep your copy.",
+              'Count the pieces and look for damage. Write any damage on the delivery receipt (the Bill of Lading), have the driver sign it, and keep your copy.',
           },
         ]}
-        columns={4}
+        columns={3}
         hideImages
         kicker="Delivery day"
+        numbered
         title="What happens, in order"
       />
       <HomeSection
@@ -183,10 +159,12 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
             <h3 className="font-heading text-lg font-semibold">Please don&apos;t</h3>
             <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-contrast-500">
               <li>
-                Refuse a damaged delivery. The truck doesn&apos;t go back to the factory, so accept
-                it, note the damage and call us.
+                Refuse a damaged delivery. Accept it, note the damage on the receipt, and file a
+                claim with the carrier.
               </li>
-              <li>Book your installer before the cabinets have arrived and been checked.</li>
+              <li>
+                Take out your old kitchen before the new cabinets have arrived and been checked.
+              </li>
               <li>
                 Sign clean if you couldn&apos;t check a box. Write “unable to inspect” instead.
               </li>
@@ -195,22 +173,22 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
           <div className="flex flex-col rounded-3xl border border-contrast-100 bg-white p-6">
             <h3 className="font-heading text-lg font-semibold">Damage or shortage</h3>
             <p className="mt-3 text-sm leading-relaxed text-contrast-500">
-              Every delivery carries free damage protection. For visible damage, note it on the
-              paperwork and call within 48 hours. For concealed damage you have{' '}
-              <strong className="font-semibold text-foreground">30 days</strong> to open every box
-              and report it. Replacement parts ship first, and if three replacements fail to fix it,
-              we refund the cabinet.
+              Once your order is with the carrier, the carrier is responsible for loss or damage in
+              transit. Note any damage on the delivery receipt, then file a claim with the carrier
+              that delivered your order. After that, call us at 860-247-1000 and we&apos;ll help
+              with the rest. Open and check every box as soon as you can. There&apos;s no restocking
+              fee on items damaged in transit.
             </p>
             <div className="mt-4">
-              <ButtonLink href="/support" shape="pill" size="small" variant="primary">
-                Report damage
+              <ButtonLink href={PHONE.href} shape="pill" size="small" variant="primary">
+                Call 860-247-1000
               </ButtonLink>
             </div>
           </div>
         </div>
       </HomeSection>
       <HomeSection
-        description="Any cabinet order can be collected free from the factory outlet, and windows and appliances can only be collected. We text you when it's ready; bring the order number, ID and a vehicle that fits it. Assembled cabinets need a van or a trailer, while a 10×10 RTA kitchen fits in a pickup truck. Our staff load; you strap it down."
+        description="You can pick up any cabinet order from our Bristol Factory Outlet instead of having it shipped. We'll let you know when it's ready. Bring your order number, ID and a vehicle big enough for it: assembled cabinets usually need a van or a trailer."
         kicker="Pickup"
         title="Picking up from Bristol"
       >
@@ -244,9 +222,9 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
             <div className="rounded-3xl border border-contrast-100 bg-white p-6 text-sm">
               <h3 className="font-heading text-lg font-semibold">Pickup timing</h3>
               <p className="mt-2 leading-relaxed text-contrast-500">
-                Online orders are ready for pickup in two days, whether that&apos;s windows,
-                appliances, hardware or cabinets. Want it today? Buy in person at the factory outlet
-                and take it with you.
+                Windows and appliances are usually ready in 2 days. Cabinets are ready when they
+                would otherwise ship (see the ship times above). Quick-ship cabinets (Eden, Madison,
+                Avon and Derry) are also sold at the Factory Outlet.
               </p>
             </div>
           </div>
@@ -267,19 +245,11 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
           items: [
             {
               q: 'Do you deliver outside Connecticut?',
-              a: 'Yes. Cabinets, closets and hardware ship to the 48 contiguous states; orders over $2,500 ship free (conditions apply) and the rest are quoted at checkout. Countertops are Connecticut only, and windows and appliances are pickup only.',
-            },
-            {
-              q: 'Can I get it faster?',
-              a: 'Hardware and accessories ship the next business day, and some collections are marked “Ships next day” on their page. For cabinets, pickup from Bristol is usually the fastest route.',
-            },
-            {
-              q: 'Can I change the delivery date?',
-              a: 'Yes. Reply to the booking call or text at least two business days ahead. A missed delivery means a second trip and a $[X] redelivery fee.',
+              a: 'Yes. Cabinets ship to the 48 contiguous states, but not to Alaska or Hawaii. Closets ship nationwide. Orders over $2,500 ship free (conditions apply). Windows and appliances are pickup only, for Connecticut customers.',
             },
             {
               q: 'Do you carry it inside?',
-              a: 'No. Delivery is to the curb or driveway with a lift-gate; inside delivery is not available, so have a helper ready.',
+              a: "Delivery is to the ground floor: your curb or driveway. Delivery inside your home isn't included unless you add it to your order, so have a helper ready.",
             },
             {
               q: 'What if part of my order is out of stock?',
@@ -287,19 +257,27 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
             },
             {
               q: 'What if it arrives damaged?',
-              a: "Don't refuse it. Note the damage on the Bill of Lading, have the driver sign it, keep your copy and call (860) 247-1000. You have 30 days to report concealed damage, and we replace damaged items free.",
+              a: "Don't refuse it. Note the damage on the delivery receipt, have the driver sign it and keep your copy. Then file a claim with the carrier, and call us at 860-247-1000 so we can help.",
+            },
+            {
+              q: "Who's responsible for my order in transit?",
+              a: "Once your order leaves us with the carrier, the carrier is responsible for loss, breakage or theft in transit. That's why checking every box at delivery matters.",
             },
           ],
         }}
       />
       <FinePrint>
-        Effective [date]. Thresholds, fees and delivery windows are to be confirmed by Express
-        Kitchens before launch.
+        Express Kitchens isn&apos;t responsible for items lost, broken or stolen after they&apos;ve
+        been released to the shipping carrier. All items are delivered to the ground floor. In-home
+        delivery, assembly and installation are excluded unless purchased.
       </FinePrint>
       <ClosingBand
-        primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
-        showrooms={SHOWROOMS}
+        description="Ordered, or about to? Ask us anything about ship times, delivery or pickup and we'll sort it out."
+        phone={null}
+        primary={PHONE}
+        secondary={{ label: 'Send us a message', href: '/contact' }}
         tint
+        title="Questions about your delivery?"
       />
     </>
   );
