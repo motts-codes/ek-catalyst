@@ -35,6 +35,8 @@ interface Props {
   inline?: boolean;
   /** Minimal only: the row hover fill. White for a table on a coloured band. */
   highlight?: 'rose' | 'white';
+  /** Minimal only: tighter rows and smaller type. */
+  compact?: boolean;
   tint?: boolean;
   className?: string;
 }
@@ -55,6 +57,7 @@ export function DeliveryLadder({
   look = 'classic',
   inline = false,
   highlight = 'rose',
+  compact = false,
   tint = false,
   className,
 }: Props) {
@@ -71,6 +74,7 @@ export function DeliveryLadder({
         <div className={clsx(inline && 'max-w-3xl')}>
           <MinimalTable
             columns={columns}
+            compact={compact}
             highlight={highlight}
             inline={inline}
             narrow={narrow}

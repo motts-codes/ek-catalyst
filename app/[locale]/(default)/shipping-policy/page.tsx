@@ -84,10 +84,13 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
       <DeliveryLadder
         className="bg-[#fdf3f5]"
         columns={['Category', 'Ships in', 'Delivery']}
+        compact
         description="Each product ships in the time shown, then spends 7–10 days in transit, depending on how far you are from Connecticut. If something is out of stock, we'll tell you, and you choose whether to ship the rest now, wait for everything together, or swap."
         footnote="Ship times are per collection. Transit times are estimates."
         highlight="white"
+        inline
         look="minimal"
+        narrow
         rows={SHIP_ROWS}
         title="How you get each thing"
       />
@@ -278,7 +281,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
           ],
         }}
       />
-      <FinePrint>
+      <FinePrint variant="plain">
         Express Kitchens isn&apos;t responsible for items lost, broken or stolen after they&apos;ve
         been released to the shipping carrier. All items are delivered to the ground floor. In-home
         delivery, assembly and installation are excluded unless purchased.
