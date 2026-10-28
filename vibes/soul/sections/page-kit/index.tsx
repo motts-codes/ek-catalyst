@@ -10,6 +10,7 @@ import {
   HomeSection,
   MediaPlaceholder,
 } from '@/vibes/soul/sections/home-section';
+import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -829,5 +830,32 @@ export function FormCard({ children, after }: { children: ReactNode; after?: Rea
         </Link>
       </p>
     </div>
+  );
+}
+
+// The legal text of a policy (the warranty terms, say), printed in full under a heading in the
+// FAQ accordion's style, so it sits as the FAQ's companion at the foot of a policy page. Plain
+// paragraphs, no collapse: "Read the full terms" in the hero anchors here.
+export function LegalText({
+  id,
+  title,
+  paragraphs,
+}: {
+  id?: string;
+  title: string;
+  /** The text, word for word, one string per paragraph. */
+  paragraphs: string[];
+}) {
+  return (
+    <SectionLayout containerSize="2xl" id={id}>
+      <h2 className="mb-6 font-[family-name:var(--font-family-heading)] text-2xl font-semibold leading-tight text-[var(--secondary-heading-color)] @xl:text-3xl">
+        {title}
+      </h2>
+      <div className="max-w-3xl space-y-3 text-sm leading-relaxed text-contrast-500">
+        {paragraphs.map((paragraph) => (
+          <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+        ))}
+      </div>
+    </SectionLayout>
   );
 }

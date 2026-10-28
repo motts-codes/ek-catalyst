@@ -10,12 +10,12 @@ import { HomeSection } from '@/vibes/soul/sections/home-section';
 import {
   Actions,
   CheckTable,
+  LegalText,
   PageBreadcrumbs,
   PageHero,
   Prose,
   StepsRow,
 } from '@/vibes/soul/sections/page-kit';
-import { LegalAccordion } from '@/vibes/soul/sections/page-kit/legal-accordion';
 
 export const metadata: Metadata = {
   title: 'Warranty',
@@ -224,9 +224,7 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
           ],
         }}
       />
-      <HomeSection id="terms">
-        <LegalAccordion paragraphs={TERMS} title="Full warranty terms" />
-      </HomeSection>
+      <LegalText id="terms" paragraphs={TERMS} title="Full warranty terms" />
       <ClosingBand
         description="Send us a description and a photo, and we'll take it from there."
         phone={PHONE}
