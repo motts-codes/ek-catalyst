@@ -102,7 +102,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
               src: '/images/pages/shipping/free-shipping-truck-wide.jpg',
               alt: 'An Express Kitchens tractor-trailer pulling out from the showroom at dusk',
             },
-            split: '50/50',
+            split: '60/40',
           }}
           title="Free shipping on all orders over $2,500"
         >
