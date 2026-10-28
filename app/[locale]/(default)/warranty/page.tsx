@@ -1,4 +1,4 @@
-import { Clock, DoorOpen, PackageSearch, Palette, Ruler, Wind, Wrench } from 'lucide-react';
+import { Clock, PackageSearch, Palette, Wrench } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -166,27 +166,27 @@ export default async function Warranty({ params }: { params: Promise<{ locale: s
       <CardsRow
         cards={[
           {
-            icon: DoorOpen,
             title: 'A door looks out of line',
+            imageLabel: 'Photo: adjusting a hinge screw',
             description:
               'Each hinge has three adjustment screws. Two minutes with a screwdriver fixes most doors that look warped.',
             ctaLabel: 'Watch the video',
             href: '/resources/how-to-videos',
           },
           {
-            icon: Ruler,
             title: 'A drawer sticks or sits crooked',
+            imageLabel: 'Photo: leveling a drawer glide',
             description: 'Drawer glides can be leveled with a screwdriver.',
           },
           {
-            icon: Wind,
             title: 'Doors move with the seasons',
+            imageLabel: 'Photo: a kitchen with the window open',
             description:
               'Very dry or very damp air moves wood. Keep the kitchen ventilated, and most doors settle on their own.',
           },
         ]}
         className="[&>div]:pb-2"
-        hideImages
+        imageStyle="plain"
         kicker="Before you claim: is it just an adjustment?"
         tint
         title="Most door and drawer problems are a quick fix"
