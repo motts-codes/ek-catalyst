@@ -65,9 +65,10 @@ export default async function HowToVideos({ params }: { params: Promise<{ locale
         ]}
         description="Short films that show you rather than tell you: how a base cabinet goes together, how a lazy susan and a corner wall cabinet fit, how a tall utility cabinet stands up, how roll-out trays go in, and how each closet unit is built. Watch one before you open the box and the build goes faster."
         image={{
-          src: '/images/pages/how-to/hands-assembling.jpg',
-          alt: 'Hands assembling a cabinet box on a workbench',
+          src: '/images/pages/how-to/hero-assembling-with-tablet.jpg',
+          alt: 'A man kneeling beside a white base cabinet, driving a screw with a cordless drill while an assembly video plays on a tablet',
         }}
+        imageStyle="plain"
         kicker="Video library"
         title="Watch it done, then do it yourself"
       />
