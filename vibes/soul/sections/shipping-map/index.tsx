@@ -288,13 +288,15 @@ export function ShippingMap({
             );
           })}
         </ul>
-        <Panel category={category} />
+        <div>
+          <Panel category={category} />
+          <p className="mt-3 text-xs leading-relaxed text-contrast-500">
+            Hover a state for the estimate. Transit takes about 7 days near Connecticut, and up to
+            10 farther away, after your order ships. Closets ship to every state; cabinets
+            don&apos;t ship to Alaska or Hawaii.
+          </p>
+        </div>
       </div>
-      <p className="mt-3 text-xs text-contrast-500">
-        Hover a state for the estimate. Transit takes about 7 days near Connecticut, and up to 10
-        farther away, after your order ships. Closets ship to every state; cabinets don&apos;t ship
-        to Alaska or Hawaii.
-      </p>
     </HomeSection>
   );
 }
