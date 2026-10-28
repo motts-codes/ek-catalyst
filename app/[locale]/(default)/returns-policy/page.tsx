@@ -66,10 +66,10 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
         ]}
         description="Changed your mind, or measured a wall wrong? Unopened items can come back within 30 days of purchase, with a 30% restocking fee, as long as we've approved the return first. Here's what qualifies, and how to do it."
         image={{
-          src: '/images/pages/returns/unopened-box-dock.jpg',
-          alt: 'An unopened cabinet box on a pallet at the loading dock',
+          src: '/images/pages/returns/hero-taping-return-box.jpg',
+          alt: 'A smiling man kneeling on the floor, taping a flat cabinet box shut for return',
         }}
-        imageLabel="An unopened cabinet box on a pallet at the Bristol dock"
+        imageStyle="plain"
         kicker="Returns"
         title="Returns, in plain English"
       />
