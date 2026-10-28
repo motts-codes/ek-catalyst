@@ -33,6 +33,8 @@ interface Props {
   look?: 'classic' | 'minimal';
   /** Minimal only: sit left under the heading (the "Money or time" look) instead of centring. */
   inline?: boolean;
+  /** Minimal only: the row hover fill. White for a table on a coloured band. */
+  highlight?: 'rose' | 'white';
   tint?: boolean;
   className?: string;
 }
@@ -52,6 +54,7 @@ export function DeliveryLadder({
   narrow = false,
   look = 'classic',
   inline = false,
+  highlight = 'rose',
   tint = false,
   className,
 }: Props) {
@@ -66,7 +69,13 @@ export function DeliveryLadder({
       {look === 'minimal' ? (
         // Inline tables sit left under the heading at the width of an explainer's half column.
         <div className={clsx(inline && 'max-w-3xl')}>
-          <MinimalTable columns={columns} inline={inline} narrow={narrow} rows={rows} />
+          <MinimalTable
+            columns={columns}
+            highlight={highlight}
+            inline={inline}
+            narrow={narrow}
+            rows={rows}
+          />
         </div>
       ) : (
         <ClassicTable columns={columns} narrow={narrow} rows={rows} />
@@ -130,6 +139,8 @@ export interface TableProps {
   fit?: boolean;
   /** Tighter rows and smaller type, for a pair of tables side by side. */
   compact?: boolean;
+  /** The row hover fill: a blush by default, white on a coloured band. */
+  highlight?: 'rose' | 'white';
 }
 
 function cellText(cell: string): { bold: boolean; text: string } {
@@ -224,6 +235,7 @@ export function MinimalTable({
   inline = false,
   fit = false,
   compact = false,
+  highlight = 'rose',
 }: TableProps) {
   let minWidth: string | undefined = inline ? 'min-w-[28rem]' : 'min-w-[36rem]';
 
@@ -270,7 +282,10 @@ export function MinimalTable({
         <tbody>
           {rows.map((row, rowIndex) => (
             <tr
-              className="border-b border-contrast-100 transition-colors hover:bg-[#fdf8f8]"
+              className={clsx(
+                'border-b border-contrast-100 transition-colors',
+                highlight === 'white' ? 'hover:bg-white' : 'hover:bg-[#fdf8f8]',
+              )}
               key={rowIndex}
             >
               {row.map((cell, cellIndex) => {

@@ -254,7 +254,7 @@ export function ShippingMap({
           </div>
         ))}
       </div>
-      <div className="mt-6 grid max-w-[62rem] gap-5 @3xl:grid-cols-[1fr_270px] @3xl:items-start">
+      <div className="mt-6 grid gap-6 @3xl:grid-cols-[1fr_300px] @3xl:items-start">
         {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
             any width. The duration label appears once a tile is wide enough to hold it. */}
         <ul

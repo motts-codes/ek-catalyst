@@ -74,7 +74,6 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
         title="How your order gets to you"
       />
       <CategoryPoints
-        fine="Free-shipping conditions to be confirmed."
         points={[
           { icon: 'truck', label: 'Free shipping on orders over $2,500' },
           { icon: 'pickup', label: 'Pickup from Bristol' },
@@ -87,6 +86,7 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
         columns={['Category', 'Ships in', 'Delivery']}
         description="Each product ships in the time shown, then spends 7–10 days in transit, depending on how far you are from Connecticut. If something is out of stock, we'll tell you, and you choose whether to ship the rest now, wait for everything together, or swap."
         footnote="Ship times are per collection. Transit times are estimates."
+        highlight="white"
         look="minimal"
         rows={SHIP_ROWS}
         title="How you get each thing"
