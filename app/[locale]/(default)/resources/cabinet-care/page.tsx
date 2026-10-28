@@ -181,7 +181,10 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
           'Wood moves with the seasons, and hardware settles after installation. Each hinge has three screws: one moves the door side to side, one up and down, and one in and out. Drawer glides can be leveled with a screwdriver. Make your adjustments after installation and before you fit knobs and pulls.',
         ]}
         id="adjusting"
-        imageLabel="A soft-close hinge with the three adjustment screws labeled"
+        image={{
+          src: '/images/pages/cabinet-care/hinge-adjustment-screws.jpg',
+          alt: 'A soft-close hinge on a white cabinet with its three adjustment screws labeled in and out, side to side, and up and down',
+        }}
         imagePosition="left"
         kicker="Adjusting"
         tint
@@ -193,8 +196,8 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
           'For small chips and scratches, a fill stick and a touch-up marker in a matching color, from most hardware stores, will hide most marks. Soften the stick in your hand, fill with a back-and-forth motion, then blend with the marker. Practice on the inside of a door first. Paint is harder to blend than stain, so if the damage is bigger than a coin, send us a photo before you start.',
         ]}
         image={{
-          src: '/images/pages/cabinet-care/touch-up-kit.jpg',
-          alt: 'A fill stick and touch-up marker beside a chipped cabinet door',
+          src: '/images/pages/cabinet-care/touch-up-chip.jpg',
+          alt: 'A hand holding a fill stick and touch-up marker beside a small chip on the edge of a white cabinet door',
         }}
         kicker="Touch-ups"
         title="Chips and scratches"
