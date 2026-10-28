@@ -136,11 +136,11 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
           />
           <div className="relative min-h-[220px] overflow-hidden rounded-3xl bg-contrast-100">
             <Image
-              alt="Plain spray bottles and a scouring pad, the cleaners to avoid"
+              alt="Bleach, spray cleaner, scouring powder, aerosol polish, a scouring sponge, a magic eraser and steel wool beside a white cabinet door: the things to keep off a cabinet"
               className="object-cover"
               fill
               sizes="(min-width: 56rem) 40rem, 100vw"
-              src="/images/pages/cabinet-care/cleaners-to-avoid.jpg"
+              src="/images/pages/cabinet-care/never-on-a-cabinet.jpg"
             />
           </div>
         </div>

@@ -59,10 +59,10 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
         ]}
         description="Everything you buy from us leaves our own factory in Bristol, Connecticut, not a warehouse somewhere, so we can tell you exactly how it gets to you. Cabinets ship to your curb or you collect them; windows and appliances are pickup only. The lead times on this page are from checkout to your door, not to the ship date, so you can plan around them."
         image={{
-          src: '/images/pages/shipping/pallet-off-truck.jpg',
-          alt: 'A pallet of wrapped cabinets coming off a truck in a driveway',
+          src: '/images/pages/shipping/ek-truck-unloading.jpg',
+          alt: 'A driver unloading a shrink-wrapped pallet of cabinets from the liftgate of an Express Kitchens truck',
         }}
-        imageLabel="A pallet of wrapped cabinets coming off the truck in a driveway"
+        imageStyle="plain"
         kicker="Shipping, delivery & pickup"
         title="How your order gets to you"
       />
