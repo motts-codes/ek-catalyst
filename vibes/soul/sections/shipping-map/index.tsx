@@ -18,24 +18,67 @@ import {
 
 type Band = 'd7' | 'd8' | 'd9' | 'd10' | 'pickup' | 'none';
 
+type Hue = 'red' | 'blue' | 'cream' | 'black';
+
 interface Tile {
   state: string;
   band: Band;
-  /** Short text printed on the tile ("3 wks", "pickup", "call"). */
+  /** Short text printed on the tile ("3 wks"). */
   label: string;
   /** Full sentence for screen readers and the title tooltip. */
   detail: string;
 }
 
-// Band fills are a grey ramp with the duration printed on every tile, so the information never
-// rests on colour alone; every fill keeps ≥ 4.5:1 against the dark text.
-const BAND_CLASS: Record<Band, string> = {
-  d7: 'bg-white',
-  d8: 'bg-neutral-200',
-  d9: 'bg-neutral-300',
-  d10: 'bg-neutral-400',
-  pickup: 'bg-foreground text-white',
-  none: 'border-dashed bg-transparent text-contrast-500',
+// One colour family per kind of thing: cabinets red, closets blue, appliances the site's cream,
+// windows black. Transit bands run light near Connecticut to dark at the far edge.
+const HUE_BY_ID: Record<string, Hue> = { closets: 'blue', appliances: 'cream', windows: 'black' };
+
+const hueFor = (category: ShipCategory): Hue => HUE_BY_ID[category.id] ?? 'red';
+
+// Every fill keeps its text at 4.5:1 or better: dark text on the two light steps, white on the
+// two dark ones (checked Oct 2026). The duration is printed on every tile, so the information
+// never rests on colour alone.
+const TILE_CLASS: Record<Hue, Record<Band, string>> = {
+  red: {
+    d7: 'bg-[#fde3e5] text-[#1a1a1a]',
+    d8: 'bg-[#f4b1b6] text-[#1a1a1a]',
+    d9: 'bg-[#c1363f] text-white',
+    d10: 'bg-[#7f1f26] text-white',
+    pickup: 'bg-[#7f1f26] text-white',
+    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+  },
+  blue: {
+    d7: 'bg-[#e4ecf9] text-[#1a1a1a]',
+    d8: 'bg-[#b7c8ea] text-[#1a1a1a]',
+    d9: 'bg-[#3f63a8] text-white',
+    d10: 'bg-[#1e3461] text-white',
+    pickup: 'bg-[#1e3461] text-white',
+    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+  },
+  cream: {
+    d7: 'bg-[#fbf5ea] text-[#1a1a1a]',
+    d8: 'bg-[#f6ebd6] text-[#1a1a1a]',
+    d9: 'bg-[#e5cfa3] text-[#1a1a1a]',
+    d10: 'bg-[#8a6a3a] text-white',
+    pickup: 'bg-[#f6ebd6] text-[#1a1a1a]',
+    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+  },
+  black: {
+    d7: 'bg-[#efefef] text-[#1a1a1a]',
+    d8: 'bg-[#c9c9c9] text-[#1a1a1a]',
+    d9: 'bg-[#6a6a6a] text-white',
+    d10: 'bg-[#1a1a1a] text-white',
+    pickup: 'bg-[#1a1a1a] text-white',
+    none: 'border border-dashed border-contrast-300 bg-transparent text-contrast-500',
+  },
+};
+
+// The selected chip takes its category's colour.
+const CHIP_CLASS: Record<Hue, string> = {
+  red: 'border-[#9f3632] bg-[#9f3632] text-white',
+  blue: 'border-[#1e3461] bg-[#1e3461] text-white',
+  cream: 'border-[#f6ebd6] bg-[#f6ebd6] text-[#1a1a1a]',
+  black: 'border-[#1a1a1a] bg-[#1a1a1a] text-white',
 };
 
 const TRANSIT_LEGEND: Array<{ band: Band; label: string }> = [
@@ -107,24 +150,32 @@ const PANEL_COPY: Record<
 
 function Panel({ category }: { category: ShipCategory }) {
   const { headline, sub } = PANEL_COPY[category.mode](category);
+  const tiles = TILE_CLASS[hueFor(category)];
 
   return (
+    // The EK red box: white text is 6.9:1 on #9F3632.
     <div
       aria-live="polite"
-      className="flex flex-col gap-1.5 rounded-3xl border border-contrast-100 bg-white p-5"
+      className="relative flex flex-col gap-1.5 overflow-hidden rounded-3xl bg-[#9f3632] p-6 text-white"
     >
-      <h3 className="font-heading text-lg font-semibold">{category.name}</h3>
-      <p className="text-sm text-contrast-500">{category.method}</p>
-      <p className="mt-2 font-heading text-2xl font-bold leading-tight">{headline}</p>
-      <p className="text-sm text-contrast-500">{sub}</p>
-      <ul className="mt-3 space-y-1.5 text-sm">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white opacity-10 blur-3xl"
+      />
+      <h3 className="relative font-heading text-lg font-semibold">{category.name}</h3>
+      <p className="relative text-sm text-white/85">{category.method}</p>
+      <p className="relative mt-2 font-heading text-2xl font-bold leading-tight">{headline}</p>
+      <p className="relative text-sm text-white/85">{sub}</p>
+      <ul className="relative mt-4 space-y-2 text-sm">
         {legendFor(category).map((item) => (
-          <li className="flex items-center gap-2" key={item.label}>
+          <li className="flex items-center gap-2.5" key={item.label}>
             <span
               aria-hidden
               className={clsx(
-                'inline-block h-3.5 w-3.5 shrink-0 rounded-sm border border-contrast-300',
-                BAND_CLASS[item.band],
+                'inline-block h-3.5 w-3.5 shrink-0 rounded-sm',
+                item.band === 'none'
+                  ? 'border border-dashed border-white/60'
+                  : clsx(tiles[item.band], 'ring-1 ring-white/40'),
               )}
             />
             {item.label}
@@ -157,6 +208,7 @@ export function ShippingMap({
 
   const groups = [...new Set(MAP_CATEGORIES.map((c) => c.group))];
   const tiles = Object.keys(SHIP_STATE_GRID).map((state) => tileFor(state, category));
+  const tileClass = TILE_CLASS[hueFor(category)];
 
   return (
     <HomeSection description={description} kicker={kicker} tint={tint} title={title}>
@@ -170,9 +222,9 @@ export function ShippingMap({
               <button
                 aria-pressed={c.id === category.id}
                 className={clsx(
-                  'rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+                  'rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                   c.id === category.id
-                    ? 'border-foreground bg-foreground text-white'
+                    ? CHIP_CLASS[hueFor(c)]
                     : 'border-contrast-200 bg-white hover:border-foreground',
                 )}
                 key={c.id}
@@ -185,38 +237,38 @@ export function ShippingMap({
           </div>
         ))}
       </div>
-      <div className="mt-6 grid gap-6 @3xl:grid-cols-[1fr_300px]">
-        <div className="overflow-x-auto rounded-3xl border border-contrast-100 bg-[#f9fafd] p-3 @xl:p-4">
-          <ul
-            aria-label={`Delivery time for ${category.name}, by state`}
-            className="grid min-w-[34rem] grid-cols-12 gap-1 @xl:gap-1.5"
-          >
-            {tiles.map((tile) => {
-              const [row, column] = SHIP_STATE_GRID[tile.state] ?? [1, 1];
+      <div className="mt-6 grid gap-6 @3xl:grid-cols-[1fr_300px] @3xl:items-start">
+        {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
+            any width. The duration label appears once a tile is wide enough to hold it. */}
+        <ul
+          aria-label={`Delivery time for ${category.name}, by state`}
+          className="grid grid-cols-12 gap-1 @md:gap-1.5 @3xl:gap-2"
+        >
+          {tiles.map((tile) => {
+            const [row, column] = SHIP_STATE_GRID[tile.state] ?? [1, 1];
 
-              return (
-                <li
-                  className={clsx(
-                    'relative flex aspect-square items-center justify-center rounded-md border border-contrast-200 pb-2 text-[11px] font-bold @xl:text-xs',
-                    BAND_CLASS[tile.band],
-                  )}
-                  key={tile.state}
-                  style={{ gridRow: row, gridColumn: column }}
-                  title={tile.detail}
+            return (
+              <li
+                className={clsx(
+                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[11px] @xl:rounded-lg @xl:pb-2 @xl:text-xs',
+                  tileClass[tile.band],
+                )}
+                key={tile.state}
+                style={{ gridRow: row, gridColumn: column }}
+                title={tile.detail}
+              >
+                <span aria-hidden>{tile.state}</span>
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0.5 hidden truncate text-center text-[8px] font-semibold @xl:block @xl:text-[9px]"
                 >
-                  <span aria-hidden>{tile.state}</span>
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0.5 truncate text-center text-[8px] font-semibold @xl:text-[9px]"
-                  >
-                    {tile.label}
-                  </span>
-                  <span className="sr-only">{tile.detail}</span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+                  {tile.label}
+                </span>
+                <span className="sr-only">{tile.detail}</span>
+              </li>
+            );
+          })}
+        </ul>
         <Panel category={category} />
       </div>
       <p className="mt-3 text-xs text-contrast-500">

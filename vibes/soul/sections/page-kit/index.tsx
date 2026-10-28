@@ -116,17 +116,37 @@ export function RedBox({
   kicker,
   title,
   children,
+  media,
   className,
 }: {
   kicker?: string;
   title?: string;
   children: ReactNode;
+  /** A photo (or its placeholder) in the right 30% of the panel, the copy in the left 70%. */
+  media?: { image?: PageImage; imageLabel?: string };
   className?: string;
 }) {
+  const copy = (
+    <>
+      {(Boolean(kicker) || Boolean(title)) && (
+        <div className={clsx('max-w-3xl', media ? 'mb-4' : 'mb-6 @4xl:mb-8')}>
+          {Boolean(kicker) && (
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
+              {kicker}
+            </p>
+          )}
+          {Boolean(title) && <h2 className={homeHeadingClassName}>{title}</h2>}
+        </div>
+      )}
+      {children}
+    </>
+  );
+
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-3xl bg-[#9f3632] px-6 py-10 text-white @xl:px-12 @xl:py-14',
+        'relative overflow-hidden rounded-3xl bg-[#9f3632] text-white',
+        media ? 'p-5 @xl:p-6' : 'px-6 py-10 @xl:px-12 @xl:py-14',
         className,
       )}
     >
@@ -134,19 +154,26 @@ export function RedBox({
         aria-hidden
         className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white opacity-10 blur-3xl"
       />
-      <div className="relative">
-        {(Boolean(kicker) || Boolean(title)) && (
-          <div className="mb-6 max-w-3xl @4xl:mb-8">
-            {Boolean(kicker) && (
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white/85">
-                {kicker}
-              </p>
+      {media ? (
+        <div className="relative grid gap-6 @3xl:grid-cols-[7fr_3fr] @3xl:items-center">
+          <div className="px-1 py-4 @xl:px-6 @xl:py-6">{copy}</div>
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[14rem] @3xl:self-stretch">
+            {media.image ? (
+              <Image
+                alt={media.image.alt}
+                className="object-cover"
+                fill
+                sizes="(min-width: 56rem) 30vw, 100vw"
+                src={media.image.src}
+              />
+            ) : (
+              <MediaPlaceholder label={media.imageLabel ?? 'Photo'} />
             )}
-            {Boolean(title) && <h2 className={homeHeadingClassName}>{title}</h2>}
           </div>
-        )}
-        {children}
-      </div>
+        </div>
+      ) : (
+        <div className="relative">{copy}</div>
+      )}
     </div>
   );
 }

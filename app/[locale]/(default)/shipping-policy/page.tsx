@@ -8,7 +8,13 @@ import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { FinePrint, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import {
+  Actions,
+  FinePrint,
+  PageBreadcrumbs,
+  PageHero,
+  RedBox,
+} from '@/vibes/soul/sections/page-kit';
 import { ShippingMap } from '@/vibes/soul/sections/shipping-map';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -76,26 +82,31 @@ export default async function ShippingPolicy({ params }: { params: Promise<{ loc
           { icon: 'tag', label: 'Ships to the 48 contiguous states' },
         ]}
       />
-      <HomeSection compact>
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-contrast-100 bg-[#f9fafd] px-6 py-5">
-          <p className="text-sm @xl:text-base">
-            <strong className="font-semibold">Free shipping on all orders over $2,500.</strong>{' '}
-            <span className="text-contrast-500">Conditions apply; the details are below.</span>
-          </p>
-          <ButtonLink href="#cost" shape="pill" size="small" variant="secondary">
-            See what qualifies
-          </ButtonLink>
-        </div>
-      </HomeSection>
       <DeliveryLadder
+        className="bg-[#fdf3f5]"
         columns={['Category', 'Ships in', 'Delivery']}
         description="Each product ships in the time shown, then spends 7–10 days in transit, depending on how far you are from Connecticut. If something is out of stock, we'll tell you, and you choose whether to ship the rest now, wait for everything together, or swap."
         footnote="Ship times are per collection. Transit times are estimates."
         look="minimal"
         rows={SHIP_ROWS}
-        tint
         title="How you get each thing"
       />
+      <HomeSection compact>
+        <RedBox
+          kicker="Free shipping"
+          media={{ imageLabel: 'A pallet of cabinets on the way' }}
+          title="Free shipping on all orders over $2,500"
+        >
+          <p className="max-w-xl text-sm leading-relaxed text-white/85 @xl:text-base">
+            Conditions apply; the details are below.
+          </p>
+          <Actions
+            actions={[{ label: 'See what qualifies', href: '#cost', primary: true }]}
+            className="mt-6"
+            onRed
+          />
+        </RedBox>
+      </HomeSection>
       <ShippingMap
         description="Transit takes about 7 days near Connecticut, and up to 10 farther away, after your order ships."
         title="Pick what you're buying to see when it could arrive"

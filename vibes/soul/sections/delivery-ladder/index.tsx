@@ -103,7 +103,7 @@ export function DeliveryLadder({
       )}
 
       {footnote != null && (
-        <p className="mt-5 max-w-3xl text-xs leading-relaxed text-contrast-400 [&_a]:underline [&_a]:underline-offset-2">
+        <p className="mt-5 max-w-3xl text-xs leading-relaxed text-contrast-500 [&_a]:underline [&_a]:underline-offset-2">
           {footnote}
         </p>
       )}
