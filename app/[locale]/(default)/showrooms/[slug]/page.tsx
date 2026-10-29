@@ -107,6 +107,7 @@ export default async function ShowroomPage({ params }: Props) {
             ? [{ icon: 'store' as const, label: 'Factory Outlet here too' }]
             : []),
         ]}
+        promisesLayout="row"
         tall
         title={`Your kitchen starts in ${showroom.name}`}
         tone="deep-red"

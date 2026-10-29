@@ -59,6 +59,8 @@ interface HeroProps {
   promises?: Array<{ icon: keyof typeof POINT_ICONS; label: string }>;
   /** A link at the end of the promises row (e.g. "See how they're built"). */
   promisesAction?: { label: string; href: string };
+  /** 'columns' (default) stacks the promises in two columns; 'row' runs them along one line. */
+  promisesLayout?: 'columns' | 'row';
   className?: string;
 }
 
@@ -87,6 +89,64 @@ const POINT_ICONS = {
   store: Store,
 };
 
+interface HeroPromise {
+  icon: keyof typeof POINT_ICONS;
+  label: string;
+}
+
+// The promises in the panel: two stacked columns (3 + 2) with the link in a narrower third
+// column at the right, the columns wrapping under each other on phones; or one wrapping row.
+function HeroPromises({
+  promises,
+  action,
+  layout,
+}: {
+  promises: HeroPromise[];
+  action?: { label: string; href: string };
+  layout: 'columns' | 'row';
+}) {
+  const row = layout === 'row';
+  const columns = row
+    ? [promises]
+    : [
+        promises.slice(0, Math.ceil(promises.length / 2)),
+        promises.slice(Math.ceil(promises.length / 2)),
+      ];
+
+  return (
+    <div
+      className={clsx(
+        'mt-12 gap-x-8 gap-y-4 text-xs font-medium text-white @xl:mt-14',
+        row ? 'flex flex-wrap items-start' : 'grid @md:grid-cols-[auto_auto_1fr] @md:items-start',
+      )}
+    >
+      {columns.map((column, index) => (
+        <ul className={clsx('flex gap-2.5', row ? 'flex-wrap gap-x-6' : 'flex-col')} key={index}>
+          {column.map((point) => {
+            const Icon = POINT_ICONS[point.icon];
+
+            return (
+              <li className="inline-flex items-center gap-2" key={point.label}>
+                <Icon aria-hidden size={16} strokeWidth={1.75} />
+                {point.label}
+              </li>
+            );
+          })}
+        </ul>
+      ))}
+      {action != null && (
+        <a
+          className="inline-flex items-center gap-1 self-start font-semibold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white @md:self-end @md:justify-self-end"
+          href={action.href}
+        >
+          {action.label}
+          <ArrowDown size={14} strokeWidth={2.25} />
+        </a>
+      )}
+    </div>
+  );
+}
+
 // Category page header, 50 / 50: the headline and one paragraph on a black panel, the category
 // photo beside it. Same rounded panel as the home hero. Stacks on narrow screens (text first).
 // Top-level categories sit on the brand red; subcategories get the compact version: shorter,
@@ -105,6 +165,7 @@ export function CategoryHero({
   tall = false,
   promises = [],
   promisesAction,
+  promisesLayout = 'columns',
   className,
 }: HeroProps) {
   return (
@@ -150,36 +211,7 @@ export function CategoryHero({
               </p>
             )}
             {promises.length > 0 && (
-              // The promises in the panel as two stacked columns (3 + 2), with the link in a
-              // narrower third column at the right; the columns wrap under each other on phones.
-              <div className="mt-12 grid gap-x-8 gap-y-4 text-xs font-medium text-white @md:grid-cols-[auto_auto_1fr] @md:items-start @xl:mt-14">
-                {[
-                  promises.slice(0, Math.ceil(promises.length / 2)),
-                  promises.slice(Math.ceil(promises.length / 2)),
-                ].map((column, index) => (
-                  <ul className="flex flex-col gap-2.5" key={index}>
-                    {column.map((point) => {
-                      const Icon = POINT_ICONS[point.icon];
-
-                      return (
-                        <li className="inline-flex items-center gap-2" key={point.label}>
-                          <Icon aria-hidden size={16} strokeWidth={1.75} />
-                          {point.label}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ))}
-                {promisesAction != null && (
-                  <a
-                    className="inline-flex items-center gap-1 self-start font-semibold text-white underline decoration-white/50 underline-offset-4 transition-colors hover:decoration-white @md:self-end @md:justify-self-end"
-                    href={promisesAction.href}
-                  >
-                    {promisesAction.label}
-                    <ArrowDown size={14} strokeWidth={2.25} />
-                  </a>
-                )}
-              </div>
+              <HeroPromises action={promisesAction} layout={promisesLayout} promises={promises} />
             )}
             {actions.length > 0 && (
               <div className={clsx('flex flex-wrap gap-3', compact ? 'mt-4' : 'mt-6')}>
