@@ -212,7 +212,7 @@ function ProjectManagerCard({
 
   return (
     <div className="group/card flex flex-col overflow-hidden rounded-3xl bg-[#151515] text-white @3xl:h-full @3xl:min-h-0">
-      <div className="relative aspect-square bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[16rem] @3xl:flex-1">
+      <div className="relative aspect-square overflow-hidden bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[16rem] @3xl:flex-1">
         {pm.photo ? (
           <Image
             alt={pm.photo.alt}
