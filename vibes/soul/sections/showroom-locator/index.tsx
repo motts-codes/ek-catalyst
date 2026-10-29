@@ -209,7 +209,7 @@ export function ShowroomLocator({
         {/* The list: a row you can swipe through on phones, a column that scrolls on desktop. */}
         <ol
           aria-label="Our showrooms"
-          className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 @3xl:mx-0 @3xl:h-full @3xl:flex-col @3xl:overflow-y-auto @3xl:px-0 @3xl:pb-0 @3xl:pr-1"
+          className="-mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 @3xl:mx-0 @3xl:h-full @3xl:flex-col @3xl:overflow-y-auto @3xl:px-0 @3xl:pb-0 @3xl:pr-1"
         >
           {showrooms.map((showroom) => {
             const isActive = showroom.slug === active;
@@ -219,7 +219,7 @@ export function ShowroomLocator({
               // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events -- the name is a button that does the same for keyboards
               <li
                 className={clsx(
-                  'w-[18rem] shrink-0 snap-start rounded-3xl border p-5 transition-colors @3xl:w-auto',
+                  'w-[18rem] shrink-0 snap-start rounded-2xl border px-4 py-3.5 transition-colors @3xl:w-auto',
                   // Chosen: the deep brand red (#9F3632) with white copy, 6.9:1.
                   isActive
                     ? 'border-[#9f3632] bg-[#9f3632] text-white'
@@ -235,51 +235,46 @@ export function ShowroomLocator({
                   cardNodes.current[showroom.slug] = node;
                 }}
               >
-                <p
-                  className={clsx(
-                    'text-[11px] font-semibold uppercase tracking-wide',
-                    isActive ? 'text-white/85' : 'text-contrast-500',
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="font-heading text-lg font-bold leading-tight">
+                    <button
+                      aria-pressed={isActive}
+                      className={clsx(
+                        'text-left focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2',
+                        isActive
+                          ? 'text-white focus-visible:ring-white focus-visible:ring-offset-[#9f3632]'
+                          : 'text-[var(--button-primary-background,#d90716)] focus-visible:ring-[var(--button-primary-background,#d90716)]',
+                      )}
+                      onClick={() => setActive(showroom.slug)}
+                      type="button"
+                    >
+                      {showroom.name}
+                    </button>
+                  </h3>
+                  {Boolean(status[showroom.slug]) && (
+                    <p
+                      className={clsx(
+                        // Wraps to two lines in a narrow card rather than spilling out of it.
+                        'flex max-w-[58%] items-start gap-1.5 pt-1 text-right text-[11px] font-medium leading-tight',
+                        isActive ? 'text-white/85' : 'text-contrast-500',
+                      )}
+                    >
+                      <span
+                        aria-hidden
+                        className={clsx('mt-[3px] inline-block h-2 w-2 shrink-0 rounded-full', {
+                          'bg-[#1a7f37]': status[showroom.slug]?.open && !isActive,
+                          'bg-[#7ee2a0]': status[showroom.slug]?.open && isActive,
+                          'bg-contrast-400': !status[showroom.slug]?.open && !isActive,
+                          'bg-white/60': !status[showroom.slug]?.open && isActive,
+                        })}
+                      />
+                      {status[showroom.slug]?.label}
+                    </p>
                   )}
-                >
-                  Showroom
-                </p>
-                <h3 className="mt-1 font-heading text-lg font-bold leading-tight">
-                  <button
-                    aria-pressed={isActive}
-                    className={clsx(
-                      'text-left focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2',
-                      isActive
-                        ? 'text-white focus-visible:ring-white focus-visible:ring-offset-[#9f3632]'
-                        : 'text-[var(--button-primary-background,#d90716)] focus-visible:ring-[var(--button-primary-background,#d90716)]',
-                    )}
-                    onClick={() => setActive(showroom.slug)}
-                    type="button"
-                  >
-                    {showroom.name}
-                  </button>
-                </h3>
-                {Boolean(status[showroom.slug]) && (
-                  <p
-                    className={clsx(
-                      'mt-2 flex items-center gap-2 text-xs font-semibold',
-                      isActive ? 'text-white' : 'text-foreground',
-                    )}
-                  >
-                    <span
-                      aria-hidden
-                      className={clsx('inline-block h-2 w-2 rounded-full', {
-                        'bg-[#1a7f37]': status[showroom.slug]?.open && !isActive,
-                        'bg-[#7ee2a0]': status[showroom.slug]?.open && isActive,
-                        'bg-contrast-400': !status[showroom.slug]?.open && !isActive,
-                        'bg-white/60': !status[showroom.slug]?.open && isActive,
-                      })}
-                    />
-                    {status[showroom.slug]?.label}
-                  </p>
-                )}
+                </div>
                 <ul
                   className={clsx(
-                    'mt-3 space-y-2 text-sm',
+                    'mt-2 space-y-1 text-sm',
                     isActive ? 'text-white/85' : 'text-contrast-500',
                   )}
                 >
@@ -313,21 +308,17 @@ export function ShowroomLocator({
                 </ul>
                 <div
                   className={clsx(
-                    'mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold',
-                    isActive ? 'text-white' : 'text-foreground',
+                    // Links sit plain; a red underline (white on the red card) appears on hover.
+                    'mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold [&_a:hover]:underline [&_a]:underline-offset-4',
+                    isActive
+                      ? 'text-white [&_a:hover]:decoration-white'
+                      : 'text-foreground [&_a:hover]:decoration-[var(--button-primary-background,#d90716)]',
                   )}
                 >
-                  <a
-                    className="underline underline-offset-4"
-                    href={directionsHref(showroom.address)}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
+                  <a href={directionsHref(showroom.address)} rel="noreferrer" target="_blank">
                     Get directions
                   </a>
-                  <Link className="underline underline-offset-4" href={showroomHref(showroom.slug)}>
-                    Showroom page
-                  </Link>
+                  <Link href={showroomHref(showroom.slug)}>Showroom page</Link>
                 </div>
               </li>
             );

@@ -309,39 +309,20 @@ const shortTime = (minutes: number) => {
 
 export interface OpenStatus {
   open: boolean;
-  /** "Open now, until 6 PM" or "Closed now, opens Tuesday at 9 AM". */
+  /** "Open until 6 PM", "Opens 9 AM" (later today), or "Closed" on a day it doesn't open. */
   label: string;
 }
 
-// Whether a showroom is open at `now`, with a line to print. Eastern time, from the hours table;
-// holidays are not known here.
+// Whether a showroom is open at `now`, with a short line to print. Eastern time, from the hours
+// table. Holidays are not known here, so a closed day just reads "Closed", never an opening time.
 export function openStatus(hours: Hours[], now: Date = new Date()): OpenStatus {
   const windows = windowsOf(hours);
   const { day, minutes } = easternNow(now);
   const today = windows[day];
 
-  if (today && minutes >= today.open && minutes < today.close) {
-    return { open: true, label: `Open now, until ${shortTime(today.close)}` };
-  }
-
-  const whenLabel = (ahead: number) => {
-    if (ahead === 0) return 'today';
-    if (ahead === 1) return 'tomorrow';
-
-    return DAY_NAMES[(day + ahead) % 7] ?? '';
-  };
-
-  for (let ahead = 0; ahead < 7; ahead += 1) {
-    const candidate = windows[(day + ahead) % 7];
-    const stillToCome = candidate != null && (ahead > 0 || minutes < candidate.close);
-
-    if (candidate && stillToCome) {
-      return {
-        open: false,
-        label: `Closed now, opens ${whenLabel(ahead)} at ${shortTime(candidate.open)}`,
-      };
-    }
-  }
+  if (!today) return { open: false, label: 'Closed' };
+  if (minutes < today.open) return { open: false, label: `Opens ${shortTime(today.open)}` };
+  if (minutes < today.close) return { open: true, label: `Open until ${shortTime(today.close)}` };
 
   return { open: false, label: 'Closed' };
 }
