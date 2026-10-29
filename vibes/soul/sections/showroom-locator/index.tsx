@@ -275,7 +275,7 @@ export function ShowroomLocator({
                 </div>
                 <ul
                   className={clsx(
-                    'mt-2 space-y-1 text-sm',
+                    'mt-2 space-y-1 text-[13px]',
                     isActive ? 'text-white/85' : 'text-contrast-500',
                   )}
                 >
@@ -311,7 +311,7 @@ export function ShowroomLocator({
                   className={clsx(
                     // Links sit plain; the site's growing underline (as on the breadcrumbs)
                     // appears on hover: red, or white on the red card.
-                    'mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold',
+                    'mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[13px] font-semibold',
                     isActive
                       ? 'text-white [--animated-underline-hover:white] [&_a:hover]:!text-white'
                       : 'text-foreground',
