@@ -4,7 +4,7 @@ import { type SpotlightReview } from '@/vibes/soul/sections/review-spotlight';
 // shop-assembled-cabinets-lp, Oct 2026), photos and all. The quotes are the page's excerpts.
 export const SPOTLIGHT_REVIEWS: SpotlightReview[] = [
   {
-    name: 'Elizabeth Masalin',
+    name: 'Elizabeth M.',
     stars: 5,
     headline: 'Exactly what I wanted!',
     quote:
@@ -15,7 +15,7 @@ export const SPOTLIGHT_REVIEWS: SpotlightReview[] = [
     },
   },
   {
-    name: 'Lauren Fuller',
+    name: 'Lauren F.',
     stars: 5,
     headline: 'Collaboration was amazing',
     quote:
@@ -23,7 +23,7 @@ export const SPOTLIGHT_REVIEWS: SpotlightReview[] = [
     image: { src: '/images/pages/reviews/spotlight-lauren.jpg', alt: 'Lauren, in her kitchen' },
   },
   {
-    name: 'Uncle Brad',
+    name: 'Brad',
     stars: 5,
     headline: 'Top-notch customer service',
     quote:
@@ -34,7 +34,7 @@ export const SPOTLIGHT_REVIEWS: SpotlightReview[] = [
     },
   },
   {
-    name: 'Maria Santos',
+    name: 'Maria S.',
     stars: 5,
     headline: 'Dream kitchen delivered!',
     quote:
@@ -42,7 +42,7 @@ export const SPOTLIGHT_REVIEWS: SpotlightReview[] = [
     image: { src: '/images/pages/reviews/spotlight-maria.jpg', alt: 'Maria, in her kitchen' },
   },
   {
-    name: 'James Thornton',
+    name: 'James T.',
     stars: 5,
     headline: 'Worth every penny',
     quote:
