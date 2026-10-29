@@ -86,7 +86,7 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
       />
       <Prose
         actions={[
-          { label: 'Book a video consult', href: FREE_DESIGN_HREF, primary: true },
+          { label: 'Book a free design consult', href: FREE_DESIGN_HREF, primary: true },
           { label: 'Order a sample door', href: SAMPLES_HREF, style: 'outline' },
         ]}
         body={[
