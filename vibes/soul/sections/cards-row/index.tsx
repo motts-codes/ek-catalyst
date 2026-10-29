@@ -41,7 +41,7 @@ interface Props {
   tone?: 'default' | 'red';
   /** `red`: each card is a deep-red panel with white copy (the "ek red box" look). */
   cardTone?: 'default' | 'red';
-  /** A thin brand-red hairline around each white card instead of the grey one. */
+  /** A thin brand-red hairline at half opacity around each white card instead of the grey one. */
   cardBorder?: 'default' | 'red';
   className?: string;
 }
@@ -77,7 +77,7 @@ export function CardsRow({
         'overflow-hidden rounded-3xl border transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
         redCard && 'border-transparent bg-[#9f3632]',
         !redCard && cardBorder === 'red'
-          ? 'border-[0.5px] border-[var(--button-primary-background,#d90716)] bg-white'
+          ? 'border-[0.5px] border-[#d90716]/50 bg-white'
           : !redCard && 'border-contrast-100 bg-white',
       );
 
