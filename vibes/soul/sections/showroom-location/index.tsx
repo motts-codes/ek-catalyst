@@ -90,7 +90,7 @@ function Box({
     <div
       className={clsx(
         'rounded-3xl p-6 @xl:p-7',
-        red ? 'bg-[#9f3632] text-white' : 'bg-[#f6ebd6] text-foreground',
+        red ? 'bg-[#9f3632] text-white' : 'bg-[#f6ebd6]/30 text-foreground',
       )}
     >
       <h2 className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.14em]">
@@ -133,16 +133,27 @@ function Rows({ rows, onRed = false }: { rows: Array<[string, ReactNode]>; onRed
   );
 }
 
+// The chip on today's row: "Open now", "Opens 9 AM" before the doors open, else "Closed now".
+function chipLabel(today: { open: boolean; label: string } | null): string {
+  if (today == null) return 'Today';
+  if (today.open) return 'Open now';
+  if (today.label.startsWith('Opens')) return today.label;
+
+  return 'Closed now';
+}
+
 // Seven rows, Monday first. Today is marked once the page is on the client (the day depends on
 // the clock in Connecticut, so the server renders no mark and the browser adds it).
 function HoursTable({ showroom }: { showroom: Showroom }) {
-  const [today, setToday] = useState<{ day: number; open: boolean } | null>(null);
+  const [today, setToday] = useState<{ day: number; open: boolean; label: string } | null>(null);
 
   useEffect(() => {
     const update = () => {
       const now = new Date();
 
-      setToday({ day: easternDay(now), open: openStatus(showroom.hours, now).open });
+      const status = openStatus(showroom.hours, now);
+
+      setToday({ day: easternDay(now), open: status.open, label: status.label });
     };
 
     update();
@@ -181,7 +192,7 @@ function HoursTable({ showroom }: { showroom: Showroom }) {
                       : 'border-contrast-200 bg-white text-contrast-500',
                   )}
                 >
-                  {openNow ? 'Open now' : 'Today'}
+                  {chipLabel(today)}
                 </span>
               )}
             </dt>

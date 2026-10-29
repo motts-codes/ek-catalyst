@@ -8,12 +8,14 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { ProjectManagerPanel } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
+import { SeoProse } from '@/vibes/soul/sections/seo-prose';
 import { ShowroomLocation } from '@/vibes/soul/sections/showroom-location';
 import { HOME_REVIEWS } from '~/lib/home/home-content';
 import {
   directionsHref,
   getShowroom,
   pmFirstName,
+  seoCopy,
   type Showroom,
   SHOWROOMS,
 } from '~/lib/pages/showrooms';
@@ -143,6 +145,7 @@ export default async function ShowroomPage({ params }: Props) {
         primary={{ label: 'Book a visit', href: bookHref }}
         title={`Ready to plan your kitchen in ${showroom.name}?`}
       />
+      <SeoProse {...seoCopy(showroom)} />
     </>
   );
 }

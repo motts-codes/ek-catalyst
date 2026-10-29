@@ -33,6 +33,8 @@ export interface Showroom {
   towns: string[];
   /** A local-landmark line for the "Who we serve" section, e.g. "Visiting Mohegan Sun…?". */
   landmarks?: string;
+  /** The last line of the search copy at the foot of the page (a default is used if absent). */
+  seoClosing?: string;
   /** The lead Project Manager (the one with the profile on the showroom page). */
   pm: ProjectManager;
   /** A second Project Manager at the same showroom, named alongside the first. */
@@ -113,6 +115,8 @@ export const SHOWROOMS: Showroom[] = [
     ],
     landmarks:
       'Visiting Mohegan Sun, Foxwoods or the Mystic Aquarium? Stop by and see our kitchens.',
+    seoClosing:
+      'Whether you are visiting the casinos at Mohegan or Foxwoods or exploring the Mystic Aquarium, please stop by our showroom to check out our wide selection of products to make your kitchen beautiful.',
     pm: {
       name: 'Lanaisha Rodrigues',
       role: 'Project Manager & Design Consultant',
@@ -378,3 +382,40 @@ export function weeklyHours(hours: Hours[]): DayHours[] {
 
 // Today's weekday index in Connecticut (0 = Sunday), for marking the row in the hours box.
 export const easternDay = (now: Date = new Date()) => easternNow(now).day;
+
+// ---- Search copy -------------------------------------------------------------------------------
+
+export interface SeoCopy {
+  title: string;
+  intro: string;
+  body: string[];
+}
+
+// "Residents from Groton, CT, Waterford, CT, … and Montville, CT": towns outside Connecticut
+// already carry their state.
+const seoTowns = (towns: string[]) => {
+  const named = towns.map((town) => (town.includes(',') ? town : `${town}, CT`));
+  const last = named.pop();
+
+  return named.length > 0 ? `${named.join(', ')} and ${last ?? ''}` : (last ?? '');
+};
+
+// The search copy at the foot of a showroom page (EK's wording, Oct 2026), with the town, the
+// nearby towns and the closing line filled in per showroom.
+export function seoCopy(showroom: Showroom): SeoCopy {
+  const place = `${showroom.name}, CT`;
+
+  return {
+    title: `Welcome to Express Kitchens for Top-Quality Kitchen Cabinets in ${place}`,
+    intro: `Discover the finest kitchen cabinets, countertops, handles, sinks, faucets, appliances, windows and more in ${place} at Express Kitchens. Our ${showroom.name} store offers a wide range of stylish and durable cabinets designed to enhance your kitchen's functionality and aesthetic appeal. Visit us today to find the perfect cabinets for your dream kitchen.`,
+    body: [
+      `Your ultimate destination for your dream kitchen in ${place}, is Express Kitchens.`,
+      `Your journey for dream kitchens starts at Express Kitchens in ${place}, your premier destination for top-quality kitchen cabinetry and comprehensive kitchen renovation solutions. If you're searching for "kitchen remodel near me," "countertops near me," "appliances near ${place}," "replacement windows," or "kitchen cabinet near me," our ${showroom.name} store offers a wide selection of stylish and durable kitchen cabinets designed to meet all your needs.`,
+      "At Express Kitchens, we specialize in custom cabinets, providing tailored solutions that perfectly fit your space and style. Our expert team is dedicated to helping you create your dream kitchen, whether you're embarking on a full kitchen remodel or simply updating certain elements. Our kitchen cabinets come in various designs and finishes, ensuring you find the perfect match for your home.",
+      'Our custom cabinet shops are dedicated to providing tailored solutions that meet your specific needs and preferences. In addition to our top-notch kitchen cabinets, we provide a wide range of kitchen countertops to complete your renovation. Choose from our stunning quartz countertops, known for their durability and low maintenance, or opt for the timeless beauty and strength of granite countertops. For those seeking a budget-friendly option, our laminate countertops offer excellent functionality and aesthetic appeal.',
+      'Our comprehensive kitchen remodel services also include high-quality kitchen appliances to complement your new cabinets and countertops. From refrigerators and ovens to dishwashers and microwaves, we have everything you need to create a cohesive and efficient kitchen.',
+      "At Express Kitchens, our experienced kitchen designers are also skilled in creating beautiful and functional bathroom spaces. We offer a wide range of options, including custom vanities, countertops, and cabinetry, all designed to fit your unique style and needs. Whether you're looking for a complete bathroom makeover or simply updating certain elements, our team will work closely with you to bring your vision to life.",
+      `Residents from ${seoTowns(showroom.towns)}, are all within easy reach of our showroom. ${showroom.seoClosing ?? 'Please stop by our showroom to check out our wide selection of products to make your kitchen beautiful.'}`,
+    ],
+  };
+}
