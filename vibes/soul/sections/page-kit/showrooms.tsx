@@ -1,12 +1,13 @@
+import { clsx } from 'clsx';
 import { CalendarDays, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { OUTLINE_BUTTON } from '@/vibes/soul/sections/page-kit';
+import { StepsTimeline } from '@/vibes/soul/sections/page-kit/steps-timeline';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import {
-  compactHours,
   directionsHref,
   pmFirstName,
   type ProjectManager,
@@ -147,18 +148,27 @@ export function ProjectManagerPanel({
   const team = [pm, showroom.secondPm].filter((p): p is ProjectManager => p != null);
 
   return (
-    <HomeSection kicker="Your Project Manager" title={`Meet ${pm.name}`}>
-      <div className="grid gap-8 @3xl:grid-cols-[1fr_1.4fr] @3xl:gap-14">
-        <div className="grid gap-5">
-          {team.map((member) => (
-            <ProjectManagerCard
-              bookHref={bookHref}
-              key={member.name}
-              pm={member}
-              showroom={showroom}
-            />
-          ))}
-        </div>
+    <HomeSection
+      kicker={team.length > 1 ? 'Your Project Managers' : 'Your Project Manager'}
+      title={`Meet ${team.map((member) => member.name).join(' and ')}`}
+    >
+      <div
+        className={clsx(
+          'grid gap-8 @3xl:items-stretch @3xl:gap-14',
+          // On desktop the cards share the height of the copy beside them: the photo gives way.
+          team.length > 1
+            ? '@3xl:grid-cols-[1fr_1fr_1.2fr] @3xl:gap-8'
+            : '@3xl:grid-cols-[1fr_1.4fr]',
+        )}
+      >
+        {team.map((member) => (
+          <ProjectManagerCard
+            bookHref={bookHref}
+            key={member.name}
+            pm={member}
+            showroom={showroom}
+          />
+        ))}
         <div>
           {Boolean(pm.intro) && (
             <p className="font-heading text-xl font-semibold leading-snug @xl:text-2xl">
@@ -175,21 +185,7 @@ export function ProjectManagerPanel({
             </p>
           )}
           {pm.steps != null && pm.steps.length > 0 && (
-            <ol className="mt-7 space-y-4">
-              {pm.steps.map((step, index) => (
-                <li className="flex gap-4" key={step.title}>
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--button-primary-background,#d90716)] text-sm font-bold text-white">
-                    {index + 1}
-                  </span>
-                  <div>
-                    <p className="font-semibold">{step.title}</p>
-                    <p className="mt-0.5 text-sm leading-relaxed text-contrast-500">
-                      {step.description}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <StepsTimeline className="mt-8" steps={pm.steps} />
           )}
           {Boolean(pm.offDuty) && (
             <p className="mt-6 text-sm italic leading-relaxed text-contrast-500">{pm.offDuty}</p>
@@ -201,7 +197,8 @@ export function ProjectManagerPanel({
 }
 
 // The dark card: square portrait with the team badge, name and role, a full-width booking
-// button, then email, hours and address in an inset box.
+// button, then email and direct line. On desktop those unfold over the foot of the photo when
+// the card is hovered or anything in it has focus; on phones they sit under the button.
 function ProjectManagerCard({
   pm,
   showroom,
@@ -212,17 +209,14 @@ function ProjectManagerCard({
   bookHref: string;
 }) {
   const firstName = pmFirstName(pm);
-  // "254 South Frontage Road, New London CT": the street and town, no zip.
-  const [street = '', town = ''] = showroom.address.split(',').map((part) => part.trim());
-  const shortAddress = `${street}, ${town.replace(/\s+\d{5}$/, '')} CT`;
 
   return (
-    <div className="overflow-hidden rounded-3xl bg-[#151515] text-white">
-      <div className="relative aspect-square bg-contrast-100">
+    <div className="group/card flex flex-col overflow-hidden rounded-3xl bg-[#151515] text-white @3xl:h-full @3xl:min-h-0">
+      <div className="relative aspect-square bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[16rem] @3xl:flex-1">
         {pm.photo ? (
           <Image
             alt={pm.photo.alt}
-            className="object-cover"
+            className="object-cover object-[center_20%]"
             fill
             sizes="(min-width: 56rem) 33vw, 100vw"
             src={pm.photo.src}
@@ -233,6 +227,9 @@ function ProjectManagerCard({
         <span className="absolute bottom-4 left-4 rounded-lg bg-[var(--button-primary-background,#d90716)] px-3.5 py-1.5 text-sm font-semibold">
           {showroom.name} Team
         </span>
+        <div className="absolute inset-x-0 bottom-0 hidden translate-y-full bg-[#151515]/90 p-5 backdrop-blur-sm transition-transform duration-300 ease-out group-focus-within/card:translate-y-0 group-hover/card:translate-y-0 @3xl:block motion-reduce:transition-none">
+          <ContactRows pm={pm} />
+        </div>
       </div>
       <div className="p-6 @xl:p-7">
         <h3 className="font-heading text-2xl font-bold leading-tight">{pm.name}</h3>
@@ -250,36 +247,38 @@ function ProjectManagerCard({
           <CalendarDays aria-hidden size={18} strokeWidth={2} />
           Book with {firstName}
         </Link>
-        <dl className="mt-4 space-y-4 rounded-2xl bg-white/[0.07] p-5">
-          {Boolean(pm.email) && (
-            <CardRow icon={<Mail aria-hidden size={15} />} label="Email">
-              <a
-                className="break-all text-[#fcb6bb] underline-offset-4 hover:underline"
-                href={`mailto:${pm.email}`}
-              >
-                {pm.email}
-              </a>
-            </CardRow>
-          )}
-          {Boolean(pm.phone) && (
-            <CardRow icon={<Phone aria-hidden size={15} />} label="Direct line">
-              <a
-                className="underline-offset-4 hover:underline"
-                href={`tel:${(pm.phone ?? '').replace(/\D/g, '')}`}
-              >
-                {pm.phone}
-              </a>
-            </CardRow>
-          )}
-          <CardRow icon={<Clock aria-hidden size={15} />} label="Hours">
-            {compactHours(showroom.hours)}
-          </CardRow>
-          <CardRow icon={<MapPin aria-hidden size={15} />} label="Location">
-            {shortAddress}
-          </CardRow>
-        </dl>
+        <div className="mt-4 rounded-2xl bg-white/[0.07] p-5 @3xl:hidden">
+          <ContactRows pm={pm} />
+        </div>
       </div>
     </div>
+  );
+}
+
+function ContactRows({ pm }: { pm: ProjectManager }) {
+  return (
+    <dl className="space-y-4">
+      {Boolean(pm.email) && (
+        <CardRow icon={<Mail aria-hidden size={15} />} label="Email">
+          <a
+            className="break-all text-[#fcb6bb] underline-offset-4 hover:underline"
+            href={`mailto:${pm.email}`}
+          >
+            {pm.email}
+          </a>
+        </CardRow>
+      )}
+      {Boolean(pm.phone) && (
+        <CardRow icon={<Phone aria-hidden size={15} />} label="Direct line">
+          <a
+            className="underline-offset-4 hover:underline"
+            href={`tel:${(pm.phone ?? '').replace(/\D/g, '')}`}
+          >
+            {pm.phone}
+          </a>
+        </CardRow>
+      )}
+    </dl>
   );
 }
 

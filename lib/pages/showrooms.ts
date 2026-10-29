@@ -374,28 +374,3 @@ export function weeklyHours(hours: Hours[]): DayHours[] {
 
 // Today's weekday index in Connecticut (0 = Sunday), for marking the row in the hours box.
 export const easternDay = (now: Date = new Date()) => easternNow(now).day;
-
-// "Tuesday – Saturday, 9:00 AM – 6:00 PM" → "Tue–Sat 9–6", for the Project Manager card.
-export function compactHours(hours: Hours[]): string {
-  const row = hours.find((h) => !/closed/i.test(h.time));
-
-  if (!row) return '';
-
-  const days = row.days
-    .split(/\s[–-]\s/)
-    .map((d) => d.trim().slice(0, 3))
-    .join('–');
-  const [openAt, closeAt] = row.time.split(/\s[–-]\s/);
-  const hour = (t = '') => {
-    const minutes = minutesOf(t);
-
-    if (Number.isNaN(minutes)) return t;
-
-    const h = Math.floor(minutes / 60) % 12 || 12;
-    const m = minutes % 60;
-
-    return `${h}${m ? `:${String(m).padStart(2, '0')}` : ''}`;
-  };
-
-  return `${days} ${hour(openAt)}–${hour(closeAt)}`;
-}
