@@ -4,8 +4,10 @@ import { setRequestLocale } from 'next-intl/server';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
+import { ReviewSpotlight } from '@/vibes/soul/sections/review-spotlight';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
+import { SPOTLIGHT_REVIEWS } from '~/lib/pages/reviews';
 
 export const metadata: Metadata = {
   title: 'Customer Reviews',
@@ -49,6 +51,12 @@ export default async function Reviews({ params }: { params: Promise<{ locale: st
           { icon: 'pin', value: '6', label: 'Showrooms to visit' },
           { icon: 'shield', value: 'A+', label: 'BBB rating' },
         ]}
+      />
+      <ReviewSpotlight
+        actions={[
+          { label: 'Shop best-selling cabinets', href: '/inspiration/best-sellers', primary: true },
+        ]}
+        reviews={SPOTLIGHT_REVIEWS}
       />
       <ReviewMarquee reviews={HOME_REVIEWS} summary="4.5 · 360+ Google reviews" />
       <ClosingBand
