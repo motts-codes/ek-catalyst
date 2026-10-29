@@ -51,6 +51,7 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
         tone="deep-red"
       />
       <CardsRow
+        cardBorder="red"
         cards={[
           {
             icon: ClipboardList,
