@@ -1,21 +1,41 @@
 import { clsx } from 'clsx';
+import {
+  ArrowRight,
+  Calculator,
+  CalendarDays,
+  ClipboardCheck,
+  FileText,
+  type LucideIcon,
+  MapPin,
+  MessageSquare,
+  Phone,
+  Send,
+  ShoppingBag,
+} from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { homeHeadingClassName, HomeSection } from '@/vibes/soul/sections/home-section';
 
 import { ShowroomSelect } from './showroom-select';
 
+interface Action {
+  label: string;
+  href: string;
+  /** The icon before the label; picked from the label when not given. */
+  icon?: LucideIcon;
+}
+
 interface Props {
   /** Small eyebrow above the heading (white, since the band is red). */
   kicker?: string;
   title?: string;
   description?: string;
-  primary?: { label: string; href: string };
+  primary?: Action;
   /** Optional second button between the primary and the phone (e.g. "Visit the factory outlet"). */
-  secondary?: { label: string; href: string };
+  secondary?: Action;
   showrooms?: Array<{ name: string; href: string }>;
   /** The call button; null hides it (a band with just the two buttons). */
-  phone?: { label: string; href: string } | null;
+  phone?: Action | null;
   tint?: boolean;
   className?: string;
 }
@@ -24,6 +44,40 @@ interface Props {
 // the panel's red text on hover.
 const outlineButtonClassName =
   'transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:rgb(255_255_255/0.3)] [--button-ghost-text:white] hover:[--button-ghost-border:white] hover:[--button-ghost-text:#9f3632] focus-visible:ring-white focus-visible:ring-offset-[#9f3632]';
+
+// Every button carries an icon. Pages can name one; otherwise it follows the label: a phone for
+// calls, a calendar for bookings, a pin for showrooms, and so on.
+function iconFor({ label, href, icon }: Action): LucideIcon {
+  if (icon) return icon;
+
+  const text = label.toLowerCase();
+
+  if (href.startsWith('tel:') || text.startsWith('call')) return Phone;
+  if (/book|consult|design|appointment/.test(text)) return CalendarDays;
+  if (/showroom|visit|outlet|find/.test(text)) return MapPin;
+  if (/measurement|send/.test(text)) return Send;
+  if (/message|talk|contact/.test(text)) return MessageSquare;
+  if (/price|cost|estimate/.test(text)) return Calculator;
+  if (text.includes('claim')) return ClipboardCheck;
+  if (/warranty|read|guide/.test(text)) return FileText;
+  if (/shop|browse|cabinet|clearance/.test(text)) return ShoppingBag;
+
+  return ArrowRight;
+}
+
+function ActionLabel({ action }: { action: Action }) {
+  const Icon = iconFor(action);
+
+  return (
+    <>
+      <Icon aria-hidden size={16} strokeWidth={2} />
+      {action.label.replace(/\s*↗$/, '')}
+    </>
+  );
+}
+
+// The label span inside the button lays out the icon and text in a row.
+const withIconClassName = '[&>span]:inline-flex [&>span]:items-center [&>span]:gap-2';
 
 // The last ask on a page — "Ready to design your kitchen?" — as a dark panel with three ways to
 // say yes at equal weight: book the consult, visit a showroom (dropdown), or call.
@@ -61,35 +115,38 @@ export function ClosingBand({
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {/* The site's sliding button: black, sweeping to white with black text on hover. */}
             <ButtonLink
-              className="border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground focus-visible:ring-white focus-visible:ring-offset-[#9f3632] [&>span]:mix-blend-normal"
+              className={clsx(
+                'border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground focus-visible:ring-white focus-visible:ring-offset-[#9f3632] [&>span]:mix-blend-normal',
+                withIconClassName,
+              )}
               href={primary.href}
               shape="pill"
               size="small"
               variant="secondary"
             >
-              {primary.label}
+              <ActionLabel action={primary} />
             </ButtonLink>
             {secondary && (
               <ButtonLink
-                className={outlineButtonClassName}
+                className={clsx(outlineButtonClassName, withIconClassName)}
                 href={secondary.href}
                 shape="pill"
                 size="small"
                 variant="ghost"
               >
-                {secondary.label}
+                <ActionLabel action={secondary} />
               </ButtonLink>
             )}
             {showrooms.length > 0 && <ShowroomSelect showrooms={showrooms} />}
             {phone && (
               <ButtonLink
-                className={outlineButtonClassName}
+                className={clsx(outlineButtonClassName, withIconClassName)}
                 href={phone.href}
                 shape="pill"
                 size="small"
                 variant="ghost"
               >
-                {phone.label}
+                <ActionLabel action={phone} />
               </ButtonLink>
             )}
           </div>
