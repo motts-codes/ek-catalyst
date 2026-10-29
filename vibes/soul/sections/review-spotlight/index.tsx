@@ -103,7 +103,7 @@ export function ReviewSpotlight({
   return (
     // Deep brand red (#9F3632): white text is 6.9:1 on it, the cream accent 9.8:1.
     <HomeSection className={clsx('bg-[#9f3632] text-white', className)}>
-      <div className="grid gap-10 @3xl:grid-cols-[1fr_1.1fr] @3xl:items-center @3xl:gap-16">
+      <div className="grid gap-10 @3xl:grid-cols-[2fr_3fr] @3xl:items-center @3xl:gap-16">
         <div className="max-w-xl">
           <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white">
             {kicker}
@@ -142,7 +142,7 @@ export function ReviewSpotlight({
         </div>
         {/* Every card sits in the same grid cell, so the deck is as tall as the tallest card;
             the padding leaves room for the two cards peeking out behind. */}
-        <div className="grid pb-8 pr-8 @3xl:mx-auto @3xl:w-full @3xl:max-w-[30rem]">
+        <div className="grid pb-8 pr-8">
           {reviews.map((review, index) => {
             const offset = (index - active + count) % count;
             const shown = offset < DEPTH;
@@ -151,7 +151,7 @@ export function ReviewSpotlight({
               <figure
                 aria-hidden={!shown || offset > 0}
                 className={clsx(
-                  'col-start-1 row-start-1 flex flex-col overflow-hidden rounded-3xl bg-white text-foreground shadow-[0_16px_40px_-20px_rgb(0_0_0/0.45)] transition-[transform,opacity,filter] duration-500 ease-out motion-reduce:transition-none',
+                  'col-start-1 row-start-1 grid overflow-hidden rounded-3xl bg-white text-foreground shadow-[0_16px_40px_-20px_rgb(0_0_0/0.45)] transition-[transform,opacity,filter] duration-500 ease-out @xl:grid-cols-[2fr_3fr] motion-reduce:transition-none',
                   shown
                     ? DECK_POSITION[offset]
                     : // Leaving the front: lift, grow a touch and fade.
@@ -161,16 +161,18 @@ export function ReviewSpotlight({
                 key={review.name}
                 style={{ zIndex: shown ? DEPTH - offset : 0 }}
               >
-                <div className="relative aspect-[16/9] bg-contrast-100">
+                {/* Wide card: the photo fills the left 40% edge to edge, the review sits on
+                    the right. Phones stack it, photo on top. */}
+                <div className="relative aspect-[16/9] bg-contrast-100 @xl:aspect-auto @xl:min-h-[16rem]">
                   <Image
                     alt={review.image.alt}
                     className="object-cover"
                     fill
-                    sizes="(min-width: 56rem) 30rem, 100vw"
+                    sizes="(min-width: 56rem) 25vw, (min-width: 32rem) 40vw, 100vw"
                     src={review.image.src}
                   />
                 </div>
-                <figcaption className="flex flex-1 flex-col gap-2 p-5 @xl:p-6">
+                <figcaption className="flex flex-col justify-center gap-2 p-5 @xl:p-7">
                   <span className="font-semibold">{review.name}</span>
                   <Stars count={review.stars} />
                   <span className="font-heading text-base font-bold text-[var(--button-primary-background,#d90716)]">
