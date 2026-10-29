@@ -161,12 +161,7 @@ export function ProjectManagerPanel({
         )}
       >
         {team.map((member) => (
-          <ProjectManagerCard
-            bookHref={bookHref}
-            key={member.name}
-            pm={member}
-            showroom={showroom}
-          />
+          <ProjectManagerCard bookHref={bookHref} key={member.name} pm={member} />
         ))}
         <div>
           {Boolean(pm.intro) && (
@@ -206,18 +201,10 @@ export function ProjectManagerPanel({
   );
 }
 
-// The dark card: square portrait with the team badge, name and role, a full-width booking
-// button, then email and direct line. On desktop those unfold over the foot of the photo when
+// The dark card: square portrait, name and role, a full-width booking button, then email and
+// direct line. On desktop those unfold over the foot of the photo when
 // the card is hovered or anything in it has focus; on phones they sit under the button.
-function ProjectManagerCard({
-  pm,
-  showroom,
-  bookHref,
-}: {
-  pm: ProjectManager;
-  showroom: Showroom;
-  bookHref: string;
-}) {
+function ProjectManagerCard({ pm, bookHref }: { pm: ProjectManager; bookHref: string }) {
   const firstName = pmFirstName(pm);
 
   return (
@@ -234,9 +221,6 @@ function ProjectManagerCard({
         ) : (
           <MediaPlaceholder label={`${pm.name}, in the showroom`} />
         )}
-        <span className="absolute bottom-4 left-4 rounded-lg bg-[var(--button-primary-background,#d90716)] px-3.5 py-1.5 text-sm font-semibold">
-          {showroom.name} Team
-        </span>
         <div className="absolute inset-x-0 bottom-0 hidden translate-y-full bg-[#151515]/90 p-5 opacity-0 backdrop-blur-sm transition-[transform,opacity] duration-300 ease-out group-focus-within/card:translate-y-0 group-focus-within/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:opacity-100 @3xl:block motion-reduce:transition-none">
           <ContactRows pm={pm} />
         </div>
@@ -250,13 +234,17 @@ function ProjectManagerCard({
           />
           {pm.role}
         </p>
-        <Link
-          className="mt-5 flex min-h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-[var(--button-primary-background,#d90716)] px-5 text-base font-semibold text-white transition-colors hover:bg-[#b8050f] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#151515]"
+        <ButtonLink
+          // The house swipe: red, filling black from the left on hover, as on the closing band.
+          className="mt-5 w-full [--button-primary-background-hover:black] [--button-primary-text:white] focus-visible:ring-white focus-visible:ring-offset-[#151515] [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2.5"
           href={bookHref}
+          shape="pill"
+          size="medium"
+          variant="primary"
         >
           <CalendarDays aria-hidden size={18} strokeWidth={2} />
           Book with {firstName}
-        </Link>
+        </ButtonLink>
         <div className="mt-4 rounded-2xl bg-white/[0.07] p-5 @3xl:hidden">
           <ContactRows pm={pm} />
         </div>
