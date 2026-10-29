@@ -117,6 +117,14 @@ function Actions({
           </ButtonLink>
         )}
       </div>
+      {hasSample && (
+        // The price is real, but the code takes the first two off at checkout; say so here so no
+        // one thinks they're being charged.
+        <p className="mt-2.5 text-xs text-contrast-500">
+          First two samples free with code <span className="font-semibold">FREESAMPLES</span> at
+          checkout.
+        </p>
+      )}
     </div>
   );
 }

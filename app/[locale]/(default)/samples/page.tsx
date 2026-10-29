@@ -77,7 +77,7 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
       />
       <PageHero
         actions={[{ label: 'Choose your samples', href: '#collections', primary: true }]}
-        description="A photo can only tell you so much about a door. The colour shifts with the light in your kitchen, the grain shows differently up close, and the feel of the finish under your hand is something a screen can't give you. So we post you a piece of the real door, in the real finish, to hold at home before you decide. Your first two quarter-door samples are free with the code FREESAMPLES; further quarter doors, and half and full doors, are priced per sample."
+        description="Screens get colors wrong. We'll mail you a real piece of the door, in the real finish, to hold up in your own kitchen. Your first two are free with code FREESAMPLES."
         image={{
           src: '/images/pages/samples/hero-door-samples-table-2.jpg',
           alt: 'A designer in a red top and a customer at a table, comparing door samples in white, sage, navy and walnut',
@@ -87,15 +87,14 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
         title="Hold the real door before you choose it"
       />
       <CategoryPoints
-        fine="Half and full doors are priced per sample."
+        fine="Extra quarter doors, and half and full doors, are priced per sample."
         points={[
           { icon: 'gift', label: 'First two quarter doors free' },
-          { icon: 'tag', label: 'Use code FREESAMPLES at checkout' },
-          { icon: 'truck', label: 'Ships in [X] days' },
+          { icon: 'tag', label: 'Code FREESAMPLES at checkout' },
         ]}
       />
       <HomeSection
-        description="Every collection has a sample door. Pick the two you're deciding between — or the one you're sure about and the one you're curious about."
+        description="Pick the two you're deciding between."
         id="collections"
         title="Samples by collection"
       >
@@ -111,8 +110,8 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
       </HomeSection>
       <Prose
         body={[
-          "Add the samples you'd like to your cart and enter FREESAMPLES at checkout; the first two quarter doors come off the total. They ship from Bristol within [X] days. When they arrive, prop them against your wall, look at them in the morning and again in the evening, and set your countertop or tile sample beside them. That's usually the moment the decision makes itself.",
-          "If you'd like a second opinion, bring them to a showroom or hold them up on a video call with a Project Manager, who can show you the collections that pair with the one you've chosen.",
+          'Add your samples to the cart and use FREESAMPLES at checkout. When they arrive, look at them in morning and evening light, next to your countertop or floor.',
+          'Want a second opinion? Bring them to a showroom, or hold them up on a video call with our design team.',
         ]}
         kicker="How samples work"
         tint
@@ -128,7 +127,7 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
             },
             {
               q: 'What size is a quarter door?',
-              a: 'A quarter-door sample is a corner section of the real door, about 6½ by 6½ inches, in the real finish, so you can see the profile, the edge and the colour exactly as they are on the full door.',
+              a: 'A quarter-door sample is a corner section of the real door, about 6½ by 6½ inches, in the real finish, so you can see the profile, the edge and the color exactly as they are on the full door.',
             },
             { q: 'Do I need to send them back?', a: "No. They're yours to keep." },
             {
