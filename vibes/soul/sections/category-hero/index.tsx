@@ -25,12 +25,38 @@ import {
 import { type ReactNode } from 'react';
 
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
+import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { ShieldHouse } from '@/vibes/soul/primitives/icons/shield-house';
 import { MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
 const containerClassName = 'mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14';
+
+// The hero's buttons share the closing band's swipe: the primary is black and fills white from the
+// left on hover; the outline is a white hairline that fills white, its text taking the panel's
+// colour. The focus ring offsets against the panel.
+const outlineBase =
+  'transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:rgb(255_255_255/0.3)] [--button-ghost-text:white] hover:[--button-ghost-border:white] focus-visible:ring-white';
+const darkPrimary =
+  'border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground focus-visible:ring-white [&>span]:mix-blend-normal';
+
+const HERO_BUTTON = {
+  'deep-red': {
+    primary: `${darkPrimary} focus-visible:ring-offset-[#9f3632]`,
+    outline: `${outlineBase} hover:[--button-ghost-text:#9f3632] focus-visible:ring-offset-[#9f3632]`,
+  },
+  red: {
+    primary: `${darkPrimary} focus-visible:ring-offset-[#d90716]`,
+    outline: `${outlineBase} hover:[--button-ghost-text:#d90716] focus-visible:ring-offset-[#d90716]`,
+  },
+  black: {
+    // On black the primary is white and swipes brand red.
+    primary:
+      'border-white bg-white text-foreground after:!bg-[var(--button-primary-background,#d90716)] hover:!text-white focus-visible:ring-white focus-visible:ring-offset-foreground [&>span]:mix-blend-normal',
+    outline: `${outlineBase} hover:[--button-ghost-text:hsl(var(--foreground))] focus-visible:ring-offset-foreground`,
+  },
+};
 
 interface HeroProps {
   title: string;
@@ -220,18 +246,16 @@ export function CategoryHero({
             {actions.length > 0 && (
               <div className={clsx('flex flex-wrap gap-3', compact ? 'mt-4' : 'mt-6')}>
                 {actions.map((action, index) => (
-                  <Link
-                    className={clsx(
-                      'inline-flex min-h-10 items-center justify-center rounded-full px-5 text-sm font-semibold transition-colors',
-                      index === 0
-                        ? 'bg-white text-foreground hover:bg-neutral-200'
-                        : 'border border-white/40 text-white hover:border-white hover:bg-white/10',
-                    )}
+                  <ButtonLink
+                    className={index === 0 ? HERO_BUTTON[tone].primary : HERO_BUTTON[tone].outline}
                     href={action.href}
                     key={action.label}
+                    shape="pill"
+                    size="small"
+                    variant={index === 0 ? 'secondary' : 'ghost'}
                   >
                     {action.label}
-                  </Link>
+                  </ButtonLink>
                 ))}
               </div>
             )}
