@@ -6,12 +6,9 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
-import {
-  OtherShowrooms,
-  ProjectManagerPanel,
-  ShowroomDetails,
-} from '@/vibes/soul/sections/page-kit/showrooms';
+import { OtherShowrooms, ProjectManagerPanel } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
+import { ShowroomLocation } from '@/vibes/soul/sections/showroom-location';
 import { HOME_REVIEWS } from '~/lib/home/home-content';
 import {
   directionsHref,
@@ -112,7 +109,6 @@ export default async function ShowroomPage({ params }: Props) {
         title={`Your kitchen starts in ${showroom.name}`}
         tone="deep-red"
       />
-      <ShowroomDetails showroom={showroom} />
       <ProjectManagerPanel bookHref={bookHref} showroom={showroom} />
       <Prose
         body={[
@@ -166,6 +162,8 @@ export default async function ShowroomPage({ params }: Props) {
         tint
         title={`Ready to plan your kitchen in ${showroom.name}?`}
       />
+      {/* Address, hours and the map, last before the footer (Arun, Oct 29 2026). */}
+      <ShowroomLocation showroom={showroom} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
     </>
   );
 }

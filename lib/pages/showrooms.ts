@@ -9,6 +9,8 @@ export interface Hours {
 export interface ProjectManager {
   name: string;
   role: string;
+  /** Headshot, square. */
+  photo?: { src: string; alt: string };
   phone?: string;
   email?: string;
   intro?: string;
@@ -53,9 +55,16 @@ const showroomImage = (file: string, alt: string) => ({
   alt,
 });
 
-const pmNamed = (name: string): ProjectManager => ({
+// Headshots live in public/images/showrooms/pm as {showroom}_{first-last}.webp (900px square).
+const pmPhoto = (showroom: string, name: string) => ({
+  src: `/images/showrooms/pm/${showroom}_${name.toLowerCase().replace(/\s+/g, '-')}.webp`,
+  alt: `${name}, Project Manager`,
+});
+
+const pmNamed = (showroom: string, name: string): ProjectManager => ({
   name,
   role: 'Project Manager & Design Consultant',
+  photo: pmPhoto(showroom, name),
 });
 
 export const SHOWROOMS: Showroom[] = [
@@ -71,7 +80,7 @@ export const SHOWROOMS: Showroom[] = [
     phone: '(203) 546-7290',
     hours: TUE_SAT,
     towns: ['Danbury', 'Bethel', 'Newtown', 'New Milford', 'New Fairfield', 'Ridgefield'],
-    pm: pmNamed('Dan Czernicki'),
+    pm: pmNamed('brookfield', 'Dan Czernicki'),
   },
   {
     slug: 'new-london',
@@ -107,6 +116,7 @@ export const SHOWROOMS: Showroom[] = [
     pm: {
       name: 'Lanaisha Rodrigues',
       role: 'Project Manager & Design Consultant',
+      photo: pmPhoto('new-london', 'Lanaisha Rodrigues'),
       phone: '(860) 471-8875',
       email: 'LRodrigues@expresskitchens.com',
       intro:
@@ -158,8 +168,8 @@ export const SHOWROOMS: Showroom[] = [
       'New Britain',
       'Glastonbury',
     ],
-    pm: pmNamed('Chris Jones'),
-    secondPm: pmNamed('Ulrike Robinson'),
+    pm: pmNamed('newington', 'Chris Jones'),
+    secondPm: pmNamed('newington', 'Ulrike Robinson'),
   },
   {
     slug: 'orange',
@@ -170,7 +180,7 @@ export const SHOWROOMS: Showroom[] = [
     phone: '(203) 283-4909',
     hours: TUE_SAT,
     towns: ['New Haven', 'Milford', 'West Haven', 'Woodbridge', 'Hamden', 'Derby', 'Shelton'],
-    pm: pmNamed('Staci Caporuscio'),
+    pm: pmNamed('orange', 'Staci Caporuscio'),
   },
   {
     slug: 'stamford',
@@ -181,7 +191,7 @@ export const SHOWROOMS: Showroom[] = [
     phone: '(203) 721-6190',
     hours: TUE_SAT,
     towns: ['Greenwich', 'Darien', 'Norwalk', 'New Canaan', 'Westport', 'Wilton'],
-    pm: pmNamed('Richard Cruz'),
+    pm: pmNamed('stamford', 'Richard Cruz'),
   },
   {
     slug: 'bristol',
@@ -203,8 +213,8 @@ export const SHOWROOMS: Showroom[] = [
       'Terryville',
       'Burlington',
     ],
-    pm: pmNamed('Laurie Praprotnik'),
-    secondPm: pmNamed('Annette Morales'),
+    pm: pmNamed('bristol', 'Laurie Praprotnik'),
+    secondPm: pmNamed('bristol', 'Annette Morales'),
     outlet: {
       name: 'Express Kitchens Factory Outlet',
       phone: '(860) 247-1000',
@@ -336,4 +346,56 @@ export function openStatus(hours: Hours[], now: Date = new Date()): OpenStatus {
   if (minutes < today.close) return { open: true, label: `Open until ${shortTime(today.close)}` };
 
   return { open: false, label: 'Closed' };
+}
+
+// ---- Hours, printed ----------------------------------------------------------------------------
+
+export interface DayHours {
+  day: string;
+  /** "9:00 AM – 6:00 PM" or "Closed". */
+  label: string;
+  closed: boolean;
+}
+
+// The hours table as seven rows, Monday first, for the store-hours box.
+export function weeklyHours(hours: Hours[]): DayHours[] {
+  const windows = windowsOf(hours);
+
+  return [1, 2, 3, 4, 5, 6, 0].map((day) => {
+    const window = windows[day];
+
+    return {
+      day: DAY_NAMES[day] ?? '',
+      label: window ? window.label : 'Closed',
+      closed: !window,
+    };
+  });
+}
+
+// Today's weekday index in Connecticut (0 = Sunday), for marking the row in the hours box.
+export const easternDay = (now: Date = new Date()) => easternNow(now).day;
+
+// "Tuesday – Saturday, 9:00 AM – 6:00 PM" → "Tue–Sat 9–6", for the Project Manager card.
+export function compactHours(hours: Hours[]): string {
+  const row = hours.find((h) => !/closed/i.test(h.time));
+
+  if (!row) return '';
+
+  const days = row.days
+    .split(/\s[–-]\s/)
+    .map((d) => d.trim().slice(0, 3))
+    .join('–');
+  const [openAt, closeAt] = row.time.split(/\s[–-]\s/);
+  const hour = (t = '') => {
+    const minutes = minutesOf(t);
+
+    if (Number.isNaN(minutes)) return t;
+
+    const h = Math.floor(minutes / 60) % 12 || 12;
+    const m = minutes % 60;
+
+    return `${h}${m ? `:${String(m).padStart(2, '0')}` : ''}`;
+  };
+
+  return `${days} ${hour(openAt)}–${hour(closeAt)}`;
 }

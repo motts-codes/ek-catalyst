@@ -1,12 +1,18 @@
-import { clsx } from 'clsx';
-import { Clock, Mail, MapPin, Phone, User } from 'lucide-react';
+import { CalendarDays, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { OUTLINE_BUTTON } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
-import { directionsHref, pmFirstName, type Showroom, showroomHref } from '~/lib/pages/showrooms';
+import {
+  compactHours,
+  directionsHref,
+  pmFirstName,
+  type ProjectManager,
+  type Showroom,
+  showroomHref,
+} from '~/lib/pages/showrooms';
 
 // One card per showroom: photo, name, address with directions, hours, phone and the Project
 // Manager, with a link to the showroom's own page.
@@ -127,7 +133,8 @@ export function ShowroomCards({
   );
 }
 
-// The Project Manager panel on a showroom page: portrait, their words, how they work.
+// The Project Manager panel on a showroom page: a dark card (portrait, name, the booking button,
+// email / hours / address) beside their words and how they work.
 export function ProjectManagerPanel({
   showroom,
   bookHref,
@@ -137,31 +144,20 @@ export function ProjectManagerPanel({
 }) {
   const { pm } = showroom;
   const firstName = pmFirstName(pm);
+  const team = [pm, showroom.secondPm].filter((p): p is ProjectManager => p != null);
 
   return (
     <HomeSection kicker="Your Project Manager" title={`Meet ${pm.name}`}>
       <div className="grid gap-8 @3xl:grid-cols-[1fr_1.4fr] @3xl:gap-14">
-        <div>
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-contrast-100">
-            <MediaPlaceholder label={`${pm.name}, in the showroom`} />
-          </div>
-          <p className="mt-4 text-sm text-contrast-500">{pm.role}</p>
-          <ul className="mt-3 space-y-1.5 text-sm">
-            {Boolean(pm.phone) && (
-              <li className="flex items-center gap-2">
-                <Phone aria-hidden className="text-contrast-400" size={15} />
-                <a href={`tel:${(pm.phone ?? '').replace(/\D/g, '')}`}>{pm.phone}</a>
-              </li>
-            )}
-            {Boolean(pm.email) && (
-              <li className="flex items-center gap-2">
-                <Mail aria-hidden className="text-contrast-400" size={15} />
-                <a className="break-all" href={`mailto:${pm.email}`}>
-                  {pm.email}
-                </a>
-              </li>
-            )}
-          </ul>
+        <div className="grid gap-5">
+          {team.map((member) => (
+            <ProjectManagerCard
+              bookHref={bookHref}
+              key={member.name}
+              pm={member}
+              showroom={showroom}
+            />
+          ))}
         </div>
         <div>
           {Boolean(pm.intro) && (
@@ -171,6 +167,12 @@ export function ProjectManagerPanel({
           )}
           {Boolean(pm.bio) && (
             <p className="mt-4 text-sm leading-relaxed text-contrast-500 @xl:text-base">{pm.bio}</p>
+          )}
+          {!pm.intro && !pm.bio && (
+            <p className="font-heading text-xl font-semibold leading-snug @xl:text-2xl">
+              {firstName} will walk you through our kitchens, go through yours with you, and price
+              it while you're here. Free, and walk-ins are welcome.
+            </p>
           )}
           {pm.steps != null && pm.steps.length > 0 && (
             <ol className="mt-7 space-y-4">
@@ -192,97 +194,111 @@ export function ProjectManagerPanel({
           {Boolean(pm.offDuty) && (
             <p className="mt-6 text-sm italic leading-relaxed text-contrast-500">{pm.offDuty}</p>
           )}
-          <div className="mt-8">
-            <ButtonLink href={bookHref} shape="pill" size="small" variant="primary">
-              Book with {firstName}
-            </ButtonLink>
-          </div>
         </div>
       </div>
     </HomeSection>
   );
 }
 
-// Address, hours, phone and parking for a showroom page; Bristol adds the Factory Outlet.
-export function ShowroomDetails({ showroom }: { showroom: Showroom }) {
+// The dark card: square portrait with the team badge, name and role, a full-width booking
+// button, then email, hours and address in an inset box.
+function ProjectManagerCard({
+  pm,
+  showroom,
+  bookHref,
+}: {
+  pm: ProjectManager;
+  showroom: Showroom;
+  bookHref: string;
+}) {
+  const firstName = pmFirstName(pm);
+  // "254 South Frontage Road, New London CT": the street and town, no zip.
+  const [street = '', town = ''] = showroom.address.split(',').map((part) => part.trim());
+  const shortAddress = `${street}, ${town.replace(/\s+\d{5}$/, '')} CT`;
+
   return (
-    <HomeSection compact tint>
-      <div
-        className={clsx(
-          'grid gap-5 @xl:grid-cols-2',
-          showroom.outlet ? '@4xl:grid-cols-4' : '@4xl:grid-cols-3',
+    <div className="overflow-hidden rounded-3xl bg-[#151515] text-white">
+      <div className="relative aspect-square bg-contrast-100">
+        {pm.photo ? (
+          <Image
+            alt={pm.photo.alt}
+            className="object-cover"
+            fill
+            sizes="(min-width: 56rem) 33vw, 100vw"
+            src={pm.photo.src}
+          />
+        ) : (
+          <MediaPlaceholder label={`${pm.name}, in the showroom`} />
         )}
-      >
-        <Detail icon={<MapPin aria-hidden size={18} />} title="Where to find us">
-          <p>{showroom.address}</p>
-          <a
-            className="mt-2 inline-block font-semibold text-foreground underline underline-offset-4"
-            href={directionsHref(showroom.address)}
-            rel="noreferrer"
-            target="_blank"
-          >
-            Get directions
-          </a>
-          {Boolean(showroom.parking) && <p className="mt-2">{showroom.parking}</p>}
-        </Detail>
-        <Detail icon={<Clock aria-hidden size={18} />} title="Showroom hours">
-          {showroom.hours.map((h) => (
-            <p key={h.days}>
-              {h.days}: {h.time}
-            </p>
-          ))}
-        </Detail>
-        <Detail icon={<Phone aria-hidden size={18} />} title="Call or text">
-          <a
-            className="font-semibold text-foreground"
-            href={`tel:${showroom.phone.replace(/\D/g, '')}`}
-          >
-            {showroom.phone}
-          </a>
-          <p className="mt-1">
-            Or the main line, 24/7:{' '}
-            <a
-              className="font-semibold text-foreground underline underline-offset-4"
-              href="tel:+18602471000"
-            >
-              860-247-1000
-            </a>
-          </p>
-        </Detail>
-        {showroom.outlet && (
-          <Detail icon={<Clock aria-hidden size={18} />} title={showroom.outlet.name}>
-            {showroom.outlet.hours.map((h) => (
-              <p key={h.days}>
-                {h.days}: {h.time}
-              </p>
-            ))}
-            <p className="mt-1">{showroom.outlet.phone}</p>
-            <p className="mt-2">
-              Not a showroom: price match and financing aren't available at the outlet.
-            </p>
-          </Detail>
-        )}
+        <span className="absolute bottom-4 left-4 rounded-lg bg-[var(--button-primary-background,#d90716)] px-3.5 py-1.5 text-sm font-semibold">
+          {showroom.name} Team
+        </span>
       </div>
-    </HomeSection>
+      <div className="p-6 @xl:p-7">
+        <h3 className="font-heading text-2xl font-bold leading-tight">{pm.name}</h3>
+        <p className="mt-1.5 flex items-center gap-2 text-sm text-white/70">
+          <span
+            aria-hidden
+            className="inline-block h-0.5 w-4 bg-[var(--button-primary-background,#d90716)]"
+          />
+          {pm.role}
+        </p>
+        <Link
+          className="mt-5 flex min-h-12 w-full items-center justify-center gap-2.5 rounded-xl bg-[var(--button-primary-background,#d90716)] px-5 text-base font-semibold text-white transition-colors hover:bg-[#b8050f] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#151515]"
+          href={bookHref}
+        >
+          <CalendarDays aria-hidden size={18} strokeWidth={2} />
+          Book with {firstName}
+        </Link>
+        <dl className="mt-4 space-y-4 rounded-2xl bg-white/[0.07] p-5">
+          {Boolean(pm.email) && (
+            <CardRow icon={<Mail aria-hidden size={15} />} label="Email">
+              <a
+                className="break-all text-[#fcb6bb] underline-offset-4 hover:underline"
+                href={`mailto:${pm.email}`}
+              >
+                {pm.email}
+              </a>
+            </CardRow>
+          )}
+          {Boolean(pm.phone) && (
+            <CardRow icon={<Phone aria-hidden size={15} />} label="Direct line">
+              <a
+                className="underline-offset-4 hover:underline"
+                href={`tel:${(pm.phone ?? '').replace(/\D/g, '')}`}
+              >
+                {pm.phone}
+              </a>
+            </CardRow>
+          )}
+          <CardRow icon={<Clock aria-hidden size={15} />} label="Hours">
+            {compactHours(showroom.hours)}
+          </CardRow>
+          <CardRow icon={<MapPin aria-hidden size={15} />} label="Location">
+            {shortAddress}
+          </CardRow>
+        </dl>
+      </div>
+    </div>
   );
 }
 
-function Detail({
+function CardRow({
   icon,
-  title,
+  label,
   children,
 }: {
   icon: React.ReactNode;
-  title: string;
+  label: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-3xl border border-contrast-100 bg-white p-5">
-      <p className="flex items-center gap-2 font-semibold">
+    <div>
+      <dt className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/60">
         <span className="text-[var(--button-primary-background,#d90716)]">{icon}</span>
-        {title}
-      </p>
-      <div className="mt-3 text-sm leading-relaxed text-contrast-500">{children}</div>
+        {label}
+      </dt>
+      <dd className="mt-0.5 pl-8 text-[15px] leading-snug">{children}</dd>
     </div>
   );
 }
