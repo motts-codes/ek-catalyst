@@ -186,10 +186,11 @@ function HoursTable({ showroom }: { showroom: Showroom }) {
               {isToday && (
                 <span
                   className={clsx(
-                    'rounded-full border px-2 py-0.5 text-[11px] font-semibold',
+                    'rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
+                    // Bright green with the deep green text: 5.4:1.
                     openNow
-                      ? 'border-[#15692e]/30 bg-white text-[#15692e]'
-                      : 'border-contrast-200 bg-white text-contrast-500',
+                      ? 'bg-[#22c55e] text-[#0a3d1f]'
+                      : 'border border-contrast-200 bg-white text-contrast-500',
                   )}
                 >
                   {chipLabel(today)}
