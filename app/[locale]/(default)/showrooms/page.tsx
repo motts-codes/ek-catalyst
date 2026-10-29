@@ -94,7 +94,10 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
         body={[
           'Video consults in every state, 9 AM–5 PM ET. Send your measurements and photos, and get the same itemized quote.',
         ]}
-        imageLabel="A designer on a video call with a plan on screen"
+        image={{
+          src: '/images/home/ways/design-consult.webp',
+          alt: 'A designer on a video call with a couple, their kitchen plan and door samples on her laptop',
+        }}
         imagePosition="right"
         kicker="Can't get to a showroom?"
         tint
