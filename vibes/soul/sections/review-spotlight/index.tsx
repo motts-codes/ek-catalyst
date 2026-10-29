@@ -104,7 +104,7 @@ export function ReviewSpotlight({
   return (
     // Deep brand red (#9F3632): white text is 6.9:1 on it, the cream accent 9.8:1.
     <HomeSection className={clsx('bg-[#9f3632] text-white', className)}>
-      <div className="grid gap-10 @3xl:grid-cols-2 @3xl:items-center @3xl:gap-16">
+      <div className="grid gap-10 @3xl:grid-cols-[11fr_9fr] @3xl:items-center @3xl:gap-16">
         <div className="max-w-xl">
           <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white">
             {kicker}
