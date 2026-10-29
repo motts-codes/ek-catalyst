@@ -30,7 +30,7 @@ const ZOOM = 13.5;
 const telHref = (phone: string) => `tel:${phone.replace(/\D/g, '')}`;
 
 // The showroom's address, hours and map in three boxes at the foot of its page: contact on the
-// deep red, hours on the light red (today's row marked, "Open now" while it is), and a Mapbox
+// deep red, hours on the cream (today's row marked, "Open now" while it is), and a Mapbox
 // map with one pin and an "Open in Maps" card.
 export function ShowroomLocation({ showroom, token, id = 'location' }: Props) {
   return (
@@ -90,7 +90,7 @@ function Box({
     <div
       className={clsx(
         'rounded-3xl p-6 @xl:p-7',
-        red ? 'bg-[#9f3632] text-white' : 'bg-[#fdf3f5] text-foreground',
+        red ? 'bg-[#9f3632] text-white' : 'bg-[#f6ebd6] text-foreground',
       )}
     >
       <h2 className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.14em]">
@@ -119,7 +119,7 @@ function Rows({ rows, onRed = false }: { rows: Array<[string, ReactNode]>; onRed
         <div
           className={clsx(
             'grid grid-cols-[5.5rem_1fr] gap-3 border-b py-3 first:pt-0 last:border-b-0 last:pb-0',
-            onRed ? 'border-white/20' : 'border-[#fcb6bb]/70',
+            onRed ? 'border-white/20' : 'border-[#1a1a1a]/10',
           )}
           key={label}
         >
@@ -164,8 +164,8 @@ function HoursTable({ showroom }: { showroom: Showroom }) {
         return (
           <div
             className={clsx(
-              'flex items-center justify-between gap-3 border-b border-[#fcb6bb]/70 py-2.5 first:pt-0 last:border-b-0 last:pb-0',
-              openNow && 'font-semibold text-[#1a7f37]',
+              'flex items-center justify-between gap-3 border-b border-[#1a1a1a]/10 py-2.5 first:pt-0 last:border-b-0 last:pb-0',
+              openNow && 'font-semibold text-[#15692e]',
               isToday && !openNow && 'font-semibold',
             )}
             key={row.day}
@@ -177,7 +177,7 @@ function HoursTable({ showroom }: { showroom: Showroom }) {
                   className={clsx(
                     'rounded-full border px-2 py-0.5 text-[11px] font-semibold',
                     openNow
-                      ? 'border-[#1a7f37]/30 bg-white text-[#1a7f37]'
+                      ? 'border-[#15692e]/30 bg-white text-[#15692e]'
                       : 'border-contrast-200 bg-white text-contrast-500',
                   )}
                 >
