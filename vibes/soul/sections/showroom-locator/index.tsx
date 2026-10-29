@@ -3,14 +3,20 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { clsx } from 'clsx';
-import { Clock, MapPin, Phone } from 'lucide-react';
+import { MapPin, Phone } from 'lucide-react';
 import type { Map as MapboxMap, Marker } from 'mapbox-gl';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Link } from '~/components/link';
-import { directionsHref, type Showroom, showroomHref } from '~/lib/pages/showrooms';
+import {
+  directionsHref,
+  type OpenStatus,
+  openStatus,
+  type Showroom,
+  showroomHref,
+} from '~/lib/pages/showrooms';
 
 interface Props {
   showrooms: Showroom[];
@@ -42,6 +48,24 @@ export function ShowroomLocator({
   const mapNode = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapboxMap | null>(null);
   const [active, setActive] = useState<string | null>(null);
+  // Open or closed right now, worked out in the browser so the server markup never goes stale.
+  const [status, setStatus] = useState<Record<string, OpenStatus>>({});
+  const cardNodes = useRef<Record<string, HTMLLIElement | null>>({});
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+
+      setStatus(Object.fromEntries(showrooms.map((s) => [s.slug, openStatus(s.hours, now)])));
+    };
+
+    update();
+
+    const timer = window.setInterval(update, 60_000);
+
+    return () => window.clearInterval(timer);
+  }, [showrooms]);
+
   // Marker elements, once the map has made them, so React can draw the pin icons into them.
   const [pins, setPins] = useState<Array<{ slug: string; element: HTMLButtonElement }>>([]);
 
@@ -96,7 +120,17 @@ export function ShowroomLocator({
         element.className =
           'group/pin flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-[var(--button-primary-background,#d90716)] text-white shadow-[0_6px_16px_-6px_rgb(0_0_0/0.5)] transition-transform hover:scale-110 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 data-[active=true]:scale-125 data-[active=true]:ring-2 data-[active=true]:ring-[var(--button-primary-background,#d90716)] data-[active=true]:ring-offset-2';
         element.dataset.active = 'false';
-        element.addEventListener('click', () => setActive(showroom.slug));
+        element.addEventListener('click', () => {
+          setActive(showroom.slug);
+          // Bring the matching card into view in the list (the list scrolls, not the page).
+          cardNodes.current[showroom.slug]?.scrollIntoView({
+            block: 'nearest',
+            inline: 'nearest',
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+              ? 'auto'
+              : 'smooth',
+          });
+        });
 
         const marker = new mapboxgl.Marker({ element, anchor: 'bottom' })
           .setLngLat([showroom.coords.lng, showroom.coords.lat])
@@ -185,10 +219,11 @@ export function ShowroomLocator({
               // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events -- the name is a button that does the same for keyboards
               <li
                 className={clsx(
-                  'w-[18rem] shrink-0 snap-start rounded-3xl border bg-white p-5 transition-[border-color,box-shadow] @3xl:w-auto',
+                  'w-[18rem] shrink-0 snap-start rounded-3xl border p-5 transition-colors @3xl:w-auto',
+                  // Chosen: the deep brand red (#9F3632) with white copy, 6.9:1.
                   isActive
-                    ? 'border-[var(--button-primary-background,#d90716)] shadow-[0_0_0_1px_var(--button-primary-background,#d90716)]'
-                    : 'border-contrast-100 hover:border-contrast-300',
+                    ? 'border-[#9f3632] bg-[#9f3632] text-white'
+                    : 'border-contrast-100 bg-white hover:border-contrast-300',
                 )}
                 data-active={isActive}
                 key={showroom.slug}
@@ -196,56 +231,101 @@ export function ShowroomLocator({
                   if (event.target instanceof Element && event.target.closest('a, button')) return;
                   setActive(showroom.slug);
                 }}
+                ref={(node) => {
+                  cardNodes.current[showroom.slug] = node;
+                }}
               >
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-contrast-500">
+                <p
+                  className={clsx(
+                    'text-[11px] font-semibold uppercase tracking-wide',
+                    isActive ? 'text-white/85' : 'text-contrast-500',
+                  )}
+                >
                   Showroom
                 </p>
                 <h3 className="mt-1 font-heading text-lg font-bold leading-tight">
                   <button
                     aria-pressed={isActive}
-                    className="text-left text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+                    className={clsx(
+                      'text-left focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-offset-2',
+                      isActive
+                        ? 'text-white focus-visible:ring-white focus-visible:ring-offset-[#9f3632]'
+                        : 'text-[var(--button-primary-background,#d90716)] focus-visible:ring-[var(--button-primary-background,#d90716)]',
+                    )}
                     onClick={() => setActive(showroom.slug)}
                     type="button"
                   >
                     {showroom.name}
                   </button>
                 </h3>
-                <ul className="mt-3 space-y-2 text-sm text-contrast-500">
+                {Boolean(status[showroom.slug]) && (
+                  <p
+                    className={clsx(
+                      'mt-2 flex items-center gap-2 text-xs font-semibold',
+                      isActive ? 'text-white' : 'text-foreground',
+                    )}
+                  >
+                    <span
+                      aria-hidden
+                      className={clsx('inline-block h-2 w-2 rounded-full', {
+                        'bg-[#1a7f37]': status[showroom.slug]?.open && !isActive,
+                        'bg-[#7ee2a0]': status[showroom.slug]?.open && isActive,
+                        'bg-contrast-400': !status[showroom.slug]?.open && !isActive,
+                        'bg-white/60': !status[showroom.slug]?.open && isActive,
+                      })}
+                    />
+                    {status[showroom.slug]?.label}
+                  </p>
+                )}
+                <ul
+                  className={clsx(
+                    'mt-3 space-y-2 text-sm',
+                    isActive ? 'text-white/85' : 'text-contrast-500',
+                  )}
+                >
                   <li className="flex gap-2.5">
-                    <MapPin aria-hidden className="mt-0.5 shrink-0 text-contrast-400" size={15} />
+                    <MapPin
+                      aria-hidden
+                      className={clsx(
+                        'mt-0.5 shrink-0',
+                        isActive ? 'text-white/70' : 'text-contrast-400',
+                      )}
+                      size={15}
+                    />
                     <span>{showroom.address}</span>
                   </li>
                   <li className="flex gap-2.5">
-                    <Clock aria-hidden className="mt-0.5 shrink-0 text-contrast-400" size={15} />
-                    <span>
-                      {showroom.hours[0]
-                        ? `${showroom.hours[0].days}: ${showroom.hours[0].time}`
-                        : ''}
-                    </span>
-                  </li>
-                  <li className="flex gap-2.5">
-                    <Phone aria-hidden className="mt-0.5 shrink-0 text-contrast-400" size={15} />
+                    <Phone
+                      aria-hidden
+                      className={clsx(
+                        'mt-0.5 shrink-0',
+                        isActive ? 'text-white/70' : 'text-contrast-400',
+                      )}
+                      size={15}
+                    />
                     <a
-                      className="text-foreground"
+                      className={isActive ? 'text-white' : 'text-foreground'}
                       href={`tel:${showroom.phone.replace(/\D/g, '')}`}
                     >
                       {showroom.phone}
                     </a>
                   </li>
                 </ul>
-                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
+                <div
+                  className={clsx(
+                    'mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold',
+                    isActive ? 'text-white' : 'text-foreground',
+                  )}
+                >
                   <a
-                    className="text-foreground underline underline-offset-4"
+                    className="underline underline-offset-4"
                     href={directionsHref(showroom.address)}
                     rel="noreferrer"
                     target="_blank"
                   >
                     Get directions
                   </a>
-                  <Link
-                    className="text-foreground underline underline-offset-4"
-                    href={showroomHref(showroom.slug)}
-                  >
+                  <Link className="underline underline-offset-4" href={showroomHref(showroom.slug)}>
                     Showroom page
                   </Link>
                 </div>

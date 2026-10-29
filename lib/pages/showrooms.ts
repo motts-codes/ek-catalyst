@@ -227,3 +227,121 @@ export const directionsHref = (address: string) =>
   `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
 
 export const getShowroom = (slug: string) => SHOWROOMS.find((s) => s.slug === slug);
+
+// ---- Open or closed right now (Eastern time) ------------------------------------------------
+
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+// "Tuesday – Saturday" → [2, 3, 4, 5, 6]; "Sunday" → [0]; "Sunday – Monday" wraps.
+function daysOf(label: string): number[] {
+  const [from, to = from] = label.split(/\s[–-]\s/).map((d) => DAY_NAMES.indexOf(d.trim()));
+
+  if (from == null || from < 0 || to == null || to < 0) return [];
+
+  const days: number[] = [];
+
+  for (let d = from; ; d = (d + 1) % 7) {
+    days.push(d);
+    if (d === to) break;
+  }
+
+  return days;
+}
+
+// "9:00 AM" → minutes since midnight.
+function minutesOf(time: string): number {
+  const match = /(\d{1,2}):(\d{2})\s*(AM|PM)/i.exec(time);
+
+  if (!match) return Number.NaN;
+
+  const hour = Number(match[1]) % 12;
+  const minute = Number(match[2]);
+  const pm = (match[3] ?? '').toUpperCase() === 'PM';
+
+  return (pm ? hour + 12 : hour) * 60 + minute;
+}
+
+// The opening window for each weekday, from the hours table.
+function windowsOf(hours: Hours[]): Array<{ open: number; close: number; label: string } | null> {
+  const windows: Array<{ open: number; close: number; label: string } | null> = Array.from(
+    { length: 7 },
+    () => null,
+  );
+
+  hours.forEach((row) => {
+    const [openAt, closeAt] = row.time.split(/\s[–-]\s/);
+    const open = minutesOf(openAt ?? '');
+    const close = minutesOf(closeAt ?? '');
+
+    if (Number.isNaN(open) || Number.isNaN(close)) return;
+
+    daysOf(row.days).forEach((day) => {
+      windows[day] = { open, close, label: `${openAt} – ${closeAt}` };
+    });
+  });
+
+  return windows;
+}
+
+// The wall clock in Connecticut: weekday index and minutes since midnight.
+function easternNow(now: Date): { day: number; minutes: number } {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    weekday: 'long',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  }).formatToParts(now);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  const day = DAY_NAMES.indexOf(get('weekday'));
+  const minutes = (Number(get('hour')) % 24) * 60 + Number(get('minute'));
+
+  return { day: day < 0 ? 0 : day, minutes };
+}
+
+const shortTime = (minutes: number) => {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  const hour12 = h % 12 === 0 ? 12 : h % 12;
+
+  return `${hour12}${m ? `:${String(m).padStart(2, '0')}` : ''} ${h < 12 ? 'AM' : 'PM'}`;
+};
+
+export interface OpenStatus {
+  open: boolean;
+  /** "Open now, until 6 PM" or "Closed now, opens Tuesday at 9 AM". */
+  label: string;
+}
+
+// Whether a showroom is open at `now`, with a line to print. Eastern time, from the hours table;
+// holidays are not known here.
+export function openStatus(hours: Hours[], now: Date = new Date()): OpenStatus {
+  const windows = windowsOf(hours);
+  const { day, minutes } = easternNow(now);
+  const today = windows[day];
+
+  if (today && minutes >= today.open && minutes < today.close) {
+    return { open: true, label: `Open now, until ${shortTime(today.close)}` };
+  }
+
+  const whenLabel = (ahead: number) => {
+    if (ahead === 0) return 'today';
+    if (ahead === 1) return 'tomorrow';
+
+    return DAY_NAMES[(day + ahead) % 7] ?? '';
+  };
+
+  for (let ahead = 0; ahead < 7; ahead += 1) {
+    const candidate = windows[(day + ahead) % 7];
+    const stillToCome = candidate != null && (ahead > 0 || minutes < candidate.close);
+
+    if (candidate && stillToCome) {
+      return {
+        open: false,
+        label: `Closed now, opens ${whenLabel(ahead)} at ${shortTime(candidate.open)}`,
+      };
+    }
+  }
+
+  return { open: false, label: 'Closed' };
+}
