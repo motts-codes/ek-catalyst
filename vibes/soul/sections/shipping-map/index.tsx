@@ -122,7 +122,7 @@ function tileFor(state: string, category: ShipCategory): Tile {
   const days = transitDays(state);
 
   if (days === null) {
-    return { state, band: 'none', label: 'no', detail: `${name}: not shipped` };
+    return { state, band: 'none', label: 'NA', detail: `${name}: not shipped` };
   }
 
   const total = formatDuration(lead + days);
