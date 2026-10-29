@@ -210,6 +210,7 @@ export function ShippingMap({
   tint,
 }: Props) {
   const [selected, setSelected] = useState(MAP_CATEGORIES[0]?.id ?? 'rta-star');
+  const [flipped, setFlipped] = useState<string | null>(null);
   const category = MAP_CATEGORIES.find((c) => c.id === selected) ?? MAP_CATEGORIES[0];
 
   if (!category) return null;
@@ -236,7 +237,10 @@ export function ShippingMap({
                     : 'border-contrast-200 bg-white hover:border-foreground',
                 )}
                 key={c.id}
-                onClick={() => setSelected(c.id)}
+                onClick={() => {
+                  setSelected(c.id);
+                  setFlipped(null);
+                }}
                 type="button"
               >
                 {c.name}
@@ -256,13 +260,13 @@ export function ShippingMap({
         >
           {tiles.map((tile) => {
             const [row, column] = SHIP_STATE_GRID[tile.state] ?? [1, 1];
-
             // "3.3 wks" reads as the number over the unit on the back of the tile.
             const [amount, unit] = splitLabel(tile.label);
             const face = clsx(
               'absolute inset-0 flex items-center justify-center rounded-md [backface-visibility:hidden] @xl:rounded-lg',
               tileClass[tile.band],
             );
+            const isFlipped = flipped === tile.state;
 
             return (
               <li
@@ -271,35 +275,50 @@ export function ShippingMap({
                 style={{ gridRow: row, gridColumn: column }}
                 title={tile.detail}
               >
-                {/* The face shows the state only; hovering flips the tile over to the time to
-                    your door at twice the size. Tiles with nothing to say stay still. */}
-                <div
-                  className={clsx(
-                    'relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] motion-reduce:transition-none',
-                    tile.label && 'group-hover:[transform:rotateY(180deg)]',
-                  )}
-                >
-                  <div aria-hidden className={face}>
-                    {tile.state}
-                  </div>
-                  {tile.label ? (
-                    <div
-                      aria-hidden
+                {/* The face shows the state only; hovering, tapping or focusing flips the tile
+                    over to the time to your door at twice the size. Tiles with nothing to say
+                    stay still. */}
+                {tile.label ? (
+                  <button
+                    aria-label={tile.detail}
+                    aria-pressed={isFlipped}
+                    className="block h-full w-full rounded-md focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 @xl:rounded-lg"
+                    onClick={() => setFlipped(isFlipped ? null : tile.state)}
+                    type="button"
+                  >
+                    <span
                       className={clsx(
-                        face,
-                        'flex-col px-0.5 text-center text-[10px] leading-none [transform:rotateY(180deg)] @md:text-sm @xl:text-xl',
+                        'relative block h-full w-full transition-transform duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] group-focus-visible:[transform:rotateY(180deg)] motion-reduce:transition-none',
+                        isFlipped && '[transform:rotateY(180deg)]',
                       )}
                     >
-                      {amount}
-                      {unit ? (
-                        <span className="mt-0.5 text-[7px] font-semibold @md:text-[9px] @xl:text-[11px]">
-                          {unit}
-                        </span>
-                      ) : null}
+                      <span aria-hidden className={face}>
+                        {tile.state}
+                      </span>
+                      <span
+                        aria-hidden
+                        className={clsx(
+                          face,
+                          'flex-col px-0.5 text-center text-[10px] leading-none [transform:rotateY(180deg)] @md:text-sm @xl:text-xl',
+                        )}
+                      >
+                        {amount}
+                        {unit ? (
+                          <span className="mt-0.5 text-[7px] font-semibold @md:text-[9px] @xl:text-[11px]">
+                            {unit}
+                          </span>
+                        ) : null}
+                      </span>
+                    </span>
+                  </button>
+                ) : (
+                  <>
+                    <div aria-hidden className={face}>
+                      {tile.state}
                     </div>
-                  ) : null}
-                </div>
-                <span className="sr-only">{tile.detail}</span>
+                    <span className="sr-only">{tile.detail}</span>
+                  </>
+                )}
               </li>
             );
           })}
@@ -307,8 +326,9 @@ export function ShippingMap({
         <div>
           <Panel category={category} />
           <p className="mt-3 text-xs leading-relaxed text-contrast-500">
-            Hover a state for the estimate. Transit takes about 7 days near Connecticut, and up to
-            10 farther away, after your order ships.
+            <span className="@xl:hidden">Click</span>
+            <span className="hidden @xl:inline">Hover</span> a state for the estimate. Transit takes
+            about 7 days near Connecticut, and up to 10 farther away, after your order ships.
           </p>
         </div>
       </div>
