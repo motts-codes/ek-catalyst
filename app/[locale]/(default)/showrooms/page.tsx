@@ -1,4 +1,4 @@
-import { BadgeDollarSign, CreditCard, Ruler } from 'lucide-react';
+import { ClipboardList, CreditCard, DollarSign, Ruler } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -47,29 +47,35 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
         cardTone="red"
         cards={[
           {
-            icon: BadgeDollarSign,
+            icon: ClipboardList,
+            title: 'Leave with a quote',
+            description: 'An itemized price, RTA and assembled, in about an hour.',
+          },
+          {
+            icon: DollarSign,
             title: 'Price match',
             description: "We'll match a written quote on the same Star cabinets or countertops.",
           },
           {
             icon: CreditCard,
             title: 'Financing',
-            description: 'Spread the cost with GreenSky. Apply with your designer.',
+            description: 'Spread the cost with GreenSky. Apply with your Project Manager.',
           },
           {
             icon: Ruler,
             title: 'Measuring',
-            description: '$85, in CT and greater-CT zip codes.',
+            description: "We'll measure your kitchen for $85 (CT and greater-CT zip codes).",
           },
         ]}
         className="[&>div]:pb-2"
-        columns={3}
+        columns={4}
+        description="Four things that make the trip worth it."
         hideImages
-        kicker="Only in a showroom"
-        title="Three things you can only do in person"
+        kicker="Why visit"
+        title="What you get in a showroom"
       />
       <FinePrint className="[&>div]:pt-0" variant="plain">
-        Not available online or at our Factory Outlet.
+        Price match and financing aren't available online or at our Factory Outlet.
       </FinePrint>
       <ShowroomLocator showrooms={SHOWROOMS} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
       <ShowroomCards
