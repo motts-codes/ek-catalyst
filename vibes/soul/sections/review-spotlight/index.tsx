@@ -81,8 +81,8 @@ const arrowButtonClassName =
   'flex h-11 w-11 items-center justify-center rounded-full text-white transition-opacity hover:opacity-70 focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#9f3632]';
 
 // "Don't take our word for it": the landing page's testimonial band, rebuilt. A deep red band:
-// copy on the left, and on the right a deck of photo cards, the next two peeking out behind the
-// front one, with the arrows beneath. Next sends the front card fading away and brings the one behind it
+// a deck of photo cards on the left, the next two peeking out behind the front one, with the
+// arrows beneath, and the copy on the right. Next sends the front card fading away and brings the one behind it
 // forward; Previous brings it back. Reduced motion swaps without the animation.
 export function ReviewSpotlight({
   kicker = 'Real kitchens. Real families.',
@@ -115,7 +115,8 @@ export function ReviewSpotlight({
           <p className="mt-3 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
           {actions.length > 0 && <Actions actions={actions} className="mt-8" onRed />}
         </div>
-        <div>
+        {/* Phones read the copy first; from tablet width the deck takes the left column. */}
+        <div className="@3xl:order-first">
           {/* Every card sits in the same grid cell, so the deck is as tall as the tallest card;
               the padding leaves room for the two cards peeking out behind. */}
           <div className="grid pb-8 pr-8">
@@ -162,7 +163,7 @@ export function ReviewSpotlight({
               );
             })}
           </div>
-          <div className="mt-5 flex items-center gap-5">
+          <div className="mt-5 flex items-center justify-end gap-5">
             <button
               aria-label="Previous review"
               className={arrowButtonClassName}
