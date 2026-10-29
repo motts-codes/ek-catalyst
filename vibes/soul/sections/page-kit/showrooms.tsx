@@ -227,7 +227,7 @@ function ProjectManagerCard({
         <span className="absolute bottom-4 left-4 rounded-lg bg-[var(--button-primary-background,#d90716)] px-3.5 py-1.5 text-sm font-semibold">
           {showroom.name} Team
         </span>
-        <div className="absolute inset-x-0 bottom-0 hidden translate-y-full bg-[#151515]/90 p-5 backdrop-blur-sm transition-transform duration-300 ease-out group-focus-within/card:translate-y-0 group-hover/card:translate-y-0 @3xl:block motion-reduce:transition-none">
+        <div className="absolute inset-x-0 bottom-0 hidden translate-y-full bg-[#151515]/90 p-5 opacity-0 backdrop-blur-sm transition-[transform,opacity] duration-300 ease-out group-focus-within/card:translate-y-0 group-focus-within/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:opacity-100 @3xl:block motion-reduce:transition-none">
           <ContactRows pm={pm} />
         </div>
       </div>

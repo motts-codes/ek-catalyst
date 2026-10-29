@@ -5,15 +5,14 @@ import { setRequestLocale } from 'next-intl/server';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
-import { OtherShowrooms, ProjectManagerPanel } from '@/vibes/soul/sections/page-kit/showrooms';
+import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { ProjectManagerPanel } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { ShowroomLocation } from '@/vibes/soul/sections/showroom-location';
 import { HOME_REVIEWS } from '~/lib/home/home-content';
 import {
   directionsHref,
   getShowroom,
-  joinTowns,
   pmFirstName,
   type Showroom,
   SHOWROOMS,
@@ -60,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // One template for the six showrooms (Arun's brief of 29 Oct 2026, finalized on New London):
-// where it is, when it's open, who you'll plan with, the towns nearby, reviews, a short FAQ.
+// who you'll plan with, reviews, a short FAQ, then where it is and when it's open.
 export default async function ShowroomPage({ params }: Props) {
   const { locale, slug } = await params;
 
@@ -72,8 +71,6 @@ export default async function ShowroomPage({ params }: Props) {
 
   const bookHref = `/book?showroom=${showroom.slug}`;
   const who = pmNames(showroom);
-  const reviews = HOME_REVIEWS.filter((r) => r.location === showroom.name);
-  const others = SHOWROOMS.filter((s) => s.slug !== slug);
   // The call button: the Project Manager's direct line, else the showroom's.
   const phone = showroom.pm.phone ?? showroom.phone;
 
@@ -110,27 +107,12 @@ export default async function ShowroomPage({ params }: Props) {
         tone="deep-red"
       />
       <ProjectManagerPanel bookHref={bookHref} showroom={showroom} />
-      <Prose
-        body={[
-          [
-            `Our ${showroom.name} showroom is an easy drive from ${joinTowns(showroom.towns)}.`,
-            showroom.landmarks,
-          ]
-            .filter(Boolean)
-            .join(' '),
-        ]}
-        kicker="Who we serve"
+      <ReviewMarquee
+        action={{ label: 'Read all reviews', href: '/reviews' }}
+        reviews={HOME_REVIEWS}
+        summary="4.5 · 360+ Google reviews"
         tint
-        title={`Kitchen cabinets near ${showroom.name}, CT`}
       />
-      {reviews.length > 0 && (
-        <ReviewMarquee
-          reviews={[...reviews, ...HOME_REVIEWS.filter((r) => r.location !== showroom.name)]}
-          summary={`Starting with our ${showroom.name} customers`}
-          tint
-          title="What it was like, in their words"
-        />
-      )}
       <CabinetFaq
         data={{
           headline: 'Before you visit',
@@ -154,16 +136,13 @@ export default async function ShowroomPage({ params }: Props) {
           ],
         }}
       />
-      <OtherShowrooms showrooms={others} />
+      <ShowroomLocation showroom={showroom} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
       <ClosingBand
         description={`Walk in any time, or book a visit with ${who}.`}
         phone={{ label: `Call ${phone}`, href: telHref(phone) }}
         primary={{ label: 'Book a visit', href: bookHref }}
-        tint
         title={`Ready to plan your kitchen in ${showroom.name}?`}
       />
-      {/* Address, hours and the map, last before the footer (Arun, Oct 29 2026). */}
-      <ShowroomLocation showroom={showroom} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
     </>
   );
 }
