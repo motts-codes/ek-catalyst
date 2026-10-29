@@ -2,15 +2,18 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { PageBreadcrumbs, PageHero, StatsRow } from '@/vibes/soul/sections/page-kit';
-import { ReviewGrid } from '@/vibes/soul/sections/page-kit/media';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
+import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'Customer Reviews',
   description:
-    'Every review is from a real Express Kitchens order. 4.5 out of 5 from 360+ Google reviews across Connecticut.',
+    'Over 110 years, thousands of homeowners have planned, ordered and lived with Express Kitchens cabinets. What they say about our designers, delivery, prices and the cabinets themselves.',
 };
+
+const BEST_SELLERS = { label: 'See our best-selling kitchens', href: '/inspiration/best-sellers' };
 
 export default async function Reviews({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -27,38 +30,33 @@ export default async function Reviews({ params }: { params: Promise<{ locale: st
       />
       <PageHero
         actions={[
-          { label: 'Free design consult', href: FREE_DESIGN_HREF, primary: true },
-          { label: 'Watch the video testimonials', href: '/testimonials' },
+          { label: 'Book a free design consult', href: FREE_DESIGN_HREF, primary: true },
+          { ...BEST_SELLERS, style: 'outline' },
         ]}
-        description="Every review here came from a real order, and we keep the critical ones too, because a page of nothing but five stars reads as fake. Read what people say about the designers, the delivery, the price and the cabinets themselves, and then decide for yourself."
+        description="Over 110 years, thousands of homeowners have planned, ordered and lived with Express Kitchens cabinets. Here's what they say about our designers, delivery, prices and the cabinets themselves."
         image={{
-          src: '/images/pages/financing/family-kitchen.jpg',
-          alt: 'A family at the island of their finished white kitchen',
+          src: '/images/pages/reviews/hero-finished-kitchen.jpg',
+          alt: 'A finished white kitchen with a grey island, rattan pendants and French doors open to the garden',
         }}
-        imageLabel="A family in their new kitchen"
         kicker="Reviews"
-        title="4.5 out of 5, from 360+ Connecticut kitchens"
+        title="5,000+ reviews from people who've lived with our kitchens"
       />
-      <StatsRow
-        stats={[
-          { value: '4.5 ★', label: 'average rating' },
-          { value: '360+', label: 'Google reviews' },
-          { value: '6', label: 'showrooms reviewed' },
-          { value: '100,000+', label: 'kitchens delivered' },
-          { value: '110', label: 'years in Connecticut' },
+      <MetricsTicker
+        metrics={[
+          { icon: 'star', value: '5,000+', label: 'Happy customer reviews' },
+          { icon: 'package', value: '50,000+', label: 'Assembled cabinets, ready to ship' },
+          { icon: 'design', value: '100K+', label: 'Kitchens designed' },
+          { icon: 'pin', value: '6', label: 'Showrooms to visit' },
+          { icon: 'shield', value: 'A+', label: 'BBB rating' },
         ]}
-        tint
       />
-      <ReviewGrid
-        description="Stars, the review, the name and the showroom. Source: Google."
-        reviews={HOME_REVIEWS}
-        title="What customers say"
-      />
+      <ReviewMarquee reviews={HOME_REVIEWS} summary="4.5 · 360+ Google reviews" />
       <ClosingBand
-        primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
+        description="A designer will go through your kitchen with you, in a showroom or on a video call, and give you an itemized quote. Free, with no obligation to buy."
+        primary={{ label: 'Book a free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}
         tint
-        title="Ready to add yours?"
+        title="Ready to start your kitchen?"
       />
     </>
   );
