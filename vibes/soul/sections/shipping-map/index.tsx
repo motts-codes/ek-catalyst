@@ -249,9 +249,9 @@ export function ShippingMap({
           </div>
         ))}
       </div>
-      {/* From tablet width the map and card shrink together to 0.8x (CSS zoom scales layout and
-          type alike) and sit centred; phones keep the full size so the tiles stay readable. */}
-      <div className="mt-6 grid gap-6 @3xl:mx-auto @3xl:max-w-[80%] @3xl:grid-cols-[1fr_300px] @3xl:items-start @3xl:gap-12 @3xl:[zoom:0.8]">
+      {/* From 1100px the map and card sit side by side, shrunk together to 0.8x (CSS zoom scales
+          layout and type alike) and centred; below that they stack at full size, as on phones. */}
+      <div className="mt-6 grid gap-6 @[1100px]:mx-auto @[1100px]:max-w-[80%] @[1100px]:grid-cols-[1fr_300px] @[1100px]:items-start @[1100px]:gap-12 @[1100px]:[zoom:0.8]">
         {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
             any width. Each tile flips on hover to show the time to your door. */}
         <ul
