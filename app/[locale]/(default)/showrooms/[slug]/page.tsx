@@ -3,8 +3,9 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
+import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
 import {
   OtherShowrooms,
   ProjectManagerPanel,
@@ -87,23 +88,28 @@ export default async function ShowroomPage({ params }: Props) {
           { label: showroom.name, href: `/showrooms/${slug}` },
         ]}
       />
-      <PageHero
+      {/* The same deep-red panel as the Assembled listing: copy inside the box, the showroom
+          photo on the right (Arun, Oct 29 2026). */}
+      <CategoryHero
         actions={[
-          { label: 'Book a visit', href: bookHref, primary: true },
-          { label: 'Get directions', href: directionsHref(showroom.address), style: 'outline' },
-        ]}
-        chips={[
-          'Free design consult',
-          'Full kitchens on display',
-          'Walk-ins welcome',
-          ...(showroom.outlet ? ['Factory Outlet here too'] : []),
+          { label: 'Book a visit', href: bookHref },
+          { label: 'Get directions', href: directionsHref(showroom.address) },
         ]}
         description={`Walk through full kitchens, hold the doors, and sit down with ${who}, who'll go through your kitchen and price it while you're here. Free, and walk-ins are welcome.`}
+        eyebrow={`${showroom.name}, CT`}
         image={showroom.image}
         imageLabel={`${showroom.name} showroom floor, wide`}
-        kicker={`${showroom.name}, CT`}
-        split="even"
+        promises={[
+          { icon: 'design', label: 'Free design consult' },
+          { icon: 'door', label: 'Full kitchens on display' },
+          { icon: 'walk', label: 'Walk-ins welcome' },
+          ...(showroom.outlet
+            ? [{ icon: 'store' as const, label: 'Factory Outlet here too' }]
+            : []),
+        ]}
+        tall
         title={`Your kitchen starts in ${showroom.name}`}
+        tone="deep-red"
       />
       <ShowroomDetails showroom={showroom} />
       <ProjectManagerPanel bookHref={bookHref} showroom={showroom} />

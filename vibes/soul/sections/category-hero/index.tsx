@@ -4,13 +4,17 @@ import {
   ArrowRight,
   CircleDollarSign,
   Clock,
+  DoorOpen,
+  Footprints,
   Gift,
   Hammer,
   Layers,
   MapPin,
   PackageCheck,
+  PencilRuler,
   Phone,
   ShieldCheck,
+  Store,
   Tag,
   ThumbsUp,
   Truck,
@@ -76,6 +80,11 @@ const POINT_ICONS = {
   shield: ShieldCheck,
   wrench: Wrench,
   hammer: Hammer,
+  // Showroom promises.
+  design: PencilRuler,
+  door: DoorOpen,
+  walk: Footprints,
+  store: Store,
 };
 
 // Category page header, 50 / 50: the headline and one paragraph on a black panel, the category
