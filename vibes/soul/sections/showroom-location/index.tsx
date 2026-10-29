@@ -33,28 +33,25 @@ const telHref = (phone: string) => `tel:${phone.replace(/\D/g, '')}`;
 // deep red, hours on the cream (today's row marked, "Open now" while it is), and a Mapbox
 // map with one pin and an "Open in Maps" card that opens the showroom's place in Google Maps.
 export function ShowroomLocation({ showroom, token, id = 'location' }: Props) {
+  const phoneLink = (phone: string, href = telHref(phone)) => (
+    <a className="font-semibold text-white underline-offset-4 hover:underline" href={href}>
+      {phone}
+    </a>
+  );
+  const contact: Array<[string, ReactNode]> = [
+    ['Address', showroom.address],
+    ['Phone', phoneLink(showroom.phone)],
+    ['Main line', <span key="main">{phoneLink('(860) 247-1000', 'tel:+18602471000')}, 24/7</span>],
+  ];
+
+  if (showroom.parking) contact.push(['Parking', showroom.parking]);
+  contact.push(['Walk-ins', 'Always welcome. No appointment needed.']);
+
   return (
     <HomeSection id={id}>
       <div className="grid gap-5 @3xl:grid-cols-3">
         <Box icon={<MapPin aria-hidden size={18} />} title="Location & contact" tone="red">
-          <Rows
-            onRed
-            rows={[
-              ['Address', showroom.address],
-              [
-                'Phone',
-                <a
-                  className="font-semibold text-white underline-offset-4 hover:underline"
-                  href={telHref(showroom.phone)}
-                  key="phone"
-                >
-                  {showroom.phone}
-                </a>,
-              ],
-              ['Parking', showroom.parking ?? 'Free parking by the door.'],
-              ['Walk-ins', 'Always welcome. No appointment needed.'],
-            ]}
-          />
+          <Rows onRed rows={contact} />
         </Box>
         <Box icon={<Clock aria-hidden size={18} />} title="Showroom hours" tone="light">
           <HoursTable showroom={showroom} />

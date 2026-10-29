@@ -144,7 +144,6 @@ export function ProjectManagerPanel({
   bookHref: string;
 }) {
   const { pm } = showroom;
-  const firstName = pmFirstName(pm);
   const team = [pm, showroom.secondPm].filter((p): p is ProjectManager => p != null);
 
   return (
@@ -180,8 +179,8 @@ export function ProjectManagerPanel({
           )}
           {!pm.intro && !pm.bio && (
             <p className="font-heading text-xl font-semibold leading-snug @xl:text-2xl">
-              {firstName} will walk you through our kitchens, go through yours with you, and price
-              it while you're here. Free, and walk-ins are welcome.
+              {team.map(pmFirstName).join(' or ')} will walk you through our kitchens, go through
+              yours with you, and price it while you're here. Free, and walk-ins are welcome.
             </p>
           )}
           {pm.steps != null && pm.steps.length > 0 && (

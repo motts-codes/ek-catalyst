@@ -63,11 +63,28 @@ const pmPhoto = (showroom: string, name: string) => ({
   alt: `${name}, Project Manager`,
 });
 
-const pmNamed = (showroom: string, name: string): ProjectManager => ({
+const pmNamed = (
+  showroom: string,
+  name: string,
+  rest: Omit<ProjectManager, 'name' | 'role' | 'photo'> = {},
+): ProjectManager => ({
   name,
   role: 'Project Manager & Design Consultant',
   photo: pmPhoto(showroom, name),
+  ...rest,
 });
+
+// The five steps the two-manager showrooms share.
+const TEAM_STEPS = [
+  { title: 'Understand your space and budget', description: 'Honest guidance from day one.' },
+  { title: 'Plan the cabinets', description: 'Storage and flow for how you actually live.' },
+  { title: 'Choose your finish', description: 'Every door style and color we make, in person.' },
+  { title: 'Check every detail', description: 'Every cabinet and measurement, before you order.' },
+  {
+    title: 'Stay with you',
+    description: "RTA ships in 2 weeks, assembled in 3, and we're here throughout.",
+  },
+];
 
 export const SHOWROOMS: Showroom[] = [
   {
@@ -81,8 +98,50 @@ export const SHOWROOMS: Showroom[] = [
     coords: { lat: 41.433247, lng: -73.410702 },
     phone: '(203) 546-7290',
     hours: TUE_SAT,
-    towns: ['Danbury', 'Bethel', 'Newtown', 'New Milford', 'New Fairfield', 'Ridgefield'],
-    pm: pmNamed('brookfield', 'Dan Czernicki'),
+    towns: [
+      'Danbury',
+      'Bethel',
+      'Newtown',
+      'New Fairfield',
+      'Ridgefield',
+      'New Milford',
+      'Southbury',
+      'Woodbury',
+      'Oxford',
+      'Watertown',
+      'Seymour',
+      'Naugatuck',
+      'Patterson, NY',
+      'Brewster, NY',
+      'Mahopac, NY',
+    ],
+    seoClosing:
+      'Visit Express Kitchens in Brookfield, CT, to explore our range of kitchen cabinets, countertops and appliances.',
+    pm: pmNamed('brookfield', 'Dan Czernicki', {
+      phone: '(203) 826-8812',
+      email: 'dczernicki@expresskitchens.com',
+      intro:
+        "Hi, I'm Dan. I've been designing kitchens with Express Kitchens for over 6 years, and I listen more than I talk.",
+      bio: "Put your trust in me and I'll plan a kitchen built around your space, your family and how you live.",
+      steps: [
+        { title: 'Understand your needs', description: 'Your needs come first, always.' },
+        {
+          title: 'Plan the cabinets',
+          description: 'Built around your space, your family and your life.',
+        },
+        {
+          title: 'Choose your finish',
+          description: 'From open-plan islands to traditional details, in person.',
+        },
+        {
+          title: 'Check every detail',
+          description: 'Every cabinet and measurement, before you order.',
+        },
+        { title: 'Stay with you', description: "I'm here to help, even after your kitchen is in." },
+      ],
+      offDuty:
+        "When I'm not at the showroom, I'm hiking with my dog, fishing, paddleboarding or longboarding.",
+    }),
   },
   {
     slug: 'new-london',
@@ -116,7 +175,7 @@ export const SHOWROOMS: Showroom[] = [
     landmarks:
       'Visiting Mohegan Sun, Foxwoods or the Mystic Aquarium? Stop by and see our kitchens.',
     seoClosing:
-      'Whether you are visiting the casinos at Mohegan or Foxwoods or exploring the Mystic Aquarium, please stop by our showroom to check out our wide selection of products to make your kitchen beautiful.',
+      "Whether you're visiting the casinos at Mohegan Sun or Foxwoods, or exploring the Mystic Aquarium, stop by our showroom and see our kitchens.",
     pm: {
       name: 'Lanaisha Rodrigues',
       role: 'Project Manager & Design Consultant',
@@ -171,9 +230,24 @@ export const SHOWROOMS: Showroom[] = [
       'Berlin',
       'New Britain',
       'Glastonbury',
+      'Cromwell',
+      'Middletown',
+      'Farmington',
+      'Elmwood',
+      'Griswoldville',
+      'Meriden',
     ],
-    pm: pmNamed('newington', 'Chris Jones'),
-    secondPm: pmNamed('newington', 'Ulrike Robinson'),
+    seoClosing:
+      "When you're driving down the Berlin Turnpike to visit Stew Leonard's or grab a snack at the Olympia Diner, stop by our showroom to see our kitchens.",
+    pm: pmNamed('newington', 'Chris Jones', {
+      phone: '(860) 785-2281',
+      email: 'cjones@expresskitchens.com',
+      steps: TEAM_STEPS,
+    }),
+    secondPm: pmNamed('newington', 'Ulrike Robinson', {
+      phone: '(860) 956-5672',
+      email: 'urobinson@expresskitchens.com',
+    }),
   },
   {
     slug: 'orange',
@@ -183,8 +257,51 @@ export const SHOWROOMS: Showroom[] = [
     coords: { lat: 41.265782, lng: -73.003126 },
     phone: '(203) 283-4909',
     hours: TUE_SAT,
-    towns: ['New Haven', 'Milford', 'West Haven', 'Woodbridge', 'Hamden', 'Derby', 'Shelton'],
-    pm: pmNamed('orange', 'Staci Caporuscio'),
+    towns: [
+      'New Haven',
+      'West Haven',
+      'East Haven',
+      'Milford',
+      'Woodbridge',
+      'Hamden',
+      'Derby',
+      'Ansonia',
+      'Shelton',
+      'Monroe',
+      'Branford',
+      'Guilford',
+    ],
+    seoClosing: "We're conveniently located right across from Party City on Boston Post Road.",
+    pm: pmNamed('orange', 'Staci Caporuscio', {
+      email: 'SCaporuscio@expresskitchens.com',
+      intro:
+        "Hi, I'm Staci. I've been a kitchen designer for almost 15 years, 6 of them with Express Kitchens.",
+      bio: "I've worked in several of our showrooms, and the kitchen really is the heart of the home, so helping customers get the one they want never gets old.",
+      steps: [
+        {
+          title: 'Listen to what you want',
+          description: 'What would make you happiest in your kitchen? I listen to every word.',
+        },
+        {
+          title: 'Plan the best kitchen for you',
+          description: "Everything you've told me, within your budget.",
+        },
+        {
+          title: 'Choose your style',
+          description: 'Every door style and color we make, in person.',
+        },
+        {
+          title: 'Check every detail',
+          description: 'Every cabinet and measurement, before you order.',
+        },
+        {
+          title: 'Stay with you',
+          description: "I'll work closely with you right through to the final result.",
+        },
+      ],
+      offDuty:
+        "When I'm not at the showroom, I'm with my family, playing tennis, or skiing when there's snow.",
+    }),
   },
   {
     slug: 'stamford',
@@ -194,8 +311,47 @@ export const SHOWROOMS: Showroom[] = [
     coords: { lat: 41.093579, lng: -73.517536 },
     phone: '(203) 721-6190',
     hours: TUE_SAT,
-    towns: ['Greenwich', 'Darien', 'Norwalk', 'New Canaan', 'Westport', 'Wilton'],
-    pm: pmNamed('stamford', 'Richard Cruz'),
+    towns: [
+      'Greenwich',
+      'Darien',
+      'New Canaan',
+      'Norwalk',
+      'Westport',
+      'Wilton',
+      'Fairfield',
+      'Bridgeport',
+      'Ridgefield',
+      'Trumbull',
+    ],
+    seoClosing:
+      'Visit us at 1011 Hope Street, just a few miles away, to explore our kitchen cabinets, countertops and appliances.',
+    pm: pmNamed('stamford', 'Richard Cruz', {
+      phone: '(203) 721-6279',
+      email: 'rcruz@expresskitchens.com',
+      intro: "Hi, I'm Richard. I've been designing kitchens with Express Kitchens for 12 years.",
+      bio: 'I blend creativity with practicality, so every kitchen fits the way my customers live.',
+      steps: [
+        {
+          title: 'Listen to your goals',
+          description: 'Your lifestyle, your taste and your budget.',
+        },
+        {
+          title: 'Plan your kitchen',
+          description: 'Practical and personal, built around your space.',
+        },
+        {
+          title: 'Choose your finish',
+          description: 'Every door style and color we make, in person.',
+        },
+        {
+          title: 'Check every detail',
+          description: 'Every cabinet and measurement, before you order.',
+        },
+        { title: 'Stay with you', description: "I'm your point of contact from start to finish." },
+      ],
+      offDuty:
+        "When I'm not at the showroom, I unwind with a good movie and keep up with the news.",
+    }),
   },
   {
     slug: 'bristol',
@@ -213,12 +369,30 @@ export const SHOWROOMS: Showroom[] = [
       'Southington',
       'Farmington',
       'Plymouth',
-      'Wolcott',
       'Terryville',
+      'Wolcott',
       'Burlington',
+      'Waterbury',
+      'Watertown',
+      'Woodbury',
+      'Canton',
+      'New Hartford',
+      'Winsted',
+      'Litchfield',
+      'Goshen',
+      'Cornwall',
     ],
-    pm: pmNamed('bristol', 'Laurie Praprotnik'),
-    secondPm: pmNamed('bristol', 'Annette Morales'),
+    seoClosing:
+      "Come and see our newly renovated showroom, in the same plaza as BJ's Wholesale Club.",
+    pm: pmNamed('bristol', 'Laurie Praprotnik', {
+      phone: '(860) 866-4831',
+      email: 'LPraprotnik@expresskitchens.com',
+      steps: TEAM_STEPS,
+    }),
+    secondPm: pmNamed('bristol', 'Annette Morales', {
+      phone: '(860) 969-8691',
+      email: 'amorales@expresskitchens.com',
+    }),
     outlet: {
       name: 'Express Kitchens Factory Outlet',
       phone: '(860) 247-1000',
@@ -391,7 +565,7 @@ export interface SeoCopy {
   body: string[];
 }
 
-// "Residents from Groton, CT, Waterford, CT, … and Montville, CT": towns outside Connecticut
+// "Residents of Groton, CT, Waterford, CT, … and Montville, CT": towns outside Connecticut
 // already carry their state.
 const seoTowns = (towns: string[]) => {
   const named = towns.map((town) => (town.includes(',') ? town : `${town}, CT`));
@@ -409,13 +583,12 @@ export function seoCopy(showroom: Showroom): SeoCopy {
     title: `Welcome to Express Kitchens for Top-Quality Kitchen Cabinets in ${place}`,
     intro: `Discover the finest kitchen cabinets, countertops, handles, sinks, faucets, appliances, windows and more in ${place} at Express Kitchens. Our ${showroom.name} store offers a wide range of stylish and durable cabinets designed to enhance your kitchen's functionality and aesthetic appeal. Visit us today to find the perfect cabinets for your dream kitchen.`,
     body: [
-      `Your ultimate destination for your dream kitchen in ${place}, is Express Kitchens.`,
-      `Your journey for dream kitchens starts at Express Kitchens in ${place}, your premier destination for top-quality kitchen cabinetry and comprehensive kitchen renovation solutions. If you're searching for "kitchen remodel near me," "countertops near me," "appliances near ${place}," "replacement windows," or "kitchen cabinet near me," our ${showroom.name} store offers a wide selection of stylish and durable kitchen cabinets designed to meet all your needs.`,
-      "At Express Kitchens, we specialize in custom cabinets, providing tailored solutions that perfectly fit your space and style. Our expert team is dedicated to helping you create your dream kitchen, whether you're embarking on a full kitchen remodel or simply updating certain elements. Our kitchen cabinets come in various designs and finishes, ensuring you find the perfect match for your home.",
-      'Our custom cabinet shops are dedicated to providing tailored solutions that meet your specific needs and preferences. In addition to our top-notch kitchen cabinets, we provide a wide range of kitchen countertops to complete your renovation. Choose from our stunning quartz countertops, known for their durability and low maintenance, or opt for the timeless beauty and strength of granite countertops. For those seeking a budget-friendly option, our laminate countertops offer excellent functionality and aesthetic appeal.',
-      'Our comprehensive kitchen remodel services also include high-quality kitchen appliances to complement your new cabinets and countertops. From refrigerators and ovens to dishwashers and microwaves, we have everything you need to create a cohesive and efficient kitchen.',
-      "At Express Kitchens, our experienced kitchen designers are also skilled in creating beautiful and functional bathroom spaces. We offer a wide range of options, including custom vanities, countertops, and cabinetry, all designed to fit your unique style and needs. Whether you're looking for a complete bathroom makeover or simply updating certain elements, our team will work closely with you to bring your vision to life.",
-      `Residents from ${seoTowns(showroom.towns)}, are all within easy reach of our showroom. ${showroom.seoClosing ?? 'Please stop by our showroom to check out our wide selection of products to make your kitchen beautiful.'}`,
+      `Your journey to your dream kitchen starts at Express Kitchens in ${place}, your destination for top-quality kitchen cabinetry and kitchen renovation solutions. If you're searching for "kitchen remodel near me," "countertops near me," "appliances near ${place}," "replacement windows" or "kitchen cabinets near me," our ${showroom.name} store offers a wide selection of stylish and durable kitchen cabinets to meet your needs.`,
+      "At Express Kitchens, we specialize in kitchen cabinets made in our own factory, in styles and sizes to fit your space. Whether you're planning a full kitchen remodel or updating a few elements, our team is here to help you create your dream kitchen, with cabinets in a range of designs and finishes.",
+      'Alongside our cabinets, we offer a wide range of countertops to complete your kitchen: quartz, known for its durability and low maintenance; granite, for its timeless beauty and strength; and laminate, a budget-friendly option.',
+      'We also offer kitchen appliances to complement your new cabinets and countertops, from refrigerators and ovens to dishwashers and microwaves.',
+      "Our experienced team also helps with bathrooms, with vanities, countertops and cabinetry to fit your style. Whether it's a complete bathroom makeover or a few updates, we'll work closely with you to bring your vision to life.",
+      `Residents of ${seoTowns(showroom.towns)} are all within easy reach of our showroom. ${showroom.seoClosing ?? 'Stop by our showroom and see our kitchens.'}`,
     ],
   };
 }
