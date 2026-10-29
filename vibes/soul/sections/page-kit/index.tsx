@@ -30,8 +30,9 @@ export interface PageAction {
   style?: 'solid' | 'outline' | 'outline-red';
 }
 
-const OUTLINE_BUTTON =
+export const OUTLINE_BUTTON =
   'transition-colors [--button-ghost-background:white] [--button-ghost-background-hover:hsl(var(--foreground))] [--button-ghost-border:hsl(var(--foreground))] hover:[--button-ghost-text:white]';
+
 // Brand-red outline and text, filling red on hover.
 const OUTLINE_RED_BUTTON =
   'transition-colors [--button-ghost-background:white] [--button-ghost-background-hover:var(--button-primary-background,#d90716)] [--button-ghost-border:var(--button-primary-background,#d90716)] [--button-ghost-text:var(--button-primary-background,#d90716)] hover:[--button-ghost-text:white]';

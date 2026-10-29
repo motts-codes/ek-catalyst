@@ -2,6 +2,7 @@ import { Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { OUTLINE_BUTTON } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 import { directionsHref, type Showroom, showroomHref } from '~/lib/pages/showrooms';
@@ -40,14 +41,7 @@ export function ShowroomCards({
               />
             </div>
             <div className="flex flex-1 flex-col p-6">
-              <h3 className="font-heading text-xl font-bold leading-tight">
-                {showroom.name}
-                {showroom.outlet != null && (
-                  <span className="ml-2 rounded-full bg-[#fbe7e7] px-2.5 py-0.5 align-middle text-[11px] font-semibold uppercase tracking-wide text-[#96050f]">
-                    Factory outlet
-                  </span>
-                )}
-              </h3>
+              <h3 className="font-heading text-xl font-bold leading-tight">{showroom.name}</h3>
               <ul className="mt-4 space-y-3 text-sm text-contrast-500">
                 <li className="flex gap-3">
                   <MapPin aria-hidden className="mt-0.5 shrink-0 text-contrast-400" size={16} />
@@ -98,20 +92,21 @@ export function ShowroomCards({
               </ul>
               <div className="mt-6 flex flex-wrap gap-2.5 pt-1">
                 <ButtonLink
-                  href={showroomHref(showroom.slug)}
-                  shape="pill"
-                  size="small"
-                  variant="secondary"
-                >
-                  Visit the showroom page
-                </ButtonLink>
-                <ButtonLink
                   href={`${bookHref}?showroom=${showroom.slug}`}
                   shape="pill"
                   size="small"
                   variant="primary"
                 >
                   Book a visit
+                </ButtonLink>
+                <ButtonLink
+                  className={OUTLINE_BUTTON}
+                  href={showroomHref(showroom.slug)}
+                  shape="pill"
+                  size="small"
+                  variant="ghost"
+                >
+                  Visit the showroom page
                 </ButtonLink>
               </div>
             </div>
@@ -290,9 +285,6 @@ export function OtherShowrooms({ showrooms }: { showrooms: Showroom[] }) {
               href={showroomHref(s.slug)}
             >
               {s.name}
-              {s.outlet != null && (
-                <span className="ml-1.5 text-[11px] text-contrast-400">· factory outlet</span>
-              )}
             </Link>
           </li>
         ))}
