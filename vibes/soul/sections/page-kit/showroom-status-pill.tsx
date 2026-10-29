@@ -29,13 +29,13 @@ export function ShowroomStatusPill({ name, hours }: Props) {
     <p
       className={clsx(
         'mb-5 inline-flex w-fit items-center gap-2 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors duration-300 motion-reduce:transition-none',
-        open ? 'bg-[#15803d] text-white' : 'bg-white text-foreground',
+        open ? 'bg-[#2bcc2b] text-black' : 'bg-white text-foreground',
       )}
     >
       {open ? (
         <>
           {name}
-          <span aria-hidden className="h-3 w-px bg-white/50" />
+          <span aria-hidden className="h-3 w-px bg-black/40" />
           <span>
             <span className="sr-only">is </span>Open<span className="sr-only"> now</span>
           </span>
