@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { CalendarDays, Clock, Mail, MapPin, Phone, User } from 'lucide-react';
+import { CalendarDays, Clock, Mail, MapPin, Phone, Quote, User } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
@@ -188,7 +188,18 @@ export function ProjectManagerPanel({
             <StepsTimeline className="mt-8" steps={pm.steps} />
           )}
           {Boolean(pm.offDuty) && (
-            <p className="mt-6 text-sm italic leading-relaxed text-contrast-500">{pm.offDuty}</p>
+            <figure className="mt-8 flex gap-3">
+              <Quote
+                aria-hidden
+                className="mt-0.5 shrink-0 -scale-x-100 text-[var(--button-primary-background,#d90716)]"
+                fill="currentColor"
+                size={22}
+                strokeWidth={0}
+              />
+              <blockquote className="font-heading text-base italic leading-relaxed text-foreground @xl:text-lg">
+                {pm.offDuty}
+              </blockquote>
+            </figure>
           )}
         </div>
       </div>

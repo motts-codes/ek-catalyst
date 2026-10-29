@@ -133,10 +133,10 @@ function Rows({ rows, onRed = false }: { rows: Array<[string, ReactNode]>; onRed
   );
 }
 
-// The chip on today's row: "Open now", "Opens 9 AM" before the doors open, else "Closed now".
+// The chip on today's row: "Open", "Opens 9 AM" before the doors open, else "Closed now".
 function chipLabel(today: { open: boolean; label: string } | null): string {
   if (today == null) return 'Today';
-  if (today.open) return 'Open now';
+  if (today.open) return 'Open';
   if (today.label.startsWith('Opens')) return today.label;
 
   return 'Closed now';
