@@ -1,14 +1,9 @@
-import { clsx } from 'clsx';
-import { Star } from 'lucide-react';
+'use client';
 
-import {
-  Carousel,
-  CarouselButtons,
-  CarouselContent,
-  CarouselControls,
-  CarouselItem,
-  CarouselScrollbar,
-} from '@/vibes/soul/primitives/carousel';
+import { clsx } from 'clsx';
+import { ArrowLeft, ArrowRight, Star } from 'lucide-react';
+import { useState } from 'react';
+
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { Actions, type PageAction } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
@@ -25,7 +20,6 @@ export interface SpotlightReview {
 }
 
 interface Props {
-  /** The small pill above the title. */
   kicker?: string;
   title?: string;
   /** Words in the title to pick out in cream. */
@@ -74,44 +68,105 @@ function Stars({ count }: { count: number }) {
   );
 }
 
-// "Don't take our word for it": the landing page's testimonial band, rebuilt. A deep red band
-// with a centred heading, then photo cards in the site's carousel (three across on desktop),
-// each with the reviewer's photo, name, stars, their own headline and an excerpt.
+// How many cards show behind the front one, and how far each steps back.
+const DEPTH = 3;
+const DECK_POSITION = [
+  'translate-x-0 translate-y-0 scale-100 opacity-100',
+  'translate-x-4 translate-y-4 scale-100 opacity-100 brightness-[0.94]',
+  'translate-x-8 translate-y-8 scale-100 opacity-100 brightness-[0.88]',
+];
+
+const arrowButtonClassName =
+  'flex h-11 w-11 items-center justify-center rounded-full border border-white/40 text-white transition-colors hover:border-white hover:bg-white hover:text-[#9f3632] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#9f3632]';
+
+// "Don't take our word for it": the landing page's testimonial band, rebuilt. A deep red band:
+// copy and the arrows on the left, and on the right a deck of photo cards, the next two peeking
+// out behind the front one. Next sends the front card fading away and brings the one behind it
+// forward; Previous brings it back. Reduced motion swaps without the animation.
 export function ReviewSpotlight({
   kicker = 'Real kitchens. Real families.',
   title = "Don't take our word for it.",
   accentWords = ['take our word'],
-  description = '5,000+ verified reviews across Google, BBB and Houzz. Rated A+ by the Better Business Bureau.',
+  description = 'Rated A+ by the Better Business Bureau, and reviewed on Google, BBB and Houzz.',
   reviews,
   actions = [],
   className,
 }: Props) {
+  const [active, setActive] = useState(0);
+  const count = reviews.length;
+  const current = reviews[active];
+
+  if (!current) return null;
+
+  const step = (delta: number) => setActive((index) => (index + delta + count) % count);
+
   return (
     // Deep brand red (#9F3632): white text is 6.9:1 on it, the cream accent 9.8:1.
     <HomeSection className={clsx('bg-[#9f3632] text-white', className)}>
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="inline-block rounded-full bg-white/15 px-3.5 py-1 text-xs font-semibold uppercase tracking-wide text-white">
-          {kicker}
-        </p>
-        <h2 className="mt-4 font-heading text-2xl font-bold leading-tight @xl:text-3xl @4xl:text-4xl">
-          <AccentedTitle accentWords={accentWords} title={title} />
-        </h2>
-        <p className="mt-3 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
-      </div>
-      <Carousel className="mt-8 @4xl:mt-10">
-        <CarouselContent className="-ml-4 @2xl:-ml-6">
-          {reviews.map((review) => (
-            <CarouselItem
-              className="basis-full pl-4 @lg:basis-1/2 @2xl:pl-6 @3xl:basis-1/3"
-              key={review.name}
+      <div className="grid gap-10 @3xl:grid-cols-[1fr_1.1fr] @3xl:items-center @3xl:gap-16">
+        <div className="max-w-xl">
+          <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-white">
+            {kicker}
+          </p>
+          <h2 className="font-heading text-2xl font-bold leading-tight @xl:text-3xl @4xl:text-4xl">
+            <AccentedTitle accentWords={accentWords} title={title} />
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-white/85 @xl:text-base">{description}</p>
+          <div className="mt-8 flex items-center gap-3">
+            <button
+              aria-label="Previous review"
+              className={arrowButtonClassName}
+              onClick={() => step(-1)}
+              type="button"
             >
-              <figure className="flex h-full flex-col overflow-hidden rounded-3xl bg-white text-foreground shadow-[0_16px_40px_-20px_rgb(0_0_0/0.45)]">
+              <ArrowLeft aria-hidden size={18} />
+            </button>
+            <button
+              aria-label="Next review"
+              className={arrowButtonClassName}
+              onClick={() => step(1)}
+              type="button"
+            >
+              <ArrowRight aria-hidden size={18} />
+            </button>
+            <p aria-live="polite" className="ml-1 text-sm text-white/85">
+              <span aria-hidden>
+                {active + 1} / {count}
+              </span>
+              <span className="sr-only">
+                Review {active + 1} of {count}: {current.name}
+              </span>
+            </p>
+          </div>
+          {actions.length > 0 && <Actions actions={actions} className="mt-8" onRed />}
+        </div>
+        {/* Every card sits in the same grid cell, so the deck is as tall as the tallest card;
+            the padding leaves room for the two cards peeking out behind. */}
+        <div className="grid pb-8 pr-8 @3xl:mx-auto @3xl:w-full @3xl:max-w-[30rem]">
+          {reviews.map((review, index) => {
+            const offset = (index - active + count) % count;
+            const shown = offset < DEPTH;
+
+            return (
+              <figure
+                aria-hidden={!shown || offset > 0}
+                className={clsx(
+                  'col-start-1 row-start-1 flex flex-col overflow-hidden rounded-3xl bg-white text-foreground shadow-[0_16px_40px_-20px_rgb(0_0_0/0.45)] transition-[transform,opacity,filter] duration-500 ease-out motion-reduce:transition-none',
+                  shown
+                    ? DECK_POSITION[offset]
+                    : // Leaving the front: lift, grow a touch and fade.
+                      'pointer-events-none -translate-y-6 scale-[1.03] opacity-0',
+                )}
+                inert={offset !== 0}
+                key={review.name}
+                style={{ zIndex: shown ? DEPTH - offset : 0 }}
+              >
                 <div className="relative aspect-[16/9] bg-contrast-100">
                   <Image
                     alt={review.image.alt}
                     className="object-cover"
                     fill
-                    sizes="(min-width: 56rem) 33vw, (min-width: 32rem) 50vw, 100vw"
+                    sizes="(min-width: 56rem) 30rem, 100vw"
                     src={review.image.src}
                   />
                 </div>
@@ -126,19 +181,10 @@ export function ReviewSpotlight({
                   </blockquote>
                 </figcaption>
               </figure>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselControls className="mt-6">
-          <CarouselScrollbar colorScheme="dark" label="Scroll reviews" />
-          <CarouselButtons
-            colorScheme="dark"
-            nextLabel="Next review"
-            previousLabel="Previous review"
-          />
-        </CarouselControls>
-      </Carousel>
-      {actions.length > 0 && <Actions actions={actions} className="mt-8 justify-center" onRed />}
+            );
+          })}
+        </div>
+      </div>
     </HomeSection>
   );
 }
