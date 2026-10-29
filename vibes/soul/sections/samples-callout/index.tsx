@@ -13,8 +13,11 @@ export interface SamplesVideo {
 }
 
 interface Props {
+  /** Small red-on-red label above the title, e.g. "How samples work". */
+  kicker?: string;
   title?: string;
-  description?: string;
+  /** One paragraph, or several. */
+  description?: string | string[];
   cta?: { label: string; href: string };
   /** A short, silent looping clip for the right panel (omit for copy only). */
   video?: SamplesVideo;
@@ -26,6 +29,7 @@ interface Props {
 // and decorative, starts paused for people who prefer reduced motion, and has its own pause
 // button (WCAG 2.2.2). Stacks on phones.
 export function SamplesCallout({
+  kicker,
   title = 'Try the finish at home. First two are on us.',
   description = 'Screens get colours wrong. Order a real door sample to hold against your walls, floors and countertop in your own light. Your first two (Quarter door samples) are free with code FREESAMPLES.',
   cta = { label: 'Order samples', href: '/samples' },
@@ -69,8 +73,15 @@ export function SamplesCallout({
       )}
     >
       <div className="flex flex-col justify-center gap-3 px-6 py-7 @xl:px-8">
+        {Boolean(kicker) && (
+          <p className="text-xs font-semibold uppercase tracking-wide text-white/80">{kicker}</p>
+        )}
         <h3 className="font-heading text-xl font-bold leading-tight @xl:text-2xl">{title}</h3>
-        <p className="max-w-[60ch] text-sm leading-relaxed @xl:text-base">{description}</p>
+        {(Array.isArray(description) ? description : [description]).map((paragraph) => (
+          <p className="max-w-[60ch] text-sm leading-relaxed @xl:text-base" key={paragraph}>
+            {paragraph}
+          </p>
+        ))}
         <div className="mt-1">
           <ButtonLink
             className="border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground [&>span]:mix-blend-normal"

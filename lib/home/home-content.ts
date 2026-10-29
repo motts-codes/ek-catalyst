@@ -14,6 +14,13 @@ import { type Showroom } from '@/vibes/soul/sections/showroom-band';
 
 export const FREE_DESIGN_HREF = '/mykitchen/free-design-consult';
 export const SAMPLES_HREF = '/samples';
+
+// The looping clip in the samples callout (home, consult, samples page).
+export const SAMPLES_VIDEO = {
+  webm: '/images/home/samples/samples.webm',
+  mp4: '/images/home/samples/samples.mp4',
+  poster: '/images/home/samples/samples-poster.jpg',
+};
 export const ESTIMATOR_HREF = '/mykitchen/price-my-kitchen';
 
 export const HERO_SLIDES: HeroSlide[] = [

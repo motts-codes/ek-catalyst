@@ -7,10 +7,11 @@ import { type CabinetLine } from '@/vibes/soul/sections/cabinet-lines';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { OUTLINE_RED_BUTTON, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { Image } from '~/components/image';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
-import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
+import { FREE_DESIGN_HREF, SAMPLES_VIDEO, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'Free Door Samples',
@@ -18,13 +19,14 @@ export const metadata: Metadata = {
     'Hold a piece of the real door, in the real finish, in your own light. Your first two quarter-door samples are free with code FREESAMPLES.',
 };
 
-// One card per collection: the door-sample photo, the collection name and the order button.
+// One card per collection: the door-sample photo on white, the collection name and a red
+// outline order button. The card lifts with a soft shadow on hover.
 function SampleCard({ line }: { line: CabinetLine }) {
   const image = line.hoverImage ?? line.image;
 
   return (
-    <li className="flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white">
-      <div className="relative aspect-square bg-contrast-100">
+    <li className="flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] motion-reduce:transition-none">
+      <div className="relative aspect-square bg-white">
         {image ? (
           <Image
             alt={`${line.name} door sample`}
@@ -42,15 +44,13 @@ function SampleCard({ line }: { line: CabinetLine }) {
         <h3 className="font-heading text-lg font-semibold leading-tight">
           {line.name} door sample
         </h3>
-        <p className="mt-1 text-sm text-contrast-500">
-          Quarter door · first two free with FREESAMPLES
-        </p>
         <div className="mt-auto pt-5">
           <ButtonLink
+            className={OUTLINE_RED_BUTTON}
             href={line.orderSampleHref ?? line.href}
             shape="pill"
             size="small"
-            variant="primary"
+            variant="ghost"
           >
             Order this sample
           </ButtonLink>
@@ -108,15 +108,18 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
           </ul>
         )}
       </HomeSection>
-      <Prose
-        body={[
-          'Add your samples to the cart and use FREESAMPLES at checkout. When they arrive, look at them in morning and evening light, next to your countertop or floor.',
-          'Want a second opinion? Bring them to a showroom, or hold them up on a video call with our design team.',
-        ]}
-        kicker="How samples work"
-        tint
-        title="Order, hold, decide"
-      />
+      <HomeSection compact>
+        <SamplesCallout
+          cta={{ label: 'Choose your samples', href: '#collections' }}
+          description={[
+            'Add your samples to the cart and use FREESAMPLES at checkout. When they arrive, look at them in morning and evening light, next to your countertop or floor.',
+            'Want a second opinion? Bring them to a showroom, or hold them up on a video call with our design team.',
+          ]}
+          kicker="How samples work"
+          title="Order, hold, decide"
+          video={SAMPLES_VIDEO}
+        />
+      </HomeSection>
       <CabinetFaq
         data={{
           headline: 'Questions about samples',
