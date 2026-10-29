@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
+import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import {
@@ -10,8 +11,15 @@ import {
   ShowroomDetails,
 } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
-import { HOME_REVIEWS, SAMPLES_HREF } from '~/lib/home/home-content';
-import { getShowroom, SHOWROOMS } from '~/lib/pages/showrooms';
+import { HOME_REVIEWS } from '~/lib/home/home-content';
+import {
+  directionsHref,
+  getShowroom,
+  joinTowns,
+  pmFirstName,
+  type Showroom,
+  SHOWROOMS,
+} from '~/lib/pages/showrooms';
 
 interface Props {
   params: Promise<{ locale: string; slug: string }>;
@@ -21,19 +29,40 @@ export function generateStaticParams() {
   return SHOWROOMS.map(({ slug }) => ({ slug }));
 }
 
+const telHref = (phone: string) => `tel:${phone.replace(/\D/g, '')}`;
+
+// "Lanaisha", or "Chris or Ulrike" where a showroom has two Project Managers.
+function pmNames(showroom: Showroom): string {
+  const first = pmFirstName(showroom.pm);
+
+  return showroom.secondPm ? `${first} or ${pmFirstName(showroom.secondPm)}` : first;
+}
+
+// "meet Project Manager Lanaisha Rodrigues" / "meet Project Managers Chris Jones and Ulrike
+// Robinson", for the meta description.
+function pmMeta(showroom: Showroom): string {
+  if (showroom.pm.name.startsWith('[')) return 'meet our Project Managers';
+
+  return showroom.secondPm
+    ? `meet Project Managers ${showroom.pm.name} and ${showroom.secondPm.name}`
+    : `meet Project Manager ${showroom.pm.name}`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const showroom = getShowroom((await params).slug);
 
   if (!showroom) return {};
 
+  const street = showroom.address.split(',')[0] ?? showroom.address;
+
   return {
-    title: `${showroom.name} Kitchen Showroom`,
-    description: `Visit Express Kitchens in ${showroom.name}, Connecticut: ${showroom.address}. Full kitchens on display and free design help from a Project Manager.`,
+    title: `Kitchen Cabinet Showroom in ${showroom.name}, CT`,
+    description: `Visit Express Kitchens in ${showroom.name}, CT, at ${street}. See full kitchens, ${pmMeta(showroom)}, and get your kitchen priced. Walk-ins welcome.`,
   };
 }
 
-// One template for the six showrooms: where it is, when it's open, who you'll plan with, and
-// the reviews from people who did.
+// One template for the six showrooms (Arun's brief of 29 Oct 2026, finalized on New London):
+// where it is, when it's open, who you'll plan with, the towns nearby, reviews, a short FAQ.
 export default async function ShowroomPage({ params }: Props) {
   const { locale, slug } = await params;
 
@@ -43,8 +72,12 @@ export default async function ShowroomPage({ params }: Props) {
 
   if (!showroom) return notFound();
 
+  const bookHref = `/book?showroom=${showroom.slug}`;
+  const who = pmNames(showroom);
   const reviews = HOME_REVIEWS.filter((r) => r.location === showroom.name);
   const others = SHOWROOMS.filter((s) => s.slug !== slug);
+  // The call button: the Project Manager's direct line, else the showroom's.
+  const phone = showroom.pm.phone ?? showroom.phone;
 
   return (
     <>
@@ -56,42 +89,73 @@ export default async function ShowroomPage({ params }: Props) {
       />
       <PageHero
         actions={[
-          { label: 'Book a visit', href: `/book?showroom=${showroom.slug}`, primary: true },
-          { label: 'Order a sample door', href: SAMPLES_HREF },
+          { label: 'Book a visit', href: bookHref, primary: true },
+          { label: 'Get directions', href: directionsHref(showroom.address), style: 'outline' },
         ]}
         chips={[
-          'Free design and quote',
+          'Free design consult',
           'Full kitchens on display',
           'Walk-ins welcome',
-          ...(showroom.outlet ? ['Factory outlet on site'] : []),
+          ...(showroom.outlet ? ['Factory Outlet here too'] : []),
         ]}
-        description={`Whether you're starting with a photo you saved or a kitchen you've been living with for too long, this is the place to turn it into a plan. Walk through full-size kitchens, hold the doors and finishes in your hands, and sit down with ${showroom.pm.name.startsWith('[') ? 'our Project Manager' : showroom.pm.name}, who will design your layout and price it while you're here. Free, with no deposit and no obligation.`}
+        description={`Walk through full kitchens, hold the doors, and sit down with ${who}, who'll go through your kitchen and price it while you're here. Free, and walk-ins are welcome.`}
         image={showroom.image}
         imageLabel={`${showroom.name} showroom floor, wide`}
-        kicker={`Express Kitchens · ${showroom.name}, Connecticut`}
+        kicker={`${showroom.name}, CT`}
+        split="even"
         title={`Your kitchen starts in ${showroom.name}`}
       />
       <ShowroomDetails showroom={showroom} />
-      <ProjectManagerPanel bookHref={`/book?showroom=${showroom.slug}`} showroom={showroom} />
+      <ProjectManagerPanel bookHref={bookHref} showroom={showroom} />
       <Prose
         body={[
-          `People come to us in ${showroom.name} from ${showroom.towns.slice(0, -1).join(', ')} and ${showroom.towns[showroom.towns.length - 1]}. If you're anywhere nearby, we're an easy visit, and if you'd rather we came to you, ask about an at-home appointment when you book.`,
+          [
+            `Our ${showroom.name} showroom is an easy drive from ${joinTowns(showroom.towns)}.`,
+            showroom.landmarks,
+          ]
+            .filter(Boolean)
+            .join(' '),
         ]}
         kicker="Who we serve"
         tint
-        title="Serving the towns around us"
+        title={`Kitchen cabinets near ${showroom.name}, CT`}
       />
       {reviews.length > 0 && (
         <ReviewMarquee
           reviews={[...reviews, ...HOME_REVIEWS.filter((r) => r.location !== showroom.name)]}
-          summary={`Starting with ${showroom.name}`}
+          summary={`Starting with our ${showroom.name} customers`}
           tint
           title="What it was like, in their words"
         />
       )}
+      <CabinetFaq
+        data={{
+          headline: 'Before you visit',
+          items: [
+            {
+              q: 'Do I need an appointment?',
+              a: `No, walk-ins are welcome. Booking a visit means ${who} is ready for you.`,
+            },
+            {
+              q: 'How long does a design consult take?',
+              a: "About an hour. You'll leave with an itemized quote, priced RTA and assembled. Free, with no obligation.",
+            },
+            {
+              q: 'Should I bring measurements?',
+              a: 'Yes, if you have them. If not, we can measure your kitchen for $85 (CT and greater-CT zip codes).',
+            },
+            {
+              q: "Can't make it in?",
+              a: 'Book a video consult, weekdays 9 AM–5 PM ET, and get the same itemized quote.',
+            },
+          ],
+        }}
+      />
       <OtherShowrooms showrooms={others} />
       <ClosingBand
-        primary={{ label: 'Book a visit', href: `/book?showroom=${showroom.slug}` }}
+        description={`Walk in any time, or book a visit with ${who}.`}
+        phone={{ label: `Call ${phone}`, href: telHref(phone) }}
+        primary={{ label: 'Book a visit', href: bookHref }}
         tint
         title={`Ready to plan your kitchen in ${showroom.name}?`}
       />

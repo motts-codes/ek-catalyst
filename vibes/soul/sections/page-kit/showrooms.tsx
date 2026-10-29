@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { Clock, Mail, MapPin, Phone, User } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -5,7 +6,7 @@ import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-sectio
 import { OUTLINE_BUTTON } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
-import { directionsHref, type Showroom, showroomHref } from '~/lib/pages/showrooms';
+import { directionsHref, pmFirstName, type Showroom, showroomHref } from '~/lib/pages/showrooms';
 
 // One card per showroom: photo, name, address with directions, hours, phone and the Project
 // Manager, with a link to the showroom's own page.
@@ -135,7 +136,7 @@ export function ProjectManagerPanel({
   bookHref: string;
 }) {
   const { pm } = showroom;
-  const firstName = pm.name.startsWith('[') ? 'your Project Manager' : pm.name.split(' ')[0];
+  const firstName = pmFirstName(pm);
 
   return (
     <HomeSection kicker="Your Project Manager" title={`Meet ${pm.name}`}>
@@ -193,7 +194,7 @@ export function ProjectManagerPanel({
           )}
           <div className="mt-8">
             <ButtonLink href={bookHref} shape="pill" size="small" variant="primary">
-              Plan your kitchen with {firstName}
+              Book with {firstName}
             </ButtonLink>
           </div>
         </div>
@@ -202,11 +203,16 @@ export function ProjectManagerPanel({
   );
 }
 
-// Address, hours, phone and parking for a showroom page, plus the towns it serves.
+// Address, hours, phone and parking for a showroom page; Bristol adds the Factory Outlet.
 export function ShowroomDetails({ showroom }: { showroom: Showroom }) {
   return (
     <HomeSection compact tint>
-      <div className="grid gap-5 @xl:grid-cols-2 @4xl:grid-cols-4">
+      <div
+        className={clsx(
+          'grid gap-5 @xl:grid-cols-2',
+          showroom.outlet ? '@4xl:grid-cols-4' : '@4xl:grid-cols-3',
+        )}
+      >
         <Detail icon={<MapPin aria-hidden size={18} />} title="Where to find us">
           <p>{showroom.address}</p>
           <a
@@ -243,7 +249,7 @@ export function ShowroomDetails({ showroom }: { showroom: Showroom }) {
             </a>
           </p>
         </Detail>
-        {showroom.outlet ? (
+        {showroom.outlet && (
           <Detail icon={<Clock aria-hidden size={18} />} title={showroom.outlet.name}>
             {showroom.outlet.hours.map((h) => (
               <p key={h.days}>
@@ -251,10 +257,9 @@ export function ShowroomDetails({ showroom }: { showroom: Showroom }) {
               </p>
             ))}
             <p className="mt-1">{showroom.outlet.phone}</p>
-          </Detail>
-        ) : (
-          <Detail icon={<MapPin aria-hidden size={18} />} title="Serving">
-            <p>{showroom.towns.join(', ')}</p>
+            <p className="mt-2">
+              Not a showroom: price match and financing aren't available at the outlet.
+            </p>
           </Detail>
         )}
       </div>

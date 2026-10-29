@@ -29,6 +29,8 @@ export interface Showroom {
   hours: Hours[];
   parking?: string;
   towns: string[];
+  /** A local-landmark line for the "Who we serve" section, e.g. "Visiting Mohegan Sun…?". */
+  landmarks?: string;
   /** The lead Project Manager (the one with the profile on the showroom page). */
   pm: ProjectManager;
   /** A second Project Manager at the same showroom, named alongside the first. */
@@ -84,57 +86,56 @@ export const SHOWROOMS: Showroom[] = [
     hours: TUE_SAT,
     parking: 'Free parking in a large lot with direct access to the showroom.',
     towns: [
-      'Madison',
-      'Clinton',
-      'East Lyme',
-      'Mystic',
-      'Uncasville',
       'Groton',
       'Waterford',
+      'East Lyme',
+      'North Lyme',
+      'Mystic',
       'Stonington',
       'Norwich',
       'Old Saybrook',
+      'Madison',
+      'Clinton',
       'Colchester',
       'Montville',
+      'Uncasville',
       'Westerly, RI',
+      'Hopkinton, RI',
     ],
+    landmarks:
+      'Visiting Mohegan Sun, Foxwoods or the Mystic Aquarium? Stop by and see our kitchens.',
     pm: {
       name: 'Lanaisha Rodrigues',
       role: 'Project Manager & Design Consultant',
       phone: '(860) 471-8875',
       email: 'LRodrigues@expresskitchens.com',
       intro:
-        "Hi, I'm Lanaisha. What I enjoy most is working alongside dedicated professionals and meeting amazing customers every single day.",
-      bio: "Each project is a new chance to learn, grow and be part of a team that takes pride in delivering quality results. I bring creativity, attention to detail and practical solutions to every kitchen I take on, and I genuinely love helping families in New London create the kitchen they've always dreamed of.",
+        "Hi, I'm Lanaisha. I love meeting customers every day and helping families in New London get the kitchen they've always wanted.",
+      bio: 'I bring creativity, attention to detail and practical answers to every kitchen, from the first idea to the final order.',
       steps: [
         {
-          title: 'Understand your vision',
-          description:
-            'I take the time to really understand what you want: your style, your family and your budget.',
+          title: 'Understand your kitchen',
+          description: 'Your style, your family and your budget.',
         },
         {
-          title: 'Design your kitchen',
-          description:
-            'I create a layout that is beautiful, functional and matched to how you live at home.',
+          title: 'Plan the cabinets',
+          description: 'What your room needs, matched to how you cook and live.',
         },
         {
-          title: 'Choose cabinets and finishes',
-          description:
-            'With 30+ door styles and every finish we make, I help you find the look that makes the kitchen feel like yours.',
+          title: 'Choose your finish',
+          description: 'Every door style and color we make, in person.',
         },
         {
-          title: 'Review every detail together',
-          description:
-            'Every cabinet and measurement is checked before ordering, so there are no surprises on install day.',
+          title: 'Check every detail',
+          description: 'Every cabinet and measurement, before you order.',
         },
         {
-          title: 'Deliver and follow through',
-          description:
-            'RTA ships in two weeks, assembled in three, and I stay available every step of the way.',
+          title: 'Stay with you',
+          description: "RTA ships in 2 weeks, assembled in 3, and I'm here throughout.",
         },
       ],
       offDuty:
-        "When I'm not helping customers, I'm making memories with my family, exploring the outdoors and working on home-improvement projects of my own.",
+        "When I'm not at the showroom, I'm out with my family, exploring the outdoors, or working on home projects of my own.",
     },
   },
   {
@@ -222,6 +223,16 @@ export const VIRTUAL_CONSULT = {
 };
 
 export const showroomHref = (slug: string) => `/showrooms/${slug}`;
+
+// "Lanaisha" from "Lanaisha Rodrigues"; "your Project Manager" for a placeholder.
+export const pmFirstName = (pm: ProjectManager) =>
+  pm.name.startsWith('[') ? 'your Project Manager' : (pm.name.split(' ')[0] ?? pm.name);
+
+// "Madison, Clinton and Westerly, RI".
+export const joinTowns = (towns: string[]) =>
+  towns.length <= 1
+    ? (towns[0] ?? '')
+    : `${towns.slice(0, -1).join(', ')} and ${towns[towns.length - 1] ?? ''}`;
 
 export const directionsHref = (address: string) =>
   `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
