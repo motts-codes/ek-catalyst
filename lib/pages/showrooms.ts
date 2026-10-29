@@ -23,6 +23,8 @@ export interface Showroom {
   /** The showroom photo (shared with the home page band). */
   image: { src: string; alt: string };
   address: string;
+  /** Geocoded from the address (Mapbox, Oct 2026), for the locator map. */
+  coords: { lat: number; lng: number };
   phone: string;
   hours: Hours[];
   parking?: string;
@@ -63,6 +65,7 @@ export const SHOWROOMS: Showroom[] = [
       'Granite and quartz slabs on a white wall beside a quartz sample island',
     ),
     address: '67 Federal Road, Brookfield, CT 06804',
+    coords: { lat: 41.433247, lng: -73.410702 },
     phone: '(203) 546-7290',
     hours: TUE_SAT,
     towns: ['Danbury', 'Bethel', 'Newtown', 'New Milford', 'New Fairfield', 'Ridgefield'],
@@ -76,6 +79,7 @@ export const SHOWROOMS: Showroom[] = [
       'Navy and white vanities around a white-brick column, door samples on the wall',
     ),
     address: '254 South Frontage Road, New London, CT 06320',
+    coords: { lat: 41.367647, lng: -72.116995 },
     phone: '(860) 471-8874',
     hours: TUE_SAT,
     parking: 'Free parking in a large lot with direct access to the showroom.',
@@ -141,6 +145,7 @@ export const SHOWROOMS: Showroom[] = [
       'A bright white display kitchen with a grey island and rattan pendants',
     ),
     address: '3311 Berlin Turnpike, Newington, CT 06111',
+    coords: { lat: 41.65768, lng: -72.72546 },
     phone: '(860) 436-3686',
     hours: MON_SAT,
     towns: [
@@ -160,6 +165,7 @@ export const SHOWROOMS: Showroom[] = [
     name: 'Orange',
     image: showroomImage('orange', 'A row of cabinet vignettes in seven finishes'),
     address: '303 Boston Post Road, Orange, CT 06477',
+    coords: { lat: 41.265782, lng: -73.003126 },
     phone: '(203) 283-4909',
     hours: TUE_SAT,
     towns: ['New Haven', 'Milford', 'West Haven', 'Woodbridge', 'Hamden', 'Derby', 'Shelton'],
@@ -170,6 +176,7 @@ export const SHOWROOMS: Showroom[] = [
     name: 'Stamford',
     image: showroomImage('stamford', 'A wall of handles and knobs above a run of white drawers'),
     address: '1011 Hope Street, Stamford, CT 06907',
+    coords: { lat: 41.093579, lng: -73.517536 },
     phone: '(203) 721-6190',
     hours: TUE_SAT,
     towns: ['Greenwich', 'Darien', 'Norwalk', 'New Canaan', 'Westport', 'Wilton'],
@@ -183,6 +190,7 @@ export const SHOWROOMS: Showroom[] = [
       'A design table laid with door and countertop samples, a display kitchen behind',
     ),
     address: '18 Main Street, Bristol, CT 06010',
+    coords: { lat: 41.669172, lng: -72.94105 },
     phone: '(860) 866-4901',
     hours: MON_SAT,
     towns: [

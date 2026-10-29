@@ -6,6 +6,7 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { FinePrint, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { ShowroomCards } from '@/vibes/soul/sections/page-kit/showrooms';
+import { ShowroomLocator } from '@/vibes/soul/sections/showroom-locator';
 import {
   FREE_DESIGN_HREF,
   SAMPLES_HREF,
@@ -78,7 +79,13 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
       <FinePrint className="[&>div]:pt-0" variant="plain">
         Not available online or at our Factory Outlet.
       </FinePrint>
-      <ShowroomCards bookHref="/book" showrooms={SHOWROOMS} title="Find the showroom nearest you" />
+      <ShowroomLocator showrooms={SHOWROOMS} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
+      <ShowroomCards
+        bookHref="/book"
+        id="showroom-cards"
+        showrooms={SHOWROOMS}
+        title="Find the showroom nearest you"
+      />
       <Prose
         actions={[
           { label: 'Book a video consult', href: FREE_DESIGN_HREF, primary: true },

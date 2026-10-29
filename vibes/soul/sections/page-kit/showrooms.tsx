@@ -15,15 +15,17 @@ export function ShowroomCards({
   description,
   bookHref,
   tint,
+  id = 'locations',
 }: {
   showrooms: Showroom[];
   title?: string;
   description?: string;
   bookHref: string;
   tint?: boolean;
+  id?: string;
 }) {
   return (
-    <HomeSection description={description} id="locations" tint={tint} title={title}>
+    <HomeSection description={description} id={id} tint={tint} title={title}>
       <ul className="grid gap-6 @xl:grid-cols-2 @4xl:grid-cols-3">
         {showrooms.map((showroom) => (
           <li
