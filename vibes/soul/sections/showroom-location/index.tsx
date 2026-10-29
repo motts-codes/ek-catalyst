@@ -187,9 +187,9 @@ function HoursTable({ showroom }: { showroom: Showroom }) {
                 <span
                   className={clsx(
                     'rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
-                    // EK's green with black text: 9.8:1.
+                    // EK's green with black text: 15:1.
                     openNow
-                      ? 'bg-[#2bcc2b] text-black'
+                      ? 'bg-[#2dff2d] text-black'
                       : 'border border-contrast-200 bg-white text-contrast-500',
                   )}
                 >

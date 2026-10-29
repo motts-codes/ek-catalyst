@@ -29,7 +29,7 @@ export function ShowroomStatusPill({ name, hours }: Props) {
     <p
       className={clsx(
         'mb-5 inline-flex w-fit items-center gap-2 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors duration-300 motion-reduce:transition-none',
-        open ? 'bg-[#2bcc2b] text-black' : 'bg-white text-foreground',
+        open ? 'bg-[#2dff2d] text-black' : 'bg-white text-foreground',
       )}
     >
       {open ? (
