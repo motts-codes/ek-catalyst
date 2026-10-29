@@ -40,6 +40,7 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
         }}
         imageLabel="A showroom floor, wide"
         kicker="Six showrooms across Connecticut"
+        split="even"
         title="Come and see your kitchen before you buy it"
       />
       <CardsRow
