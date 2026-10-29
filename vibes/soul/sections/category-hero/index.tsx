@@ -49,6 +49,8 @@ interface HeroProps {
   tone?: 'black' | 'red' | 'deep-red';
   /** A small line above the headline (the category name when the headline is a promise). */
   eyebrow?: string;
+  /** A ready-made eyebrow (e.g. a live status pill) shown instead of the plain one. */
+  eyebrowSlot?: ReactNode;
   /** Rendered over the photo (e.g. the 'Watch the explainer' chip). */
   imageOverlay?: ReactNode;
   /** Where on the photo: top-right (default) or bottom-left, the usual spot for a video chip. */
@@ -160,6 +162,7 @@ export function CategoryHero({
   compact = false,
   tone = 'red',
   eyebrow,
+  eyebrowSlot,
   imageOverlay,
   imageOverlayPosition = 'top-right',
   tall = false,
@@ -192,7 +195,8 @@ export function CategoryHero({
                   ),
             )}
           >
-            {Boolean(eyebrow) && (
+            {eyebrowSlot}
+            {eyebrowSlot == null && Boolean(eyebrow) && (
               <p className="mb-5 inline-flex w-fit items-center rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground">
                 {eyebrow}
               </p>

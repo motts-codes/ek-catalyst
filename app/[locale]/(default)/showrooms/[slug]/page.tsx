@@ -6,6 +6,7 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { ShowroomStatusPill } from '@/vibes/soul/sections/page-kit/showroom-status-pill';
 import { ProjectManagerPanel } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { SeoProse } from '@/vibes/soul/sections/seo-prose';
@@ -92,7 +93,7 @@ export default async function ShowroomPage({ params }: Props) {
           { label: 'Get directions', href: directionsHref(showroom.address) },
         ]}
         description={`Walk through full kitchens, hold the doors, and sit down with ${who}, who'll go through your kitchen and price it while you're here. Free, and walk-ins are welcome.`}
-        eyebrow={`${showroom.name}, CT`}
+        eyebrowSlot={<ShowroomStatusPill hours={showroom.hours} name={showroom.name} />}
         image={showroom.image}
         imageLabel={`${showroom.name} showroom floor, wide`}
         promises={[
