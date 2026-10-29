@@ -87,8 +87,13 @@ export function ShowroomCards({
                 <li className="flex gap-3">
                   <User aria-hidden className="mt-0.5 shrink-0 text-contrast-400" size={16} />
                   <span>
-                    <span className="sr-only">Project Manager: </span>
-                    {showroom.pm.name}
+                    <span className="sr-only">
+                      {showroom.secondPm ? 'Project Managers: ' : 'Project Manager: '}
+                    </span>
+                    {[showroom.pm, showroom.secondPm]
+                      .filter(Boolean)
+                      .map((pm) => pm?.name)
+                      .join(' and ')}
                   </span>
                 </li>
               </ul>

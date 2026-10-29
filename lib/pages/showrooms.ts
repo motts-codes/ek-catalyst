@@ -1,5 +1,5 @@
 // The six Connecticut showrooms. Addresses, phones and hours from expresskitchens.com/showrooms;
-// Project Managers are still to be supplied for five of them (bracketed placeholders).
+// Project Manager names from Arun, 29 Oct 2026 (bios still to come for all but Lanaisha).
 
 export interface Hours {
   days: string;
@@ -27,7 +27,10 @@ export interface Showroom {
   hours: Hours[];
   parking?: string;
   towns: string[];
+  /** The lead Project Manager (the one with the profile on the showroom page). */
   pm: ProjectManager;
+  /** A second Project Manager at the same showroom, named alongside the first. */
+  secondPm?: ProjectManager;
   outlet?: { name: string; phone: string; hours: Hours[] };
 }
 
@@ -46,10 +49,10 @@ const showroomImage = (file: string, alt: string) => ({
   alt,
 });
 
-const PM_TBD: ProjectManager = {
-  name: '[Project Manager]',
+const pmNamed = (name: string): ProjectManager => ({
+  name,
   role: 'Project Manager & Design Consultant',
-};
+});
 
 export const SHOWROOMS: Showroom[] = [
   {
@@ -63,7 +66,7 @@ export const SHOWROOMS: Showroom[] = [
     phone: '(203) 546-7290',
     hours: TUE_SAT,
     towns: ['Danbury', 'Bethel', 'Newtown', 'New Milford', 'New Fairfield', 'Ridgefield'],
-    pm: PM_TBD,
+    pm: pmNamed('Dan Czernicki'),
   },
   {
     slug: 'new-london',
@@ -149,7 +152,8 @@ export const SHOWROOMS: Showroom[] = [
       'New Britain',
       'Glastonbury',
     ],
-    pm: PM_TBD,
+    pm: pmNamed('Chris Jones'),
+    secondPm: pmNamed('Ulrike Robinson'),
   },
   {
     slug: 'orange',
@@ -159,7 +163,7 @@ export const SHOWROOMS: Showroom[] = [
     phone: '(203) 283-4909',
     hours: TUE_SAT,
     towns: ['New Haven', 'Milford', 'West Haven', 'Woodbridge', 'Hamden', 'Derby', 'Shelton'],
-    pm: PM_TBD,
+    pm: pmNamed('Staci Caporuscio'),
   },
   {
     slug: 'stamford',
@@ -169,7 +173,7 @@ export const SHOWROOMS: Showroom[] = [
     phone: '(203) 721-6190',
     hours: TUE_SAT,
     towns: ['Greenwich', 'Darien', 'Norwalk', 'New Canaan', 'Westport', 'Wilton'],
-    pm: PM_TBD,
+    pm: pmNamed('Richard Cruz'),
   },
   {
     slug: 'bristol',
@@ -190,7 +194,8 @@ export const SHOWROOMS: Showroom[] = [
       'Terryville',
       'Burlington',
     ],
-    pm: PM_TBD,
+    pm: pmNamed('Laurie Praprotnik'),
+    secondPm: pmNamed('Annette Morales'),
     outlet: {
       name: 'Express Kitchens Factory Outlet',
       phone: '(860) 247-1000',
