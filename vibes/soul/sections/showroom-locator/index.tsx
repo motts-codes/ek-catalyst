@@ -8,6 +8,7 @@ import type { Map as MapboxMap, Marker } from 'mapbox-gl';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Link } from '~/components/link';
 import {
@@ -223,7 +224,7 @@ export function ShowroomLocator({
                   // Chosen: the deep brand red (#9F3632) with white copy, 6.9:1.
                   isActive
                     ? 'border-[#9f3632] bg-[#9f3632] text-white'
-                    : 'border-contrast-100 bg-white hover:border-contrast-300',
+                    : 'border-[#fcb6bb] bg-white hover:border-[var(--button-primary-background,#d90716)]',
                 )}
                 data-active={isActive}
                 key={showroom.slug}
@@ -308,17 +309,28 @@ export function ShowroomLocator({
                 </ul>
                 <div
                   className={clsx(
-                    // Links sit plain; a red underline (white on the red card) appears on hover.
-                    'mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold [&_a:hover]:underline [&_a]:underline-offset-4',
+                    // Links sit plain; the site's growing underline (as on the breadcrumbs)
+                    // appears on hover: red, or white on the red card.
+                    'mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold',
                     isActive
-                      ? 'text-white [&_a:hover]:decoration-white'
-                      : 'text-foreground [&_a:hover]:decoration-[var(--button-primary-background,#d90716)]',
+                      ? 'text-white [--animated-underline-hover:white] [&_a:hover]:!text-white'
+                      : 'text-foreground',
                   )}
                 >
-                  <a href={directionsHref(showroom.address)} rel="noreferrer" target="_blank">
+                  <a
+                    className={clsx(animatedUnderlineClassName, 'pb-0.5')}
+                    href={directionsHref(showroom.address)}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     Get directions
                   </a>
-                  <Link href={showroomHref(showroom.slug)}>Showroom page</Link>
+                  <Link
+                    className={clsx(animatedUnderlineClassName, 'pb-0.5')}
+                    href={showroomHref(showroom.slug)}
+                  >
+                    Showroom page
+                  </Link>
                 </div>
               </li>
             );
