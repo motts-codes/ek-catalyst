@@ -3,8 +3,9 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
+import { CategoryHero } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { FinePrint, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { FinePrint, PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
 import { ShowroomCards } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ShowroomLocator } from '@/vibes/soul/sections/showroom-locator';
 import {
@@ -28,23 +29,28 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
   return (
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'Showrooms', href: '/showrooms' }]} />
-      <PageHero
+      <CategoryHero
         actions={[
-          { label: 'Book a visit', href: '/book', primary: true },
-          { label: 'See the locations', href: '#locations', style: 'outline' },
+          { label: 'Book a visit', href: '/book' },
+          { label: 'See the locations', href: '#locations' },
         ]}
         description="Walk through full kitchens, hold the doors, and get your kitchen priced by a designer while you're there. Free, and walk-ins are welcome."
+        eyebrow="Six showrooms across Connecticut"
         image={{
           src: '/images/showrooms/hero.webp',
           alt: 'A bright showroom floor with white, sage, navy and oak display kitchens',
         }}
-        imageLabel="A showroom floor, wide"
-        kicker="Six showrooms across Connecticut"
-        split="even"
+        promises={[
+          { icon: 'design', label: 'Free design consult' },
+          { icon: 'door', label: 'Full kitchens on display' },
+          { icon: 'walk', label: 'Walk-ins welcome' },
+        ]}
+        promisesLayout="row"
+        tall
         title="Come and see your kitchen before you buy it"
+        tone="deep-red"
       />
       <CardsRow
-        cardTone="red"
         cards={[
           {
             icon: ClipboardList,
