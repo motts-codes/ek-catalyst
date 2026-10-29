@@ -42,15 +42,6 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
         kicker="Six showrooms across Connecticut"
         title="Come and see your kitchen before you buy it"
       />
-      <Prose
-        body={[
-          "Plan on an hour or so. You'll leave with an itemized quote, priced both RTA and assembled.",
-          'Bring your measurements, or we can measure for $85 (CT and greater-CT zip codes).',
-        ]}
-        className="bg-[#fdf3f5]"
-        kicker="What a visit is like"
-        title="Walk through real kitchens, not samples on a wall"
-      />
       <CardsRow
         cardTone="red"
         cards={[
