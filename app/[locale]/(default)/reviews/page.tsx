@@ -37,7 +37,7 @@ export default async function Reviews({ params }: { params: Promise<{ locale: st
         ]}
         description="Over 110 years, thousands of homeowners have planned, ordered and lived with Express Kitchens cabinets. Here's what they say about our designers, delivery, prices and the cabinets themselves."
         image={{
-          src: '/images/pages/reviews/hero-five-stars-cabinet.jpg',
+          src: '/images/pages/reviews/hero-five-stars-cabinet-2.jpg',
           alt: 'A sage green base cabinet with a stone top, under a red speech bubble holding five gold stars',
         }}
         imageStyle="plain"
