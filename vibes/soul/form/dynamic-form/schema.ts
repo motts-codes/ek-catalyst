@@ -34,6 +34,9 @@ interface FormField {
   required?: boolean;
   id?: string;
   placeholder?: string;
+  /** Show this field only while another field has the given value (e.g. a choice that only
+   *  applies to one showroom). Keep such a field optional: it is hidden, not removed. */
+  showWhen?: { field: string; equals: string };
 }
 
 type RadioField = {

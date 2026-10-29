@@ -7,7 +7,7 @@ import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitBookingLead } from '~/lib/forms/submit-lead';
-import { getShowroom } from '~/lib/pages/showrooms';
+import { getShowroom, SHOWROOMS } from '~/lib/pages/showrooms';
 
 export const metadata: Metadata = {
   title: 'Book a Showroom Appointment',
@@ -22,6 +22,21 @@ const TIME_OPTIONS = ['9:00 AM', '10:30 AM', '12:00 PM', '1:30 PM', '3:00 PM', '
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+// Showrooms with two Project Managers get a "who would you like to meet?" choice that appears
+// only while that showroom is selected.
+const PM_CHOICES: Field[] = SHOWROOMS.filter((s) => s.secondPm != null).map((s) => ({
+  type: 'radio-group',
+  name: `pm-${s.slug}`,
+  label: `Who would you like to meet at ${s.name}?`,
+  options: [
+    { label: s.pm.name, value: s.pm.name },
+    { label: s.secondPm?.name ?? '', value: s.secondPm?.name ?? '' },
+    { label: 'No preference', value: 'either' },
+  ],
+  defaultValue: 'either',
+  showWhen: { field: 'showroom', equals: s.slug },
+}));
+
 function fields(showroom: string | undefined): Array<Field | Field[]> {
   return [
     {
@@ -32,6 +47,7 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
       options: SHOWROOM_OPTIONS,
       defaultValue: showroom,
     },
+    ...PM_CHOICES,
     {
       type: 'radio-group',
       name: 'format',
@@ -100,7 +116,7 @@ export default async function Book({
         chips={['60–90 minutes', 'No deposit', 'No obligation', 'Confirmed within two hours']}
         description={
           chosen
-            ? `Book time with ${chosen.pm.name.startsWith('[') ? 'the Project Manager' : chosen.pm.name} at our ${chosen.name} showroom. You'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy.`
+            ? `Book time with ${chosen.secondPm ? `${chosen.pm.name} or ${chosen.secondPm.name}` : chosen.pm.name} at our ${chosen.name} showroom. You'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy.`
             : "Every showroom has a Project Manager who plans and prices your kitchen with you. Pick the showroom, a day and a time that suit you, and you'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy."
         }
         image={{
@@ -129,7 +145,7 @@ export default async function Book({
         kicker="Your appointment"
         spacing="tight"
         steps={[
-          { title: 'Where', names: ['showroom', 'format'] },
+          { title: 'Where', names: ['showroom', ...PM_CHOICES.map((f) => f.name), 'format'] },
           { title: 'When', names: ['date', 'time'] },
           { title: 'About you', names: ['name', 'email', 'phone', 'zip', 'rooms', 'notes'] },
         ]}

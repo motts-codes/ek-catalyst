@@ -215,6 +215,14 @@ export function DynamicForm<F extends Field>({
           steps.findIndex((candidate) => candidate.names.includes(name)),
         );
   const stepClass = (name: string) => (steps != null && stepIndexOf(name) !== step ? 'hidden' : '');
+  // A field with `showWhen` stays in the form (so its value still posts) but is hidden until the
+  // field it depends on holds the right value. Conform keeps `value` current as the user types.
+  const hiddenBy = (field: F) => {
+    if (field.showWhen == null) return false;
+
+    return formFields[field.showWhen.field]?.value !== field.showWhen.equals;
+  };
+  const fieldClass = (field: F) => clsx(stepClass(field.name), hiddenBy(field) && 'hidden');
 
   return (
     <FormProvider context={form.context}>
@@ -253,7 +261,7 @@ export function DynamicForm<F extends Field>({
                 <div
                   className={clsx(
                     'flex flex-col gap-4 @sm:flex-row',
-                    first != null && stepClass(first.name),
+                    first != null && fieldClass(first),
                   )}
                   key={index}
                 >
@@ -279,7 +287,7 @@ export function DynamicForm<F extends Field>({
             if (formField == null) return null;
 
             return (
-              <div className={stepClass(field.name)} key={formField.id}>
+              <div className={fieldClass(field)} key={formField.id}>
                 <DynamicFormField field={field} formField={formField} />
               </div>
             );
