@@ -10,8 +10,8 @@ import { createPortal } from 'react-dom';
 
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import {
-  directionsHref,
   easternDay,
+  mapsHref,
   openStatus,
   type Showroom,
   weeklyHours,
@@ -31,7 +31,7 @@ const telHref = (phone: string) => `tel:${phone.replace(/\D/g, '')}`;
 
 // The showroom's address, hours and map in three boxes at the foot of its page: contact on the
 // deep red, hours on the cream (today's row marked, "Open now" while it is), and a Mapbox
-// map with one pin and an "Open in Maps" card.
+// map with one pin and an "Open in Maps" card that opens the showroom's place in Google Maps.
 export function ShowroomLocation({ showroom, token, id = 'location' }: Props) {
   return (
     <HomeSection id={id}>
@@ -271,7 +271,7 @@ function ShowroomMap({ showroom, token }: { showroom: Showroom; token?: string }
         <p className="mt-1 text-[13px] leading-snug text-[#404040]">{showroom.address}</p>
         <a
           className="mt-3 inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--button-primary-background,#d90716)] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#9f3632] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
-          href={directionsHref(showroom.address)}
+          href={mapsHref(showroom.address)}
           rel="noreferrer"
           target="_blank"
         >

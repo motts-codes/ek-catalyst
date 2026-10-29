@@ -247,6 +247,10 @@ export const joinTowns = (towns: string[]) =>
 export const directionsHref = (address: string) =>
   `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
 
+// The showroom's place on Google Maps (the pin and its card, not a route to it).
+export const mapsHref = (address: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Express Kitchens, ${address}`)}`;
+
 export const getShowroom = (slug: string) => SHOWROOMS.find((s) => s.slug === slug);
 
 // ---- Open or closed right now (Eastern time) ------------------------------------------------
