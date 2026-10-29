@@ -58,6 +58,7 @@ export function ShowroomLocator({
     const observer = new ResizeObserver(() => map?.resize());
 
     observer.observe(container);
+    if (container.parentElement) observer.observe(container.parentElement);
 
     void import('mapbox-gl').then(({ default: mapboxgl }) => {
       if (cancelled) return;
@@ -78,6 +79,11 @@ export function ShowroomLocator({
 
       map = created;
       mapRef.current = created;
+
+      // Belt and braces: measure again on the next frame and once the first tiles are in, in
+      // case the box was still settling when the map was made.
+      requestAnimationFrame(() => created.resize());
+      created.once('idle', () => created.resize());
 
       created.addControl(new mapboxgl.AttributionControl({ compact: true }));
       created.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
