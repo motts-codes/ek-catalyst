@@ -135,6 +135,12 @@ function tileFor(state: string, category: ShipCategory): Tile {
   };
 }
 
+function splitLabel(label: string): [string, string | undefined] {
+  const at = label.lastIndexOf(' ');
+
+  return at === -1 ? [label, undefined] : [label.slice(0, at), label.slice(at + 1)];
+}
+
 const PANEL_COPY: Record<
   ShipCategory['mode'],
   (c: ShipCategory) => { headline: string; sub: string }
@@ -243,7 +249,7 @@ export function ShippingMap({
           type alike) and sit centred; phones keep the full size so the tiles stay readable. */}
       <div className="mt-6 grid gap-6 @3xl:mx-auto @3xl:max-w-[80%] @3xl:grid-cols-[1fr_300px] @3xl:items-start @3xl:gap-12 @3xl:[zoom:0.8]">
         {/* No box around the map: the tiles sit on the page, scaled so every state is in view at
-            any width. The duration label appears once a tile is wide enough to hold it. */}
+            any width. Each tile flips on hover to show the time to your door. */}
         <ul
           aria-label={`Delivery time for ${category.name}, by state`}
           className="grid grid-cols-12 gap-1 @md:gap-1.5 @3xl:gap-2"
@@ -251,23 +257,48 @@ export function ShippingMap({
           {tiles.map((tile) => {
             const [row, column] = SHIP_STATE_GRID[tile.state] ?? [1, 1];
 
+            // "3.3 wks" reads as the number over the unit on the back of the tile.
+            const [amount, unit] = splitLabel(tile.label);
+            const face = clsx(
+              'absolute inset-0 flex items-center justify-center rounded-md [backface-visibility:hidden] @xl:rounded-lg',
+              tileClass[tile.band],
+            );
+
             return (
               <li
-                className={clsx(
-                  'relative flex aspect-square items-center justify-center rounded-md text-[9px] font-bold @md:text-[11px] @xl:rounded-lg @xl:pb-3 @xl:text-xs',
-                  tileClass[tile.band],
-                )}
+                className="group relative aspect-square text-[9px] font-bold [perspective:600px] @md:text-[11px] @xl:text-xs"
                 key={tile.state}
                 style={{ gridRow: row, gridColumn: column }}
                 title={tile.detail}
               >
-                <span aria-hidden>{tile.state}</span>
-                <span
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-1.5 hidden truncate text-center text-[10px] font-semibold leading-none @xl:block"
+                {/* The face shows the state only; hovering flips the tile over to the time to
+                    your door at twice the size. Tiles with nothing to say stay still. */}
+                <div
+                  className={clsx(
+                    'relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d] motion-reduce:transition-none',
+                    tile.label && 'group-hover:[transform:rotateY(180deg)]',
+                  )}
                 >
-                  {tile.label}
-                </span>
+                  <div aria-hidden className={face}>
+                    {tile.state}
+                  </div>
+                  {tile.label ? (
+                    <div
+                      aria-hidden
+                      className={clsx(
+                        face,
+                        'flex-col px-0.5 text-center text-[10px] leading-none [transform:rotateY(180deg)] @md:text-sm @xl:text-xl',
+                      )}
+                    >
+                      {amount}
+                      {unit ? (
+                        <span className="mt-0.5 text-[7px] font-semibold @md:text-[9px] @xl:text-[11px]">
+                          {unit}
+                        </span>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
                 <span className="sr-only">{tile.detail}</span>
               </li>
             );
