@@ -39,6 +39,8 @@ interface Props {
   tint?: boolean;
   /** `red`: the band on brand red, the copy reversed to white (plain photo cards). */
   tone?: 'default' | 'red';
+  /** `red`: each card is a deep-red panel with white copy (the "ek red box" look). */
+  cardTone?: 'default' | 'red';
   className?: string;
 }
 
@@ -57,12 +59,21 @@ export function CardsRow({
   imageStyle = 'inset',
   tint = false,
   tone = 'default',
+  cardTone = 'default',
   className,
 }: Props) {
   const bleed = imageStyle === 'bleed' && !hideImages;
   const plain = imageStyle === 'plain' && !hideImages;
   const insetImage = !hideImages && !bleed;
-  const red = tone === 'red';
+  const red = tone === 'red' || cardTone === 'red';
+  const redCard = cardTone === 'red';
+  // Deep brand red (#9F3632): white copy is 6.9:1 on it.
+  const cardClassName = plain
+    ? 'group'
+    : clsx(
+        'overflow-hidden rounded-3xl border transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
+        redCard ? 'border-transparent bg-[#9f3632]' : 'border-contrast-100 bg-white',
+      );
 
   return (
     <HomeSection
@@ -85,15 +96,7 @@ export function CardsRow({
         )}
       >
         {cards.map((card, i) => (
-          <article
-            className={clsx(
-              'flex h-full flex-col',
-              plain
-                ? 'group'
-                : 'overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
-            )}
-            key={card.title}
-          >
+          <article className={clsx('flex h-full flex-col', cardClassName)} key={card.title}>
             {bleed && (
               <div className="relative aspect-[16/10] overflow-hidden bg-contrast-100">
                 {card.image ? (
@@ -111,7 +114,9 @@ export function CardsRow({
               </div>
             )}
             <div className={clsx('flex flex-1 flex-col', plain ? 'p-0' : 'p-6 @xl:p-7')}>
-              {hideImages && <CardLead icon={card.icon} number={numbered ? i + 1 : undefined} />}
+              {hideImages && (
+                <CardLead icon={card.icon} number={numbered ? i + 1 : undefined} onRed={redCard} />
+              )}
               {insetImage && (
                 <div
                   className={clsx(
@@ -180,10 +185,26 @@ export function CardsRow({
 
 // What tops a text-only card: a big red number when the row is numbered, an icon in a pale
 // red disc when the card has one, else the short red accent bar.
-function CardLead({ icon: Icon, number }: { icon?: LucideIcon; number?: number }) {
+function CardLead({
+  icon: Icon,
+  number,
+  onRed = false,
+}: {
+  icon?: LucideIcon;
+  number?: number;
+  /** On a red card: a white icon in a translucent disc, a white number. */
+  onRed?: boolean;
+}) {
   if (Icon) {
     return (
-      <span className="mb-4 flex size-12 items-center justify-center rounded-full bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]">
+      <span
+        className={clsx(
+          'mb-4 flex size-12 items-center justify-center rounded-full',
+          onRed
+            ? 'bg-white/15 text-white'
+            : 'bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]',
+        )}
+      >
         <Icon aria-hidden size={24} strokeWidth={2} />
       </span>
     );
@@ -191,7 +212,12 @@ function CardLead({ icon: Icon, number }: { icon?: LucideIcon; number?: number }
 
   if (number != null) {
     return (
-      <span className="mb-3 block font-heading text-4xl font-bold leading-none text-[var(--button-primary-background,#d90716)]">
+      <span
+        className={clsx(
+          'mb-3 block font-heading text-4xl font-bold leading-none',
+          onRed ? 'text-white' : 'text-[var(--button-primary-background,#d90716)]',
+        )}
+      >
         {number}
       </span>
     );

@@ -41,7 +41,9 @@ export function ShowroomCards({
               />
             </div>
             <div className="flex flex-1 flex-col p-6">
-              <h3 className="font-heading text-xl font-bold leading-tight">{showroom.name}</h3>
+              <h3 className="font-heading text-xl font-bold leading-tight text-[var(--button-primary-background,#d90716)]">
+                {showroom.name}
+              </h3>
               <ul className="mt-4 space-y-3 text-sm text-contrast-500">
                 <li className="flex gap-3">
                   <MapPin aria-hidden className="mt-0.5 shrink-0 text-contrast-400" size={16} />
