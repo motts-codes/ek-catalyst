@@ -193,7 +193,7 @@ export function ShowroomLocator({
 
   return (
     <HomeSection description={description} id={id} kicker={kicker} title={title}>
-      <div className="grid gap-4 @3xl:h-[36rem] @3xl:grid-cols-[22rem_1fr] @3xl:gap-6">
+      <div className="grid gap-4 @3xl:h-[36rem] @3xl:grid-cols-[23.5rem_1fr] @3xl:gap-5">
         {/* The map: 3:2 on phones, above the list; the full height beside it from tablet width. */}
         <div className="relative aspect-[3/2] overflow-hidden rounded-3xl bg-contrast-100 @3xl:order-last @3xl:aspect-auto @3xl:h-full">
           {token ? (
@@ -210,7 +210,7 @@ export function ShowroomLocator({
         {/* The list: a row you can swipe through on phones, a column that scrolls on desktop. */}
         <ol
           aria-label="Our showrooms"
-          className="-mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 @3xl:mx-0 @3xl:h-full @3xl:flex-col @3xl:overflow-y-auto @3xl:px-0 @3xl:pb-0 @3xl:pr-1"
+          className="-mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 @3xl:mx-0 @3xl:h-full @3xl:flex-col @3xl:overflow-y-auto @3xl:px-0 @3xl:pb-0 @3xl:pr-4 @3xl:[scrollbar-gutter:stable]"
         >
           {showrooms.map((showroom) => {
             const isActive = showroom.slug === active;
