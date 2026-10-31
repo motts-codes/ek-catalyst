@@ -293,7 +293,15 @@ export function DynamicForm<F extends Field>({
             );
           })}
           {recaptchaSiteKey ? <RecaptchaWidget sitekey={recaptchaSiteKey} /> : null}
-          <div className="flex gap-2 pt-3">
+          <div
+            className={clsx(
+              'flex gap-2 pt-3',
+              // Stepped forms on a narrow card: the submit / Next button takes the top row in
+              // full, and Back sits beneath it, so a long submit label never wraps.
+              steps != null &&
+                'flex-col-reverse @sm:flex-row [&>button]:w-full @sm:[&>button]:w-auto',
+            )}
+          >
             {onCancel && (
               <Button
                 aria-label={`${cancelLabel} ${submitLabel}`}
