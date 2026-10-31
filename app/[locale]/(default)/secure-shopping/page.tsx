@@ -1,3 +1,4 @@
+import { CreditCard, Landmark, Lock, ScanSearch, ShieldCheck, ShieldOff } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -37,41 +38,47 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
         title="Your payment is protected, start to finish"
       />
       <CardsRow
+        cardTone="alternate"
         cards={[
           {
             title: 'PCI DSS Level 1 certified',
+            icon: ShieldCheck,
             description:
               'Our store runs on BigCommerce, which holds Level 1 PCI DSS certification, the highest level in the payment card industry and the standard the banks and card networks require of themselves.',
           },
           {
             title: 'Encrypted, end to end',
+            icon: Lock,
             description:
               'Every page on the site, not just checkout, is served over HTTPS. What you type travels scrambled between your browser and the payment processor.',
           },
           {
             title: 'We never store your card',
+            icon: ShieldOff,
             description:
               'Card numbers are handled by the payment processor, not by Express Kitchens. Our team sees your order and delivery details, never your full card number.',
           },
           {
             title: 'Fraud screening on every payment',
+            icon: ScanSearch,
             description:
               'Address and card-code checks (AVS and CVV) plus automated fraud screening run on each transaction, so a stolen card is far less likely to be used, and yours is protected if it ever is.',
           },
           {
             title: "Your bank's protection, on top",
+            icon: CreditCard,
             description:
               "Pay by Visa, MasterCard, Discover or American Express and your card issuer's zero-liability and chargeback protections apply as they would in any store.",
           },
           {
             title: 'Financing through a regulated lender',
+            icon: Landmark,
             description:
               '0% financing applications are handled by the lender on their own secure system. We receive a decision, not your financial details.',
           },
         ]}
         hideImages
         kicker="How it works"
-        tint
         title="Six things that keep your order safe"
       />
       <Prose

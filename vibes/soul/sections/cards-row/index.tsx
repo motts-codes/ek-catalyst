@@ -39,8 +39,12 @@ interface Props {
   tint?: boolean;
   /** `red`: the band on brand red, the copy reversed to white (plain photo cards). */
   tone?: 'default' | 'red';
-  /** `red`: each card is a deep-red panel with white copy (the "ek red box" look). */
-  cardTone?: 'default' | 'red';
+  /**
+   * `red`: each card is a deep-red panel with white copy (the "ek red box" look).
+   * `alternate`: the cards checker between that deep red and a light-red panel (red, light,
+   * red / light, red, light on three columns; red, light, red… down a phone).
+   */
+  cardTone?: 'default' | 'red' | 'alternate';
   /** A thin brand-red hairline at half opacity around each white card instead of the grey one. */
   cardBorder?: 'default' | 'red';
   className?: string;
@@ -68,18 +72,30 @@ export function CardsRow({
   const bleed = imageStyle === 'bleed' && !hideImages;
   const plain = imageStyle === 'plain' && !hideImages;
   const insetImage = !hideImages && !bleed;
-  const red = tone === 'red' || cardTone === 'red';
-  const redCard = cardTone === 'red';
-  // Deep brand red (#9F3632): white copy is 6.9:1 on it.
-  const cardClassName = plain
-    ? 'group'
-    : clsx(
-        'overflow-hidden rounded-3xl border transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
-        redCard && 'border-transparent bg-[#9f3632]',
-        !redCard && cardBorder === 'red'
-          ? 'border-[0.5px] border-[#d90716]/50 bg-white'
-          : !redCard && 'border-contrast-100 bg-white',
-      );
+  // Deep brand red (#9F3632): white copy is 6.9:1 on it. Alternating rows put the even cards
+  // on red and the odd ones on the light-red panel (#fdf3f5).
+  const surfaceOf = (i: number): 'red' | 'light' | 'white' => {
+    if (cardTone === 'red') return 'red';
+    if (cardTone === 'alternate') return i % 2 === 0 ? 'red' : 'light';
+
+    return 'white';
+  };
+  const whiteCard =
+    cardBorder === 'red'
+      ? 'border-[0.5px] border-[#d90716]/50 bg-white'
+      : 'border-contrast-100 bg-white';
+  const SURFACE = {
+    red: 'border-transparent bg-[#9f3632]',
+    light: 'border-transparent bg-[#fdf3f5]',
+    white: whiteCard,
+  };
+  const cardClassName = (surface: 'red' | 'light' | 'white') =>
+    plain
+      ? 'group'
+      : clsx(
+          'overflow-hidden rounded-3xl border transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
+          SURFACE[surface],
+        );
 
   return (
     <HomeSection
@@ -101,45 +117,23 @@ export function CardsRow({
           }[columns],
         )}
       >
-        {cards.map((card, i) => (
-          <article className={clsx('flex h-full flex-col', cardClassName)} key={card.title}>
-            {bleed && (
-              <div className="relative aspect-[16/10] overflow-hidden bg-contrast-100">
-                {card.image ? (
-                  <Image
-                    alt={card.image.alt}
-                    className="object-cover"
-                    fill
-                    sizes="(min-width: 56rem) 25vw, 100vw"
-                    src={card.image.src}
-                    unoptimized={card.image.src.startsWith('http')}
-                  />
-                ) : (
-                  <MediaPlaceholder label={card.imageLabel ?? card.title} />
-                )}
-              </div>
-            )}
-            <div className={clsx('flex flex-1 flex-col', plain ? 'p-0' : 'p-6 @xl:p-7')}>
-              {hideImages && (
-                <CardLead icon={card.icon} number={numbered ? i + 1 : undefined} onRed={redCard} />
-              )}
-              {insetImage && (
-                <div
-                  className={clsx(
-                    'relative mb-6 overflow-hidden bg-contrast-100',
-                    plain ? 'aspect-[5/3] rounded-t-3xl' : 'aspect-[16/10] rounded-2xl',
-                  )}
-                >
+        {cards.map((card, i) => {
+          const surface = surfaceOf(i);
+          const reversed = tone === 'red' || surface === 'red';
+
+          return (
+            <article
+              className={clsx('flex h-full flex-col', cardClassName(surface))}
+              key={card.title}
+            >
+              {bleed && (
+                <div className="relative aspect-[16/10] overflow-hidden bg-contrast-100">
                   {card.image ? (
                     <Image
                       alt={card.image.alt}
-                      className={clsx(
-                        'object-cover',
-                        plain &&
-                          'transition-transform duration-700 ease-smooth group-hover:scale-[1.03]',
-                      )}
+                      className="object-cover"
                       fill
-                      sizes="(min-width: 56rem) 33vw, 100vw"
+                      sizes="(min-width: 56rem) 25vw, 100vw"
                       src={card.image.src}
                       unoptimized={card.image.src.startsWith('http')}
                     />
@@ -148,42 +142,77 @@ export function CardsRow({
                   )}
                 </div>
               )}
-              <h3
-                className={clsx(
-                  'font-heading text-lg font-semibold leading-tight @xl:text-xl',
-                  red && 'text-white',
+              <div className={clsx('flex flex-1 flex-col', plain ? 'p-0' : 'p-6 @xl:p-7')}>
+                {hideImages && (
+                  <CardLead
+                    icon={card.icon}
+                    number={numbered ? i + 1 : undefined}
+                    onLight={surface === 'light'}
+                    onRed={surface === 'red'}
+                  />
                 )}
-              >
-                {card.title}
-              </h3>
-              {card.meta != null && (
-                <p className="mt-1 text-xs font-semibold text-[var(--button-primary-background,#d90716)]">
-                  {card.meta}
-                </p>
-              )}
-              <p
-                className={clsx(
-                  'mt-2.5 flex-1 text-sm leading-relaxed',
-                  red ? 'text-white' : 'text-contrast-500',
-                )}
-              >
-                {card.description}
-              </p>
-              {Boolean(card.ctaLabel) && Boolean(card.href) && (
-                <div className="mt-6">
-                  <ButtonLink
-                    href={card.href ?? '#'}
-                    shape="pill"
-                    size="small"
-                    variant={card.primary ? 'primary' : 'secondary'}
+                {insetImage && (
+                  <div
+                    className={clsx(
+                      'relative mb-6 overflow-hidden bg-contrast-100',
+                      plain ? 'aspect-[5/3] rounded-t-3xl' : 'aspect-[16/10] rounded-2xl',
+                    )}
                   >
-                    {card.ctaLabel}
-                  </ButtonLink>
-                </div>
-              )}
-            </div>
-          </article>
-        ))}
+                    {card.image ? (
+                      <Image
+                        alt={card.image.alt}
+                        className={clsx(
+                          'object-cover',
+                          plain &&
+                            'transition-transform duration-700 ease-smooth group-hover:scale-[1.03]',
+                        )}
+                        fill
+                        sizes="(min-width: 56rem) 33vw, 100vw"
+                        src={card.image.src}
+                        unoptimized={card.image.src.startsWith('http')}
+                      />
+                    ) : (
+                      <MediaPlaceholder label={card.imageLabel ?? card.title} />
+                    )}
+                  </div>
+                )}
+                <h3
+                  className={clsx(
+                    'font-heading text-lg font-semibold leading-tight @xl:text-xl',
+                    reversed && 'text-white',
+                  )}
+                >
+                  {card.title}
+                </h3>
+                {card.meta != null && (
+                  <p className="mt-1 text-xs font-semibold text-[var(--button-primary-background,#d90716)]">
+                    {card.meta}
+                  </p>
+                )}
+                <p
+                  className={clsx(
+                    'mt-2.5 flex-1 text-sm leading-relaxed',
+                    reversed ? 'text-white' : 'text-contrast-500',
+                  )}
+                >
+                  {card.description}
+                </p>
+                {Boolean(card.ctaLabel) && Boolean(card.href) && (
+                  <div className="mt-6">
+                    <ButtonLink
+                      href={card.href ?? '#'}
+                      shape="pill"
+                      size="small"
+                      variant={card.primary ? 'primary' : 'secondary'}
+                    >
+                      {card.ctaLabel}
+                    </ButtonLink>
+                  </div>
+                )}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </HomeSection>
   );
@@ -195,20 +224,23 @@ function CardLead({
   icon: Icon,
   number,
   onRed = false,
+  onLight = false,
 }: {
   icon?: LucideIcon;
   number?: number;
   /** On a red card: a white icon in a translucent disc, a white number. */
   onRed?: boolean;
+  /** On a light-red card: the red icon sits in a white disc so it still reads as a disc. */
+  onLight?: boolean;
 }) {
   if (Icon) {
     return (
       <span
         className={clsx(
           'mb-4 flex size-12 items-center justify-center rounded-full',
-          onRed
-            ? 'bg-white/15 text-white'
-            : 'bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]',
+          onRed && 'bg-white/15 text-white',
+          onLight && 'bg-white text-[var(--button-primary-background,#d90716)]',
+          !onRed && !onLight && 'bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]',
         )}
       >
         <Icon aria-hidden size={24} strokeWidth={2} />
