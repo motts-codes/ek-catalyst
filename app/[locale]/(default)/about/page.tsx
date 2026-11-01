@@ -6,8 +6,8 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import {
   LinkCards,
   PageBreadcrumbs,
-  PageHero,
   type Person,
+  StackedHero,
   TeamRow,
   Timeline,
 } from '@/vibes/soul/sections/page-kit';
@@ -56,13 +56,16 @@ export default async function About({ params }: { params: Promise<{ locale: stri
   return (
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'About', href: '/about' }]} />
-      <PageHero
+      <StackedHero
         actions={[
           { label: 'Meet your showroom team', href: '/showrooms', primary: true },
           { label: 'Free design consult', href: FREE_DESIGN_HREF },
         ]}
         description="Our Project Managers, cabinetmakers, drivers and the team in Bristol are the reason customers come back, and the people they name in their reviews. Two families have run this business across four generations since 1916, and every kitchen still goes through people who know the work."
-        imageLabel="The Express Kitchens team together at our Bristol facility"
+        image={{
+          src: '/images/pages/about/team-bristol-wide.jpg',
+          alt: 'The Express Kitchens team together at our Bristol facility',
+        }}
         kicker="About Express Kitchens"
         title="The people behind your kitchen"
       />

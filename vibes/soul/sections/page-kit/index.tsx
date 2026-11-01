@@ -372,6 +372,63 @@ interface ProseProps {
 
 // A heading, some paragraphs, optional buttons — and anything else as children. With an image
 // (or image label) it becomes a two-column split.
+// A centered, stacked hero for pages led by one wide photo (the About page's team shot):
+// eyebrow and headline centered, the photo full width beneath, then the description and the
+// buttons centered under it. The photo keeps its wide ratio on desktop and crops to 16:9 on
+// phones so the people stay legible.
+export function StackedHero({
+  kicker,
+  title,
+  description,
+  actions = [],
+  image,
+  imageLabel,
+  className,
+}: {
+  kicker?: string;
+  title: string;
+  description?: string;
+  actions?: PageAction[];
+  image?: PageImage;
+  imageLabel?: string;
+  className?: string;
+}) {
+  return (
+    <HomeSection className={className} compact>
+      <div className="flex flex-col items-center text-center">
+        {Boolean(kicker) && (
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+            {kicker}
+          </p>
+        )}
+        <h1 className="max-w-3xl font-heading text-3xl font-bold leading-tight @xl:text-4xl @4xl:text-[44px]">
+          {title}
+        </h1>
+        <div className="relative mt-8 aspect-[16/9] w-full overflow-hidden rounded-3xl bg-contrast-100 @xl:aspect-[2.4/1] @3xl:mt-10 @3xl:aspect-[1920/518]">
+          {image ? (
+            <Image
+              alt={image.alt}
+              className="object-cover"
+              fill
+              preload
+              sizes="(min-width: 80rem) 1280px, 100vw"
+              src={image.src}
+            />
+          ) : (
+            <MediaPlaceholder label={imageLabel ?? title} />
+          )}
+        </div>
+        {Boolean(description) && (
+          <p className="mt-8 max-w-3xl text-sm leading-relaxed text-contrast-500 @xl:text-base @3xl:mt-10">
+            {description}
+          </p>
+        )}
+        <Actions actions={actions} className="mt-7 justify-center" />
+      </div>
+    </HomeSection>
+  );
+}
+
 export function Prose({
   id,
   kicker,
