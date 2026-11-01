@@ -600,7 +600,7 @@ export function TeamRow({
               {person.href ? (
                 <Link
                   className={clsx(
-                    className,
+                    cardClassName,
                     'transition-shadow hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
                   )}
                   href={person.href}

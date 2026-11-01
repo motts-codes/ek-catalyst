@@ -11,6 +11,7 @@ import { type HeroOffer, type HeroSlide } from '@/vibes/soul/sections/home-hero-
 import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 import { type Showroom } from '@/vibes/soul/sections/showroom-band';
+import { type Metric } from '@/vibes/soul/sections/why-us-scroll';
 
 export const FREE_DESIGN_HREF = '/mykitchen/free-design-consult';
 export const SAMPLES_HREF = '/samples';
@@ -22,6 +23,15 @@ export const SAMPLES_VIDEO = {
   poster: '/images/home/samples/samples-poster.jpg',
 };
 export const ESTIMATOR_HREF = '/mykitchen/price-my-kitchen';
+
+// The scrolling proof strip shared by the Why EK and About pages.
+export const EK_METRICS: Metric[] = [
+  { icon: 'package', value: '50,000+', label: 'Assembled cabinets, ready to ship' },
+  { icon: 'star', value: '5,000+', label: 'Happy customer reviews' },
+  { icon: 'design', value: '100K+', label: 'Kitchens designed' },
+  { icon: 'pin', value: '6', label: 'Showrooms to visit' },
+  { icon: 'shield', value: 'A+', label: 'BBB rating' },
+];
 
 export const HERO_SLIDES: HeroSlide[] = [
   {

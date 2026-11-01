@@ -13,7 +13,13 @@ import {
   StatementReveal,
   WaitBand,
 } from '@/vibes/soul/sections/why-us-scroll';
-import { FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS, THREE_WAYS } from '~/lib/home/home-content';
+import {
+  EK_METRICS,
+  FREE_DESIGN_HREF,
+  HOME_REVIEWS,
+  SHOWROOMS,
+  THREE_WAYS,
+} from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'Why Express Kitchens',
@@ -48,15 +54,7 @@ export default async function WhyExpressKitchens({
           'Without the price you were dreading.',
         ]}
       />
-      <MetricsTicker
-        metrics={[
-          { icon: 'package', value: '50,000+', label: 'Assembled cabinets, ready to ship' },
-          { icon: 'star', value: '5,000+', label: 'Happy customer reviews' },
-          { icon: 'design', value: '100K+', label: 'Kitchens designed' },
-          { icon: 'pin', value: '6', label: 'Showrooms to visit' },
-          { icon: 'shield', value: 'A+', label: 'BBB rating' },
-        ]}
-      />
+      <MetricsTicker metrics={EK_METRICS} />
       <WaitBand
         description="Custom cabinets are usually built after you order, so you wait in line. Ours are already built and on the shelf in Connecticut. Quick-ship collections ship the next day, RTA in 2 weeks and assembled in 3."
         kicker="Why wait 14 weeks?"
