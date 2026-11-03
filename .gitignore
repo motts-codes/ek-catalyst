@@ -75,3 +75,6 @@ scripts/avon-test/
 
 # Source artwork (originals for the resized assets in public/images)
 /design-assets/
+
+# pasted live-channel credentials (never commit)
+cataylst-live-details
