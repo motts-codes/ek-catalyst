@@ -7,9 +7,8 @@ import { type CabinetOffer } from '~/lib/cabinet-admin/offers-shape';
 
 import { saveOffersAction } from '../actions';
 
-import { validateUrl } from './validators';
-
 import { Field } from './faq-editor';
+import { validateUrl } from './validators';
 
 const toScope = (v: string): CabinetOffer['scope'] =>
   v === 'line' || v === 'collection' ? v : 'all';

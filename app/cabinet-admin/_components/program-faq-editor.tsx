@@ -20,7 +20,7 @@ export function ProgramFaqEditor({ initial }: { initial: ProgramFaq }) {
     startTransition(async () => {
       const res = await saveProgramFaqAction(data);
 
-      setStatus({ ok: res.ok, msg: res.ok ? 'Saved.' : res.error ?? 'Save failed.' });
+      setStatus({ ok: res.ok, msg: res.ok ? 'Saved.' : (res.error ?? 'Save failed.') });
     });
   };
 
@@ -28,9 +28,10 @@ export function ProgramFaqEditor({ initial }: { initial: ProgramFaq }) {
     <div>
       <h1 className="mb-1 text-2xl font-semibold">Cabinet Assembly</h1>
       <p className="mb-4 max-w-2xl text-sm text-gray-500">
-        Content shown on the cabinet shop pages (Assembled and RTA). For now this is the program-wide
-        FAQ — questions that apply to the whole program. For questions specific to one collection
-        (Avon, Dover…), edit that collection instead. More sections can be added here later.
+        Content shown on the cabinet shop pages (Assembled and RTA). For now this is the
+        program-wide FAQ — questions that apply to the whole program. For questions specific to one
+        collection (Avon, Dover…), edit that collection instead. More sections can be added here
+        later.
       </p>
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
