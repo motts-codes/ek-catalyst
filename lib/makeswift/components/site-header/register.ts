@@ -48,8 +48,8 @@ const logo = Group({
   label: 'Logo',
   preferredLayout: Group.Layout.Popover,
   props: {
-    desktop: logoGroup('Desktop', { width: 180, height: 36 }),
-    mobile: logoGroup('Mobile', { width: 100, height: 40 }),
+    desktop: logoGroup('Desktop', { width: 225, height: 45 }),
+    mobile: logoGroup('Mobile', { width: 125, height: 40 }),
     link: Link({ label: 'Logo link' }),
   },
 });

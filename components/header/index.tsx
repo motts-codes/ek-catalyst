@@ -9,14 +9,14 @@ import { client } from '~/client';
 import { graphql, readFragment } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 import { TAGS } from '~/client/tags';
-import { logoTransformer } from '~/data-transformers/logo-transformer';
 import { routing } from '~/i18n/routing';
+import { BRAND_LOGO } from '~/lib/brand';
 import { getCartId } from '~/lib/cart';
 import { getPreferredCurrencyCode } from '~/lib/currency';
+import { SiteHeader as HeaderSection } from '~/lib/makeswift/components/site-header';
 import { getAudienceMode } from '~/lib/navigation/audience-mode';
 import { AUDIENCE_CTA, getMenu } from '~/lib/navigation/menu-config';
 import { switchAudienceMode } from '~/lib/navigation/switch-audience-action';
-import { SiteHeader as HeaderSection } from '~/lib/makeswift/components/site-header';
 
 import { search } from './_actions/search';
 import { switchCurrency } from './_actions/switch-currency';
@@ -81,7 +81,7 @@ export const Header = async () => {
 
   const data = await getHeaderData();
 
-  const logo = data.settings ? logoTransformer(data.settings) : '';
+  const logo = BRAND_LOGO;
 
   const locales = routing.locales.map((enabledLocales) => ({
     id: enabledLocales,

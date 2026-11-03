@@ -14,8 +14,7 @@ import { readFragment } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 import { Image } from '~/components/image';
 import { subscribe } from '~/components/subscribe/_actions/subscribe';
-import { logoTransformer } from '~/data-transformers/logo-transformer';
-import { BRAND_NAME } from '~/lib/brand';
+import { BRAND_LOGO, BRAND_NAME } from '~/lib/brand';
 import { SHOWROOMS } from '~/lib/home/home-content';
 import { SiteFooter as FooterSection } from '~/lib/makeswift/components/site-footer';
 import {
@@ -84,7 +83,7 @@ export const Footer = async () => {
   const t = await getTranslations('Components.Footer');
   const data = await getFooterData();
 
-  const logo = data.settings ? logoTransformer(data.settings) : '';
+  const logo = BRAND_LOGO;
   const copyright = `© ${new Date().getFullYear()} ${BRAND_NAME}`;
 
   const socialMediaLinks = data.settings?.socialMediaLinks
