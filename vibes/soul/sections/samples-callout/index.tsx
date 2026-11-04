@@ -26,6 +26,8 @@ interface Props {
   video?: SamplesVideo;
   /** A still photo for the right panel instead of the clip (the Pro windows offer). */
   image?: { src: string; alt: string };
+  /** A small disclaimer line under the buttons ("* up to 101 united inches"). */
+  note?: string;
   className?: string;
 }
 
@@ -41,6 +43,7 @@ export function SamplesCallout({
   secondaryCta,
   video,
   image,
+  note,
   className,
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -111,6 +114,7 @@ export function SamplesCallout({
             </ButtonLink>
           )}
         </div>
+        {Boolean(note) && <p className="text-xs text-white/85">{note}</p>}
       </div>
       {image && !video && (
         <div className="relative aspect-video @3xl:aspect-auto @3xl:h-full">

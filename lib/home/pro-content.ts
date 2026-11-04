@@ -122,7 +122,8 @@ export const PRO_PROGRAM_FOOTNOTE =
 
 export const WINDOWS_OFFER = {
   kicker: 'Windows offer',
-  title: 'Double hung windows, $179.99, any size up to 101 united inches',
+  title: 'Double hung windows, $179.99, any size*',
+  note: '* Up to 101 united inches.',
   description:
     "In stock in Bristol and ready for pickup in 2 days. Measure the opening, then add the width and height: if it's 101 or under, it's $179.99.",
   actions: [

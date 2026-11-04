@@ -167,6 +167,7 @@ export default async function Pro({ params }: Props) {
               description={WINDOWS_OFFER.description}
               image={WINDOWS_OFFER.image}
               kicker={WINDOWS_OFFER.kicker}
+              note={WINDOWS_OFFER.note}
               secondaryCta={WINDOWS_OFFER.actions[1]}
               title={WINDOWS_OFFER.title}
             />
