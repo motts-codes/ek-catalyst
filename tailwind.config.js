@@ -170,6 +170,8 @@ const config = {
         out: 'var(--ease-smooth)',
         'in-out': 'var(--ease-smooth)',
         smooth: 'var(--ease-smooth)',
+        // A plain ease-in-out for slow state changes that should read as a fade, not a snap.
+        gentle: 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
       transitionDuration: {
         DEFAULT: '300ms',

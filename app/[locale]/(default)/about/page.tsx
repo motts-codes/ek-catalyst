@@ -68,6 +68,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
       />
       <MetricsTicker metrics={EK_METRICS} />
       <StoryTimeline
+        className="bg-[#fdf3f5]"
         description="Two families, four generations, and more than a century of kitchens."
         items={[
           {
@@ -117,11 +118,11 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               'Automated cabinet production, windows and interior doors, and a new site.',
           },
         ]}
-        className="bg-[#fdf3f5]"
         kicker="Our story"
         title="From a Hartford hardware store to a 300,000 sq ft home in Bristol"
       />
       <CardsRow
+        cardTitleTone="red"
         cards={[
           {
             title: 'Our own factory',
@@ -164,7 +165,6 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             imageLabel: 'The team at work',
           },
         ]}
-        cardTitleTone="red"
         columns={4}
         description="We don't resell someone else's kitchen. We make it, stock it, show it and stand behind it."
         imageStyle="plain"
@@ -181,8 +181,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             href: '/',
             linkLabel: 'Start your kitchen',
             image: {
-              src: '/images/pages/about/audience-homeowners.jpg',
-              alt: 'A white shaker kitchen with an island, three red stools and French doors to the garden',
+              src: '/images/pages/about/audience-homeowners-v2.jpg',
+              alt: 'A couple laughing at their new white kitchen island, French doors open to the garden behind them',
             },
           },
           {
@@ -192,8 +192,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             href: '/pro',
             linkLabel: 'For contractors',
             image: {
-              src: '/images/pages/about/audience-contractors.jpg',
-              alt: 'Pallets of wrapped cabinets lined up in a new-build hallway, a hard hat on top',
+              src: '/images/pages/about/audience-contractors-v2.jpg',
+              alt: 'A contractor pointing out a cabinet in a warehouse aisle while a red-shirted team member checks stock on a tablet',
             },
           },
           {
@@ -203,8 +203,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             href: '/industry/multifamily',
             linkLabel: 'Multifamily',
             image: {
-              src: '/images/pages/about/audience-multifamily.jpg',
-              alt: 'An apartment kitchen with flat white cabinets, an island with two red stools and a living room beyond',
+              src: '/images/pages/about/audience-multifamily-v2.jpg',
+              alt: 'A property manager with a tablet walking a developer through a finished apartment kitchen',
             },
           },
           {
@@ -214,8 +214,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             href: '/industry/commercial',
             linkLabel: 'Commercial',
             image: {
-              src: '/images/pages/about/audience-commercial.jpg',
-              alt: 'Racks of finished cabinets in the warehouse with a pallet jack in the aisle',
+              src: '/images/pages/about/audience-commercial-v2.jpg',
+              alt: "Shrink-wrapped cabinet pallets lined up in a new building's corridor while a site inspector and a developer review the delivery",
             },
           },
         ]}

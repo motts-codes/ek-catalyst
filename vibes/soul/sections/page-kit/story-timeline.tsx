@@ -3,7 +3,11 @@
 import { clsx } from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 
-import { clamp01, onScrollFrame, prefersReducedMotion } from '@/vibes/soul/sections/why-us-scroll/scroll-utils';
+import {
+  clamp01,
+  onScrollFrame,
+  prefersReducedMotion,
+} from '@/vibes/soul/sections/why-us-scroll/scroll-utils';
 
 export interface StoryTimelineItem {
   when: string;
@@ -117,17 +121,20 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
                 aria-hidden
                 className={clsx(
                   'absolute -inset-1.5 rounded-full bg-[var(--button-primary-background,#d90716)]',
-                  'transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none',
+                  'transition-opacity duration-700 ease-gentle motion-reduce:transition-none',
                   isCurrent ? 'opacity-[0.15]' : 'opacity-0',
                 )}
               />
               <span
                 className={clsx(
                   'relative flex h-14 w-14 items-center justify-center rounded-full border font-heading text-sm font-bold tabular-nums',
-                  'transition-colors duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none @xl:h-16 @xl:w-16 @xl:text-base',
-                  isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white',
-                  active && !isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-white text-[var(--button-primary-background,#d90716)]',
-                  !active && 'border-contrast-200 bg-white text-contrast-500',
+                  'transition-colors duration-700 ease-gentle @xl:h-16 @xl:w-16 @xl:text-base motion-reduce:transition-none',
+                  isCurrent &&
+                    'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white',
+                  active &&
+                    !isCurrent &&
+                    'border-[var(--button-primary-background,#d90716)] bg-white text-[var(--button-primary-background,#d90716)]',
+                  !active && 'border-[#dcdcdc] bg-transparent text-[#707070]',
                 )}
                 data-marker
               >
@@ -135,22 +142,23 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
               </span>
             </span>
             <div className="pt-3.5 @xl:pt-4">
-              {/* Upcoming steps fade, but only as far as WCAG AA allows: the big bold title to
-                  60% on phones where it is not yet large text, 50% from tablet up (3:1 as large text), the body to 90% (4.5:1). */}
+              {/* Upcoming steps sit in grey, as light as WCAG AA allows on the pink band: #707070 is
+                  4.5:1 for the body and the phone-size title; from tablet up the title counts as large
+                  text and can go to #8c8c8c (3:1). */}
               <h3
                 className={clsx(
                   'font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-2xl',
-                  'transition-opacity duration-500 ease-smooth motion-reduce:transition-none',
-                  !active && 'opacity-60 @xl:opacity-50',
+                  'transition-colors duration-700 ease-gentle motion-reduce:transition-none',
+                  !active && 'text-[#707070] @xl:text-[#8c8c8c]',
                 )}
               >
                 {item.title}
               </h3>
               <p
                 className={clsx(
-                  'mt-2 max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base',
-                  'transition-opacity duration-500 ease-smooth motion-reduce:transition-none',
-                  !active && 'opacity-90',
+                  'mt-2 max-w-xl text-sm leading-relaxed @xl:text-base',
+                  'transition-colors duration-700 ease-gentle motion-reduce:transition-none',
+                  active ? 'text-contrast-500' : 'text-[#707070]',
                 )}
               >
                 {item.description}
