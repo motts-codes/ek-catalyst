@@ -183,6 +183,10 @@ const config = {
           from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' },
         },
+        'fill-bar': {
+          from: { transform: 'scaleX(0)' },
+          to: { transform: 'scaleX(1)' },
+        },
         'marching-ants': {
           to: {
             'background-position':
@@ -230,6 +234,7 @@ const config = {
       animation: {
         collapse: 'collapse 400ms var(--ease-smooth)',
         expand: 'expand 400ms var(--ease-smooth)',
+        'fill-bar': 'fill-bar var(--fill-bar-duration, 6s) linear forwards',
         marching: 'marching-ants 10s linear infinite',
         rotate: 'rotate 2000ms linear infinite',
         scroll: 'scroll 200ms infinite linear both',

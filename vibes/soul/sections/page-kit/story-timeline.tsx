@@ -112,11 +112,11 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
             key={item.when + item.title}
           >
             <span className="relative z-10 shrink-0 self-start">
-              {/* The soft halo behind the current step's circle, a touch larger and offset. */}
+              {/* The soft halo behind the current step's circle, a touch larger, centred on it. */}
               <span
                 aria-hidden
                 className={clsx(
-                  'absolute -inset-1.5 translate-x-0.5 translate-y-0.5 rounded-full bg-[var(--button-primary-background,#d90716)]',
+                  'absolute -inset-1.5 rounded-full bg-[var(--button-primary-background,#d90716)]',
                   'transition-opacity duration-500 ease-smooth motion-reduce:transition-none',
                   isCurrent ? 'opacity-[0.15]' : 'opacity-0',
                 )}

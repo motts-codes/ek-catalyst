@@ -52,6 +52,10 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
   }, [paused, stopped, still, items, value]);
 
   const current = items.find((item) => item.title === value) ?? items[0];
+  // The open row's bottom hairline fills red over the dwell time, in step with the timer: both
+  // restart whenever the row changes or the rows resume after a pause.
+  const running = !paused && !stopped && !still && items.length > 1;
+  const runKey = `${value}:${String(running)}`;
 
   return (
     <div
@@ -93,10 +97,21 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
         >
           {items.map((item) => (
             <AccordionPrimitive.Item
-              className="group/item border-b border-contrast-200"
+              className="group/item relative border-b border-contrast-200"
               key={item.title}
               value={item.title}
             >
+              {item.title === value && (
+                <span
+                  aria-hidden
+                  className={clsx(
+                    'absolute inset-x-0 -bottom-px h-px origin-left bg-[var(--button-primary-background,#d90716)]',
+                    running && 'animate-fill-bar motion-reduce:animate-none',
+                  )}
+                  key={runKey}
+                  style={{ animationDuration: `${DWELL_MS}ms` }}
+                />
+              )}
               <AccordionPrimitive.Header asChild>
                 <Heading className="m-0">
                   <AccordionPrimitive.Trigger className="group flex w-full cursor-pointer items-center gap-4 py-5 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 @xl:py-6">
