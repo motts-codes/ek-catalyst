@@ -231,6 +231,7 @@ export const FOUR_LINES: RowCard[] = [
 // (lib/cabinets/program-content.ts, ASSEMBLED_BUILD_BLOCK).
 
 export const DESIGN_BAND = {
+  kicker: 'Free quotes for the trade',
   title: 'We price it, you win the job',
   description:
     "Send us your plans or measurements. We'll price every cabinet, RTA and assembled, so you can put a number in front of your client. Free.",

@@ -105,6 +105,7 @@ export default async function Pro({ params }: Props) {
             columns={4}
             description="Some jobs are bigger than a kitchen. Pick the one that sounds like your business."
             imageStyle="plain"
+            kicker="Who we work with"
             title="Which one sounds like your business?"
           />
         }
@@ -133,6 +134,7 @@ export default async function Pro({ params }: Props) {
           <DeliveryLadder
             columns={DELIVERY_COLUMNS}
             description="So you can put a date in front of your client and hold it. Add 7–10 days of transit, or pick up in Bristol."
+            kicker="Lead times, line by line"
             look="minimal"
             rows={DELIVERY_ROWS}
             tint
@@ -187,6 +189,7 @@ export default async function Pro({ params }: Props) {
         fallback={
           <HomeSection
             description="The build is the same across collections. What changes is the door and the finish."
+            kicker="Same box, every line"
             title="How every cabinet is built"
           >
             <Build block={ASSEMBLED_BUILD_BLOCK} embedded />
@@ -203,6 +206,7 @@ export default async function Pro({ params }: Props) {
             actions={DESIGN_BAND.actions}
             description={DESIGN_BAND.description}
             imageLabel={DESIGN_BAND.imageLabel}
+            kicker={DESIGN_BAND.kicker}
             title={DESIGN_BAND.title}
           />
         }
@@ -215,6 +219,7 @@ export default async function Pro({ params }: Props) {
         fallback={
           <ClosingBand
             description="Call or text the trade team for special pricing on contractor and builder orders. We answer 24/7. Or visit the Factory Outlet: our outlet team knows the products, so bring your plans and they'll help you find what fits."
+            kicker="Special pricing for the trade"
             phone={{ label: 'Call or text 860-247-1000', href: 'tel:+18602471000' }}
             primary={{ label: 'Talk to the trade team', href: TRADE_CONTACT_HREF }}
             secondary={{ label: 'Visit the Factory Outlet ↗', href: FACTORY_OUTLET_URL }}
