@@ -198,14 +198,13 @@ export default async function WhyExpressKitchens({
         look="minimal"
         rows={[
           ['!Made by the company that sells it', '✓', '—', '—', '✓'],
-          ['!In stock, ships in 2–3 weeks (quick-ship next day)', '✓', 'Some', '—', '—'],
+          ['!In stock, ships in 2–3 weeks', '✓', 'Some', '—', '—'],
           ['!Showrooms you can visit', '✓ Six in CT', '—', '✓', 'Some'],
           ['!Price shown on every collection', '✓', '✓', '—', '—'],
-          ['!Free design with a dedicated designer', '✓', 'Online only', '✓', '✓'],
+          ['!Free design help', '✓', 'Online only', '✓', '✓'],
           ['!Free door samples', '✓ First two', 'Paid', '—', '—'],
-          ['!RTA and assembled — your choice', '✓', 'RTA only', 'Assembled only', 'Assembled only'],
-          ['!Price match guarantee', '✓', 'Some', '✓', '—'],
-          ['!0% financing', '✓', '✓', '✓', '—'],
+          ['!RTA and assembled, your choice', '✓', 'RTA only', 'Assembled only', 'Assembled only'],
+          ['!Price match guarantee', '✓ In our showrooms', 'Some', '✓', '—'],
         ]}
         title="How we compare"
       />
