@@ -4,7 +4,6 @@ import { setRequestLocale } from 'next-intl/server';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import {
-  LinkCards,
   PageBreadcrumbs,
   type Person,
   StackedHero,
@@ -126,7 +125,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'Our own factory',
             description:
-              'Robots cut and finish every cabinet in our 300,000 sq ft Bristol plant, and 50,000 sit in stock. RTA ships in two weeks.',
+              "We make our own cabinets in Bristol, cut and finished by robots so every one fits the next. And with 50,000+ already in stock, you're not waiting months for yours.",
             image: {
               src: '/images/pages/about/robotic-line.jpg',
               alt: 'A robotic arm placing a panel on the cabinet line',
@@ -136,7 +135,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'Six showrooms',
             description:
-              'Full kitchens on display across Connecticut, and a Project Manager at each one to plan and price yours.',
+              "See full kitchens, hold the doors, and sit down with a Project Manager who'll price yours. Six showrooms across Connecticut, and walk-ins are welcome.",
             image: {
               src: '/images/pages/about/showroom-display.jpg',
               alt: 'A white shaker display kitchen in the showroom',
@@ -146,7 +145,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'The Factory Outlet',
             description:
-              'Clearance and quick-ship cabinets, closets, appliances, windows and doors, at 18 Main Street, Bristol.',
+              'Clearance, quick-ship and in-stock cabinets, closets, appliances, windows and doors, for less than big-box prices. Bring your plans and our team will help you find what fits. 18 Main Street, Bristol.',
             image: {
               src: '/images/why-us/factory/stock.webp',
               alt: 'Racks of boxed cabinets in the Bristol warehouse',
@@ -154,9 +153,9 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             imageLabel: 'Factory outlet',
           },
           {
-            title: 'People who know the work',
+            title: 'We stand behind it',
             description:
-              'Project Managers and factory teams, many here a decade or more. The names you see in our reviews.',
+              "Every cabinet has a 1-year warranty, and our phones are answered 24/7. If something's not right, call or text and a real person picks up.",
             image: {
               src: '/images/pages/about/team-at-work.jpg',
               alt: 'Two cabinetmakers fitting a door at a workbench',
@@ -171,37 +170,57 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         kicker="Why Express Kitchens"
         title="Everything under one roof"
       />
-      <LinkCards
+      <CardsRow
         cards={[
           {
             title: 'Homeowners',
             description:
-              'Six showrooms, free design help, and everything for the kitchen from one company.',
+              'Planning your first kitchen, or your last? Walk into any of our six showrooms, see it for real, and get it priced, free and with no pressure to buy.',
+            ctaLabel: 'Start your kitchen',
             href: '/',
-            linkLabel: 'Start your kitchen',
+            image: {
+              src: '/images/pages/about/audience-homeowners.jpg',
+              alt: 'A white shaker kitchen with an island, three red stools and French doors to the garden',
+            },
           },
           {
             title: 'Contractors',
             description:
-              'Special pricing for contractors and builders, and 50,000+ cabinets in stock. Call us for details.',
+              'Your client wants a date, and you need cabinets that show up on time. With 50,000+ in stock and special pricing for the trade, we help you keep your promises. Call us for details.',
+            ctaLabel: 'For contractors',
             href: '/pro',
-            linkLabel: 'For contractors',
+            image: {
+              src: '/images/pages/about/audience-contractors.jpg',
+              alt: 'Pallets of wrapped cabinets lined up in a new-build hallway, a hard hat on top',
+            },
           },
           {
             title: 'Multifamily',
             description:
-              "One spec per unit type, delivered on your schedule. We've supplied up to 430 kitchens for Storrs Center near UConn.",
+              "Hundreds of units, one spec, and no room for delays. We've supplied up to 430 kitchens for Storrs Center near UConn, delivered on the schedule the building needed.",
+            ctaLabel: 'Multifamily',
             href: '/industry/multifamily',
-            linkLabel: 'Multifamily',
+            image: {
+              src: '/images/pages/about/audience-multifamily.jpg',
+              alt: 'An apartment kitchen with flat white cabinets, an island with two red stools and a living room beyond',
+            },
           },
           {
             title: 'Commercial & wholesale',
-            description: 'Schedule certainty for general contractors and developers.',
+            description:
+              "Developers and general contractors need cabinets they can schedule around. We make and stock our own, so your timeline isn't waiting on someone else's factory.",
+            ctaLabel: 'Commercial',
             href: '/industry/commercial',
-            linkLabel: 'Commercial',
+            image: {
+              src: '/images/pages/about/audience-commercial.jpg',
+              alt: 'Racks of finished cabinets in the warehouse with a pallet jack in the aisle',
+            },
           },
         ]}
+        cardTitleTone="red"
+        columns={4}
         description="Six showrooms for homeowners, plus a commercial business supplying builders, contractors and apartment communities."
+        imageStyle="plain"
         kicker="Who we work with"
         tint
         title="Homeowners, contractors, builders and property managers"
