@@ -39,7 +39,7 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
       <PageHero
         actions={[
           { label: 'Find a showroom', href: '/showrooms', primary: true },
-          { label: 'How it works', href: '#how-it-works' },
+          { label: 'How it works', href: '#how-it-works', style: 'outline' },
         ]}
         description="Bring any competitor cabinet quote of $3,000 or more to an Express Kitchens showroom. We'll price the same kitchen with plywood boxes, soft-close hinges and full-extension glides, and beat their price. If we can't, you get a $500 credit toward your order."
         imageLabel="A homeowner handing a competitor quote across a showroom desk"
@@ -103,12 +103,12 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
         body={[
           "A lower price often means a particleboard box, hinges that slam, or drawers that only open part of the way. We match on the same layout, with a plywood box, soft-close hinges and full-extension glides, so you're getting more cabinet for the same money.",
         ]}
+        className="bg-[#fdf3f5]"
         image={{
           src: '/images/pages/price-match/box-comparison.jpg',
           alt: 'A plywood cabinet box beside a particleboard one, both cut open',
         }}
         kicker="Compare like for like"
-        tint
         title="A cheaper quote is often a different cabinet"
       />
       <CabinetFaq
@@ -140,8 +140,7 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
       />
       <ClosingBand
         description="Walk into any of our six showrooms, or book a visit so a Project Manager is ready for you."
-        primary={{ label: 'Find a showroom', href: '/showrooms' }}
-        secondary={{ label: 'Book a visit', href: '/book' }}
+        primary={{ label: 'Book a visit', href: '/book' }}
         showrooms={SHOWROOMS}
         title="Got a quote? Bring it in."
       />
