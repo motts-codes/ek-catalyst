@@ -222,7 +222,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         ]}
         kicker="Who we work with"
         tint
-        title="Homeowners, contractors, builders and property managers"
+        title="Whatever you’re building"
       />
       <TeamRow
         action={{ label: 'Find your showroom team', href: '/showrooms' }}
