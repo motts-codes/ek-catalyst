@@ -162,8 +162,8 @@ function CellContent({ text }: { text: string }): ReactNode {
   const rest = text.slice(1).trim();
 
   return (
-    <span className="inline-flex items-center gap-1.5">
-      <Check aria-hidden className="h-4 w-4 shrink-0" strokeWidth={2.5} />
+    <span className="inline-flex items-start gap-1.5">
+      <Check aria-hidden className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2.5} />
       <span className="sr-only">Yes</span>
       {rest ? <span>{rest}</span> : null}
     </span>
@@ -266,8 +266,10 @@ export function MinimalTable({
     // Scrolls sideways on narrow screens, so it must be reachable from the keyboard (WCAG 2.1.1).
     <div
       aria-label={columns.filter(Boolean).join(', ')}
+      // `relative` keeps absolutely positioned descendants (the sr-only "Yes" in check cells) inside
+      // the scroll container; otherwise they escape it and widen the page on phones.
       className={clsx(
-        'overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
+        'relative overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]',
         narrow && !inline && 'mx-auto max-w-4xl',
       )}
       role="region"
