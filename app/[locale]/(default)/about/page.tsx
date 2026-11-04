@@ -178,7 +178,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             title: 'Homeowners',
             description:
               'Planning your first kitchen, or your last? Walk into any of our six showrooms, see it for real, and get it priced, free and with no pressure to buy.',
-            href: '/',
+            href: FREE_DESIGN_HREF,
             linkLabel: 'Start your kitchen',
             image: {
               src: '/images/pages/about/audience-homeowners-v2.jpg',
