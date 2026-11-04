@@ -129,7 +129,10 @@ export const WINDOWS_OFFER = {
     { label: 'Shop windows', href: '/windows', primary: true },
     { label: 'See the double hung', href: DOUBLE_HUNG_HREF },
   ],
-  imageLabel: 'White vinyl double-hung windows on a pallet',
+  image: {
+    src: '/images/pages/pro/windows-on-pallet.jpg',
+    alt: 'White vinyl double-hung windows stacked on a pallet in the Bristol warehouse',
+  },
 };
 
 // "Ship times you can quote": every line, with no quick-ship column. Transit is on top (7–10 days)

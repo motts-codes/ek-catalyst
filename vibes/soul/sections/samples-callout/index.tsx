@@ -5,6 +5,7 @@ import { Pause, Play } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+import { Image } from '~/components/image';
 
 export interface SamplesVideo {
   webm?: string;
@@ -19,8 +20,12 @@ interface Props {
   /** One paragraph, or several. */
   description?: string | string[];
   cta?: { label: string; href: string };
+  /** An optional second, outlined button beside the first. */
+  secondaryCta?: { label: string; href: string };
   /** A short, silent looping clip for the right panel (omit for copy only). */
   video?: SamplesVideo;
+  /** A still photo for the right panel instead of the clip (the Pro windows offer). */
+  image?: { src: string; alt: string };
   className?: string;
 }
 
@@ -33,7 +38,9 @@ export function SamplesCallout({
   title = 'Try the finish at home. First two are on us.',
   description = 'Screens get colours wrong. Order a real door sample to hold against your walls, floors and countertop in your own light. Your first two (Quarter door samples) are free with code FREESAMPLES.',
   cta = { label: 'Order samples', href: '/samples' },
+  secondaryCta,
   video,
+  image,
   className,
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -68,7 +75,7 @@ export function SamplesCallout({
     <div
       className={clsx(
         'grid overflow-hidden rounded-3xl bg-[#9f3632] text-white @3xl:min-h-[330px]',
-        video && '@3xl:grid-cols-[3fr_2fr]',
+        (video ?? image) && '@3xl:grid-cols-[3fr_2fr]',
         className,
       )}
     >
@@ -82,7 +89,7 @@ export function SamplesCallout({
             {paragraph}
           </p>
         ))}
-        <div className="mt-1">
+        <div className="mt-1 flex flex-wrap gap-3">
           <ButtonLink
             className="border-foreground bg-foreground text-white after:!bg-white hover:!text-foreground [&>span]:mix-blend-normal"
             href={cta.href}
@@ -92,8 +99,30 @@ export function SamplesCallout({
           >
             {cta.label}
           </ButtonLink>
+          {secondaryCta && (
+            <ButtonLink
+              className="border-white bg-transparent text-white after:!bg-white hover:!text-[#9f3632] [&>span]:mix-blend-normal"
+              href={secondaryCta.href}
+              shape="pill"
+              size="small"
+              variant="secondary"
+            >
+              {secondaryCta.label}
+            </ButtonLink>
+          )}
         </div>
       </div>
+      {image && !video && (
+        <div className="relative aspect-video @3xl:aspect-auto @3xl:h-full">
+          <Image
+            alt={image.alt}
+            className="object-cover"
+            fill
+            sizes="(min-width: 56rem) 40vw, 100vw"
+            src={image.src}
+          />
+        </div>
+      )}
       {video && (
         <div className="relative aspect-video @3xl:aspect-auto @3xl:h-full">
           <video

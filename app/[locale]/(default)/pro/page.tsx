@@ -7,6 +7,7 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { ProgramSplit } from '@/vibes/soul/sections/program-split';
+import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
@@ -144,12 +145,12 @@ export default async function Pro({ params }: Props) {
       <Slot
         fallback={
           <DeliveryLadder
+            className="bg-[#fdf3f5]"
             columns={DELIVERY_COLUMNS}
             description="So you can put a date in front of your client and hold it. Add 7–10 days of transit, or pick up in Bristol."
             kicker="Lead times, line by line"
             look="minimal"
             rows={DELIVERY_ROWS}
-            tint
             title="Ship times you can quote"
           />
         }
@@ -160,13 +161,16 @@ export default async function Pro({ params }: Props) {
       {/* 6 · Windows offer (double hung only) */}
       <Slot
         fallback={
-          <StoryBand
-            actions={WINDOWS_OFFER.actions}
-            description={WINDOWS_OFFER.description}
-            imageLabel={WINDOWS_OFFER.imageLabel}
-            kicker={WINDOWS_OFFER.kicker}
-            title={WINDOWS_OFFER.title}
-          />
+          <HomeSection compact>
+            <SamplesCallout
+              cta={WINDOWS_OFFER.actions[0]}
+              description={WINDOWS_OFFER.description}
+              image={WINDOWS_OFFER.image}
+              kicker={WINDOWS_OFFER.kicker}
+              secondaryCta={WINDOWS_OFFER.actions[1]}
+              title={WINDOWS_OFFER.title}
+            />
+          </HomeSection>
         }
         label="Pro windows offer"
         snapshotId="pro-windows-offer"
