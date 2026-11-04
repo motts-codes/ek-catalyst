@@ -233,6 +233,24 @@ function heroImageProps(imageStyle: HeroProps['imageStyle']): {
 }
 
 // Page opener: kicker, h1, one paragraph, optional chips and buttons; a photo beside it unless
+// The hero's media box. A plain photo sits as it is; a plain placeholder stays square-cornered,
+// like the photo that will replace it; everything else gets the rounded grey box.
+function heroMediaClassName(
+  imageStyle: HeroProps['imageStyle'],
+  hasImage: boolean,
+  small: boolean,
+): string {
+  const plain = imageStyle === 'plain';
+
+  return clsx(
+    'relative overflow-hidden',
+    plain && hasImage ? 'aspect-[6/5]' : 'aspect-[4/3] bg-contrast-100',
+    !plain && !hasImage && 'rounded-3xl',
+    imageStyle === 'framed' && 'ring-1 ring-contrast-100',
+    small && 'mx-auto w-2/3 @3xl:w-[62%]',
+  );
+}
+
 // `textOnly`.
 export function PageHero({
   kicker,
@@ -326,16 +344,7 @@ export function PageHero({
           )}
         </div>
         {!textOnly && (
-          <div
-            className={clsx(
-              'relative overflow-hidden',
-              imageStyle === 'plain' && image
-                ? 'aspect-[6/5]'
-                : 'aspect-[4/3] rounded-3xl bg-contrast-100',
-              imageStyle === 'framed' && 'ring-1 ring-contrast-100',
-              imageSize === 'small' && 'mx-auto w-2/3 @3xl:w-[62%]',
-            )}
-          >
+          <div className={heroMediaClassName(imageStyle, image != null, imageSize === 'small')}>
             {image ? (
               <Image
                 alt={image.alt}

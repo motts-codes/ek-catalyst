@@ -1,11 +1,13 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
-import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
+import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { ReviewGrid } from '@/vibes/soul/sections/page-kit/media';
+import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
+import { StepsTimeline } from '@/vibes/soul/sections/page-kit/steps-timeline';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -53,6 +55,29 @@ const ROWS = [
   ['!Price match', 'Yes, in our showrooms', 'Varies', 'Rarely', 'Rarely'],
 ];
 
+const SELLERS = [
+  {
+    title: 'Big-box stores',
+    description:
+      "Great for seeing a door in person, and the entry prices look hard to beat. But the cabinets come from someone else, usually made to order, and if something arrives damaged you're waiting on a third party.",
+  },
+  {
+    title: 'Online-only sellers',
+    description:
+      "Often the cheapest ready-to-assemble option, and fine for a confident DIYer with a simple layout. But you can't see the cabinet first, assembled is rarely offered, and help comes through a ticket, not a person.",
+  },
+  {
+    title: 'Custom shops',
+    description:
+      'Beautiful work, built to any size. You pay for it in money and in time, often 14 weeks or more.',
+  },
+  {
+    title: 'Us',
+    description:
+      'We sit in between. We make our own cabinets, keep them in stock, show them in six showrooms, and sell them ready to assemble or assembled. Custom-shop quality, with no custom-shop wait.',
+  },
+];
+
 // Real Google reviews from the site's list, trimmed with an ellipsis where a line was cut.
 const REVIEWS = [
   {
@@ -94,52 +119,51 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
           { label: 'Free design consult', href: FREE_DESIGN_HREF, style: 'outline' },
         ]}
         description="Big-box stores, online sellers, custom shops and us. Here's what you get from each, so you can compare like for like."
+        imageLabel="A homeowner comparing three cabinet quotes at a showroom table"
+        imageStyle="plain"
         kicker="Compare"
-        textOnly
         title="Pricing your kitchen in three places? Here's how we compare."
       />
-      <CardsRow
-        cards={[
-          {
-            title: 'We make it',
-            description:
-              "Our cabinets are built in our own Bristol factory, so there's no middleman's markup in the price.",
-          },
-          {
-            title: "It's already in stock",
-            description:
-              "50,000+ cabinets on the shelf, so you're not waiting the 14 weeks a custom kitchen often takes.",
-          },
-          {
-            title: 'You can see it first',
-            description:
-              'Walk through full kitchens in six showrooms, or order a door sample before you buy.',
-          },
-        ]}
-        hideImages
-        kicker="The short answer"
-        title="Three things most cabinet sellers can't say"
-      />
+      <HomeSection kicker="The short answer" title="Three things most cabinet sellers can't say">
+        <StepsTimeline
+          layout="row"
+          steps={[
+            {
+              title: 'We make it',
+              description:
+                "Our cabinets are built in our own Bristol factory, so there's no middleman's markup in the price.",
+            },
+            {
+              title: "It's already in stock",
+              description:
+                "50,000+ cabinets on the shelf, so you're not waiting the 14 weeks a custom kitchen often takes.",
+            },
+            {
+              title: 'You can see it first',
+              description:
+                'Walk through full kitchens in six showrooms, or order a door sample before you buy.',
+            },
+          ]}
+        />
+      </HomeSection>
       <div id="compare" />
       <DeliveryLadder
+        className="bg-[#fdf3f5]"
         columns={COLUMNS}
         footnote="Competitor columns describe each type of seller in general, not any one company. Our ship times are per collection; transit adds 7–10 days. The 14-week figure is the typical custom-cabinet lead time reported by US kitchen designers, 2025–26."
         kicker="Side by side"
         look="minimal"
         rows={ROWS}
-        tint
         title="What you get, seller by seller"
       />
-      <Prose
-        body={[
-          "Big-box stores: Great for seeing a door in person, and the entry prices look hard to beat. But the cabinets come from someone else, usually made to order, and if something arrives damaged you're waiting on a third party.",
-          "Online-only sellers: Often the cheapest ready-to-assemble option, and fine for a confident DIYer with a simple layout. But you can't see the cabinet first, assembled is rarely offered, and help comes through a ticket, not a person.",
-          'Custom shops: Beautiful work, built to any size. You pay for it in money and in time, often 14 weeks or more.',
-          'Us: We sit in between. We make our own cabinets, keep them in stock, show them in six showrooms, and sell them ready to assemble or assembled. Custom-shop quality, with no custom-shop wait.',
-        ]}
-        kicker="By type of seller"
-        title="The honest take on each"
-      />
+      <HomeSection kicker="By type of seller" title="The honest take on each">
+        <div className="grid items-start gap-8 @3xl:grid-cols-2 @3xl:gap-12">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100">
+            <MediaPlaceholder label="A showroom kitchen beside a big-box aisle, an online listing and a custom workshop" />
+          </div>
+          <StepsAccordion numbered={false} steps={SELLERS} />
+        </div>
+      </HomeSection>
       <Prose
         actions={[
           { label: 'How the price match works', href: '/price-match-guarantee', primary: true },
