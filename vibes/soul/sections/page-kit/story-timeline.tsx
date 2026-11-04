@@ -117,14 +117,14 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
                 aria-hidden
                 className={clsx(
                   'absolute -inset-1.5 rounded-full bg-[var(--button-primary-background,#d90716)]',
-                  'transition-opacity duration-500 ease-smooth motion-reduce:transition-none',
+                  'transition-opacity duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none',
                   isCurrent ? 'opacity-[0.15]' : 'opacity-0',
                 )}
               />
               <span
                 className={clsx(
                   'relative flex h-14 w-14 items-center justify-center rounded-full border font-heading text-sm font-bold tabular-nums',
-                  'transition-colors duration-500 ease-smooth motion-reduce:transition-none @xl:h-16 @xl:w-16 @xl:text-base',
+                  'transition-colors duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none @xl:h-16 @xl:w-16 @xl:text-base',
                   isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white',
                   active && !isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-white text-[var(--button-primary-background,#d90716)]',
                   !active && 'border-contrast-200 bg-white text-contrast-500',

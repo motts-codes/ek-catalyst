@@ -613,7 +613,7 @@ export function StoryTimeline({
       tint={tint}
       title={title}
     >
-      <StoryTimelineList className="mt-4 @xl:mt-8" items={items} />
+      <StoryTimelineList className="mt-10 pb-8 @xl:mt-16 @xl:pb-12" items={items} />
     </HomeSection>
   );
 }

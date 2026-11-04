@@ -3,7 +3,7 @@
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { clsx } from 'clsx';
 import { ArrowRight, ChevronDown, Pause, Play } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -34,13 +34,32 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
   const [paused, setPaused] = useState(false);
   const [stopped, setStopped] = useState(false);
   const [still, setStill] = useState(false);
+  // The rows only start walking once the section is on screen, so a visitor who scrolls down
+  // always meets the first row open with its photo already showing.
+  const [inView, setInView] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setStill(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, []);
 
   useEffect(() => {
-    if (paused || stopped || still || items.length < 2) return;
+    const el = root.current;
+
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry?.isIntersecting ?? false),
+      { threshold: 0.35 },
+    );
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView || paused || stopped || still || items.length < 2) return;
 
     const timer = window.setTimeout(() => {
       const i = items.findIndex((item) => item.title === value);
@@ -49,12 +68,12 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
     }, DWELL_MS);
 
     return () => window.clearTimeout(timer);
-  }, [paused, stopped, still, items, value]);
+  }, [inView, paused, stopped, still, items, value]);
 
   const current = items.find((item) => item.title === value) ?? items[0];
   // The open row's bottom hairline fills red over the dwell time, in step with the timer: both
   // restart whenever the row changes or the rows resume after a pause.
-  const running = !paused && !stopped && !still && items.length > 1;
+  const running = inView && !paused && !stopped && !still && items.length > 1;
   const runKey = `${value}:${String(running)}`;
 
   return (
@@ -64,8 +83,10 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
       onFocus={() => setPaused(true)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      ref={root}
     >
-      {/* The photo: every image is stacked and only the open row's shows, so the swap is a fade. */}
+      {/* The photo: every image is stacked and only the open row's shows, so the swap is a fade.
+          Loaded eagerly: a lazy image that has already faded out never starts loading. */}
       <div className="relative aspect-[5/3] overflow-hidden rounded-3xl bg-contrast-100 @3xl:order-last @3xl:aspect-[5/4]">
         {items.map((item) => (
           <Image
@@ -77,6 +98,7 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
             )}
             fill
             key={item.image.src}
+            loading="eager"
             sizes="(min-width: 56rem) 50vw, 100vw"
             src={item.image.src}
           />
