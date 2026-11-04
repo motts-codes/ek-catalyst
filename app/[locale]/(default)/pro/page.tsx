@@ -1,9 +1,11 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
+import { Build } from '@/vibes/soul/sections/cabinet-program-content';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
+import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
@@ -17,10 +19,10 @@ import {
   FACTORY_OUTLET_URL,
   FOUR_LINES,
   PRO_AUDIENCES,
+  PRO_BUILD_BLOCK,
   PRO_HERO_SLIDES,
   PRO_PROGRAM_CARDS,
   PRO_PROGRAM_FOOTNOTE,
-  QUALITY_POINTS,
   SPEC_SHELF,
   TRADE_CONTACT_HREF,
   WINDOWS_OFFER,
@@ -185,14 +187,12 @@ export default async function Pro({ params }: Props) {
       {/* 8 · How every cabinet is built */}
       <Slot
         fallback={
-          <CardsRow
-            cards={QUALITY_POINTS}
-            columns={3}
+          <HomeSection
             description="The build is the same across collections. What changes is the door and the finish."
-            hideImages
-            tint
             title="How every cabinet is built"
-          />
+          >
+            <Build block={PRO_BUILD_BLOCK} embedded />
+          </HomeSection>
         }
         label="Pro quality"
         snapshotId="pro-quality"
