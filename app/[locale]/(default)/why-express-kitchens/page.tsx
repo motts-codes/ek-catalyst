@@ -195,6 +195,7 @@ export default async function WhyExpressKitchens({
         ]}
         description="Only the rows where the answers differ. We've used store types, not names, so you can check for yourself."
         kicker="Before you shop around"
+        look="minimal"
         rows={[
           ['!Made by the company that sells it', '✓', '—', '—', '✓'],
           ['!In stock, ships in 2–3 weeks (quick-ship next day)', '✓', 'Some', '—', '—'],

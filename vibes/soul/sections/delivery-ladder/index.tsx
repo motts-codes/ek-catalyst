@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { Check } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -153,6 +154,22 @@ function cellText(cell: string): { bold: boolean; text: string } {
   return { bold, text: bold ? cell.slice(1) : cell };
 }
 
+// A cell that starts with "✓" renders the lucide check (no circle) in brand red, with "Yes" for
+// screen readers, followed by any trailing text ("✓ Six in CT"). Other cells render as typed.
+function CellContent({ text }: { text: string }): ReactNode {
+  if (!text.startsWith('✓')) return text;
+
+  const rest = text.slice(1).trim();
+
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Check aria-hidden className="h-4 w-4 shrink-0" strokeWidth={2.5} />
+      <span className="sr-only">Yes</span>
+      {rest ? <span>{rest}</span> : null}
+    </span>
+  );
+}
+
 // The boxed table: red header row, alternating fills, hairlines between every column.
 function ClassicTable({ columns, rows, narrow }: TableProps) {
   return (
@@ -216,7 +233,7 @@ function ClassicTable({ columns, rows, narrow }: TableProps) {
                       )}
                       key={cellIndex}
                     >
-                      {text}
+                      <CellContent text={text} />
                     </td>
                   );
                 })}
@@ -311,7 +328,7 @@ export function MinimalTable({
                     )}
                     key={cellIndex}
                   >
-                    {text}
+                    <CellContent text={text} />
                   </td>
                 );
               })}

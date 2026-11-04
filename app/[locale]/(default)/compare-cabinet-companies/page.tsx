@@ -100,6 +100,7 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
       />
       <DeliveryLadder
         columns={COLUMNS}
+        look="minimal"
         footnote="Our prices are live from the collection pages. Competitor figures are left blank until we can publish them with a source; we'd rather show a gap than a guess."
         kicker="Side by side"
         rows={rows(lowest)}
