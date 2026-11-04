@@ -73,49 +73,51 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         items={[
           {
             when: '1916',
-            title: 'Star Hardware opens',
+            title: 'A store that listened',
             description:
-              'Sam and Charlie Gellin open a hardware store in Hartford, and soon start remodeling kitchens.',
+              'Hartford homeowners came to Star Hardware for tools. When they asked for help with their kitchens, Sam and Charlie Gellin started building them.',
           },
           {
             when: '1989',
-            title: 'A new family takes over',
-            description: 'The Kothari family takes over Star Hardware.',
+            title: 'Same street, same promise',
+            description:
+              'The Kothari family took over the store, and the people of Hartford kept coming back.',
           },
           {
             when: '2002',
-            title: 'Express Kitchens is born',
-            description: 'Max Kothari founds Express Kitchens in Hartford.',
+            title: 'No more waiting',
+            description:
+              'Customers were tired of waiting months for a kitchen, so Max Kothari founded Express Kitchens to make it faster.',
           },
           {
             when: '2013',
-            title: 'Our own cabinet line',
+            title: 'Cabinets we could stand behind',
             description:
-              'Star Cabinets, made in Hartford, and up to 430 kitchens for Storrs Center near UConn.',
+              'We started making our own in Hartford, and soon up to 430 families at Storrs Center near UConn were cooking in our kitchens.',
           },
           {
             when: '2018',
-            title: 'Three stores in one day',
+            title: 'Closer to home',
             description:
-              'Southington, Springfield and Holyoke open together, taking us to 16 stores.',
+              'Southington, Springfield and Holyoke opened in one day, so more families could see their kitchen before they bought it.',
           },
           {
             when: '2023',
-            title: 'Into New York and New Jersey',
+            title: 'Further than ever',
             description:
-              'Three acquisitions add a New Jersey plant and grow us to 17 showrooms in four states.',
+              'Three acquisitions took us into New York and New Jersey, and brought more customers a showroom near them.',
           },
           {
             when: '2025',
-            title: 'A new home in Bristol',
+            title: 'Ready when you are',
             description:
-              'Manufacturing, distribution, offices and our outlet, in one 300,000+ sq ft facility.',
+              'Our new 300,000+ sq ft home in Bristol keeps 50,000+ cabinets in stock, so your kitchen isn’t stuck in someone’s queue.',
           },
           {
             when: '2026',
-            title: 'Windows, doors and a new website',
+            title: 'More of what you need',
             description:
-              'Automated cabinet production, windows and interior doors, and a new site.',
+              'Windows and interior doors join the kitchen, and a new website makes shopping with us easier, from first idea to order.',
           },
         ]}
         kicker="Our story"
