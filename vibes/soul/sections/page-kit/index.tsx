@@ -725,11 +725,15 @@ export function TeamRow({
                   </span>
                 )}
                 <span className="mt-5 block border-t border-contrast-100 pt-4">
-                  <span className="block font-heading text-lg font-semibold leading-tight">
+                  <span className="block font-heading text-lg font-semibold leading-tight text-[var(--button-primary-background,#d90716)]">
                     {person.name}
                   </span>
-                  <span className="mt-1.5 flex items-start gap-2 text-xs text-contrast-500 @xl:text-sm">
-                    <User aria-hidden className="mt-px shrink-0 text-contrast-400" size={14} />
+                  <span className="mt-1.5 flex items-center gap-2 text-xs text-contrast-500 @xl:text-sm">
+                    <User
+                      aria-hidden
+                      className="shrink-0 text-[var(--button-primary-background,#d90716)]"
+                      size={14}
+                    />
                     {person.role}
                   </span>
                 </span>
