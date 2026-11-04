@@ -99,7 +99,11 @@ export default async function Pro({ params }: Props) {
 
       {/* 2 · Everything for the job: shopping first */}
       <EditableSection
-        defaults={{ categories: PRO_CATEGORY_TILES, categoriesTitle: 'Everything for the job' }}
+        defaults={{
+          categories: PRO_CATEGORY_TILES,
+          categoriesTitle: 'Everything for the job',
+          tightTop: true,
+        }}
         label="Pro categories"
         snapshotId="pro-category-carousel"
         type={CATEGORY_CAROUSEL_TYPE}
