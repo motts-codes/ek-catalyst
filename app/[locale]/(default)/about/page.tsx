@@ -119,6 +119,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           },
         ]}
         kicker="Our story"
+        surfaceClassName="bg-[#fdf3f5]"
         title="From a Hartford hardware store to a 300,000 sq ft home in Bristol"
       />
       <CardsRow

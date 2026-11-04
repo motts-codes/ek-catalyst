@@ -597,6 +597,7 @@ export function StoryTimeline({
   description,
   items,
   tint,
+  surfaceClassName,
   className,
 }: {
   kicker?: string;
@@ -604,6 +605,8 @@ export function StoryTimeline({
   description?: string;
   items: TimelineItem[];
   tint?: boolean;
+  /** The band's background class, repeated inside the upcoming circles (default white). */
+  surfaceClassName?: string;
   className?: string;
 }) {
   return (
@@ -614,7 +617,11 @@ export function StoryTimeline({
       tint={tint}
       title={title}
     >
-      <StoryTimelineList className="mt-10 pb-8 @xl:mt-16 @xl:pb-12" items={items} />
+      <StoryTimelineList
+        className="mt-10 pb-8 @xl:mt-16 @xl:pb-12"
+        items={items}
+        surfaceClassName={surfaceClassName}
+      />
     </HomeSection>
   );
 }

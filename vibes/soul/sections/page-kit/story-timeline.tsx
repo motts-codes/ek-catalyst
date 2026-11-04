@@ -19,6 +19,8 @@ interface Props {
   items: StoryTimelineItem[];
   /** Where in the viewport (0 = top, 1 = bottom) a marker has to reach to light up. */
   activation?: number;
+  /** The band's background, painted inside the upcoming circles so the line does not show through. */
+  surfaceClassName?: string;
   /** Inactive items on a tinted band read against that tint. */
   className?: string;
 }
@@ -29,7 +31,12 @@ const RED = 'var(--button-primary-background,#d90716)';
 // line of copy beside it. A red fill climbs the line as you scroll; each step lights up as the
 // fill reaches its circle, and the steps still to come sit faded. Server-rendered fully lit (no
 // JS / reduced motion), the effect takes over on mount.
-export function StoryTimelineList({ items, activation = 0.5, className }: Props) {
+export function StoryTimelineList({
+  items,
+  activation = 0.5,
+  surfaceClassName = 'bg-white',
+  className,
+}: Props) {
   const list = useRef<HTMLOListElement>(null);
   const line = useRef<HTMLSpanElement>(null);
   const fill = useRef<HTMLSpanElement>(null);
@@ -134,7 +141,8 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
                   active &&
                     !isCurrent &&
                     'border-[var(--button-primary-background,#d90716)] bg-white text-[var(--button-primary-background,#d90716)]',
-                  !active && 'border-[#dcdcdc] bg-transparent text-[#707070]',
+                  !active &&
+                    clsx('border-[#dcdcdc] text-[#707070] @xl:text-[#949494]', surfaceClassName),
                 )}
                 data-marker
               >
@@ -142,14 +150,14 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
               </span>
             </span>
             <div className="pt-3.5 @xl:pt-4">
-              {/* Upcoming steps sit in grey, as light as WCAG AA allows on the pink band: #707070 is
-                  4.5:1 for the body and the phone-size title; from tablet up the title counts as large
-                  text and can go to #8c8c8c (3:1). */}
+              {/* Upcoming steps sit in grey. On phones the greys hold the WCAG AA floor (#707070,
+                  4.5:1 on the pink band); from tablet up they go lighter than AA at the client's
+                  request, so the reached steps stand out more. */}
               <h3
                 className={clsx(
                   'font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-2xl',
                   'transition-colors duration-700 ease-gentle motion-reduce:transition-none',
-                  !active && 'text-[#707070] @xl:text-[#8c8c8c]',
+                  !active && 'text-[#707070] @xl:text-[#a3a3a3]',
                 )}
               >
                 {item.title}
@@ -158,7 +166,7 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
                 className={clsx(
                   'mt-2 max-w-xl text-sm leading-relaxed @xl:text-base',
                   'transition-colors duration-700 ease-gentle motion-reduce:transition-none',
-                  active ? 'text-contrast-500' : 'text-[#707070]',
+                  active ? 'text-contrast-500' : 'text-[#707070] @xl:text-[#949494]',
                 )}
               >
                 {item.description}
