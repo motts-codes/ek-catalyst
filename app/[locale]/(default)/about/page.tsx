@@ -116,8 +116,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
               'Automated cabinet production, windows and interior doors, and a new site.',
           },
         ]}
+        className="bg-[#fdf3f5]"
         kicker="Our story"
-        tint
         title="From a Hartford hardware store to a 300,000 sq ft home in Bristol"
       />
       <CardsRow

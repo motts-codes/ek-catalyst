@@ -88,7 +88,7 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
   }, [activation, items.length]);
 
   return (
-    <ol className={clsx('relative', className)} ref={list}>
+    <ol className={clsx('relative mx-auto max-w-2xl', className)} ref={list}>
       <span
         aria-hidden
         className="absolute left-[27px] w-px bg-contrast-200 @xl:left-[31px]"
@@ -111,33 +111,44 @@ export function StoryTimelineList({ items, activation = 0.5, className }: Props)
             data-status={active ? 'active' : 'inactive'}
             key={item.when + item.title}
           >
-            <span
-              className={clsx(
-                'relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border font-heading text-sm font-bold tabular-nums',
-                'transition-colors duration-500 ease-smooth motion-reduce:transition-none @xl:h-16 @xl:w-16 @xl:text-base',
-                isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white',
-                active && !isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-white text-[var(--button-primary-background,#d90716)]',
-                !active && 'border-contrast-200 bg-white text-contrast-500',
-              )}
-              data-marker
-            >
-              {item.when}
+            <span className="relative z-10 shrink-0 self-start">
+              {/* The soft halo behind the current step's circle, a touch larger and offset. */}
+              <span
+                aria-hidden
+                className={clsx(
+                  'absolute -inset-1.5 translate-x-0.5 translate-y-0.5 rounded-full bg-[var(--button-primary-background,#d90716)]',
+                  'transition-opacity duration-500 ease-smooth motion-reduce:transition-none',
+                  isCurrent ? 'opacity-[0.15]' : 'opacity-0',
+                )}
+              />
+              <span
+                className={clsx(
+                  'relative flex h-14 w-14 items-center justify-center rounded-full border font-heading text-sm font-bold tabular-nums',
+                  'transition-colors duration-500 ease-smooth motion-reduce:transition-none @xl:h-16 @xl:w-16 @xl:text-base',
+                  isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white',
+                  active && !isCurrent && 'border-[var(--button-primary-background,#d90716)] bg-white text-[var(--button-primary-background,#d90716)]',
+                  !active && 'border-contrast-200 bg-white text-contrast-500',
+                )}
+                data-marker
+              >
+                {item.when}
+              </span>
             </span>
-            <div className="pt-2.5 @xl:pt-3.5">
+            <div className="pt-3.5 @xl:pt-4">
               {/* Upcoming steps fade, but only as far as WCAG AA allows: the big bold title to
-                  50% (3:1 as large text), the body to 90% (4.5:1). */}
+                  60% on phones where it is not yet large text, 50% from tablet up (3:1 as large text), the body to 90% (4.5:1). */}
               <h3
                 className={clsx(
-                  'font-heading text-2xl font-bold leading-tight @xl:text-3xl @4xl:text-[34px]',
+                  'font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-2xl',
                   'transition-opacity duration-500 ease-smooth motion-reduce:transition-none',
-                  !active && 'opacity-50',
+                  !active && 'opacity-60 @xl:opacity-50',
                 )}
               >
                 {item.title}
               </h3>
               <p
                 className={clsx(
-                  'mt-3 max-w-xl text-base leading-relaxed text-contrast-500 @xl:text-lg',
+                  'mt-2 max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base',
                   'transition-opacity duration-500 ease-smooth motion-reduce:transition-none',
                   !active && 'opacity-90',
                 )}
