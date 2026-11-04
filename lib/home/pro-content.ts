@@ -22,19 +22,19 @@ export const DOUBLE_HUNG_HREF = '/windows/replacement/double-hung-windows';
 // The wireframe rotates the audience word in one headline; here each audience is its own slide.
 export const PRO_HERO_SLIDES: HeroSlide[] = [
   {
-    title: 'Built for contractors.\nSpecial pricing, and ship dates you can quote.',
+    title: 'For contractors:\nShip dates you can quote.',
     image: { src: '', alt: 'a job site or warehouse racking' },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
   },
   {
-    title: 'Built for interior designers.\nSpec it, price it, ship it.',
+    title: 'For interior designers:\nSpec it. Price it. Ship it.',
     image: { src: '', alt: 'a designer reviewing a kitchen plan' },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
   },
   {
-    title: 'Built for multifamily and commercial.\nOne spec per unit, delivered on your schedule.',
+    title: 'For multifamily and commercial:\nOne spec, every unit.',
     image: { src: '', alt: 'cabinets staged on a multifamily floor' },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
