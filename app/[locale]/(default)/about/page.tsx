@@ -57,10 +57,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'About', href: '/about' }]} />
       <StackedHero
-        actions={[
-          { label: 'Meet your showroom team', href: '/showrooms', primary: true },
-          { label: 'Free design consult', href: FREE_DESIGN_HREF },
-        ]}
+        actions={[{ label: 'Meet your showroom team', href: '/showrooms', primary: true }]}
         description="Our Project Managers, cabinetmakers, drivers and the team in Bristol are the reason customers come back, and the people they name in their reviews. Two families have run this business across four generations since 1916, and every kitchen still goes through people who know the work."
         image={{
           src: '/images/pages/about/team-bristol-wide.jpg',
@@ -151,8 +148,8 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             description:
               'Also at 18 Main Street, Bristol: clearance and discounted cabinets, quick-ship styles, closets, appliances, windows, vanities and interior doors.',
             image: {
-              src: '/images/pages/about/factory-outlet.jpg',
-              alt: 'Cabinet sets on display at the factory outlet',
+              src: '/images/why-us/factory/stock.webp',
+              alt: 'Racks of boxed cabinets in the Bristol warehouse',
             },
             imageLabel: 'Factory outlet',
           },
@@ -169,8 +166,10 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         ]}
         columns={4}
         description="We don't resell someone else's kitchen. We make it, stock it, show it and stand behind it."
+        imageStyle="plain"
         kicker="Why Express Kitchens"
         title="Everything under one roof"
+        titleTone="red"
       />
       <LinkCards
         cards={[

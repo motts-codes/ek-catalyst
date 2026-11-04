@@ -37,6 +37,8 @@ interface Props {
   headingStyle?: 'default' | 'small';
   /** `red`: the band on brand red with the heading row in white. */
   tone?: 'default' | 'red';
+  /** `red`: just the title in brand red (on a normal band). */
+  titleTone?: 'default' | 'red';
   className?: string;
   children: ReactNode;
 }
@@ -58,6 +60,7 @@ export function HomeSection({
   className,
   children,
   tone = 'default',
+  titleTone = 'default',
 }: Props) {
   let verticalPadding = 'py-10 @4xl:py-14';
 
@@ -95,9 +98,10 @@ export function HomeSection({
               )}
               {Boolean(title) && (
                 <h2
-                  className={
-                    headingStyle === 'small' ? smallHeadingClassName : homeHeadingClassName
-                  }
+                  className={clsx(
+                    headingStyle === 'small' ? smallHeadingClassName : homeHeadingClassName,
+                    titleTone === 'red' && 'text-[var(--button-primary-background,#d90716)]',
+                  )}
                 >
                   {title}
                 </h2>

@@ -39,6 +39,8 @@ interface Props {
   tint?: boolean;
   /** `red`: the band on brand red, the copy reversed to white (plain photo cards). */
   tone?: 'default' | 'red';
+  /** `red`: just the section title in brand red. */
+  titleTone?: 'default' | 'red';
   /**
    * `red`: each card is a deep-red panel with white copy (the "ek red box" look).
    * `alternate`: the cards checker between that deep red and a light-red panel (red, light,
@@ -65,6 +67,7 @@ export function CardsRow({
   imageStyle = 'inset',
   tint = false,
   tone = 'default',
+  titleTone = 'default',
   cardTone = 'default',
   cardBorder = 'default',
   className,
@@ -104,6 +107,7 @@ export function CardsRow({
       kicker={kicker}
       tint={tint}
       title={title}
+      titleTone={titleTone}
       tone={tone}
     >
       <div
