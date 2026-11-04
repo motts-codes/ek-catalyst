@@ -1,9 +1,11 @@
 // Default (fallback) content for the Pro / contractor home (wireframe `/pro`). Same convention as
 // home-content.ts: each band on the page is a Makeswift slot whose fallback renders this.
-// `href: '#'` = page not built yet. "[X]" figures from the wireframe replaced with neutral copy.
+// Checked against EK's rules (Nov 2026): no Pro Program on the site, no quick-ship or rush
+// promises, no installation mentions, a consult gives a quote (not a layout), Euro Value is an
+// engineered-board box, Prism is made to order (8 weeks), the $179.99 window offer is double hung
+// only, phones are answered 24/7 and texting works.
 
 import { type RowCard } from '@/vibes/soul/sections/cards-row';
-import { type QuickShipTile } from '@/vibes/soul/sections/delivery-ladder';
 import { type HeroSlide } from '@/vibes/soul/sections/home-hero-split';
 import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type ProgramTier } from '@/vibes/soul/sections/program-tiers';
@@ -15,11 +17,12 @@ export const PRO_PROGRAM_HREF = '/pro-program';
 export const TRADE_CONTACT_HREF = '/contact';
 export const FACTORY_OUTLET_URL = 'https://expresskitchensfactoryoutlet.com/';
 export const WHOLESALE_URL = 'https://kunalkitchens.com/';
+export const DOUBLE_HUNG_HREF = '/windows/replacement/double-hung-windows';
 
 // The wireframe rotates the audience word in one headline; here each audience is its own slide.
 export const PRO_HERO_SLIDES: HeroSlide[] = [
   {
-    title: 'Built for contractors.\nTrade pricing, dates you can quote.',
+    title: 'Built for contractors.\nSpecial pricing, and ship dates you can quote.',
     image: { src: '', alt: 'a job site or warehouse racking' },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
@@ -31,7 +34,7 @@ export const PRO_HERO_SLIDES: HeroSlide[] = [
     ctaLabel: 'Talk to the trade team',
   },
   {
-    title: 'Built for multifamily and commercial.\nOne spec per unit, delivered floor by floor.',
+    title: 'Built for multifamily and commercial.\nOne spec per unit, delivered on your schedule.',
     image: { src: '', alt: 'cabinets staged on a multifamily floor' },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
@@ -42,16 +45,16 @@ export const PRO_AUDIENCES: RowCard[] = [
   {
     title: 'I build and remodel kitchens',
     description:
-      'Contractors, remodelers and installers — trade pricing from your first $5,000 invoice, a text line that answers, dates you can quote.',
-    ctaLabel: 'Contractor Program',
-    href: '#pro-program',
+      'Contractors, remodelers and installers. Special pricing for the trade, 50,000+ cabinets in stock, and a phone line that answers, call or text, 24/7.',
+    ctaLabel: 'Talk to the trade team',
+    href: TRADE_CONTACT_HREF,
     primary: true,
     imageLabel: 'A contractor at will-call',
   },
   {
     title: 'I furnish whole buildings',
     description:
-      'Apartments, condos and senior living — one spec per unit type, priced per unit, delivered floor by floor on your schedule.',
+      'Apartments, condos and senior living. One spec per unit type, priced per unit, delivered on your schedule.',
     ctaLabel: 'Multifamily',
     href: '/industry/multifamily',
     imageLabel: 'An apartment kitchen, one of many',
@@ -59,7 +62,7 @@ export const PRO_AUDIENCES: RowCard[] = [
   {
     title: 'I fit out commercial spaces',
     description:
-      'Offices, medical, hospitality and institutional — spec-sheet ready, delivery dates locked to your build, WBE/MBE certified.',
+      'Offices, medical, hospitality and institutional. Spec sheets ready, and delivery dates set to your build.',
     ctaLabel: 'Commercial',
     href: '/industry/commercial',
     imageLabel: 'A commercial break room fit-out',
@@ -76,18 +79,18 @@ export const PRO_AUDIENCES: RowCard[] = [
 
 export const PRO_PROGRAM_CARDS: ProgramCard[] = [
   {
-    title: 'RTA — 2 weeks',
+    title: 'RTA: ships in 2 weeks',
     tag: 'Ready to assemble',
-    description: 'Flat-packed, lowest cost per box, fastest to ship.',
-    points: ['Ships from Bristol in two weeks', 'Priced per 10×10 on every collection'],
+    description: 'Flat-packed, the lowest cost per box. Your crew builds it on site.',
+    points: ['Star RTA ships in 2 weeks, Euro Max in 4', 'A 10×10 price on every collection'],
     ctaLabel: 'Shop RTA',
     href: '/cabinets/rta-cabinets',
   },
   {
-    title: 'Assembled — 3 weeks',
+    title: 'Assembled: ships in 3 weeks',
     tag: 'Factory assembled',
-    description: 'Built in our Connecticut shop, delivered ready to hang.',
-    points: ['Built and checked before it leaves', 'Priced per 10×10 on every collection'],
+    description: 'Built and checked in our factory, ready to install.',
+    points: ['Star ships in 3 weeks, Euro in 4, Prism in 8', 'A 10×10 price on every collection'],
     ctaLabel: 'Shop Assembled',
     href: '/cabinets/assembled-cabinets',
   },
@@ -95,37 +98,31 @@ export const PRO_PROGRAM_CARDS: ProgramCard[] = [
 
 export const WINDOWS_OFFER = {
   kicker: 'Windows offer',
-  title: 'Replacement windows — $179.99, any size up to 101 united inches',
+  title: 'Double hung windows, $179.99, any size up to 101 united inches',
   description:
-    "Double hung, sliders and hoppers, in stock in Bristol. Measure the opening, add width and height; if it's 101 or under, it's $179.99. Ready for pickup in 2 days. Contractor pricing applies on top for orders of five or more.",
+    "In stock in Bristol and ready for pickup in 2 days. Measure the opening, then add the width and height: if it's 101 or under, it's $179.99.",
   actions: [
     { label: 'Shop windows', href: '/windows', primary: true },
-    { label: 'See the double hung', href: '#' },
+    { label: 'See the double hung', href: DOUBLE_HUNG_HREF },
   ],
   imageLabel: 'White vinyl double-hung windows on a pallet',
 };
 
-export const DELIVERY_COLUMNS = [
-  'Program / category',
-  'In stock',
-  'Quick-ship',
-  'Made to order',
-  'How you get it',
-];
+// "Ship times you can quote": every line, with no quick-ship column. Transit is on top (7–10 days)
+// unless the order is picked up in Bristol.
+export const DELIVERY_COLUMNS = ['Product', 'Ships in', 'How you get it'];
 export const DELIVERY_ROWS: string[][] = [
-  ['RTA cabinets', 'Days', '≤ 2 weeks', '2 weeks', 'Ship or will-call'],
-  ['Assembled cabinets', '—', '—', '3 weeks', 'Ship or will-call'],
-  ['Closets (Star)', 'Ships from stock', '—', 'Made to order', 'Ship or will-call'],
-  ['Windows', 'Pick up in 2 days', '—', 'Made to order', '!Pickup only'],
-  ['Appliances', 'Pick up in 2 days', '—', 'Available to order', '!Pickup only'],
-];
-export const QUICK_SHIP_TILES: QuickShipTile[] = [
-  { name: 'Cambridge', meta: 'Quick-ship · ≤ 2 weeks', href: '#' },
-  { name: 'Tribeca Shaker', meta: 'Quick-ship · ≤ 2 weeks', href: '#' },
-  { name: 'Avon', meta: 'Quick-ship · ≤ 2 weeks', href: '/cabinets/rta-cabinets' },
-  { name: 'Dover', meta: 'Quick-ship · ≤ 2 weeks', href: '/cabinets/rta-cabinets' },
+  ['!Star RTA', '2 weeks', 'Ship or pick up'],
+  ['!Euro Max RTA', '4 weeks', 'Ship or pick up'],
+  ['!Star assembled', '3 weeks', 'Ship or pick up'],
+  ['!Euro assembled', '4 weeks (Tribeca Shaker 2)', 'Ship or pick up'],
+  ['!Prism (painted)', '8 weeks', 'Ship or pick up'],
+  // The closets ship time is still to be confirmed by EK; "ask us" until then.
+  ['!Closets', 'Ask us for a date', 'Ships nationwide, or pick up'],
+  ['!Windows and appliances', 'Ready in 2 days', 'Pickup only, Bristol'],
 ];
 
+// Kept in code in case the Contractor Program comes back; not rendered anywhere (EK, Nov 2026).
 export const PROGRAM_TIERS: ProgramTier[] = [
   {
     name: 'Silver',
@@ -162,14 +159,8 @@ export const PROGRAM_TIERS: ProgramTier[] = [
 export const PROGRAM_TIERS_FOOTNOTE =
   'Joining is a two-minute form. Our trade team calls to verify your trade license or resale certificate and sets up the account. Everything after that is handled by your trade team, not a portal.';
 
+// The brochure card returns when the PDF exists.
 export const SPEC_SHELF: RowCard[] = [
-  {
-    title: 'Download brochure',
-    description: 'Full range, one PDF.',
-    ctaLabel: 'Download',
-    href: '#',
-    imageLabel: 'Brochure cover',
-  },
   {
     title: 'Spec sheets',
     description: 'One per collection, on each collection page.',
@@ -179,7 +170,7 @@ export const SPEC_SHELF: RowCard[] = [
   },
   {
     title: 'Door samples',
-    description: 'First two quarter doors free.',
+    description: 'First two quarter doors free with FREESAMPLES.',
     ctaLabel: 'Order samples',
     href: '/samples',
     imageLabel: 'Sample doors',
@@ -190,44 +181,38 @@ export const FOUR_LINES: RowCard[] = [
   {
     title: 'Star',
     description:
-      'Framed cabinets, 300+ SKUs in every door style, all stocked in Bristol, CT. RTA or assembled.',
+      'Framed, with a plywood box and a solid birch face frame. Our widest choice of doors, kept in stock in Bristol. RTA or assembled.',
     imageLabel: 'Star kitchen',
   },
   {
     title: 'Prism',
     description:
-      'Custom-painted framed cabinets, 300+ SKUs per door style, stocked in Bristol, CT. Assembled.',
+      "Star's framed cabinets, painted in 10 colors. Made to order, ships in 8 weeks. Assembled.",
     imageLabel: 'Prism kitchen',
   },
   {
     title: 'Euro Max',
-    description:
-      'Frameless cabinets on ¾-inch plywood boxes, 300+ SKUs per door style, stocked in Bristol, CT. RTA or assembled.',
+    description: 'Frameless, full overlay, with a ¾" plywood box. RTA or assembled.',
     imageLabel: 'Euro Max kitchen',
   },
   {
     title: 'Euro Value',
     description:
-      'Frameless cabinets on ¾-inch plywood boxes, built in Bristol, CT. 300+ SKUs per door style. Assembled.',
+      'The same frameless doors as Euro Max, with an engineered board box, at a lower price. Assembled.',
     imageLabel: 'Euro Value kitchen',
   },
 ];
 
 const QUALITY_PAIRS: Array<[string, string]> = [
-  ['All-plywood box', '¾-inch plywood sides, top and bottom. No particle board.'],
-  ['Soft-close hardware', 'Soft-close hinges on every door, fitted and adjusted.'],
-  ['Dovetail drawer boxes', 'Solid-wood drawer boxes with dovetail joints.'],
-  ['Full-extension slides', 'Undermount glides — the full depth of every drawer.'],
-  ['Adjustable shelving', '¾-inch shelves on metal pins, set where you need them.'],
-  ['Warranty on box and door', 'RTA or assembled, the same cover either way.'],
+  ['Plywood box', 'On Star, Prism and Euro Max.'],
+  ['Soft-close hinges', 'On every door.'],
+  ['Dovetail drawer boxes', 'Solid wood, with dovetail joints.'],
+  ['Adjustable shelving', 'Set where you need it.'],
   [
-    'Precision manufacturing',
-    'Robotic cutting and drilling in our own Connecticut factory — the same tolerance in box one and box four hundred.',
+    'Robotic manufacturing',
+    'Cut and drilled to the same tolerance, from box one to box four hundred.',
   ],
-  [
-    'Free design help and quote',
-    'Send the plan; our design team returns a layout, a cut list and a price you can put in front of your client.',
-  ],
+  ['1-year warranty', 'RTA or assembled, the same cover either way.'],
 ];
 
 export const QUALITY_POINTS: RowCard[] = QUALITY_PAIRS.map(([title, description], index) => ({
@@ -236,37 +221,12 @@ export const QUALITY_POINTS: RowCard[] = QUALITY_PAIRS.map(([title, description]
 }));
 
 export const DESIGN_BAND = {
-  title: 'We design, you win the job',
+  title: 'We price it, you win the job',
   description:
-    'Send us your homeowner. We do the layout, the renderings and the itemized quote for free — under your name if you want. You close the job, we supply it.',
-  actions: [
-    {
-      label: 'Book a design for your client',
-      href: '/mykitchen/free-design-consult',
-      primary: true,
-    },
-  ],
-  imageLabel: "A rendering with the contractor's name on the title block",
+    "Send us your plans or measurements. We'll price every cabinet, RTA and assembled, so you can put a number in front of your client. Free.",
+  actions: [{ label: 'Get a free quote', href: '/mykitchen/free-design-consult', primary: true }],
+  imageLabel: 'A priced cabinet list beside a set of plans',
 };
 
-// Placeholders until real contractor quotes are supplied (the wireframe leaves these bracketed).
-export const PRO_REVIEWS: CustomerReview[] = [
-  {
-    stars: 5,
-    quote: '[Quote — about lead-time reliability.]',
-    name: '[Name]',
-    location: 'Remodeler, [Town] CT',
-  },
-  {
-    stars: 5,
-    quote: '[Quote — about the account rep.]',
-    name: '[Name]',
-    location: 'GC, [Town] CT',
-  },
-  {
-    stars: 5,
-    quote: '[Quote — a multifamily job.]',
-    name: '[Name]',
-    location: '[Company] · [X] units',
-  },
-];
+// Not rendered: EK has not supplied real contractor reviews yet (the old site's look made up).
+export const PRO_REVIEWS: CustomerReview[] = [];

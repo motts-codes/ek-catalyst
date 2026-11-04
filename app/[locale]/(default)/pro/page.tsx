@@ -5,8 +5,6 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { ProgramCards } from '@/vibes/soul/sections/program-cards';
-import { ProgramTiers } from '@/vibes/soul/sections/program-tiers';
-import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
 import { HERO_OFFERS, PRO_CATEGORY_TILES } from '~/lib/home/home-content';
@@ -19,11 +17,7 @@ import {
   PRO_AUDIENCES,
   PRO_HERO_SLIDES,
   PRO_PROGRAM_CARDS,
-  PRO_REVIEWS,
-  PROGRAM_TIERS,
-  PROGRAM_TIERS_FOOTNOTE,
   QUALITY_POINTS,
-  QUICK_SHIP_TILES,
   SPEC_SHELF,
   TRADE_CONTACT_HREF,
   WINDOWS_OFFER,
@@ -42,9 +36,9 @@ interface Props {
 
 export function generateMetadata(): Metadata {
   return {
-    title: 'Pro / Trade Program',
+    title: 'Pro: Contractors, Designers, Multifamily and Commercial',
     description:
-      'Express Kitchens Pro — trade pricing, dedicated project support, faster delivery and bulk ordering for contractors, designers, multifamily and commercial firms.',
+      'Special pricing for contractors and builders, 50,000+ cabinets in stock, and ship dates you can quote. Express Kitchens for the trade. Call or text 860-247-1000, 24/7.',
   };
 }
 
@@ -52,10 +46,11 @@ export function generateStaticParams(): Params[] {
   return locales.map((locale) => ({ locale }));
 }
 
-// Pro (contractor) home — wireframe `/pro`. Same mechanics as the homeowner home: every band is
-// a Makeswift <Slot> whose fallback renders lib/home/pro-content.ts, so the page is complete now
-// and any band can be replaced in the builder. The hero reuses the "Home / Hero Split" layout
-// (65/35, rotating photos + the same offer cards as the homepage).
+// Pro (contractor) home — wireframe `/pro`, a trade landing page (there is no Pro Program on the
+// site). Same mechanics as the homeowner home: every band is a Makeswift <Slot> whose fallback
+// renders lib/home/pro-content.ts, so the page is complete now and any band can be replaced in
+// the builder. The hero reuses the "Home / Hero Split" layout (65/35, rotating photos + the same
+// offer cards as the homepage).
 export default async function Pro({ params }: Props) {
   const { locale } = await params;
 
@@ -77,7 +72,7 @@ export default async function Pro({ params }: Props) {
           <CardsRow
             cards={PRO_AUDIENCES}
             columns={4}
-            description="Some jobs are bigger than a kitchen. Pick the one that sounds like your business — there's a dedicated team for each."
+            description="Some jobs are bigger than a kitchen. Pick the one that sounds like your business."
             imageStyle="bleed"
             tint
             title="Which one sounds like your business?"
@@ -87,7 +82,7 @@ export default async function Pro({ params }: Props) {
         snapshotId="pro-audiences"
       />
 
-      {/* 3 · Start with the program — real delivery promises, no explainer */}
+      {/* 3 · Two ways to buy the same cabinet */}
       <Slot
         fallback={
           <ProgramCards
@@ -100,7 +95,23 @@ export default async function Pro({ params }: Props) {
         snapshotId="pro-programs"
       />
 
-      {/* 4 · Everything for the job */}
+      {/* 4 · Ship times you can quote */}
+      <Slot
+        fallback={
+          <DeliveryLadder
+            columns={DELIVERY_COLUMNS}
+            description="So you can put a date in front of your client and hold it. Add 7–10 days of transit, or pick up in Bristol."
+            look="minimal"
+            rows={DELIVERY_ROWS}
+            tint
+            title="Ship times you can quote"
+          />
+        }
+        label="Pro delivery ladder"
+        snapshotId="pro-delivery"
+      />
+
+      {/* 5 · Everything for the job */}
       <EditableSection
         defaults={{ categories: PRO_CATEGORY_TILES, categoriesTitle: 'Everything for the job' }}
         label="Pro categories"
@@ -108,7 +119,7 @@ export default async function Pro({ params }: Props) {
         type={CATEGORY_CAROUSEL_TYPE}
       />
 
-      {/* 5 · Windows offer */}
+      {/* 6 · Windows offer (double hung only) */}
       <Slot
         fallback={
           <StoryBand
@@ -123,77 +134,36 @@ export default async function Pro({ params }: Props) {
         snapshotId="pro-windows-offer"
       />
 
-      {/* 6 · The delivery ladder */}
-      <Slot
-        fallback={
-          <DeliveryLadder
-            columns={DELIVERY_COLUMNS}
-            cta={{ label: 'Everything that ships in 2 weeks or less', href: '#' }}
-            description="So you can put a date in front of your client and hold it."
-            rows={DELIVERY_ROWS}
-            tiles={QUICK_SHIP_TILES}
-            tint
-            title="The delivery ladder"
-          />
-        }
-        label="Pro delivery ladder"
-        snapshotId="pro-delivery"
-      />
-
-      {/* 7 · The Contractor Program — two tiers (anchor for the audience card above) */}
-      <Slot
-        fallback={
-          <ProgramTiers
-            footnote={PROGRAM_TIERS_FOOTNOTE}
-            id="pro-program"
-            lede="Silver from your first $5,000 invoice. Diamond at $50,000 a year. Both get a text-enabled support line only contractors have, free design and design audits, and sales-tax exemption with your form on file."
-            tiers={PROGRAM_TIERS}
-            title="The Contractor Program — two tiers, real discounts"
-          />
-        }
-        label="Pro program tiers"
-        snapshotId="pro-program-tiers"
-      />
-
-      {/* 8 · Spec shelf — downloads, no login */}
-      <Slot
-        fallback={
-          <CardsRow cards={SPEC_SHELF} description="Downloads, no login." tint title="Spec shelf" />
-        }
-        label="Pro spec shelf"
-        snapshotId="pro-spec-shelf"
-      />
-
-      {/* 9 · The four lines */}
+      {/* 7 · The four lines */}
       <Slot
         fallback={
           <CardsRow
             cards={FOUR_LINES}
             columns={4}
-            title="The four lines — what to spec at which budget"
+            title="The four lines, and what to spec at each budget"
           />
         }
         label="Pro cabinet lines"
         snapshotId="pro-lines"
       />
 
-      {/* 10 · Quality you can see and touch */}
+      {/* 8 · How every cabinet is built */}
       <Slot
         fallback={
           <CardsRow
             cards={QUALITY_POINTS}
-            columns={4}
-            description="The construction is the same across every line and every collection — what changes is the door and the finish."
+            columns={3}
+            description="The build is the same across collections. What changes is the door and the finish."
             hideImages
             tint
-            title="Quality you can see and touch"
+            title="How every cabinet is built"
           />
         }
         label="Pro quality"
         snapshotId="pro-quality"
       />
 
-      {/* 11 · We design, you win the job */}
+      {/* 9 · We price it, you win the job */}
       <Slot
         fallback={
           <StoryBand
@@ -207,30 +177,31 @@ export default async function Pro({ params }: Props) {
         snapshotId="pro-design"
       />
 
-      {/* 12 · Contractors who order here */}
+      {/* 10 · Spec shelf — downloads, no login */}
       <Slot
         fallback={
-          <ReviewMarquee
-            height={420}
-            reviews={PRO_REVIEWS}
+          <CardsRow
+            cards={SPEC_SHELF}
+            columns={2}
+            description="Downloads, with no login."
             tint
-            title="Contractors who order here"
+            title="Spec shelf"
           />
         }
-        label="Pro testimonials"
-        snapshotId="pro-testimonials"
+        label="Pro spec shelf"
+        snapshotId="pro-spec-shelf"
       />
 
-      {/* 13 · Closing — join, visit the outlet, or call */}
+      {/* 11 · Closing — call or text, or visit the outlet */}
       <Slot
         fallback={
           <ClosingBand
-            description="Get in touch and our trade team calls to verify your license and set you up — pricing, tax exemption and a text line that answers."
+            description="Call or text the trade team for special pricing on contractor and builder orders. We answer 24/7. Or visit the Factory Outlet: our outlet team knows the products, so bring your plans and they'll help you find what fits."
             phone={{ label: 'Call or text 860-247-1000', href: 'tel:+18602471000' }}
             primary={{ label: 'Talk to the trade team', href: TRADE_CONTACT_HREF }}
-            secondary={{ label: 'Visit the factory outlet ↗', href: FACTORY_OUTLET_URL }}
+            secondary={{ label: 'Visit the Factory Outlet ↗', href: FACTORY_OUTLET_URL }}
             tint={false}
-            title="Ready to set up your trade account?"
+            title="Got a job coming up?"
           />
         }
         label="Pro closing band"
