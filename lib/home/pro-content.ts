@@ -49,7 +49,10 @@ export const PRO_AUDIENCES: RowCard[] = [
     ctaLabel: 'Talk to the trade team',
     href: TRADE_CONTACT_HREF,
     primary: true,
-    imageLabel: 'A contractor at will-call',
+    image: {
+      src: '/images/pages/pro/audience-contractors.jpg',
+      alt: 'A contractor loading a white base cabinet into a pickup at will-call',
+    },
   },
   {
     title: 'I furnish whole buildings',
@@ -57,7 +60,10 @@ export const PRO_AUDIENCES: RowCard[] = [
       'Apartments, condos and senior living. One spec per unit type, priced per unit, delivered on your schedule.',
     ctaLabel: 'Multifamily',
     href: '/industry/multifamily',
-    imageLabel: 'An apartment kitchen, one of many',
+    image: {
+      src: '/images/pages/pro/audience-multifamily.jpg',
+      alt: 'A grey apartment kitchen with a quartz peninsula and red stools, apartment buildings outside',
+    },
   },
   {
     title: 'I fit out commercial spaces',
@@ -65,7 +71,10 @@ export const PRO_AUDIENCES: RowCard[] = [
       'Offices, medical, hospitality and institutional. Spec sheets ready, and delivery dates set to your build.',
     ctaLabel: 'Commercial',
     href: '/industry/commercial',
-    imageLabel: 'A commercial break room fit-out',
+    image: {
+      src: '/images/pages/pro/audience-commercial.jpg',
+      alt: 'An office break room with white cabinets and red chairs',
+    },
   },
   {
     title: 'I buy by the pallet',
@@ -73,7 +82,10 @@ export const PRO_AUDIENCES: RowCard[] = [
       'Wholesale supply for dealers and distributors — full-line pricing, container and pallet quantities, through Kunal Kitchens.',
     ctaLabel: 'Wholesale ↗',
     href: WHOLESALE_URL,
-    imageLabel: 'Pallets of cabinets in the warehouse',
+    image: {
+      src: '/images/pages/pro/audience-wholesale.jpg',
+      alt: 'Shrink-wrapped pallets of cabinets in the warehouse, a forklift behind',
+    },
   },
 ];
 

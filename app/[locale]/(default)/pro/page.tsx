@@ -104,8 +104,7 @@ export default async function Pro({ params }: Props) {
             cards={PRO_AUDIENCES}
             columns={4}
             description="Some jobs are bigger than a kitchen. Pick the one that sounds like your business."
-            imageStyle="bleed"
-            tint
+            imageStyle="plain"
             title="Which one sounds like your business?"
           />
         }
