@@ -4,7 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { Actions, PageBreadcrumbs, PageHero, RedBox } from '@/vibes/soul/sections/page-kit';
 import { ReviewGrid } from '@/vibes/soul/sections/page-kit/media';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { StepsTimeline } from '@/vibes/soul/sections/page-kit/steps-timeline';
@@ -175,22 +175,37 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
       <HomeSection kicker="By type of seller" title="The honest take on each">
         <StepsAccordion numbered={false} steps={SELLERS} />
       </HomeSection>
-      <Prose
-        actions={[
-          { label: 'How the price match works', href: '/price-match-guarantee', primary: true },
-          { label: "What's in a 10×10", href: '/resources/ten-by-ten-kitchen', style: 'outline' },
-        ]}
-        body={[
-          'Two quotes for "the same kitchen" can hide a particleboard box, hinges that slam, or fewer cabinets. Check the cabinet list, not just the total. And if a competitor\'s quote still comes in lower, bring it to a showroom: we\'ll beat it, or give you a $500 credit.',
-        ]}
-        className="bg-[#fdf3f5]"
-        kicker="Before you compare prices"
-        title="A cheaper quote is often a different cabinet"
-      >
-        <p className="mt-5 text-xs leading-relaxed text-contrast-500">
-          Competitor quotes of $3,000+. In-store only. Until Nov 30, 2026.
-        </p>
-      </Prose>
+      <HomeSection compact>
+        <RedBox
+          kicker="Before you compare prices"
+          media={{
+            image: {
+              src: '/images/cabinets/stained-wood-kitchen.jpg',
+              alt: 'A kitchen in dark stained shaker cabinets with a granite island and pendant lights',
+            },
+            split: '60/40',
+          }}
+          title="A cheaper quote is often a different cabinet"
+        >
+          <p className="max-w-xl text-sm leading-relaxed text-white/85 @xl:text-base">
+            Two quotes for &ldquo;the same kitchen&rdquo; can hide a particleboard box, hinges that
+            slam, or fewer cabinets. Check the cabinet list, not just the total. And if a
+            competitor&rsquo;s quote still comes in lower, bring it to a showroom: we&rsquo;ll beat
+            it, or give you a $500 credit.
+          </p>
+          <Actions
+            actions={[
+              { label: 'How the price match works', href: '/price-match-guarantee', primary: true },
+              { label: "What's in a 10×10", href: '/resources/ten-by-ten-kitchen' },
+            ]}
+            className="mt-6"
+            onRed
+          />
+          <p className="mt-5 text-xs leading-relaxed text-white/85">
+            Competitor quotes of $3,000+. In-store only. Until Nov 30, 2026.
+          </p>
+        </RedBox>
+      </HomeSection>
       <ReviewGrid
         action={{ label: 'Read all reviews', href: '/reviews' }}
         reviews={REVIEWS}
