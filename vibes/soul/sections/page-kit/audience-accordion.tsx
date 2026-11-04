@@ -27,7 +27,8 @@ const DWELL_MS = 6000;
 // Rows of copy on the left, one photo on the right: the open row shows its paragraph and link,
 // and the photo crossfades to that row's picture. The rows walk themselves every six seconds until
 // someone taps a row or the pause button; they also wait while hovered or focused, and hold still
-// under reduced motion. On phones the photo sits above the rows.
+// under reduced motion. On phones the photo sits above the rows; from tablet up it takes the
+// narrower right-hand column so it reads as a companion to the rows, not the main event.
 export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
   const Heading = headingLevel === 4 ? 'h4' : 'h3';
   const [value, setValue] = useState(items[0]?.title ?? '');
@@ -78,7 +79,7 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
 
   return (
     <div
-      className="grid items-start gap-8 @3xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] @3xl:gap-14"
+      className="grid items-start gap-8 @3xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] @3xl:gap-14"
       onBlur={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onMouseEnter={() => setPaused(true)}
