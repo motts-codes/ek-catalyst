@@ -5,7 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero, PanelPair } from '@/vibes/soul/sections/page-kit';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -30,11 +30,10 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
       <PageHero
         description="When you order from us online, your payment runs through a checkout certified to the highest standard in the payments industry. Your card details are encrypted the moment you type them and never touch our servers: we see your order, never your card. Here's what that means in practice, and what else protects you."
         image={{
-          src: '/images/pages/secure-shopping/padlock-card.jpg',
-          alt: 'A padlock and a payment card beside a laptop',
+          src: '/images/pages/secure-shopping/shield-card-phone.jpg',
+          alt: 'A red shield with a padlock between a payment card and a phone showing a secured checkout',
         }}
-        imageLabel="A padlock, a card and the checkout screen"
-        kicker="Secure shopping"
+                kicker="Secure shopping"
         title="Your payment is protected, start to finish"
       />
       <CardsRow
@@ -81,22 +80,27 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
         kicker="How it works"
         title="Six things that keep your order safe"
       />
-      <Prose
-        actions={[{ label: 'Read the privacy policy', href: '/privacy' }]}
-        body={[
-          "We use your name, address and contact details to fulfil your order, tell you when it ships and, if you've opted in, send you offers. We don't sell your information. The privacy policy sets out exactly what is collected and why.",
+      <PanelPair
+        panels={[
+          {
+            kicker: 'What we do with your details',
+            title: 'Only what the order needs',
+            body: [
+              "We use your name, address and contact details to fulfil your order, tell you when it ships and, if you've opted in, send you offers. We don't sell your information. The privacy policy sets out exactly what is collected and why.",
+            ],
+            actions: [{ label: 'Read the privacy policy', href: '/privacy' }],
+            tone: 'rose',
+          },
+          {
+            kicker: 'Prefer not to pay online?',
+            title: 'Order in person or by phone instead',
+            body: [
+              'Every order can be placed and paid in any of our six showrooms, or over the phone on 860-247-1000, at the same prices and with the same delivery.',
+            ],
+            actions: [{ label: 'Find a showroom', href: '/showrooms', primary: true }],
+            tone: 'sky',
+          },
         ]}
-        kicker="What we do with your details"
-        title="Only what the order needs"
-      />
-      <Prose
-        actions={[{ label: 'Find a showroom', href: '/showrooms', primary: true }]}
-        body={[
-          'Every order can be placed and paid in any of our six showrooms, or over the phone on 860-247-1000, at the same prices and with the same delivery.',
-        ]}
-        kicker="Prefer not to pay online?"
-        tint
-        title="Order in person or by phone instead"
       />
       <CabinetFaq
         data={{
