@@ -21,7 +21,7 @@ export default function NotFound() {
           src: '/images/pages/not-found/empty-cabinet.jpg',
           alt: 'A white wall cabinet with both doors open on an empty red interior',
         }}
-        kicker="404"
+        kicker="This cabinet’s empty."
         note="Still stuck? Call or text 860-247-1000, any time. A real person will answer."
         search={{
           action: '/search',
@@ -29,7 +29,7 @@ export default function NotFound() {
           label: 'Search',
           placeholder: 'Search cabinets, styles or questions…',
         }}
-        title="This cabinet’s empty."
+        title="404"
       />
 
       <Footer />

@@ -19,7 +19,7 @@ interface Props {
 
 const RED = 'text-[var(--button-primary-background,#d90716)]';
 
-// The 404, one centred column: headline, the "404" under it, a line of copy, the empty-cabinet
+// The 404, one centred column: the eyebrow line, a big "404", a line of copy, the empty-cabinet
 // photo, a search box, the buttons, and a last line with the phone number. Plain GET form, so the
 // search works without JavaScript and lands on the search page with the term in the URL.
 export function EkNotFound({
@@ -36,19 +36,19 @@ export function EkNotFound({
     // Its own container: this page renders outside the layout's, so the @-breakpoints need one.
     <section className={clsx('@container', className)}>
       <div className="mx-auto flex max-w-3xl flex-col items-center px-6 py-12 text-center @xl:px-9 @4xl:py-16">
-        <h1 className="font-heading text-3xl font-bold leading-tight @xl:text-4xl @4xl:text-5xl">
+        <p className={`mb-2 text-xs font-semibold uppercase tracking-wide ${RED}`}>{kicker}</p>
+        <h1 className="font-heading text-5xl font-bold leading-none @xl:text-6xl @4xl:text-7xl">
           {title}
         </h1>
-        <p className={`mt-3 text-xs font-semibold uppercase tracking-wide ${RED}`}>{kicker}</p>
         <p className="mt-4 max-w-lg text-base leading-relaxed text-contrast-500">{description}</p>
 
-        <div className="mt-8 w-full max-w-xl @3xl:max-w-2xl">
+        <div className="mt-8 w-full max-w-xs @3xl:max-w-lg">
           <Image
             alt={image.alt}
             className="h-auto w-full"
             height={750}
             preload
-            sizes="(min-width: 56rem) 42rem, 36rem"
+            sizes="(min-width: 56rem) 32rem, 20rem"
             src={image.src}
             width={1200}
           />
