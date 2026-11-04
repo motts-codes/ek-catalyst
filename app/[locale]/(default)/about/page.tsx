@@ -38,13 +38,13 @@ const pmPerson = (slug: string, quote: string): Person => {
 const PEOPLE: Person[] = [
   pmPerson(
     'new-london',
-    '“I love meeting customers every day and helping families get the kitchen they’ve always wanted.”',
+    'I love meeting customers every day and helping families get the kitchen they’ve always wanted.',
   ),
-  pmPerson('orange', '“The kitchen really is the heart of the home.”'),
-  pmPerson('brookfield', '“I listen more than I talk.”'),
+  pmPerson('orange', 'The kitchen really is the heart of the home.'),
+  pmPerson('brookfield', 'I listen more than I talk.'),
   pmPerson(
     'stamford',
-    '“I blend creativity with practicality, so every kitchen fits the way my customers live.”',
+    'I blend creativity with practicality, so every kitchen fits the way my customers live.',
   ),
 ];
 

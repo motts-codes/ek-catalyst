@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { ArrowRight, Check, X } from 'lucide-react';
+import { ArrowRight, Check, Quote, User, X } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
@@ -13,6 +13,7 @@ import {
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
+
 import { AudienceAccordion, type AudienceAccordionItem } from './audience-accordion';
 import { StoryTimelineList } from './story-timeline';
 
@@ -656,7 +657,9 @@ export interface Person {
   href?: string;
 }
 
-// "The people" — portrait, name, role and a line in their own words.
+// "The people": equal-height cards, the portrait running edge to edge across the top, a light-red
+// quote mark over their line in their own words, and the name with a person-icon role line held
+// to the bottom so the names sit level across the row.
 export function TeamRow({
   kicker,
   title,
@@ -687,11 +690,11 @@ export function TeamRow({
         {people.map((person) => {
           const card = (
             <>
-              <span className="relative block aspect-square overflow-hidden rounded-2xl bg-contrast-100">
+              <span className="relative block aspect-[4/3] overflow-hidden bg-contrast-100">
                 {person.image ? (
                   <Image
                     alt={person.image.alt}
-                    className="object-cover"
+                    className="object-cover object-top transition-transform duration-700 ease-smooth group-hover:scale-[1.03]"
                     fill
                     sizes="(min-width: 64rem) 25vw, 50vw"
                     src={person.image.src}
@@ -700,18 +703,34 @@ export function TeamRow({
                   <MediaPlaceholder label="Portrait" />
                 )}
               </span>
-              <span className="mt-4 block font-heading text-lg font-semibold leading-tight">
-                {person.name}
-              </span>
-              <span className="mt-0.5 block text-sm text-contrast-500">{person.role}</span>
-              {Boolean(person.quote) && (
-                <span className="mt-3 block text-sm leading-relaxed text-contrast-500">
-                  {person.quote}
+              <span className="flex flex-1 flex-col p-5 @xl:p-6">
+                {Boolean(person.quote) && (
+                  <span className="flex-1">
+                    <Quote
+                      aria-hidden
+                      className="mb-3 fill-current text-[#f3c0c5]"
+                      size={28}
+                      strokeWidth={0}
+                    />
+                    <span className="block text-sm leading-relaxed text-contrast-500 @xl:text-base">
+                      {person.quote}
+                    </span>
+                  </span>
+                )}
+                <span className="mt-5 block border-t border-contrast-100 pt-4">
+                  <span className="block font-heading text-lg font-semibold leading-tight">
+                    {person.name}
+                  </span>
+                  <span className="mt-1.5 flex items-start gap-2 text-xs text-contrast-500 @xl:text-sm">
+                    <User aria-hidden className="mt-px shrink-0 text-contrast-400" size={14} />
+                    {person.role}
+                  </span>
                 </span>
-              )}
+              </span>
             </>
           );
-          const cardClassName = 'flex flex-col rounded-3xl border border-contrast-100 bg-white p-5';
+          const cardClassName =
+            'group flex h-full flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white';
 
           return (
             <li key={person.name + person.role}>
@@ -719,7 +738,7 @@ export function TeamRow({
                 <Link
                   className={clsx(
                     cardClassName,
-                    'transition-shadow hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
+                    'transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]',
                   )}
                   href={person.href}
                 >
