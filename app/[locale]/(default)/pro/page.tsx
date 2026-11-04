@@ -7,6 +7,8 @@ import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
+import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
+import { LINE_CARDS, LINE_SAMPLE_COLLECTIONS } from '~/lib/cabinets/cabinets-hub-content';
 import { HERO_OFFERS, PRO_CATEGORY_TILES } from '~/lib/home/home-content';
 import {
   DELIVERY_COLUMNS,
@@ -56,6 +58,33 @@ export default async function Pro({ params }: Props) {
   const { locale } = await params;
 
   setRequestLocale(locale);
+
+  // The four lines as the cabinets hub shows them (a kitchen photo from one of each line's
+  // collections, the line's meta line and shop button), with the trade copy from pro-content.
+  const lines = await getCabinetLines('assembled');
+  const kitchenOf = (line?: (typeof lines)[number]) =>
+    line?.image && !line.containCover ? line.image : undefined;
+  const lineCards = FOUR_LINES.map((card) => {
+    const hub = LINE_CARDS.find((candidate) => candidate.title === card.title);
+    const pick = LINE_SAMPLE_COLLECTIONS[card.title];
+    const named = lines.find((candidate) => candidate.name === pick?.name);
+    const byFinish = pick?.finish ? named?.finishKitchens?.[pick.finish] : undefined;
+    const image =
+      (byFinish && named ? { src: byFinish, alt: `${named.name} ${pick?.finish}` } : undefined) ??
+      kitchenOf(named) ??
+      lines
+        .map(kitchenOf)
+        .find((kitchen, index) => kitchen && lines[index]?.productLine === card.title);
+
+    return {
+      ...card,
+      meta: hub?.meta,
+      ctaLabel: hub?.ctaLabel,
+      href: hub?.href,
+      image,
+      primary: true,
+    };
+  });
 
   return (
     <>
@@ -141,9 +170,12 @@ export default async function Pro({ params }: Props) {
       <Slot
         fallback={
           <CardsRow
-            cards={FOUR_LINES}
+            cards={lineCards}
             columns={4}
-            title="The four lines, and what to spec at each budget"
+            description="The line decides how the cabinet is built; the collection decides the door and color."
+            imageStyle="plain"
+            kicker="The four lines"
+            title="What to spec at each budget"
           />
         }
         label="Pro cabinet lines"
