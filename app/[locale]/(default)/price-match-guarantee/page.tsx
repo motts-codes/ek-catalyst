@@ -42,7 +42,11 @@ export default async function PriceMatch({ params }: { params: Promise<{ locale:
           { label: 'How it works', href: '#how-it-works', style: 'outline' },
         ]}
         description="Bring any competitor cabinet quote of $3,000 or more to an Express Kitchens showroom. We'll price the same kitchen with plywood boxes, soft-close hinges and full-extension glides, and beat their price. If we can't, you get a $500 credit toward your order."
-        imageLabel="A homeowner handing a competitor quote across a showroom desk"
+        image={{
+          src: '/images/pages/price-match/hero-price-match.jpg',
+          alt: 'A Project Manager pointing to a red price-match tag on a white cabinet beside a plain-tagged one',
+        }}
+        imageStyle="plain"
         kicker="Price match guarantee · Until Nov 30, 2026"
         title="Bring your quote. We'll beat it, or give you a $500 credit."
       />
