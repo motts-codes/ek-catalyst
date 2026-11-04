@@ -135,7 +135,10 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
           { label: 'Free design consult', href: FREE_DESIGN_HREF, style: 'outline' },
         ]}
         description="Big-box stores, online sellers, custom shops and us. Here's what you get from each, so you can compare like for like."
-        imageLabel="A homeowner comparing three cabinet quotes at a showroom table"
+        image={{
+          src: '/images/pages/compare/hero-four-doors.jpg',
+          alt: 'A Project Manager beside four shaker doors in white, cream, red and grey',
+        }}
         imageStyle="plain"
         kicker="Compare"
         title="Pricing your kitchen in three places? Here's how we compare."
