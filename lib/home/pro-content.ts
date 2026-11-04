@@ -50,8 +50,8 @@ export const PRO_AUDIENCES: RowCard[] = [
     href: TRADE_CONTACT_HREF,
     primary: true,
     image: {
-      src: '/images/pages/pro/audience-contractors.jpg',
-      alt: 'A contractor loading a white base cabinet into a pickup at will-call',
+      src: '/images/pages/pro/audience-contractors-v2.jpg',
+      alt: 'A contractor and a team member in red lifting a shrink-wrapped cabinet box into a pickup at will-call',
     },
   },
   {
