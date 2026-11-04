@@ -4,7 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { ProgramCards } from '@/vibes/soul/sections/program-cards';
+import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
 import { HERO_OFFERS, PRO_CATEGORY_TILES } from '~/lib/home/home-content';
@@ -17,6 +17,7 @@ import {
   PRO_AUDIENCES,
   PRO_HERO_SLIDES,
   PRO_PROGRAM_CARDS,
+  PRO_PROGRAM_FOOTNOTE,
   QUALITY_POINTS,
   SPEC_SHELF,
   TRADE_CONTACT_HREF,
@@ -85,8 +86,10 @@ export default async function Pro({ params }: Props) {
       {/* 3 · Two ways to buy the same cabinet */}
       <Slot
         fallback={
-          <ProgramCards
+          <ProgramSplit
             cards={PRO_PROGRAM_CARDS}
+            footnote={PRO_PROGRAM_FOOTNOTE}
+            helper={{ label: 'Not sure? Talk to the trade team →', href: TRADE_CONTACT_HREF }}
             kicker="Two ways to buy the same cabinet"
             title="Start with the program"
           />

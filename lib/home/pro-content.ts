@@ -85,6 +85,10 @@ export const PRO_PROGRAM_CARDS: ProgramCard[] = [
     points: ['Star RTA ships in 2 weeks, Euro Max in 4', 'A 10×10 price on every collection'],
     ctaLabel: 'Shop RTA',
     href: '/cabinets/rta-cabinets',
+    image: {
+      src: '/images/home/programs/rta.webp',
+      alt: 'A kitchen in dark grey shaker cabinets',
+    },
   },
   {
     title: 'Assembled: ships in 3 weeks',
@@ -93,8 +97,16 @@ export const PRO_PROGRAM_CARDS: ProgramCard[] = [
     points: ['Star ships in 3 weeks, Euro in 4, Prism in 8', 'A 10×10 price on every collection'],
     ctaLabel: 'Shop Assembled',
     href: '/cabinets/assembled-cabinets',
+    image: {
+      src: '/images/home/programs/assembled.webp',
+      alt: 'A finished kitchen in sage-green shaker cabinets with a white quartz island and black pendants',
+    },
   },
 ];
+
+// Under the two panels: the same cabinet either way, and the trade pricing line EK asked for.
+export const PRO_PROGRAM_FOOTNOTE =
+  'Same box, same door, same finish either way. Special pricing for contractors and builders applies to both: call us for details.';
 
 export const WINDOWS_OFFER = {
   kicker: 'Windows offer',
