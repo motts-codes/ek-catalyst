@@ -240,7 +240,10 @@ export const DESIGN_BAND = {
   description:
     "Send us your plans or measurements. We'll price every cabinet, RTA and assembled, so you can put a number in front of your client. Free.",
   actions: [{ label: 'Get a free quote', href: '/mykitchen/free-design-consult', primary: true }],
-  imageLabel: 'A priced cabinet list beside a set of plans',
+  image: {
+    src: '/images/pages/pro/quote-handshake.jpg',
+    alt: 'A contractor shaking hands with a couple over the plans and a priced quote in a kitchen mid-remodel',
+  },
 };
 
 // Not rendered: EK has not supplied real contractor reviews yet (the old site's look made up).

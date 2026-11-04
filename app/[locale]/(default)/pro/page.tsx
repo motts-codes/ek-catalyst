@@ -214,8 +214,9 @@ export default async function Pro({ params }: Props) {
           <StoryBand
             actions={DESIGN_BAND.actions}
             description={DESIGN_BAND.description}
-            imageLabel={DESIGN_BAND.imageLabel}
+            image={DESIGN_BAND.image}
             kicker={DESIGN_BAND.kicker}
+            plate={false}
             title={DESIGN_BAND.title}
           />
         }
