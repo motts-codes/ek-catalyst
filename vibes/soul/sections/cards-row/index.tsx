@@ -41,6 +41,8 @@ interface Props {
   tone?: 'default' | 'red';
   /** `red`: just the section title in brand red. */
   titleTone?: 'default' | 'red';
+  /** `red`: each card's title in brand red. */
+  cardTitleTone?: 'default' | 'red';
   /**
    * `red`: each card is a deep-red panel with white copy (the "ek red box" look).
    * `alternate`: the cards checker between that deep red and a light-red panel (red, light,
@@ -68,6 +70,7 @@ export function CardsRow({
   tint = false,
   tone = 'default',
   titleTone = 'default',
+  cardTitleTone = 'default',
   cardTone = 'default',
   cardBorder = 'default',
   className,
@@ -180,12 +183,7 @@ export function CardsRow({
                     )}
                   </div>
                 )}
-                <h3
-                  className={clsx(
-                    'font-heading text-lg font-semibold leading-tight @xl:text-xl',
-                    reversed && 'text-white',
-                  )}
-                >
+                <h3 className={cardTitleClassName(reversed, cardTitleTone)}>
                   {card.title}
                 </h3>
                 {card.meta != null && (
@@ -270,5 +268,13 @@ function CardLead({
       aria-hidden
       className="mb-5 block h-0.5 w-10 rounded-full bg-[var(--button-primary-background,#d90716)]"
     />
+  );
+}
+
+function cardTitleClassName(reversed: boolean, tone: 'default' | 'red'): string {
+  return clsx(
+    'font-heading text-lg font-semibold leading-tight @xl:text-xl',
+    reversed && 'text-white',
+    !reversed && tone === 'red' && 'text-[var(--button-primary-background,#d90716)]',
   );
 }

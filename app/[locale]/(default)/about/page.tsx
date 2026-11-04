@@ -126,7 +126,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'Our own factory',
             description:
-              'Since 2025, manufacturing, distribution and our offices share one 300,000+ sq ft facility in Bristol. Robots cut and finish every cabinet, and 50,000+ sit in stock, so RTA ships in 2 weeks.',
+              'Robots cut and finish every cabinet in our 300,000 sq ft Bristol plant, and 50,000 sit in stock. RTA ships in two weeks.',
             image: {
               src: '/images/pages/about/robotic-line.jpg',
               alt: 'A robotic arm placing a panel on the cabinet line',
@@ -136,7 +136,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'Six showrooms',
             description:
-              'Newington, Orange, New London, Brookfield, Stamford and Bristol. Full kitchens on display, and a Project Manager at each one to plan and price your kitchen.',
+              'Full kitchens on display across Connecticut, and a Project Manager at each one to plan and price yours.',
             image: {
               src: '/images/pages/about/showroom-display.jpg',
               alt: 'A white shaker display kitchen in the showroom',
@@ -146,7 +146,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'The Factory Outlet',
             description:
-              'Also at 18 Main Street, Bristol: clearance and discounted cabinets, quick-ship styles, closets, appliances, windows, vanities and interior doors.',
+              'Clearance and quick-ship cabinets, closets, appliances, windows and doors, at 18 Main Street, Bristol.',
             image: {
               src: '/images/why-us/factory/stock.webp',
               alt: 'Racks of boxed cabinets in the Bristol warehouse',
@@ -156,7 +156,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
           {
             title: 'People who know the work',
             description:
-              "Project Managers and factory teams, many with us for over a decade. They're the people our customers name in their reviews.",
+              'Project Managers and factory teams, many here a decade or more. The names you see in our reviews.',
             image: {
               src: '/images/pages/about/team-at-work.jpg',
               alt: 'Two cabinetmakers fitting a door at a workbench',
@@ -164,12 +164,12 @@ export default async function About({ params }: { params: Promise<{ locale: stri
             imageLabel: 'The team at work',
           },
         ]}
+        cardTitleTone="red"
         columns={4}
         description="We don't resell someone else's kitchen. We make it, stock it, show it and stand behind it."
         imageStyle="plain"
         kicker="Why Express Kitchens"
         title="Everything under one roof"
-        titleTone="red"
       />
       <LinkCards
         cards={[
