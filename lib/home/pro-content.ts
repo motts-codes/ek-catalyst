@@ -5,7 +5,6 @@
 // engineered-board box, Prism is made to order (8 weeks), the $179.99 window offer is double hung
 // only, phones are answered 24/7 and texting works.
 
-import { type ContentBlock } from '@/vibes/soul/sections/cabinet-program-content';
 import { type RowCard } from '@/vibes/soul/sections/cards-row';
 import { type HeroSlide } from '@/vibes/soul/sections/home-hero-split';
 import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
@@ -216,28 +215,8 @@ export const FOUR_LINES: RowCard[] = [
   },
 ];
 
-// "How every cabinet is built": the listing pages' red build panel, with the six points EK
-// confirmed (plywood only where it is true; no glides, no design help).
-export const PRO_BUILD_BLOCK: Extract<ContentBlock, { type: 'build' }> = {
-  type: 'build',
-  title: 'Build quality',
-  points: [
-    { icon: 'layers', lead: 'Plywood box.', detail: 'On Star, Prism and Euro Max.' },
-    { icon: 'volume-x', lead: 'Soft-close hinges.', detail: 'On every door.' },
-    { icon: 'blocks', lead: 'Dovetail drawer boxes.', detail: 'Solid wood, with dovetail joints.' },
-    { icon: 'layout-grid', lead: 'Adjustable shelving.', detail: 'Set where you need it.' },
-    {
-      icon: 'bot',
-      lead: 'Robotic manufacturing.',
-      detail: 'Cut and drilled to the same tolerance, from box one to box four hundred.',
-    },
-    {
-      icon: 'shield-check',
-      lead: '1-year warranty.',
-      detail: 'RTA or assembled, the same cover either way.',
-    },
-  ],
-};
+// "How every cabinet is built" shows the assembled listing's Build quality panel as it is
+// (lib/cabinets/program-content.ts, ASSEMBLED_BUILD_BLOCK).
 
 export const DESIGN_BAND = {
   title: 'We price it, you win the job',

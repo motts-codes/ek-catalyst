@@ -11,6 +11,7 @@ import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { locales } from '~/i18n/locales';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { LINE_CARDS, LINE_SAMPLE_COLLECTIONS } from '~/lib/cabinets/cabinets-hub-content';
+import { ASSEMBLED_BUILD_BLOCK } from '~/lib/cabinets/program-content';
 import { HERO_OFFERS, PRO_CATEGORY_TILES } from '~/lib/home/home-content';
 import {
   DELIVERY_COLUMNS,
@@ -19,7 +20,6 @@ import {
   FACTORY_OUTLET_URL,
   FOUR_LINES,
   PRO_AUDIENCES,
-  PRO_BUILD_BLOCK,
   PRO_HERO_SLIDES,
   PRO_PROGRAM_CARDS,
   PRO_PROGRAM_FOOTNOTE,
@@ -191,7 +191,7 @@ export default async function Pro({ params }: Props) {
             description="The build is the same across collections. What changes is the door and the finish."
             title="How every cabinet is built"
           >
-            <Build block={PRO_BUILD_BLOCK} embedded />
+            <Build block={ASSEMBLED_BUILD_BLOCK} embedded />
           </HomeSection>
         }
         label="Pro quality"
