@@ -87,7 +87,7 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
     >
       {/* The photo: every image is stacked and only the open row's shows, so the swap is a fade.
           Loaded eagerly: a lazy image that has already faded out never starts loading. */}
-      <div className="relative aspect-[5/3] overflow-hidden rounded-3xl bg-contrast-100 @3xl:order-last @3xl:aspect-[5/4]">
+      <div className="relative aspect-[5/3] overflow-hidden rounded-3xl bg-contrast-100 @3xl:order-last @3xl:aspect-[4/3]">
         {items.map((item) => (
           <Image
             alt={item.image.alt}
@@ -136,7 +136,7 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
               )}
               <AccordionPrimitive.Header asChild>
                 <Heading className="m-0">
-                  <AccordionPrimitive.Trigger className="group flex w-full cursor-pointer items-center gap-4 py-5 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 @xl:py-6">
+                  <AccordionPrimitive.Trigger className="group flex w-full cursor-pointer items-center gap-4 py-4 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 @xl:py-5">
                     <span className="flex-1 font-heading text-xl font-bold leading-tight transition-colors duration-300 group-data-[state=open]:text-[var(--button-primary-background,#d90716)] @xl:text-2xl">
                       {item.title}
                     </span>
@@ -149,7 +149,7 @@ export function AudienceAccordion({ items, headingLevel = 3 }: Props) {
                 </Heading>
               </AccordionPrimitive.Header>
               <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-collapse data-[state=open]:animate-expand">
-                <div className="pb-6">
+                <div className="pb-5">
                   <p className="max-w-xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
                     {item.description}
                   </p>
