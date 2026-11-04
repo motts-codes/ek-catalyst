@@ -296,8 +296,8 @@ function Compare({ block }: { block: Extract<ContentBlock, { type: 'compare' }> 
 }
 
 // A brand-red panel inside the page gutters, white text, bare icons.
-// Exported so other pages (the Pro page's "How every cabinet is built") can show the same red
-// panel under their own heading: `embedded` drops the outer section and the panel's own title.
+// Exported so the Pro page can show the same red panel under its own heading: `embedded` drops
+// the outer section (the parent supplies the container), the panel itself is unchanged.
 export function Build({
   block,
   embedded = false,
@@ -306,20 +306,15 @@ export function Build({
   embedded?: boolean;
 }) {
   return (
-    <section className={clsx(!embedded && [CONTAINER, 'py-4 @4xl:py-6'])}>
+    <section className={clsx('@container', !embedded && [CONTAINER, 'py-4 @4xl:py-6'])}>
       <div className="rounded-3xl bg-[var(--button-primary-background,#d90716)] px-6 py-10 text-white @xl:px-10 @4xl:px-14 @4xl:py-14">
-        {!embedded && <h2 className={clsx(H2, '!text-white')}>{block.title}</h2>}
+        <h2 className={clsx(H2, '!text-white')}>{block.title}</h2>
         {block.intro != null && (
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white @xl:text-base">
             {block.intro}
           </p>
         )}
-        <ul
-          className={clsx(
-            'grid gap-x-12 gap-y-6 @xl:grid-cols-2 @4xl:grid-cols-3 @4xl:gap-x-16',
-            (!embedded || block.intro != null) && 'mt-6',
-          )}
-        >
+        <ul className="mt-6 grid gap-x-12 gap-y-6 @xl:grid-cols-2 @4xl:grid-cols-3 @4xl:gap-x-16">
           {block.points.map((point) => {
             const Icon = ICONS[point.icon];
 

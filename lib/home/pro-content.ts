@@ -220,7 +220,7 @@ export const FOUR_LINES: RowCard[] = [
 // confirmed (plywood only where it is true; no glides, no design help).
 export const PRO_BUILD_BLOCK: Extract<ContentBlock, { type: 'build' }> = {
   type: 'build',
-  title: 'How every cabinet is built',
+  title: 'Build quality',
   points: [
     { icon: 'layers', lead: 'Plywood box.', detail: 'On Star, Prism and Euro Max.' },
     { icon: 'volume-x', lead: 'Soft-close hinges.', detail: 'On every door.' },
