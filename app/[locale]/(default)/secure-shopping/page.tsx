@@ -5,7 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
-import { PageBreadcrumbs, PageHero, PanelPair } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -81,27 +81,33 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
         kicker="How it works"
         title="Six things that keep your order safe"
       />
-      <PanelPair
-        panels={[
+      <CardsRow
+        cards={[
           {
-            kicker: 'What we do with your details',
             title: 'Only what the order needs',
-            body: [
+            description:
               "We use your name, address and contact details to fulfil your order, tell you when it ships and, if you've opted in, send you offers. We don't sell your information. The privacy policy sets out exactly what is collected and why.",
-            ],
-            actions: [{ label: 'Read the privacy policy', href: '/privacy' }],
-            tone: 'rose',
+            ctaLabel: 'Read the privacy policy',
+            href: '/privacy',
+            image: {
+              src: '/images/pages/secure-shopping/checkout-on-phone.jpg',
+              alt: 'A homeowner in her kitchen placing an order on her phone, with only name, address and phone filled in',
+            },
           },
           {
-            kicker: 'Prefer not to pay online?',
             title: 'Order in person or by phone instead',
-            body: [
+            description:
               'Every order can be placed and paid in any of our six showrooms, or over the phone on 860-247-1000, at the same prices and with the same delivery.',
-            ],
-            actions: [{ label: 'Find a showroom', href: '/showrooms', primary: true }],
-            tone: 'sky',
+            ctaLabel: 'Find a showroom',
+            href: '/showrooms',
+            image: {
+              src: '/images/pages/secure-shopping/pay-in-showroom.jpg',
+              alt: 'A customer tapping a card on a terminal at a showroom counter beside cabinet door samples',
+            },
           },
         ]}
+        columns={2}
+        imageStyle="plain"
       />
       <CabinetFaq
         data={{
