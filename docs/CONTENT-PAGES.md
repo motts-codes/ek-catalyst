@@ -99,8 +99,7 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 | --- | --- | --- |
 | About | http://localhost:3000/about-us | |
 | Why Express Kitchens | http://localhost:3000/why-express-kitchens | |
-| Refer a friend | http://localhost:3000/refer-a-friend | form |
-| └ confirmation | http://localhost:3000/refer-a-friend/confirmed | |
+| Refer a friend | (parked) | Not needed yet (Arun, 4 Nov 2026). Code kept in `app/[locale]/(default)/_refer-a-friend` (underscore = unrouted); rename the folder to bring it back. |
 
 ## Support and legal
 
