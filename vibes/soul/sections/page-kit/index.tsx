@@ -13,6 +13,7 @@ import {
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
+import { AudienceAccordion, type AudienceAccordionItem } from './audience-accordion';
 import { StoryTimelineList } from './story-timeline';
 
 // Building blocks shared by the content pages (about, financing, showrooms, resources…), in the
@@ -613,6 +614,36 @@ export function StoryTimeline({
       title={title}
     >
       <StoryTimelineList className="mt-4 @xl:mt-8" items={items} />
+    </HomeSection>
+  );
+}
+
+// "Who we work with": rows of copy that open one at a time beside a photo that swaps with them
+// (see audience-accordion.tsx).
+export function AudienceRows({
+  kicker,
+  title,
+  description,
+  items,
+  tint,
+  className,
+}: {
+  kicker?: string;
+  title?: string;
+  description?: string;
+  items: AudienceAccordionItem[];
+  tint?: boolean;
+  className?: string;
+}) {
+  return (
+    <HomeSection
+      className={className}
+      description={description}
+      kicker={kicker}
+      tint={tint}
+      title={title}
+    >
+      <AudienceAccordion items={items} />
     </HomeSection>
   );
 }
