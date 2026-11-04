@@ -42,18 +42,6 @@ export function EkNotFound({
         </h1>
         <p className="mt-4 max-w-lg text-base leading-relaxed text-contrast-500">{description}</p>
 
-        <div className="mt-8 w-full max-w-xs @3xl:max-w-lg">
-          <Image
-            alt={image.alt}
-            className="h-auto w-full"
-            height={750}
-            preload
-            sizes="(min-width: 56rem) 32rem, 20rem"
-            src={image.src}
-            width={1200}
-          />
-        </div>
-
         <form action={search.action} className="mt-8 w-full max-w-xl" method="get" role="search">
           <label className="sr-only" htmlFor="not-found-search">
             {search.label}
@@ -76,6 +64,18 @@ export function EkNotFound({
             </button>
           </div>
         </form>
+
+        <div className="mt-10 w-full max-w-xs @3xl:max-w-lg">
+          <Image
+            alt={image.alt}
+            className="h-auto w-full"
+            height={750}
+            preload
+            sizes="(min-width: 56rem) 32rem, 20rem"
+            src={image.src}
+            width={1200}
+          />
+        </div>
 
         <Actions actions={actions} className="mt-6 justify-center" />
 
