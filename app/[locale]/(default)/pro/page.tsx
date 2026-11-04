@@ -97,7 +97,15 @@ export default async function Pro({ params }: Props) {
         type={HERO_SPLIT_TYPE}
       />
 
-      {/* 2 · Which one sounds like your business? */}
+      {/* 2 · Everything for the job: shopping first */}
+      <EditableSection
+        defaults={{ categories: PRO_CATEGORY_TILES, categoriesTitle: 'Everything for the job' }}
+        label="Pro categories"
+        snapshotId="pro-category-carousel"
+        type={CATEGORY_CAROUSEL_TYPE}
+      />
+
+      {/* 3 · Which one sounds like your business? */}
       <Slot
         fallback={
           <CardsRow
@@ -113,7 +121,7 @@ export default async function Pro({ params }: Props) {
         snapshotId="pro-audiences"
       />
 
-      {/* 3 · Two ways to buy the same cabinet */}
+      {/* 4 · Two ways to buy the same cabinet */}
       <Slot
         fallback={
           <ProgramSplit
@@ -128,7 +136,7 @@ export default async function Pro({ params }: Props) {
         snapshotId="pro-programs"
       />
 
-      {/* 4 · Ship times you can quote */}
+      {/* 5 · Ship times you can quote */}
       <Slot
         fallback={
           <DeliveryLadder
@@ -143,14 +151,6 @@ export default async function Pro({ params }: Props) {
         }
         label="Pro delivery ladder"
         snapshotId="pro-delivery"
-      />
-
-      {/* 5 · Everything for the job */}
-      <EditableSection
-        defaults={{ categories: PRO_CATEGORY_TILES, categoriesTitle: 'Everything for the job' }}
-        label="Pro categories"
-        snapshotId="pro-category-carousel"
-        type={CATEGORY_CAROUSEL_TYPE}
       />
 
       {/* 6 · Windows offer (double hung only) */}
