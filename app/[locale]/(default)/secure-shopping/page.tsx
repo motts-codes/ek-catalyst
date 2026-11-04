@@ -33,7 +33,8 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
           src: '/images/pages/secure-shopping/shield-card-phone.jpg',
           alt: 'A red shield with a padlock between a payment card and a phone showing a secured checkout',
         }}
-                kicker="Secure shopping"
+        imageStyle="plain"
+        kicker="Secure shopping"
         title="Your payment is protected, start to finish"
       />
       <CardsRow

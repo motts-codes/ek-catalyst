@@ -538,7 +538,7 @@ export function PanelPair({
         {panels.map((panel) => (
           <section
             aria-labelledby={`panel-${slugify(panel.title)}`}
-            className={clsx('rounded-3xl p-7 @xl:p-9', PANEL_TONE[panel.tone])}
+            className={clsx('flex flex-col rounded-3xl p-7 @xl:p-9', PANEL_TONE[panel.tone])}
             key={panel.title}
           >
             {Boolean(panel.kicker) && (
@@ -557,8 +557,9 @@ export function PanelPair({
                 {paragraph}
               </p>
             ))}
+            {/* Pinned to the bottom so the two panels' buttons sit on one line. */}
             {panel.actions && panel.actions.length > 0 && (
-              <Actions actions={panel.actions} className="mt-6" />
+              <Actions actions={panel.actions} className="mt-auto pt-6" />
             )}
           </section>
         ))}
