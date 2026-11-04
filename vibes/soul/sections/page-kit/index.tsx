@@ -13,6 +13,7 @@ import {
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
+import { StoryTimelineList } from './story-timeline';
 
 // Building blocks shared by the content pages (about, financing, showrooms, resources…), in the
 // home page's design language: the same container, section rhythm, rounded panels and type.
@@ -583,6 +584,35 @@ export function Timeline({
           </li>
         ))}
       </ol>
+    </HomeSection>
+  );
+}
+
+// "Our story" as a step-by-step scroll timeline (see story-timeline.tsx). Same props as Timeline.
+export function StoryTimeline({
+  kicker,
+  title,
+  description,
+  items,
+  tint,
+  className,
+}: {
+  kicker?: string;
+  title?: string;
+  description?: string;
+  items: TimelineItem[];
+  tint?: boolean;
+  className?: string;
+}) {
+  return (
+    <HomeSection
+      className={className}
+      description={description}
+      kicker={kicker}
+      tint={tint}
+      title={title}
+    >
+      <StoryTimelineList className="mt-4 @xl:mt-8" items={items} />
     </HomeSection>
   );
 }

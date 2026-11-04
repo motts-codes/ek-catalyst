@@ -8,8 +8,8 @@ import {
   PageBreadcrumbs,
   type Person,
   StackedHero,
+  StoryTimeline,
   TeamRow,
-  Timeline,
 } from '@/vibes/soul/sections/page-kit';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
@@ -67,7 +67,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         title="The people behind your kitchen"
       />
       <MetricsTicker metrics={EK_METRICS} />
-      <Timeline
+      <StoryTimeline
         description="Two families, four generations, and more than a century of kitchens."
         items={[
           {
