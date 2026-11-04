@@ -172,6 +172,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         kicker="Why Express Kitchens"
         title="Everything under one roof"
       />
+      <ShowroomBand showrooms={SHOWROOMS} />
       <AudienceRows
         description="Six showrooms for homeowners, plus a commercial business supplying builders, contractors and apartment communities."
         items={[
@@ -231,7 +232,6 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         people={PEOPLE}
         title="Meet a few of them"
       />
-      <ShowroomBand showrooms={SHOWROOMS} />
       <ClosingBand
         primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}
