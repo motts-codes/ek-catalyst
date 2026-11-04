@@ -54,6 +54,7 @@ export const FOOTER_SECTIONS: Section[] = [
     links: [
       { label: 'About', href: '/about-us' },
       { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
+      { label: 'Compare cabinet companies', href: '/compare-cabinet-companies' },
       { label: 'Showrooms', href: '/showrooms' },
       { label: 'Pro', href: '/pro' },
       { label: 'Industries' },

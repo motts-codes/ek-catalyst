@@ -1,80 +1,82 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
+import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { ReviewGrid } from '@/vibes/soul/sections/page-kit/media';
-import { ASSEMBLED_LISTING_HREF } from '~/lib/cabinets/cabinets-hub-content';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
-import { getLowest10x10 } from '~/lib/pages/lowest-price';
 
 export const metadata: Metadata = {
-  title: 'How We Compare to Big-Box and Online Cabinet Sellers',
+  title: 'How Express Kitchens Compares to Big-Box, Online and Custom Cabinet Sellers',
   description:
-    'The 10×10 price, the finishes, whether you can get it assembled, how long it takes and who actually makes it. Express Kitchens next to big-box stores, online-only sellers and custom shops, line by line.',
+    'Who makes the cabinet, how long you wait, whether you can see it first, and price match. Express Kitchens side by side with big-box stores, online sellers and custom shops.',
 };
 
-// Competitor cells are "[X]" until the business supplies figures it is comfortable publishing.
-// Nothing here should be a guess about someone else's price.
+// The comparison is on what is true of each type of seller (who makes it, whether it is in stock,
+// whether you can see it first), never on competitors' prices: every EK cell can be backed up and
+// the competitor cells describe the category, not a named company. The price match closes it.
 const COLUMNS = ['', 'Express Kitchens', 'Big-box stores', 'Online-only sellers', 'Custom shops'];
 
-const rows = (lowest: { assembled: string | null; rta: string | null; collections: number }) => [
+const ROWS = [
   [
-    '!10×10 price',
-    `from ${lowest.rta ?? '$[X]'} RTA · ${lowest.assembled ?? '$[X]'} assembled`,
-    '$[X]',
-    '$[X]',
-    '$[X]',
-  ],
-  [
-    '!Door styles',
-    `${lowest.collections > 0 ? `${lowest.collections}+` : '30+'} collections`,
-    '[X]',
-    '[X]',
-    'Unlimited, at a price',
-  ],
-  ['!Assembled available', 'Yes, in 3 weeks', '[?]', '[?]', 'Yes, by definition'],
-  ['!Delivery time', 'RTA 2 weeks · assembled 3 weeks', '[X]', '[X]', '[X]'],
-  ['!Showrooms', `${SHOWROOMS.length} in Connecticut`, 'Aisle displays', 'None', 'Usually one'],
-  [
-    '!Who manufactures',
-    'We do, in Bristol (Star Cabinetry)',
-    'Third party',
-    'Third party',
+    '!Who makes the cabinet',
+    'We do, in Bristol, CT',
+    'Another manufacturer',
+    'Another manufacturer',
     'They do',
   ],
+  ['!Ready to ship', '50,000+ in stock', 'Mostly made to order', 'Varies', 'Made to order'],
   [
-    '!Installation',
-    'Not included; we point you to installers',
-    'Sold separately',
-    'Not offered',
-    'Often included',
+    '!Typical wait',
+    'RTA ships in 2 weeks, assembled in 3',
+    'Often several weeks',
+    'Varies',
+    '14 weeks is typical',
   ],
+  [
+    '!See it before you buy',
+    '6 showrooms, plus door samples',
+    'Aisle displays',
+    'Samples only',
+    'Usually one showroom',
+  ],
+  ['!RTA or assembled', 'Both, your choice', 'Usually assembled', 'Usually RTA', 'Assembled'],
+  [
+    '!Design help',
+    'Free, in a showroom or on video',
+    'Often free, in store',
+    'Online tools, or paid',
+    'Included in the price',
+  ],
+  ['!Price match', 'Yes, in our showrooms', 'Varies', 'Rarely', 'Rarely'],
 ];
 
-const QUOTES = [
+// Real Google reviews from the site's list, trimmed with an ellipsis where a line was cut.
+const REVIEWS = [
   {
-    quote:
-      '[Big-box first: a review from someone who priced a big-box store before us, in their own words.]',
-    name: '[Name]',
-    location: '[Town], CT',
     stars: 5,
+    quote:
+      'No selling involved, just information for you to make your decision. For value I did shop 3 competitors and they were not close.',
+    name: 'George M.',
+    location: 'New London',
+    source: 'Google',
   },
   {
-    quote:
-      '[Online-only first: a review from someone who compared an online seller, in their own words.]',
-    name: '[Name]',
-    location: '[Town], CT',
     stars: 5,
+    quote: 'Reasonable price. … Very knowledgeable and worked at our own pace. Great value!',
+    name: 'Linda K.',
+    location: 'New London',
+    source: 'Google',
   },
   {
-    quote:
-      '[Custom quote first: a review from someone who priced a custom shop before us, in their own words.]',
-    name: '[Name]',
-    location: '[Town], CT',
     stars: 5,
+    quote:
+      'Dan in the Brookfield office is a saint. I completely changed my mind about the whole cabinet and countertop style two weeks after we put the plan together, and he just went with it.',
+    name: 'Cathy D.',
+    location: 'Brookfield',
+    source: 'Google',
   },
 ];
 
@@ -83,51 +85,88 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
 
   setRequestLocale(locale);
 
-  const lowest = await getLowest10x10();
-
   return (
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'Compare', href: '/compare-cabinet-companies' }]} />
       <PageHero
         actions={[
-          { label: 'Shop cabinets', href: ASSEMBLED_LISTING_HREF, primary: true },
-          { label: 'Free design consult', href: FREE_DESIGN_HREF },
+          { label: 'See the comparison', href: '#compare', primary: true },
+          { label: 'Free design consult', href: FREE_DESIGN_HREF, style: 'outline' },
         ]}
-        description="You're probably pricing a kitchen in three or four places at once, and the hard part is that nobody quotes it the same way. So here is the comparison on one basis: the industry-standard 10×10 kitchen, the number of finishes, whether you can get it assembled, how long it takes and who actually makes the cabinet. Where we don't know another seller's figure we say so rather than guess."
+        description="Big-box stores, online sellers, custom shops and us. Here's what you get from each, so you can compare like for like."
         kicker="Compare"
         textOnly
-        title="How we compare to big-box, line by line"
+        title="Pricing your kitchen in three places? Here's how we compare."
       />
+      <CardsRow
+        cards={[
+          {
+            title: 'We make it',
+            description:
+              "Our cabinets are built in our own Bristol factory, so there's no middleman's markup in the price.",
+          },
+          {
+            title: "It's already in stock",
+            description:
+              "50,000+ cabinets on the shelf, so you're not waiting the 14 weeks a custom kitchen often takes.",
+          },
+          {
+            title: 'You can see it first',
+            description:
+              'Walk through full kitchens in six showrooms, or order a door sample before you buy.',
+          },
+        ]}
+        hideImages
+        kicker="The short answer"
+        title="Three things most cabinet sellers can't say"
+      />
+      <div id="compare" />
       <DeliveryLadder
         columns={COLUMNS}
-        look="minimal"
-        footnote="Our prices are live from the collection pages. Competitor figures are left blank until we can publish them with a source; we'd rather show a gap than a guess."
+        footnote="Competitor columns describe each type of seller in general, not any one company. Our ship times are per collection; transit adds 7–10 days. The 14-week figure is the typical custom-cabinet lead time reported by US kitchen designers, 2025–26."
         kicker="Side by side"
-        rows={rows(lowest)}
+        look="minimal"
+        rows={ROWS}
         tint
-        title="The same seven questions, asked of everyone"
+        title="What you get, seller by seller"
       />
       <Prose
         body={[
-          "Big-box stores sell cabinets made by someone else, usually to order, with lead times set by that supplier. The in-store displays are good for getting a feel for a door style, and the prices on the entry lines are hard to beat on paper. Where it tends to go wrong is after the order: a damaged box means waiting on a third party, and the person who designed your kitchen isn't the person who built it.",
-          "Online-only sellers are often the cheapest ready-to-assemble option you'll find, and for a confident builder with a simple layout they can be a perfectly good choice. You won't be able to see or hold the cabinet first, assembled is rarely an option, and support is a ticket rather than a person.",
-          'Custom shops make beautiful work and will build to any size. You pay for that, both in money and in time, and a true custom kitchen is usually a different budget conversation entirely.',
-          "Our position is the one in between: we design and build the cabinet ourselves in Bristol, stock it there, show it in six Connecticut showrooms and sell it priced openly, ready-to-assemble or factory-assembled. If you want it faster or cheaper than that, we'd rather tell you who to call.",
+          "Big-box stores: Great for seeing a door in person, and the entry prices look hard to beat. But the cabinets come from someone else, usually made to order, and if something arrives damaged you're waiting on a third party.",
+          "Online-only sellers: Often the cheapest ready-to-assemble option, and fine for a confident DIYer with a simple layout. But you can't see the cabinet first, assembled is rarely offered, and help comes through a ticket, not a person.",
+          'Custom shops: Beautiful work, built to any size. You pay for it in money and in time, often 14 weeks or more.',
+          'Us: We sit in between. We make our own cabinets, keep them in stock, show them in six showrooms, and sell them ready to assemble or assembled. Custom-shop quality, with no custom-shop wait.',
         ]}
-        kicker="By seller type"
-        title="The honest version of each"
+        kicker="By type of seller"
+        title="The honest take on each"
       />
-      <ReviewGrid reviews={QUOTES} tint title="What people who compared first said" />
-      <HomeSection compact title="Ready to decide?">
-        <p className="max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
-          Browse the collections with their 10×10 prices, or let a designer price your actual room
-          both ways for free. Either way you keep the number.
+      <Prose
+        actions={[
+          { label: 'How the price match works', href: '/price-match-guarantee', primary: true },
+          { label: "What's in a 10×10", href: '/resources/ten-by-ten-kitchen', style: 'outline' },
+        ]}
+        body={[
+          'Two quotes for "the same kitchen" can hide a particleboard box, hinges that slam, or fewer cabinets. Check the cabinet list, not just the total. And if a competitor\'s quote still comes in lower, bring it to a showroom: we\'ll beat it, or give you a $500 credit.',
+        ]}
+        className="bg-[#fdf3f5]"
+        kicker="Before you compare prices"
+        title="A cheaper quote is often a different cabinet"
+      >
+        <p className="mt-5 text-xs leading-relaxed text-contrast-500">
+          Competitor quotes of $3,000+. In-store only. Until Nov 30, 2026.
         </p>
-      </HomeSection>
+      </Prose>
+      <ReviewGrid
+        action={{ label: 'Read all reviews', href: '/reviews' }}
+        reviews={REVIEWS}
+        title="From people who shopped around"
+      />
       <ClosingBand
-        primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
-        secondary={{ label: 'Shop cabinets', href: ASSEMBLED_LISTING_HREF }}
+        description="Bring it to a showroom and we'll show you, line by line, what you'd get with us."
+        primary={{ label: 'Find a showroom', href: '/showrooms' }}
+        secondary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}
+        title="Got a quote from somewhere else?"
       />
     </>
   );

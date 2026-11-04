@@ -80,7 +80,7 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 | What is a 10×10 kitchen | http://localhost:3000/resources/ten-by-ten-kitchen | `/resources/10x10-kitchen` redirects here |
 | How-to videos | http://localhost:3000/resources/how-to-videos | |
 | Cabinet care | http://localhost:3000/resources/cabinet-care | |
-| Compare cabinet companies | http://localhost:3000/compare-cabinet-companies | live EK column · [X] competitor cells on purpose |
+| Compare cabinet companies | http://localhost:3000/compare-cabinet-companies | Compares seller types, not named companies or prices; closes on the price match (until Nov 30, 2026). Footer: Company. |
 
 ## For the trade
 
