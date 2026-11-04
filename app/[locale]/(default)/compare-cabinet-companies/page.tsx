@@ -3,7 +3,7 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { ReviewGrid } from '@/vibes/soul/sections/page-kit/media';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
@@ -58,21 +58,37 @@ const ROWS = [
 const SELLERS = [
   {
     title: 'Big-box stores',
+    image: {
+      src: '/images/pages/compare/seller-big-box.jpg',
+      alt: 'A big-box store aisle of boxed cabinets on orange racking',
+    },
     description:
       "Great for seeing a door in person, and the entry prices look hard to beat. But the cabinets come from someone else, usually made to order, and if something arrives damaged you're waiting on a third party.",
   },
   {
     title: 'Online-only sellers',
+    image: {
+      src: '/images/pages/compare/seller-online.jpg',
+      alt: 'A laptop showing a cabinet product page with an add to cart button',
+    },
     description:
       "Often the cheapest ready-to-assemble option, and fine for a confident DIYer with a simple layout. But you can't see the cabinet first, assembled is rarely offered, and help comes through a ticket, not a person.",
   },
   {
     title: 'Custom shops',
+    image: {
+      src: '/images/pages/compare/seller-custom.jpg',
+      alt: 'A cabinet box clamped on a bench in a small woodworking shop',
+    },
     description:
       'Beautiful work, built to any size. You pay for it in money and in time, often 14 weeks or more.',
   },
   {
     title: 'Us',
+    image: {
+      src: '/images/pages/compare/seller-us.jpg',
+      alt: 'An Express Kitchens showroom with a white island, red stools and wood kitchens behind',
+    },
     description:
       'We sit in between. We make our own cabinets, keep them in stock, show them in six showrooms, and sell them ready to assemble or assembled. Custom-shop quality, with no custom-shop wait.',
   },
@@ -157,12 +173,7 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
         title="What you get, seller by seller"
       />
       <HomeSection kicker="By type of seller" title="The honest take on each">
-        <div className="grid items-start gap-8 @3xl:grid-cols-2 @3xl:gap-12">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100">
-            <MediaPlaceholder label="A showroom kitchen beside a big-box aisle, an online listing and a custom workshop" />
-          </div>
-          <StepsAccordion numbered={false} steps={SELLERS} />
-        </div>
+        <StepsAccordion numbered={false} steps={SELLERS} />
       </HomeSection>
       <Prose
         actions={[
