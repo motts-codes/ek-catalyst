@@ -82,6 +82,8 @@ export default async (): Promise<NextConfig> => {
     // eslint-disable-next-line @typescript-eslint/require-await
     async redirects() {
       return [
+        // The About page keeps the live site's URL (/about-us); the build used /about for a while.
+        { source: '/about', destination: '/about-us', permanent: true },
         {
           source: '/cabinets/shop/assembled-cabinets',
           destination: '/cabinets/assembled-cabinets',

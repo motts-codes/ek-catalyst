@@ -52,7 +52,7 @@ export const FOOTER_SECTIONS: Section[] = [
   {
     title: 'Company',
     links: [
-      { label: 'About', href: '/about' },
+      { label: 'About', href: '/about-us' },
       { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
       { label: 'Showrooms', href: '/showrooms' },
       { label: 'Pro', href: '/pro' },

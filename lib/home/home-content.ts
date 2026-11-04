@@ -408,7 +408,7 @@ export const STORY = {
     "Built in our own Connecticut factory with robotic precision, and sold straight to you at factory-direct prices. Doors that line up, no middleman's cut, and a date we control because the factory is ours.",
   actions: [
     { label: 'Why Express Kitchens', href: '/why-express-kitchens', primary: true },
-    { label: 'Our story', href: '/about' },
+    { label: 'Our story', href: '/about-us' },
   ],
   imageLabel: 'The Bristol factory line',
   video: {

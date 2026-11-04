@@ -55,7 +55,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
 
   return (
     <>
-      <PageBreadcrumbs breadcrumbs={[{ label: 'About', href: '/about' }]} />
+      <PageBreadcrumbs breadcrumbs={[{ label: 'About', href: '/about-us' }]} />
       <StackedHero
         actions={[{ label: 'Meet your showroom team', href: '/showrooms', primary: true }]}
         description="Our Project Managers, cabinetmakers, drivers and the team in Bristol are the reason customers come back, and the people they name in their reviews. Two families have run this business across four generations since 1916, and every kitchen still goes through people who know the work."

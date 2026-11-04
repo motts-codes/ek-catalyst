@@ -97,7 +97,7 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 
 | Page | Link | Notes |
 | --- | --- | --- |
-| About | http://localhost:3000/about | |
+| About | http://localhost:3000/about-us | |
 | Why Express Kitchens | http://localhost:3000/why-express-kitchens | |
 | Refer a friend | http://localhost:3000/refer-a-friend | form |
 | └ confirmation | http://localhost:3000/refer-a-friend/confirmed | |
