@@ -61,7 +61,7 @@ export const PRO_AUDIENCES: RowCard[] = [
     ctaLabel: 'Multifamily',
     href: '/industry/multifamily',
     image: {
-      src: '/images/pages/pro/audience-multifamily.jpg',
+      src: '/images/pages/pro/audience-multifamily-v2.jpg',
       alt: 'A grey apartment kitchen with a quartz peninsula and red stools, apartment buildings outside',
     },
   },
@@ -72,7 +72,7 @@ export const PRO_AUDIENCES: RowCard[] = [
     ctaLabel: 'Commercial',
     href: '/industry/commercial',
     image: {
-      src: '/images/pages/pro/audience-commercial.jpg',
+      src: '/images/pages/pro/audience-commercial-v2.jpg',
       alt: 'An office break room with white cabinets and red chairs',
     },
   },
