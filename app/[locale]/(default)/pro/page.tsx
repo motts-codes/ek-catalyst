@@ -23,7 +23,6 @@ import {
   PRO_HERO_SLIDES,
   PRO_PROGRAM_CARDS,
   PRO_PROGRAM_FOOTNOTE,
-  SPEC_SHELF,
   TRADE_CONTACT_HREF,
   WINDOWS_OFFER,
 } from '~/lib/home/pro-content';
@@ -210,21 +209,6 @@ export default async function Pro({ params }: Props) {
         }
         label="Pro design band"
         snapshotId="pro-design"
-      />
-
-      {/* 10 · Spec shelf — downloads, no login */}
-      <Slot
-        fallback={
-          <CardsRow
-            cards={SPEC_SHELF}
-            columns={2}
-            description="Downloads, with no login."
-            tint
-            title="Spec shelf"
-          />
-        }
-        label="Pro spec shelf"
-        snapshotId="pro-spec-shelf"
       />
 
       {/* 11 · Closing — call or text, or visit the outlet */}

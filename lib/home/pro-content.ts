@@ -171,7 +171,7 @@ export const PROGRAM_TIERS: ProgramTier[] = [
 export const PROGRAM_TIERS_FOOTNOTE =
   'Joining is a two-minute form. Our trade team calls to verify your trade license or resale certificate and sets up the account. Everything after that is handled by your trade team, not a portal.';
 
-// The brochure card returns when the PDF exists.
+// Not rendered: the spec shelf came off the Pro page (Arun, 4 Nov 2026); kept in case it returns.
 export const SPEC_SHELF: RowCard[] = [
   {
     title: 'Spec sheets',
