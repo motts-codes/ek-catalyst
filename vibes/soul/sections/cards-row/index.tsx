@@ -23,6 +23,8 @@ export interface RowCard {
   titleTone?: 'default' | 'red';
   /** A short label in a white pill over the photo's top-left corner ("Most popular"). */
   badge?: string;
+  /** A price (or similar) set on the title line, pushed to the right edge ("from $2,800"). */
+  price?: string;
 }
 
 interface Props {
@@ -62,6 +64,19 @@ interface Props {
 // gentle lift on hover. Store-hosted photos (absolute URLs) skip the Next optimizer, which only
 // knows the CDN hosts. Used for "Three ways to be sure", the Pro audience cards, the spec shelf,
 // the four lines and the quality grid.
+// The title line: the title on the left and, when the card has a price, the price on the right
+// in the same style.
+function CardTitle({ card, className }: { card: RowCard; className: string }) {
+  if (card.price == null) return <h3 className={className}>{card.title}</h3>;
+
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <h3 className={className}>{card.title}</h3>
+      <span className={clsx(className, 'shrink-0')}>{card.price}</span>
+    </div>
+  );
+}
+
 // A short label in a white pill over the photo's top-left corner ("Most popular").
 function CardBadge({ label }: { label?: string }) {
   if (!label) return null;
@@ -199,9 +214,10 @@ export function CardsRow({
                     <CardBadge label={card.badge} />
                   </div>
                 )}
-                <h3 className={cardTitleClassName(reversed, card.titleTone ?? cardTitleTone)}>
-                  {card.title}
-                </h3>
+                <CardTitle
+                  card={card}
+                  className={cardTitleClassName(reversed, card.titleTone ?? cardTitleTone)}
+                />
                 {card.meta != null && (
                   <p className="mt-1 text-xs font-semibold text-[var(--button-primary-background,#d90716)]">
                     {card.meta}

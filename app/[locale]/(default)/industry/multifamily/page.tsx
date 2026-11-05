@@ -76,7 +76,8 @@ const ONE_PO = [
 
 const PACKAGES: RowCard[] = [
   {
-    title: 'Studio / 1BR, from $2,800',
+    title: 'Studio / 1BR',
+    price: 'from $2,800',
     description:
       '8–12 cabinets per unit. A base and wall cabinet set, laminate countertop, standard sink cutout, soft-close hinges.',
     image: {
@@ -85,7 +86,8 @@ const PACKAGES: RowCard[] = [
     },
   },
   {
-    title: '2BR standard, from $4,200',
+    title: '2BR standard',
+    price: 'from $4,200',
     badge: 'Most popular',
     description:
       '14–18 cabinets per unit. An expanded layout, a choice of three countertop materials, an appliance bundle available, and plywood construction.',
@@ -95,7 +97,8 @@ const PACKAGES: RowCard[] = [
     },
   },
   {
-    title: 'Luxury / 3BR, from $6,500',
+    title: 'Luxury / 3BR',
+    price: 'from $6,500',
     description:
       '20–28 cabinets per unit. A full kitchen redesign, solid-surface countertops, premium hardware, and a custom layout consultation.',
     image: {
