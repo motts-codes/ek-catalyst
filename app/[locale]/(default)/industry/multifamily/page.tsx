@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
-import { CardsRow } from '@/vibes/soul/sections/cards-row';
+import { CardsRow, type RowCard } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
@@ -74,7 +74,7 @@ const ONE_PO = [
   },
 ];
 
-const PACKAGES = [
+const PACKAGES: RowCard[] = [
   {
     title: 'Studio / 1BR, from $2,800',
     titleTone: 'red',
@@ -173,6 +173,13 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         highlight="white"
         inline
         look="minimal"
+        media={{
+          image: {
+            src: '/images/pages/industry/hourglass-coins.png',
+            alt: 'A red hourglass with gold coins falling through it, beside a small white cabinet',
+          },
+          split: '60/40',
+        }}
         narrow
         rows={[
           ['!Wait time', '14 weeks for cabinets', '5 days to delivery'],
