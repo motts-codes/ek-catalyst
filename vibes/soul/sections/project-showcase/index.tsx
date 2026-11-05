@@ -139,7 +139,7 @@ export function ProjectShowcase({
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col gap-3 @xl:flex-row @xl:items-center @xl:justify-between @xl:gap-4">
           <p aria-live="polite" className="min-w-0 text-sm text-contrast-500">
             <span className="font-semibold text-foreground">{current?.name}</span>
             {current?.location ? ` · ${current.location}` : ''}
