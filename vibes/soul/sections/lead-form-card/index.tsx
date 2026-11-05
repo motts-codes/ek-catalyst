@@ -13,6 +13,8 @@ interface Props<F extends Field> {
   title: string;
   /** One short line under the title. */
   description?: string;
+  /** A small brand-red line under the description (the commercial form's five-state footprint). */
+  note?: string;
   action: DynamicFormAction<F>;
   /** Fields, or rows of fields rendered side by side. */
   fields: Array<F | F[]>;
@@ -35,6 +37,7 @@ export function LeadFormCard<F extends Field>({
   kicker,
   title,
   description,
+  note,
   action,
   fields,
   submitLabel = 'Send',
@@ -83,6 +86,11 @@ export function LeadFormCard<F extends Field>({
               {Boolean(description) && (
                 <p className="mt-2 text-sm leading-relaxed text-contrast-500 @xl:text-base">
                   {description}
+                </p>
+              )}
+              {Boolean(note) && (
+                <p className="mt-2 text-xs font-semibold leading-relaxed text-[var(--button-primary-background,#d90716)]">
+                  {note}
                 </p>
               )}
               {/* Compact inputs with the site's pink hairline (#fcb6bb) instead of the grey default.

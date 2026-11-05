@@ -7,7 +7,7 @@ import { CardsRow, type RowCard } from '@/vibes/soul/sections/cards-row';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { LogoMarquee } from '@/vibes/soul/sections/logo-marquee';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { StepsTimeline } from '@/vibes/soul/sections/page-kit/steps-timeline';
 import { ProjectShowcase } from '@/vibes/soul/sections/project-showcase';
@@ -212,13 +212,6 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
       <HomeSection className="bg-[#fdf3f5]" kicker="How it works" title="From scope to site">
         <StepsTimeline layout="row" steps={STEPS} />
       </HomeSection>
-      <Prose
-        body={[
-          'Working with general contractors, developers, hospitality groups, office complexes and retail developments across Connecticut, New York, New Jersey, Massachusetts and Rhode Island.',
-        ]}
-        kicker="Where we work"
-        title="Local experts across five states"
-      />
       <CabinetFaq data={{ headline: 'Questions we hear from GCs', items: FAQ }} />
       <LeadFormCard
         action={submitIndustryLead}
@@ -239,6 +232,7 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
           alt: 'An office break room with white cabinets and red chairs',
         }}
         kicker="Talk to us"
+        note="Projects across Connecticut, New York, New Jersey, Massachusetts and Rhode Island"
         submitLabel="Send"
         title="Get pricing in 48 hours"
       />
