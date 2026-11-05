@@ -1,13 +1,15 @@
-import { DoorClosed, Droplets, RectangleHorizontal, Refrigerator, Wrench } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
+import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
-import { PageBreadcrumbs, PageHero, Prose, StatsRow } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
+import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { industryFields } from '~/lib/forms/industry-fields';
 import { submitIndustryLead } from '~/lib/forms/submit-lead';
 
@@ -22,40 +24,54 @@ export const metadata: Metadata = {
 // of countertops in stock" and "5,000+ appliances in stock". Client names (UDR, Related
 // Companies, Equity Residential, WinnCompanies, Konover) go under the Storrs Center band once
 // EK confirms each may be used.
-const STATS = [
-  { value: '5-day', label: 'kitchens, our multifamily standard' },
-  { value: '50,000+', label: 'cabinets in stock' },
-  { value: '100,000+', label: 'multifamily units delivered' },
-  { value: '300+', label: 'property managers' },
-];
+const METRICS = [
+  { icon: 'truck', value: '5-day', label: 'kitchens, our multifamily standard' },
+  { icon: 'package', value: '50,000+', label: 'cabinets in stock' },
+  { icon: 'building', value: '100,000+', label: 'multifamily units delivered' },
+  { icon: 'users', value: '300+', label: 'property managers' },
+] as const;
 
+// Photos are the category pages' hero shots; installation has no category, so the site-delivery
+// photo stands in.
 const ONE_PO = [
   {
     title: 'Cabinets',
     description: '50,000+ in stock, in shaker, raised panel, stained and modern finishes.',
-    icon: DoorClosed,
+    image: { src: '/images/category/heroes/cat-cabinets.webp', alt: 'A finished shaker kitchen' },
   },
   {
     title: 'Countertops',
     description:
       '10,000+ linear feet in stock, in granite, quartz and laminate, with 35+ colors to choose from.',
-    icon: RectangleHorizontal,
+    image: {
+      src: '/images/category/heroes/cat-countertops.webp',
+      alt: 'A stone countertop on an island',
+    },
   },
   {
     title: 'Appliances',
     description:
       '5,000+ in stock, freestanding and built-in, in white, black and stainless. ADA-compliant packages, Energy Star and Wi-Fi models, from Whirlpool, GE, Frigidaire, Maytag, KitchenAid and more.',
-    icon: Refrigerator,
+    image: {
+      src: '/images/category/heroes/cat-appliances.webp',
+      alt: 'A white kitchen with a stainless fridge, range and hood beside an oak island',
+    },
   },
   {
     title: 'Sinks, faucets and hardware',
     description: '300+ sinks, 700+ faucets and 2,000+ handles and pulls in stock.',
-    icon: Droplets,
+    image: {
+      src: '/images/category/heroes/cat-sinks-faucets.webp',
+      alt: 'A kitchen sink with a pull-down faucet',
+    },
   },
   {
     title: 'Installation',
     description: 'Our crews install, so the kitchen arrives and goes in on one schedule.',
-    icon: Wrench,
+    image: {
+      src: '/images/pages/industry/site-delivery.jpg',
+      alt: 'Boxed cabinets being unloaded at a building site',
+    },
   },
 ];
 
@@ -64,17 +80,29 @@ const PACKAGES = [
     title: 'Studio / 1BR, from $2,800',
     description:
       '8–12 cabinets per unit. A base and wall cabinet set, laminate countertop, standard sink cutout, soft-close hinges.',
+    image: {
+      src: '/images/pages/industry/multifamily-kitchen.jpg',
+      alt: 'A compact apartment kitchen in grey shaker cabinets with white quartz',
+    },
   },
   {
     title: '2BR standard, from $4,200',
     meta: 'Most popular',
     description:
       '14–18 cabinets per unit. An expanded layout, a choice of three countertop materials, an appliance bundle available, and plywood construction.',
+    image: {
+      src: '/images/home/programs/rta.webp',
+      alt: 'A kitchen in dark grey shaker cabinets',
+    },
   },
   {
     title: 'Luxury / 3BR, from $6,500',
     description:
       '20–28 cabinets per unit. A full kitchen redesign, solid-surface countertops, premium hardware, and a custom layout consultation.',
+    image: {
+      src: '/images/cabinets/stained-wood-kitchen.jpg',
+      alt: 'A kitchen in dark stained shaker cabinets with a granite island and pendant lights',
+    },
   },
 ];
 
@@ -141,6 +169,7 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
             </span>
           </>
         }
+        highlight="white"
         inline
         look="minimal"
         narrow
@@ -151,15 +180,14 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         ]}
         title="The math that matters"
       />
-      <StatsRow stats={STATS} />
-      <CardsRow
-        cards={ONE_PO}
-        columns={5}
+      <MetricsTicker metrics={[...METRICS]} />
+      <HomeSection
         description="Cabinets, countertops, appliances, fixtures and installation, all from one company. Fewer vendors to chase, and one point of accountability."
-        hideImages
         kicker="One supplier"
         title="Everything for the unit, on one PO"
-      />
+      >
+        <StepsAccordion numbered={false} split="even" steps={ONE_PO} />
+      </HomeSection>
       <Prose
         body={[
           'Your tenants need to move in, and your owners need occupancy up. Nobody should wait 14 weeks for cabinets while units sit empty. So we built a different kind of operation: 50,000+ cabinets in stock, our own factory, our own crews, and a team that understands what each vacant day costs you.',
@@ -172,7 +200,7 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
       <CardsRow
         cards={PACKAGES}
         description="Pre-configured packages cut decision time and speed up quote to order. Cabinets, countertops and appliances on one PO, with installation available. Custom configurations for orders of 50+ units."
-        hideImages
+        imageStyle="plain"
         kicker="Apartment kitchen packages"
         title="Three packages, one PO"
       />
@@ -184,6 +212,7 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
           alt: 'A compact apartment kitchen in grey shaker cabinets with white quartz and stainless appliances',
         }}
         kicker="Proof"
+        plate={false}
         title="Up to 430 kitchens for Storrs Center"
       />
       <CabinetFaq data={{ headline: 'Questions from property managers', items: FAQ }} />

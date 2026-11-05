@@ -20,6 +20,8 @@ interface Props {
   headingLevel?: 3 | 4;
   /** `false` drops the number discs: rows that are options, not steps ("the honest take on each"). */
   numbered?: boolean;
+  /** With photos: `even` splits photo and stack 50/50 from tablet up (default favours the photo 60/40). */
+  split?: 'default' | 'even';
 }
 
 /** How long each step stays open before the next one takes over. */
@@ -28,7 +30,12 @@ const DWELL_MS = 5000;
 // Numbered steps as a stack of boxes: the open step is red with white copy, the rest show their
 // headline only. The stack walks itself one step every five seconds until someone taps a step or
 // the pause button; it also waits while hovered or focused, and holds still under reduced motion.
-export function StepsAccordion({ steps, headingLevel = 3, numbered = true }: Props) {
+export function StepsAccordion({
+  steps,
+  headingLevel = 3,
+  numbered = true,
+  split = 'default',
+}: Props) {
   const Heading = headingLevel === 4 ? 'h4' : 'h3';
   const [value, setValue] = useState(steps[0]?.title ?? '');
   const [paused, setPaused] = useState(false);
@@ -58,7 +65,10 @@ export function StepsAccordion({ steps, headingLevel = 3, numbered = true }: Pro
     <div
       // Split layout (every step has a photo): the photo takes the wider left column from tablet
       // up, so the stack on the right runs a little taller; on phones the photo sits above.
-      className={clsx(withPhotos && 'grid items-start gap-8 @3xl:grid-cols-[3fr_2fr] @3xl:gap-12')}
+      className={clsx(
+        withPhotos && 'grid items-start gap-8 @3xl:gap-12',
+        withPhotos && (split === 'even' ? '@3xl:grid-cols-2' : '@3xl:grid-cols-[3fr_2fr]'),
+      )}
       onBlur={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onMouseEnter={() => setPaused(true)}
@@ -78,7 +88,11 @@ export function StepsAccordion({ steps, headingLevel = 3, numbered = true }: Pro
                 fill
                 key={step.image.src}
                 loading="eager"
-                sizes="(min-width: 56rem) 60vw, 100vw"
+                sizes={
+                  split === 'even'
+                    ? '(min-width: 56rem) 50vw, 100vw'
+                    : '(min-width: 56rem) 60vw, 100vw'
+                }
                 src={step.image.src}
               />
             ) : null,

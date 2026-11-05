@@ -2,6 +2,7 @@
 
 import { clsx } from 'clsx';
 import {
+  Building2,
   type LucideIcon,
   MapPin,
   Package,
@@ -10,6 +11,8 @@ import {
   Play,
   ShieldCheck,
   Star,
+  Truck,
+  Users,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -19,6 +22,9 @@ const ICONS = {
   design: PencilRuler,
   pin: MapPin,
   shield: ShieldCheck,
+  truck: Truck,
+  building: Building2,
+  users: Users,
 } satisfies Record<string, LucideIcon>;
 
 export interface Metric {
