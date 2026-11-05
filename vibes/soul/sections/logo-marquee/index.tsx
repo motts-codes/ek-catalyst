@@ -48,7 +48,7 @@ export function LogoMarquee({
       >
         <Image
           alt={hidden ? '' : logo.alt}
-          className="h-12 w-auto max-w-[12rem] object-contain @xl:h-14 @xl:max-w-[15rem]"
+          className="h-12 w-auto @xl:h-14"
           height={logo.height}
           // The track scrolls, so every logo must be ready before it enters view.
           loading="eager"

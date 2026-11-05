@@ -220,11 +220,7 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
           </p>
         </RedBox>
       </HomeSection>
-      <LogoMarquee
-        kicker="Trusted by"
-        logos={PROJECT_LOGOS}
-        title="Developers, builders and property managers who order here"
-      />
+      <LogoMarquee kicker="Trusted by" logos={PROJECT_LOGOS} />
       <div id="packages" />
       <CardsRow
         cardTitleTone="red"
