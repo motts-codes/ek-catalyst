@@ -48,7 +48,12 @@ export function StepsTimeline({ steps, layout = 'column', className }: Props) {
 
   return (
     <ol
-      className={clsx(row ? 'grid gap-8 @3xl:grid-cols-3 @3xl:gap-10' : 'space-y-8', className)}
+      className={clsx(
+        row
+          ? ['grid gap-8 @3xl:gap-10', steps.length === 4 ? '@3xl:grid-cols-4' : '@3xl:grid-cols-3']
+          : 'space-y-8',
+        className,
+      )}
       data-shown={shown}
       ref={list}
     >

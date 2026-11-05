@@ -2,7 +2,10 @@
 
 import { clsx } from 'clsx';
 import {
+  Award,
+  BadgeDollarSign,
   Building2,
+  CalendarDays,
   type LucideIcon,
   MapPin,
   Package,
@@ -25,6 +28,9 @@ const ICONS = {
   truck: Truck,
   building: Building2,
   users: Users,
+  dollar: BadgeDollarSign,
+  award: Award,
+  calendar: CalendarDays,
 } satisfies Record<string, LucideIcon>;
 
 export interface Metric {
