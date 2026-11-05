@@ -3,7 +3,11 @@ import { Check } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
-import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import {
+  homeHeadingClassName,
+  HomeSection,
+  MediaPlaceholder,
+} from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -128,22 +132,35 @@ export function DeliveryLadder({
     </>
   );
 
-  return (
-    <HomeSection
-      className={className}
-      description={description}
-      kicker={kicker}
-      tint={tint}
-      title={title}
-    >
-      {media ? (
+  // With a picture, the whole section splits: heading and table on the left, the picture on the
+  // right at the full height of both (the section's own heading row is left empty).
+  if (media) {
+    return (
+      <HomeSection className={className} tint={tint}>
         <div
           className={clsx(
             'grid items-stretch gap-8 @3xl:gap-12',
             media.split === '70/30' ? '@3xl:grid-cols-[7fr_3fr]' : '@3xl:grid-cols-[3fr_2fr]',
           )}
         >
-          <div className="min-w-0">{body}</div>
+          <div className="min-w-0">
+            {Boolean(kicker || title || description) && (
+              <div className="mb-5 max-w-3xl @4xl:mb-6">
+                {Boolean(kicker) && (
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)]">
+                    {kicker}
+                  </p>
+                )}
+                <h2 className={homeHeadingClassName}>{title}</h2>
+                {Boolean(description) && (
+                  <p className="mt-2 text-sm leading-relaxed text-contrast-500 @xl:text-base">
+                    {description}
+                  </p>
+                )}
+              </div>
+            )}
+            {body}
+          </div>
           {/* The picture takes the table's height from tablet up (contained, so a cut-out keeps
               its shape); on phones it sits under the table as a square. */}
           <div className="relative mx-auto aspect-square w-full max-w-sm @3xl:aspect-auto @3xl:h-full @3xl:min-h-[14rem] @3xl:max-w-none">
@@ -156,9 +173,19 @@ export function DeliveryLadder({
             />
           </div>
         </div>
-      ) : (
-        body
-      )}
+      </HomeSection>
+    );
+  }
+
+  return (
+    <HomeSection
+      className={className}
+      description={description}
+      kicker={kicker}
+      tint={tint}
+      title={title}
+    >
+      {body}
     </HomeSection>
   );
 }
