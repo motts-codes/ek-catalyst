@@ -77,6 +77,7 @@ const ONE_PO = [
 const PACKAGES = [
   {
     title: 'Studio / 1BR, from $2,800',
+    titleTone: 'red',
     description:
       '8–12 cabinets per unit. A base and wall cabinet set, laminate countertop, standard sink cutout, soft-close hinges.',
     image: {
@@ -146,8 +147,8 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         chips={['5-day kitchens', '50,000+ cabinets in stock', 'Supply and installation on one PO']}
         description="We deliver complete kitchens in five days from 50,000+ cabinets in stock, so your units are back on the market sooner. One spec per unit type, one PO, from cabinets to installation."
         image={{
-          src: '/images/pages/industry/apartment-kitchen-units.jpg',
-          alt: 'A finished apartment kitchen, with the next identical unit visible beyond',
+          src: '/images/pages/industry/hero-keys-handover.jpg',
+          alt: 'A property manager in red handing keys to a couple carrying a moving box, in a new white kitchen',
         }}
         imageStyle="plain"
         kicker="Multifamily · 5-day kitchens"
@@ -209,8 +210,8 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
           media={{
             image: {
               // Stand-in until EK sends a Storrs Center unit photo.
-              src: '/images/home/categories/cabinets.webp',
-              alt: 'Grey shaker cabinets with brass pulls over a white subway-tile backsplash',
+              src: '/images/pages/industry/proof-grey-kitchen.jpg',
+              alt: 'A grey and white flat-panel apartment kitchen with a white countertop and black oven',
             },
             split: '60/40',
           }}

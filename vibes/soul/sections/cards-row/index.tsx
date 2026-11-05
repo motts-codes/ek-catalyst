@@ -19,6 +19,8 @@ export interface RowCard {
   imageLabel?: string;
   /** Text-only cards (`hideImages`): a red icon in a pale disc in place of the accent bar. */
   icon?: LucideIcon;
+  /** `red`: this card's title in brand red (overrides the row's `cardTitleTone`). */
+  titleTone?: 'default' | 'red';
 }
 
 interface Props {
@@ -183,7 +185,7 @@ export function CardsRow({
                     )}
                   </div>
                 )}
-                <h3 className={cardTitleClassName(reversed, cardTitleTone)}>
+                <h3 className={cardTitleClassName(reversed, card.titleTone ?? cardTitleTone)}>
                   {card.title}
                 </h3>
                 {card.meta != null && (
