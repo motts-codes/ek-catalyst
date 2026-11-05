@@ -81,8 +81,8 @@ const PACKAGES = [
     description:
       '8–12 cabinets per unit. A base and wall cabinet set, laminate countertop, standard sink cutout, soft-close hinges.',
     image: {
-      src: '/images/pages/industry/multifamily-kitchen.jpg',
-      alt: 'A compact apartment kitchen in grey shaker cabinets with white quartz',
+      src: '/images/pages/industry/package-studio.jpg',
+      alt: 'A compact studio kitchen with white gloss uppers, grey bases, a marble-look backsplash and a small sofa',
     },
   },
   {
