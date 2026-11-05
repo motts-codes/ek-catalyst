@@ -336,7 +336,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                         >
                           <div className="max-w-xl">
                             {Boolean(slide.kicker) && (
-                              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-white/50 [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)] @xl:text-xs">
+                              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-white/70 [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)] @xl:text-xs">
                                 {slide.kicker}
                               </p>
                             )}
