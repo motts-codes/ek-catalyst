@@ -23,19 +23,30 @@ export const DOUBLE_HUNG_HREF = '/windows/replacement/double-hung-windows';
 export const PRO_HERO_SLIDES: HeroSlide[] = [
   {
     title: 'For contractors:\nShip dates you can quote.',
-    image: { src: '', alt: 'a job site or warehouse racking' },
+    image: {
+      src: '/images/pages/pro/hero-contractor-pickup.jpg',
+      alt: 'A contractor in a tool belt beside a red pickup loaded with shrink-wrapped cabinets',
+    },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
   },
   {
     title: 'For interior designers:\nSpec it. Price it. Ship it.',
-    image: { src: '', alt: 'a designer reviewing a kitchen plan' },
+    image: {
+      src: '/images/pages/pro/hero-designer-samples.jpg',
+      alt: 'A designer holding a board of door samples beside a sage-green kitchen run',
+    },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
+    // Brand-red studio backdrop, so the button is white (as on the home page's red slide).
+    ctaColor: 'white',
   },
   {
     title: 'For multifamily and commercial:\nOne spec, every unit.',
-    image: { src: '', alt: 'cabinets staged on a multifamily floor' },
+    image: {
+      src: '/images/pages/pro/hero-multifamily-pallets.jpg',
+      alt: 'A project manager with a hard hat and tablet beside a run of white base cabinets and palletised boxes',
+    },
     href: TRADE_CONTACT_HREF,
     ctaLabel: 'Talk to the trade team',
   },
