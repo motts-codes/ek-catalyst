@@ -21,6 +21,8 @@ export interface RowCard {
   icon?: LucideIcon;
   /** `red`: this card's title in brand red (overrides the row's `cardTitleTone`). */
   titleTone?: 'default' | 'red';
+  /** A short label in a white pill over the photo's top-left corner ("Most popular"). */
+  badge?: string;
 }
 
 interface Props {
@@ -60,6 +62,17 @@ interface Props {
 // gentle lift on hover. Store-hosted photos (absolute URLs) skip the Next optimizer, which only
 // knows the CDN hosts. Used for "Three ways to be sure", the Pro audience cards, the spec shelf,
 // the four lines and the quality grid.
+// A short label in a white pill over the photo's top-left corner ("Most popular").
+function CardBadge({ label }: { label?: string }) {
+  if (!label) return null;
+
+  return (
+    <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--button-primary-background,#d90716)] ring-1 ring-contrast-100">
+      {label}
+    </span>
+  );
+}
+
 export function CardsRow({
   kicker,
   title,
@@ -183,6 +196,7 @@ export function CardsRow({
                     ) : (
                       <MediaPlaceholder label={card.imageLabel ?? card.title} />
                     )}
+                    <CardBadge label={card.badge} />
                   </div>
                 )}
                 <h3 className={cardTitleClassName(reversed, card.titleTone ?? cardTitleTone)}>

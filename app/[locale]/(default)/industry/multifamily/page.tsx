@@ -77,7 +77,6 @@ const ONE_PO = [
 const PACKAGES: RowCard[] = [
   {
     title: 'Studio / 1BR, from $2,800',
-    titleTone: 'red',
     description:
       '8–12 cabinets per unit. A base and wall cabinet set, laminate countertop, standard sink cutout, soft-close hinges.',
     image: {
@@ -87,7 +86,7 @@ const PACKAGES: RowCard[] = [
   },
   {
     title: '2BR standard, from $4,200',
-    meta: 'Most popular',
+    badge: 'Most popular',
     description:
       '14–18 cabinets per unit. An expanded layout, a choice of three countertop materials, an appliance bundle available, and plywood construction.',
     image: {
@@ -218,6 +217,7 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
       </HomeSection>
       <div id="packages" />
       <CardsRow
+        cardTitleTone="red"
         cards={PACKAGES}
         description="Pre-configured packages cut decision time and speed up quote to order. Cabinets, countertops and appliances on one PO, with installation available. Custom configurations for orders of 50+ units."
         imageStyle="plain"
