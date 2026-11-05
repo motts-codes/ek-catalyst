@@ -22,6 +22,8 @@ interface Props {
   numbered?: boolean;
   /** With photos: `even` splits photo and stack 50/50 from tablet up (default favours the photo 60/40). */
   split?: 'default' | 'even';
+  /** `large` steps the row title and body up a size (18px / 16px). */
+  size?: 'default' | 'large';
 }
 
 /** How long each step stays open before the next one takes over. */
@@ -35,6 +37,7 @@ export function StepsAccordion({
   headingLevel = 3,
   numbered = true,
   split = 'default',
+  size = 'default',
 }: Props) {
   const Heading = headingLevel === 4 ? 'h4' : 'h3';
   const [value, setValue] = useState(steps[0]?.title ?? '');
@@ -128,7 +131,12 @@ export function StepsAccordion({
                         {i + 1}
                       </span>
                     )}
-                    <span className="flex-1 font-heading text-base font-semibold leading-tight transition-colors duration-300 group-data-[state=open]:text-white">
+                    <span
+                      className={clsx(
+                        'flex-1 font-heading font-semibold leading-tight transition-colors duration-300 group-data-[state=open]:text-white',
+                        size === 'large' ? 'text-lg' : 'text-base',
+                      )}
+                    >
                       {step.title}
                     </span>
                     <ChevronDown
@@ -142,7 +150,8 @@ export function StepsAccordion({
               <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-collapse data-[state=open]:animate-expand">
                 <p
                   className={clsx(
-                    'px-5 pb-4 text-sm leading-relaxed text-white',
+                    'px-5 pb-4 leading-relaxed text-white',
+                    size === 'large' ? 'text-base' : 'text-sm',
                     numbered && 'pl-[4.25rem]',
                   )}
                 >

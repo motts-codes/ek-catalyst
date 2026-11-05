@@ -6,9 +6,8 @@ import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero, Prose, RedBox } from '@/vibes/soul/sections/page-kit';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
-import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { industryFields } from '~/lib/forms/industry-fields';
 import { submitIndustryLead } from '~/lib/forms/submit-lead';
@@ -154,6 +153,7 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         kicker="Multifamily · 5-day kitchens"
         title="Fewer vacant days. More rental income."
       />
+      <MetricsTicker className="mt-10 @xl:mt-14" metrics={[...METRICS]} />
       <DeliveryLadder
         className="bg-[#fdf3f5]"
         columns={['', 'Industry standard', 'Express Kitchens']}
@@ -180,13 +180,12 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         ]}
         title="The math that matters"
       />
-      <MetricsTicker metrics={[...METRICS]} />
       <HomeSection
         description="Cabinets, countertops, appliances, fixtures and installation, all from one company. Fewer vendors to chase, and one point of accountability."
         kicker="One supplier"
         title="Everything for the unit, on one PO"
       >
-        <StepsAccordion numbered={false} split="even" steps={ONE_PO} />
+        <StepsAccordion numbered={false} size="large" split="even" steps={ONE_PO} />
       </HomeSection>
       <Prose
         body={[
@@ -204,17 +203,25 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         kicker="Apartment kitchen packages"
         title="Three packages, one PO"
       />
-      <StoryBand
-        description="For Storrs Center, the mixed-use development beside UConn, we supplied up to 430 kitchens: the same spec in every unit, from our own cabinet line."
-        image={{
-          // Stand-in until EK sends a Storrs Center unit photo.
-          src: '/images/pages/industry/multifamily-kitchen.jpg',
-          alt: 'A compact apartment kitchen in grey shaker cabinets with white quartz and stainless appliances',
-        }}
-        kicker="Proof"
-        plate={false}
-        title="Up to 430 kitchens for Storrs Center"
-      />
+      <HomeSection compact>
+        <RedBox
+          kicker="Proof"
+          media={{
+            image: {
+              // Stand-in until EK sends a Storrs Center unit photo.
+              src: '/images/home/categories/cabinets.webp',
+              alt: 'Grey shaker cabinets with brass pulls over a white subway-tile backsplash',
+            },
+            split: '60/40',
+          }}
+          title="Up to 430 kitchens for Storrs Center"
+        >
+          <p className="max-w-xl text-sm leading-relaxed text-white/85 @xl:text-base">
+            For Storrs Center, the mixed-use development beside UConn, we supplied up to 430
+            kitchens: the same spec in every unit, from our own cabinet line.
+          </p>
+        </RedBox>
+      </HomeSection>
       <CabinetFaq data={{ headline: 'Questions from property managers', items: FAQ }} />
       <LeadFormCard
         action={submitIndustryLead}
@@ -230,6 +237,10 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
           </>
         }
         id="talk"
+        image={{
+          src: '/images/pages/design-consult/form-kitchen-island.jpg',
+          alt: 'A modern kitchen with a white quartz island and oak panels',
+        }}
         kicker="Talk to us"
         submitLabel="Send"
         title="Request portfolio pricing"
