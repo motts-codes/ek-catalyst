@@ -35,7 +35,7 @@ export interface Metric {
 
 interface Props {
   metrics: Metric[];
-  /** Seconds for one full pass of the list. */
+  /** Seconds for one full pass of the list (92 ≈ 1.2× the original 110s pace). */
   duration?: number;
   className?: string;
 }
@@ -44,7 +44,7 @@ interface Props {
 // and a Lucide icon, separated by hairlines. The track is doubled so the loop is seamless. It
 // pauses while hovered or focused and has a stop/start button (WCAG 2.2.2); reduced motion lays
 // the figures out in a wrapped row instead.
-export function MetricsTicker({ metrics, duration = 110, className }: Props) {
+export function MetricsTicker({ metrics, duration = 92, className }: Props) {
   const [paused, setPaused] = useState(false);
 
   const row = (hidden: boolean) =>
