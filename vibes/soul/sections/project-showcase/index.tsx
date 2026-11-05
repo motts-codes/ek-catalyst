@@ -151,11 +151,11 @@ export function ProjectShowcase({
                 </span>
               </>
             )}
-            <span className="ms-2 text-xs">
-              {selected + 1}/{projects.length}
-            </span>
           </p>
           <div className="flex shrink-0 items-center gap-2">
+            <span className="me-1 text-xs tabular-nums text-contrast-500">
+              {selected + 1}/{projects.length}
+            </span>
             <button
               aria-label="Previous project"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-contrast-200 bg-white text-foreground transition-colors hover:border-foreground focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
