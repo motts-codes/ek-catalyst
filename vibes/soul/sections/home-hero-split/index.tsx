@@ -15,6 +15,8 @@ import { Link } from '~/components/link';
 export type HeroCtaColor = 'red' | 'black' | 'white';
 
 export interface HeroSlide {
+  /** Small uppercase line above the headline (e.g. the audience: "For contractors"). */
+  kicker?: string;
   /** Headline; use "\n" for a manual line break (the wireframe headlines are two lines). */
   title: string;
   image?: { src: string; alt: string };
@@ -332,22 +334,29 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                               : 'flex-wrap items-end justify-between',
                           )}
                         >
-                          <h1
-                            className={clsx(
-                              'm-0 max-w-xl font-heading text-[28px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)]',
-                              // Top-left copy shares the frame with the photo's subject, so a step smaller.
-                              slide.textPosition === 'top'
-                                ? '@xl:text-2xl @4xl:text-[27px]'
-                                : '@xl:text-3xl @4xl:text-[2.5rem]',
+                          <div className="max-w-xl">
+                            {Boolean(slide.kicker) && (
+                              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-white/50 [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)] @xl:text-xs">
+                                {slide.kicker}
+                              </p>
                             )}
-                          >
-                            {slide.title.split('\n').map((line, lineIndex) => (
-                              <Fragment key={lineIndex}>
-                                {lineIndex > 0 && <br />}
-                                {line}
-                              </Fragment>
-                            ))}
-                          </h1>
+                            <h1
+                              className={clsx(
+                                'm-0 font-heading text-[28px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)]',
+                                // Top-left copy shares the frame with the photo's subject, so a step smaller.
+                                slide.textPosition === 'top'
+                                  ? '@xl:text-2xl @4xl:text-[27px]'
+                                  : '@xl:text-3xl @4xl:text-[2.5rem]',
+                              )}
+                            >
+                              {slide.title.split('\n').map((line, lineIndex) => (
+                                <Fragment key={lineIndex}>
+                                  {lineIndex > 0 && <br />}
+                                  {line}
+                                </Fragment>
+                              ))}
+                            </h1>
+                          </div>
                           {slide.showCta !== false &&
                             Boolean(slide.ctaLabel) &&
                             Boolean(slide.href) && (
