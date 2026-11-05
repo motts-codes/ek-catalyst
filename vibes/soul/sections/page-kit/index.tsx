@@ -127,6 +127,7 @@ export function RedBox({
   title,
   children,
   media,
+  size = 'default',
   className,
 }: {
   kicker?: string;
@@ -134,6 +135,8 @@ export function RedBox({
   children: ReactNode;
   /** A photo (or its placeholder) on the right of the panel, the copy on the left. */
   media?: { image?: PageImage; imageLabel?: string; split?: '70/30' | '60/40' | '50/50' };
+  /** `tall`: a bigger panel (more vertical padding, a taller photo) for a statement band. */
+  size?: 'default' | 'tall';
   className?: string;
 }) {
   const copy = (
@@ -167,8 +170,20 @@ export function RedBox({
       {media ? (
         // The photo covers its column edge to edge, no gap; the copy keeps the panel's padding.
         <div className={clsx('relative grid', MEDIA_SPLIT[media.split ?? '70/30'])}>
-          <div className="px-6 py-10 @xl:px-12 @xl:py-12">{copy}</div>
-          <div className="relative aspect-[16/9] bg-contrast-100 @3xl:aspect-auto @3xl:min-h-[14rem]">
+          <div
+            className={clsx(
+              'px-6 @xl:px-12',
+              size === 'tall' ? 'py-14 @xl:py-20' : 'py-10 @xl:py-12',
+            )}
+          >
+            {copy}
+          </div>
+          <div
+            className={clsx(
+              'relative aspect-[16/9] bg-contrast-100 @3xl:aspect-auto',
+              size === 'tall' ? '@3xl:min-h-[24rem]' : '@3xl:min-h-[14rem]',
+            )}
+          >
             {media.image ? (
               <Image
                 alt={media.image.alt}

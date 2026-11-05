@@ -6,7 +6,7 @@ import { CardsRow, type RowCard } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
-import { PageBreadcrumbs, PageHero, Prose, RedBox } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero, RedBox } from '@/vibes/soul/sections/page-kit';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { industryFields } from '~/lib/forms/industry-fields';
@@ -195,14 +195,27 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
       >
         <StepsAccordion numbered={false} size="large" split="even" steps={ONE_PO} />
       </HomeSection>
-      <Prose
-        body={[
-          'Your tenants need to move in, and your owners need occupancy up. Nobody should wait 14 weeks for cabinets while units sit empty. So we built a different kind of operation: 50,000+ cabinets in stock, our own factory, our own crews, and a team that understands what each vacant day costs you.',
-        ]}
-        kicker="Our belief"
-        tint
-        title="The kitchen supplier should be the fastest part of your renovation, not the bottleneck."
-      />
+      <HomeSection compact>
+        <RedBox
+          kicker="Our belief"
+          media={{
+            image: {
+              src: '/images/pages/industry/warehouse-crew.jpg',
+              alt: 'Three Express Kitchens crew in red shirts wheeling a wrapped cabinet to a box truck in the warehouse',
+            },
+            split: '60/40',
+          }}
+          size="tall"
+          title="The kitchen supplier should be the fastest part of your renovation, not the bottleneck."
+        >
+          <p className="max-w-xl text-sm leading-relaxed text-white/85 @xl:text-base">
+            Your tenants need to move in, and your owners need occupancy up. Nobody should wait 14
+            weeks for cabinets while units sit empty. So we built a different kind of operation:
+            50,000+ cabinets in stock, our own factory, our own crews, and a team that understands
+            what each vacant day costs you.
+          </p>
+        </RedBox>
+      </HomeSection>
       <div id="packages" />
       <CardsRow
         cards={PACKAGES}
