@@ -190,7 +190,6 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
         title="Hit your date, on every unit."
       />
       <LogoMarquee kicker="Trusted by" logos={PROJECT_LOGOS} />
-      <MetricsTicker metrics={[...METRICS]} />
       <CardsRow
         cards={OUTCOMES}
         columns={3}
@@ -198,6 +197,7 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
         kicker="Why GCs choose us"
         title="Fewer surprises on site. More bids won."
       />
+      <MetricsTicker metrics={[...METRICS]} />
       <HomeSection kicker="One PO" title="Everything for the project, from one supplier">
         <StepsAccordion numbered={false} size="large" split="even" steps={ONE_PO} />
       </HomeSection>
