@@ -6,11 +6,13 @@ import { CardsRow, type RowCard } from '@/vibes/soul/sections/cards-row';
 import { DeliveryLadder } from '@/vibes/soul/sections/delivery-ladder';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
+import { LogoMarquee } from '@/vibes/soul/sections/logo-marquee';
 import { PageBreadcrumbs, PageHero, RedBox } from '@/vibes/soul/sections/page-kit';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { industryFields } from '~/lib/forms/industry-fields';
 import { submitIndustryLead } from '~/lib/forms/submit-lead';
+import { PROJECT_LOGOS } from '~/lib/pages/project-logos';
 
 export const metadata: Metadata = {
   title: 'Multifamily Kitchens: Five-Day Delivery',
@@ -218,6 +220,11 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
           </p>
         </RedBox>
       </HomeSection>
+      <LogoMarquee
+        kicker="Trusted by"
+        logos={PROJECT_LOGOS}
+        title="Developers, builders and property managers who order here"
+      />
       <div id="packages" />
       <CardsRow
         cardTitleTone="red"
