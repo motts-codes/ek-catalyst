@@ -146,12 +146,16 @@ export function CardsRow({
       <div
         className={clsx(
           'grid gap-6',
-          {
-            2: '@xl:grid-cols-2',
-            3: '@lg:grid-cols-2 @3xl:grid-cols-3',
-            4: '@lg:grid-cols-2 @3xl:grid-cols-4',
-            5: '@lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-5',
-          }[columns],
+          // Checkered cards go straight from one column to three: at two columns the even/odd
+          // checker would turn into stripes (red, light / red, light).
+          cardTone === 'alternate' && columns === 3
+            ? '@3xl:grid-cols-3'
+            : {
+                2: '@xl:grid-cols-2',
+                3: '@lg:grid-cols-2 @3xl:grid-cols-3',
+                4: '@lg:grid-cols-2 @3xl:grid-cols-4',
+                5: '@lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-5',
+              }[columns],
         )}
       >
         {cards.map((card, i) => {

@@ -198,6 +198,7 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
       />
       <LogoMarquee kicker="Trusted by" logos={PROJECT_LOGOS} />
       <CardsRow
+        cardTone="alternate"
         cards={OUTCOMES}
         columns={3}
         hideImages

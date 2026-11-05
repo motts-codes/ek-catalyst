@@ -13,6 +13,8 @@ export interface ShowcaseProject {
   src: string;
   name: string;
   location?: string;
+  /** Number of units in the project, as the sheet states it. */
+  units?: number;
 }
 
 interface Props {
@@ -27,7 +29,8 @@ interface Props {
 }
 
 // A centred project carousel: the current project sits in the middle at full size, the
-// neighbours peek in from both sides smaller and faded, and it advances on its own. It pauses
+// neighbours peek in from both sides smaller and faded (the active one carries a thin red outline
+// and a soft shadow), and it advances on its own, slowly: the sheets are dense. It pauses
 // while hovered or focused, has prev/next and a stop/start button (WCAG 2.2.2), and never
 // auto-advances when the visitor prefers reduced motion. The caption names the centred project.
 export function ProjectShowcase({
@@ -35,7 +38,7 @@ export function ProjectShowcase({
   title,
   description,
   projects,
-  interval = 3500,
+  interval = 5800,
   tint = false,
   className,
 }: Props) {
@@ -99,7 +102,7 @@ export function ProjectShowcase({
         onMouseLeave={() => resume()}
         role="group"
       >
-        <div className="overflow-hidden" ref={viewportRef}>
+        <div className="overflow-hidden pb-12 pt-6" ref={viewportRef}>
           <div className="flex touch-pan-y">
             {projects.map((project, index) => {
               const active = index === selected;
@@ -115,8 +118,10 @@ export function ProjectShowcase({
                 >
                   <div
                     className={clsx(
-                      'relative aspect-[1600/1035] overflow-hidden rounded-2xl bg-contrast-100 ring-1 ring-contrast-100 transition-[transform,opacity] duration-500 ease-smooth @xl:rounded-3xl motion-reduce:transition-none',
-                      active ? 'scale-100 opacity-100' : 'scale-[0.92] opacity-50',
+                      'relative aspect-[1600/1035] overflow-hidden rounded-2xl bg-contrast-100 transition-[transform,opacity,box-shadow] duration-700 ease-smooth @xl:rounded-3xl motion-reduce:transition-none',
+                      active
+                        ? 'scale-100 opacity-100 shadow-[0_24px_48px_-20px_rgba(0,0,0,0.35)] ring-1 ring-[color:var(--button-primary-background,#d90716)]'
+                        : 'scale-[0.9] opacity-30 ring-1 ring-contrast-100',
                     )}
                   >
                     <Image
@@ -134,10 +139,18 @@ export function ProjectShowcase({
           </div>
         </div>
 
-        <div className="mt-5 flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4">
           <p aria-live="polite" className="min-w-0 text-sm text-contrast-500">
             <span className="font-semibold text-foreground">{current?.name}</span>
             {current?.location ? ` · ${current.location}` : ''}
+            {current?.units != null && (
+              <>
+                {' · '}
+                <span className="font-semibold text-[var(--button-primary-background,#d90716)]">
+                  {current.units.toLocaleString('en-US')} units
+                </span>
+              </>
+            )}
             <span className="ms-2 text-xs">
               {selected + 1}/{projects.length}
             </span>
