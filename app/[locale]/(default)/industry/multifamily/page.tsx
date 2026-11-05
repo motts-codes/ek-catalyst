@@ -166,7 +166,7 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         footnote={
           <>
             <span className="block text-lg font-semibold text-foreground">
-              $7,705 back per unit, times your units.
+              About $7,705 more rent per unit. Renovating 100 units? That&rsquo;s about $770,000.
             </span>
             <span className="mt-2 block">
               Based on $2,500 a month average rent. 14 weeks is the typical custom-cabinet lead time
