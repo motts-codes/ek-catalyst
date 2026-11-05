@@ -5,3 +5,6 @@ undefined/
 docs/
 tests/
 *.log
+
+# Local dev-server logs.
+nohup*.out
