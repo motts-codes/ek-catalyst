@@ -1,7 +1,6 @@
 import { EkNotFound } from '@/vibes/soul/sections/not-found/ek-not-found';
 import { Footer } from '~/components/footer';
 import { Header } from '~/components/header';
-import { ESTIMATOR_HREF } from '~/lib/home/home-content';
 
 // The 404 for any unknown URL under a locale. Rendered outside the (default) layout, so it
 // brings its own header and footer.
@@ -11,12 +10,8 @@ export default function NotFound() {
       <Header />
 
       <EkNotFound
-        actions={[
-          { label: 'Kitchen cabinets', href: '/cabinets', primary: true },
-          { label: 'Price my kitchen', href: ESTIMATOR_HREF, style: 'outline' },
-        ]}
         className="flex-1 place-content-center"
-        description="The page you’re looking for has moved, or never existed. Here’s where most people were heading:"
+        description="The page you’re looking for has moved, or never existed. Try a search, or give us a call."
         image={{
           src: '/images/pages/not-found/empty-cabinet.jpg',
           alt: 'A white wall cabinet with both doors open on an empty red interior',

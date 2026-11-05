@@ -10,8 +10,8 @@ interface Props {
   description: string;
   image: { src: string; alt: string };
   search: { action: string; name: string; placeholder: string; label: string };
-  /** The two or three places most visitors were heading, as buttons under the search. */
-  actions: PageAction[];
+  /** Optional buttons under the photo (off by default: the search and the phone line carry it). */
+  actions?: PageAction[];
   /** The quiet last line ("Still stuck? Call or text…"); phone numbers become tel: links. */
   note: string;
   className?: string;
@@ -19,8 +19,8 @@ interface Props {
 
 const RED = 'text-[var(--button-primary-background,#d90716)]';
 
-// The 404, one centred column: the eyebrow line, a big "404", a line of copy, the empty-cabinet
-// photo, a search box, the buttons, and a last line with the phone number. Plain GET form, so the
+// The 404, one centred column: the eyebrow line, a big "404", a line of copy, a search box, the
+// empty-cabinet photo, and a last line with the phone number. Plain GET form, so the
 // search works without JavaScript and lands on the search page with the term in the URL.
 export function EkNotFound({
   kicker = '404',
@@ -77,7 +77,9 @@ export function EkNotFound({
           />
         </div>
 
-        <Actions actions={actions} className="mt-6 justify-center" />
+        {actions && actions.length > 0 && (
+          <Actions actions={actions} className="mt-6 justify-center" />
+        )}
 
         <p className="mt-8 text-sm text-contrast-500">
           <NoteWithPhone text={note} />
