@@ -10,9 +10,11 @@ import { LogoMarquee } from '@/vibes/soul/sections/logo-marquee';
 import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
 import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { StepsTimeline } from '@/vibes/soul/sections/page-kit/steps-timeline';
+import { ProjectShowcase } from '@/vibes/soul/sections/project-showcase';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { industryFields } from '~/lib/forms/industry-fields';
 import { submitIndustryLead } from '~/lib/forms/submit-lead';
+import { COMMERCIAL_PROJECTS } from '~/lib/pages/commercial-projects';
 import { PROJECT_LOGOS } from '~/lib/pages/project-logos';
 
 export const metadata: Metadata = {
@@ -182,12 +184,17 @@ export default async function Commercial({ params }: { params: Promise<{ locale:
         ]}
         description="Cabinet delays shouldn't be the reason your project slips. We make, stock and deliver our own cabinets, so the date we give you is one we control. Send us your scope, and you'll have pricing back within 48 hours."
         image={{
-          src: '/images/pages/industry/site-delivery.jpg',
-          alt: 'Pallets of cabinets being wheeled into a building under construction',
+          src: '/images/pages/industry/hero-pm-pallet.jpg',
+          alt: 'A project manager in a hard hat and hi-vis vest with a tablet beside a shrink-wrapped pallet of cabinets',
         }}
         imageStyle="plain"
         kicker="Commercial · WBE/MBE certified"
         title="Hit your date, on every unit."
+      />
+      <ProjectShowcase
+        kicker="Recent projects"
+        projects={COMMERCIAL_PROJECTS}
+        title="Delivered on schedule, from Jersey City to Long Island City"
       />
       <LogoMarquee kicker="Trusted by" logos={PROJECT_LOGOS} />
       <CardsRow
