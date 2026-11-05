@@ -216,8 +216,7 @@ export default async function Compare({ params }: { params: Promise<{ locale: st
       />
       <ClosingBand
         description="Bring it to a showroom and we'll show you, line by line, what you'd get with us."
-        primary={{ label: 'Find a showroom', href: '/showrooms' }}
-        secondary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
+        primary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}
         title="Got a quote from somewhere else?"
       />
