@@ -107,10 +107,6 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'Contact', href: '/contact' }]} />
       <PageHero
-        actions={[
-          { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
-          { label: 'Send a message', href: '#message' },
-        ]}
         description="Call or text us any time, day or night, or send a message below."
         image={{
           src: '/images/pages/contact/bristol-factory-exterior.jpg',
