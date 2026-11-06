@@ -113,7 +113,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
         ctaStyle="outline"
         description="Call or text us any time, day or night, or send a message below."
         hideImages
-        kicker="Contact"
+        kicker="Get in touch"
         opensPage
         title="Talk to a real person"
       />
