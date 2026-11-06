@@ -1,18 +1,58 @@
+import { Mail, MapPin, Phone, Store } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
+import { CardsRow, type RowCard } from '@/vibes/soul/sections/cards-row';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
 import { AUDIENCE_OPTIONS } from '~/lib/forms/fields';
 import { submitContactLead } from '~/lib/forms/submit-lead';
+import { FACTORY_OUTLET_URL } from '~/lib/home/pro-content';
 
 export const metadata: Metadata = {
   title: 'Contact Express Kitchens',
   description:
-    'A question about an order, a product or a project? Send it here and the right person replies within one business day. Or call or text 860-247-1000, 24/7.',
+    'Call or text 860-247-1000 any time, day or night, email us, visit a showroom or the Bristol outlet, or send a message and the right person gets back to you.',
 };
+
+// The customer email is still to be confirmed by EK; support@ is the address the site uses
+// elsewhere (secure shopping).
+const CONTACT_EMAIL = 'support@expresskitchens.com';
+
+// One row of four: the outlet gets its own card, separate from the showrooms (EK's request).
+const WAYS: RowCard[] = [
+  {
+    icon: Phone,
+    title: 'Call or text',
+    description: '860-247-1000, answered 24/7.',
+    ctaLabel: 'Call or text',
+    href: 'tel:+18602471000',
+  },
+  {
+    icon: Mail,
+    title: 'Email',
+    description: CONTACT_EMAIL,
+    ctaLabel: 'Email us',
+    href: `mailto:${CONTACT_EMAIL}`,
+  },
+  {
+    icon: MapPin,
+    title: 'Visit a showroom',
+    description: 'Six across Connecticut, and walk-ins are welcome.',
+    ctaLabel: 'Find a showroom',
+    href: '/showrooms',
+  },
+  {
+    icon: Store,
+    title: 'Factory Outlet',
+    description:
+      '18 Main Street, Bristol. Clearance and in-stock cabinets, closets, appliances, windows and doors.',
+    ctaLabel: 'Visit the outlet ↗',
+    href: FACTORY_OUTLET_URL,
+  },
+];
 
 // Three short steps instead of one long form: what it's about, who you are, how to reach you.
 // Every field stays mounted across steps, so the same submit action receives the same names.
@@ -25,9 +65,10 @@ const FIELDS: Array<Field | Field[]> = [
       { label: 'A product question', value: 'product' },
       { label: 'An existing order', value: 'order' },
       { label: 'Delivery or pickup', value: 'delivery' },
+      { label: 'A return', value: 'return' },
       { label: 'Damage or a warranty claim', value: 'warranty' },
       { label: 'A design appointment', value: 'design' },
-      { label: 'Trade / Pro Program', value: 'pro' },
+      { label: 'Contractor or trade pricing', value: 'pro' },
       { label: 'Something else', value: 'other' },
     ],
   },
@@ -68,29 +109,36 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
       <PageHero
         actions={[
           { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
-          { label: 'Read the FAQ', href: '/faq' },
+          { label: 'Send a message', href: '#message' },
         ]}
-        description="Whether it's a question about an order, a product you're weighing up or a project you're planning, send it here and the right person will reply within one business day. If it can't wait, call or text us any time, day or night. And if you're wondering about delivery, returns or how samples work, the FAQ may already have your answer."
+        description="Call or text us any time, day or night, or send a message below."
         image={{
           src: '/images/pages/contact/bristol-factory-exterior.jpg',
           alt: 'The factory and outlet building from outside',
         }}
         imageLabel="The Bristol factory and outlet, wide"
         kicker="Contact"
-        title="Talk to Express Kitchens"
+        title="Talk to a real person"
+      />
+      <CardsRow
+        cards={WAYS}
+        columns={4}
+        hideImages
+        kicker="Ways to reach us"
+        title="Pick what suits you"
       />
       <LeadFormCard
         action={submitContactLead}
-        description="We reply within one business day."
+        description="Tell us what you need and the right person will get back to you."
         fields={FIELDS}
         fine={
           <>
             By sending this you agree to our{' '}
-            <Link className="underline" href="#">
+            <Link className="underline" href="/terms">
               Terms
             </Link>{' '}
             and{' '}
-            <Link className="underline" href="#">
+            <Link className="underline" href="/privacy">
               Privacy Policy
             </Link>
             , and to be contacted using the details you&apos;ve given.
@@ -101,10 +149,10 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
           src: '/images/pages/measuring/designer-customer-screen.jpg',
           alt: 'A designer and a customer looking at a kitchen plan on a showroom screen',
         }}
-        kicker="Send a message"
+        kicker="Contact form"
         steps={STEPS}
         submitLabel="Send message"
-        title="Tell us what you need"
+        title="Send us a message"
       />
     </>
   );
