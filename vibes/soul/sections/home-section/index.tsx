@@ -35,6 +35,8 @@ interface Props {
   tightTop?: boolean;
   /** `small`: an h3-sized title, for a band that shouldn't compete with the hero. */
   headingStyle?: 'default' | 'small';
+  /** `h1` when the band opens a page that has no hero (the title is then the page's heading). */
+  headingLevel?: 'h1' | 'h2';
   /** `red`: the band on brand red with the heading row in white. */
   tone?: 'default' | 'red';
   /** `red`: just the title in brand red (on a normal band). */
@@ -57,11 +59,13 @@ export function HomeSection({
   halfPadding = false,
   tightTop = false,
   headingStyle = 'default',
+  headingLevel = 'h2',
   className,
   children,
   tone = 'default',
   titleTone = 'default',
 }: Props) {
+  const Heading = headingLevel;
   let verticalPadding = 'py-10 @4xl:py-14';
 
   if (compact) verticalPadding = 'py-8 @4xl:py-10';
@@ -97,14 +101,14 @@ export function HomeSection({
                 </p>
               )}
               {Boolean(title) && (
-                <h2
+                <Heading
                   className={clsx(
                     headingStyle === 'small' ? smallHeadingClassName : homeHeadingClassName,
                     titleTone === 'red' && 'text-[var(--button-primary-background,#d90716)]',
                   )}
                 >
                   {title}
-                </h2>
+                </Heading>
               )}
               {Boolean(description) && (
                 <p

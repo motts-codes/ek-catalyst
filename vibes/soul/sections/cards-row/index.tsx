@@ -44,6 +44,8 @@ interface Props {
    */
   imageStyle?: 'inset' | 'bleed' | 'plain';
   tint?: boolean;
+  /** The band opens the page (no hero above): its title is the h1 and it sits under the breadcrumb. */
+  opensPage?: boolean;
   /** `red`: the band on brand red, the copy reversed to white (plain photo cards). */
   tone?: 'default' | 'red';
   /** `red`: just the section title in brand red. */
@@ -76,12 +78,21 @@ const OUTLINE_ON_RED_BUTTON =
 // the four lines and the quality grid.
 // The title line: the title on the left and, when the card has a price, the price on the right
 // in the same style.
-function CardTitle({ card, className }: { card: RowCard; className: string }) {
-  if (card.price == null) return <h3 className={className}>{card.title}</h3>;
+function CardTitle({
+  card,
+  className,
+  level: Heading = 'h3',
+}: {
+  card: RowCard;
+  className: string;
+  /** `h2` when the band opens the page and its own title is the h1. */
+  level?: 'h2' | 'h3';
+}) {
+  if (card.price == null) return <Heading className={className}>{card.title}</Heading>;
 
   return (
     <div className="flex items-baseline justify-between gap-3">
-      <h3 className={className}>{card.title}</h3>
+      <Heading className={className}>{card.title}</Heading>
       <span className={clsx(className, 'shrink-0')}>{card.price}</span>
     </div>
   );
@@ -108,6 +119,7 @@ export function CardsRow({
   numbered = false,
   imageStyle = 'inset',
   tint = false,
+  opensPage = false,
   tone = 'default',
   titleTone = 'default',
   cardTitleTone = 'default',
@@ -148,7 +160,9 @@ export function CardsRow({
     <HomeSection
       className={className}
       description={description}
+      headingLevel={opensPage ? 'h1' : 'h2'}
       kicker={kicker}
+      tightTop={opensPage}
       tint={tint}
       title={title}
       titleTone={titleTone}
@@ -232,6 +246,7 @@ export function CardsRow({
                 <CardTitle
                   card={card}
                   className={cardTitleClassName(reversed, card.titleTone ?? cardTitleTone)}
+                  level={opensPage ? 'h2' : 'h3'}
                 />
                 {card.meta != null && (
                   <p className="mt-1 text-xs font-semibold text-[var(--button-primary-background,#d90716)]">

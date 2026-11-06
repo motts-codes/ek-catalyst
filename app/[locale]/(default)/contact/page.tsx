@@ -5,7 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow, type RowCard } from '@/vibes/soul/sections/cards-row';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
-import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
 import { AUDIENCE_OPTIONS } from '~/lib/forms/fields';
 import { submitContactLead } from '~/lib/forms/submit-lead';
@@ -106,24 +106,16 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
   return (
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'Contact', href: '/contact' }]} />
-      <PageHero
-        description="Call or text us any time, day or night, or send a message below."
-        image={{
-          src: '/images/pages/contact/bristol-factory-exterior.jpg',
-          alt: 'The factory and outlet building from outside',
-        }}
-        imageLabel="The Bristol factory and outlet, wide"
-        kicker="Contact"
-        title="Talk to a real person"
-      />
       <CardsRow
         cardTone="alternate"
         cards={WAYS}
         columns={4}
         ctaStyle="outline"
+        description="Call or text us any time, day or night, or send a message below."
         hideImages
-        kicker="Ways to reach us"
-        title="Pick what suits you"
+        kicker="Contact"
+        opensPage
+        title="Talk to a real person"
       />
       <LeadFormCard
         action={submitContactLead}
