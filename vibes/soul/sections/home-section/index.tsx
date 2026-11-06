@@ -33,6 +33,8 @@ interface Props {
   halfPadding?: boolean;
   /** Minimal top padding — for a band that should sit right under the hero. */
   tightTop?: boolean;
+  /** A little top padding: the band opens the page, sitting under the breadcrumb. */
+  openTop?: boolean;
   /** `small`: an h3-sized title, for a band that shouldn't compete with the hero. */
   headingStyle?: 'default' | 'small';
   /** `h1` when the band opens a page that has no hero (the title is then the page's heading). */
@@ -58,6 +60,7 @@ export function HomeSection({
   compact = false,
   halfPadding = false,
   tightTop = false,
+  openTop = false,
   headingStyle = 'default',
   headingLevel = 'h2',
   className,
@@ -71,6 +74,7 @@ export function HomeSection({
   if (compact) verticalPadding = 'py-8 @4xl:py-10';
   if (halfPadding) verticalPadding = 'py-5 @4xl:py-7';
   if (tightTop) verticalPadding = 'pb-10 pt-2 @4xl:pb-14 @4xl:pt-3';
+  if (openTop) verticalPadding = 'pb-10 pt-8 @4xl:pb-14 @4xl:pt-10';
 
   const hasHeading = Boolean(kicker || title || description || action);
 

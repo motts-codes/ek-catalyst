@@ -162,7 +162,7 @@ export function CardsRow({
       description={description}
       headingLevel={opensPage ? 'h1' : 'h2'}
       kicker={kicker}
-      tightTop={opensPage}
+      openTop={opensPage}
       tint={tint}
       title={title}
       titleTone={titleTone}
