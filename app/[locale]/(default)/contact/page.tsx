@@ -121,8 +121,10 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
         title="Talk to a real person"
       />
       <CardsRow
+        cardTone="alternate"
         cards={WAYS}
         columns={4}
+        ctaStyle="outline"
         hideImages
         kicker="Ways to reach us"
         title="Pick what suits you"

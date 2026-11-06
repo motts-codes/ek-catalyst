@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
+import { OUTLINE_BUTTON } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
 
 export interface RowCard {
@@ -57,8 +58,17 @@ interface Props {
   cardTone?: 'default' | 'red' | 'alternate';
   /** A thin brand-red hairline at half opacity around each white card instead of the grey one. */
   cardBorder?: 'default' | 'red';
+  /**
+   * `outline`: the card buttons as the site's outline button (black outline on white and light
+   * cards, white outline on red ones) instead of the solid black one. `primary` cards stay red.
+   */
+  ctaStyle?: 'solid' | 'outline';
   className?: string;
 }
+
+// The white outline button for a red card, as on the red box and the closing band.
+const OUTLINE_ON_RED_BUTTON =
+  'transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:rgb(255_255_255/0.3)] [--button-ghost-text:white] hover:[--button-ghost-border:white] hover:[--button-ghost-text:#9f3632] focus-visible:ring-white focus-visible:ring-offset-[#9f3632]';
 
 // A row of equal cards — inset photo (or an accent bar), heading, one line, a button — with a
 // gentle lift on hover. Store-hosted photos (absolute URLs) skip the Next optimizer, which only
@@ -103,6 +113,7 @@ export function CardsRow({
   cardTitleTone = 'default',
   cardTone = 'default',
   cardBorder = 'default',
+  ctaStyle = 'solid',
   className,
 }: Props) {
   const bleed = imageStyle === 'bleed' && !hideImages;
@@ -241,7 +252,7 @@ export function CardsRow({
                       href={card.href ?? '#'}
                       shape="pill"
                       size="small"
-                      variant={card.primary ? 'primary' : 'secondary'}
+                      {...ctaProps(card, ctaStyle, surface)}
                     >
                       {card.ctaLabel}
                     </ButtonLink>
@@ -254,6 +265,22 @@ export function CardsRow({
       </div>
     </HomeSection>
   );
+}
+
+// The card button: red for a `primary` card; otherwise solid black, or the outline button
+// (white outline on a red card) when the row asks for `outline`.
+function ctaProps(
+  card: RowCard,
+  ctaStyle: 'solid' | 'outline',
+  surface: 'red' | 'light' | 'white',
+): { variant: 'primary' | 'secondary' | 'ghost'; className?: string } {
+  if (card.primary) return { variant: 'primary' };
+  if (ctaStyle === 'solid') return { variant: 'secondary' };
+
+  return {
+    variant: 'ghost',
+    className: surface === 'red' ? OUTLINE_ON_RED_BUTTON : OUTLINE_BUTTON,
+  };
 }
 
 // What tops a text-only card: a big red number when the row is numbered, an icon in a pale
