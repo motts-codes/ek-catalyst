@@ -14,17 +14,9 @@ export const metadata: Metadata = {
     'A question about an order, a product or a project? Send it here and the right person replies within one business day. Or call or text 860-247-1000, 24/7.',
 };
 
+// Three short steps instead of one long form: what it's about, who you are, how to reach you.
+// Every field stays mounted across steps, so the same submit action receives the same names.
 const FIELDS: Array<Field | Field[]> = [
-  [
-    { type: 'text', name: 'firstName', label: 'First name', required: true },
-    { type: 'text', name: 'lastName', label: 'Last name', required: true },
-  ],
-  [
-    { type: 'email', name: 'email', label: 'Email', required: true },
-    { type: 'tel', name: 'phone', label: 'Phone' },
-  ],
-  { type: 'text', name: 'zip', label: 'ZIP code' },
-  { type: 'select', name: 'audience', label: 'I am a…', options: AUDIENCE_OPTIONS },
   {
     type: 'select',
     name: 'topic',
@@ -41,12 +33,28 @@ const FIELDS: Array<Field | Field[]> = [
   },
   { type: 'text', name: 'orderNumber', label: 'Order number, if you have one' },
   { type: 'textarea', name: 'message', label: 'Your message', required: true },
+  { type: 'select', name: 'audience', label: 'I am a…', options: AUDIENCE_OPTIONS },
+  [
+    { type: 'text', name: 'firstName', label: 'First name', required: true },
+    { type: 'text', name: 'lastName', label: 'Last name', required: true },
+  ],
+  { type: 'text', name: 'zip', label: 'ZIP code' },
+  [
+    { type: 'email', name: 'email', label: 'Email', required: true },
+    { type: 'tel', name: 'phone', label: 'Phone' },
+  ],
   {
     type: 'checkbox',
     name: 'smsConsent',
     label:
       'I agree to receive text messages from Express Kitchens at the number above. Message frequency may vary; data rates may apply. Text HELP to 860-247-1000 for help, STOP to opt out.',
   },
+];
+
+const STEPS = [
+  { title: 'Your question', names: ['topic', 'orderNumber', 'message'] },
+  { title: 'About you', names: ['audience', 'firstName', 'lastName', 'zip'] },
+  { title: 'How to reach you', names: ['email', 'phone', 'smsConsent'] },
 ];
 
 export default async function Contact({ params }: { params: Promise<{ locale: string }> }) {
@@ -79,20 +87,22 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
           <>
             By sending this you agree to our{' '}
             <Link className="underline" href="#">
-              {' '}
-              Terms{' '}
+              Terms
             </Link>{' '}
             and{' '}
             <Link className="underline" href="#">
-              {' '}
-              Privacy Policy{' '}
-            </Link>{' '}
-            , and to be contacted using the details you&apos;ve given. We reply within one business
-            day.
+              Privacy Policy
+            </Link>
+            , and to be contacted using the details you&apos;ve given.
           </>
         }
         id="message"
+        image={{
+          src: '/images/pages/measuring/designer-customer-screen.jpg',
+          alt: 'A designer and a customer looking at a kitchen plan on a showroom screen',
+        }}
         kicker="Send a message"
+        steps={STEPS}
         submitLabel="Send message"
         title="Tell us what you need"
       />
