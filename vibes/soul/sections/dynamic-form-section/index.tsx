@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-import { DynamicForm, DynamicFormAction } from '@/vibes/soul/form/dynamic-form';
+import { DynamicForm, DynamicFormAction, type FormStep } from '@/vibes/soul/form/dynamic-form';
 import {
   Field,
   FieldGroup,
@@ -19,6 +19,8 @@ interface Props<F extends Field> {
   passwordComplexity?: PasswordComplexitySettings | null;
   errorTranslations?: FormErrorTranslationMap;
   recaptchaSiteKey?: string;
+  /** Split the form into steps (see DynamicForm). */
+  steps?: FormStep[];
 }
 
 export function DynamicFormSection<F extends Field>({
@@ -31,6 +33,7 @@ export function DynamicFormSection<F extends Field>({
   passwordComplexity,
   errorTranslations,
   recaptchaSiteKey,
+  steps,
 }: Props<F>) {
   return (
     <SectionLayout className={clsx('mx-auto w-full max-w-4xl', className)} containerSize="lg">
@@ -50,6 +53,7 @@ export function DynamicFormSection<F extends Field>({
         fields={fields}
         passwordComplexity={passwordComplexity}
         recaptchaSiteKey={recaptchaSiteKey}
+        steps={steps}
         submitLabel={submitLabel}
       />
     </SectionLayout>

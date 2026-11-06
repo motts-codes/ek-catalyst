@@ -292,7 +292,8 @@ export function DynamicForm<F extends Field>({
               </div>
             );
           })}
-          {recaptchaSiteKey ? <RecaptchaWidget sitekey={recaptchaSiteKey} /> : null}
+          {/* On a stepped form the reCAPTCHA belongs with the submit button, on the last step. */}
+          {recaptchaSiteKey && isLastStep ? <RecaptchaWidget sitekey={recaptchaSiteKey} /> : null}
           <div
             className={clsx(
               'flex gap-2 pt-3',

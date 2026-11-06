@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { type FormStep } from '@/vibes/soul/form/dynamic-form';
 import { Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { DynamicFormSection } from '@/vibes/soul/sections/dynamic-form-section';
 import {
@@ -43,6 +44,36 @@ function removeExlusiveOffersField(field: Field | Field[]): boolean {
   }
 
   return field.id !== '25';
+}
+
+// Three short steps instead of one long form. Built-in fields are placed by name; any custom
+// fields the store adds go with the group they belong to (address or customer). An empty step
+// is dropped.
+const ACCOUNT_NAMES = ['firstName', 'lastName', 'email', 'password', 'confirmPassword'];
+const ADDRESS_NAMES = [
+  'address1',
+  'address2',
+  'city',
+  'stateOrProvince',
+  'postalCode',
+  'countryCode',
+];
+
+function registerSteps(fields: Array<Field | Field[]>): FormStep[] {
+  const names = fields
+    .flatMap((field) => (Array.isArray(field) ? field : [field]))
+    .map((f) => f.name);
+  const isAddress = (name: string) =>
+    ADDRESS_NAMES.includes(name) || name.startsWith(ADDRESS_FIELDS_NAME_PREFIX);
+  const account = names.filter((name) => ACCOUNT_NAMES.includes(name));
+  const address = names.filter(isAddress);
+  const details = names.filter((name) => !ACCOUNT_NAMES.includes(name) && !isAddress(name));
+
+  return [
+    { title: 'Your account', names: account },
+    { title: 'About you', names: details },
+    { title: 'Your address', names: address },
+  ].filter((step) => step.names.length > 0);
 }
 
 export default async function Register({ params }: Props) {
@@ -158,6 +189,7 @@ export default async function Register({ params }: Props) {
       fields={fields}
       passwordComplexity={passwordComplexitySettings}
       recaptchaSiteKey={recaptchaSiteKey}
+      steps={registerSteps(fields)}
       submitLabel={t('cta')}
       title={t('heading')}
     />

@@ -6,7 +6,8 @@ export const colors = {
   background: '0 0% 100%',
   foreground: '0 0% 7%',
   success: '116 78% 65%',
-  error: '0 100% 60%',
+  // Brand red: 5.3:1 on white, so 12px field errors pass AA (the old 60% lightness was 3.5:1).
+  error: '355 94% 44%',
   warning: '40 100% 60%',
   info: '220 70% 45%',
   contrast: {
