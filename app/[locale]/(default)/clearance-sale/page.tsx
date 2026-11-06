@@ -139,6 +139,7 @@ export default async function Clearance({ params }: { params: Promise<{ locale: 
         }}
       />
       <ClosingBand
+        phone={null}
         primary={{ label: 'Call 860-247-1000', href: 'tel:+18602471000' }}
         showrooms={SHOWROOMS}
         tint

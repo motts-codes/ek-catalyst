@@ -58,6 +58,7 @@ export default async function Sale({ params }: { params: Promise<{ locale: strin
       />
       <ClosingBand
         description="Sale products will list here once the sale category is set up in the store; until then the collections and categories above show their current prices."
+        phone={null}
         primary={{ label: 'Clearance sets', href: '/clearance-sale' }}
         secondary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}

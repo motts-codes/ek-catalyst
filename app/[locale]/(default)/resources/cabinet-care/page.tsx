@@ -237,7 +237,7 @@ export default async function CabinetCare({ params }: { params: Promise<{ locale
         title="Covered for a year"
       />
       <ClosingBand
-        description="Send us a photo, and we'll tell you how to fix it or whether it's covered. Call or text 860-247-1000, any time."
+        description="Send us a photo, and we'll tell you how to fix it or whether it's covered. Or call or text us, any time."
         primary={{ label: 'Send us a message', href: CONTACT_HREF }}
         secondary={{ label: 'Read the warranty', href: WARRANTY_HREF }}
         tint

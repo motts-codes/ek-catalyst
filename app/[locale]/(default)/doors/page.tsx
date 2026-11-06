@@ -128,7 +128,8 @@ export default async function Doors({ params }: { params: Promise<{ locale: stri
       />
       <div id="products" />
       <ClosingBand
-        description="Door products will appear here as the category is set up in the store. Until then, call 860-247-1000 to order."
+        description="Door products will appear here as the category is set up in the store. Until then, call us to order."
+        phone={null}
         primary={{ label: 'Call 860-247-1000', href: 'tel:+18602471000' }}
         secondary={{ label: 'Free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}

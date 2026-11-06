@@ -5,7 +5,6 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LinkCards, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
-import { ASSEMBLED_LISTING_HREF } from '~/lib/cabinets/cabinets-hub-content';
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SAMPLES_HREF, SHOWROOMS } from '~/lib/home/home-content';
 import { getLowest10x10 } from '~/lib/pages/lowest-price';
 
@@ -165,7 +164,6 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
       </HomeSection>
       <ClosingBand
         primary={{ label: 'Book a free design consult', href: FREE_DESIGN_HREF }}
-        secondary={{ label: 'Browse assembled cabinets', href: ASSEMBLED_LISTING_HREF }}
         showrooms={SHOWROOMS}
       />
     </>

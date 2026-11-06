@@ -6,7 +6,6 @@ import { FaqSchema } from '@/vibes/soul/sections/faq/faq-schema';
 import { FaqExplorer } from '@/vibes/soul/sections/faq-explorer';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { SHOWROOMS } from '~/lib/home/home-content';
 import { FAQ_CLOSING, FAQ_GROUPS, FAQ_HERO, FAQ_META_DESCRIPTION } from '~/lib/pages/faq';
 
 export const metadata: Metadata = {
@@ -58,7 +57,6 @@ export default async function Faq({ params }: { params: Promise<{ locale: string
         description={FAQ_CLOSING.description}
         primary={FAQ_CLOSING.primary}
         secondary={FAQ_CLOSING.secondary}
-        showrooms={SHOWROOMS}
         tint
         title={FAQ_CLOSING.title}
       />
