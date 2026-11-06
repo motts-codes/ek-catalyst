@@ -51,7 +51,7 @@ export const COUNTERTOP_QUOTE_FIELDS: QuoteFields = [
       { label: 'None', value: 'none' },
     ],
   },
-  { type: 'textarea', name: 'notes', label: 'Anything else — colour, edge, timing' },
+  { type: 'textarea', name: 'notes', label: 'Anything else: colour, edge, timing' },
 ];
 
 // The same form with the chosen stone carried along (PDP), so the quote names the product.

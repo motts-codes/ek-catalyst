@@ -29,9 +29,9 @@ export function CollectionsTable({ rows }: { rows: CollectionRow[] }) {
               rows.map((r) => (
                 <tr className="hover:bg-gray-50" key={r.id}>
                   <td className="px-4 py-3 font-medium text-gray-900">{r.name}</td>
-                  <td className="px-4 py-3 text-gray-600">{r.line || '—'}</td>
-                  <td className="px-4 py-3 text-gray-600">{r.doorStyle || '—'}</td>
-                  <td className="px-4 py-3 text-gray-600">{r.defaultFinish || '—'}</td>
+                  <td className="px-4 py-3 text-gray-600">{r.line || '–'}</td>
+                  <td className="px-4 py-3 text-gray-600">{r.doorStyle || '–'}</td>
+                  <td className="px-4 py-3 text-gray-600">{r.defaultFinish || '–'}</td>
                   <td className="px-4 py-3 text-right">
                     <Link
                       className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100"

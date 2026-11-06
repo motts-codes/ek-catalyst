@@ -8,7 +8,7 @@ import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit
 import { SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'Clearance — Floor-Model and Overstock Sets',
+  title: 'Clearance: Floor-Model and Overstock Sets',
   description:
     'Floor-model and overstock kitchen and bath sets at deeply discounted prices. Limited stock, sold as is. Call to check availability.',
 };

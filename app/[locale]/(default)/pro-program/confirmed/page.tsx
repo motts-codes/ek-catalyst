@@ -30,7 +30,7 @@ export default async function ProProgramConfirmed({
         description="Thank you. Your showroom's trade team will call to verify your license and set up your account and tax exemption, usually within [X] business days. Until then you can order at retail pricing, and we'll apply your tier to anything in progress once the account is live."
         kicker="Application received"
         textOnly
-        title="Welcome aboard — we'll call to set you up"
+        title="Welcome aboard. We'll call to set you up"
       />
     </>
   );

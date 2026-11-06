@@ -32,7 +32,7 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
       <CardsRow
         cards={[
           {
-            title: 'Replacement windows — $179.99, any size up to 101 UI',
+            title: 'Replacement windows: $179.99, any size up to 101 UI',
             description: 'Any homeowner · pickup from Bristol · ends [date]',
             ctaLabel: 'See the offer',
             href: '/windows',
@@ -44,7 +44,7 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
             imageLabel: 'A white double-hung window',
           },
           {
-            title: '[Collection] — [X]% off',
+            title: '[Collection]: [X]% off',
             description: 'Online and in the showroom · ends [date]',
             ctaLabel: 'Shop the sale',
             href: '/sale',

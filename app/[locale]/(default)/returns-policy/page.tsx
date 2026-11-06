@@ -79,7 +79,7 @@ export default async function ReturnsPolicy({ params }: { params: Promise<{ loca
           { icon: 'clock', label: '30 days from purchase' },
           { icon: 'stock', label: 'Original, unopened packaging' },
           { icon: 'price', label: '30% restocking fee' },
-          { icon: 'phone', label: 'Authorization first — 860-247-1000' },
+          { icon: 'phone', label: 'Authorization first: 860-247-1000' },
         ]}
       />
       <HomeSection title="What can come back">

@@ -232,7 +232,7 @@ export const PROGRAM_CARDS: ProgramCard[] = [
 ];
 
 export const PROGRAM_FOOTNOTE =
-  'Every cabinet we sell is the same box, the same door and the same finish — built in Connecticut. The only choice is whether it arrives flat-packed for you to build, or already built.';
+  'Every cabinet we sell is the same box, the same door and the same finish, built in Connecticut. The only choice is whether it arrives flat-packed for you to build, or already built.';
 
 export const THREE_WAYS: RowCard[] = [
   {
@@ -280,7 +280,7 @@ export const HOME_REVIEWS: CustomerReview[] = [
   {
     stars: 5,
     quote:
-      'Jeremiah was extremely friendly and exceptionally patient. He helped us realize a different design than what we currently have. His layout was so much more functional — he explained why he was suggesting the changes.',
+      'Jeremiah was extremely friendly and exceptionally patient. He helped us realize a different design than what we currently have. His layout was so much more functional, and he explained why he was suggesting the changes.',
     name: 'Scott B.',
     location: 'Newington',
     source: 'Google',

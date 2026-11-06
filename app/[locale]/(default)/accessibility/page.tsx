@@ -97,7 +97,7 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
       <Prose
         body={[
           'The site relies on HTML, WAI-ARIA, CSS and JavaScript, and is tested with current versions of Chrome, Safari, Firefox and Edge, and with VoiceOver on Mac and iOS, NVDA on Windows and TalkBack on Android.',
-          'Some content comes from partners — the financing application, the map embeds and the payment step — and is covered by their own accessibility statements. Older PDF spec sheets are being replaced with tagged versions; if you need one sooner, ask us and we will send the information in another format.',
+          'Some content comes from partners (the financing application, the map embeds and the payment step) and is covered by their own accessibility statements. Older PDF spec sheets are being replaced with tagged versions; if you need one sooner, ask us and we will send the information in another format.',
         ]}
         kicker="Technology and known limitations"
         title="What we test with, and what we're still fixing"

@@ -55,7 +55,7 @@ export function ProductEditor({ product }: { product: ProductData }) {
         {/* VIEW-ONLY sections — managed in BigCommerce admin. */}
         <Group title="Basic (view only)">
           <ReadRow label="Name" value={view.name} />
-          <ReadRow label="SKU" value={view.sku || '—'} />
+          <ReadRow label="SKU" value={view.sku || '–'} />
           <ReadRow label="Status" value={view.isVisible ? 'Active' : 'Hidden'} />
         </Group>
 

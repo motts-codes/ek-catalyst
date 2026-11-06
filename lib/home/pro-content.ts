@@ -93,7 +93,7 @@ export const PRO_AUDIENCES: RowCard[] = [
   {
     title: 'I buy by the pallet',
     description:
-      'Wholesale supply for dealers and distributors — full-line pricing, container and pallet quantities, through Kunal Kitchens.',
+      'Wholesale supply for dealers and distributors: full-line pricing, container and pallet quantities, through Kunal Kitchens.',
     ctaLabel: 'Wholesale ↗',
     href: WHOLESALE_URL,
     image: {

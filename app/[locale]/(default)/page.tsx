@@ -60,11 +60,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Absolute: the home title names the brand itself, so the layout's "- Express Kitchens"
     // suffix is not added again.
     title: {
-      absolute: metadata?.title ?? 'Express Kitchens — Kitchen cabinets made in Connecticut',
+      absolute: metadata?.title ?? 'Express Kitchens: Kitchen cabinets made in Connecticut',
     },
     description:
       metadata?.description ??
-      'Kitchen cabinets built in Connecticut and stocked in Bristol. RTA in two weeks, assembled in three — plus countertops, sinks, appliances and windows from one supplier.',
+      'Kitchen cabinets built in Connecticut and stocked in Bristol. RTA in two weeks, assembled in three, plus countertops, sinks, appliances and windows from one supplier.',
     alternates: await getMetadataAlternates({ path: '/', locale }),
   };
 }

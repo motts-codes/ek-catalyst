@@ -791,7 +791,7 @@ function colorLabel(w: Wizard): string {
   if (w.colorMode === 'any') return `Your choice of ${w.colors.length} finishes`;
   if (w.color === SINGLE_FINISH) return 'Standard finish';
 
-  return w.color ?? '—';
+  return w.color ?? 'Not chosen yet';
 }
 
 // The price card: the layout render, the four picks with their pictures, the price, the
@@ -852,7 +852,7 @@ function ResultStep({
                 label="Line"
                 value={[w.line?.label, build].filter(Boolean).join(' · ')}
               />
-              <PickRow edit={() => w.go(3)} label="Door style" value={w.door ?? '—'}>
+              <PickRow edit={() => w.go(3)} label="Door style" value={w.door ?? 'Not chosen yet'}>
                 {door ? (
                   <span className="relative size-9 shrink-0 overflow-hidden rounded-lg border border-contrast-100 bg-[#f6f6f8]">
                     <Image

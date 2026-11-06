@@ -55,7 +55,7 @@ export default async function ReferAFriend({ params }: { params: Promise<{ local
         points={[
           { icon: 'gift', label: 'Your friend: $[X] off their first order' },
           { icon: 'price', label: 'You: $[X] credit or gift card when it ships' },
-          { icon: 'zap', label: 'No limit — refer as many as you like' },
+          { icon: 'zap', label: 'No limit: refer as many as you like' },
         ]}
       />
       <CardsRow

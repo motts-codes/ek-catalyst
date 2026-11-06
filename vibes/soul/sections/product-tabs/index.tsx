@@ -151,7 +151,7 @@ export function ProductTabs({ tabs, aspectRatio = '1:1', className, addToCartAct
           aspectRatio={aspectRatio}
           controls={<TabRowArrows />}
           density="compact"
-          emptyStateSubtitle="Nothing here yet — check the other tabs."
+          emptyStateSubtitle="Nothing here yet. Check the other tabs."
           emptyStateTitle="No products in this tab"
           products={tab.products}
         />

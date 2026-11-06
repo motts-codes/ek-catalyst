@@ -6,7 +6,7 @@ import { ProjectGrid } from '@/vibes/soul/sections/page-kit/media';
 import { PROJECTS } from '~/lib/pages/projects';
 
 export const metadata: Metadata = {
-  title: 'Industries — Beyond Retail',
+  title: 'Industries: Beyond Retail',
   description:
     'The same Connecticut-made cabinets at a different scale: retail, the factory outlet, multifamily, wholesale and commercial.',
 };

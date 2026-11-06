@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Projects are hidden at the client's request (27 Oct 2026): still reachable, not indexed.
   return project
     ? {
-        title: `${project.title} — ${project.meta}`,
+        title: `${project.title}: ${project.meta}`,
         description: project.summary,
         robots: { index: false },
       }
@@ -61,7 +61,7 @@ export default async function ProjectPage({ params }: Props) {
         imageLabel={project.imageLabel}
         kicker={project.industry}
         textOnly
-        title={`${project.title} — ${project.collection}, ${project.finish}, ${project.program}`}
+        title={`${project.title}: ${project.collection}, ${project.finish}, ${project.program}`}
       />
       <HomeSection compact tint title="Before and after">
         <div className="grid gap-4 @xl:grid-cols-2">
@@ -106,7 +106,7 @@ export default async function ProjectPage({ params }: Props) {
           <blockquote className="max-w-3xl font-heading text-xl font-semibold leading-snug @xl:text-2xl">
             “{project.quote.text}”
           </blockquote>
-          <p className="mt-3 text-sm text-contrast-500">— {project.quote.name}</p>
+          <p className="mt-3 text-sm text-contrast-500">{project.quote.name}</p>
         </HomeSection>
       )}
       {previous != null && next != null && (

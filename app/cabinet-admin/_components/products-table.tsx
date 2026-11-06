@@ -14,6 +14,7 @@ export function ProductsTable({ data, search }: { data: ProductsPage; search: st
 
   const go = (params: Record<string, string | number>) => {
     const sp = new URLSearchParams({ tab: 'products' });
+
     Object.entries(params).forEach(([k, v]) => {
       if (v !== '' && v != null) sp.set(k, String(v));
     });
@@ -83,7 +84,7 @@ export function ProductsTable({ data, search }: { data: ProductsPage; search: st
               data.rows.map((p) => (
                 <tr className="hover:bg-gray-50" key={p.id}>
                   <td className="px-4 py-3 font-medium text-gray-900">{p.name}</td>
-                  <td className="px-4 py-3 text-gray-500">{p.sku || '—'}</td>
+                  <td className="px-4 py-3 text-gray-500">{p.sku || '–'}</td>
                   <td className="px-4 py-3 text-gray-600">{p.type}</td>
                   <td className="px-4 py-3">
                     <span
@@ -115,9 +116,7 @@ export function ProductsTable({ data, search }: { data: ProductsPage; search: st
       {/* Pagination */}
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600">
         <span>
-          {data.total === 0
-            ? 'No entries'
-            : `Showing ${start} to ${end} of ${data.total} entries`}
+          {data.total === 0 ? 'No entries' : `Showing ${start} to ${end} of ${data.total} entries`}
         </span>
         <div className="flex items-center gap-1">
           <button

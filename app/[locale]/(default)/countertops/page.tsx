@@ -13,7 +13,7 @@ import { COUNTERTOP_QUOTE_FIELDS } from '~/lib/countertops/quote-form';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
-  title: 'Countertops — Granite from $49.99, Quartz from $59.99 per sq ft',
+  title: 'Countertops: Granite from $49.99, Quartz from $59.99 per sq ft',
   description:
     'Granite, quartz, laminate and prefabricated countertops at some of the lowest prices per square foot anywhere. Request a quote or call to order.',
 };
@@ -36,7 +36,7 @@ export default async function Countertops({ params }: { params: Promise<{ locale
           { label: 'Get a countertop quote', href: '#quote' },
           { label: 'Call 860-247-1000', href: 'tel:+18602471000' },
         ]}
-        description="Granite from $49.99 and quartz from $59.99 a square foot: some of the lowest prices per square foot you'll find anywhere, on stone from quarries around the world, cut and polished at our own facility in Bristol. Because every countertop is sized to your kitchen, the price is a quote rather than a cart. Tell us the rough size and we'll price it, usually the same day — or simply call and order over the phone."
+        description="Granite from $49.99 and quartz from $59.99 a square foot: some of the lowest prices per square foot you'll find anywhere, on stone from quarries around the world, cut and polished at our own facility in Bristol. Because every countertop is sized to your kitchen, the price is a quote rather than a cart. Tell us the rough size and we'll price it, usually the same day. Or simply call and order over the phone."
         imageLabel="A quartz countertop in a finished kitchen"
         title="Countertops at prices other shops can't match"
       />

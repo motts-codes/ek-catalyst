@@ -41,8 +41,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const label = prog === 'assembled' ? 'Assembled' : 'RTA';
 
   return {
-    title: `${ref.name} ${label} Cabinets — Overview`,
-    description: `Explore the ${ref.name} ${label} cabinet collection — materials, construction, and inspiration.`,
+    title: `${ref.name} ${label} Cabinets: Overview`,
+    description: `Explore the ${ref.name} ${label} cabinet collection: materials, construction, and inspiration.`,
   };
 }
 

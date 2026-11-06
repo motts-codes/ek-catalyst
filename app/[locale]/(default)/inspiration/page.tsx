@@ -8,7 +8,7 @@ import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 import { projectHref, PROJECTS } from '~/lib/pages/projects';
 
 export const metadata: Metadata = {
-  title: 'Finished Kitchens — Inspiration',
+  title: 'Finished Kitchens: Inspiration',
   description:
     'Real kitchens in Connecticut homes. Every photo names the collection and finish and links to it; open one for the project story.',
   // Hidden at the client's request (27 Oct 2026): out of the nav, footer and sitemap, not indexed.

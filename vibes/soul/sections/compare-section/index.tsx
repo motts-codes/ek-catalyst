@@ -198,9 +198,7 @@ export function CompareSection({
                               {value}
                             </span>
                           ) : (
-                            <span aria-label="Not specified" className={muted}>
-                              —
-                            </span>
+                            <span className={muted}>Not specified</span>
                           )}
                         </div>
                       );

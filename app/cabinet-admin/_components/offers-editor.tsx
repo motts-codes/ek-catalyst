@@ -158,7 +158,7 @@ export function OffersEditor({
                 />
                 <Field
                   error={validateUrl(offer.url)}
-                  label="Details link (optional) — shown as an arrow after the text"
+                  label="Details link (optional), shown as an arrow after the text"
                   onChange={(v) => update(i, { url: v })}
                   placeholder="/promotions/free-samples"
                   value={offer.url}
@@ -188,7 +188,7 @@ export function OffersEditor({
                       onChange={(e) => update(i, { lineId: e.target.value })}
                       value={offer.lineId}
                     >
-                      <option value="">— Select —</option>
+                      <option value="">Select…</option>
                       {productLines.map((l) => (
                         <option key={l.id} value={l.id}>
                           {l.name}
@@ -208,7 +208,7 @@ export function OffersEditor({
                         onChange={(e) => update(i, { collectionId: e.target.value })}
                         value={offer.collectionId}
                       >
-                        <option value="">— Select —</option>
+                        <option value="">Select…</option>
                         {collections.map((c) => (
                           <option key={c.id} value={String(c.id)}>
                             {c.name}

@@ -32,7 +32,7 @@ export const SHIP_CATEGORIES: ShipCategory[] = [
   {
     group: CONTIGUOUS,
     id: 'rta-star',
-    name: 'RTA — Star',
+    name: 'RTA: Star',
     mode: 'national',
     reach: 'contiguous',
     ship: '2 weeks',
@@ -42,7 +42,7 @@ export const SHIP_CATEGORIES: ShipCategory[] = [
   {
     group: CONTIGUOUS,
     id: 'rta-euro',
-    name: 'RTA — Euro Max',
+    name: 'RTA: Euro Max',
     mode: 'national',
     reach: 'contiguous',
     ship: '4 weeks',
@@ -52,7 +52,7 @@ export const SHIP_CATEGORIES: ShipCategory[] = [
   {
     group: CONTIGUOUS,
     id: 'star',
-    name: 'Assembled — Star',
+    name: 'Assembled: Star',
     mode: 'national',
     reach: 'contiguous',
     ship: '3 weeks',
@@ -62,7 +62,7 @@ export const SHIP_CATEGORIES: ShipCategory[] = [
   {
     group: CONTIGUOUS,
     id: 'euro',
-    name: 'Assembled — Euro',
+    name: 'Assembled: Euro',
     mode: 'national',
     reach: 'contiguous',
     ship: '4 weeks',
@@ -126,7 +126,9 @@ export const SHIP_CATEGORIES: ShipCategory[] = [
 
 // The "Ships in" cell of the by-product table: the ship time, with its qualifier if there is one.
 export const shipsIn = (category: ShipCategory): string =>
-  category.ship == null ? '—' : `${category.ship}${category.note ? ` (${category.note})` : ''}`;
+  category.ship == null
+    ? 'Ask us'
+    : `${category.ship}${category.note ? ` (${category.note})` : ''}`;
 
 // Categories the map can plot: anything with a ship time of its own, plus the pickup-only ones.
 export const MAP_CATEGORIES = SHIP_CATEGORIES.filter((c) => c.mode === 'pickup' || c.lead != null);

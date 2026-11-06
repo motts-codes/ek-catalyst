@@ -46,7 +46,7 @@ export default async function ProProgram({ params }: { params: Promise<{ locale:
       <PageBreadcrumbs breadcrumbs={[{ label: 'Contractor Program', href: '/pro-program' }]} />
       <PageHero
         actions={[
-          { label: 'Join — two-minute form', href: '#join', primary: true },
+          { label: 'Join: two-minute form', href: '#join', primary: true },
           { label: 'See the discounts', href: '#tiers' },
         ]}
         description="If you fit kitchens for a living, you should be buying them at a contractor's price from people who know your jobs. The Contractor Program gives you that: Silver from your first $5,000 invoice, Diamond once you reach twenty invoices or $50,000 in a year, and in both tiers a text-enabled support line only contractors have, free design on every job and sales-tax exemption with your form on file. Fill in the two-minute form and your showroom sets the account up."
@@ -83,8 +83,8 @@ export default async function ProProgram({ params }: { params: Promise<{ locale:
           ['!In-stock Star stone', '5% off', '10% off'],
           ['!Sink cut-outs', '10% off', '30% off'],
           ['!Measurement fees', 'Waived', 'Waived'],
-          ['!Rush — 10-day SKUs', '50% off the rush fee', 'Rush fee waived'],
-          ['!Rush — 5-day SKUs', '—', '50% off the rush fee'],
+          ['!Rush, 10-day SKUs', '50% off the rush fee', 'Rush fee waived'],
+          ['!Rush, 5-day SKUs', 'Not offered', '50% off the rush fee'],
           ['!Delivery', '25% off', '50% off'],
           ['!Services performed by EK', '5% off', '10% off'],
         ]}

@@ -158,14 +158,14 @@ export function CollectionEditor({
 
         <Group title="Specification">
           <Select
-            emptyLabel="— Select a product line —"
+            emptyLabel="Select a product line…"
             label="Product Line"
             onChange={(v) => setData((d) => ({ ...d, spec: { ...d.spec, productLineId: v } }))}
             options={attributes.productLines}
             value={data.spec.productLineId}
           />
           <Select
-            emptyLabel="— Select a construction —"
+            emptyLabel="Select a construction…"
             label="Construction"
             onChange={(v) => setData((d) => ({ ...d, spec: { ...d.spec, constructionId: v } }))}
             options={attributes.constructions}
@@ -250,7 +250,7 @@ export function CollectionEditor({
           {(['assembled', 'rta'] as const).map((prog) => (
             <Textarea
               key={prog}
-              label={`Specifications — ${prog === 'assembled' ? 'Assembled' : 'RTA'} (HTML)`}
+              label={`Specifications: ${prog === 'assembled' ? 'Assembled' : 'RTA'} (HTML)`}
               onChange={(v) =>
                 setData((d) => ({
                   ...d,
@@ -267,7 +267,7 @@ export function CollectionEditor({
           {(['assembled', 'rta'] as const).map((prog) => (
             <Textarea
               key={`how-built-${prog}`}
-              label={`How it's built — ${prog === 'assembled' ? 'Assembled' : 'RTA'} (one row per line as "Feature: what it means for you". Leave empty to derive from the specifications)`}
+              label={`How it's built: ${prog === 'assembled' ? 'Assembled' : 'RTA'} (one row per line as "Feature: what it means for you". Leave empty to derive from the specifications)`}
               onChange={(v) =>
                 setData((d) => ({
                   ...d,
@@ -279,7 +279,7 @@ export function CollectionEditor({
             />
           ))}
           <Textarea
-            label="Disclaimer (HTML) — small print shown at the bottom"
+            label="Disclaimer (HTML), the small print shown at the bottom"
             onChange={(v) => setData((d) => ({ ...d, content: { ...d.content, disclaimer: v } }))}
             rows={3}
             value={data.content.disclaimer}
@@ -289,7 +289,7 @@ export function CollectionEditor({
         {(['assembled', 'rta'] as const).map((prog) => (
           <Group
             key={prog}
-            title={`Assembly Instructions — ${prog === 'assembled' ? 'Assembled' : 'RTA'}`}
+            title={`Assembly Instructions: ${prog === 'assembled' ? 'Assembled' : 'RTA'}`}
           >
             <AssemblyEditor
               onChange={(videos) =>
@@ -369,7 +369,7 @@ export function CollectionEditor({
 
         {/* FAQ — one editor per program (RTA and Assembled have different questions). */}
         {(['assembled', 'rta'] as const).map((prog) => (
-          <Group key={prog} title={`FAQ — ${prog === 'assembled' ? 'Assembled' : 'RTA'}`}>
+          <Group key={prog} title={`FAQ: ${prog === 'assembled' ? 'Assembled' : 'RTA'}`}>
             <FaqEditor
               onChange={(next) => setData((d) => ({ ...d, faq: { ...d.faq, [prog]: next } }))}
               value={data.faq[prog]}

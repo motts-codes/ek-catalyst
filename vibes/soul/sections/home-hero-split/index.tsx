@@ -312,7 +312,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                           aria-hidden
                           className="flex h-full w-full items-center justify-center bg-neutral-600 p-6 text-center text-sm text-white/70"
                         >
-                          Photo — {slide.image?.alt ?? 'kitchen'}
+                          Photo: {slide.image?.alt ?? 'kitchen'}
                         </div>
                       )}
                       {/* Bottom row: headline left, button right. No tint here — any darkening for

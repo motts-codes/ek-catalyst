@@ -93,14 +93,14 @@ const PANEL_CLASS: Record<Hue, { panel: string; muted: string; swatchRing: strin
 };
 
 const TRANSIT_LEGEND: Array<{ band: Band; label: string }> = [
-  { band: 'd7', label: 'Northeast — +7 days' },
-  { band: 'd8', label: 'Mid-Atlantic / Southeast — +8 days' },
-  { band: 'd9', label: 'Central / South — +9 days' },
-  { band: 'd10', label: 'West and far — +10 days' },
+  { band: 'd7', label: 'Northeast: +7 days' },
+  { band: 'd8', label: 'Mid-Atlantic / Southeast: +8 days' },
+  { band: 'd9', label: 'Central / South: +9 days' },
+  { band: 'd10', label: 'West and far: +10 days' },
 ];
 
 const LEGEND: Record<ShipCategory['mode'], Array<{ band: Band; label: string }>> = {
-  national: [...TRANSIT_LEGEND, { band: 'none', label: 'Alaska and Hawaii — not shipped' }],
+  national: [...TRANSIT_LEGEND, { band: 'none', label: 'Alaska and Hawaii: not shipped' }],
   pickup: [
     { band: 'pickup', label: 'Pickup point (Bristol, CT)' },
     { band: 'none', label: 'Not shipped' },

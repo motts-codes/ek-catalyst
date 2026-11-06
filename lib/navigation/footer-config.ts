@@ -105,7 +105,7 @@ export const FOOTER_LEGAL_LINKS = [
 export const FOOTER_NEWSLETTER = {
   title: 'Subscribe to our newsletter',
   description:
-    'Design trends, new collections, showroom events and offers — once a month, in one email.',
+    'Design trends, new collections, showroom events and offers, once a month, in one email.',
   placeholder: 'Your email',
   submitLabel: 'Subscribe',
 };
