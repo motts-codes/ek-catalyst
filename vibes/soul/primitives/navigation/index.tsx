@@ -392,8 +392,10 @@ function MenuTile({
   );
 }
 
+// Hover: no grey box behind the icon; the icon itself turns EK red (search, account, cart,
+// gift certificates, mobile menu trigger and close all share this class).
 const navButtonClassName =
-  'relative rounded-lg bg-[var(--nav-button-background,transparent)] p-1.5 text-[var(--nav-button-icon,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors focus-visible:outline-0 focus-visible:ring-2 @4xl:hover:bg-[var(--nav-button-background-hover,hsl(var(--contrast-100)))] @4xl:hover:text-[var(--nav-button-icon-hover,hsl(var(--foreground)))]';
+  'relative rounded-lg bg-[var(--nav-button-background,transparent)] p-1.5 text-[var(--nav-button-icon,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors focus-visible:outline-0 focus-visible:ring-2 hover:bg-[var(--nav-button-background-hover,transparent)] hover:text-[var(--nav-button-icon-hover,var(--button-primary-background,#d90716))]';
 
 /**
  * This component supports various CSS variables for theming. Here's a comprehensive list, along
@@ -420,9 +422,9 @@ const navButtonClassName =
  *   --nav-sub-link-background-hover: hsl(var(--contrast-100));
  *   --nav-sub-link-font-family: var(--font-family-body);
  *   --nav-button-icon: hsl(var(--foreground));
- *   --nav-button-icon-hover: hsl(var(--foreground));
+ *   --nav-button-icon-hover: var(--button-primary-background);
  *   --nav-button-background: hsl(var(--background));
- *   --nav-button-background-hover: hsl(var(--contrast-100));
+ *   --nav-button-background-hover: transparent;
  *   --nav-menu-background: hsl(var(--background));
  *   --nav-menu-border: hsl(var(--foreground) / 5%);
  *   --nav-mobile-background: hsl(var(--background));
@@ -1077,7 +1079,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   // as a badge on the icon rather than part of it (like a presence indicator).
                   <span
                     aria-hidden
-                    className="absolute right-0.5 top-0.5 h-2.5 w-2.5 rounded-full bg-[#16a34a] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
+                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[#22c55e] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
                   />
                 )}
               </Link>

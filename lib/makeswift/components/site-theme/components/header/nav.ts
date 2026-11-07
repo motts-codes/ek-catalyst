@@ -36,9 +36,11 @@ const button = Group({
   preferredLayout: Group.Layout.Popover,
   props: {
     icon: Color({ label: 'Icon', defaultValue: hsl(colors.foreground) }),
-    iconHover: Color({ label: 'Icon hover', defaultValue: hsl(colors.foreground) }),
+    // Red icon, no grey box on hover. Also pinned with !important in globals.css because the
+    // stored Makeswift theme snapshot overrides these defaults; keep both in sync.
+    iconHover: Color({ label: 'Icon hover', defaultValue: '#D90716' }),
     background: Color({ label: 'Background', defaultValue: hsl(colors.background) }),
-    backgroundHover: Color({ label: 'Background hover', defaultValue: hsl(colors.contrast[100]) }),
+    backgroundHover: Color({ label: 'Background hover', defaultValue: 'transparent' }),
   },
 });
 

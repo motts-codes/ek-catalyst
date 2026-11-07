@@ -211,6 +211,11 @@ h6,
   --swatch-radio-group-light-checked-border: #d90716;
   /* PDP gallery: active thumbnail outlined in brand red (upstream default is black). */
   --product-gallery-image-border-active: #d90716;
+  /* Header icon buttons (search, account, cart): red icon on hover, no grey box. `!important`
+     for the same reason as the button colours above; defaults also set in
+     lib/makeswift/components/site-theme/components/header/nav.ts. */
+  --nav-button-icon-hover: #d90716 !important;
+  --nav-button-background-hover: transparent !important;
   --button-tertiary-background: #96050f !important;
   --button-tertiary-background-hover: #6b040b !important;
   --button-tertiary-foreground: #ffffff !important;
