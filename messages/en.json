@@ -624,6 +624,7 @@
       "toggleNavigation": "Toggle navigation",
       "Icons": {
         "account": "Profile",
+        "accountSignedIn": "Your account, signed in",
         "cart": "Cart",
         "search": "Open search popup",
         "giftCertificates": "Gift certificates"

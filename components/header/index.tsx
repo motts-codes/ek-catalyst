@@ -127,6 +127,14 @@ export const Header = async () => {
     return getCartCount(cartId, customerAccessToken);
   });
 
+  // Signed-in customers get a green status dot on the account icon and go straight to their
+  // account instead of the login page (the login page does not redirect signed-in visitors).
+  const streamableIsLoggedIn = Streamable.from(async () => {
+    const customerAccessToken = await getSessionCustomerAccessToken();
+
+    return Boolean(customerAccessToken);
+  });
+
   const streamableActiveCurrencyId = Streamable.from(async (): Promise<string | undefined> => {
     const currencyCode = await getPreferredCurrencyCode();
 
@@ -140,6 +148,9 @@ export const Header = async () => {
       navigation={{
         accountHref: '/login',
         accountLabel: t('Icons.account'),
+        signedInAccountHref: '/account/orders',
+        signedInAccountLabel: t('Icons.accountSignedIn'),
+        isLoggedIn: streamableIsLoggedIn,
         cartHref: '/cart',
         cartLabel: t('Icons.cart'),
         giftCertificatesLabel: t('Icons.giftCertificates'),

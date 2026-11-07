@@ -117,6 +117,10 @@ interface Props<S extends SearchResult> {
   className?: string;
   isFloating?: boolean;
   accountHref: string;
+  /** Where the account icon goes once the customer is signed in (defaults to accountHref). */
+  signedInAccountHref?: string;
+  /** Signed-in state: shows a small solid green dot on the account icon. */
+  isLoggedIn?: Streamable<boolean>;
   cartCount?: Streamable<number | null>;
   cartHref: string;
   links: Streamable<Link[]>;
@@ -141,6 +145,7 @@ interface Props<S extends SearchResult> {
   searchSubmitLabel?: string;
   cartLabel?: string;
   accountLabel?: string;
+  signedInAccountLabel?: string;
   openSearchPopupLabel?: string;
   searchLabel?: string;
   mobileMenuTriggerLabel?: string;
@@ -465,6 +470,8 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     cartHref,
     cartCount: streamableCartCount,
     accountHref,
+    signedInAccountHref = accountHref,
+    isLoggedIn: streamableIsLoggedIn = false,
     links: streamableLinks,
     logo: streamableLogo,
     logoHref = '/',
@@ -487,6 +494,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     searchSubmitLabel,
     cartLabel = 'Cart',
     accountLabel = 'Profile',
+    signedInAccountLabel = 'Your account, signed in',
     openSearchPopupLabel = 'Open search popup',
     searchLabel = 'Search',
     mobileMenuTriggerLabel = 'Toggle navigation',
@@ -1049,9 +1057,32 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             </Link>
           )}
 
-          <Link aria-label={accountLabel} className={navButtonClassName} href={accountHref}>
-            <User size={20} strokeWidth={1} />
-          </Link>
+          <Stream
+            fallback={
+              <Link aria-label={accountLabel} className={navButtonClassName} href={accountHref}>
+                <User size={20} strokeWidth={1} />
+              </Link>
+            }
+            value={streamableIsLoggedIn}
+          >
+            {(isLoggedIn) => (
+              <Link
+                aria-label={isLoggedIn ? signedInAccountLabel : accountLabel}
+                className={navButtonClassName}
+                href={isLoggedIn ? signedInAccountHref : accountHref}
+              >
+                <User size={20} strokeWidth={1} />
+                {isLoggedIn && (
+                  // Signed-in status dot: solid green, ringed in the nav background so it reads
+                  // as a badge on the icon rather than part of it (like a presence indicator).
+                  <span
+                    aria-hidden
+                    className="absolute right-0.5 top-0.5 h-2.5 w-2.5 rounded-full bg-[#16a34a] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
+                  />
+                )}
+              </Link>
+            )}
+          </Stream>
           <Link aria-label={cartLabel} className={navButtonClassName} href={cartHref}>
             <ShoppingBag size={20} strokeWidth={1} />
             <Stream
