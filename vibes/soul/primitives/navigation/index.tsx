@@ -392,10 +392,11 @@ function MenuTile({
   );
 }
 
-// Hover: no grey box behind the icon; the icon itself turns EK red (search, account, cart,
-// gift certificates, mobile menu trigger and close all share this class).
+// Hover: no grey box behind the icon; the icon turns EK red (same red as the menu links) and
+// grows a touch (search, account, cart, gift certificates, mobile menu trigger and close all
+// share this class). Scale is skipped for reduced-motion users.
 const navButtonClassName =
-  'relative rounded-lg bg-[var(--nav-button-background,transparent)] p-1.5 text-[var(--nav-button-icon,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors focus-visible:outline-0 focus-visible:ring-2 hover:bg-[var(--nav-button-background-hover,transparent)] hover:text-[var(--nav-button-icon-hover,var(--button-primary-background,#d90716))]';
+  'relative rounded-lg bg-[var(--nav-button-background,transparent)] p-1.5 text-[var(--nav-button-icon,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-[color,background-color,transform] duration-200 focus-visible:outline-0 focus-visible:ring-2 hover:bg-[var(--nav-button-background-hover,transparent)] hover:text-[var(--nav-button-icon-hover,var(--button-primary-background,#d90716))] motion-safe:hover:scale-110';
 
 /**
  * This component supports various CSS variables for theming. Here's a comprehensive list, along
