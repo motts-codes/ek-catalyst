@@ -1080,7 +1080,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   // as a badge on the icon rather than part of it (like a presence indicator).
                   <span
                     aria-hidden
-                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-[#22c55e] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
+                    className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-[#22c55e] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
                   />
                 )}
               </Link>
