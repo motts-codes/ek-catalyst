@@ -32,19 +32,13 @@ export interface GuardResult {
   mode: AntiSpamMode;
 }
 
-/**
- * Runs every server-side bot signal for a form submission:
- * honeypot, page-load timing, link count, disposable email, then Vercel BotID.
- *
- * Call it first thing in a server action, before validation, so a bot gets no field-level
- * feedback. Lead forms should then take the normal "thanks" path without delivering; auth forms
- * should return a generic error.
- *
- * @param form Short form name for the log line, e.g. "contact".
- * @param formData The submitted form.
- * @param options Timing floor and limits; `skipTiming` for login-type forms.
- * @returns Whether to block (never in report mode) and the failing signal, if any.
- */
+// Runs every server-side bot signal for a form submission: honeypot, page-load timing, link
+// count, disposable email, then Vercel BotID. Returns whether to block (never in report mode)
+// and the failing signal, if any.
+//
+// Call it first thing in a server action, before validation, so a bot gets no field-level
+// feedback. Lead forms should then take the normal "thanks" path without delivering; auth forms
+// should return a generic error. `form` is the short name for the log line, e.g. "contact".
 export async function guardForm(
   form: string,
   formData: FormData,

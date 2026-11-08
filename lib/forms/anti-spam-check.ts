@@ -1,6 +1,9 @@
 // Pure, dependency-free signal checks so they can be unit-tested with plain Node.
 // The server wrapper (anti-spam.ts) adds BotID, mode handling and logging.
 
+import disposableDomains from 'disposable-email-domains/index.json' with { type: 'json' };
+import disposableWildcards from 'disposable-email-domains/wildcard.json' with { type: 'json' };
+
 import { HONEYPOT_FIELD, LOADED_AT_FIELD } from '@/vibes/soul/form/anti-spam-fields/constants';
 
 export type SpamReason =
@@ -31,26 +34,20 @@ export interface SignalOptions {
 const DAY = 24 * 60 * 60 * 1000;
 const LINK_PATTERN = /https?:\/\/|www\./gi;
 
-/**
- * Throwaway-mail domains seen in lead spam. Short on purpose: the goal is to stop the obvious
- * ones for free, not to maintain a registry. Extend when a new one shows up in the logs.
- */
-export const DISPOSABLE_EMAIL_DOMAINS = new Set([
-  '10minutemail.com',
-  'guerrillamail.com',
-  'guerrillamail.net',
-  'mailinator.com',
-  'sharklasers.com',
-  'temp-mail.org',
-  'tempmail.com',
-  'throwawaymail.com',
-  'trashmail.com',
-  'yopmail.com',
-  'getnada.com',
-  'dispostable.com',
-  'maildrop.cc',
-  'fakeinbox.com',
-]);
+// Throwaway-mail domains from the community-maintained `disposable-email-domains` list
+// (~120k exact domains plus ~400 wildcard suffixes such as 33mail.com, where every subdomain is
+// disposable). Built lazily so a cold start that never sees an email does not pay for the Set.
+let disposableSet: Set<string> | null = null;
+
+function isDisposableDomain(domain: string): boolean {
+  disposableSet ??= new Set(disposableDomains);
+
+  if (disposableSet.has(domain)) {
+    return true;
+  }
+
+  return disposableWildcards.some((suffix) => domain === suffix || domain.endsWith(`.${suffix}`));
+}
 
 export function emailDomain(email: string): string {
   const at = email.lastIndexOf('@');
@@ -67,13 +64,8 @@ export function countLinks(values: string[]): number {
   return values.reduce((n, v) => n + (v.match(LINK_PATTERN)?.length ?? 0), 0);
 }
 
-/**
- * Runs the request-only bot signals, cheapest and most certain first.
- *
- * @param formData The submitted form.
- * @param options Timing floor and limits.
- * @returns The first failing signal, or null when the submission looks human.
- */
+// Runs the request-only bot signals, cheapest and most certain first, and returns the first
+// failing one, or null when the submission looks human.
 export function checkFormSignals(formData: FormData, options: SignalOptions): SpamReason | null {
   const { minMs, maxMs = DAY, maxLinks = 3, skipTiming = false, now = Date.now() } = options;
 
@@ -112,7 +104,7 @@ export function checkFormSignals(formData: FormData, options: SignalOptions): Sp
 
   const email = entries.find(([key]) => key === 'email')?.[1];
 
-  if (email && DISPOSABLE_EMAIL_DOMAINS.has(emailDomain(email))) {
+  if (email && isDisposableDomain(emailDomain(email))) {
     return 'disposable-email';
   }
 

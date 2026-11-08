@@ -201,7 +201,9 @@ Done, local commit, report mode:
   `register-customer.ts`. Lead forms and newsletter take the silent path when blocked; login and
   register return the generic error; forgot-password returns its normal "check your email" text.
 - Layer 0 inside the same check: more than 3 links across the text fields, or a disposable email
-  domain, counts as a signal. Phone already required 10 US digits.
+  domain, counts as a signal. The domain list is the `disposable-email-domains` package (about
+  120k exact domains plus 400 wildcard suffixes), matched case-insensitively on the part after the
+  `@`; bump the package now and then to pick up new services. Phone already required 10 US digits.
 - BotID Basic on every POST. Vercel project `ek-catalyst` is on the Pro team, so Deep Analysis
   and WAF rate limits are available when wanted.
 - Mode switch: `FORM_ANTISPAM_MODE=enforce` in the Vercel environment flips from log-only to
