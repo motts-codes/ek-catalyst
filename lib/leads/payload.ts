@@ -94,6 +94,7 @@ export function buildLeadPayload(
 
   return {
     ...fields,
+    ...crmFields(values),
     name: fullName(values),
     form,
     form_label: formLabel(form),
@@ -105,4 +106,80 @@ export function buildLeadPayload(
       TRACKING_KEYS.filter((key) => tracking[key]).map((key) => [key, tracking[key] ?? '']),
     ),
   };
+}
+
+// ---- CRM-ready values -------------------------------------------------------------------------
+// monday.com Status columns only accept their existing labels, so the payload also carries the
+// form's answers translated into the exact labels on the WF28 Online Nurturing Funnel board
+// (read from the board on 8 Nov 2026). Pabbly maps these keys straight across, no lookups.
+
+/** Website showroom value → monday "Store" label (note the board's own spelling of Bristol). */
+export const MONDAY_STORE_LABELS: Record<string, string> = {
+  brookfield: 'CT - BROOKFIELD',
+  'new-london': 'CT - NEW LONDON',
+  newington: 'CT - NEWINGTON',
+  orange: 'CT - ORANGE',
+  stamford: 'CT - STAMFORD',
+  bristol: 'CT-BRISTOL',
+};
+
+/** Meeting format → monday "Kitchen Design options" label. */
+export const MONDAY_DESIGN_OPTIONS: Record<string, string> = {
+  showroom: 'In-Store',
+  video: 'Virtual',
+};
+
+/** Meeting format → wording in the board's free-text "Preference" column. */
+export const PREFERENCE_LABELS: Record<string, string> = {
+  showroom: 'Showroom Consult',
+  video: 'Virtual Consult',
+};
+
+// monday "State" label from a US ZIP prefix: CT is 06; MA 010–027; NY 100–149; NJ 070–089.
+export function stateFromZip(zip: unknown): string {
+  const digits = asText(zip).replace(/\D/g, '');
+
+  if (digits.length < 5) {
+    return '';
+  }
+
+  const p3 = Number(digits.slice(0, 3));
+
+  if (digits.startsWith('06')) {
+    return 'CT';
+  }
+
+  if ((p3 >= 10 && p3 <= 27) || (p3 >= 100 && p3 <= 149) || (p3 >= 70 && p3 <= 89)) {
+    return 'MA / NY / NJ';
+  }
+
+  return '';
+}
+
+export function crmFields(values: Record<string, unknown>): Record<string, string> {
+  const out: Record<string, string> = {};
+  const showroom = asText(values.showroom);
+  const format = asText(values.format);
+
+  if (showroom && MONDAY_STORE_LABELS[showroom]) {
+    out.store = MONDAY_STORE_LABELS[showroom];
+  }
+
+  if (format && MONDAY_DESIGN_OPTIONS[format]) {
+    out.design_option = MONDAY_DESIGN_OPTIONS[format];
+    out.preference = PREFERENCE_LABELS[format] ?? format;
+  }
+
+  if ('smsConsent' in values) {
+    out.sms_opt_in =
+      values.smsConsent === true || asText(values.smsConsent) === 'true' ? 'IN' : 'OUT';
+  }
+
+  const state = stateFromZip(values.zip);
+
+  if (state) {
+    out.state = state;
+  }
+
+  return out;
 }

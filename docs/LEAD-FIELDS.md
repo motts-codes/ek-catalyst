@@ -99,9 +99,15 @@ Fields by form, Read me). In short:
   Type (Status), Order Number (Text), Trade License / Resale No (Text), Product of Interest (Text),
   Utm Term (Text, low priority). Optional, or fold into Message: Countertop Material (Status),
   Approx. Sq Ft (Text), Cut-outs (Status).
-- **Status columns only accept their existing labels:** Store must contain the six showroom
-  names, SMS Opt-in needs an opted-in label, Lead Source needs "Website". Project Type
-  (Commercial) is a Dropdown with fixed values, so free-text scope goes to Message instead.
+- **Status columns only accept their existing labels**, so the payload also carries ready-made
+  keys in the board's own wording (labels read from the board on 8 Nov 2026): `store`
+  (CT - BROOKFIELD, CT - NEW LONDON, CT - NEWINGTON, CT - ORANGE, CT - STAMFORD, CT-BRISTOL),
+  `design_option` (In-Store / Virtual, for Kitchen Design options), `preference` (Showroom Consult /
+  Virtual Consult), `sms_opt_in` (IN / OUT) and `state` (CT or MA / NY / NJ, from the ZIP). The
+  Commercial and Multifamily forms gained an optional Project type dropdown whose values are the
+  board's six Project Type (Commercial) options. Lead Source has "Website" and "Website – Contact
+  Us" labels; Platform has only fb / ig. The "Status labels" sheet of the workbook lists every
+  label of the relevant columns.
 
 ## What we need from Express Kitchens
 
