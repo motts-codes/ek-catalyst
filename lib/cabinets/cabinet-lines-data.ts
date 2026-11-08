@@ -383,7 +383,7 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
   const lineNames = names.productLines;
 
   const lines = await Promise.all(
-    children.map(async (child): Promise<CabinetLine> => {
+    children.map(async (child): Promise<CabinetLine | null> => {
       const { data: mf } = await client.fetch({
         document: CabinetLineMetafieldsQuery,
         variables: { entityId: child.entityId },
@@ -391,6 +391,16 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
       });
 
       const cat = mf.site.category;
+
+      // merch.info.active is the admin's on/off switch (cabinet-admin > Collections). Off means
+      // the collection is left out of every list built from this function; missing means on.
+      const merchInfo = parseJson<{ door_style?: string; active?: boolean }>(
+        cat?.merch.edges?.find((e) => e.node.key === 'info')?.node.value,
+      );
+
+      if (merchInfo?.active === false) {
+        return null;
+      }
 
       // pricing_10x10.pricing = { rta: {...}, assembled: {...} }
       const pricingRaw = cat?.pricing.edges?.find((e) => e.node.key === 'pricing')?.node.value;
@@ -452,10 +462,7 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
         construction: spec?.construction_id
           ? names.constructions.get(spec.construction_id)
           : undefined,
-        style: styleOf(
-          parseJson<{ door_style?: string }>(value('merch', 'info'))?.door_style,
-          specHtml,
-        ),
+        style: styleOf(merchInfo?.door_style, specHtml),
         finishTypes: finishTypesOf(specHtml),
       };
 
@@ -501,9 +508,12 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
     }),
   );
 
-  // A collection with no price for this program isn't sold in it (e.g. Rochelle is Assembled
-  // only), so it stays off that program's listing rather than showing a card with no price.
-  return lines.filter((line) => line.price != null && line.price !== '');
+  // Inactive collections (null above) are gone everywhere. A collection with no price for this
+  // program isn't sold in it (e.g. Rochelle is Assembled only), so it stays off that program's
+  // listing rather than showing a card with no price.
+  return lines.filter(
+    (line): line is CabinetLine => line != null && line.price != null && line.price !== '',
+  );
 });
 
 // Program-wide FAQ shown on the /cabinets/* listing listing pages (one FAQ per program, not per

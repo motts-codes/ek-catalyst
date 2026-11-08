@@ -46,8 +46,10 @@ export interface CollectionSpec {
 export interface CollectionMetafields {
   // pricing_10x10.pricing = { rta, assembled }
   pricing: { rta: ProgramPricing; assembled: ProgramPricing };
-  // merch.info
-  merch: { line: string; door_style: string; default_finish: string };
+  // merch.info. `active` (default true) is the merchandising switch: an inactive collection is
+  // left out of every collection list on the storefront (Assembled / RTA listings, the Cabinets
+  // overview, home and Pro rows, samples, estimator); its own page stays reachable by URL.
+  merch: { line: string; door_style: string; default_finish: string; active: boolean };
   // fulfillment.delivery = { rta, assembled }
   delivery: { rta: string; assembled: string };
   // assets.spec_sheets = { rta, assembled }
@@ -104,7 +106,7 @@ const DEFAULT_FAQ_HEADLINE = 'Frequently Asked Questions';
 export function emptyCollectionMetafields(): CollectionMetafields {
   return {
     pricing: { rta: emptyPricing(), assembled: emptyPricing() },
-    merch: { line: '', door_style: '', default_finish: '' },
+    merch: { line: '', door_style: '', default_finish: '', active: true },
     delivery: { rta: '', assembled: '' },
     specSheets: { rta: '', assembled: '' },
     sample: { product_id: '', price: '', url: '' },
@@ -224,7 +226,8 @@ export async function readCollectionMetafields(categoryId: number): Promise<Coll
       rta: { ...base.pricing.rta, ...pricing?.rta },
       assembled: { ...base.pricing.assembled, ...pricing?.assembled },
     },
-    merch: { ...base.merch, ...merch },
+    // Collections written before the switch existed have no `active`: treat them as active.
+    merch: { ...base.merch, ...merch, active: merch?.active !== false },
     delivery: { ...base.delivery, ...delivery },
     specSheets: { ...base.specSheets, ...specSheets },
     sample: {
@@ -497,6 +500,8 @@ export interface CollectionRow {
   line: string;
   doorStyle: string;
   defaultFinish: string;
+  /** merch.info.active — false hides the collection from every storefront list. */
+  active: boolean;
 }
 
 export async function listCollectionRows(): Promise<CollectionRow[]> {
@@ -521,6 +526,7 @@ export async function listCollectionRows(): Promise<CollectionRow[]> {
         line: lineName(mf.spec.productLineId) || mf.merch.line,
         doorStyle: constructionName(mf.spec.constructionId) || mf.merch.door_style,
         defaultFinish: colorName(mf.spec.defaultColorId) || mf.merch.default_finish,
+        active: mf.merch.active,
       };
     }),
   );

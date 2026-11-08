@@ -15,13 +15,14 @@ export function CollectionsTable({ rows }: { rows: CollectionRow[] }) {
               <th className="px-4 py-3">Line</th>
               <th className="px-4 py-3">Door Style</th>
               <th className="px-4 py-3">Default Finish</th>
+              <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {rows.length === 0 ? (
               <tr>
-                <td className="px-4 py-6 text-gray-500" colSpan={5}>
+                <td className="px-4 py-6 text-gray-500" colSpan={6}>
                   No collections found.
                 </td>
               </tr>
@@ -32,6 +33,17 @@ export function CollectionsTable({ rows }: { rows: CollectionRow[] }) {
                   <td className="px-4 py-3 text-gray-600">{r.line || '–'}</td>
                   <td className="px-4 py-3 text-gray-600">{r.doorStyle || '–'}</td>
                   <td className="px-4 py-3 text-gray-600">{r.defaultFinish || '–'}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={
+                        r.active
+                          ? 'inline-flex rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800'
+                          : 'inline-flex rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700'
+                      }
+                    >
+                      {r.active ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
                   <td className="px-4 py-3 text-right">
                     <Link
                       className="inline-flex items-center gap-1 rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100"

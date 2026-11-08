@@ -74,6 +74,34 @@ export function CollectionEditor({
           <span className="font-normal text-gray-400">(category {collection.id})</span>
         </h2>
 
+        <Group title="Status">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              checked={data.merch.active}
+              className="mt-0.5 h-4 w-4 accent-[#d90716]"
+              onChange={(e) =>
+                setData((d) => ({ ...d, merch: { ...d.merch, active: e.target.checked } }))
+              }
+              type="checkbox"
+            />
+            <span>
+              <span className="block text-sm font-medium text-gray-900">
+                Active: shown on the website
+              </span>
+              <span className="block text-xs text-gray-500">
+                Untick to hide this collection from the Assembled and RTA listings, the Cabinets
+                overview, and every other place collections are listed (home, Pro, samples,
+                estimator). Its own page stays reachable by URL. Takes effect after Save.
+              </span>
+            </span>
+          </label>
+          {!data.merch.active && (
+            <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
+              This collection is inactive and hidden from shoppers.
+            </p>
+          )}
+        </Group>
+
         <Group title="10×10 Kitchen Pricing">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {(['assembled', 'rta'] as const).map((prog) => (
