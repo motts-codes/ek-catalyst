@@ -28,10 +28,12 @@ const LINK = /\[([^\]]+)\]\(([^)]+)\)/g;
 const plain = (answer: string) => answer.replace(LINK, '$1');
 
 // Collapsible FAQ section for category and cabinet pages (per-collection, per-program and the
-// generic `faq.list`); the data source differs, the presentation is the same. The first row opens
-// by default; FAQPage JSON-LD is emitted from the same items. Renders nothing without rows.
+// generic `faq.list`); the data source differs, the presentation is the same. One row is open at a
+// time (the first by default): opening another closes it, clicking the open one collapses it.
+// FAQPage JSON-LD is emitted from the same items. Renders nothing without rows.
 export function CabinetFaq({ data, className }: Props) {
   const items = (data?.items ?? []).filter((i) => i.q.trim() !== '' || i.a.trim() !== '');
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   if (data == null || items.length === 0) {
     return null;
@@ -48,24 +50,33 @@ export function CabinetFaq({ data, className }: Props) {
 
       <dl className="divide-y divide-contrast-100 border-t border-contrast-100">
         {items.map((item, index) => (
-          <FaqRow a={item.a} defaultOpen={index === 0} key={index} q={item.q} />
+          <FaqRow
+            a={item.a}
+            key={index}
+            onToggle={() => setOpenIndex((current) => (current === index ? null : index))}
+            open={openIndex === index}
+            q={item.q}
+          />
         ))}
       </dl>
     </SectionLayout>
   );
 }
 
-// One question row. Collapsed by default; the first row opens so the section reads as populated.
-function FaqRow({ q, a, defaultOpen = false }: CabinetFaqItem & { defaultOpen?: boolean }) {
-  const [open, setOpen] = useState(defaultOpen);
-
+// One question row; the section owns which row is open so only one answer shows at a time.
+function FaqRow({
+  q,
+  a,
+  open,
+  onToggle,
+}: CabinetFaqItem & { open: boolean; onToggle: () => void }) {
   return (
     <div>
       <dt>
         <button
           aria-expanded={open}
           className="flex w-full items-center justify-between gap-4 py-4 text-left"
-          onClick={() => setOpen((v) => !v)}
+          onClick={onToggle}
           type="button"
         >
           <span className="font-[family-name:var(--font-family-heading)] text-base font-semibold leading-snug @xl:text-lg">

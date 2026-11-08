@@ -66,9 +66,8 @@ function questionId(question: string): string {
 export function FaqExplorer({ groups, className }: { groups: FaqGroup[]; className?: string }) {
   const [query, setQuery] = useState('');
   const deferred = useDeferredValue(query.trim().toLowerCase());
-  const [openIds, setOpenIds] = useState<Set<string>>(
-    () => new Set(groups[0] ? [groups[0].id] : []),
-  );
+  // One topic open at a time (the first by default); opening another closes the previous one.
+  const [openId, setOpenId] = useState<string | null>(groups[0]?.id ?? null);
   const [activeId, setActiveId] = useState(groups[0]?.id ?? '');
   const searchId = useId();
   const searching = deferred !== '';
@@ -100,7 +99,7 @@ export function FaqExplorer({ groups, className }: { groups: FaqGroup[]; classNa
         (group) => group.id === id || group.items.some((item) => questionId(item.q) === id),
       );
 
-      if (owner) setOpenIds((current) => new Set(current).add(owner.id));
+      if (owner) setOpenId(owner.id);
     };
 
     openHash();
@@ -133,18 +132,10 @@ export function FaqExplorer({ groups, className }: { groups: FaqGroup[]; classNa
     return () => observer.disconnect();
   }, [groups, visible]);
 
-  const toggle = (id: string) =>
-    setOpenIds((current) => {
-      const next = new Set(current);
-
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-
-      return next;
-    });
+  const toggle = (id: string) => setOpenId((current) => (current === id ? null : id));
 
   const jump = (id: string) => {
-    setOpenIds((current) => new Set(current).add(id));
+    setOpenId(id);
     setActiveId(id);
   };
 
@@ -257,7 +248,7 @@ export function FaqExplorer({ groups, className }: { groups: FaqGroup[]; classNa
                 highlight={deferred}
                 key={group.id}
                 onToggle={() => toggle(group.id)}
-                open={searching || openIds.has(group.id)}
+                open={searching || openId === group.id}
               />
             ))}
           </div>
