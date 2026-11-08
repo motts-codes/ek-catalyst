@@ -9,6 +9,8 @@ import { Field, schema } from '@/vibes/soul/form/dynamic-form/schema';
 import { redirect } from '~/i18n/routing';
 
 import { createMondayLead, isMondayConfigured } from '../leads/monday';
+import { buildLeadPayload, extractTracking, type Tracking } from '../leads/payload';
+import { leadWebhookUrls, postLeadWebhooks } from '../leads/webhook';
 
 import { guardForm } from './anti-spam';
 
@@ -25,21 +27,53 @@ interface LeadMeta {
   confirmPath: string;
 }
 
-async function deliverLead(form: string, value: Record<string, unknown>) {
-  if (!isMondayConfigured()) {
+// Fan-out: every configured channel gets the lead (webhooks such as Pabbly → monday.com and a
+// Google Sheet, and/or monday.com directly). With nothing configured the lead is logged.
+async function deliverLead(form: string, value: Record<string, unknown>, tracking: Tracking = {}) {
+  const payload = buildLeadPayload(form, value, tracking);
+  const channels: Array<Promise<{ channel: string; ok: boolean; error?: string }>> = [];
+
+  if (leadWebhookUrls().length > 0) {
+    channels.push(
+      postLeadWebhooks(payload).then((hits) => ({
+        channel: 'webhook',
+        ok: hits.some((r) => r.ok),
+        error: hits
+          .filter((r) => !r.ok)
+          .map((r) => `${r.url.slice(0, 60)}… ${r.error ?? `HTTP ${r.status ?? '?'}`}`)
+          .join('; '),
+      })),
+    );
+  }
+
+  if (isMondayConfigured()) {
+    channels.push(
+      createMondayLead({ form, values: value }).then((r) => ({
+        channel: 'monday',
+        ok: r.ok,
+        error: r.ok ? undefined : r.error,
+      })),
+    );
+  }
+
+  if (channels.length === 0) {
     // eslint-disable-next-line no-console
-    console.info(`[lead:${form}]`, JSON.stringify(value));
+    console.info(`[lead:${form}]`, JSON.stringify(payload));
 
     return;
   }
 
-  const result = await createMondayLead({ form, values: value });
+  const results = await Promise.all(channels);
+  const failed = results.filter((r) => !r.ok);
 
-  if (!result.ok) {
+  if (failed.length > 0) {
     // The visitor still gets the confirmation page (they did nothing wrong); the lead is kept in
     // the logs so it can be re-entered by hand. Grep for "[lead:undelivered]".
     // eslint-disable-next-line no-console
-    console.error(`[lead:undelivered] ${form} ${result.error}`, JSON.stringify(value));
+    console.error(
+      `[lead:undelivered] ${form} ${failed.map((f) => `${f.channel}: ${f.error ?? 'failed'}`).join(' | ')}`,
+      JSON.stringify(payload),
+    );
   }
 }
 
@@ -63,7 +97,7 @@ async function submitLead<F extends Field>(
     return { lastResult: submission.reply() };
   }
 
-  await deliverLead(meta.form, submission.value);
+  await deliverLead(meta.form, submission.value, extractTracking(formData));
 
   return redirect({ href: meta.confirmPath, locale: await getLocale() });
 }
@@ -154,7 +188,7 @@ export async function submitEstimateLead<F extends Field>(
     return { lastResult: submission.reply() };
   }
 
-  await deliverLead('estimate', submission.value);
+  await deliverLead('estimate', submission.value, extractTracking(formData));
 
   return {
     lastResult: submission.reply({ resetForm: true }),

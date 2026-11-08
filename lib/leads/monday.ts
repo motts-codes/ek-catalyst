@@ -2,6 +2,8 @@ import 'server-only';
 
 import { z } from 'zod';
 
+import { asText, formLabel } from './payload';
+
 // Lead delivery → monday.com CRM. Active when MONDAY_API_TOKEN and MONDAY_BOARD_ID are set.
 //
 // Every valid lead becomes one item on the board. The item name is "<Form> · <Name>" and the
@@ -27,20 +29,6 @@ const CREATE_UPDATE = `
     create_update(item_id: $item, body: $body) { id }
   }
 `;
-
-const FORM_LABELS: Record<string, string> = {
-  contact: 'Contact',
-  'free-design': 'Free design consult',
-  booking: 'Book',
-  quote: 'Quote request',
-  industry: 'Commercial / multifamily',
-  'pro-program': 'Pro Program',
-  'refer-a-friend': 'Referral',
-  support: 'Support',
-  'return-authorization': 'Return',
-  'price-match': 'Price match',
-  estimate: 'Kitchen estimate',
-};
 
 const columnMapSchema = z.record(z.string());
 const responseSchema = z.object({
@@ -101,24 +89,8 @@ export async function createMondayLead({ form, values }: LeadPayload): Promise<M
   return { ok: true, itemId };
 }
 
-function asText(value: unknown): string {
-  if (Array.isArray(value)) {
-    return value.map(asText).join(', ');
-  }
-
-  if (typeof value === 'string') {
-    return value;
-  }
-
-  if (typeof value === 'number' || typeof value === 'boolean') {
-    return String(value);
-  }
-
-  return value == null ? '' : JSON.stringify(value);
-}
-
 function itemName(form: string, values: Record<string, unknown>): string {
-  const label = FORM_LABELS[form] ?? form;
+  const label = formLabel(form);
   const person = [values.firstName, values.lastName]
     .map(asText)
     .filter((v) => v.trim() !== '')
@@ -155,7 +127,7 @@ function columnMap(): Record<string, string> {
 
 function fieldValue(field: string, form: string, values: Record<string, unknown>): string {
   if (field === 'form') {
-    return FORM_LABELS[form] ?? form;
+    return formLabel(form);
   }
 
   if (field === 'source') {
@@ -196,7 +168,7 @@ function updateBody(form: string, values: Record<string, unknown>): string {
     .filter(([, text]) => text !== '')
     .map(([key, text]) => `<b>${escapeHtml(key)}</b>: ${escapeHtml(text)}`);
 
-  return [`<b>Form</b>: ${escapeHtml(FORM_LABELS[form] ?? form)} (website)`, ...lines].join('<br>');
+  return [`<b>Form</b>: ${escapeHtml(formLabel(form))} (website)`, ...lines].join('<br>');
 }
 
 function escapeHtml(s: string): string {

@@ -4,7 +4,41 @@ Status: 8 Nov 2026. Every form below posts through `lib/forms/submit-lead.ts` an
 `MONDAY_API_TOKEN` and `MONDAY_BOARD_ID` are set, lands on the monday.com board as one item
 (`lib/leads/monday.ts`). Account creation is not a lead and goes to BigCommerce only.
 
-## How a lead arrives on the board
+## How the old landing page did it (and what we copy)
+
+The Stencil page `/shop-assembled-cabinets-lp/` never called monday.com itself. Its form posted
+one flat JSON payload to a **Pabbly Connect** webhook, which maps the keys onto monday.com
+columns, and a second copy to a **Google Apps Script** that logs a sheet. The payload was:
+`name, email, phone, preference, source, page_url, date, timestamp` plus any of
+`utm_source, utm_medium, utm_campaign, utm_term, utm_content, gclid, fbclid` captured from the
+landing URL and kept in sessionStorage.
+
+The new site does the same from the server (`lib/leads/webhook.ts`, URLs in
+`LEAD_WEBHOOK_URLS`, comma-separated), so the webhook URLs are no longer visible in page source,
+BotID and the honeypot run first, and the Pabbly mapping stays where it is. Every lead form
+carries the same attribution fields (`vibes/soul/form/tracking-fields`). The payload keeps the old
+keys and adds the rest of the form:
+
+| Key                                                                        | Value                                                                 |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `name`                                                                     | the Name field, or first + last name joined                           |
+| `email`, `phone`, `zip`, and every other field of that form, by field name | as typed; multi-selects joined with ", "; empty fields omitted        |
+| `form`, `form_label`                                                       | short id (`contact`) and label (`Contact`)                            |
+| `source`                                                                   | `EK Website – <Form label>` (the old page sent `EK Landing Page – …`) |
+| `page_url`                                                                 | URL of the page the form was on                                       |
+| `date`, `timestamp`                                                        | `11/8/2026` (US Eastern) and ISO 8601                                 |
+| `utm_source` … `fbclid`                                                    | only when present                                                     |
+
+**Mapping work for the client (or us, if we own the Pabbly account):** the existing workflow maps
+the old page's handful of keys. New forms send more keys, listed below per form. In Pabbly, each
+new key either maps to an existing monday column, or a new column is created on the board first
+and then mapped. Keys that stay unmapped are simply ignored by Pabbly, so nothing breaks while the
+mapping grows. Suggest routing by `form_label` (one Pabbly router step) so each form can map to
+its own group or columns.
+
+The direct monday.com integration below remains available as an alternative or a second channel.
+
+## How a lead arrives on the board (direct monday.com integration)
 
 - **Item name:** `<Form> · <Name>` (falls back to the email, then "Website lead").
 - **First update on the item:** every submitted field as `Field: value`, plus the form name.

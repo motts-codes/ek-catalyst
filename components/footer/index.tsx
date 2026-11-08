@@ -8,6 +8,7 @@ import {
 import { getTranslations } from 'next-intl/server';
 import { cache, JSX } from 'react';
 
+import { TrackingCapture } from '@/vibes/soul/form/tracking-fields';
 import { LayoutQuery } from '~/app/[locale]/(default)/page-data';
 import { client } from '~/client';
 import { readFragment } from '~/client/graphql';
@@ -94,22 +95,26 @@ export const Footer = async () => {
     }));
 
   return (
-    <FooterSection
-      contactPanel={{
-        ...FOOTER_CONTACT,
-        showrooms: SHOWROOMS.map(({ name, href }) => ({ name, href })),
-      }}
-      copyright={copyright}
-      description={FOOTER_BRAND_DESCRIPTION}
-      legalLinks={[...FOOTER_LEGAL_LINKS, { label: FOOTER_CONTACT.phone.label }]}
-      logo={logo}
-      logoHref="/"
-      logoLabel={t('home')}
-      newsletter={{ ...FOOTER_NEWSLETTER, action: subscribe }}
-      paymentIcons={paymentIcons}
-      sections={FOOTER_SECTIONS}
-      socialMediaLinks={socialMediaLinks}
-      trustBadges={trustBadges}
-    />
+    <>
+      {/* Stores utm_* / gclid / fbclid from the landing URL so any later lead form carries them. */}
+      <TrackingCapture />
+      <FooterSection
+        contactPanel={{
+          ...FOOTER_CONTACT,
+          showrooms: SHOWROOMS.map(({ name, href }) => ({ name, href })),
+        }}
+        copyright={copyright}
+        description={FOOTER_BRAND_DESCRIPTION}
+        legalLinks={[...FOOTER_LEGAL_LINKS, { label: FOOTER_CONTACT.phone.label }]}
+        logo={logo}
+        logoHref="/"
+        logoLabel={t('home')}
+        newsletter={{ ...FOOTER_NEWSLETTER, action: subscribe }}
+        paymentIcons={paymentIcons}
+        sections={FOOTER_SECTIONS}
+        socialMediaLinks={socialMediaLinks}
+        trustBadges={trustBadges}
+      />
+    </>
   );
 };

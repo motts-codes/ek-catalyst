@@ -142,7 +142,12 @@ anyone time.
   (Integrations, API), turn on double opt-in for API signups (Subscribers, Settings), pick or
   create a "Website" group, and add the two variables in Vercel. First real signup should be
   checked end to end: confirmation email arrives, clicking it moves the subscriber to active.
-- **Leads: monday.com.** Every lead form except account creation delivers to a monday.com board
+- **Leads: webhooks first, monday.com direct as an option.** The old landing page reached
+  monday.com through a Pabbly Connect webhook plus a Google Sheet log; the new site posts the same
+  style of flat JSON payload (with utm/gclid/fbclid attribution) to every URL in
+  `LEAD_WEBHOOK_URLS` from the server (`lib/leads/webhook.ts`). See `docs/LEAD-FIELDS.md` for
+  the payload and the per-form keys Pabbly needs to map. Alternatively, or additionally, every
+  lead form except account creation delivers straight to a monday.com board
   (`lib/leads/monday.ts`), active once `MONDAY_API_TOKEN` and `MONDAY_BOARD_ID` are set. Each
   lead is one item named "Form · Name" with the whole submission as its first update, plus typed
   columns when `MONDAY_COLUMN_MAP` lists the board's column ids. A failed delivery still shows the

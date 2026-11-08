@@ -10,7 +10,6 @@ import {
   useForm,
   useInputControl,
 } from '@conform-to/react';
-import { AntiSpamFields } from '@/vibes/soul/form/anti-spam-fields';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
@@ -27,6 +26,7 @@ import { useFormStatus } from 'react-dom';
 import RecaptchaWidget from 'react-google-recaptcha';
 import { z } from 'zod';
 
+import { AntiSpamFields } from '@/vibes/soul/form/anti-spam-fields';
 import { ButtonRadioGroup } from '@/vibes/soul/form/button-radio-group';
 import { CardRadioGroup } from '@/vibes/soul/form/card-radio-group';
 import { Checkbox } from '@/vibes/soul/form/checkbox';
@@ -40,6 +40,7 @@ import { RadioGroup } from '@/vibes/soul/form/radio-group';
 import { Select } from '@/vibes/soul/form/select';
 import { SwatchRadioGroup } from '@/vibes/soul/form/swatch-radio-group';
 import { Textarea } from '@/vibes/soul/form/textarea';
+import { TrackingFields } from '@/vibes/soul/form/tracking-fields';
 import { Button, ButtonProps } from '@/vibes/soul/primitives/button';
 
 import { formatUsPhone } from './phone';
@@ -229,6 +230,7 @@ export function DynamicForm<F extends Field>({
     <FormProvider context={form.context}>
       <form {...getFormProps(form)} action={formAction} onChange={onChange}>
         <AntiSpamFields />
+        <TrackingFields />
         {steps != null && (
           <ol
             aria-label={`Step ${step + 1} of ${steps.length}`}
