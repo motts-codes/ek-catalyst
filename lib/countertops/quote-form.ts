@@ -5,8 +5,16 @@ import { heroImageFor } from '~/lib/category/category-content';
 // countertop category pages, the countertop PDPs and the /countertops content page so the quote
 // path reads the same everywhere.
 
-/** In-page anchor of the quote form; card and PDP buttons jump to it. */
+/** In-page anchor of the quote form on the quote page. */
 export const QUOTE_ANCHOR = 'request-a-quote';
+
+/** The one countertop quote page; cards, PDPs and category bands all send shoppers here. */
+export const QUOTE_PAGE_HREF = '/countertops/get-a-quote';
+
+// The quote page with the stone being quoted carried in the URL (the form names it).
+export function quotePageHref(product?: string): string {
+  return product ? `${QUOTE_PAGE_HREF}?product=${encodeURIComponent(product)}` : QUOTE_PAGE_HREF;
+}
 
 export const COUNTERTOP_PHONE = { label: 'Call to submit request', href: 'tel:+18602471000' };
 

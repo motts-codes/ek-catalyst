@@ -17,7 +17,8 @@ import {
   CabinetTypeFilter,
   type CabinetTypeValue,
 } from '@/vibes/soul/sections/cabinet-type-filter';
-import { CountertopQuote } from '@/vibes/soul/sections/countertop-quote';
+import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
+import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
 import { SeoContentSection } from '@/vibes/soul/sections/seo-content';
@@ -48,13 +49,8 @@ import {
 } from '~/lib/cabinets/type-filter-fallback';
 import { pickFaq } from '~/lib/category/category-faq';
 import { parseSeoContent } from '~/lib/category/category-seo';
-import {
-  COUNTERTOP_QUOTE_FIELDS,
-  COUNTERTOP_QUOTE_IMAGE,
-  QUOTE_ANCHOR,
-} from '~/lib/countertops/quote-form';
+import { QUOTE_PAGE_HREF } from '~/lib/countertops/quote-form';
 import { getPreferredCurrencyCode } from '~/lib/currency';
-import { submitQuoteLead } from '~/lib/forms/submit-lead';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { EditableSection } from '~/lib/makeswift/components/editable-section';
 import { CATEGORY_HEADER_TYPE } from '~/lib/makeswift/components/section-types';
@@ -389,20 +385,38 @@ function programCrumbs(program: Program | undefined) {
   ];
 }
 
-// Countertops are quoted, not carted: their cards link to a quote form rendered under the grid.
-const isCountertopPath = (path: string) => path.startsWith('/countertops');
+// Countertops are quoted, not carted: their cards send shoppers to the quote page (with the
+// product named), the grid carries the per-square-foot prices, and a closing band repeats the
+// quote path for anyone who did not pick a product. Samples stay carted.
+const isCountertopPath = (path: string) =>
+  path.startsWith('/countertops') && !path.startsWith('/countertops/samples');
 
-const quoteHrefFor = (path: string) => (isCountertopPath(path) ? `#${QUOTE_ANCHOR}` : undefined);
+const quoteHrefFor = (path: string) => (isCountertopPath(path) ? QUOTE_PAGE_HREF : undefined);
+
+function CountertopPricing({ path }: { path: string }) {
+  if (!isCountertopPath(path)) return null;
+
+  return (
+    <CategoryPoints
+      fine="Per square foot, supplied and delivered; your installer fits it. Every top is quoted to your kitchen."
+      points={[
+        { icon: 'price', label: 'Granite from $49.99 · Quartz from $59.99 per sq ft' },
+        { icon: 'clock', label: 'Quotes usually back the same day' },
+        { icon: 'phone', label: 'Or call 860-247-1000 and order by phone' },
+      ]}
+    />
+  );
+}
 
 function CountertopQuoteBand({ path }: { path: string }) {
   if (!isCountertopPath(path)) return null;
 
   return (
-    <CountertopQuote
-      action={submitQuoteLead}
-      fields={COUNTERTOP_QUOTE_FIELDS}
-      id={QUOTE_ANCHOR}
-      image={COUNTERTOP_QUOTE_IMAGE}
+    <ClosingBand
+      description="Pick a stone above and the quote form will name it, or start with the size of your kitchen and we'll help you choose."
+      kicker="Countertops are quoted, not carted"
+      primary={{ label: 'Get a countertop quote', href: QUOTE_PAGE_HREF }}
+      title="Ready for a price?"
     />
   );
 }
@@ -724,6 +738,7 @@ export default async function Category(props: Props) {
           type={CATEGORY_HEADER_TYPE}
         />
       )}
+      <CountertopPricing path={category.path} />
       <Slot
         label={`${category.name} top content`}
         snapshotId={`category-${categoryId}-top-content`}

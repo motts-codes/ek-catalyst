@@ -5,7 +5,6 @@ import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/serve
 import { SearchParams } from 'nuqs/server';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
-import { CountertopQuote } from '@/vibes/soul/sections/countertop-quote';
 import { Faq } from '@/vibes/soul/sections/faq';
 import { FeaturedProductCarousel } from '@/vibes/soul/sections/featured-product-carousel';
 import { FeaturesGrid } from '@/vibes/soul/sections/features-grid';
@@ -19,14 +18,8 @@ import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { productInfoFeaturesTransformer } from '~/data-transformers/product-info-features-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
-import {
-  COUNTERTOP_PHONE,
-  COUNTERTOP_QUOTE_IMAGE,
-  countertopQuoteFields,
-  QUOTE_ANCHOR,
-} from '~/lib/countertops/quote-form';
+import { COUNTERTOP_PHONE, quotePageHref } from '~/lib/countertops/quote-form';
 import { getPreferredCurrencyCode } from '~/lib/currency';
-import { submitQuoteLead } from '~/lib/forms/submit-lead';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { ProductDetail } from '~/lib/makeswift/components/product-detail';
 import { getRecaptchaSiteKey } from '~/lib/recaptcha';
@@ -854,7 +847,7 @@ export default async function Product({ params, searchParams }: Props) {
           quoteOnly={
             quoteOnly
               ? {
-                  quoteHref: `#${QUOTE_ANCHOR}`,
+                  quoteHref: quotePageHref(baseProduct.name),
                   phoneHref: COUNTERTOP_PHONE.href,
                   phoneLabel: COUNTERTOP_PHONE.label,
                 }
@@ -892,17 +885,6 @@ export default async function Product({ params, searchParams }: Props) {
         scrollbarLabel={t('RelatedProducts.scrollbar')}
         title={t('RelatedProducts.title')}
       />
-
-      {/* Countertops: the quote form comes after the product information and related products. */}
-      {quoteOnly && (
-        <CountertopQuote
-          action={submitQuoteLead}
-          fields={countertopQuoteFields(baseProduct.name)}
-          id={QUOTE_ANCHOR}
-          image={COUNTERTOP_QUOTE_IMAGE}
-          product={baseProduct.name}
-        />
-      )}
 
       {showRating && baseProduct.reviewSummary.numberOfReviews > 0 && (
         <div id="reviews">

@@ -296,6 +296,7 @@ export function ProductCard({
                     addToCartAction={addToCartAction}
                     href={href}
                     id={id}
+                    productName={title}
                     quoteHref={quoteHref}
                     quoteOnly={quoteOnly}
                     requiredOptions={requiredOptions}
@@ -345,6 +346,7 @@ export function ProductCard({
 export function CardCta({
   quoteOnly,
   quoteHref,
+  productName,
   href,
   id,
   requiresOptions,
@@ -353,6 +355,8 @@ export function CardCta({
 }: {
   quoteOnly: boolean;
   quoteHref?: string;
+  /** Named in the quote link (?product=…) so the quote form knows which stone. */
+  productName?: string;
   href: string;
   id: string;
   requiresOptions?: boolean;
@@ -360,8 +364,14 @@ export function CardCta({
   addToCartAction?: ProductCardAddToCartAction;
 }) {
   if (quoteOnly) {
+    // A page URL (the quote page) gets the product name appended; an in-page anchor is left as is.
+    const target =
+      quoteHref && !quoteHref.startsWith('#') && productName
+        ? `${quoteHref}${quoteHref.includes('?') ? '&' : '?'}product=${encodeURIComponent(productName)}`
+        : (quoteHref ?? href);
+
     return (
-      <Link className={CTA_BUTTON_CLASS} href={quoteHref ?? `${href}#request-a-quote`}>
+      <Link className={CTA_BUTTON_CLASS} href={target}>
         Request a quote
       </Link>
     );
