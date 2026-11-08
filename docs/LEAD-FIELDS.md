@@ -78,26 +78,30 @@ items, lastName, layout, license, material, message, name, notes, orderNumber, p
 product, rooms, scope, showroom, smsConsent, sqft, squares, time, timeline, timing, topic,
 type, zip`, plus the two synthetic keys `form` and `source`.
 
-## Suggested board columns
+## Mapping to the WF28 board
 
-A single "Website leads" board with groups per form works well with the mapping above:
+The target is the existing monday.com board **WF28 Online Nurturing Funnel** (board 5532533891),
+89 columns, listed with types by monday AI on 8 Nov 2026. The full key-by-key mapping is the
+workbook `docs/EK-lead-fields-monday.xlsx` (sheets: Mapping, Columns to create, Board columns,
+Fields by form, Read me). In short:
 
-| Column       | Type      | Mapped from                                                                      |
-| ------------ | --------- | -------------------------------------------------------------------------------- |
-| Form         | Status    | `form`                                                                           |
-| Name         | Text      | `name` (Contact sends `firstName`/`lastName`; map both or rely on the item name) |
-| Email        | Email     | `email`                                                                          |
-| Phone        | Phone     | `phone`                                                                          |
-| ZIP          | Text      | `zip`                                                                            |
-| Showroom     | Dropdown  | `showroom`                                                                       |
-| Company      | Text      | `company`                                                                        |
-| Order number | Text      | `orderNumber`                                                                    |
-| Message      | Long Text | `message` (or `notes` / `items` / `scope`)                                       |
-| Source       | Text      | `source`                                                                         |
-
-Everything else (layout, budget, cut-outs, dates, consent and so on) is visible in the item's
-first update, and can be promoted to a column later by adding it to `MONDAY_COLUMN_MAP` without
-a code change.
+- **Maps to existing columns:** name → Name, lastName → Last name, email → Customer Primary
+  Email Address, phone → Customer Primary Number, zip → Zip Code, company → Company Name
+  (Commercial), page_url (+ source) → Lead Source Detail, utm_source/medium/campaign/content →
+  the four Utm columns, gclid/fbclid → Ad codes, layout / timing / budget → the three
+  questionnaire Text columns, format → Preference, island → Plan, rooms → What type of project
+  are you considering?, message / notes / items → Message, smsConsent → SMS Opt-in, showroom →
+  Store, appointmentDate → Preffered Date for Appointment, time + days → Preffered Time for
+  Appointment, scope (units) → Unit Count (Commercial), timeline → Delivery Timeline (Commercial),
+  date → Entry Date.
+- **Fixed values set in Pabbly:** Lead Source = Website, Platform = Website.
+- **New columns needed:** Web Form (Status, from form_label), Contact Topic (Status), Customer
+  Type (Status), Order Number (Text), Trade License / Resale No (Text), Product of Interest (Text),
+  Utm Term (Text, low priority). Optional, or fold into Message: Countertop Material (Status),
+  Approx. Sq Ft (Text), Cut-outs (Status).
+- **Status columns only accept their existing labels:** Store must contain the six showroom
+  names, SMS Opt-in needs an opted-in label, Lead Source needs "Website". Project Type
+  (Commercial) is a Dropdown with fixed values, so free-text scope goes to Message instead.
 
 ## What we need from Express Kitchens
 
