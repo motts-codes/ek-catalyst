@@ -9,7 +9,10 @@ import { getAudienceMode } from '~/lib/navigation/audience-mode';
 
 // The "Cabinets" category (parent). When the category page resolves this id, it renders the
 // cabinet-lines view (a card per child line/finish) instead of the normal product grid.
-export const CABINETS_CATEGORY_ID = 863;
+// Per store: sandbox tree 3 = 863 (default), live store tree 3 = 804 (docs/LIVE-CATEGORY-IDS.md).
+// Set CABINETS_CATEGORY_ID in the environment that points at the live store. Must equal
+// CABINETS_PARENT_CATEGORY_ID in lib/cabinet-admin/collection-shape-const.ts (same env var).
+export const CABINETS_CATEGORY_ID = Number(process.env.CABINETS_CATEGORY_ID) || 863;
 
 export type CabinetProgram = 'assembled' | 'rta';
 
