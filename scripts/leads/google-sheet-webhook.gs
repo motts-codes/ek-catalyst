@@ -63,13 +63,18 @@ function doPost(e) {
     var sheet = getSheet_();
     var header = ensureHeader_(sheet, payload);
     var row = header.map(function (key) {
-      if (key === 'received_at') return new Date();
+      if (key === 'received_at') return Utilities.formatDate(new Date(), 'America/New_York', 'yyyy-MM-dd HH:mm:ss');
       var v = payload[key];
       if (v === undefined || v === null) return '';
       return typeof v === 'object' ? JSON.stringify(v) : String(v);
     });
-    sheet.appendRow(row);
-    return json_({ ok: true, row: sheet.getLastRow() });
+    // Write the row as plain text so ZIPs keep their leading zero (every CT ZIP starts with 0)
+    // and phone numbers / ids are never reinterpreted as numbers or dates.
+    var nextRow = sheet.getLastRow() + 1;
+    var range = sheet.getRange(nextRow, 1, 1, row.length);
+    range.setNumberFormat('@');
+    range.setValues([row]);
+    return json_({ ok: true, row: nextRow });
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   } finally {
