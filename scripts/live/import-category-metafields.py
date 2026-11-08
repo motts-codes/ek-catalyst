@@ -17,6 +17,8 @@ they are reported so the fields can be re-pointed once Arun's products exist.
   python scripts/live/import-category-metafields.py --apply
   python scripts/live/import-category-metafields.py --only 864,865  # sandbox ids
   python scripts/live/import-category-metafields.py --namespaces content,faq
+  python scripts/live/import-category-metafields.py --scope non-cabinets   # faq.list / seo.content
+  python scripts/live/import-category-metafields.py --scope all
 """
 from __future__ import annotations
 
@@ -57,16 +59,31 @@ def sandbox_paged(path: str):
         page += 1
 
 
-def read_sandbox() -> dict[int, dict]:
-    """{sandbox category id: {'name', 'metafields': [...]}} for Cabinets + its children."""
+def read_sandbox(scope: str) -> dict[int, dict]:
+    """{sandbox category id: {'name', 'metafields': [...]}} for the chosen scope of tree 3."""
     tree = sandbox_get('/v3/catalog/trees/3/categories')['data']
+
+    def flatten(nodes, out):
+        for n in nodes:
+            out.append(n)
+            flatten(n.get('children', []), out)
+        return out
+
     cab = next(n for n in tree if int(n['id']) == SANDBOX_CABINETS)
-    nodes = [cab] + list(cab.get('children', []))
+    cabinet_nodes = [cab] + list(cab.get('children', []))
+    if scope == 'cabinets':
+        nodes = cabinet_nodes
+    elif scope == 'non-cabinets':
+        cabinet_ids = {int(n['id']) for n in cabinet_nodes}
+        nodes = [n for n in flatten(tree, []) if int(n['id']) not in cabinet_ids]
+    else:
+        nodes = flatten(tree, [])
     out = {}
     for n in nodes:
         cid = int(n['id'])
         out[cid] = {'name': n['name'], 'metafields': sandbox_paged(f'/v3/catalog/categories/{cid}/metafields')}
-        print(f'  sandbox {cid} {n["name"]}: {len(out[cid]["metafields"])} metafields')
+        if out[cid]['metafields']:
+            print(f'  sandbox {cid} {n["name"]}: {len(out[cid]["metafields"])} metafields')
     return out
 
 
@@ -108,12 +125,14 @@ def main():
     ap.add_argument('--source', help='export JSON instead of reading the sandbox API')
     ap.add_argument('--only', help='comma-separated SANDBOX category ids')
     ap.add_argument('--namespaces', help='comma-separated namespaces to copy (default all)')
+    ap.add_argument('--scope', choices=['cabinets', 'non-cabinets', 'all'], default='cabinets',
+                    help='which sandbox tree-3 categories to read (default: Cabinets + collections)')
     a = ap.parse_args()
 
     g = Guard(apply=a.apply)
     id_map = {int(k): int(v['live_id']) for k, v in json.load(open(ID_MAP))['map'].items()}
 
-    src = read_export(a.source) if a.source else read_sandbox()
+    src = read_export(a.source) if a.source else read_sandbox(a.scope)
     only = {int(x) for x in a.only.split(',')} if a.only else None
     namespaces = set(a.namespaces.split(',')) if a.namespaces else None
     prod_ids: set[int] = set()
@@ -126,6 +145,8 @@ def main():
 
     for old, cat in sorted(src.items()):
         if only and old not in only:
+            continue
+        if not cat['metafields']:
             continue
         live_id = id_map.get(old)
         if not live_id:
