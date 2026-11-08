@@ -80,15 +80,30 @@ export function fullName(values: Record<string, unknown>): string {
 // Reserved keys, written last and therefore authoritative: name, form, form_label, source,
 // page_url, date, timestamp and the tracking keys. Do not name a form field after one of them
 // (the booking form's appointment date is `appointmentDate` for this reason).
+export type OptionLabels = Record<string, Record<string, string>>;
+
+// The visitor-facing label for a stored option value ("lt5" → "Under $5,000"); arrays map each item.
+export function labelled(key: string, value: unknown, labels: OptionLabels): unknown {
+  const map = labels[key];
+
+  if (!map) return value;
+
+  const one = (v: unknown): unknown => (typeof v === 'string' && map[v]) || v;
+
+  return Array.isArray(value) ? value.map(one) : one(value);
+}
+
 export function buildLeadPayload(
   form: string,
   values: Record<string, unknown>,
   tracking: Tracking,
   now: Date = new Date(),
+  labels: OptionLabels = {},
 ): Record<string, string> {
+  // Human-readable answers for the CRM and the sheet; the raw values still drive crmFields().
   const fields = Object.fromEntries(
     Object.entries(values)
-      .map(([key, value]) => [key, asText(value)] as const)
+      .map(([key, value]) => [key, asText(labelled(key, value, labels))] as const)
       .filter(([, text]) => text !== ''),
   );
 

@@ -56,6 +56,36 @@ import { removeOptionsFromFields } from './utils';
 export interface DynamicFormActionArgs<F extends Field> {
   fields: Array<F | FieldGroup<F>>;
   passwordComplexity?: PasswordComplexitySettings | null;
+  /**
+   * value → label for every option-bearing field, so a server action can report what the visitor
+   * saw ("Under $5,000") instead of the stored value ("lt5"). Options themselves are stripped from
+   * `fields` to keep the request small; this map is just the strings.
+   */
+  optionLabels?: Record<string, Record<string, string>>;
+}
+
+function collectOptionLabels<F extends Field>(
+  fields: Array<F | FieldGroup<F>>,
+): Record<string, Record<string, string>> {
+  const out: Record<string, Record<string, string>> = {};
+
+  fields
+    .flatMap((f) => (Array.isArray(f) ? f : [f]))
+    .forEach((field) => {
+      if (!('options' in field) || !Array.isArray(field.options)) return;
+
+      const labels: Record<string, string> = {};
+
+      field.options.forEach((option: { label?: string; value?: string }) => {
+        if (typeof option.value === 'string' && typeof option.label === 'string') {
+          labels[option.value] = option.label;
+        }
+      });
+
+      if (Object.keys(labels).length > 0) out[field.name] = labels;
+    });
+
+  return out;
 }
 
 type Action<F extends Field, S, P> = (
@@ -121,7 +151,11 @@ export function DynamicForm<F extends Field>({
   // Options are only needed for rendering, not for processing form submissions
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const fieldsWithoutOptions = removeOptionsFromFields(fields) as Array<F | FieldGroup<F>>;
-  const actionWithFields = action.bind(null, { fields: fieldsWithoutOptions, passwordComplexity });
+  const actionWithFields = action.bind(null, {
+    fields: fieldsWithoutOptions,
+    passwordComplexity,
+    optionLabels: collectOptionLabels(fields),
+  });
 
   const [{ lastResult, successMessage }, formAction] = useActionState(actionWithFields, {
     lastResult: null,

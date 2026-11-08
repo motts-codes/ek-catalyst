@@ -9,7 +9,12 @@ import { Field, schema } from '@/vibes/soul/form/dynamic-form/schema';
 import { redirect } from '~/i18n/routing';
 
 import { createMondayLead, isMondayConfigured } from '../leads/monday';
-import { buildLeadPayload, extractTracking, type Tracking } from '../leads/payload';
+import {
+  buildLeadPayload,
+  extractTracking,
+  type OptionLabels,
+  type Tracking,
+} from '../leads/payload';
 import { leadWebhookUrls, postLeadWebhooks } from '../leads/webhook';
 
 import { guardForm } from './anti-spam';
@@ -29,8 +34,13 @@ interface LeadMeta {
 
 // Fan-out: every configured channel gets the lead (webhooks such as Pabbly → monday.com and a
 // Google Sheet, and/or monday.com directly). With nothing configured the lead is logged.
-async function deliverLead(form: string, value: Record<string, unknown>, tracking: Tracking = {}) {
-  const payload = buildLeadPayload(form, value, tracking);
+async function deliverLead(
+  form: string,
+  value: Record<string, unknown>,
+  tracking: Tracking = {},
+  labels: OptionLabels = {},
+) {
+  const payload = buildLeadPayload(form, value, tracking, new Date(), labels);
   const channels: Array<Promise<{ channel: string; ok: boolean; error?: string }>> = [];
 
   if (leadWebhookUrls().length > 0) {
@@ -79,7 +89,7 @@ async function deliverLead(form: string, value: Record<string, unknown>, trackin
 
 async function submitLead<F extends Field>(
   meta: LeadMeta,
-  { fields }: DynamicFormActionArgs<F>,
+  { fields, optionLabels }: DynamicFormActionArgs<F>,
   _prevState: { lastResult: SubmissionResult | null },
   formData: FormData,
 ) {
@@ -97,7 +107,7 @@ async function submitLead<F extends Field>(
     return { lastResult: submission.reply() };
   }
 
-  await deliverLead(meta.form, submission.value, extractTracking(formData));
+  await deliverLead(meta.form, submission.value, extractTracking(formData), optionLabels);
 
   return redirect({ href: meta.confirmPath, locale: await getLocale() });
 }
@@ -178,7 +188,7 @@ export async function submitQuoteLead<F extends Field>(...a: LeadArgs<F>) {
 // The estimator's "email me this estimate": stays on the page and confirms inline rather than
 // redirecting, so the number never leaves the screen.
 export async function submitEstimateLead<F extends Field>(
-  { fields }: DynamicFormActionArgs<F>,
+  { fields, optionLabels }: DynamicFormActionArgs<F>,
   _prevState: { lastResult: SubmissionResult | null },
   formData: FormData,
 ) {
@@ -188,7 +198,7 @@ export async function submitEstimateLead<F extends Field>(
     return { lastResult: submission.reply() };
   }
 
-  await deliverLead('estimate', submission.value, extractTracking(formData));
+  await deliverLead('estimate', submission.value, extractTracking(formData), optionLabels);
 
   return {
     lastResult: submission.reply({ resetForm: true }),
