@@ -71,12 +71,16 @@ export function FiltersAside({ children }: { children: ReactNode }) {
   const { visible } = useContext(FiltersVisibility);
 
   return (
+    // The aside itself is sticky (same pattern as the cabinet listings): it must be the sticky
+    // element and self-aligned to the top, because a stretched flex item cannot stick and a
+    // sticky child cannot escape this aside's overflow clipping. Taller filter lists scroll
+    // inside the viewport-high box.
     <aside
       className={clsx(
-        'hidden shrink-0 overflow-hidden transition-[width,opacity,margin,transform] duration-300 ease-smooth @3xl:block',
+        'hidden shrink-0 self-start transition-[width,opacity,margin,transform] duration-300 ease-smooth @3xl:sticky @3xl:top-4 @3xl:block @3xl:max-h-[calc(100vh-2rem)]',
         visible
-          ? 'w-52 translate-x-0 opacity-100 @4xl:w-60'
-          : 'w-0 -translate-x-4 opacity-0 @3xl:-mr-8 @4xl:-mr-10',
+          ? 'w-52 translate-x-0 overflow-y-auto opacity-100 @4xl:w-60'
+          : 'w-0 -translate-x-4 overflow-hidden opacity-0 @3xl:-mr-8 @4xl:-mr-10',
       )}
       id={ASIDE_ID}
       inert={!visible}

@@ -241,7 +241,6 @@ export function ProductsListSection({
                   {(filtersPanelTitle) => <h2 className="sr-only">{filtersPanelTitle}</h2>}
                 </Stream>
                 <FiltersPanel
-                  className="sticky top-4"
                   filters={filters}
                   paginationInfo={paginationInfo}
                   rangeFilterApplyLabel={rangeFilterApplyLabel}
