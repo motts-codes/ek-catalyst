@@ -84,6 +84,9 @@ export default async (): Promise<NextConfig> => {
       return [
         // The About page keeps the live site's URL (/about-us); the build used /about for a while.
         { source: '/about', destination: '/about-us', permanent: true },
+        // Pro Program removed at the client's request (8 Nov 2026); the Pro home carries trade info.
+        { source: '/pro-program', destination: '/pro', permanent: true },
+        { source: '/pro-program/confirmed', destination: '/pro', permanent: true },
         {
           source: '/cabinets/shop/assembled-cabinets',
           destination: '/cabinets/assembled-cabinets',

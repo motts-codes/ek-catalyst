@@ -11,8 +11,6 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type ProgramTier } from '@/vibes/soul/sections/program-tiers';
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 
-/** The Pro Program page is hidden at the client's request (27 Oct 2026); nothing links to it. */
-export const PRO_PROGRAM_HREF = '/pro-program';
 /** Where trade calls to action go while the program page is hidden. */
 export const TRADE_CONTACT_HREF = '/contact';
 export const FACTORY_OUTLET_URL = 'https://expresskitchensfactoryoutlet.com/';

@@ -81,7 +81,7 @@ export default async function FindAPro({ params }: { params: Promise<{ locale: s
       />
       <Prose
         body={[
-          'Pro Program members can be listed here free. We pass on the inquiry and you deal with the homeowner direct. (Program decision pending: a verified installer directory, or a referral partner.)',
+          'Installers who work with our cabinets can be listed here free. We pass on the inquiry and you deal with the homeowner direct. (Decision pending: a verified installer directory, or a referral partner.)',
         ]}
         kicker="Are you an installer?"
         tint

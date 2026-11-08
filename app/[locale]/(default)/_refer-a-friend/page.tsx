@@ -94,9 +94,9 @@ export default async function ReferAFriend({ params }: { params: Promise<{ local
         title="Start referring"
       />
       <Prose
-        actions={[{ label: 'Pro Program', href: '/pro' }]}
+        actions={[{ label: 'For the trade', href: '/pro' }]}
         body={[
-          'Contractors can refer a homeowner, or another contractor. Pro Program members earn the same reward on homeowner referrals, and $[X] when a contractor they refer places a first trade order.',
+          'Contractors can refer a homeowner, or another contractor. Trade customers earn the same reward on homeowner referrals, and $[X] when a contractor they refer places a first trade order.',
         ]}
         kicker="Also for the trade"
         tint

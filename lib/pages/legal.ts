@@ -138,7 +138,7 @@ export const TERMS_SECTIONS: LegalSection[] = [
   },
   {
     id: 'accounts',
-    title: 'Accounts and the Pro Program',
+    title: 'Accounts and trade customers',
     paragraphs: [
       '[Account responsibilities, trade account eligibility and verification, tax exemption documentation.]',
     ],

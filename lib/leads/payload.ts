@@ -13,7 +13,6 @@ export const FORM_LABELS: Record<string, string> = {
   booking: 'Book',
   quote: 'Quote request',
   industry: 'Commercial / multifamily',
-  'pro-program': 'Pro Program',
   'refer-a-friend': 'Referral',
   support: 'Support',
   'return-authorization': 'Return',

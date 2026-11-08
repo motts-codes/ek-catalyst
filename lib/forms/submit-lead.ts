@@ -164,15 +164,6 @@ export async function submitReferralLead<F extends Field>(...a: LeadArgs<F>) {
   return submitLead({ form: 'refer-a-friend', confirmPath: '/refer-a-friend/confirmed' }, ...a);
 }
 
-export async function submitProProgramLead<F extends Field>(...a: LeadArgs<F>) {
-  return submitLead(
-    { form: 'pro-program', confirmPath: '/pro-program/confirmed' },
-    a[0],
-    a[1],
-    a[2],
-  );
-}
-
 export async function submitIndustryLead<F extends Field>(...a: LeadArgs<F>) {
   return submitLead({ form: 'industry', confirmPath: '/quote/confirmed' }, a[0], a[1], a[2]);
 }
