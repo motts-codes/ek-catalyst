@@ -90,6 +90,6 @@ old→new map is `scripts/live/category-id-map.json`. Cabinets parent = **804** 
 
 - [ ] Customers > Customer Groups > guest group > Category Access: tick every new category (storefront hides unticked ones).
 - [ ] `CABINETS_CATEGORY_ID=804` in the live/preview environment that points at this store.
-- [ ] Metafields: parent 804 (attribute master-lists, program FAQ) and each collection, via the seed/import scripts with `--category <live id>`.
+- [x] Metafields: done 8 Nov 2026 with `scripts/live/import-category-metafields.py` (579 category metafields on 804 + 38 collections, same namespaces/keys/permission sets as the sandbox; idempotent re-run reports 0 changes). 38 `content.short_description` values still reference the sandbox image host; re-host before the sandbox is retired.
 - [ ] Products: **Arun adds the live products himself** (no sandbox products move over) into these tree-3 category ids and the Catalyst channel 1908757. Scripts then only post-process his products per category (Program custom field, `__is_*` badges, `__delivery`, swatches, program_sibling / pdp.features), dry-run first, additive, after confirming the write allowance for Catalyst-only products.
 - [ ] Facets, stock-display setting, redirects: see LIVE-MIGRATION.md.
