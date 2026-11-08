@@ -1,0 +1,401 @@
+{
+ "live_tree_id": 3,
+ "sandbox_tree_id": 3,
+ "map": {
+  "853": {
+   "live_id": 801,
+   "name": "Appliances",
+   "url": "/appliances/"
+  },
+  "854": {
+   "live_id": 835,
+   "name": "Fridges & Freezers",
+   "url": "/appliances/fridges-freezers/"
+  },
+  "855": {
+   "live_id": 808,
+   "name": "Windows",
+   "url": "/windows/"
+  },
+  "856": {
+   "live_id": 854,
+   "name": "Replacement",
+   "url": "/windows/replacement/"
+  },
+  "857": {
+   "live_id": 843,
+   "name": "New Construction",
+   "url": "/windows/new-construction/"
+  },
+  "858": {
+   "live_id": 875,
+   "name": "Double Hung Windows",
+   "url": "/windows/replacement/double-hung-windows/"
+  },
+  "859": {
+   "live_id": 879,
+   "name": "Slider Windows",
+   "url": "/windows/replacement/slider-windows/"
+  },
+  "860": {
+   "live_id": 877,
+   "name": "Hopper Windows",
+   "url": "/windows/replacement/hopper-windows/"
+  },
+  "861": {
+   "live_id": 805,
+   "name": "Closets",
+   "url": "/closets/"
+  },
+  "863": {
+   "live_id": 804,
+   "name": "Cabinets",
+   "url": "/cabinets/"
+  },
+  "864": {
+   "live_id": 809,
+   "name": "Avon Painted White",
+   "url": "/cabinets/avon/"
+  },
+  "865": {
+   "live_id": 816,
+   "name": "Dover",
+   "url": "/cabinets/dover/"
+  },
+  "867": {
+   "live_id": 855,
+   "name": "Rochelle",
+   "url": "/cabinets/rochelle/"
+  },
+  "868": {
+   "live_id": 815,
+   "name": "Derry Stratus",
+   "url": "/cabinets/derry-stratus/"
+  },
+  "869": {
+   "live_id": 810,
+   "name": "Barcelona",
+   "url": "/cabinets/barcelona/"
+  },
+  "870": {
+   "live_id": 806,
+   "name": "Countertops",
+   "url": "/countertops/"
+  },
+  "871": {
+   "live_id": 836,
+   "name": "Granite",
+   "url": "/countertops/granite/"
+  },
+  "872": {
+   "live_id": 853,
+   "name": "Quartz",
+   "url": "/countertops/quartz/"
+  },
+  "873": {
+   "live_id": 845,
+   "name": "PreFabricated",
+   "url": "/countertops/prefabricated/"
+  },
+  "874": {
+   "live_id": 878,
+   "name": "Quartz (Prefabricated)",
+   "url": "/countertops/prefabricated/quartz-prefabricated/"
+  },
+  "875": {
+   "live_id": 876,
+   "name": "Granite (Prefabricated)",
+   "url": "/countertops/prefabricated/granite-prefabricated/"
+  },
+  "876": {
+   "live_id": 839,
+   "name": "Laminate",
+   "url": "/countertops/laminate/"
+  },
+  "877": {
+   "live_id": 856,
+   "name": "Samples",
+   "url": "/countertops/samples/"
+  },
+  "878": {
+   "live_id": 802,
+   "name": "Bath",
+   "url": "/bath/"
+  },
+  "879": {
+   "live_id": 857,
+   "name": "Vanity Tops",
+   "url": "/bath/vanity-tops/"
+  },
+  "880": {
+   "live_id": 867,
+   "name": "Side Splashes",
+   "url": "/bath/side-splashes/"
+  },
+  "881": {
+   "live_id": 858,
+   "name": "Bathroom Sinks",
+   "url": "/bath/bathroom-sinks/"
+  },
+  "882": {
+   "live_id": 864,
+   "name": "Bathroom Faucets",
+   "url": "/bath/bathroom-faucets/"
+  },
+  "883": {
+   "live_id": 868,
+   "name": "Drains & Accessories",
+   "url": "/bath/drains-accessories/"
+  },
+  "884": {
+   "live_id": 807,
+   "name": "Sinks & Faucets",
+   "url": "/sinks-faucets/"
+  },
+  "885": {
+   "live_id": 838,
+   "name": "Kitchen Sinks",
+   "url": "/sinks-faucets/kitchen-sinks/"
+  },
+  "886": {
+   "live_id": 859,
+   "name": "Kitchen Faucets",
+   "url": "/sinks-faucets/kitchen-faucets/"
+  },
+  "887": {
+   "live_id": 862,
+   "name": "Accessories",
+   "url": "/sinks-faucets/accessories/"
+  },
+  "888": {
+   "live_id": 803,
+   "name": "Cabinet Hardware",
+   "url": "/cabinet-hardware/"
+  },
+  "889": {
+   "live_id": 837,
+   "name": "Handles & Knobs",
+   "url": "/cabinet-hardware/handles-knobs/"
+  },
+  "890": {
+   "live_id": 861,
+   "name": "Tiles",
+   "url": "/cabinet-hardware/tiles/"
+  },
+  "891": {
+   "live_id": 863,
+   "name": "Accessories",
+   "url": "/cabinet-hardware/accessories/"
+  },
+  "892": {
+   "live_id": 860,
+   "name": "Ranges & Cooktops",
+   "url": "/appliances/ranges-cooktops/"
+  },
+  "893": {
+   "live_id": 865,
+   "name": "Dishwashers",
+   "url": "/appliances/dishwashers/"
+  },
+  "894": {
+   "live_id": 866,
+   "name": "Microwaves",
+   "url": "/appliances/microwaves/"
+  },
+  "895": {
+   "live_id": 869,
+   "name": "Wall Ovens",
+   "url": "/appliances/wall-ovens/"
+  },
+  "896": {
+   "live_id": 870,
+   "name": "Range Hoods",
+   "url": "/appliances/range-hoods/"
+  },
+  "897": {
+   "live_id": 871,
+   "name": "Washers & Dryers",
+   "url": "/appliances/washers-dryers/"
+  },
+  "898": {
+   "live_id": 872,
+   "name": "Garbage Disposals",
+   "url": "/appliances/garbage-disposals/"
+  },
+  "899": {
+   "live_id": 873,
+   "name": "Air Conditioning",
+   "url": "/appliances/air-conditioning/"
+  },
+  "900": {
+   "live_id": 874,
+   "name": "Accessories",
+   "url": "/appliances/accessories/"
+  },
+  "901": {
+   "live_id": 811,
+   "name": "Beacon Hill",
+   "url": "/cabinets/beacon-hill/"
+  },
+  "902": {
+   "live_id": 812,
+   "name": "Birmingham",
+   "url": "/cabinets/birmingham/"
+  },
+  "903": {
+   "live_id": 813,
+   "name": "Brunswick",
+   "url": "/cabinets/brunswick/"
+  },
+  "904": {
+   "live_id": 814,
+   "name": "Cambridge",
+   "url": "/cabinets/cambridge/"
+  },
+  "905": {
+   "live_id": 817,
+   "name": "Dublin",
+   "url": "/cabinets/dublin/"
+  },
+  "906": {
+   "live_id": 818,
+   "name": "Edinburgh",
+   "url": "/cabinets/edinburgh/"
+  },
+  "907": {
+   "live_id": 840,
+   "name": "Lasalle",
+   "url": "/cabinets/lasalle/"
+  },
+  "908": {
+   "live_id": 841,
+   "name": "Lexington",
+   "url": "/cabinets/lexington/"
+  },
+  "909": {
+   "live_id": 842,
+   "name": "Mero",
+   "url": "/cabinets/mero/"
+  },
+  "910": {
+   "live_id": 844,
+   "name": "Northampton",
+   "url": "/cabinets/northampton/"
+  },
+  "911": {
+   "live_id": 846,
+   "name": "Prism Avon",
+   "url": "/cabinets/prism-avon/"
+  },
+  "912": {
+   "live_id": 847,
+   "name": "Prism Beacon Hill",
+   "url": "/cabinets/prism-beacon-hill/"
+  },
+  "913": {
+   "live_id": 848,
+   "name": "Prism Cambridge",
+   "url": "/cabinets/prism-cambridge/"
+  },
+  "914": {
+   "live_id": 849,
+   "name": "Prism Derry",
+   "url": "/cabinets/prism-derry/"
+  },
+  "915": {
+   "live_id": 850,
+   "name": "Prism Edinburgh",
+   "url": "/cabinets/prism-edinburgh/"
+  },
+  "916": {
+   "live_id": 851,
+   "name": "Prism Lexington",
+   "url": "/cabinets/prism-lexington/"
+  },
+  "917": {
+   "live_id": 852,
+   "name": "Prism Mero",
+   "url": "/cabinets/prism-mero/"
+  },
+  "918": {
+   "live_id": 819,
+   "name": "Euro Max Eden",
+   "url": "/cabinets/euro-max-eden/"
+  },
+  "919": {
+   "live_id": 820,
+   "name": "Euro Max Madison",
+   "url": "/cabinets/euro-max-madison/"
+  },
+  "920": {
+   "live_id": 821,
+   "name": "Euro Max Manhattan HG",
+   "url": "/cabinets/euro-max-manhattan-hg/"
+  },
+  "921": {
+   "live_id": 822,
+   "name": "Euro Max Manhattan PM",
+   "url": "/cabinets/euro-max-manhattan-pm/"
+  },
+  "922": {
+   "live_id": 823,
+   "name": "Euro Max Tribeca A",
+   "url": "/cabinets/euro-max-tribeca-a/"
+  },
+  "923": {
+   "live_id": 824,
+   "name": "Euro Max Tribeca B",
+   "url": "/cabinets/euro-max-tribeca-b/"
+  },
+  "924": {
+   "live_id": 825,
+   "name": "Euro Max Tribeca C",
+   "url": "/cabinets/euro-max-tribeca-c/"
+  },
+  "925": {
+   "live_id": 826,
+   "name": "Euro Max Tribeca Shaker",
+   "url": "/cabinets/euro-max-tribeca-shaker/"
+  },
+  "926": {
+   "live_id": 827,
+   "name": "Euro Value Eden",
+   "url": "/cabinets/euro-value-eden/"
+  },
+  "927": {
+   "live_id": 828,
+   "name": "Euro Value Madison",
+   "url": "/cabinets/euro-value-madison/"
+  },
+  "928": {
+   "live_id": 829,
+   "name": "Euro Value Manhattan HG",
+   "url": "/cabinets/euro-value-manhattan-hg/"
+  },
+  "929": {
+   "live_id": 830,
+   "name": "Euro Value Manhattan PM",
+   "url": "/cabinets/euro-value-manhattan-pm/"
+  },
+  "930": {
+   "live_id": 831,
+   "name": "Euro Value Tribeca A",
+   "url": "/cabinets/euro-value-tribeca-a/"
+  },
+  "931": {
+   "live_id": 832,
+   "name": "Euro Value Tribeca B",
+   "url": "/cabinets/euro-value-tribeca-b/"
+  },
+  "932": {
+   "live_id": 833,
+   "name": "Euro Value Tribeca C",
+   "url": "/cabinets/euro-value-tribeca-c/"
+  },
+  "933": {
+   "live_id": 834,
+   "name": "Euro Value Tribeca Shaker",
+   "url": "/cabinets/euro-value-tribeca-shaker/"
+  }
+ }
+}
