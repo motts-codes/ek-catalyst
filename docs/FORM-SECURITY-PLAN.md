@@ -135,8 +135,13 @@ This is where captcha-farm spam, which passes every technical check, gets stoppe
 anyone time.
 
 - **Newsletter: MailerLite with double opt-in.** Unconfirmed addresses never enter the list, so
-  fake subscribers are self-cleaning. Already requested by EK (feedback point 20). Replace the
-  BigCommerce subscribe mutation with the MailerLite API call in `subscribe.ts`.
+  fake subscribers are self-cleaning. Already requested by EK (feedback point 20). Built in
+  `lib/newsletter/mailerlite.ts`: the subscribe action posts to MailerLite with status
+  `unconfirmed` when `MAILERLITE_API_KEY` is set (plus optional `MAILERLITE_GROUP_ID`), and falls
+  back to BigCommerce's list when it is not. To go live: create an API token in MailerLite
+  (Integrations, API), turn on double opt-in for API signups (Subscribers, Settings), pick or
+  create a "Website" group, and add the two variables in Vercel. First real signup should be
+  checked end to end: confirmation email arrives, clicking it moves the subscriber to active.
 - **Lead quarantine.** Every lead carries a score built from the layer results (BotID verdict,
   fill time, link count, disposable email, repeat email or phone). Score above a threshold goes to
   a "review" bucket in the CRM instead of the sales inbox, with a weekly glance by EK.

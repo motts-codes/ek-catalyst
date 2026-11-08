@@ -3,12 +3,14 @@
 import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
 import { SubmissionResult } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
+import { headers } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 
 import { schema } from '@/vibes/soul/primitives/inline-email-form/schema';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
 import { guardForm } from '~/lib/forms/anti-spam';
+import { isMailerLiteConfigured, subscribeToMailerLite } from '~/lib/newsletter/mailerlite';
 
 const SubscribeToNewsletterMutation = graphql(`
   mutation SubscribeToNewsletterMutation($input: CreateSubscriberInput!) {
@@ -52,6 +54,27 @@ export const subscribe = async (
 
   if (guard.blocked) {
     return { lastResult: submission.reply(), successMessage: t('subscribedToNewsletter') };
+  }
+
+  // MailerLite (double opt-in) when configured; BigCommerce's own list otherwise.
+  if (isMailerLiteConfigured()) {
+    const result = await subscribeToMailerLite(submission.value.email, {
+      ip: (await headers()).get('x-forwarded-for')?.split(',')[0]?.trim() ?? null,
+    });
+
+    if (result.ok) {
+      return { lastResult: submission.reply(), successMessage: t('subscribedToNewsletter') };
+    }
+
+    return {
+      lastResult: submission.reply({
+        formErrors: [
+          result.kind === 'invalid-email'
+            ? t('Errors.invalidEmail')
+            : t('Errors.somethingWentWrong'),
+        ],
+      }),
+    };
   }
 
   try {
