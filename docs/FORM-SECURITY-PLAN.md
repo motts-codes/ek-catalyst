@@ -142,6 +142,13 @@ anyone time.
   (Integrations, API), turn on double opt-in for API signups (Subscribers, Settings), pick or
   create a "Website" group, and add the two variables in Vercel. First real signup should be
   checked end to end: confirmation email arrives, clicking it moves the subscriber to active.
+- **Leads: monday.com.** Every lead form except account creation delivers to a monday.com board
+  (`lib/leads/monday.ts`), active once `MONDAY_API_TOKEN` and `MONDAY_BOARD_ID` are set. Each
+  lead is one item named "Form · Name" with the whole submission as its first update, plus typed
+  columns when `MONDAY_COLUMN_MAP` lists the board's column ids. A failed delivery still shows the
+  visitor the confirmation page and logs the lead under `[lead:undelivered]` for manual entry.
+  Needed from EK: an API token with write access to the board, the board id, and (optionally)
+  the column ids to map, or a read token so we can look them up.
 - **Lead quarantine.** Every lead carries a score built from the layer results (BotID verdict,
   fill time, link count, disposable email, repeat email or phone). Score above a threshold goes to
   a "review" bucket in the CRM instead of the sales inbox, with a weekly glance by EK.

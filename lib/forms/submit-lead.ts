@@ -8,14 +8,16 @@ import { DynamicFormActionArgs } from '@/vibes/soul/form/dynamic-form';
 import { Field, schema } from '@/vibes/soul/form/dynamic-form/schema';
 import { redirect } from '~/i18n/routing';
 
+import { createMondayLead, isMondayConfigured } from '../leads/monday';
+
 import { guardForm } from './anti-spam';
 
 // One server action for every lead form on the site (design consult, contact, quotes, Pro
 // Program, referrals…). Validates against the form's own field schema, then hands off.
 //
-// DELIVERY IS NOT WIRED YET: there is no CRM / inbox integration in the sandbox, so a valid
-// submission is logged on the server and the visitor is sent to the form's confirmation page.
-// Wire `deliverLead` to the business's CRM, email or BigCommerce contact form before launch.
+// Delivery goes to monday.com (lib/leads/monday.ts) when MONDAY_API_TOKEN and MONDAY_BOARD_ID
+// are set. Until then a valid submission is logged on the server and the visitor is sent to the
+// form's confirmation page either way.
 interface LeadMeta {
   /** Which form this came from, e.g. "free-design". */
   form: string;
@@ -23,9 +25,22 @@ interface LeadMeta {
   confirmPath: string;
 }
 
-function deliverLead(form: string, value: Record<string, unknown>) {
-  // eslint-disable-next-line no-console
-  console.info(`[lead:${form}]`, JSON.stringify(value));
+async function deliverLead(form: string, value: Record<string, unknown>) {
+  if (!isMondayConfigured()) {
+    // eslint-disable-next-line no-console
+    console.info(`[lead:${form}]`, JSON.stringify(value));
+
+    return;
+  }
+
+  const result = await createMondayLead({ form, values: value });
+
+  if (!result.ok) {
+    // The visitor still gets the confirmation page (they did nothing wrong); the lead is kept in
+    // the logs so it can be re-entered by hand. Grep for "[lead:undelivered]".
+    // eslint-disable-next-line no-console
+    console.error(`[lead:undelivered] ${form} ${result.error}`, JSON.stringify(value));
+  }
 }
 
 async function submitLead<F extends Field>(
@@ -48,7 +63,7 @@ async function submitLead<F extends Field>(
     return { lastResult: submission.reply() };
   }
 
-  deliverLead(meta.form, submission.value);
+  await deliverLead(meta.form, submission.value);
 
   return redirect({ href: meta.confirmPath, locale: await getLocale() });
 }
@@ -133,15 +148,13 @@ export async function submitEstimateLead<F extends Field>(
   _prevState: { lastResult: SubmissionResult | null },
   formData: FormData,
 ) {
-  await Promise.resolve();
-
   const submission = parseWithZod(formData, { schema: schema(fields) });
 
   if (submission.status !== 'success') {
     return { lastResult: submission.reply() };
   }
 
-  deliverLead('estimate', submission.value);
+  await deliverLead('estimate', submission.value);
 
   return {
     lastResult: submission.reply({ resetForm: true }),
