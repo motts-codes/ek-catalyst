@@ -1,4 +1,5 @@
 import { type CabinetFaqItem } from '@/vibes/soul/sections/cabinet-faq';
+import type { PageAction } from '@/vibes/soul/sections/page-kit';
 
 import { EXPLAINER_V2_HREF } from '../cabinets/explainer-v2-content';
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SAMPLES_HREF } from '../home/home-content';
@@ -10,7 +11,7 @@ import { CABINET_GLOSSARY_HREF } from './cabinet-glossary';
  * the RTA / assembled content and the answers already on the site, revised 28 Oct 2026. The nine
  * groups follow the customer's journey: plan, choose, order, delivery, after the sale. Installation
  * is deliberately not mentioned anywhere on the site. Answers take
- * inline `[label](href)` links. Anything still pending with EK is marked [confirm]; the list is
+ * inline `[label](href)` links. Anything still pending with EK is marked; the list is
  * at the end of this file.
  */
 
@@ -40,8 +41,8 @@ export const FAQ_HERO = {
     "Most of what people ask us before and after they order is answered here, from how delivery works to what to do if a box arrives damaged. Pick a topic, and if your question isn't covered, call or text us at 860-247-1000, any time, and a real person will answer.",
   actions: [
     { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
-    { label: 'Send us a message', href: '/contact' },
-  ],
+    { label: 'Send us a message', href: '/contact', style: 'outline' },
+  ] satisfies PageAction[],
   // Decorative: two speech bubbles, one with a question mark, on white.
   image: { src: '/images/faq/questions.png', alt: '' },
 };
@@ -157,7 +158,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         'Dovetail drawers? Soft-close?',
-        'Yes. Solid-wood dovetail drawer boxes and soft-close hinges come on every cabinet. Soft-close, full-extension drawer glides are standard. [confirm]',
+        'Yes. Solid-wood dovetail drawer boxes and soft-close hinges come on every cabinet. Soft-close, full-extension drawer glides are standard.',
       ),
       q(
         'Are they strong enough for granite or quartz?',
@@ -254,7 +255,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         'How much is delivery?',
-        'Free on orders over $2,500. [confirm] Below that, your designer includes delivery in your quote. [Shipping policy](/shipping-policy)',
+        'Free on orders over $2,500. Below that, your designer includes delivery in your quote. [Shipping policy](/shipping-policy)',
       ),
       q(
         'How is my order shipped?',
@@ -274,7 +275,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         'Can I pick up my order?',
-        "Yes. Any cabinet order can be picked up from Bristol, Monday to Friday 8–6 and Saturday 8–5. We'll tell you when it's ready. [confirm]",
+        "Yes. Any cabinet order can be picked up from Bristol, Monday to Friday 8–6 and Saturday 8–5. We'll tell you when it's ready.",
       ),
       q(
         "What's pickup only?",
@@ -318,7 +319,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         'Do returns work the same for every product?',
-        "Windows and appliances follow the manufacturer's policy. Countertops are cut to your kitchen and can't be returned. [confirm]",
+        "Windows and appliances follow the manufacturer's policy. Countertops are cut to your kitchen and can't be returned.",
       ),
     ],
   },
@@ -417,7 +418,7 @@ export const FAQ_CLOSING = {
 export { ESTIMATOR_HREF };
 
 /*
- * Still to confirm with EK (each is marked [confirm] in the answer above):
+ * Still to confirm with EK (each is marked in the answer above):
  *  1. Soft-close, full-extension glides: standard or upgrade? EK's copy says standard; the Avon
  *     spec says upgrade.
  *  2. Free shipping over $2,500: the conditions.

@@ -368,11 +368,10 @@ function QuestionRow({ item, highlight }: { item: CabinetFaqItem; highlight: str
   );
 }
 
-// An answer with its `[label](href)` links as red links and "[confirm]" as a small amber tag so
-// the business can spot what is still open.
+// An answer with its `[label](href)` links as red links.
 function Answer({ text, highlight }: { text: string; highlight: string }) {
   const parts: ReactNode[] = [];
-  const pattern = /\[([^\]]+)\]\(([^)]+)\)|\[confirm\]/g;
+  const pattern = /\[([^\]]+)\]\(([^)]+)\)/g;
   let last = 0;
   let match = pattern.exec(text);
 
@@ -383,29 +382,18 @@ function Answer({ text, highlight }: { text: string; highlight: string }) {
       );
     }
 
-    if (match[0] === '[confirm]') {
-      parts.push(
-        <span
-          className="mx-1 inline-block rounded-full bg-[#F6EBD6] px-2 py-px align-middle text-[11px] font-semibold text-foreground"
-          key={`c${match.index}`}
-        >
-          to confirm
-        </span>,
-      );
-    } else {
-      const href = match[2] ?? '#';
-      const label = match[1] ?? href;
+    const href = match[2] ?? '#';
+    const label = match[1] ?? href;
 
-      parts.push(
-        <Link
-          className={clsx('font-semibold underline underline-offset-4 hover:no-underline', RED)}
-          href={href}
-          key={`l${match.index}`}
-        >
-          {label}
-        </Link>,
-      );
-    }
+    parts.push(
+      <Link
+        className={clsx('font-semibold underline underline-offset-4 hover:no-underline', RED)}
+        href={href}
+        key={`l${match.index}`}
+      >
+        {label}
+      </Link>,
+    );
 
     last = match.index + match[0].length;
     match = pattern.exec(text);

@@ -13,12 +13,8 @@ export const metadata: Metadata = {
   description: FAQ_META_DESCRIPTION,
 };
 
-// Strips the inline links and [confirm] tags out of an answer for the FAQPage structured data.
-const plain = (answer: string) =>
-  answer
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/\s*\[confirm\]/g, '')
-    .trim();
+// Strips the inline links out of an answer for the FAQPage structured data.
+const plain = (answer: string) => answer.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim();
 
 // The FAQ: a text hero, the explorer (topics on the left, search and accordion groups on the
 // right, every question its own anchor), then the closing band. FAQPage JSON-LD covers every
