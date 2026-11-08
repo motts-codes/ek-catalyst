@@ -114,8 +114,7 @@ export async function readProduct(productId: number): Promise<ProductEditorData 
   // Program sibling link (merch.program_sibling = { product_id, name }).
   const sib = parse(mfs, 'merch', 'program_sibling');
   const sibId = typeof sib.product_id === 'number' ? sib.product_id : Number(sib.product_id);
-  const sibling =
-    sibId && !Number.isNaN(sibId) ? { productId: sibId, name: str(sib.name) } : null;
+  const sibling = sibId && !Number.isNaN(sibId) ? { productId: sibId, name: str(sib.name) } : null;
 
   // Editable content.
   const features = parse(mfs, 'features', 'grid');
@@ -166,7 +165,10 @@ export async function readProduct(productId: number): Promise<ProductEditorData 
 async function categoryNamesFor(ids: number[]): Promise<string[]> {
   if (ids.length === 0) return [];
 
-  const tree = (await bcGet('/catalog/trees/categories?limit=250')) as {
+  // Ask for exactly these ids: the live store has more categories than one page holds.
+  const tree = (await bcGet(
+    `/catalog/trees/categories?category_id:in=${ids.join(',')}&limit=250`,
+  )) as {
     data?: Array<{ category_id: number; name: string }>;
   };
   const byId = new Map((tree.data ?? []).map((c) => [c.category_id, c.name]));
@@ -186,6 +188,7 @@ export async function writeProductContent(
   const cells = content.features.cells.filter(
     (c) => c.image.trim() || c.title.trim() || c.text.trim(),
   );
+
   await upsertMetafield(
     'products',
     productId,
@@ -202,6 +205,7 @@ export async function writeProductContent(
   // faq.list — CRITICAL: spread previous so faq.list.image (unmodeled) is preserved.
   const faqPrev = parse(mfs, 'faq', 'list');
   const faqItems = content.faq.items.filter((it) => it.q.trim() || it.a.trim());
+
   await upsertMetafield(
     'products',
     productId,
@@ -213,6 +217,7 @@ export async function writeProductContent(
   // product_info.features — preserve extra keys; drop empty rows.
   const infoPrev = parse(mfs, 'product_info', 'features');
   const infoItems = content.info.items.filter((it) => it.name.trim() || it.value.trim());
+
   await upsertMetafield(
     'products',
     productId,

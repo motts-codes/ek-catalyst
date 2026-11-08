@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { CABINETS_PARENT_CATEGORY_ID } from './collection-shape-const';
+
 // Server-side BigCommerce Management API wrapper for cabinet metafields. Uses CATALYST_ACCESS_TOKEN
 // (management scope) — this module is server-only and the token never reaches the browser. All
 // admin reads/writes go through here.
@@ -87,10 +89,19 @@ export async function upsertMetafield(
   }
 }
 
-/** The two cabinet collections (children of Cabinets, 863) with id + name. */
+/**
+ * The cabinet collections (children of the Cabinets parent) with id + name. Filtered server-side
+ * by parent so it works on any store size: the live store has 300+ categories across its trees,
+ * more than one page.
+ */
 export async function listCabinetCollections(): Promise<Array<{ id: number; name: string }>> {
-  const data = await apiFetch('GET', '/catalog/trees/categories?limit=250');
+  const data = await apiFetch(
+    'GET',
+    `/catalog/trees/categories?parent_id:in=${CABINETS_PARENT_CATEGORY_ID}&limit=250`,
+  );
   const cats = (data.data ?? []) as Array<{ category_id: number; name: string; parent_id: number }>;
 
-  return cats.filter((c) => c.parent_id === 863).map((c) => ({ id: c.category_id, name: c.name }));
+  return cats
+    .filter((c) => c.parent_id === CABINETS_PARENT_CATEGORY_ID)
+    .map((c) => ({ id: c.category_id, name: c.name }));
 }
