@@ -58,7 +58,13 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
         { label: 'On a video call', value: 'video' },
       ],
     },
-    { type: 'date', name: 'date', label: 'Pick a date', required: true, minDate: today() },
+    {
+      type: 'date',
+      name: 'appointmentDate',
+      label: 'Pick a date',
+      required: true,
+      minDate: today(),
+    },
     {
       type: 'select',
       name: 'time',
@@ -146,7 +152,7 @@ export default async function Book({
         spacing="tight"
         steps={[
           { title: 'Where', names: ['showroom', ...PM_CHOICES.map((f) => f.name), 'format'] },
-          { title: 'When', names: ['date', 'time'] },
+          { title: 'When', names: ['appointmentDate', 'time'] },
           { title: 'About you', names: ['name', 'email', 'phone', 'zip', 'rooms', 'notes'] },
         ]}
         submitLabel="Book my appointment"

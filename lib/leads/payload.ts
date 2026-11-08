@@ -76,6 +76,10 @@ export function fullName(values: Record<string, unknown>): string {
 // The flat JSON a webhook receives. Shape follows the old landing page's payload (name, email,
 // phone, preference-style fields, source, page_url, date, timestamp, utm_*) so an existing
 // Pabbly → monday.com workflow keeps working, with every other field of the form added as-is.
+//
+// Reserved keys, written last and therefore authoritative: name, form, form_label, source,
+// page_url, date, timestamp and the tracking keys. Do not name a form field after one of them
+// (the booking form's appointment date is `appointmentDate` for this reason).
 export function buildLeadPayload(
   form: string,
   values: Record<string, unknown>,
