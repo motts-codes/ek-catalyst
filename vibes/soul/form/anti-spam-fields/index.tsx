@@ -17,6 +17,7 @@ import { HONEYPOT_FIELD, LOADED_AT_FIELD } from './constants';
 // cannot stamp them per visitor without making every page dynamic. BotID covers forged values.
 export function AntiSpamFields() {
   const [loadedAt, setLoadedAt] = useState('');
+  const [armed, setArmed] = useState(false);
 
   useEffect(() => {
     setLoadedAt(String(Date.now()));
@@ -29,11 +30,15 @@ export function AntiSpamFields() {
         className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden"
         data-antispam
       >
-        <label htmlFor={HONEYPOT_FIELD}>Leave this field empty</label>
+        <label htmlFor={HONEYPOT_FIELD}>Do not fill</label>
+        {/* readOnly until focused: browsers never autofill a read-only input, while a bot that
+            sets .value or posts the field directly is unaffected. */}
         <input
           autoComplete="off"
           id={HONEYPOT_FIELD}
           name={HONEYPOT_FIELD}
+          onFocus={() => setArmed(true)}
+          readOnly={!armed}
           tabIndex={-1}
           type="text"
         />

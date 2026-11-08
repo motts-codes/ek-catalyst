@@ -50,8 +50,9 @@ Cost: none. Friction: none.
 
 Add two hidden inputs to `DynamicForm` so every form built on it gets them for free:
 
-- `ek_company_site` (text, visually hidden, `tabindex=-1`, `autocomplete="off"`, not named
-  anything a browser autofills such as "website" or "url"). Must be empty.
+- `ek_x7q` (text, visually hidden, `tabindex=-1`, `autocomplete="off"`, read-only until focused so
+  browsers never autofill it; the name is deliberately meaningless because an earlier name that
+  contained "company" was autofilled by Chrome for a real visitor on 8 Nov 2026). Must be empty.
 - `ek_t` (hidden, set to the page-load time after hydration). The action requires at least
   3 seconds for multi-field forms and 1.5 seconds for the single-field newsletter, and rejects
   pages older than 24 hours. A request replayed from the static HTML arrives with it empty.

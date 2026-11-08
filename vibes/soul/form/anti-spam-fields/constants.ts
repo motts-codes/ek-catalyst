@@ -2,10 +2,11 @@
 // module (no 'use client') so server code can import the strings directly.
 
 /**
- * Honeypot input name. Deliberately NOT "website", "url" or "company": browsers autofill those
- * from saved contact profiles and would flag real customers.
+ * Honeypot input name. Must contain no word a browser's autofill heuristics recognise: Chrome
+ * filled an earlier name that contained "company" with a real visitor's company (8 Nov 2026),
+ * which would have flagged a human. Keep it meaningless.
  */
-export const HONEYPOT_FIELD = 'ek_company_site';
+export const HONEYPOT_FIELD = 'ek_x7q';
 
 /** Hidden input carrying the client's page-load time (ms since epoch), set after hydration. */
 export const LOADED_AT_FIELD = 'ek_t';
