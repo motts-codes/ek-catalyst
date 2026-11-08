@@ -1,7 +1,8 @@
 # Form security plan: layered bot and spam protection
 
-Status: proposal, 8 Nov 2026. Covers the Catalyst storefront on Vercel. The old Stencil site gets a
-short note at the end.
+Status: 8 Nov 2026. Phases 1 and 2 are built (see section 8); the Vercel project is on Pro, so
+phase 3 is unblocked. Covers the Catalyst storefront on Vercel. The old Stencil site gets a short
+note at the end.
 
 ## 1. What we are defending against
 
@@ -51,19 +52,23 @@ Add two hidden inputs to `DynamicForm` so every form built on it gets them for f
 
 - `ek_company_site` (text, visually hidden, `tabindex=-1`, `autocomplete="off"`, not named
   anything a browser autofills such as "website" or "url"). Must be empty.
-- `ek_t` (hidden, set to a server-issued, HMAC-signed timestamp when the page renders). The
-  action verifies the signature and requires at least 3 seconds for multi-field forms, 1.5 seconds
-  for the single-field newsletter. Signing it means a direct-POST script cannot just send a fake
-  old timestamp, and it adds an upper bound too: tokens older than 24 hours are rejected.
+- `ek_t` (hidden, set to the page-load time after hydration). The action requires at least
+  3 seconds for multi-field forms and 1.5 seconds for the single-field newsletter, and rejects
+  pages older than 24 hours. A request replayed from the static HTML arrives with it empty.
+
+  Why it is not signed: the lead-form pages are statically rendered, so the server cannot stamp a
+  per-visitor token without making every page dynamic. The timestamp is therefore advisory: it
+  catches scripts that do not bother, and BotID (Layer 2) covers the ones that forge it.
 
 Enforcement in `submitLead` (and `subscribe`): a failing honeypot or timing check returns the
 normal "thanks" redirect to the bot but does not deliver the lead. Logging records the reason. The
 bot learns nothing; a wrongly flagged human loses one submission, which the fill-time floor keeps
-rare. Reads about 60 lines in `dynamic-form/index.tsx`, `submit-lead.ts` and a new
-`lib/forms/anti-spam.ts`.
+rare. Lives in `vibes/soul/form/anti-spam-fields/` (the inputs), `lib/forms/anti-spam-check.ts`
+(the pure checks) and `lib/forms/anti-spam.ts` (`guardForm`, which adds BotID, mode and logging).
 
-Also cover `register` and `login`: the honeypot is rendered by `DynamicFormSection`, so the same
-hidden fields appear there. Enforcement goes in those two actions as well.
+Also covers `register`, `login` and forgot-password: the same hidden fields render in those forms,
+with the timing floor skipped there because a password manager legitimately fills and submits in
+under a second.
 
 Cost: none. Friction: none. Stops: dumb form-fillers and request replays that copy the field set.
 
@@ -71,19 +76,23 @@ Cost: none. Friction: none. Stops: dumb form-fillers and request replays that co
 
 The main layer for the lead forms, newsletter, login and forgot-password. Invisible to visitors.
 
-- Install `botid`, wrap `next.config.ts` with `withBotId`, and add `instrumentation-client.ts`
-  calling `initBotId({ protect: [...] })` listing every protected route with method `POST`
-  (server actions post to the page URL, so list the page paths: `/contact`, `/book`,
-  `/mykitchen/free-design-consult`, `/countertops`, `/login`, `/login/forgot-password`,
-  `/register`, and `/*` for the footer newsletter since it is on every page).
-- In each protected action call `checkBotId()` first. `isBot === true` gets the same silent
-  handling as Layer 1 for lead forms, and a visible "Please try again" for login and register.
+- `botid` is installed. `instrumentation-client.ts` calls `initBotId` with one rule, `POST` to
+  `/*`: every public form posts through a Server Action to the page it sits on, the quote prompts
+  sit on dynamic category and product URLs, and the footer newsletter is on every page, so one
+  wildcard is both simpler and safer than a path list. The rule only attaches a header; nothing is
+  checked or billed unless an action calls `checkBotId()`. (Vercel now routes the BotID
+  challenge requests itself, so no `next.config` wrapper is needed.)
+- `guardForm` calls `checkBotId()` after the request-only signals. `isBot` on a lead form takes
+  the silent path; on login and register it returns the generic "Something went wrong" error.
 - Tiers: **Basic** is free on every plan. **Deep Analysis** (Kasada) is billed at about $1 per
-  1,000 `checkBotId()` calls on Pro; only calls are billed, not page views. Start on Basic
-  everywhere, then switch the lead forms and login to Deep Analysis once the Vercel project is
-  confirmed on Pro. At EK's volumes that is dollars per month.
-- Local dev: BotID passes everything through on localhost by default. Use
-  `developmentOptions: { bypass: 'BOT' }` in a test run to see the rejection path.
+  1,000 `checkBotId()` calls on Pro; only calls are billed, not page views. Running on Basic now.
+  To move to Deep Analysis: enable it in the Vercel dashboard (Project, Firewall, Rules, "Vercel
+  BotID Deep Analysis"), then change `BOTID_CHECK_LEVEL` in
+  `vibes/soul/form/anti-spam-fields/constants.ts`. One constant feeds both client and server,
+  because the two levels must match or verification fails.
+- Local dev: `checkBotId()` always returns not-a-bot in `next dev`, and the client runtime is a
+  no-op there. Use `developmentOptions: { bypass: 'BAD-BOT' }` in a test run to see the rejection
+  path. On a Vercel preview, `curl` against a protected route is blocked by design; test from a page.
 
 Cost: free (Basic) or a few dollars a month (Deep Analysis). Friction: none. Stops: direct-POST
 scripts (no valid token), headless browsers, most automation frameworks.
@@ -182,7 +191,26 @@ Playwright, run against local and preview:
 - Newsletter: duplicate email within an hour returns "already subscribed" without a second
   mutation.
 
-## 7. The old Stencil site, while it is still live
+## 7. Status of the build (8 Nov 2026)
+
+Done, local commit, report mode:
+
+- Hidden fields in every public form: the shared `DynamicForm` (all 14 lead forms, register), the
+  footer newsletter, login, forgot-password.
+- `guardForm` wired into `submit-lead.ts`, `subscribe.ts`, `login.ts`, `reset-password.ts` and
+  `register-customer.ts`. Lead forms and newsletter take the silent path when blocked; login and
+  register return the generic error; forgot-password returns its normal "check your email" text.
+- Layer 0 inside the same check: more than 3 links across the text fields, or a disposable email
+  domain, counts as a signal. Phone already required 10 US digits.
+- BotID Basic on every POST. Vercel project `ek-catalyst` is on the Pro team, so Deep Analysis
+  and WAF rate limits are available when wanted.
+- Mode switch: `FORM_ANTISPAM_MODE=enforce` in the Vercel environment flips from log-only to
+  blocking. Default is report. Grep the logs for `[antispam]`.
+
+Still to do, in order: two weeks of report-mode logs on preview, WAF rate-limit rules (section 3,
+Layer 4), Deep Analysis on lead forms and login, then Layer 5 with the CRM and MailerLite.
+
+## 8. The old Stencil site, while it is still live
 
 Not our build, but three cheap fixes if EK wants them before cut-over:
 

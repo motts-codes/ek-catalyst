@@ -1,5 +1,6 @@
 'use client';
 
+import { AntiSpamFields } from '@/vibes/soul/form/anti-spam-fields';
 import { getFormProps, getInputProps, SubmissionResult, useForm } from '@conform-to/react';
 import { getZodConstraint } from '@conform-to/zod';
 import { useTranslations } from 'next-intl';
@@ -46,6 +47,7 @@ export function ForgotPasswordForm({
 
   return (
     <form {...getFormProps(form)} action={formAction} className="flex grow flex-col gap-5">
+      <AntiSpamFields />
       <Input
         {...getInputProps(fields.email, { type: 'text' })}
         errors={fields.email.errors}

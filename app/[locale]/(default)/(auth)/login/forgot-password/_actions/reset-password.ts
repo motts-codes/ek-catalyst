@@ -8,6 +8,7 @@ import { getTranslations } from 'next-intl/server';
 import { schema } from '@/vibes/soul/sections/forgot-password-section/schema';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
+import { guardForm } from '~/lib/forms/anti-spam';
 
 const ResetPasswordMutation = graphql(`
   mutation ResetPasswordMutation($input: RequestResetPasswordInput!) {
@@ -35,6 +36,17 @@ export const resetPassword = async (
 
   if (submission.status !== 'success') {
     return { lastResult: submission.reply() };
+  }
+
+  // Honeypot + BotID only (see login). A blocked bot gets the same "check your email" message
+  // as a real visitor, so it cannot tell whether the address exists.
+  const guard = await guardForm('forgot-password', formData, { minMs: 0, skipTiming: true });
+
+  if (guard.blocked) {
+    return {
+      lastResult: submission.reply(),
+      successMessage: t('confirmResetPassword', { email: submission.value.email }),
+    };
   }
 
   try {

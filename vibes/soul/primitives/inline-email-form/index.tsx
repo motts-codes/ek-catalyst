@@ -1,5 +1,6 @@
 'use client';
 
+import { AntiSpamFields } from '@/vibes/soul/form/anti-spam-fields';
 import { getFormProps, getInputProps, SubmissionResult, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
@@ -50,6 +51,7 @@ export function InlineEmailForm({
 
   return (
     <form {...getFormProps(form)} action={formAction} className={clsx('space-y-2', className)}>
+      <AntiSpamFields />
       <div
         className={clsx(
           'relative rounded-full border bg-background text-sm transition-colors duration-200 focus-within:border-primary focus:outline-none',

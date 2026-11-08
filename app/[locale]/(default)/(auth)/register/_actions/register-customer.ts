@@ -14,6 +14,7 @@ import { graphql, VariablesOf } from '~/client/graphql';
 import { FieldNameToFieldId } from '~/data-transformers/form-field-transformer/utils';
 import { redirect } from '~/i18n/routing';
 import { getCartId } from '~/lib/cart';
+import { guardForm } from '~/lib/forms/anti-spam';
 import { assertRecaptchaTokenPresent, getRecaptchaFromForm } from '~/lib/recaptcha';
 
 import { ADDRESS_FIELDS_NAME_PREFIX, CUSTOMER_FIELDS_NAME_PREFIX } from './prefixes';
@@ -367,6 +368,14 @@ export async function registerCustomer<F extends Field>(
     return {
       lastResult: submission.reply({ formErrors: recaptchaValidation.formErrors }),
     };
+  }
+
+  // Honeypot + BotID on top of BigCommerce's reCAPTCHA. Three steps take longer than three
+  // seconds for anyone, but a password manager can fill the lot, so no timing floor here.
+  const guard = await guardForm('register', formData, { minMs: 0, skipTiming: true });
+
+  if (guard.blocked) {
+    return { lastResult: submission.reply({ formErrors: [t('somethingWentWrong')] }) };
   }
 
   try {

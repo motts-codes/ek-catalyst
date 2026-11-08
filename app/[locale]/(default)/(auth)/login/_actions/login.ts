@@ -10,6 +10,7 @@ import { schema } from '@/vibes/soul/sections/sign-in-section/schema';
 import { signIn } from '~/auth';
 import { redirect } from '~/i18n/routing';
 import { getCartId } from '~/lib/cart';
+import { guardForm } from '~/lib/forms/anti-spam';
 
 export const login = async (
   { redirectTo }: { redirectTo: string },
@@ -24,6 +25,13 @@ export const login = async (
 
   if (submission.status !== 'success') {
     return submission.reply();
+  }
+
+  // Honeypot + BotID only; no timing floor, a password manager fills this form instantly.
+  const guard = await guardForm('login', formData, { minMs: 0, skipTiming: true });
+
+  if (guard.blocked) {
+    return submission.reply({ formErrors: [t('somethingWentWrong')] });
   }
 
   try {

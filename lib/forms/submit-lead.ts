@@ -8,6 +8,8 @@ import { DynamicFormActionArgs } from '@/vibes/soul/form/dynamic-form';
 import { Field, schema } from '@/vibes/soul/form/dynamic-form/schema';
 import { redirect } from '~/i18n/routing';
 
+import { guardForm } from './anti-spam';
+
 // One server action for every lead form on the site (design consult, contact, quotes, Pro
 // Program, referrals…). Validates against the form's own field schema, then hands off.
 //
@@ -32,6 +34,14 @@ async function submitLead<F extends Field>(
   _prevState: { lastResult: SubmissionResult | null },
   formData: FormData,
 ) {
+  // Bot signals first, before validation, so a bot gets no field-level feedback. A blocked
+  // submission takes the same "thanks" path as a real one; it just is not delivered.
+  const guard = await guardForm(meta.form, formData, { minMs: 3000 });
+
+  if (guard.blocked) {
+    return redirect({ href: meta.confirmPath, locale: await getLocale() });
+  }
+
   const submission = parseWithZod(formData, { schema: schema(fields) });
 
   if (submission.status !== 'success') {

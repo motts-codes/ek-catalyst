@@ -8,6 +8,7 @@ import { getTranslations } from 'next-intl/server';
 import { schema } from '@/vibes/soul/primitives/inline-email-form/schema';
 import { client } from '~/client';
 import { graphql } from '~/client/graphql';
+import { guardForm } from '~/lib/forms/anti-spam';
 
 const SubscribeToNewsletterMutation = graphql(`
   mutation SubscribeToNewsletterMutation($input: CreateSubscriberInput!) {
@@ -43,6 +44,14 @@ export const subscribe = async (
 
   if (submission.status !== 'success') {
     return { lastResult: submission.reply() };
+  }
+
+  // Single-field form, so a short floor. A blocked bot sees the normal success message and no
+  // subscriber is created.
+  const guard = await guardForm('newsletter', formData, { minMs: 1500 });
+
+  if (guard.blocked) {
+    return { lastResult: submission.reply(), successMessage: t('subscribedToNewsletter') };
   }
 
   try {

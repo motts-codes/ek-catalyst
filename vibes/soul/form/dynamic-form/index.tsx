@@ -10,6 +10,7 @@ import {
   useForm,
   useInputControl,
 } from '@conform-to/react';
+import { AntiSpamFields } from '@/vibes/soul/form/anti-spam-fields';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
@@ -227,6 +228,7 @@ export function DynamicForm<F extends Field>({
   return (
     <FormProvider context={form.context}>
       <form {...getFormProps(form)} action={formAction} onChange={onChange}>
+        <AntiSpamFields />
         {steps != null && (
           <ol
             aria-label={`Step ${step + 1} of ${steps.length}`}
