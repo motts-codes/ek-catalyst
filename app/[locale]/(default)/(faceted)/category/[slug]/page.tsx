@@ -17,7 +17,6 @@ import {
   CabinetTypeFilter,
   type CabinetTypeValue,
 } from '@/vibes/soul/sections/cabinet-type-filter';
-import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { ProductsListSection } from '@/vibes/soul/sections/products-list-section';
 import { getFilterParsers } from '@/vibes/soul/sections/products-list-section/filter-parsers';
@@ -386,27 +385,13 @@ function programCrumbs(program: Program | undefined) {
 }
 
 // Countertops are quoted, not carted: their cards send shoppers to the quote page (with the
-// product named), the grid carries the per-square-foot prices, and a closing band repeats the
-// quote path for anyone who did not pick a product. Samples stay carted.
+// product named), the header points carry the per-square-foot prices (lib/category/category-content),
+// and a closing band repeats the quote path for anyone who did not pick a product. Samples stay
+// carted.
 const isCountertopPath = (path: string) =>
   path.startsWith('/countertops') && !path.startsWith('/countertops/samples');
 
 const quoteHrefFor = (path: string) => (isCountertopPath(path) ? QUOTE_PAGE_HREF : undefined);
-
-function CountertopPricing({ path }: { path: string }) {
-  if (!isCountertopPath(path)) return null;
-
-  return (
-    <CategoryPoints
-      fine="Per square foot, supplied and delivered; your installer fits it. Every top is quoted to your kitchen."
-      points={[
-        { icon: 'price', label: 'Granite from $49.99 · Quartz from $59.99 per sq ft' },
-        { icon: 'clock', label: 'Quotes usually back the same day' },
-        { icon: 'phone', label: 'Or call 860-247-1000 and order by phone' },
-      ]}
-    />
-  );
-}
 
 function CountertopQuoteBand({ path }: { path: string }) {
   if (!isCountertopPath(path)) return null;
@@ -738,7 +723,6 @@ export default async function Category(props: Props) {
           type={CATEGORY_HEADER_TYPE}
         />
       )}
-      <CountertopPricing path={category.path} />
       <Slot
         label={`${category.name} top content`}
         snapshotId={`category-${categoryId}-top-content`}

@@ -55,6 +55,21 @@ const PICKUP_POINTS: CategoryPoint[] = [
   { icon: 'clock', label: 'Ready in 2 days' },
 ];
 
+// Countertops are quoted, not carted: no stock / shipping / returns promises. The points row
+// carries the per-square-foot prices and the quote path instead (every countertop category
+// except Samples, which are ordered from the cart like anything else).
+const COUNTERTOP_POINTS: CategoryPoint[] = [
+  { icon: 'price', label: 'Granite from $49.99 · Quartz from $59.99 per sq ft' },
+  { icon: 'clock', label: 'Quotes usually back the same day' },
+  { icon: 'phone', label: 'Or call 860-247-1000 and order by phone' },
+];
+
+const COUNTERTOP_FINE =
+  'Per square foot, supplied and delivered; your installer fits it. Every top is quoted to your kitchen.';
+
+const isQuotedCountertopPath = (key: string) =>
+  key.startsWith('/countertops') && !key.startsWith('/countertops/samples');
+
 export const DEFAULT_CATEGORY_CONTENT: Required<Pick<CategoryContent, 'subTitle' | 'points'>> &
   Pick<CategoryContent, 'fine'> = {
   subTitle: 'Shop by type',
@@ -515,7 +530,11 @@ const normalize = (path: string) => `/${path.replace(/^\/+|\/+$/g, '')}`;
 
 export function getCategoryContent(path: string): CategoryContent {
   const key = normalize(path);
-  const content = CATEGORY_CONTENT[key] ?? {};
+  const base = CATEGORY_CONTENT[key] ?? {};
+  const content =
+    isQuotedCountertopPath(key) && base.points == null
+      ? { ...base, points: COUNTERTOP_POINTS, fine: base.fine ?? COUNTERTOP_FINE }
+      : base;
   // The authored lede (client copy, Oct 2026) wins; HERO_LEDES is the older fallback set.
   const lede = content.lede ?? HERO_LEDES[key];
 
@@ -530,7 +549,10 @@ const heroImage = (file: string, alt: string) => ({
 });
 
 const HERO_IMAGES: Record<string, { src: string; alt: string }> = {
-  '/appliances': heroImage('cat-appliances', 'A white kitchen with a stainless fridge, range and hood beside an oak island'),
+  '/appliances': heroImage(
+    'cat-appliances',
+    'A white kitchen with a stainless fridge, range and hood beside an oak island',
+  ),
   '/bath': heroImage('cat-bath', 'A vanity with a white top, sink and faucet'),
   '/cabinets': heroImage('cat-cabinets', 'A finished shaker kitchen'),
   '/closets': heroImage('cat-closets', 'A fitted closet with shelves and hanging rails'),
