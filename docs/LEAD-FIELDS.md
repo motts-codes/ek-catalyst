@@ -13,6 +13,11 @@ columns, and a second copy to a **Google Apps Script** that logs a sheet. The pa
 `utm_source, utm_medium, utm_campaign, utm_term, utm_content, gclid, fbclid` captured from the
 landing URL and kept in sessionStorage.
 
+**Google Sheet (8 Nov 2026):** the old page's Apps Script writes a fixed set of columns and drops every
+other key, so a second sheet with `scripts/leads/google-sheet-webhook.gs` (schema-less, adds a column per
+new key, core columns first) replaces it; set-up steps are at the top of that file. Pabbly likewise only
+maps the old keys until its workflow is extended (see Mapping sheet in the workbook).
+
 The new site does the same from the server (`lib/leads/webhook.ts`, URLs in
 `LEAD_WEBHOOK_URLS`, comma-separated), so the webhook URLs are no longer visible in page source,
 BotID and the honeypot run first, and the Pabbly mapping stays where it is. Every lead form
