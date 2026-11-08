@@ -13,15 +13,15 @@ Companion docs: [CABINET-REPLICATION.md](CABINET-REPLICATION.md) (cabinet featur
 
 ## 0. What moves, and how
 
-| Layer | Moves by | Effort |
-| --- | --- | --- |
-| Code (pages, sections, nav config, footer config, admin panel) | Deploying this repo with live env vars | Low — one constant to change (§3) |
-| Design (theme tokens, layout, fonts) | Same — it is all in the repo | None |
-| Makeswift content (edited slots, header/footer overrides, Makeswift-only pages) | Reuse the same Makeswift site key, or rebuild on a new site | None if the key is reused |
-| **Catalog structure** (categories, channel assignment) | Created in the live store | **Main work** |
-| **Metafields + custom fields** (cabinet content, PDP content, badges, delivery) | Seed scripts + admin panel + control panel | **Main work** |
-| Store settings (facets, stock display, reviews) | Control panel | Low |
-| Redirects / SEO | next.config redirects + BigCommerce redirects | Low |
+| Layer                                                                           | Moves by                                                    | Effort                            |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------------- |
+| Code (pages, sections, nav config, footer config, admin panel)                  | Deploying this repo with live env vars                      | Low — one constant to change (§3) |
+| Design (theme tokens, layout, fonts)                                            | Same — it is all in the repo                                | None                              |
+| Makeswift content (edited slots, header/footer overrides, Makeswift-only pages) | Reuse the same Makeswift site key, or rebuild on a new site | None if the key is reused         |
+| **Catalog structure** (categories, channel assignment)                          | Created in the live store                                   | **Main work**                     |
+| **Metafields + custom fields** (cabinet content, PDP content, badges, delivery) | Seed scripts + admin panel + control panel                  | **Main work**                     |
+| Store settings (facets, stock display, reviews)                                 | Control panel                                               | Low                               |
+| Redirects / SEO                                                                 | next.config redirects + BigCommerce redirects               | Low                               |
 
 ---
 
@@ -31,14 +31,13 @@ Companion docs: [CABINET-REPLICATION.md](CABINET-REPLICATION.md) (cabinet featur
       category the storefront shows must live in **that tree** (see BIGCOMMERCE-SETUP §1). Note the
       tree id.
 - [ ] **Products assigned to the channel.** Products not assigned to the channel silently return
-      nothing (BIGCOMMERCE-SETUP §2). Bulk-assign the whole catalog to the channel.
+      nothing (BIGCOMMERCE-SETUP §2). **Decision 8 Nov 2026: no sandbox products are copied to the live
+      store.** Arun adds the live products into the tree-3 categories (docs/LIVE-CATEGORY-IDS.md) and
+      assigns the Catalyst channel; scripts only post-process those products per category.
 - [ ] **Category paths match the nav/footer config.** The storefront links to these paths, so the
-      live categories need the same URLs (or update the configs):
-      - `/cabinets` (Cabinets parent), `/cabinets/<collection>` (Avon, Dover, …)
-      - `/closets`, `/appliances`, `/windows`
-      - Later: `/countertops`, `/bath`, `/siding`, `/doors`, `/kitchen/sinks`, `/kitchen/faucets`,
-        accessories subcategories — currently `#` in [menu-config.ts](../lib/navigation/menu-config.ts)
-        and [footer-config.ts](../lib/navigation/footer-config.ts); fill in as the pages exist.
+      live categories need the same URLs (or update the configs): - `/cabinets` (Cabinets parent), `/cabinets/<collection>` (Avon, Dover, …) - `/closets`, `/appliances`, `/windows` - Later: `/countertops`, `/bath`, `/siding`, `/doors`, `/kitchen/sinks`, `/kitchen/faucets`,
+      accessories subcategories — currently `#` in [menu-config.ts](../lib/navigation/menu-config.ts)
+      and [footer-config.ts](../lib/navigation/footer-config.ts); fill in as the pages exist.
 - [ ] **Tokens.** Store hash, Storefront API token (plus unauthenticated token), a management
       API token with **read + write** on `/v3/catalog` (used as `CATALYST_ACCESS_TOKEN` by the
       seed scripts and the cabinet admin panel), and the app client id/secret if customer login is used.
@@ -51,7 +50,7 @@ Companion docs: [CABINET-REPLICATION.md](CABINET-REPLICATION.md) (cabinet featur
 
 - [ ] Create the **Cabinets parent** and one **child category per collection** (Avon, Dover, …) in
       the channel's tree. Note every id.
-- [ ] Assign each collection's products (RTA and Assembled variants, accessories) to its category
+- [ ] (Arun) Add each collection's live products (RTA and Assembled variants, accessories) to its category
       **and** to the channel.
 - [ ] Set the **`Program` product custom field** (`Assembled` / `RTA`, both for accessories) —
       the data half of the program filter:
@@ -114,20 +113,20 @@ Keep every double-underscore field: the PDP spec table filters them out on purpo
 
 Server-only unless prefixed `NEXT_PUBLIC_`.
 
-| Var | Purpose |
-| --- | --- |
-| `BIGCOMMERCE_STORE_HASH` | Live store |
-| `BIGCOMMERCE_CHANNEL_ID` | The Catalyst channel |
-| `BIGCOMMERCE_STOREFRONT_TOKEN` / `BIGCOMMERCE_STOREFRONT_UNAUTHENTICATED_TOKEN` | Storefront GraphQL |
-| `BIGCOMMERCE_ACCESS_TOKEN` | Management API (Catalyst core) |
-| `CATALYST_ACCESS_TOKEN` | Read + write management token for metafields (scripts + `/cabinet-admin`) |
-| `BIGCOMMERCE_CLIENT_ID` / `BIGCOMMERCE_CLIENT_SECRET` | Customer login (if used) |
-| `AUTH_SECRET` (+ `AUTH_TRUST_HOST=true` behind a proxy) | Session signing |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `EK_ADMIN_EMAILS` | `/cabinet-admin` Google sign-in + staff allowlist |
-| `MAKESWIFT_SITE_API_KEY` | Makeswift site (reuse the sandbox key to keep all edits) |
-| `NEXT_PUBLIC_BIGCOMMERCE_CDN_HOSTNAME` | Image CDN host |
-| `DEFAULT_REVALIDATE_TARGET`, `TRAILING_SLASH`, `ENABLE_ADMIN_ROUTE` | As in sandbox |
-| Upstash / KV vars | Only if the KV logger / cache is used |
+| Var                                                                             | Purpose                                                                   |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `BIGCOMMERCE_STORE_HASH`                                                        | Live store                                                                |
+| `BIGCOMMERCE_CHANNEL_ID`                                                        | The Catalyst channel                                                      |
+| `BIGCOMMERCE_STOREFRONT_TOKEN` / `BIGCOMMERCE_STOREFRONT_UNAUTHENTICATED_TOKEN` | Storefront GraphQL                                                        |
+| `BIGCOMMERCE_ACCESS_TOKEN`                                                      | Management API (Catalyst core)                                            |
+| `CATALYST_ACCESS_TOKEN`                                                         | Read + write management token for metafields (scripts + `/cabinet-admin`) |
+| `BIGCOMMERCE_CLIENT_ID` / `BIGCOMMERCE_CLIENT_SECRET`                           | Customer login (if used)                                                  |
+| `AUTH_SECRET` (+ `AUTH_TRUST_HOST=true` behind a proxy)                         | Session signing                                                           |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `EK_ADMIN_EMAILS`                 | `/cabinet-admin` Google sign-in + staff allowlist                         |
+| `MAKESWIFT_SITE_API_KEY`                                                        | Makeswift site (reuse the sandbox key to keep all edits)                  |
+| `NEXT_PUBLIC_BIGCOMMERCE_CDN_HOSTNAME`                                          | Image CDN host                                                            |
+| `DEFAULT_REVALIDATE_TARGET`, `TRAILING_SLASH`, `ENABLE_ADMIN_ROUTE`             | As in sandbox                                                             |
+| Upstash / KV vars                                                               | Only if the KV logger / cache is used                                     |
 
 - [ ] Google Cloud console: add `https://<live-domain>/api/admin-auth/callback/google` to
       Authorized redirect URIs and the bare domain to JavaScript origins.
@@ -164,5 +163,5 @@ Server-only unless prefixed `NEXT_PUBLIC_`.
 
 1. Channel tree + product channel assignment → 2. cabinet categories, `Program` custom field,
    metafield seeding, PDP custom fields → 3. store settings (facets, stock display) →
-4. `CABINETS_CATEGORY_ID` + env vars + Google redirect URI → 5. preview deploy + verification →
-6. repoint the channel, permanent redirects.
+2. `CABINETS_CATEGORY_ID` + env vars + Google redirect URI → 5. preview deploy + verification →
+3. repoint the channel, permanent redirects.

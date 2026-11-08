@@ -91,5 +91,5 @@ old→new map is `scripts/live/category-id-map.json`. Cabinets parent = **804** 
 - [ ] Customers > Customer Groups > guest group > Category Access: tick every new category (storefront hides unticked ones).
 - [ ] `CABINETS_CATEGORY_ID=804` in the live/preview environment that points at this store.
 - [ ] Metafields: parent 804 (attribute master-lists, program FAQ) and each collection, via the seed/import scripts with `--category <live id>`.
-- [ ] Products: add channel 1908757 and the tree-3 category ids to each product (additive only).
+- [ ] Products: **Arun adds the live products himself** (no sandbox products move over) into these tree-3 category ids and the Catalyst channel 1908757. Scripts then only post-process his products per category (Program custom field, `__is_*` badges, `__delivery`, swatches, program_sibling / pdp.features), dry-run first, additive, after confirming the write allowance for Catalyst-only products.
 - [ ] Facets, stock-display setting, redirects: see LIVE-MIGRATION.md.
