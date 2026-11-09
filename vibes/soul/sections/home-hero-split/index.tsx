@@ -277,6 +277,8 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
             <div className="h-full overflow-hidden" ref={photos.ref}>
               <div className="flex h-full">
                 {slides.map((slide, index) => {
+                  // Only the first slide is the page's h1; the others are h2 so the page keeps one.
+                  const Heading = index === 0 ? 'h1' : 'h2';
                   const content = (
                     <>
                       {slide.image?.src ? (
@@ -340,7 +342,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                                 {slide.kicker}
                               </p>
                             )}
-                            <h1
+                            <Heading
                               className={clsx(
                                 'm-0 font-heading text-[28px] font-bold leading-[1.05] text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.35),0_2px_14px_rgb(0_0_0/0.25)]',
                                 // Top-left copy shares the frame with the photo's subject, so a step smaller.
@@ -355,7 +357,7 @@ export function HomeHeroSplit({ slides, offers, slideInterval = 8000, className 
                                   {line}
                                 </Fragment>
                               ))}
-                            </h1>
+                            </Heading>
                           </div>
                           {slide.showCta !== false &&
                             Boolean(slide.ctaLabel) &&
