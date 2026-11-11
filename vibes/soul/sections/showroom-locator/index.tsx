@@ -5,12 +5,18 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { clsx } from 'clsx';
 import { MapPin, Phone } from 'lucide-react';
 import type { Map as MapboxMap, Marker } from 'mapbox-gl';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Link } from '~/components/link';
+import {
+  FAR_AWAY_MILES,
+  formatMiles,
+  rankByDistance,
+  type SearchOrigin,
+} from '~/lib/pages/showroom-distance';
 import {
   directionsHref,
   type OpenStatus,
@@ -18,6 +24,8 @@ import {
   type Showroom,
   showroomHref,
 } from '~/lib/pages/showrooms';
+
+import { ZipSearch } from './zip-search';
 
 interface Props {
   showrooms: Showroom[];
@@ -33,6 +41,8 @@ const MAP_STYLE = 'mapbox://styles/mapbox/light-v11';
 const SELECTED_ZOOM = 13;
 const FIT_PADDING = 64;
 const FIT_MAX_ZOOM = 10;
+// After a ZIP search the map frames the ZIP and the nearest showroom together.
+const RESULT_MAX_ZOOM = 12;
 const FLY_MS = 1200;
 
 // "Where to find us": the six showrooms on a Mapbox map with a list beside it. Pick a card or a
@@ -49,6 +59,10 @@ export function ShowroomLocator({
   const mapNode = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapboxMap | null>(null);
   const [active, setActive] = useState<string | null>(null);
+  // Where a ZIP search (or the browser's location) put the visitor; null until they search.
+  const [origin, setOrigin] = useState<SearchOrigin | null>(null);
+  const originMarker = useRef<Marker | null>(null);
+  const listNode = useRef<HTMLOListElement>(null);
   // Open or closed right now, worked out in the browser so the server markup never goes stale.
   const [status, setStatus] = useState<Record<string, OpenStatus>>({});
   const cardNodes = useRef<Record<string, HTMLLIElement | null>>({});
@@ -189,13 +203,118 @@ export function ShowroomLocator({
     else map.flyTo({ ...camera, zoom: SELECTED_ZOOM, duration: FLY_MS, essential: false });
   }, [active, pins, showrooms]);
 
+  // The visitor's point: a dark dot on the map, and the map framed on it and the nearest showroom.
+  useEffect(() => {
+    const map = mapRef.current;
+
+    originMarker.current?.remove();
+    originMarker.current = null;
+
+    if (!origin) return;
+
+    // The list has re-sorted nearest first; start it from the top.
+    listNode.current?.scrollTo({ top: 0, left: 0 });
+
+    if (!map) return;
+
+    let cancelled = false;
+
+    void import('mapbox-gl').then(({ default: mapboxgl }) => {
+      if (cancelled) return;
+
+      const element = document.createElement('span');
+
+      element.className =
+        'block h-4 w-4 rounded-full border-[3px] border-white bg-foreground shadow-[0_0_0_2px_rgb(0_0_0/0.15)]';
+      element.setAttribute('aria-hidden', 'true');
+
+      originMarker.current = new mapboxgl.Marker({ element })
+        .setLngLat([origin.lng, origin.lat])
+        .addTo(map);
+
+      const closest = rankByDistance(showrooms, origin)[0]?.item;
+
+      if (!closest) return;
+
+      const bounds = new mapboxgl.LngLatBounds()
+        .extend([origin.lng, origin.lat])
+        .extend([closest.coords.lng, closest.coords.lat]);
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      map.fitBounds(bounds, {
+        // Room for a pin above its point (and the zoom control) at the top.
+        padding: {
+          top: FIT_PADDING + 40,
+          bottom: FIT_PADDING,
+          left: FIT_PADDING,
+          right: FIT_PADDING,
+        },
+        maxZoom: RESULT_MAX_ZOOM,
+        duration: reducedMotion ? 0 : FLY_MS,
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [origin, showrooms]);
+
+  const locate = useCallback(
+    (next: SearchOrigin) => {
+      const closest = rankByDistance(showrooms, next)[0]?.item;
+
+      setOrigin(next);
+      if (closest) setActive(closest.slug);
+    },
+    [showrooms],
+  );
+
+  const reset = useCallback(() => {
+    setOrigin(null);
+    setActive(null);
+
+    const map = mapRef.current;
+
+    if (!map) return;
+
+    void import('mapbox-gl').then(({ default: mapboxgl }) => {
+      const bounds = new mapboxgl.LngLatBounds();
+
+      showrooms.forEach((s) => bounds.extend([s.coords.lng, s.coords.lat]));
+      map.fitBounds(bounds, { padding: FIT_PADDING, maxZoom: FIT_MAX_ZOOM, duration: 700 });
+    });
+  }, [showrooms]);
+
+  const results = origin ? rankByDistance(showrooms, origin) : null;
+  const nearest = results?.[0];
+  const ranked: Array<{ item: Showroom; miles: number | undefined }> =
+    results ?? showrooms.map((item) => ({ item, miles: undefined }));
   const chosen = showrooms.find((s) => s.slug === active);
+  let announcement = '';
+
+  if (nearest && origin) {
+    announcement = `Nearest showroom to ${origin.label} is ${nearest.item.name}, ${formatMiles(nearest.miles)} away.`;
+  } else if (chosen) {
+    announcement = `Showing ${chosen.name} on the map.`;
+  }
 
   return (
     <HomeSection description={description} id={id} kicker={kicker} title={title}>
-      <div className="grid gap-4 @3xl:h-[36rem] @3xl:grid-cols-[23.5rem_1fr] @3xl:gap-5">
-        {/* The map: 3:2 on phones, above the list; the full height beside it from tablet width. */}
-        <div className="relative aspect-[3/2] overflow-hidden rounded-3xl bg-contrast-100 @3xl:order-last @3xl:aspect-auto @3xl:h-full">
+      {/* Phones: search, then the map, then the list as a swipe row. From tablet width: search
+          and list in the left column, the map the full height on the right. */}
+      <div className="grid gap-4 @3xl:h-[36rem] @3xl:grid-cols-[23.5rem_1fr] @3xl:grid-rows-[auto_minmax(0,1fr)] @3xl:gap-5">
+        <div className="@3xl:col-start-1 @3xl:row-start-1">
+          <ZipSearch onLocate={locate} token={token} />
+          {nearest && origin ? (
+            <ResultsHeader
+              farAway={nearest.miles > FAR_AWAY_MILES}
+              onReset={reset}
+              origin={origin}
+            />
+          ) : null}
+        </div>
+        {/* The map: 3:2 on phones; the full height beside the list from tablet width. */}
+        <div className="relative aspect-[3/2] overflow-hidden rounded-3xl bg-contrast-100 @3xl:col-start-2 @3xl:row-span-2 @3xl:row-start-1 @3xl:aspect-auto @3xl:h-full">
           {token ? (
             // Mapbox's own stylesheet makes its container `position: relative`; this wins.
             <div className="!absolute inset-0" ref={mapNode} />
@@ -209,10 +328,11 @@ export function ShowroomLocator({
         </div>
         {/* The list: a row you can swipe through on phones, a column that scrolls on desktop. */}
         <ol
-          aria-label="Our showrooms"
-          className="-mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 @3xl:mx-0 @3xl:h-full @3xl:flex-col @3xl:overflow-y-auto @3xl:px-0 @3xl:pb-0 @3xl:pr-4 @3xl:[scrollbar-gutter:stable]"
+          aria-label={origin ? `Our showrooms, nearest to ${origin.label} first` : 'Our showrooms'}
+          className="-mx-6 flex snap-x snap-mandatory scroll-pl-6 gap-3 overflow-x-auto px-6 pb-2 [overflow-anchor:none] @3xl:col-start-1 @3xl:row-start-2 @3xl:mx-0 @3xl:h-full @3xl:min-h-0 @3xl:flex-col @3xl:overflow-y-auto @3xl:px-0 @3xl:pb-0 @3xl:pr-4 @3xl:[scrollbar-gutter:stable]"
+          ref={listNode}
         >
-          {showrooms.map((showroom) => {
+          {ranked.map(({ item: showroom, miles }) => {
             const isActive = showroom.slug === active;
 
             return (
@@ -236,7 +356,9 @@ export function ShowroomLocator({
                   cardNodes.current[showroom.slug] = node;
                 }}
               >
-                <div className="flex items-start justify-between gap-3">
+                {/* Name (and distance, after a search) left; the open status right, dropping to its
+                    own line in a narrow card. */}
+                <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
                   <h3 className="font-heading text-lg font-bold leading-tight">
                     <button
                       aria-pressed={isActive}
@@ -251,12 +373,23 @@ export function ShowroomLocator({
                     >
                       {showroom.name}
                     </button>
+                    {miles !== undefined && (
+                      <span
+                        className={clsx(
+                          'ml-2 inline-block translate-y-[-2px] whitespace-nowrap rounded-full px-2 py-0.5 font-sans text-xs font-semibold tabular-nums',
+                          isActive
+                            ? 'bg-white/15 text-white'
+                            : 'bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]',
+                        )}
+                      >
+                        {formatMiles(miles)}
+                      </span>
+                    )}
                   </h3>
                   {Boolean(status[showroom.slug]) && (
                     <p
                       className={clsx(
-                        // Wraps to two lines in a narrow card rather than spilling out of it.
-                        'flex max-w-[58%] items-start gap-1.5 pt-1 text-right text-[11px] font-medium leading-tight',
+                        'ml-auto flex items-start gap-1.5 whitespace-nowrap pt-1 text-right text-[11px] font-medium leading-tight',
                         isActive ? 'text-white/85' : 'text-contrast-500',
                       )}
                     >
@@ -338,8 +471,54 @@ export function ShowroomLocator({
         </ol>
       </div>
       <p aria-live="polite" className="sr-only">
-        {chosen ? `Showing ${chosen.name} on the map.` : ''}
+        {announcement}
       </p>
     </HomeSection>
+  );
+}
+
+// "Nearest to 06511 · New Haven, CT" above the ranked list, with a way back to all six, and a
+// line for ZIPs outside our area that points at what we can still do for them.
+function ResultsHeader({
+  origin,
+  farAway,
+  onReset,
+}: {
+  origin: SearchOrigin;
+  farAway: boolean;
+  onReset: () => void;
+}) {
+  return (
+    <div className="mt-3 rounded-2xl bg-[#fdf3f5] px-4 py-3 text-[13px]">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <p className="text-foreground">
+          <span className="font-semibold">Nearest to {origin.label}</span>
+          {origin.place ? <span className="text-contrast-500"> · {origin.place}</span> : null}
+        </p>
+        <button
+          className={clsx(
+            animatedUnderlineClassName,
+            'pb-0.5 font-semibold text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2',
+          )}
+          onClick={onReset}
+          type="button"
+        >
+          Show all six
+        </button>
+      </div>
+      {farAway ? (
+        <p className="mt-1.5 text-contrast-500">
+          Our showrooms are all in Connecticut. We ship cabinets to the 48 states, and a designer
+          can price your kitchen on a{' '}
+          <Link
+            className="font-semibold text-foreground underline underline-offset-2"
+            href="/mykitchen/free-design-consult"
+          >
+            video call
+          </Link>
+          .
+        </p>
+      ) : null}
+    </div>
   );
 }
