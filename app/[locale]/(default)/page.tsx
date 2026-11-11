@@ -11,7 +11,7 @@ import { ProductTabs } from '@/vibes/soul/sections/product-tabs';
 import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
-import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
+import { ShowroomMapBand } from '@/vibes/soul/sections/showroom-map-band';
 import { StoryFilm } from '@/vibes/soul/sections/story-film';
 import {
   getBestSellingProducts,
@@ -39,6 +39,7 @@ import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { EditableSection } from '~/lib/makeswift/components/editable-section';
 import { CATEGORY_CAROUSEL_TYPE, HERO_SPLIT_TYPE } from '~/lib/makeswift/components/section-types';
 import { Slot } from '~/lib/makeswift/slot';
+import { SHOWROOMS as SHOWROOM_DETAILS } from '~/lib/pages/showrooms';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
 
 import { productCardAddToCartAction } from './(faceted)/product-card-add-to-cart';
@@ -246,7 +247,12 @@ export default async function Home({ params }: Props) {
 
       {/* 9 · Showrooms */}
       <Slot
-        fallback={<ShowroomBand showrooms={SHOWROOMS} />}
+        fallback={
+          <ShowroomMapBand
+            showrooms={SHOWROOM_DETAILS}
+            token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+          />
+        }
         label="Home showrooms"
         snapshotId="home-showrooms"
       />

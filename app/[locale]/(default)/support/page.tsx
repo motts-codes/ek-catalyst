@@ -4,8 +4,8 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
-import { SHOWROOMS } from '~/lib/home/home-content';
+import { ShowroomMapBand } from '@/vibes/soul/sections/showroom-map-band';
+import { SHOWROOMS } from '~/lib/pages/showrooms';
 
 export const metadata: Metadata = {
   title: 'Support',
@@ -145,7 +145,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
         title="The pages that answer most questions"
       />
 
-      <ShowroomBand showrooms={SHOWROOMS} />
+      <ShowroomMapBand showrooms={SHOWROOMS} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
     </>
   );
 }

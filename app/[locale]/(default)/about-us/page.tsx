@@ -11,10 +11,10 @@ import {
   StoryTimeline,
   TeamRow,
 } from '@/vibes/soul/sections/page-kit';
-import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
+import { ShowroomMapBand } from '@/vibes/soul/sections/showroom-map-band';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { EK_METRICS, FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
-import { getShowroom, showroomHref } from '~/lib/pages/showrooms';
+import { getShowroom, SHOWROOMS as SHOWROOM_DETAILS, showroomHref } from '~/lib/pages/showrooms';
 
 export const metadata: Metadata = {
   title: 'About Express Kitchens',
@@ -174,7 +174,7 @@ export default async function About({ params }: { params: Promise<{ locale: stri
         kicker="Why Express Kitchens"
         title="Everything under one roof"
       />
-      <ShowroomBand showrooms={SHOWROOMS} />
+      <ShowroomMapBand showrooms={SHOWROOM_DETAILS} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
       <AudienceRows
         description="Six showrooms for homeowners, plus a commercial business supplying builders, contractors and apartment communities."
         items={[
