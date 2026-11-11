@@ -31,7 +31,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
         ]}
         description="Checking on an order, arranging a pickup or not sure who to ask? Call or text us any time on 860-247-1000. Most questions are answered on the pages below."
         image={{
-          src: '/images/pages/support/hero-chat-phone-door-v2.jpg',
+          src: '/images/pages/support/hero-chat-phone-door-v3.jpg',
           alt: 'A red speech bubble with three dots in front of a white phone and a small white cabinet door',
         }}
         imageStyle="plain"
@@ -41,7 +41,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
 
       {/* 2 · Help with an order. Damage wording follows EK's Oct 27 answer. */}
       <CardsRow
-        cardTone="alternate"
+        cardTone="red"
         cards={[
           {
             icon: ClipboardList,
