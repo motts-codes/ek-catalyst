@@ -84,7 +84,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           },
           {
             title: 'Shipping & pickup',
-            ctaLabel: 'Shipping & pickup',
+            ctaLabel: 'How delivery works',
             description: 'How each thing gets to you, what it costs and how long it takes.',
             href: '/shipping-policy',
             image: {
@@ -94,7 +94,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           },
           {
             title: 'Returns',
-            ctaLabel: 'Returns',
+            ctaLabel: 'How returns work',
             description: 'What can come back, the restocking fee, and how to get authorization.',
             href: '/returns-policy',
             image: {
@@ -104,7 +104,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           },
           {
             title: 'Warranty',
-            ctaLabel: 'Warranty',
+            ctaLabel: 'What’s covered',
             description: '1 year on every cabinet, and how to make a claim.',
             href: '/warranty',
             image: {
@@ -114,7 +114,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           },
           {
             title: 'Price match',
-            ctaLabel: 'Price match',
+            ctaLabel: 'How to claim it',
             // Offer copy until Nov 30, 2026. After that, swap to:
             // "We'll match a competitor's cabinet quote, in our showrooms."
             description:
@@ -127,7 +127,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           },
           {
             title: 'Secure shopping',
-            ctaLabel: 'Secure shopping',
+            ctaLabel: 'How we protect you',
             description: 'How your payment and your details are protected.',
             href: '/secure-shopping',
             image: {
