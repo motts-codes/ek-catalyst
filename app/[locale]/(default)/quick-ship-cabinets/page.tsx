@@ -67,11 +67,8 @@ const NEXT_DAY_MORE = [
     title: 'Accessories',
     description: 'Roll-out trays, organizers, fillers and panels.',
     ctaLabel: 'Shop accessories',
-    href: '/cabinet-hardware',
-    image: {
-      src: '/images/pages/glossary/parts-flatlay.jpg',
-      alt: 'Cabinet parts laid out on white: doors, crown molding, a soft-close hinge, a drawer slide, a pull and a knob',
-    },
+    href: '/cabinet-hardware/accessories',
+    image: { src: '/images/nav/accessories.webp', alt: 'Drawer organizer' },
   },
 ];
 
