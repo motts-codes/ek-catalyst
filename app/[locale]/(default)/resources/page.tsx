@@ -89,7 +89,6 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
 
       {/* 3 · Plan and price */}
       <CardsRow
-        cardBorder="red"
         cards={[
           {
             title: 'Price my kitchen',
