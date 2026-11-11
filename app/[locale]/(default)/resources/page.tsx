@@ -14,8 +14,9 @@ export const metadata: Metadata = {
 };
 
 // Copy checked against EK's policy pages and their Oct 27 answers. Each card points at the page
-// that holds the full answer, and its photo is that page's hero. Inset photo cards with a red
-// hairline, red titles and a text link with an arrow.
+// that holds the full answer, and its photo is that page's hero. Learn and Plan are plain cards
+// with the whole photo inside a red hairline frame; Ordering and After keep the hairline around
+// the full card. Black titles, a text link with an arrow.
 export default async function Resources({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -34,7 +35,6 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
       {/* 2 · Learn the basics */}
       <CardsRow
         cardBorder="red"
-        cardTitleTone="red"
         cards={[
           {
             title: 'What are RTA cabinets',
@@ -78,6 +78,8 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
         ]}
         columns={4}
         ctaStyle="link"
+        imageFit="contain"
+        imageStyle="plain"
         kicker="New to cabinets?"
         title="Learn the basics"
       />
@@ -85,7 +87,6 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
       {/* 3 · Plan and price */}
       <CardsRow
         cardBorder="red"
-        cardTitleTone="red"
         cards={[
           {
             title: 'Price my kitchen',
@@ -133,6 +134,8 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
         ]}
         columns={4}
         ctaStyle="link"
+        imageFit="contain"
+        imageStyle="plain"
         kicker="Getting started"
         tint
         title="Plan and price"
@@ -141,7 +144,6 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
       {/* 4 · Ordering and delivery */}
       <CardsRow
         cardBorder="red"
-        cardTitleTone="red"
         cards={[
           {
             title: 'Financing',
@@ -189,6 +191,7 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
         ]}
         columns={4}
         ctaStyle="link"
+        imageFit="contain"
         kicker="Before you buy"
         title="Ordering and delivery"
       />
@@ -196,7 +199,6 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
       {/* 5 · After it arrives */}
       <CardsRow
         cardBorder="red"
-        cardTitleTone="red"
         cards={[
           {
             title: 'Assembly videos',
@@ -231,6 +233,7 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
         ]}
         columns={3}
         ctaStyle="link"
+        imageFit="contain"
         kicker="Guides"
         tint
         title="After it arrives"

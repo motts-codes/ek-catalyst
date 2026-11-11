@@ -59,8 +59,13 @@ interface Props {
    * red / light, red, light on three columns; red, light, red… down a phone).
    */
   cardTone?: 'default' | 'red' | 'alternate';
-  /** A thin brand-red hairline at half opacity around each white card instead of the grey one. */
+  /**
+   * A thin brand-red hairline at half opacity around each white card instead of the grey one.
+   * On `plain` cards (no card chrome) the hairline goes around the photo instead.
+   */
   cardBorder?: 'default' | 'red';
+  /** `contain`: the whole photo is visible inside its frame, on white, instead of cropped to fill. */
+  imageFit?: 'cover' | 'contain';
   /**
    * `outline`: the card buttons as the site's outline button (black outline on white and light
    * cards, white outline on red ones) instead of the solid black one. `primary` cards stay red.
@@ -128,6 +133,7 @@ export function CardsRow({
   cardTitleTone = 'default',
   cardTone = 'default',
   cardBorder = 'default',
+  imageFit = 'cover',
   ctaStyle = 'solid',
   className,
 }: Props) {
@@ -151,6 +157,17 @@ export function CardsRow({
     light: 'border-transparent bg-[#fdf3f5]',
     white: whiteCard,
   };
+  // The photo frame and the photo itself don't vary per card, so they are settled once here.
+  const imageFrameClassName = clsx(
+    'relative mb-6 overflow-hidden',
+    imageFit === 'contain' ? 'bg-white' : 'bg-contrast-100',
+    plain ? 'aspect-[5/3] rounded-t-3xl' : 'aspect-[16/10] rounded-2xl',
+    plain && cardBorder === 'red' && 'rounded-3xl border-[0.5px] border-[#d90716]/50',
+  );
+  const imageClassName = clsx(
+    imageFit === 'contain' ? 'object-contain p-3' : 'object-cover',
+    plain && 'transition-transform duration-700 ease-smooth group-hover:scale-[1.03]',
+  );
   const cardClassName = (surface: 'red' | 'light' | 'white') =>
     plain
       ? 'group'
@@ -221,20 +238,11 @@ export function CardsRow({
                   />
                 )}
                 {insetImage && (
-                  <div
-                    className={clsx(
-                      'relative mb-6 overflow-hidden bg-contrast-100',
-                      plain ? 'aspect-[5/3] rounded-t-3xl' : 'aspect-[16/10] rounded-2xl',
-                    )}
-                  >
+                  <div className={imageFrameClassName}>
                     {card.image ? (
                       <Image
                         alt={card.image.alt}
-                        className={clsx(
-                          'object-cover',
-                          plain &&
-                            'transition-transform duration-700 ease-smooth group-hover:scale-[1.03]',
-                        )}
+                        className={imageClassName}
                         fill
                         sizes="(min-width: 56rem) 33vw, 100vw"
                         src={card.image.src}
