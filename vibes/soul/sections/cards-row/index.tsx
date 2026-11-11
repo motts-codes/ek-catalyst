@@ -1,10 +1,11 @@
 import { clsx } from 'clsx';
-import type { LucideIcon } from 'lucide-react';
+import { ArrowRight, type LucideIcon } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { OUTLINE_BUTTON } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
+import { Link } from '~/components/link';
 
 export interface RowCard {
   title: string;
@@ -63,8 +64,10 @@ interface Props {
   /**
    * `outline`: the card buttons as the site's outline button (black outline on white and light
    * cards, white outline on red ones) instead of the solid black one. `primary` cards stay red.
+   * `link`: no button; a red text link with an arrow (white on a red card), as on the old
+   * LinkCards.
    */
-  ctaStyle?: 'solid' | 'outline';
+  ctaStyle?: 'solid' | 'outline' | 'link';
   className?: string;
 }
 
@@ -261,18 +264,7 @@ export function CardsRow({
                 >
                   {card.description}
                 </p>
-                {Boolean(card.ctaLabel) && Boolean(card.href) && (
-                  <div className="mt-6">
-                    <ButtonLink
-                      href={card.href ?? '#'}
-                      shape="pill"
-                      size="small"
-                      {...ctaProps(card, ctaStyle, surface)}
-                    >
-                      {card.ctaLabel}
-                    </ButtonLink>
-                  </div>
-                )}
+                <CardCta card={card} ctaStyle={ctaStyle} reversed={reversed} surface={surface} />
               </div>
             </article>
           );
@@ -282,11 +274,55 @@ export function CardsRow({
   );
 }
 
+// The card's call to action, when it has a label and a link: a red text link with an arrow
+// (white on a red card) for `link`, otherwise a small pill button.
+function CardCta({
+  card,
+  ctaStyle,
+  reversed,
+  surface,
+}: {
+  card: RowCard;
+  ctaStyle: 'solid' | 'outline' | 'link';
+  reversed: boolean;
+  surface: 'red' | 'light' | 'white';
+}) {
+  if (!card.ctaLabel || !card.href) return null;
+
+  if (ctaStyle === 'link') {
+    return (
+      <Link
+        className={clsx(
+          'group/link mt-5 inline-flex items-center gap-1.5 self-start text-sm font-semibold focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+          reversed ? 'text-white' : 'text-[var(--button-primary-background,#d90716)]',
+        )}
+        href={card.href}
+      >
+        {card.ctaLabel}
+        <ArrowRight
+          aria-hidden
+          className="transition-transform group-hover/link:translate-x-1"
+          size={15}
+          strokeWidth={2.5}
+        />
+      </Link>
+    );
+  }
+
+  return (
+    <div className="mt-6">
+      <ButtonLink href={card.href} shape="pill" size="small" {...ctaProps(card, ctaStyle, surface)}>
+        {card.ctaLabel}
+      </ButtonLink>
+    </div>
+  );
+}
+
 // The card button: red for a `primary` card; otherwise solid black, or the outline button
 // (white outline on a red card) when the row asks for `outline`.
 function ctaProps(
   card: RowCard,
-  ctaStyle: 'solid' | 'outline',
+  ctaStyle: 'solid' | 'outline' | 'link',
   surface: 'red' | 'light' | 'white',
 ): { variant: 'primary' | 'secondary' | 'ghost'; className?: string } {
   if (card.primary) return { variant: 'primary' };
