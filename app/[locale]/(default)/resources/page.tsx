@@ -43,8 +43,8 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
               'Flat-packed, lower cost, and each one goes together in 30 minutes or less.',
             href: EXPLAINER_V2_HREF.rta,
             image: {
-              src: '/images/explainers/rta-box-and-cabinet-espresso.jpg',
-              alt: 'An opened flat RTA box with its espresso panels, doors and hardware, beside the same cabinet built',
+              src: '/images/explainers/rta-hero-v2.jpg',
+              alt: 'A man sitting on the floor fitting a white shaker door to a base cabinet, parts and hardware around him',
             },
           },
           {
@@ -64,8 +64,8 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
               'The standard kitchen behind every "from" price, and the 13 cabinets in ours.',
             href: '/resources/ten-by-ten-kitchen',
             image: {
-              src: '/images/estimator/ten-by-ten-hero.jpg',
-              alt: 'A white shaker 10×10 kitchen, two walls of cabinets meeting in a corner',
+              src: '/images/estimator/l-shaped-numbered.jpg',
+              alt: 'The 10×10 kitchen as an L, each cabinet numbered',
             },
           },
           {
