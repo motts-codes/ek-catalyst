@@ -45,7 +45,7 @@ const staticMapSrc = (showroom: Showroom, token: string) => {
 
 // The showroom band without showroom photos (EK asked for none until the showrooms are
 // refinished): the same pills, progress line and auto-cycle, but the right panel is a map of the
-// active showroom with its Project Manager on a red card. `ShowroomBand` keeps the photo version
+// active showroom with its Project Manager(s) on a red card. `ShowroomBand` keeps the photo version
 // for when the new photos arrive.
 export function ShowroomMapBand({
   kicker = 'Six showrooms across Connecticut',
@@ -177,8 +177,18 @@ export function ShowroomMapBand({
   );
 }
 
-// The right panel: one static map per showroom, crossfading to the active one, with the showroom
-// lead Project Manager on a red card: headshot, name, role, and the showroom name with a pin.
+// "Project Manager & Design Consultant" for one person; for two with the same role, the plural
+// "Project Managers & Design Consultants". Different roles are listed as they are.
+function teamRole(team: Array<{ role: string }>): string {
+  const roles = [...new Set(team.map((pm) => pm.role))];
+
+  if (team.length < 2 || roles.length !== 1) return roles.join(' / ');
+
+  return (roles[0] ?? '').replace(/Manager\b/, 'Managers').replace(/Consultant\b/, 'Consultants');
+}
+
+// The right panel: one static map per showroom, crossfading to the active one, with the showroom's
+// Project Manager(s) on a red card: headshot(s), names, role, and the showroom name with a pin.
 function MapPanel({
   showrooms,
   active,
@@ -190,57 +200,77 @@ function MapPanel({
   current: Showroom;
   token?: string;
 }) {
-  return (
-    <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-contrast-100">
-      {token ? (
-        showrooms.map((showroom, index) => (
-          <div
-            className={clsx(
-              'absolute inset-0 transition-opacity duration-700 ease-out',
-              index === active ? 'opacity-100' : 'opacity-0',
-            )}
-            key={showroom.slug}
-          >
-            {/* A plain img: the map comes ready-sized from Mapbox, so Next's optimizer would
-                only add a hop (and the host isn't in its allow-list). */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt={`Map of the ${showroom.name} showroom at ${showroom.address}`}
-              className="h-full w-full object-cover"
-              decoding="async"
-              loading={index === 0 ? 'eager' : 'lazy'}
-              src={staticMapSrc(showroom, token)}
-            />
-          </div>
-        ))
-      ) : (
-        <MediaPlaceholder label={`Map of the ${current.name} showroom`} />
-      )}
+  // Newington and Bristol have two Project Managers; both go on the card.
+  const team = [current.pm, current.secondPm].filter((pm) => pm !== undefined);
 
-      <div className="absolute inset-x-4 bottom-4 flex flex-col items-start @xl:inset-x-5 @xl:bottom-5">
+  return (
+    <div className="relative">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-contrast-100">
+        {token ? (
+          showrooms.map((showroom, index) => (
+            <div
+              className={clsx(
+                'absolute inset-0 transition-opacity duration-700 ease-out',
+                index === active ? 'opacity-100' : 'opacity-0',
+              )}
+              key={showroom.slug}
+            >
+              {/* A plain img: the map comes ready-sized from Mapbox, so Next's optimizer would
+                only add a hop (and the host isn't in its allow-list). */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt={`Map of the ${showroom.name} showroom at ${showroom.address}`}
+                className="h-full w-full object-cover"
+                decoding="async"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                src={staticMapSrc(showroom, token)}
+              />
+            </div>
+          ))
+        ) : (
+          <MediaPlaceholder label={`Map of the ${current.name} showroom`} />
+        )}
+      </div>
+
+      {/* On phones the card sits under the map, overlapping its foot, so the pin stays visible;
+          from @xl it floats over the map's bottom-left corner. */}
+      <div className="relative -mt-10 flex flex-col items-start px-4 @xl:absolute @xl:inset-x-5 @xl:bottom-5 @xl:mt-0 @xl:px-0">
         <Link
           className="group/pm flex origin-bottom-left items-center gap-3 rounded-2xl bg-[var(--button-primary-background,#d90716)] p-2 pr-5 text-white shadow-md transition-[transform,box-shadow,background-color] duration-300 ease-smooth hover:scale-[1.04] hover:bg-[#9f3632] hover:shadow-[0_18px_40px_-12px_rgb(0_0_0/0.45)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white motion-reduce:hover:scale-100"
           href={showroomHref(current.slug)}
         >
-          {current.pm.photo ? (
-            <Image
-              alt=""
-              className="size-14 shrink-0 rounded-full object-cover ring-2 ring-white/80"
-              height={56}
-              src={current.pm.photo.src}
-              width={56}
-            />
-          ) : (
-            <span
-              aria-hidden
-              className="flex size-14 shrink-0 items-center justify-center rounded-full bg-white/20 text-sm font-bold"
-            >
-              {current.pm.name.charAt(0)}
-            </span>
-          )}
+          {/* Two managers: the headshots overlap vertically, the lower one in front. */}
+          <span className="flex shrink-0 flex-col -space-y-4">
+            {team.map((pm, index) =>
+              pm.photo ? (
+                <Image
+                  alt=""
+                  className={clsx(
+                    'size-14 rounded-full object-cover ring-2 ring-white/80',
+                    index > 0 && 'relative z-10',
+                  )}
+                  height={56}
+                  key={pm.name}
+                  src={pm.photo.src}
+                  width={56}
+                />
+              ) : (
+                <span
+                  aria-hidden
+                  className={clsx(
+                    'flex size-14 items-center justify-center rounded-full bg-white/20 text-sm font-bold ring-2 ring-white/80',
+                    index > 0 && 'relative z-10',
+                  )}
+                  key={pm.name}
+                >
+                  {pm.name.charAt(0)}
+                </span>
+              ),
+            )}
+          </span>
           <span className="flex min-w-0 flex-col leading-tight">
-            <span className="text-sm font-semibold">{current.pm.name}</span>
-            <span className="text-[11px] text-white/80">{current.pm.role}</span>
+            <span className="text-sm font-semibold">{team.map((pm) => pm.name).join(' & ')}</span>
+            <span className="text-[11px] text-white/80">{teamRole(team)}</span>
             <span className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-white">
               <MapPin aria-hidden size={12} strokeWidth={2.25} />
               {current.name}
