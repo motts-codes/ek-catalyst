@@ -4,7 +4,7 @@ import { Phone } from 'lucide-react';
 import { Link } from '~/components/link';
 
 // Thin utility strip above the main header, per the wireframe:
-//   Call 860-247-1000 ······ Free Samples | 0% Financing | Showrooms | [Homeowner ⟷ Pro]
+//   Call 860-247-1000 ······ Free Samples | Financing | Showrooms | [Homeowner ⟷ Pro]
 // The Homeowner/Pro switch is passed in as `audienceToggle` and sits at the right end.
 //
 // Layout: the fade runs full-bleed (mode tint at the top → transparent at the bottom); the
@@ -19,7 +19,7 @@ const PHONE = { label: '860-247-1000', href: 'tel:+18602471000' };
 const UTILITY_LINKS: Array<{ label: string; href: string; highlight?: boolean; mobile?: boolean }> =
   [
     { label: 'Free Samples', href: '/samples' },
-    { label: '0% Financing', href: '/financing' },
+    { label: 'Financing', href: '/financing' },
     { label: 'Showrooms', href: '/showrooms', mobile: true },
   ];
 
