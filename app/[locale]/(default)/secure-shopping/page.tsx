@@ -71,10 +71,10 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
               "Pay by Visa, MasterCard, Discover or American Express and your card issuer's zero-liability and chargeback protections apply as they would in any store.",
           },
           {
-            title: 'Financing through a regulated lender',
+            title: 'Financing through GreenSky',
             icon: Landmark,
             description:
-              '0% financing applications are handled by the lender on their own secure system. We receive a decision, not your financial details.',
+              'Apply in any of our showrooms. GreenSky handles your application on its own secure system, and we receive a decision, not your financial details.',
           },
         ]}
         hideImages
@@ -119,7 +119,7 @@ export default async function SecureShopping({ params }: { params: Promise<{ loc
             },
             {
               q: 'Which cards do you accept?',
-              a: 'Visa, MasterCard, Discover and American Express, plus 0% financing on qualifying orders.',
+              a: 'Visa, MasterCard, Discover and American Express. Financing is available in our showrooms.',
             },
             {
               q: 'When is my card charged?',
