@@ -53,6 +53,8 @@ interface Link {
   // Optional visual grouping ('shop' | 'content'): consecutive items sharing a group render as a
   // cluster, with space inserted between different groups in the top nav bar.
   group?: string;
+  // A link row at the foot of the mega menu ("All resources").
+  panelLink?: { label: string; href: string };
   groups?: Array<{
     label?: string;
     href?: string;
@@ -917,6 +919,27 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                             </ul>
                           </div>
                         ))}
+                        {item.panelLink != null && (
+                          // Full-width last row, so the link lines up with the heading tiles.
+                          <div className="-mt-2 border-t border-[hsl(var(--foreground)/6%)] pt-4 @[900px]:col-span-2">
+                            <Link
+                              className="group/all inline-flex items-center gap-1.5 rounded-lg text-sm font-semibold text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]"
+                              href={item.panelLink.href}
+                              onClick={() => {
+                                hoverSuppressed.current = true;
+                                setMenuValue('');
+                              }}
+                            >
+                              {item.panelLink.label}
+                              <ArrowRight
+                                aria-hidden
+                                className="transition-transform group-hover/all:translate-x-1"
+                                size={15}
+                                strokeWidth={2.5}
+                              />
+                            </Link>
+                          </div>
+                        )}
                       </div>
                     </NavigationMenu.Content>
                   )}

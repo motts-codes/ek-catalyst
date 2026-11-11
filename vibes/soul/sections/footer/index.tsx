@@ -24,6 +24,8 @@ interface FooterLink {
 
 export interface Section {
   title?: string;
+  /** Makes the column title a link to the column's hub page (Support → /support). */
+  href?: string;
   links: FooterLink[];
 }
 
@@ -206,9 +208,17 @@ export const Footer = ({
         <Stream fallback={<FooterColumnsSkeleton />} value={streamableSections}>
           {(sections) => (
             <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 @2xl:grid-cols-3 @5xl:grid-cols-7">
-              {sections.map(({ title, links }, i) => (
+              {sections.map(({ title, href, links }, i) => (
                 <div key={i}>
-                  {title != null && (
+                  {title != null && href != null && href !== '' && (
+                    <Link
+                      className="mb-2 block w-fit rounded-lg text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))] ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 hover:text-[var(--footer-link-hover,var(--button-primary-background,#d90716))] focus-visible:outline-0 focus-visible:ring-2"
+                      href={href}
+                    >
+                      {title}
+                    </Link>
+                  )}
+                  {title != null && (href == null || href === '') && (
                     <span className="mb-2 block text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
                       {title}
                     </span>

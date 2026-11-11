@@ -27,6 +27,7 @@ export const FOOTER_SECTIONS: Section[] = [
   },
   {
     title: 'Inspiration',
+    href: '/inspiration/best-sellers',
     links: [
       { label: 'Best-selling designs', href: '/inspiration/best-sellers' },
       { label: 'Reviews', href: '/reviews' },
@@ -35,6 +36,7 @@ export const FOOTER_SECTIONS: Section[] = [
   },
   {
     title: 'Resources',
+    href: '/resources',
     links: [
       { label: 'Free design consult', href: '/mykitchen/free-design-consult' },
       { label: 'Kitchen estimator', href: '/mykitchen/price-my-kitchen' },
@@ -51,6 +53,7 @@ export const FOOTER_SECTIONS: Section[] = [
   },
   {
     title: 'Company',
+    href: '/about-us',
     links: [
       { label: 'About', href: '/about-us' },
       { label: 'Why Express Kitchens', href: '/why-express-kitchens' },
@@ -70,6 +73,7 @@ export const FOOTER_SECTIONS: Section[] = [
   },
   {
     title: 'Support',
+    href: '/support',
     links: [
       { label: 'Contact', href: '/contact' },
       { label: 'FAQ', href: '/faq' },

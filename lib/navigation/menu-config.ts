@@ -48,6 +48,8 @@ export interface MenuItem {
   href: string;
   group: MenuItemGroup;
   groups?: MenuGroup[];
+  /** A link row at the foot of the mega menu ("All resources"), for a hub page the tiles don't cover. */
+  panelLink?: { label: string; href: string };
 }
 
 // Pages that exist today (used more than once below).
@@ -355,6 +357,7 @@ const menu: MenuItem[] = [
     label: 'Resources',
     href: '/resources',
     group: 'content',
+    panelLink: { label: 'All resources', href: '/resources' },
     groups: [
       {
         label: 'Getting Started',
