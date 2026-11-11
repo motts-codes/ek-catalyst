@@ -263,10 +263,10 @@ export const Footer = ({
                       </span>
                     </span>
                     <span className="flex min-w-0 flex-col">
-                      <span className="whitespace-nowrap text-[10px] tracking-tight text-contrast-500 transition-colors group-hover:text-white @xl:text-[11px]">
+                      <span className="whitespace-nowrap text-[10px] leading-none tracking-tight text-contrast-500 transition-colors group-hover:text-white @xl:text-[11px]">
                         {contactPanel.title}
                       </span>
-                      <span className="mt-0.5 font-heading text-[26px] font-bold leading-none tracking-tight @xl:text-[30px]">
+                      <span className="mt-2.5 font-heading text-[26px] font-bold leading-none tracking-tight @xl:text-[30px]">
                         {contactPanel.phone.label}
                       </span>
                     </span>
