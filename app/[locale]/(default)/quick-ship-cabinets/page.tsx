@@ -8,7 +8,6 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { PageBreadcrumbs, PageHero, Prose, StepsRow } from '@/vibes/soul/sections/page-kit';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
-import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
@@ -99,8 +98,11 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
           { label: 'Shipping & pickup', href: '/shipping-policy', style: 'outline' },
         ]}
         description="When a kitchen can’t wait, start here. Six collections, fully assembled and in stock in Bristol, ship the next business day. Dovetail drawers, KCMA certified, thousands of units ready to go."
-        image={CODE_PAGE_HERO_IMAGES.quickShip}
-        imageLabel="Cabinets wrapped on a pallet, ready to ship"
+        image={{
+          src: '/images/pages/quick-ship/hero-cart-cabinets.jpg',
+          alt: 'A smiling woman in a red top pushing a cart stacked with three shrink-wrapped white shaker cabinets, strapped with a red ratchet strap',
+        }}
+        imageStyle="plain"
         kicker="Ships next day"
         title="Order today. Ships tomorrow."
       />
