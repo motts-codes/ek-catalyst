@@ -30,8 +30,12 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           { label: 'Send a message', href: '/contact', style: 'outline' },
         ]}
         description="Checking on an order, arranging a pickup or not sure who to ask? Call or text us any time on 860-247-1000. Most questions are answered on the pages below."
+        image={{
+          src: '/images/pages/support/hero-chat-phone-door-v2.jpg',
+          alt: 'A red speech bubble with three dots in front of a white phone and a small white cabinet door',
+        }}
+        imageStyle="plain"
         kicker="Support"
-        textOnly
         title="How can we help?"
       />
 
