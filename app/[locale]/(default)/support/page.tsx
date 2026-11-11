@@ -34,6 +34,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           src: '/images/pages/support/hero-chat-phone-door-v3.jpg',
           alt: 'A red speech bubble with three dots in front of a white phone and a small white cabinet door',
         }}
+        imageSize="medium"
         imageStyle="plain"
         kicker="Support"
         title="How can we help?"

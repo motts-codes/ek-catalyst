@@ -220,8 +220,9 @@ interface HeroProps {
   /** `plain` shows the photo as it is: no frame, rounding or backdrop (for shots on white);
    *  `soft` keeps the rounded corners but drops the outline. */
   imageStyle?: 'framed' | 'plain' | 'soft';
-  /** `small` keeps a plain image to about two thirds of its column (an illustration, not a photo). */
-  imageSize?: 'default' | 'small';
+  /** `small` keeps a plain image to about two thirds of its column (an illustration, not a photo);
+   *  `medium` is 1.3x that, for an illustration that should carry a little more weight. */
+  imageSize?: 'default' | 'small' | 'medium';
   /** No photo column — the copy runs the full width. */
   textOnly?: boolean;
   /** `2` when the page already has an h1 above (e.g. a scroll hero). */
@@ -253,7 +254,7 @@ function heroImageProps(imageStyle: HeroProps['imageStyle']): {
 function heroMediaClassName(
   imageStyle: HeroProps['imageStyle'],
   hasImage: boolean,
-  small: boolean,
+  size: HeroProps['imageSize'],
 ): string {
   const plain = imageStyle === 'plain';
 
@@ -262,7 +263,8 @@ function heroMediaClassName(
     plain && hasImage ? 'aspect-[6/5]' : 'aspect-[4/3] bg-contrast-100',
     !plain && !hasImage && 'rounded-3xl',
     imageStyle === 'framed' && 'ring-1 ring-contrast-100',
-    small && 'mx-auto w-2/3 @3xl:w-[62%]',
+    size === 'small' && 'mx-auto w-2/3 @3xl:w-[62%]',
+    size === 'medium' && 'mx-auto w-[87%] @3xl:w-[80%]',
   );
 }
 
@@ -359,7 +361,7 @@ export function PageHero({
           )}
         </div>
         {!textOnly && (
-          <div className={heroMediaClassName(imageStyle, image != null, imageSize === 'small')}>
+          <div className={heroMediaClassName(imageStyle, image != null, imageSize)}>
             {image ? (
               <Image
                 alt={image.alt}
