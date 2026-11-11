@@ -154,7 +154,7 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
             description: 'Pay over time with GreenSky, in our showrooms. Rates from 9.99% APR.',
             href: '/financing',
             image: {
-              src: '/images/pages/financing/hero-couple-cabinets-5.jpg',
+              src: '/images/pages/financing/hero-couple-cabinets-6.jpg',
               alt: 'A couple holding white cabinet drawers above a base cabinet, with a red piggy bank',
             },
           },
