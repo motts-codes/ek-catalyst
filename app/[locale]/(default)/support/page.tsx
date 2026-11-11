@@ -70,7 +70,8 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           },
           {
             title: 'Price match',
-            description: "Bring a competitor's quote and we'll beat it, or pay you $500.",
+            description:
+              "Bring a quote to a showroom and we'll beat it, or give you a $500 credit, until Nov 30.",
             href: '/price-match-guarantee',
             linkLabel: 'Price match',
           },

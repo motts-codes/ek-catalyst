@@ -167,15 +167,15 @@ export default async function WhyExpressKitchens({
             imageLabel: 'A collection card with its price',
           },
           {
-            title: 'Beat our price, get $500',
-            description: "Bring a competitor's quote. We'll beat it, or pay you $500.",
+            title: 'Beat our price, or get a $500 credit',
+            description: "Bring a competitor's quote. We'll beat it, or give you a $500 credit.",
             ctaLabel: 'See the guarantee',
             href: '/price-match-guarantee',
             image: {
               src: '/images/why-us/proof/guarantee.webp',
-              alt: "A competitor's kitchen cabinet quote with a $500 cheque on top",
+              alt: "A competitor's kitchen cabinet quote with a $500 credit card on top",
             },
-            imageLabel: 'A quote and a cheque',
+            imageLabel: 'A quote and a credit card',
           },
         ]}
         columns={3}

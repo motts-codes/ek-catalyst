@@ -75,7 +75,7 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
           {
             title: "Bring your quote, we'll beat it",
             description:
-              "Competitor cabinet quotes of $3,000+ · free upgrades · $500 if we can't match",
+              "Competitor quotes of $3,000+ · in our showrooms · $500 credit if we can't beat it · until Nov 30",
             ctaLabel: 'Price match',
             href: '/price-match-guarantee',
             imageLabel: 'The Bring Your Quote banner',
