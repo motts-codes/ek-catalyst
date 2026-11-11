@@ -136,7 +136,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
             },
           },
         ]}
-        className="bg-[#fdf3f5]"
+        className="bg-[#fdf3f5] [&_.grid]:gap-y-12"
         columns={3}
         ctaStyle="link"
         imageFit="contain"
