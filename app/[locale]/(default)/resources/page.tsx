@@ -132,12 +132,12 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
             },
           },
         ]}
+        className="bg-[#fdf3f5]"
         columns={4}
         ctaStyle="link"
         imageFit="contain"
         imageStyle="plain"
         kicker="Getting started"
-        tint
         title="Plan and price"
       />
 
@@ -231,11 +231,11 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
             },
           },
         ]}
+        className="bg-[#fdf3f5]"
         columns={3}
         ctaStyle="link"
         imageFit="contain"
         kicker="Guides"
-        tint
         title="After it arrives"
       />
 
