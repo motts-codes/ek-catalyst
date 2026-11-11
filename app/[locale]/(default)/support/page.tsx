@@ -27,7 +27,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
       <PageHero
         actions={[
           { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
-          { label: 'Send a message', href: '/contact' },
+          { label: 'Send a message', href: '/contact', style: 'outline' },
         ]}
         description="Checking on an order, arranging a pickup or not sure who to ask? Call or text us any time on 860-247-1000. Most questions are answered on the pages below."
         kicker="Support"
@@ -37,6 +37,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
 
       {/* 2 · Help with an order. Damage wording follows EK's Oct 27 answer. */}
       <CardsRow
+        cardTone="alternate"
         cards={[
           {
             icon: ClipboardList,
@@ -131,12 +132,12 @@ export default async function Support({ params }: { params: Promise<{ locale: st
             },
           },
         ]}
+        className="bg-[#fdf3f5]"
         columns={3}
         ctaStyle="link"
         imageFit="contain"
         imageStyle="plain"
         kicker="Policies"
-        tint
         title="The pages that answer most questions"
       />
 
