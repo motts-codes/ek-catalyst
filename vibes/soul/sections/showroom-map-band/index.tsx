@@ -29,7 +29,7 @@ interface Props {
 }
 
 const MAP_STYLE = 'mapbox/light-v11';
-const MAP_ZOOM = 13;
+const MAP_ZOOM = 14;
 // 16:10, the panel's shape; @2x for sharp text on retina screens.
 const MAP_SIZE = '1200x750@2x';
 const PIN = 'd90716';
@@ -178,7 +178,7 @@ export function ShowroomMapBand({
 }
 
 // The right panel: one static map per showroom, crossfading to the active one, with the showroom
-// name in a white pill and its lead Project Manager on a red card beside it.
+// lead Project Manager on a red card: headshot, name, role, and the showroom name with a pin.
 function MapPanel({
   showrooms,
   active,
@@ -217,31 +217,23 @@ function MapPanel({
         <MediaPlaceholder label={`Map of the ${current.name} showroom`} />
       )}
 
-      <div className="absolute inset-x-4 bottom-4 flex flex-wrap items-end gap-2 @xl:inset-x-5 @xl:bottom-5">
-        <div className="flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-foreground shadow-md">
-          <MapPin
-            aria-hidden
-            className="text-[var(--button-primary-background,#d90716)]"
-            size={15}
-          />
-          {current.name}
-        </div>
+      <div className="absolute inset-x-4 bottom-4 flex flex-col items-start @xl:inset-x-5 @xl:bottom-5">
         <Link
-          className="group/pm flex items-center gap-3 rounded-2xl bg-[var(--button-primary-background,#d90716)] p-1.5 pr-4 text-white shadow-md transition-colors hover:bg-[#9f3632] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white"
+          className="group/pm flex items-center gap-3 rounded-2xl bg-[var(--button-primary-background,#d90716)] p-2 pr-5 text-white shadow-md transition-colors hover:bg-[#9f3632] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white"
           href={showroomHref(current.slug)}
         >
           {current.pm.photo ? (
             <Image
               alt=""
-              className="size-11 shrink-0 rounded-full object-cover ring-2 ring-white/80"
-              height={44}
+              className="size-14 shrink-0 rounded-full object-cover ring-2 ring-white/80"
+              height={56}
               src={current.pm.photo.src}
-              width={44}
+              width={56}
             />
           ) : (
             <span
               aria-hidden
-              className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/20 text-sm font-bold"
+              className="flex size-14 shrink-0 items-center justify-center rounded-full bg-white/20 text-sm font-bold"
             >
               {current.pm.name.charAt(0)}
             </span>
@@ -249,6 +241,10 @@ function MapPanel({
           <span className="flex min-w-0 flex-col leading-tight">
             <span className="text-sm font-semibold">{current.pm.name}</span>
             <span className="text-[11px] text-white/80">{current.pm.role}</span>
+            <span className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-white">
+              <MapPin aria-hidden size={12} strokeWidth={2.25} />
+              {current.name}
+            </span>
           </span>
         </Link>
       </div>
