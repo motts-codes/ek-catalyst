@@ -31,8 +31,7 @@ const PATHS = [
   },
   {
     title: '“I want it ready-built”',
-    description:
-      'Built and checked in our Connecticut shop, delivered in three weeks and ready for your installer to hang.',
+    description: 'Built and checked in our factory, ships in 3 weeks, ready to install.',
     href: '/mykitchen/what-are-assembled-cabinets',
     linkLabel: 'How assembled works',
   },

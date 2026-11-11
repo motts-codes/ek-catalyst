@@ -193,7 +193,7 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     points: [
       'Arrives built and ready to hang. No parts to sort, no lost weekend',
       'Built and checked by our team in Connecticut',
-      'At your door in three weeks',
+      'Ships in 3 weeks',
     ],
     ctaLabel: 'Shop assembled',
     href: '/cabinets/assembled-cabinets',
