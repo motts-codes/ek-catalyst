@@ -232,6 +232,14 @@ const config = {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(0%)' },
         },
+        'phone-ring': {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '15%': { transform: 'rotate(16deg)' },
+          '30%': { transform: 'rotate(-14deg)' },
+          '45%': { transform: 'rotate(10deg)' },
+          '60%': { transform: 'rotate(-7deg)' },
+          '75%': { transform: 'rotate(3deg)' },
+        },
       },
       animation: {
         collapse: 'collapse 400ms var(--ease-smooth)',
@@ -243,6 +251,7 @@ const config = {
         scrollLeft: 'scrollLeft var(--marquee-duration) linear infinite',
         shake: 'shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both',
         slideIn: 'slideIn 800ms cubic-bezier(0.25, 1, 0, 1)',
+        'phone-ring': 'phone-ring 800ms ease-in-out',
       },
     },
   },

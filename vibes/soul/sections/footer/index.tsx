@@ -240,10 +240,10 @@ export const Footer = ({
                 <div className="col-span-2 @2xl:col-span-1 @5xl:col-span-2">
                   {/* Phone pill, after the brand-guidelines mockup: a pale red pill with the phone
                       in a pink disc flush to the left edge, the "Have a question?" line small above
-                      the number. On hover the pill fills red, the disc goes dark red, the text
-                      reverses to white and the ringing icon swaps in. */}
+                      the number. On hover a red fill swipes in from the disc side, the disc goes
+                      dark red, the text reverses to white and the phone rings (rotates). */}
                   <Link
-                    className="group inline-flex h-[68px] max-w-full items-center gap-3 overflow-hidden rounded-full bg-[#fdf3f5] pr-5 text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] ring-offset-2 transition-colors duration-300 hover:bg-[var(--button-primary-background,#d90716)] hover:text-white focus-visible:outline-0 focus-visible:ring-2 @xl:h-[72px]"
+                    className="group relative isolate inline-flex h-[68px] max-w-full items-center gap-3 overflow-hidden rounded-full bg-[#fdf3f5] pr-5 text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] ring-offset-2 transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:-translate-x-full before:rounded-full before:bg-[var(--button-primary-background,#d90716)] before:transition-transform before:duration-500 before:ease-smooth before:content-[''] hover:text-white hover:before:translate-x-0 focus-visible:outline-0 focus-visible:ring-2 @xl:h-[72px]"
                     href={contactPanel.phone.href}
                   >
                     <span className="flex aspect-square h-full shrink-0 items-center justify-center rounded-full bg-[#eea3a8] text-white transition-colors duration-300 group-hover:bg-[#9f3632]">
@@ -255,13 +255,13 @@ export const Footer = ({
                       />
                       <PhoneCall
                         aria-hidden
-                        className="hidden group-hover:block"
+                        className="hidden group-hover:block group-hover:animate-phone-ring motion-reduce:group-hover:animate-none"
                         size={26}
                         strokeWidth={1.75}
                       />
                     </span>
                     <span className="flex min-w-0 flex-col">
-                      <span className="whitespace-nowrap text-xs text-contrast-500 transition-colors group-hover:text-white">
+                      <span className="whitespace-nowrap text-[10px] tracking-tight text-contrast-500 transition-colors group-hover:text-white @xl:text-[11px]">
                         {contactPanel.title}
                       </span>
                       <span className="mt-0.5 font-heading text-[26px] font-bold leading-none tracking-tight @xl:text-[30px]">
