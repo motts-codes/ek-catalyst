@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
-import { LinkCards, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
 import { SHOWROOMS } from '~/lib/home/home-content';
 
@@ -63,51 +63,78 @@ export default async function Support({ params }: { params: Promise<{ locale: st
         title="Already ordered?"
       />
 
-      {/* 3 · Policies */}
-      <LinkCards
+      {/* 3 · Policies: ek content cards, each with the hero photo of the page it opens. */}
+      <CardsRow
         cards={[
           {
             title: 'FAQ',
+            ctaLabel: 'Read the FAQ',
             description:
               'Ordering, delivery, RTA vs assembled, materials, measuring, samples and more.',
             href: '/faq',
-            linkLabel: 'Read the FAQ',
+            image: {
+              src: '/images/faq/questions.png',
+              alt: 'Two speech bubbles, a grey one with three dots and a red one with a question mark',
+            },
           },
           {
             title: 'Shipping & pickup',
+            ctaLabel: 'Shipping & pickup',
             description: 'How each thing gets to you, what it costs and how long it takes.',
             href: '/shipping-policy',
-            linkLabel: 'Shipping & pickup',
+            image: {
+              src: '/images/pages/shipping/ek-truck-unloading.jpg',
+              alt: 'A driver unloading a shrink-wrapped pallet of cabinets from the liftgate of an Express Kitchens truck',
+            },
           },
           {
             title: 'Returns',
+            ctaLabel: 'Returns',
             description: 'What can come back, the restocking fee, and how to get authorization.',
             href: '/returns-policy',
-            linkLabel: 'Returns',
+            image: {
+              src: '/images/pages/returns/hero-taping-return-box.jpg',
+              alt: 'A smiling man kneeling on the floor, taping a flat cabinet box shut for return',
+            },
           },
           {
             title: 'Warranty',
+            ctaLabel: 'Warranty',
             description: '1 year on every cabinet, and how to make a claim.',
             href: '/warranty',
-            linkLabel: 'Warranty',
+            image: {
+              src: '/images/pages/warranty/one-year-walnut.jpg',
+              alt: 'A smiling Express Kitchens designer beside a walnut base cabinet, with a 1-year warranty badge',
+            },
           },
           {
             title: 'Price match',
+            ctaLabel: 'Price match',
             // Offer copy until Nov 30, 2026. After that, swap to:
             // "We'll match a competitor's cabinet quote, in our showrooms."
             description:
               "Bring a quote to a showroom and we'll beat it, or give you a $500 credit, until Nov 30.",
             href: '/price-match-guarantee',
-            linkLabel: 'Price match',
+            image: {
+              src: '/images/pages/price-match/hero-price-match.jpg',
+              alt: 'A Project Manager pointing to a red price-match tag on a white cabinet beside a plain-tagged one',
+            },
           },
           {
             title: 'Secure shopping',
+            ctaLabel: 'Secure shopping',
             description: 'How your payment and your details are protected.',
             href: '/secure-shopping',
-            linkLabel: 'Secure shopping',
+            image: {
+              src: '/images/pages/secure-shopping/shield-card-phone.jpg',
+              alt: 'A red shield with a padlock between a payment card and a phone showing a secured checkout',
+            },
           },
         ]}
         columns={3}
+        ctaStyle="link"
+        imageFit="contain"
+        imageStyle="plain"
         kicker="Policies"
         tint
         title="The pages that answer most questions"
