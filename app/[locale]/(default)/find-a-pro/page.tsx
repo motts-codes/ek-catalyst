@@ -9,7 +9,7 @@ import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 export const metadata: Metadata = {
   title: 'Find an Installer',
   description:
-    "Installation isn't included on anything we sell. Here's how to find a good installer, what to ask them, and how to get your kitchen ready.",
+    "Online orders don't include installation. Here's how to find a good installer, what to ask, and how to get ready.",
 };
 
 const DIRECTORY_HREF =
@@ -28,14 +28,14 @@ export default async function FindAPro({ params }: { params: Promise<{ locale: s
           { label: 'Search installers near you ↗', href: DIRECTORY_HREF, primary: true },
           { label: 'Installation prep videos', href: '/resources/how-to-videos#installation-prep' },
         ]}
-        description="Installation isn't included on anything we sell: we make the cabinets, deliver them or hand them to you at the outlet, and you or your installer fit them. If you've just discovered that and felt a flicker of worry, this page is for you. Finding a good installer is a solved problem, and here's how to do it."
+        description="Online orders don't include installation: we make the cabinets, deliver them or hand them to you at the outlet, and you or your installer fit them. If you've just discovered that and felt a flicker of worry, this page is for you. Finding a good installer is a solved problem, and here's how to do it."
         image={{
           src: '/images/pages/find-a-pro/installer-levelling.jpg',
           alt: 'An installer levelling a white shaker base cabinet',
         }}
         imageLabel="An installer levelling a base cabinet"
         kicker="Find a pro"
-        title="We don't install. Here's how to get it done right."
+        title="Online orders don't include installation. Here's how to get it done right."
       />
       <CardsRow
         cards={[
