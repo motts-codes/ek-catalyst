@@ -73,7 +73,10 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
             ctaLabel: 'Open the glossary',
             description: 'Face frame, full overlay, soft-close and other terms, in plain English.',
             href: '/help/cabinet-glossary',
-            imageLabel: 'Glossary photo',
+            image: {
+              src: '/images/pages/glossary/parts-flatlay.jpg',
+              alt: 'Cabinet parts laid out on white: a white raised-panel door, a sage slab drawer front, crown molding, a red door, a soft-close hinge, a drawer slide, a nickel pull and knob, light rail and a maple sample',
+            },
           },
         ]}
         columns={4}
