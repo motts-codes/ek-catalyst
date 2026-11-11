@@ -93,7 +93,7 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'Promotions', href: '/promotions' }]} />
       <PageHero
-        description="Each card says when the offer ends."
+        description="Five ways to get more kitchen for your money. Open any offer for the details and how to claim it."
         kicker="Promotions"
         textOnly
         title="Current offers"
