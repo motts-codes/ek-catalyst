@@ -102,7 +102,7 @@ const FIELDS: Array<Field | Field[]> = [
       { label: 'In a showroom: see the displays and leave with a quote', value: 'showroom' },
       {
         label:
-          'On a video call (9 AM–5 PM ET): send photos and measurements, and go through it on screen',
+          'On a video call (Tuesday – Saturday, 9 AM – 5 PM ET): send photos and measurements, and go through it on screen',
         value: 'video',
       },
     ],

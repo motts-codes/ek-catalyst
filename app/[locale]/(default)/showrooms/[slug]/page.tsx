@@ -134,7 +134,7 @@ export default async function ShowroomPage({ params }: Props) {
             },
             {
               q: "Can't make it in?",
-              a: 'Book a video consult, 9 AM–5 PM ET, and get the same itemized quote.',
+              a: 'Book a video consult, Tuesday – Saturday, 9 AM – 5 PM ET, and get the same itemized quote.',
             },
           ],
         }}

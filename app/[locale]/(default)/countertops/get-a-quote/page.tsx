@@ -16,7 +16,7 @@ import { submitQuoteLead } from '~/lib/forms/submit-lead';
 export const metadata: Metadata = {
   title: 'Get a Countertop Quote: Granite from $49.99, Quartz from $59.99 per sq ft',
   description:
-    'Tell us the rough size, material and cut-outs and we price your countertop, usually the same day. Granite from $49.99 and quartz from $59.99 a square foot. Or call 860-247-1000 to order.',
+    'Tell us the rough size, material and cut-outs and we price your countertop within 1 business day. Granite from $49.99 and quartz from $59.99 a square foot. Or call 860-247-1000 to order.',
 };
 
 // The one countertop quote page. Product cards and product pages in the countertop categories
@@ -52,13 +52,13 @@ export default async function CountertopQuotePage({
         chips={[
           'Granite from $49.99 per sq ft',
           'Quartz from $59.99 per sq ft',
-          'Usually quoted the same day',
+          'Quoted within 1 business day',
           'Measured before we cut',
         ]}
         description={
           product
-            ? `Tell us the rough size of your kitchen and we'll price ${product} for you, usually the same day. Every countertop is cut to your cabinets, so the price is a quote rather than a cart. If you'd rather talk it through, call and we can take the order over the phone.`
-            : "Granite from $49.99 and quartz from $59.99 a square foot, on stone cut and polished at our own facility in Bristol. Every countertop is sized to your kitchen, so the price is a quote rather than a cart. Tell us the rough size and we'll price it, usually the same day, or call and order over the phone."
+            ? `Tell us the rough size of your kitchen and we'll price ${product} for you within 1 business day. Every countertop is cut to your cabinets, so the price is a quote rather than a cart. If you'd rather talk it through, call and we can take the order over the phone.`
+            : "Granite from $49.99 and quartz from $59.99 a square foot, on stone cut and polished at our own facility in Bristol. Every countertop is sized to your kitchen, so the price is a quote rather than a cart. Tell us the rough size and we'll price it within 1 business day, or call and order over the phone."
         }
         image={COUNTERTOP_QUOTE_IMAGE}
         imageStyle="plain"
@@ -75,7 +75,7 @@ export default async function CountertopQuotePage({
           },
           {
             title: 'We price it',
-            description: 'A quote back usually the same day, by email or a quick call.',
+            description: 'A quote back within 1 business day, by email or a quick call.',
           },
           {
             title: 'We measure before we cut',

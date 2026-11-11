@@ -60,7 +60,7 @@ const PICKUP_POINTS: CategoryPoint[] = [
 // except Samples, which are ordered from the cart like anything else).
 const COUNTERTOP_POINTS: CategoryPoint[] = [
   { icon: 'price', label: 'Granite from $49.99 · Quartz from $59.99 per sq ft' },
-  { icon: 'clock', label: 'Quotes usually back the same day' },
+  { icon: 'clock', label: 'Quotes back within 1 business day' },
   { icon: 'phone', label: 'Or call 860-247-1000 and order by phone' },
 ];
 

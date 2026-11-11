@@ -97,7 +97,7 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
           { label: 'Order a sample door', href: SAMPLES_HREF, style: 'outline' },
         ]}
         body={[
-          'Video consults in every state, 9 AM–5 PM ET. Send your measurements and photos, and get the same itemized quote.',
+          'Video consults in every state, Tuesday – Saturday, 9 AM – 5 PM ET. Send your measurements and photos, and get the same itemized quote.',
         ]}
         image={{
           src: '/images/home/ways/design-consult.webp',

@@ -407,7 +407,7 @@ export const SHOWROOMS: Showroom[] = [
 
 export const VIRTUAL_CONSULT = {
   phone: '(860) 247-1000',
-  hours: '9 AM – 5 PM ET',
+  hours: 'Tuesday – Saturday, 9 AM – 5 PM ET',
 };
 
 export const showroomHref = (slug: string) => `/showrooms/${slug}`;
