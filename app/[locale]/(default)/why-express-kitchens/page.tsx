@@ -56,7 +56,7 @@ export default async function WhyExpressKitchens({
       />
       <MetricsTicker metrics={EK_METRICS} />
       <WaitBand
-        description="Custom cabinets are usually built after you order, so you wait in line. Ours are already built and on the shelf in Connecticut. Quick-ship collections ship the next day, RTA in 2 weeks and assembled in 3."
+        description="Custom cabinets are usually built after you order, so you wait in line. Ours are already built and on the shelf in Connecticut. Our quick-ship collections (Avon, Birmingham, Cambridge, Derry, Eden and Madison) ship the next day. Other Star RTA ships in 2 weeks, assembled in 3."
         kicker="Why wait 14 weeks?"
         lanes={[
           { label: 'Industry average', value: '14 weeks', width: 100 },
@@ -134,7 +134,8 @@ export default async function WhyExpressKitchens({
               src: '/images/why-us/factory/ship.webp',
               alt: 'A forklift loading pallets into an Express Kitchens truck at the dock',
             },
-            description: 'Quick-ship the next day. RTA in 2 weeks, assembled in 3.',
+            description:
+              'Our quick-ship collections (Avon, Birmingham, Cambridge, Derry, Eden and Madison) ship the next day. Other Star RTA ships in 2 weeks, assembled in 3.',
             imageLabel: 'EK plant photo: loading dock',
           },
         ]}
