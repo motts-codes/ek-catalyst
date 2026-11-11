@@ -2,16 +2,11 @@ import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetLineCard } from '@/vibes/soul/sections/cabinet-lines';
+import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import {
-  LinkCards,
-  PageBreadcrumbs,
-  PageHero,
-  Prose,
-  StepsRow,
-} from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero, Prose, StepsRow } from '@/vibes/soul/sections/page-kit';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
@@ -41,18 +36,42 @@ const NEXT_DAY_MORE = [
   {
     title: 'Handles',
     description: 'Pulls and knobs to finish the doors, in stock.',
+    ctaLabel: 'Shop handles',
     href: '/cabinet-hardware',
+    image: {
+      src: '/images/home/categories/handles.webp',
+      alt: 'A drawer cabinet with brass pulls against white tile',
+    },
   },
   {
     title: 'Sinks and faucets',
     description: 'Kitchen sinks and pull-down faucets, ready to ship.',
+    ctaLabel: 'Shop sinks and faucets',
     href: '/sinks-faucets',
+    image: {
+      src: '/images/home/categories/kitchen-sink.webp',
+      alt: 'A farmhouse sink with a brass faucet',
+    },
   },
-  { title: 'Bath', description: 'Vanities and bath cabinets from stock.', href: '/bath' },
+  {
+    title: 'Bath',
+    description: 'Vanities and bath cabinets from stock.',
+    ctaLabel: 'Shop bath',
+    href: '/bath',
+    image: {
+      src: '/images/home/categories/bath-faucet-sink.webp',
+      alt: 'An oak vanity with a white top, black faucet and round mirror',
+    },
+  },
   {
     title: 'Accessories',
     description: 'Roll-out trays, organizers, fillers and panels.',
+    ctaLabel: 'Shop accessories',
     href: '/cabinet-hardware',
+    image: {
+      src: '/images/pages/glossary/parts-flatlay.jpg',
+      alt: 'Cabinet parts laid out on white: doors, crown molding, a soft-close hinge, a drawer slide, a pull and a knob',
+    },
   },
 ];
 
@@ -116,9 +135,12 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
           </div>
         )}
       </HomeSection>
-      <LinkCards
+      <CardsRow
         cards={NEXT_DAY_MORE}
+        columns={4}
+        ctaStyle="link"
         description="Finish the job from the same stock. These ship next day too."
+        imageStyle="plain"
         kicker="Also next day"
         title="Handles, sinks, faucets, bath and accessories"
       />
