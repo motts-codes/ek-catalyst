@@ -99,7 +99,7 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
         ]}
         description="When a kitchen can’t wait, start here. Six collections, fully assembled and in stock in Bristol, ship the next business day. Dovetail drawers, KCMA certified, thousands of units ready to go."
         image={{
-          src: '/images/pages/quick-ship/hero-cart-cabinets.jpg',
+          src: '/images/pages/quick-ship/hero-cart-cabinets-left.jpg',
           alt: 'A smiling woman in a red top pushing a cart stacked with three shrink-wrapped white shaker cabinets, strapped with a red ratchet strap',
         }}
         imageStyle="plain"
