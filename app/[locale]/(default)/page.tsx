@@ -193,9 +193,9 @@ export default async function Home({ params }: Props) {
           className="mb-2 mt-10 @4xl:mt-12"
           cta={{ label: 'Order samples', href: SAMPLES_HREF }}
           video={{
-            webm: '/images/home/samples/samples.webm',
-            mp4: '/images/home/samples/samples.mp4',
-            poster: '/images/home/samples/samples-poster.jpg',
+            webm: '/images/home/samples/sample-wheel-marble-v3.webm',
+            mp4: '/images/home/samples/sample-wheel-marble-v3.mp4',
+            poster: '/images/home/samples/sample-wheel-marble-v3-poster.jpg',
           }}
         />
       </HomeSection>
