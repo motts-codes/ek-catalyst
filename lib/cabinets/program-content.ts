@@ -57,10 +57,10 @@ const whyReasons = (program: 'assembled' | 'rta') => [
       },
   {
     icon: 'percent' as const,
-    title: '0% interest financing',
+    title: 'Financing in our showrooms',
     note: 'Available for showroom purchases',
     detail:
-      'Flexible 0% APR payment plans through GreenSky, so a better kitchen doesn’t mean a bigger upfront cost.',
+      'Payment plans through GreenSky, from 9.99% APR, so a better kitchen doesn’t mean a bigger upfront cost.',
   },
   {
     icon: 'warehouse' as const,
