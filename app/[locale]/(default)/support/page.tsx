@@ -96,7 +96,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
       />
       <LeadFormCard
         action={submitSupportLead}
-        description="We reply within one business day."
+        description="We get back to you within 1 business day."
         fields={FIELDS}
         id="message"
         kicker="Send a message"

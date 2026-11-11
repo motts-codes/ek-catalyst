@@ -250,7 +250,7 @@ export const THREE_WAYS: RowCard[] = [
   {
     title: 'I want a person',
     description:
-      'A designer plans your layout with you, in a showroom or on a video call. Free, with no obligation to buy.',
+      'A designer goes through your kitchen with you and gives you an itemized quote, in a showroom or on a video call. Free, with no obligation to buy.',
     ctaLabel: 'Book a free consult',
     href: FREE_DESIGN_HREF,
     primary: true,

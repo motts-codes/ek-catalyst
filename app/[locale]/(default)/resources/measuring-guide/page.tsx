@@ -144,8 +144,7 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
           {
             title: 'Your first design',
             meta: 'About 2 business days',
-            description:
-              'A 3D design of your kitchen, from above and in perspective, with the full cabinet list and an itemized price, RTA or assembled.',
+            description: 'An itemized quote for your kitchen, RTA or assembled.',
             image: {
               src: '/images/pages/measuring/3d-kitchen-design.jpg',
               alt: 'A 3D kitchen design on a monitor',
@@ -263,7 +262,7 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
         project manager confirms every size before you order.
       </FinePrint>
       <ClosingBand
-        description="Send your sketch, numbers and photos, and a project manager will turn them into a 3D design with an exact price. It's free, with no obligation to buy."
+        description="Send your sketch, numbers and photos, and a project manager will turn them into an itemized quote. It's free, with no obligation to buy."
         primary={{ label: 'Send my measurements', href: FREE_DESIGN_HREF }}
         secondary={{ label: 'Price my kitchen', href: ESTIMATOR_HREF }}
         tint

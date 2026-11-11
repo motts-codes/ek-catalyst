@@ -223,7 +223,7 @@ export default async function WhyExpressKitchens({
         title="Pick the way you like to decide."
       />
       <ClosingBand
-        description="Bring a photo, a sketch or nothing at all. Plan it on a video call or in one of our six Connecticut showrooms, and leave with a layout and a price. Free."
+        description="Bring a photo, a sketch or nothing at all. Plan it on a video call or in one of our six Connecticut showrooms, and leave with an itemized quote. Free."
         primary={{ label: 'Book a free design consult', href: FREE_DESIGN_HREF }}
         showrooms={SHOWROOMS}
         tint

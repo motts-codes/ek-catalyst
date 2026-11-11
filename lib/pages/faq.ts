@@ -68,7 +68,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         "I'm not in Connecticut. Can I still get design help?",
-        'Yes. Video consults are available in every state, weekdays 9 AM–5 PM ET. Send us your measurements and photos, and a designer will go through it with you and quote it.',
+        'Yes. Video consults are available in every state, Tuesday – Saturday, 9 AM – 5 PM ET. Send us your measurements and photos, and a designer will go through it with you and quote it.',
       ),
       q(
         'How do I measure my kitchen?',

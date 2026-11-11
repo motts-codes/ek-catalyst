@@ -24,13 +24,13 @@ export const metadata: Metadata = {
 // Connecticut measuring visit). To confirm with EK: the one review figure used across the site.
 const HOW_IT_WORKS = [
   {
-    title: 'We get back to you the same day.',
+    title: 'We get back to you within 1 business day.',
     description: "A designer contacts you to set up a time and how you'd like to meet.",
   },
   {
     title: 'You go through it together.',
     description:
-      'In a showroom (walk-ins welcome) or on a video call, weekdays 9 AM–5 PM ET. Bring a photo, your measurements, or just an idea.',
+      'In a showroom (walk-ins welcome) or on a video call, Tuesday – Saturday, 9 AM – 5 PM ET. Bring a photo, your measurements, or just an idea.',
   },
   {
     title: 'You get your quote.',
@@ -190,8 +190,9 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         fields={pro ? PRO_FIELDS : FIELDS}
         fine={
           <>
-            We&apos;ll get back to you the same day. You&apos;ll talk to a real designer, not a call
-            center. No deposit, no obligation. Prefer to call? Call or text 860-247-1000, any time.
+            We get back to you within 1 business day. You&apos;ll talk to a real designer, not a
+            call center. No deposit, no obligation. Prefer to call? Call or text 860-247-1000, any
+            time.
           </>
         }
         id="request"

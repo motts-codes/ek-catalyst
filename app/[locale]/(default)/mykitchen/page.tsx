@@ -18,7 +18,7 @@ const PATHS = [
   {
     title: '“I want it done for me”',
     description:
-      'A designer plans your kitchen with you, prices every cabinet and hands you a delivery date. Free, with no deposit and nothing to sign up for.',
+      'A designer plans your kitchen with you and prices every cabinet, RTA and assembled. Free, with no deposit and nothing to sign up for.',
     href: FREE_DESIGN_HREF,
     linkLabel: 'Free design consult',
   },
@@ -59,7 +59,8 @@ const STEPS = [
   {
     n: '3',
     title: 'Measure',
-    description: 'Twenty minutes with a tape measure, or a designer does it for you.',
+    description:
+      'Twenty minutes with a tape measure, or, in CT and greater-CT zip codes, we can measure for $85.',
   },
   {
     n: '4',

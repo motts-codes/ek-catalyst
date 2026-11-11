@@ -119,11 +119,11 @@ export default async function Book({
       <PageHero
         actions={[{ label: 'Pick a time', href: '#book', primary: true }]}
         chipStyle="checks"
-        chips={['60–90 minutes', 'No deposit', 'No obligation', 'Confirmed within two hours']}
+        chips={['60–90 minutes', 'No deposit', 'No obligation', 'Confirmed within 1 business day']}
         description={
           chosen
-            ? `Book time with ${chosen.secondPm ? `${chosen.pm.name} or ${chosen.secondPm.name}` : chosen.pm.name} at our ${chosen.name} showroom. You'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy.`
-            : "Every showroom has a Project Manager who plans and prices your kitchen with you. Pick the showroom, a day and a time that suit you, and you'll walk the displays together, plan the room and leave with a layout and a price. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy."
+            ? `Book time with ${chosen.secondPm ? `${chosen.pm.name} or ${chosen.secondPm.name}` : chosen.pm.name} at our ${chosen.name} showroom. You'll walk the displays together, plan the room and leave with an itemized quote. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy.`
+            : "Every showroom has a Project Manager who plans and prices your kitchen with you. Pick the showroom, a day and a time that suit you, and you'll walk the displays together, plan the room and leave with an itemized quote. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy."
         }
         image={{
           src: '/images/book/hero-door-samples-table.jpg',
@@ -135,7 +135,7 @@ export default async function Book({
       />
       <LeadFormCard
         action={submitBookingLead}
-        description="Your Project Manager confirms by text and email within two hours. Times are Eastern."
+        description="Your Project Manager confirms by text and email within 1 business day. Times are Eastern."
         fields={fields(chosen?.slug)}
         fine={
           <>

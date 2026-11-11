@@ -192,9 +192,6 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-export const projectHref = (slug: string) => `/inspiration/projects/${slug}`;
-export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug);
-
 export interface Video {
   title: string;
   meta?: string;

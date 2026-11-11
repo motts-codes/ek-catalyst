@@ -5,7 +5,7 @@ import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-sectio
 import { type CustomerReview } from '@/vibes/soul/sections/review-carousel';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
-import { type Project, projectHref, type Video } from '~/lib/pages/projects';
+import { type Project, type Video } from '~/lib/pages/projects';
 
 import { VideoTile } from './video-tile';
 
@@ -48,10 +48,8 @@ export function ProjectGrid({
       >
         {projects.map((project) => (
           <li key={project.slug}>
-            <Link
-              className="group block overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
-              href={projectHref(project.slug)}
-            >
+            {/* No project detail pages (removed Nov 2026), so the card is not a link. */}
+            <article className="group block overflow-hidden rounded-3xl border border-contrast-100 bg-white">
               <span className="relative block aspect-[4/3] bg-contrast-100">
                 {project.image ? (
                   <Image
@@ -72,7 +70,7 @@ export function ProjectGrid({
                 <span className="mt-1 block text-sm text-contrast-500">{project.meta}</span>
                 <span className="mt-1 block text-sm font-medium">{project.cost}</span>
               </span>
-            </Link>
+            </article>
           </li>
         ))}
       </ul>

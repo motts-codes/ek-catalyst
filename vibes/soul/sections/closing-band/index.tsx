@@ -84,7 +84,7 @@ const withIconClassName = '[&>span]:inline-flex [&>span]:items-center [&>span]:g
 export function ClosingBand({
   kicker,
   title = 'What would your kitchen actually cost?',
-  description = 'Got your number? The next step is a person. A designer plans the layout with you on a video call, or you can see the cabinets up close at one of our six Connecticut showrooms. Either way it is free, and you leave with a plan.',
+  description = 'Got your number? The next step is a person. A designer prices it with you on a video call, or you can see the cabinets up close at one of our six Connecticut showrooms. Either way it is free, and you leave with an itemized quote.',
   primary = { label: 'Free design consult', href: '#' },
   secondary,
   showrooms = [],

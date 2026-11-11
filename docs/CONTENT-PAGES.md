@@ -65,8 +65,6 @@ or data from BigCommerce · **[X]** = page still has placeholders the business m
 | --- | --- | --- |
 | Inspiration | http://localhost:3000/inspiration | |
 | Best-selling designs | http://localhost:3000/inspiration/best-sellers | |
-| Finished kitchens | http://localhost:3000/inspiration/projects | |
-| └ example project | http://localhost:3000/inspiration/projects/hartford-avon-galley | |
 | Reviews | http://localhost:3000/reviews | |
 | Testimonials | http://localhost:3000/testimonials | |
 | Blog | http://localhost:3000/blog | BigCommerce blog (not rebuilt) |

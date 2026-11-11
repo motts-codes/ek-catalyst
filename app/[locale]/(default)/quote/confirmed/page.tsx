@@ -18,7 +18,7 @@ export default async function QuoteConfirmed({ params }: { params: Promise<{ loc
           { label: 'Back to the home page', href: '/', primary: true },
           { label: 'Call 860-247-1000', href: 'tel:+18602471000' },
         ]}
-        description="Thank you. Your request is with the right team and you'll have a price back within one business day. If you'd rather talk it through sooner, call or text 860-247-1000 and someone will pick it up with you."
+        description="Thank you. Your request is with the right team and we get back to you with a price within 1 business day. If you'd rather talk it through sooner, call or text 860-247-1000 and someone will pick it up with you."
         kicker="Request received"
         textOnly
         title="Your quote is on its way"

@@ -26,7 +26,7 @@ export default async function BookConfirmed({ params }: { params: Promise<{ loca
           { label: 'How to measure', href: '/resources/measuring-guide', primary: true },
           { label: 'Showroom directions', href: '/showrooms' },
         ]}
-        description="Thanks. Your Project Manager will confirm the day and time by text and email within two hours, and you'll get a reminder the day before. Bring a photo of your kitchen and rough measurements if you have them, or nothing at all; either way you'll leave with a plan and a price."
+        description="Thanks. Your Project Manager will confirm the day and time by text and email within 1 business day, and you'll get a reminder the day before. Bring a photo of your kitchen and rough measurements if you have them, or nothing at all; either way you'll leave with an itemized quote."
         kicker="Showroom appointment"
         textOnly
         title="Your appointment is requested"

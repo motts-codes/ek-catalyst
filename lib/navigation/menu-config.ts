@@ -330,12 +330,6 @@ const menu: MenuItem[] = [
             href: '/inspiration/best-sellers',
             image: nav('best-selling-designs', 'The most-ordered kitchen, Avon in white'),
           },
-          // Projects (/inspiration/projects) is hidden at the client's request (27 Oct 2026).
-          // {
-          //   label: 'Projects',
-          //   href: '/inspiration/projects',
-          //   image: nav('projects', 'A finished customer kitchen'),
-          // },
         ],
       },
       {
