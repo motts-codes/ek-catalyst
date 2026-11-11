@@ -7,10 +7,10 @@ import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 export const metadata: Metadata = {
   title: 'First 2 Door Samples Free',
   description:
-    'Hold the real door before you choose. Your first 2 door samples are free with code FREESAMPLES. Until Nov 30, 2026.',
+    'Hold the real door before you choose. Your first 2 door samples are free with code FREESAMPLES.',
 };
 
-// Offer page for the free-samples promotion (until Nov 30, 2026). Linked from the "Offers" row
+// Offer page for the free-samples promotion (no end date). Linked from the "Offers" row
 // on every cabinet collection page via the offers registry in /cabinet-admin.
 export default async function FreeSamplesOffer({
   params,
@@ -41,7 +41,6 @@ export default async function FreeSamplesOffer({
             ['Code', 'FREESAMPLES, at checkout'],
             ['From', 'Any cabinet collection'],
             ['Shipping', 'Free on a samples-only order'],
-            ['Valid until', 'November 30, 2026'],
           ],
         }}
         faq={[
@@ -68,7 +67,7 @@ export default async function FreeSamplesOffer({
           'Extra samples on the same order are charged at their listed price.',
           "Full-size doors, countertop samples and accessories aren't included.",
           "Samples ship to the 48 contiguous states. They're yours to keep, and there's nothing to return.",
-          'Valid on orders placed by November 30, 2026. Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
+          'Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
         ]}
         title="Your first 2 door samples are free with code FREESAMPLES"
       />

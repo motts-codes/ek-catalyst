@@ -7,10 +7,10 @@ import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 export const metadata: Metadata = {
   title: 'Free Appliance with Every Kitchen',
   description:
-    'Get up to $1,100 in appliance credit with your kitchen, plus up to 4 bonus gifts. Frigidaire, GE, Whirlpool, Samsung, LG and more. Until Nov 30, 2026.',
+    'Get up to $1,100 in appliance credit with your kitchen, plus up to 4 bonus gifts. Frigidaire, GE, Whirlpool, Samsung, LG and more. Until Dec 31, 2026.',
 };
 
-// Offer page for the appliance credit (until Nov 30, 2026). Appliances are sold in stock only
+// Offer page for the appliance credit (until Dec 31, 2026). Appliances are sold in stock only
 // and delivered within EK's Connecticut zones.
 export default async function FreeApplianceOffer({
   params,
@@ -53,7 +53,7 @@ export default async function FreeApplianceOffer({
             ],
             ['Brands', 'Frigidaire, GE Appliances, Whirlpool, Samsung, Haier, LG, JennAir, Miele'],
             ["How it's applied", 'As a credit toward appliances from Express Kitchens, not cash'],
-            ['Valid until', 'November 30, 2026'],
+            ['Valid until', 'December 31, 2026'],
           ],
         }}
         faq={[
@@ -85,7 +85,7 @@ export default async function FreeApplianceOffer({
           'Appliances are subject to stock. Appliance delivery is limited to our Connecticut delivery zones. (EK to confirm: can customers outside CT pick up at the Factory Outlet?)',
           "Bonus gifts: (EK to confirm how they're earned, e.g. one gift per tier.)",
           'One credit per kitchen.',
-          'Valid on purchases made by November 30, 2026. Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
+          'Valid on purchases made by December 31, 2026. Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
         ]}
         title="Free appliance with every kitchen: up to $1,100 in appliance credit"
       />

@@ -7,7 +7,7 @@ import { Link } from '~/components/link';
 export interface OfferStackItem {
   title: string;
   description: string;
-  /** "Until November 30, 2026" */
+  /** "Until November 30, 2026", or "Ongoing offer" */
   ends: string;
   href: string;
   ctaLabel?: string;

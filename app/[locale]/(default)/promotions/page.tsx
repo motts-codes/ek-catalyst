@@ -7,20 +7,21 @@ import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 export const metadata: Metadata = {
   title: 'Current Offers and Promotions',
   description:
-    'Free appliance credit, up to $500 toward your countertop, our price match and free door samples. Until November 30, 2026.',
+    'Free appliance credit, up to $500 toward your countertop, our price match and free door samples.',
 };
 
-const ENDS = 'Until November 30, 2026';
+const NOV = 'Until November 30, 2026';
+const DEC = 'Until December 31, 2026';
 const BANNERS = '/images/offers/banners';
 
-// The five offers running until Nov 30, 2026, each as EK's banner in a card that links to its
+// The five current offers, each as EK's banner in a card that links to its
 // offer page. The banner text is pixels, so the card says the offer in words as well.
 const OFFERS: OfferStackItem[] = [
   {
     title: 'Free appliance with every kitchen',
     description:
       'An appliance credit of $500 to $1,100 with your kitchen, plus up to 4 bonus gifts: roll-out trays, organizers, designer handles and a pull-down faucet.',
-    ends: ENDS,
+    ends: DEC,
     href: '/offers-free-appliance',
     banner: {
       src: `${BANNERS}/free-appliance.webp`,
@@ -33,7 +34,7 @@ const OFFERS: OfferStackItem[] = [
     title: 'Up to $500 toward your countertop',
     description:
       'With Star Cabinets purchases of $3,000 or more, and the full $500 from $5,000. It comes off your countertop quote.',
-    ends: ENDS,
+    ends: DEC,
     href: '/offers-countertop',
     banner: {
       src: `${BANNERS}/countertop-credit.webp`,
@@ -46,7 +47,7 @@ const OFFERS: OfferStackItem[] = [
     title: 'Granite from $49.99, quartz from $59.99 a sq ft',
     description:
       'Start with $3,000 in cabinets, then pick from three granites and nine quartz colors at these prices.',
-    ends: ENDS,
+    ends: DEC,
     href: '/offers-countertop-pricing',
     banner: {
       src: `${BANNERS}/countertop-pricing.webp`,
@@ -59,7 +60,7 @@ const OFFERS: OfferStackItem[] = [
     title: "We'll beat any quote, or give you a $500 credit",
     description:
       'Bring a competitor quote of $3,000 or more to a showroom. We price the same kitchen with plywood boxes, soft-close hinges and full-extension glides, and beat it.',
-    ends: ENDS,
+    ends: NOV,
     href: '/price-match-guarantee',
     banner: {
       src: `${BANNERS}/price-match.webp`,
@@ -72,7 +73,7 @@ const OFFERS: OfferStackItem[] = [
     title: 'First 2 door samples free',
     description:
       'Hold the real door before you choose. Any collection, code FREESAMPLES at checkout, and the samples are yours to keep.',
-    ends: ENDS,
+    ends: 'Ongoing offer',
     href: '/offers-freesamples',
     banner: {
       src: `${BANNERS}/free-samples.webp`,
@@ -92,7 +93,7 @@ export default async function Promotions({ params }: { params: Promise<{ locale:
     <>
       <PageBreadcrumbs breadcrumbs={[{ label: 'Promotions', href: '/promotions' }]} />
       <PageHero
-        description="Every offer below runs until November 30, 2026."
+        description="Each card says when the offer ends."
         kicker="Promotions"
         textOnly
         title="Current offers"

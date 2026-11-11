@@ -7,10 +7,10 @@ import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 export const metadata: Metadata = {
   title: 'Up to $500 Toward Your Countertop',
   description:
-    'Buy $3,000 or more of Star Cabinets and get up to $500 toward your countertop, in full from $5,000. Granite from $49.99, quartz from $59.99 a sq ft. Until Nov 30, 2026.',
+    'Buy $3,000 or more of Star Cabinets and get up to $500 toward your countertop, in full from $5,000. Granite from $49.99, quartz from $59.99 a sq ft. Until Dec 31, 2026.',
 };
 
-// Offer page for the Star countertop credit (until Nov 30, 2026). Linked from the "Offers" row
+// Offer page for the Star countertop credit (until Dec 31, 2026). Linked from the "Offers" row
 // on Star collection pages via the offers registry in /cabinet-admin (scope: product line Star).
 export default async function CountertopOffer({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -46,7 +46,7 @@ export default async function CountertopOffer({ params }: { params: Promise<{ lo
             ['Star purchase of $3,000–$4,999', 'A partial credit (amount to confirm)'],
             ["How it's applied", 'As a credit on your countertop quote, not cash'],
             ['Countertops', 'Granite from $49.99 a sq ft, quartz from $59.99'],
-            ['Valid until', 'November 30, 2026'],
+            ['Valid until', 'December 31, 2026'],
           ],
         }}
         faq={[
@@ -79,7 +79,7 @@ export default async function CountertopOffer({ params }: { params: Promise<{ lo
           'One credit per kitchen.',
           'If returns bring the cabinet purchase below $3,000, the credit is withdrawn.',
           "Online orders don't include installation. On showroom orders, we can template and install your countertop.",
-          'Valid on purchases made by November 30, 2026. Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
+          'Valid on purchases made by December 31, 2026. Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
         ]}
         title="Up to $500 toward your countertop with Star Cabinets"
       />

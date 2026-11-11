@@ -7,10 +7,10 @@ import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 export const metadata: Metadata = {
   title: 'Granite from $49.99, Quartz from $59.99',
   description:
-    'Buy $3,000 or more in cabinets and get granite from $49.99 and quartz from $59.99 a square foot. Until Nov 30, 2026.',
+    'Buy $3,000 or more in cabinets and get granite from $49.99 and quartz from $59.99 a square foot. Until Dec 31, 2026.',
 };
 
-// Offer page for the countertop pricing with $3,000 in cabinets (until Nov 30, 2026).
+// Offer page for the countertop pricing with $3,000 in cabinets (until Dec 31, 2026).
 export default async function CountertopPricingOffer({
   params,
 }: {
@@ -48,7 +48,7 @@ export default async function CountertopPricingOffer({
               'Aruca White, Blanca Arabescato, Calacatta Arno, Calacatta Botanica, Calacatta Sierra, Calacatta Trevi, Carrara Mist, Macabo Gray, New Carrara Marmi',
             ],
             ['How to claim', 'Order your cabinets, then request a countertop quote'],
-            ['Valid until', 'November 30, 2026'],
+            ['Valid until', 'December 31, 2026'],
           ],
         }}
         faq={[
@@ -74,7 +74,7 @@ export default async function CountertopPricingOffer({
           'Applies to cabinet purchases of $3,000 or more before tax.',
           'Prices are per square foot, on the colors listed. (EK to confirm what the asterisk on the banner covers: fabrication, edges, cutouts, installation.)',
           "Countertops are cut to your measurements. Online orders don't include installation. On showroom orders, we can template and install.",
-          'Valid on purchases made by November 30, 2026. Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
+          'Valid on purchases made by December 31, 2026. Express Kitchens may change or end the offer at any time. Orders already placed are honored.',
         ]}
         title="Granite from $49.99 and quartz from $59.99 a square foot with $3,000 in cabinets"
       />
