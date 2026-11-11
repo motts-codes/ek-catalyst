@@ -1,6 +1,6 @@
 import { SubmissionResult } from '@conform-to/react';
 import { clsx } from 'clsx';
-import { Phone } from 'lucide-react';
+import { Phone, PhoneCall } from 'lucide-react';
 import { ReactNode } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
@@ -50,7 +50,11 @@ export interface NewsletterBand {
 export interface ContactPanel {
   title: string;
   phone: { label: string; href: string };
+  /** Small line under the number ("Call or text us 24/7"). */
+  phoneNote?: string;
   hoursTitle?: string;
+  /** Small grey note beside the hours title ("Vary by showroom"). */
+  hoursNote?: string;
   hours?: string[];
   showroomsTitle?: string;
   showrooms?: Array<{ name: string; href: string }>;
@@ -202,7 +206,7 @@ export const Footer = ({
         {/* Link columns + contact column */}
         <Stream fallback={<FooterColumnsSkeleton />} value={streamableSections}>
           {(sections) => (
-            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 @2xl:grid-cols-3 @5xl:grid-cols-6">
+            <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 @2xl:grid-cols-3 @5xl:grid-cols-7">
               {sections.map(({ title, links }, i) => (
                 <div key={i}>
                   {title != null && (
@@ -234,26 +238,52 @@ export const Footer = ({
               ))}
 
               {contactPanel && (
-                <div className="col-span-2 @2xl:col-span-1">
-                  <span className="mb-2 block whitespace-pre-line text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
+                <div className="col-span-2 @2xl:col-span-1 @5xl:col-span-2">
+                  <span className="mb-3 block whitespace-pre-line text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
                     {contactPanel.title}
                   </span>
+                  {/* The number is the one thing in focus: big, with the phone in a pale red disc
+                      that fills red and switches to the ringing icon on hover. */}
                   <Link
-                    className="inline-flex items-center gap-1.5 text-lg font-bold text-foreground hover:text-[var(--button-primary-background,#d90716)]"
+                    className="group inline-flex items-center gap-3 rounded-lg text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
                     href={contactPanel.phone.href}
                   >
-                    <Phone size={16} strokeWidth={2} />
-                    {contactPanel.phone.label}
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:bg-[var(--button-primary-background,#d90716)] group-hover:text-white">
+                      <Phone aria-hidden className="group-hover:hidden" size={20} strokeWidth={2} />
+                      <PhoneCall
+                        aria-hidden
+                        className="hidden group-hover:block"
+                        size={20}
+                        strokeWidth={2}
+                      />
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="font-heading text-2xl font-bold leading-none tracking-tight transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @xl:text-[26px]">
+                        {contactPanel.phone.label}
+                      </span>
+                      {Boolean(contactPanel.phoneNote) && (
+                        <span className="mt-1 text-xs text-contrast-500">
+                          {contactPanel.phoneNote}
+                        </span>
+                      )}
+                    </span>
                   </Link>
                   {contactPanel.hours && contactPanel.hours.length > 0 && (
-                    <div className="mt-4 text-sm text-contrast-500">
+                    <div className="mt-5 text-sm text-contrast-500">
                       {Boolean(contactPanel.hoursTitle) && (
-                        <span className="block font-semibold text-foreground">
-                          {contactPanel.hoursTitle}
+                        <span className="flex flex-wrap items-baseline gap-x-2">
+                          <span className="font-semibold text-foreground">
+                            {contactPanel.hoursTitle}
+                          </span>
+                          {Boolean(contactPanel.hoursNote) && (
+                            <span className="text-xs text-contrast-400">
+                              {contactPanel.hoursNote}
+                            </span>
+                          )}
                         </span>
                       )}
                       {contactPanel.hours.map((line) => (
-                        <span className="block" key={line}>
+                        <span className="mt-1 block whitespace-nowrap" key={line}>
                           {line}
                         </span>
                       ))}
@@ -332,7 +362,7 @@ function SocialMediaLinksSkeleton() {
 function FooterColumnsSkeleton() {
   return (
     <Skeleton.Root
-      className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 @container-normal group-has-[[data-pending]]/footer:animate-pulse @2xl:grid-cols-3 @5xl:grid-cols-6"
+      className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 @container-normal group-has-[[data-pending]]/footer:animate-pulse @2xl:grid-cols-3 @5xl:grid-cols-7"
       pending
     >
       {Array.from({ length: 6 }).map((_, idx) => (

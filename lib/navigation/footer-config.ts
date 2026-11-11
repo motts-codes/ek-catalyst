@@ -87,11 +87,14 @@ export const FOOTER_SECTIONS: Section[] = [
 ];
 
 export const FOOTER_CONTACT = {
-  // Two lines: the question, then the offer (rendered with the line break kept).
-  title: 'Have a question?\nCall or text us 24/7',
+  title: 'Have a question?',
   phone: { label: '860-247-1000', href: 'tel:+18602471000' },
+  // The small line under the number.
+  phoneNote: 'Call or text us 24/7',
   hoursTitle: 'Working hours',
-  hours: ['Vary by showroom', 'Mon – Sat: 9 AM to 6 PM (Eastern)', 'Sunday: Closed'],
+  // The small note beside the hours title.
+  hoursNote: 'Vary by showroom',
+  hours: ['Mon – Sat: 9 AM to 6 PM (Eastern)', 'Sunday: Closed'],
   showroomsTitle: 'Find a showroom',
 };
 
