@@ -48,10 +48,9 @@ export interface NewsletterBand {
 }
 
 export interface ContactPanel {
+  /** Small line inside the phone pill, above the number. */
   title: string;
   phone: { label: string; href: string };
-  /** Optional small line under the number inside the band. Unused by default: the note lives in `title`. */
-  phoneNote?: string;
   hoursTitle?: string;
   /** Small grey note beside the hours title ("Vary by showroom"). */
   hoursNote?: string;
@@ -239,33 +238,35 @@ export const Footer = ({
 
               {contactPanel && (
                 <div className="col-span-2 @2xl:col-span-1 @5xl:col-span-2">
-                  <span className="mb-3 block whitespace-pre-line text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
-                    {contactPanel.title}
-                  </span>
-                  {/* The number sits in a light red band that fills red on hover, with the text
-                      reversed to white and the phone switching to the ringing icon. */}
+                  {/* Phone pill, after the brand-guidelines mockup: a pale red pill with the phone
+                      in a pink disc flush to the left edge, the "Have a question?" line small above
+                      the number. On hover the pill fills red, the disc goes dark red, the text
+                      reverses to white and the ringing icon swaps in. */}
                   <Link
-                    className="group inline-flex max-w-full items-center gap-3 rounded-xl bg-[#fdf3f5] px-4 py-3 text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 hover:bg-[var(--button-primary-background,#d90716)] hover:text-white focus-visible:outline-0 focus-visible:ring-2"
+                    className="group inline-flex h-[68px] max-w-full items-center gap-3 overflow-hidden rounded-full bg-[#fdf3f5] pr-5 text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] ring-offset-2 transition-colors duration-300 hover:bg-[var(--button-primary-background,#d90716)] hover:text-white focus-visible:outline-0 focus-visible:ring-2 @xl:h-[72px]"
                     href={contactPanel.phone.href}
                   >
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
-                      <Phone aria-hidden className="group-hover:hidden" size={20} strokeWidth={2} />
+                    <span className="flex aspect-square h-full shrink-0 items-center justify-center rounded-full bg-[#eea3a8] text-white transition-colors duration-300 group-hover:bg-[#9f3632]">
+                      <Phone
+                        aria-hidden
+                        className="group-hover:hidden"
+                        size={26}
+                        strokeWidth={1.75}
+                      />
                       <PhoneCall
                         aria-hidden
                         className="hidden group-hover:block"
-                        size={20}
-                        strokeWidth={2}
+                        size={26}
+                        strokeWidth={1.75}
                       />
                     </span>
-                    <span className="flex flex-col">
-                      <span className="font-heading text-[26px] font-bold leading-none tracking-tight @xl:text-[30px]">
+                    <span className="flex min-w-0 flex-col">
+                      <span className="whitespace-nowrap text-xs text-contrast-500 transition-colors group-hover:text-white">
+                        {contactPanel.title}
+                      </span>
+                      <span className="mt-0.5 font-heading text-[26px] font-bold leading-none tracking-tight @xl:text-[30px]">
                         {contactPanel.phone.label}
                       </span>
-                      {Boolean(contactPanel.phoneNote) && (
-                        <span className="mt-1 text-xs text-contrast-500 group-hover:text-white/80">
-                          {contactPanel.phoneNote}
-                        </span>
-                      )}
                     </span>
                   </Link>
                   {contactPanel.hours && contactPanel.hours.length > 0 && (
