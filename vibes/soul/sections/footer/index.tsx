@@ -50,7 +50,7 @@ export interface NewsletterBand {
 export interface ContactPanel {
   title: string;
   phone: { label: string; href: string };
-  /** Small line under the number ("Call or text us 24/7"). */
+  /** Optional small line under the number inside the band. Unused by default: the note lives in `title`. */
   phoneNote?: string;
   hoursTitle?: string;
   /** Small grey note beside the hours title ("Vary by showroom"). */
@@ -242,13 +242,13 @@ export const Footer = ({
                   <span className="mb-3 block whitespace-pre-line text-sm font-semibold text-[var(--footer-section-title,hsl(var(--foreground)))]">
                     {contactPanel.title}
                   </span>
-                  {/* The number is the one thing in focus: big, with the phone in a pale red disc
-                      that fills red and switches to the ringing icon on hover. */}
+                  {/* The number sits in a light red band that fills red on hover, with the text
+                      reversed to white and the phone switching to the ringing icon. */}
                   <Link
-                    className="group inline-flex items-center gap-3 rounded-lg text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] focus-visible:outline-0 focus-visible:ring-2"
+                    className="group inline-flex max-w-full items-center gap-3 rounded-xl bg-[#fdf3f5] px-4 py-3 text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] transition-colors duration-300 hover:bg-[var(--button-primary-background,#d90716)] hover:text-white focus-visible:outline-0 focus-visible:ring-2"
                     href={contactPanel.phone.href}
                   >
-                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:bg-[var(--button-primary-background,#d90716)] group-hover:text-white">
+                    <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-[var(--button-primary-background,#d90716)] transition-colors duration-300 group-hover:bg-white/15 group-hover:text-white">
                       <Phone aria-hidden className="group-hover:hidden" size={20} strokeWidth={2} />
                       <PhoneCall
                         aria-hidden
@@ -258,11 +258,11 @@ export const Footer = ({
                       />
                     </span>
                     <span className="flex flex-col">
-                      <span className="font-heading text-2xl font-bold leading-none tracking-tight transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @xl:text-[26px]">
+                      <span className="font-heading text-[26px] font-bold leading-none tracking-tight @xl:text-[30px]">
                         {contactPanel.phone.label}
                       </span>
                       {Boolean(contactPanel.phoneNote) && (
-                        <span className="mt-1 text-xs text-contrast-500">
+                        <span className="mt-1 text-xs text-contrast-500 group-hover:text-white/80">
                           {contactPanel.phoneNote}
                         </span>
                       )}
