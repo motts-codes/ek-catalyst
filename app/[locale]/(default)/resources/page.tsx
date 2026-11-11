@@ -194,6 +194,7 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
         ]}
         columns={4}
         ctaStyle="link"
+        imageAspect="tall"
         imageFit="contain"
         kicker="Before you buy"
         title="Ordering and delivery"

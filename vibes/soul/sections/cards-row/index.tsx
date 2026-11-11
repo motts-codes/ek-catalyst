@@ -67,6 +67,8 @@ interface Props {
   cardBorder?: 'default' | 'red';
   /** `contain`: the whole photo is visible inside its frame, on white, instead of cropped to fill. */
   imageFit?: 'cover' | 'contain';
+  /** `tall`: a 4:3 photo frame instead of the default wide one, so a contained photo shows larger. */
+  imageAspect?: 'wide' | 'tall';
   /**
    * `outline`: the card buttons as the site's outline button (black outline on white and light
    * cards, white outline on red ones) instead of the solid black one. `primary` cards stay red.
@@ -135,6 +137,7 @@ export function CardsRow({
   cardTone = 'default',
   cardBorder = 'default',
   imageFit = 'cover',
+  imageAspect = 'wide',
   ctaStyle = 'solid',
   className,
 }: Props) {
@@ -162,7 +165,9 @@ export function CardsRow({
   const imageFrameClassName = clsx(
     'relative mb-6 overflow-hidden',
     imageFit === 'contain' ? 'bg-white' : 'bg-contrast-100',
-    plain ? 'aspect-[5/3] rounded-t-3xl' : 'aspect-[16/10] rounded-2xl',
+    plain ? 'rounded-t-3xl' : 'rounded-2xl',
+    imageAspect === 'tall' && 'aspect-[4/3]',
+    imageAspect === 'wide' && (plain ? 'aspect-[5/3]' : 'aspect-[16/10]'),
     plain && cardBorder === 'red' && 'border-[0.5px] border-[#d90716]/50',
   );
   const imageClassName = clsx(
