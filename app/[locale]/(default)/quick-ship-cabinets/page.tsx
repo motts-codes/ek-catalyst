@@ -98,14 +98,14 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
           { label: 'Shop next-day collections', href: '#collections', primary: true },
           { label: 'Shipping & pickup', href: '/shipping-policy', style: 'outline' },
         ]}
-        description="When a kitchen can't wait, start here. These cabinets come fully assembled, built with all-plywood boxes and dovetail drawers, and KCMA approved, and they're sitting in stock in Bristol. Over 60 colors, more than 80 SKUs and thousands of units ready to go. Order today and start building tomorrow."
+        description="When a kitchen can’t wait, start here. Six collections, fully assembled and in stock in Bristol, ship the next business day. Dovetail drawers, KCMA certified, thousands of units ready to go."
         image={CODE_PAGE_HERO_IMAGES.quickShip}
         imageLabel="Cabinets wrapped on a pallet, ready to ship"
         kicker="Ships next day"
-        title="Order today. Start building tomorrow."
+        title="Order today. Ships tomorrow."
       />
       <CategoryPoints
-        fine="Next-day shipping on in-stock items, confirmed orders. Delivery time depends on where you are; see the shipping page."
+        fine="Ships the next business day on confirmed orders of in-stock items. Allow 7–10 days for transit, or pick up in Bristol."
         points={[
           { icon: 'stock', label: 'Fully assembled, in stock' },
           { icon: 'plywood', label: 'All-plywood boxes, KCMA approved' },
@@ -114,7 +114,7 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
         ]}
       />
       <HomeSection
-        description="Six assembled collections we keep on the shelf. Everything else is built to order."
+        description="Six assembled collections we keep on the shelf. Other collections ship in 2 to 8 weeks."
         id="collections"
         kicker="Cabinets"
         tint
@@ -152,16 +152,15 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
           },
           {
             title: 'We ship the next day',
-            description:
-              'Once your order is confirmed, we pack it and send it out the next business day, so nothing waits on a factory run.',
+            description: 'Once your order is confirmed, it ships the next business day.',
           },
           {
-            title: 'Packed safe, tracked all the way',
+            title: 'On its way in 7–10 days',
             description:
-              'Cabinets go out wrapped on a pallet, and you get updates as the delivery moves. The shipping page has delivery day and pickup details.',
+              'Cabinets go out wrapped on a pallet and are delivered to the ground floor, usually within 7–10 days. In Connecticut? Pick up from Bristol instead.',
           },
         ]}
-        title="Three steps, no waiting"
+        title="Three steps, less waiting"
       />
       <Prose
         actions={[
@@ -169,8 +168,8 @@ export default async function QuickShip({ params }: { params: Promise<{ locale: 
           { label: 'Talk to a designer', href: FREE_DESIGN_HREF, style: 'outline' },
         ]}
         body={[
-          "Running behind on a renovation? Whether you're a hands-on homeowner or a contractor with a crew booked for Monday, this is the stock we built for last-minute jobs. Remodeling the kitchen, upgrading the bath or adding the finishing touches, the cabinets are already packed and ready, so your project stays on track.",
-          'Great projects start with great timing. You shouldn’t have to choose between speed and the quality of the box, so these are the same all-plywood, dovetail-drawer cabinets as the rest of the range, just kept on the shelf.',
+          "Running behind on a renovation? Whether you're a hands-on homeowner or a contractor with a crew to keep busy, this is the stock we keep for jobs that can’t wait. Remodeling the kitchen, upgrading the bath or adding the finishing touches, the cabinets are already packed and ready, so your project stays on track.",
+          'You shouldn’t have to choose between speed and quality. These are the same cabinets as the rest of the range, just kept on the shelf.',
         ]}
         kicker="Built for speed, made to last"
         title="Perfect for last-minute projects"
