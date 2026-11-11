@@ -61,7 +61,8 @@ interface Props {
   cardTone?: 'default' | 'red' | 'alternate';
   /**
    * A thin brand-red hairline at half opacity around each white card instead of the grey one.
-   * On `plain` cards (no card chrome) the hairline goes around the photo instead.
+   * On `plain` cards (no card chrome) the hairline goes around the photo instead (rounded at the
+   * top, square at the bottom, like the photo itself).
    */
   cardBorder?: 'default' | 'red';
   /** `contain`: the whole photo is visible inside its frame, on white, instead of cropped to fill. */
@@ -162,7 +163,7 @@ export function CardsRow({
     'relative mb-6 overflow-hidden',
     imageFit === 'contain' ? 'bg-white' : 'bg-contrast-100',
     plain ? 'aspect-[5/3] rounded-t-3xl' : 'aspect-[16/10] rounded-2xl',
-    plain && cardBorder === 'red' && 'rounded-3xl border-[0.5px] border-[#d90716]/50',
+    plain && cardBorder === 'red' && 'border-[0.5px] border-[#d90716]/50',
   );
   const imageClassName = clsx(
     imageFit === 'contain' ? 'object-contain p-3' : 'object-cover',

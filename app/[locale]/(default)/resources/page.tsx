@@ -97,8 +97,8 @@ export default async function Resources({ params }: { params: Promise<{ locale: 
             description: 'Four steps to a price range for your kitchen, RTA and assembled.',
             href: ESTIMATOR_HREF,
             image: {
-              src: '/images/estimator/hero-kitchen.jpg',
-              alt: 'A bright white kitchen with shaker cabinets, a farmhouse sink and a wooden range hood',
+              src: '/images/estimator/card-designer-plan.jpg',
+              alt: 'A smiling designer in a red top holding up a hand-drawn kitchen plan and a tape measure, beside a white base cabinet with a red price tag',
             },
           },
           {
