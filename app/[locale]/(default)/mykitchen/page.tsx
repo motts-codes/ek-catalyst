@@ -1,170 +1,171 @@
+import { ArrowRight } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
+import { FeatureRows } from '@/vibes/soul/sections/feature-rows';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
-import { LinkCards, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
-import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SAMPLES_HREF, SHOWROOMS } from '~/lib/home/home-content';
+import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { ProgramSplit } from '@/vibes/soul/sections/program-split';
+import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
+import { StoryBand } from '@/vibes/soul/sections/story-band';
+import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
+import { Link } from '~/components/link';
+import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
+import { COST_BAND } from '~/lib/cabinets/cabinets-hub-content';
+import { ESTIMATOR_HREF, FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
 import { getLowest10x10 } from '~/lib/pages/lowest-price';
+import {
+  CATEGORY_ROWS,
+  COST_BAND_ACTIONS,
+  COST_BAND_INTRO,
+  COST_BAND_OUTRO,
+  KITCHEN_STEPS,
+  MEASURING_NOTE,
+  MYKITCHEN_CLOSING,
+  MYKITCHEN_FAQ,
+  MYKITCHEN_HERO,
+  MYKITCHEN_METRICS,
+  PRISM_TILE_NAME,
+  TWO_WAYS,
+} from '~/lib/pages/mykitchen-content';
 
 export const metadata: Metadata = {
-  title: 'Plan Your Kitchen',
+  title: 'Kitchen Remodeling: Cabinets, Countertops and Appliances',
   description:
-    'The options in plain language before you spend anything: a free designer, ready-to-assemble, factory-assembled or a closet. Pick the one that sounds like you.',
+    'Your whole kitchen from one place: cabinets, countertops, appliances, sinks and hardware on one quote. Free design consult in a showroom or by video. Installation on showroom orders in Connecticut.',
 };
 
-const PATHS = [
-  {
-    title: '“I want it done for me”',
-    description:
-      'A designer plans your kitchen with you and prices every cabinet, RTA and assembled. Free, with no deposit and nothing to sign up for.',
-    href: FREE_DESIGN_HREF,
-    linkLabel: 'Free design consult',
-  },
-  {
-    title: '“I’ll assemble and save”',
-    description:
-      'The same cabinet, flat-packed and shipped in two weeks, for noticeably less. If you can use a screwdriver, you can build it.',
-    href: '/mykitchen/what-are-rta-cabinets',
-    linkLabel: 'How RTA works',
-  },
-  {
-    title: '“I want it ready-built”',
-    description: 'Built and checked in our factory, ships in 3 weeks, ready to install.',
-    href: '/mykitchen/what-are-assembled-cabinets',
-    linkLabel: 'How assembled works',
-  },
-  {
-    title: '“It’s my closet”',
-    description:
-      'Twelve pieces, three colors and one afternoon of building. Closets are a straight shop: pick the pieces and go.',
-    href: '/closets',
-    linkLabel: 'Design my closet',
-  },
-];
-
-const STEPS = [
-  {
-    n: '1',
-    title: 'Choose',
-    description: 'A door style, a color and a program: ready-to-assemble or assembled.',
-  },
-  {
-    n: '2',
-    title: 'Sample',
-    description:
-      'Your first two quarter doors are free, so you can see the finish in your own light.',
-  },
-  {
-    n: '3',
-    title: 'Measure',
-    description:
-      'Twenty minutes with a tape measure, or, in CT and greater-CT zip codes, we can measure for $85.',
-  },
-  {
-    n: '4',
-    title: 'Order',
-    description: 'Two weeks for ready-to-assemble, three for assembled, from stock in Connecticut.',
-  },
-  {
-    n: '5',
-    title: 'Install',
-    description:
-      'Your installer fits them. Online orders don’t include installation, but we can point you to people who do.',
-  },
-];
-
-const FAQ = {
-  headline: 'The four questions everyone asks',
-  items: [
-    {
-      q: 'How much will my kitchen cost?',
-      a: 'Cabinets for a standard 10×10 kitchen start at the prices above, and every collection page shows its own 10×10 price. The estimator scales that to your walls in about two minutes, and a designer gives you a fixed price for free.',
-    },
-    {
-      q: 'What’s the difference between RTA and assembled?',
-      a: 'Nothing about the cabinet. Same box, same door, same finish, same warranty. Ready-to-assemble arrives flat and you build it, so it costs less and ships a week sooner. Assembled arrives built from our factory, ready to install.',
-    },
-    {
-      q: 'How long does it take?',
-      a: 'Ready-to-assemble ships in two weeks and assembled in three. Those are published lead times from stock in Connecticut, not a promise made on a call.',
-    },
-    {
-      q: 'Do you install?',
-      a: 'Online orders don’t include installation. Assembled means the cabinet box is built, not fitted to your wall. Installing, levelling and plumbing are your installer’s job either way, and our Find a Pro page lists people who install our cabinets regularly.',
-    },
-  ],
-};
-
+// The whole-kitchen hub, on the /cabinets layout: story-band hero, proof strip, one feature row
+// per category, the two ways to do it, five steps, the cost band, reviews, FAQ, closing.
 export default async function MyKitchen({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
   setRequestLocale(locale);
 
-  const lowest = await getLowest10x10();
+  const [lowest, lines] = await Promise.all([getLowest10x10(), getCabinetLines('assembled')]);
+
+  // The Prism tile shows a Prism kitchen from the live collections.
+  const prism = lines.find((line) => line.productLine === 'Prism' && line.image);
+  const rows = CATEGORY_ROWS.map((row) => ({
+    ...row,
+    tiles: row.tiles?.map((tile) =>
+      tile.name === PRISM_TILE_NAME && prism?.image
+        ? { ...tile, image: prism.hoverImage ?? prism.image }
+        : tile,
+    ),
+  }));
+
+  // The "ours start at" sentence only when both prices loaded; never "$[X]".
+  const priceLine =
+    lowest.rta && lowest.assembled
+      ? ` Ours start at ${lowest.rta} RTA and ${lowest.assembled} assembled, cabinets only.`
+      : '';
 
   return (
     <>
-      <PageBreadcrumbs breadcrumbs={[{ label: 'Explore', href: '/mykitchen' }]} />
-      <PageHero
-        chips={['Free help', 'Real designers', 'No pressure', 'Nothing to sign up for']}
-        description="This is the part of the site that explains your options in plain language before you spend anything. Pick the path below that sounds most like you, by what you want rather than by product name, and we'll take you to the right next step."
-        kicker="Explore"
-        textOnly
-        title="Let's plan your kitchen"
+      <PageBreadcrumbs breadcrumbs={[{ label: 'My kitchen', href: '/mykitchen' }]} />
+
+      {/* 1 · Hero */}
+      <StoryBand
+        actions={[
+          { label: 'Book a free design consult', href: FREE_DESIGN_HREF, primary: true },
+          { label: 'Price my kitchen', href: ESTIMATOR_HREF },
+        ]}
+        description={MYKITCHEN_HERO.description}
+        headingLevel={1}
+        image={MYKITCHEN_HERO.image}
+        imageFit="contain"
+        imageFrame="none"
+        imageHeight="medium"
+        kicker={MYKITCHEN_HERO.kicker}
+        plate={false}
+        split="even"
+        title={MYKITCHEN_HERO.title}
       />
-      <LinkCards cards={PATHS} columns={4} />
-      <HomeSection
-        description="Whichever path you take, the kitchen comes together the same way."
-        kicker="How it goes"
-        tint
-        title="Five steps, start to finish"
-      >
+
+      {/* 2 · Proof strip */}
+      <MetricsTicker metrics={MYKITCHEN_METRICS} />
+
+      {/* 3 · Everything for your kitchen */}
+      <FeatureRows
+        className="bg-[#fdf8f8]"
+        description="Choose it all together, so it all fits together."
+        id="everything"
+        kicker="One consult, one quote"
+        rows={rows}
+        stacked
+        title="Everything for your kitchen"
+      />
+
+      {/* 4 · Two ways to do it */}
+      <ProgramSplit cards={TWO_WAYS} kicker="Your kitchen, your way" title="Two ways to do it" />
+
+      {/* 5 · How it comes together */}
+      <HomeSection kicker="How it goes" tint title="Five steps, start to finish">
         <ol className="grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-5">
-          {STEPS.map((step) => (
-            <li className="rounded-3xl border border-contrast-100 bg-white p-5" key={step.n}>
+          {KITCHEN_STEPS.map((step, index) => (
+            <li
+              className="flex flex-col rounded-3xl border border-contrast-100 bg-white p-5"
+              key={step.title}
+            >
               <span className="font-heading text-3xl font-bold text-[var(--button-primary-background,#d90716)]">
-                {step.n}
+                {index + 1}
               </span>
               <h3 className="mt-2 font-heading text-lg font-semibold">{step.title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-contrast-500">{step.description}</p>
+              {step.link && (
+                <Link
+                  className="group/link mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                  href={step.link.href}
+                >
+                  {step.link.label}
+                  <ArrowRight
+                    aria-hidden
+                    className="transition-transform group-hover/link:translate-x-1"
+                    size={15}
+                    strokeWidth={2.5}
+                  />
+                </Link>
+              )}
             </li>
           ))}
         </ol>
+        <p className="mt-6 text-sm text-contrast-500">{MEASURING_NOTE}</p>
       </HomeSection>
-      <Prose
-        actions={[
-          { label: 'Get a number in 2 minutes', href: ESTIMATOR_HREF, primary: true },
-          { label: 'What’s a 10×10?', href: '/resources/ten-by-ten-kitchen' },
-        ]}
-        body={[
-          'Everyone in this business prices cabinets on a “10×10”: a standard kitchen with two ten-foot walls in an L, about twelve cabinets. It is the fairest way to compare one seller with another, and every “from” price on this site is that kitchen in that collection.',
-          `Ours start at ${lowest.rta ?? '$[X]'} ready-to-assemble and ${lowest.assembled ?? '$[X]'} assembled. Yours will differ, of course, and the estimator scales those prices to your own walls in about two minutes.`,
-        ]}
-        image={{
-          src: '/images/estimator/layout-l-shaped.jpg',
-          alt: 'The 10×10 kitchen as an L: two 10-foot walls of white shaker cabinets',
-        }}
-        imageLabel="The 10×10 kitchen, drawn in plan"
-        kicker="What a kitchen actually costs"
+
+      {/* 6 · What will my kitchen cost? */}
+      <StoryBand
+        actions={COST_BAND_ACTIONS}
+        description={`${COST_BAND_INTRO}${priceLine} ${COST_BAND_OUTRO}`}
+        image={COST_BAND.image}
+        imageLabel={COST_BAND.imageLabel}
+        kicker="Prices, up front"
+        plate={false}
         title="One honest number to start from"
+        tone="red"
       />
-      <CabinetFaq data={FAQ} />
-      <HomeSection
-        action={{ label: 'Order free samples', href: SAMPLES_HREF }}
-        compact
-        tint
-        title="Rather hold a door first?"
-      >
-        <p className="max-w-2xl text-sm leading-relaxed text-contrast-500 @xl:text-base">
-          Your first two quarter-door samples are free with the code FREESAMPLES. Most people find
-          the choice gets easy once the doors are on the counter.
-        </p>
-      </HomeSection>
+
+      {/* 7 · Reviews */}
+      <ReviewMarquee
+        action={{ label: 'Read all reviews', href: '/reviews' }}
+        reviews={HOME_REVIEWS}
+        summary="4.5 · 360+ Google reviews"
+        title="From people who’ve done it"
+      />
+
+      {/* 8 · FAQ */}
+      <CabinetFaq data={MYKITCHEN_FAQ} />
+
+      {/* 9 · Closing */}
       <ClosingBand
-        primary={{ label: 'Book a free design consult', href: FREE_DESIGN_HREF }}
+        description={MYKITCHEN_CLOSING.description}
+        primary={MYKITCHEN_CLOSING.primary}
+        secondary={MYKITCHEN_CLOSING.secondary}
         showrooms={SHOWROOMS}
+        tint
+        title={MYKITCHEN_CLOSING.title}
       />
     </>
   );

@@ -165,9 +165,22 @@ export function ProgramSplit({
                       ))}
                     </ul>
                   )}
-                  <ButtonLink href={card.href} shape="pill" size="small" variant="primary">
-                    {card.ctaLabel}
-                  </ButtonLink>
+                  <div className="flex flex-wrap gap-2.5">
+                    <ButtonLink href={card.href} shape="pill" size="small" variant="primary">
+                      {card.ctaLabel}
+                    </ButtonLink>
+                    {card.secondary != null && (
+                      <ButtonLink
+                        className="transition-colors [--button-ghost-background-hover:white] [--button-ghost-border:rgb(255_255_255/0.6)] [--button-ghost-text:white] hover:[--button-ghost-border:white] hover:[--button-ghost-text:hsl(var(--foreground))]"
+                        href={card.secondary.href}
+                        shape="pill"
+                        size="small"
+                        variant="ghost"
+                      >
+                        {card.secondary.label}
+                      </ButtonLink>
+                    )}
+                  </div>
                 </div>
               </div>
             </article>

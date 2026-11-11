@@ -19,6 +19,8 @@ export interface ProgramCard {
   points: string[];
   ctaLabel: string;
   href: string;
+  /** A second, outline button beside the first (ProgramSplit only). */
+  secondary?: { label: string; href: string };
   image?: { src: string; alt: string };
 }
 

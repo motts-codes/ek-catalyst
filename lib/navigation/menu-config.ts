@@ -62,7 +62,8 @@ const menu: MenuItem[] = [
   //    hardware, tiles and clearance. ─────────────────────────────────────────────────────────
   {
     label: 'Kitchen',
-    href: '#',
+    // The label itself opens the whole-kitchen hub; the mega menu holds the shop columns.
+    href: '/mykitchen',
     group: 'shop',
     groups: [
       {
