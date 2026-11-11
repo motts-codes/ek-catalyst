@@ -184,7 +184,7 @@ export const HUB_PROGRAM_CARDS: ProgramCard[] = [
     tag: 'Most hands-off',
     description:
       'Ready to install when they arrive. The smoother handoff and the faster path to finished.',
-    points: ['Built and checked in our Connecticut shop', 'Delivered ready to hang in three weeks'],
+    points: ['Built and checked in our Connecticut shop', 'Ships in 3 weeks, ready to install'],
     ctaLabel: 'Browse assembled cabinets',
     href: ASSEMBLED_LISTING_HREF,
   },

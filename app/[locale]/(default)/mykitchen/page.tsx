@@ -70,7 +70,7 @@ const STEPS = [
     n: '5',
     title: 'Install',
     description:
-      'Your installer hangs them. We don’t install, but we can point you to people who do.',
+      'Your installer fits them. Online orders don’t include installation, but we can point you to people who do.',
   },
 ];
 
@@ -83,7 +83,7 @@ const FAQ = {
     },
     {
       q: 'What’s the difference between RTA and assembled?',
-      a: 'Nothing about the cabinet. Same box, same door, same finish, same warranty. Ready-to-assemble arrives flat and you build it, so it costs less and ships a week sooner. Assembled arrives built from our shop, ready to hang.',
+      a: 'Nothing about the cabinet. Same box, same door, same finish, same warranty. Ready-to-assemble arrives flat and you build it, so it costs less and ships a week sooner. Assembled arrives built from our factory, ready to install.',
     },
     {
       q: 'How long does it take?',
@@ -91,7 +91,7 @@ const FAQ = {
     },
     {
       q: 'Do you install?',
-      a: 'No. Assembled means the cabinet box is built, not fitted to your wall. Hanging, levelling and plumbing are your installer’s job either way, and our Find a Pro page lists people who hang our cabinets regularly.',
+      a: 'Online orders don’t include installation. Assembled means the cabinet box is built, not fitted to your wall. Installing, levelling and plumbing are your installer’s job either way, and our Find a Pro page lists people who install our cabinets regularly.',
     },
   ],
 };

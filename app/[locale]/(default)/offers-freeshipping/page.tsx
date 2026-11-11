@@ -87,7 +87,7 @@ export default async function FreeShippingOffer({
         body={[
           'Free shipping applies to cabinet orders with a subtotal of $2,500 or more before tax, shipped to one address in the continental United States. Assembled and ready-to-assemble cabinets from every collection qualify, including trim, panels and cabinet accessories on the same order.',
           'Countertops, appliances, windows, doors and samples-only orders are excluded; their delivery is priced separately. Showroom pickup orders are unaffected, since there is nothing to ship.',
-          'Delivery is curbside. Inside delivery, carry-up and installation are not included; Express Kitchens does not install.',
+          'Delivery is curbside. Inside delivery, carry-up and installation are not included.',
           'If part of an order is returned and the remaining subtotal falls below $2,500, the standard shipping charge may be deducted from the refund. Express Kitchens may change or end the offer at any time; orders already placed are honoured. (Terms to be confirmed.)',
         ]}
         kicker="The terms, in plain words"

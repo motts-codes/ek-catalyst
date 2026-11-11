@@ -191,7 +191,7 @@ export const PROGRAM_CARDS: ProgramCard[] = [
     title: 'Assembled cabinets',
     tag: 'We build them',
     points: [
-      'Arrives built and ready to hang. No parts to sort, no lost weekend',
+      'Arrives built and ready to install. No parts to sort, no lost weekend',
       'Built and checked by our team in Connecticut',
       'Ships in 3 weeks',
     ],
