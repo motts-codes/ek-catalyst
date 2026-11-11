@@ -1,28 +1,21 @@
+import { ClipboardList, PackageX, Store } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
-import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
-import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
-import { LinkCards, PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { CardsRow } from '@/vibes/soul/sections/cards-row';
+import { LinkCards, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 import { ShowroomBand } from '@/vibes/soul/sections/showroom-band';
-import { submitSupportLead } from '~/lib/forms/submit-lead';
 import { SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'Support',
   description:
-    'Phone, showroom contacts or a form. Order status, changes, pickups, and the policies that answer most questions.',
+    'Call or text 860-247-1000 any time. Order status and changes, Bristol pickups, delivery damage, and the policies that answer most questions.',
 };
 
-const FIELDS: Array<Field | Field[]> = [
-  [
-    { type: 'text', name: 'name', label: 'Your name', required: true },
-    { type: 'email', name: 'email', label: 'Email', required: true },
-  ],
-  { type: 'text', name: 'orderNumber', label: 'Order number, if you have one' },
-  { type: 'textarea', name: 'message', label: 'How can we help?', required: true },
-];
-
+// Hero, order help, the six policy cards, showroom band. No form here: "Send a message" goes
+// to /contact, the one form on the site (it already asks for an order number). The phones are
+// answered 24/7; reply times are stated on the contact page only.
 export default async function Support({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -33,14 +26,44 @@ export default async function Support({ params }: { params: Promise<{ locale: st
       <PageBreadcrumbs breadcrumbs={[{ label: 'Support', href: '/support' }]} />
       <PageHero
         actions={[
-          { label: 'Call 860-247-1000', href: 'tel:+18602471000', primary: true },
-          { label: 'Send a message', href: '#message' },
+          { label: 'Call or text 860-247-1000', href: 'tel:+18602471000', primary: true },
+          { label: 'Send a message', href: '/contact' },
         ]}
-        description="Whether you're checking on an order, changing a delivery date, arranging a pickup or just not sure who to ask, start here. The quickest route is the phone, Monday to Saturday 9 AM to 6 PM Eastern; otherwise send us a message and the right person will reply within one business day. Most questions are already answered on the four pages below."
+        description="Checking on an order, arranging a pickup or not sure who to ask? Call or text us any time on 860-247-1000. Most questions are answered on the pages below."
         kicker="Support"
         textOnly
         title="How can we help?"
       />
+
+      {/* 2 · Help with an order. Damage wording follows EK's Oct 27 answer. */}
+      <CardsRow
+        cards={[
+          {
+            icon: ClipboardList,
+            title: 'Status and changes',
+            description:
+              'Call or text 860-247-1000 with your order number. To change an order, call within 72 hours of placing it. After that, changes may not be possible, or may cost extra.',
+          },
+          {
+            icon: Store,
+            title: 'Pickup from Bristol',
+            description:
+              'Call ahead to arrange a time. Pickups are from 18 Main Street, Bristol, CT 06010.',
+          },
+          {
+            icon: PackageX,
+            title: 'Damaged in delivery',
+            description:
+              'Note the damage on the delivery receipt and file a claim with the carrier, then call us. There’s no restocking fee on items damaged in transit.',
+          },
+        ]}
+        columns={3}
+        hideImages
+        kicker="Order help"
+        title="Already ordered?"
+      />
+
+      {/* 3 · Policies */}
       <LinkCards
         cards={[
           {
@@ -64,12 +87,14 @@ export default async function Support({ params }: { params: Promise<{ locale: st
           },
           {
             title: 'Warranty',
-            description: "What's covered, for how long, and what counts as a defect.",
+            description: '1 year on every cabinet, and how to make a claim.',
             href: '/warranty',
             linkLabel: 'Warranty',
           },
           {
             title: 'Price match',
+            // Offer copy until Nov 30, 2026. After that, swap to:
+            // "We'll match a competitor's cabinet quote, in our showrooms."
             description:
               "Bring a quote to a showroom and we'll beat it, or give you a $500 credit, until Nov 30.",
             href: '/price-match-guarantee',
@@ -87,22 +112,7 @@ export default async function Support({ params }: { params: Promise<{ locale: st
         tint
         title="The pages that answer most questions"
       />
-      <Prose
-        body={[
-          'For order status, changes to an order placed in the last 72 hours, or to arrange a pickup from Bristol, call 860-247-1000 with your order number to hand. Changes after 72 hours may not be possible without additional fees, so the sooner you call, the better.',
-        ]}
-        kicker="Order help"
-        title="Status, changes and pickups"
-      />
-      <LeadFormCard
-        action={submitSupportLead}
-        description="We get back to you within 1 business day."
-        fields={FIELDS}
-        id="message"
-        kicker="Send a message"
-        submitLabel="Send"
-        title="Tell us what you need"
-      />
+
       <ShowroomBand showrooms={SHOWROOMS} />
     </>
   );

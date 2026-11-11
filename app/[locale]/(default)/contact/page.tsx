@@ -119,7 +119,7 @@ export default async function Contact({ params }: { params: Promise<{ locale: st
       />
       <LeadFormCard
         action={submitContactLead}
-        description="Tell us what you need and the right person will get back to you."
+        description="Tell us what you need and the right person will get back to you within 1 business day."
         fields={FIELDS}
         fine={
           <>
