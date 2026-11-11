@@ -71,6 +71,8 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
+// One stationary card beside the slides. Only the first entry is rendered (the right side no
+// longer rotates), so keep this list to the live offer.
 export const HERO_OFFERS: HeroOffer[] = [
   {
     kicker: 'Kitchens @$299/month',
@@ -82,20 +84,6 @@ export const HERO_OFFERS: HeroOffer[] = [
       src: '/images/home/offers/free-appliance.webp',
       alt: 'A stainless-steel refrigerator and gas range, each tied with a red gift bow',
     },
-  },
-  {
-    kicker: 'Replacement windows',
-    headline: '$179.99 any size up to 101 united inches',
-    description: 'Double hung, sliders and hoppers. Pick up from Bristol.',
-    href: '/windows',
-    ctaLabel: 'See the offer',
-  },
-  {
-    kicker: '0% financing',
-    headline: 'From $299 a month',
-    description: 'Buy the kitchen now, pay for it monthly. On qualifying orders.',
-    href: '#',
-    ctaLabel: 'Check your rate',
   },
 ];
 
