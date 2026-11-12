@@ -8,7 +8,7 @@ import { FeatureRows } from '@/vibes/soul/sections/feature-rows';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { NightKitchen } from '@/vibes/soul/sections/night-kitchen';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
-import { ProgramSplit } from '@/vibes/soul/sections/program-split';
+import { ProgramCards } from '@/vibes/soul/sections/program-cards';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
@@ -101,8 +101,9 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
         title={EVERYTHING_SECTION.title}
       />
 
-      {/* 4 · Two ways to get there */}
-      <ProgramSplit
+      {/* 4 · Two ways to get there: the tinted pair (photo inset, copy on a solid field), not the
+          hover split, so the copy never sits over a photo. */}
+      <ProgramCards
         cards={TWO_WAYS}
         kicker="Your kitchen, your way"
         title="Two ways to get there"

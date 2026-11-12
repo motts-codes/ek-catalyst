@@ -20,7 +20,7 @@ export const MYKITCHEN_HERO = {
   kicker: 'My kitchen',
   title: 'Your whole kitchen, every piece made to fit',
   description:
-    'Pick the cabinets, countertop, appliances and sink that suit the way you cook and live, all in one cart. See your price before you talk to anyone. Free shipping on orders over $2,500.',
+    'Pick the cabinets, countertop, appliances and sink that suit the way you cook and live, all in one cart. See your price before you talk to anyone.',
   actions: [
     { label: 'Price my kitchen', href: ESTIMATOR_HREF, primary: true },
     { label: 'Shop cabinets', href: '/cabinets' },

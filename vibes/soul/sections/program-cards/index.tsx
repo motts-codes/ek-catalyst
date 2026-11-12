@@ -19,7 +19,7 @@ export interface ProgramCard {
   points: string[];
   ctaLabel: string;
   href: string;
-  /** A second, outline button beside the first (ProgramSplit only). */
+  /** A second, outline button beside the first. */
   secondary?: { label: string; href: string };
   image?: { src: string; alt: string };
 }
@@ -115,10 +115,21 @@ export function ProgramCards({
                 ))}
               </ul>
             )}
-            <div className="mt-auto pt-7">
+            <div className="mt-auto flex flex-wrap gap-2.5 pt-7">
               <ButtonLink href={card.href} shape="pill" size="small" variant="primary">
                 {card.ctaLabel}
               </ButtonLink>
+              {card.secondary != null && (
+                <ButtonLink
+                  className="transition-colors [--button-ghost-background-hover:hsl(var(--foreground))] [--button-ghost-border:hsl(var(--foreground))] hover:[--button-ghost-text:white]"
+                  href={card.secondary.href}
+                  shape="pill"
+                  size="small"
+                  variant="ghost"
+                >
+                  {card.secondary.label}
+                </ButtonLink>
+              )}
             </div>
           </article>
         ))}
