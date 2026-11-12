@@ -270,8 +270,8 @@ export const KITCHEN_STEPS: AccordionStep[] = [
     description: 'Twenty minutes with a tape measure. Our measuring guide shows you how.',
     link: { label: 'Measuring guide', href: MEASURING_GUIDE_HREF },
     image: {
-      src: '/images/pages/measuring/tape-across-wall.jpg',
-      alt: 'A tape measure stretched across a kitchen wall',
+      src: '/images/pages/mykitchen/know-your-space.jpg',
+      alt: 'A white traditional kitchen with a marble-topped dark wood island, globe pendants and a pink tile backsplash',
     },
   },
   {
@@ -295,7 +295,7 @@ export const KITCHEN_STEPS: AccordionStep[] = [
     },
   },
   {
-    title: 'Get it on its way',
+    title: 'Order it',
     description: 'RTA ships in 2 weeks and assembled in 3, plus 7–10 days of transit.',
     image: {
       src: '/images/pages/shipping/ek-truck-unloading.jpg',

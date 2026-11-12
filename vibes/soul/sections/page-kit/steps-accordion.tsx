@@ -129,7 +129,7 @@ export function StepsAccordion({
         >
           {steps.map((step, i) => (
             <AccordionPrimitive.Item
-              className="group/item rounded-2xl border border-contrast-100 bg-white transition-colors duration-300 data-[state=open]:border-[var(--button-primary-background,#d90716)] data-[state=open]:bg-[var(--button-primary-background,#d90716)]"
+              className="group/item rounded-2xl border border-[#fcb6bb] bg-white transition-colors duration-300 data-[state=open]:border-[var(--button-primary-background,#d90716)] data-[state=open]:bg-[var(--button-primary-background,#d90716)]"
               key={step.title}
               value={step.title}
             >
