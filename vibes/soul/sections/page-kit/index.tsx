@@ -55,7 +55,8 @@ function actionVariant(action: PageAction): 'primary' | 'secondary' | 'ghost' {
   return action.style === 'outline' || action.style === 'outline-red' ? 'ghost' : 'secondary';
 }
 
-// Breadcrumb at the top of a page. Small and grey like the PDP's, at a size/grey that passes AA.
+// Breadcrumb at the top of a page. Small, in the body's secondary grey (34%): the lighter 45%
+// read as washed out on Windows screens (client feedback, 12 Nov 2026).
 export function PageBreadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) {
   const trail = [{ label: 'Home', href: '/' }, ...breadcrumbs];
 
@@ -64,7 +65,7 @@ export function PageBreadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) 
       <div className="mx-auto max-w-screen-2xl px-6 pt-[15px] @xl:px-9 @4xl:px-14">
         <Breadcrumbs
           breadcrumbs={trail}
-          className="[&_a]:!text-contrast-400 [&_ol]:!text-[11px] [&_span]:!text-contrast-400 [&_svg]:!text-contrast-400"
+          className="[&_a]:!text-contrast-500 [&_ol]:!text-[11px] [&_span]:!text-contrast-500 [&_svg]:!text-contrast-400"
         />
       </div>
     </div>

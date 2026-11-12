@@ -41,13 +41,13 @@ export function Breadcrumbs({ breadcrumbs: streamableBreadcrumbs, className }: B
 
         return (
           <nav aria-label="breadcrumb" className={clsx(className)}>
-            <ol className="flex flex-wrap items-center gap-x-1.5 text-xs text-contrast-400">
+            <ol className="flex flex-wrap items-center gap-x-1.5 text-xs text-contrast-500">
               {breadcrumbs.map(({ label, href }, index) => {
                 if (index < breadcrumbs.length - 1) {
                   return (
                     <li className="inline-flex items-center gap-x-1.5" key={index}>
                       <Link className="group/underline focus:outline-none" href={href}>
-                        <AnimatedUnderline className="font-[family-name:var(--breadcrumbs-font-family,var(--font-family-body))] text-[var(--breadcrumbs-primary-text,hsl(var(--contrast-400)))] [background:linear-gradient(0deg,var(--breadcrumbs-hover,hsl(var(--primary))),var(--breadcrumbs-hover,hsl(var(--primary))))_no-repeat_left_bottom_/_0_1px]">
+                        <AnimatedUnderline className="font-[family-name:var(--breadcrumbs-font-family,var(--font-family-body))] text-[var(--breadcrumbs-primary-text,hsl(var(--contrast-500)))] [background:linear-gradient(0deg,var(--breadcrumbs-hover,hsl(var(--primary))),var(--breadcrumbs-hover,hsl(var(--primary))))_no-repeat_left_bottom_/_0_1px]">
                           {label}
                         </AnimatedUnderline>
                       </Link>
@@ -63,7 +63,7 @@ export function Breadcrumbs({ breadcrumbs: streamableBreadcrumbs, className }: B
 
                 return (
                   <li
-                    className="inline-flex items-center font-[family-name:var(--breadcrumbs-font-family,var(--font-family-body))] text-[var(--breadcrumbs-secondary-text,hsl(var(--contrast-400)))]"
+                    className="inline-flex items-center font-[family-name:var(--breadcrumbs-font-family,var(--font-family-body))] text-[var(--breadcrumbs-secondary-text,hsl(var(--contrast-500)))]"
                     key={index}
                   >
                     <span aria-current="page" aria-disabled="true" role="link">

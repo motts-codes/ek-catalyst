@@ -115,7 +115,7 @@ export function CategoryBreadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[]
       <div className="mx-auto max-w-screen-2xl px-6 pt-[15px] @xl:px-9 @4xl:px-14">
         <Breadcrumbs
           breadcrumbs={breadcrumbs}
-          className="[&_a]:!text-contrast-400 [&_ol]:!text-[11px] [&_span]:!text-contrast-400 [&_svg]:!text-contrast-400"
+          className="[&_a]:!text-contrast-500 [&_ol]:!text-[11px] [&_span]:!text-contrast-500 [&_svg]:!text-contrast-400"
         />
       </div>
     </div>

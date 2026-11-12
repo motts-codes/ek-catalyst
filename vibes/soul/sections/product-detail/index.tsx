@@ -183,7 +183,7 @@ export function ProductDetail<F extends Field>({
           <div className="group/breadcrumbs mb-4 @2xl:mb-16">
             <Breadcrumbs
               breadcrumbs={breadcrumbs}
-              className="[&_a:hover_span]:!text-foreground [&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
+              className="[&_a:hover_span]:!text-foreground [&_a]:!text-contrast-500 [&_ol]:!text-[11px] [&_span]:!text-contrast-500 [&_svg]:!text-contrast-400"
             />
           </div>
         )}
