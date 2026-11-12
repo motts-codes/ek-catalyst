@@ -55,7 +55,10 @@ export const EVERYTHING_SECTION = {
   description: 'No juggling five stores and hoping it all lines up.',
 };
 
-// One row per category. The Prism tile's photo is filled in by the page from the live collections.
+// One row per category. The page fills two photos in from the live collections: the Cabinets
+// row's kitchen (Avon, the best seller; the live collection is "Avon Painted White" on the Star
+// line) and the Prism tile.
+export const CABINETS_ROW_COLLECTION = { line: 'Star', name: 'Avon' };
 export const PRISM_TILE_NAME = 'Painted (Prism)';
 
 export const CATEGORY_ROWS: FeatureRow[] = [
@@ -63,7 +66,8 @@ export const CATEGORY_ROWS: FeatureRow[] = [
     title: 'Cabinets that look right and last',
     description:
       'Shaker, modern, raised panel or real wood grain, with 50,000+ in stock. RTA ships in 2 weeks, assembled in 3.',
-    image: category('cabinets', 'White shaker cabinets with brushed handles'),
+    // Replaced by the live Avon kitchen when it loads.
+    image: category('cabinets', 'An Avon white shaker kitchen'),
     tilesLabel: 'Shop by',
     tileCtaLabel: 'Shop',
     tiles: [
@@ -101,6 +105,11 @@ export const CATEGORY_ROWS: FeatureRow[] = [
         href: '/countertops/laminate',
         image: nav('laminate', 'Laminate countertop'),
       },
+      {
+        name: 'Prefabricated',
+        href: '/countertops/prefabricated',
+        image: nav('prefabricated', 'Prefabricated countertop'),
+      },
     ],
     action: { label: 'Explore countertops', href: '/countertops' },
   },
@@ -130,6 +139,32 @@ export const CATEGORY_ROWS: FeatureRow[] = [
         image: nav('dishwashers', 'Dishwasher'),
       },
       { name: 'Microwaves', href: '/appliances/microwaves', image: nav('microwaves', 'Microwave') },
+      { name: 'Wall ovens', href: '/appliances/wall-ovens', image: nav('wall-ovens', 'Wall oven') },
+      {
+        name: 'Range hoods',
+        href: '/appliances/range-hoods',
+        image: nav('range-hoods', 'Range hood'),
+      },
+      {
+        name: 'Washers and dryers',
+        href: '/appliances/washers-dryers',
+        image: nav('washers-dryers', 'Washer and dryer'),
+      },
+      {
+        name: 'Garbage disposals',
+        href: '/appliances/garbage-disposals',
+        image: nav('garbage-disposals', 'Garbage disposal'),
+      },
+      {
+        name: 'Air conditioning',
+        href: '/appliances/air-conditioning',
+        image: nav('air-conditioning', 'Air conditioner'),
+      },
+      {
+        name: 'Accessories',
+        href: '/appliances/accessories',
+        image: nav('appliance-accessories', 'Appliance accessories'),
+      },
     ],
     action: { label: 'Shop appliances', href: '/appliances' },
   },
@@ -152,6 +187,11 @@ export const CATEGORY_ROWS: FeatureRow[] = [
         image: nav('kitchen-faucets', 'Kitchen faucet'),
       },
       { name: 'Bath', href: '/bath', image: nav('bathroom-faucets', 'Bathroom faucet') },
+      {
+        name: 'Accessories',
+        href: '/sinks-faucets/accessories',
+        image: nav('sink-faucet-accessories', 'Sink and faucet accessories'),
+      },
     ],
     action: { label: 'Shop sinks and faucets', href: '/sinks-faucets' },
   },
@@ -178,6 +218,7 @@ export const CATEGORY_ROWS: FeatureRow[] = [
         href: '/cabinet-hardware',
         image: { src: '/images/cabinets/accessories.jpg', alt: 'A filler strip and end panel' },
       },
+      { name: 'Tiles', href: '/cabinet-hardware/tiles', image: nav('tiles', 'Backsplash tiles') },
     ],
     action: { label: 'Shop hardware', href: '/cabinet-hardware' },
   },

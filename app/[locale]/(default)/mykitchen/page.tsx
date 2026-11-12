@@ -17,6 +17,7 @@ import { COST_BAND } from '~/lib/cabinets/cabinets-hub-content';
 import { HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
 import { getLowest10x10 } from '~/lib/pages/lowest-price';
 import {
+  CABINETS_ROW_COLLECTION,
   CATEGORY_ROWS,
   COST_BAND_COPY,
   EVERYTHING_SECTION,
@@ -49,10 +50,19 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
 
   const [lowest, lines] = await Promise.all([getLowest10x10(), getCabinetLines('assembled')]);
 
-  // The Prism tile shows a Prism kitchen from the live collections.
+  // Two photos come from the live collections: the Avon kitchen fronts the Cabinets row, and the
+  // Prism tile shows a Prism kitchen.
+  const avon = lines.find(
+    (line) =>
+      line.productLine === CABINETS_ROW_COLLECTION.line &&
+      line.name.startsWith(CABINETS_ROW_COLLECTION.name) &&
+      line.image,
+  );
   const prism = lines.find((line) => line.productLine === 'Prism' && line.image);
-  const rows = CATEGORY_ROWS.map((row) => ({
+  const rows = CATEGORY_ROWS.map((row, index) => ({
     ...row,
+    image:
+      index === 0 && avon?.image ? { src: avon.image.src, alt: row.image?.alt ?? '' } : row.image,
     tiles: row.tiles?.map((tile) =>
       tile.name === PRISM_TILE_NAME && prism?.image
         ? { ...tile, image: prism.hoverImage ?? prism.image }
