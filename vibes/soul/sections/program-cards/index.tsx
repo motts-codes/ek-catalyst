@@ -142,17 +142,20 @@ export function ProgramCards({
               {card.points.length > 0 && (
                 <ul className="mt-5 grid gap-x-6 gap-y-2.5 text-sm @7xl:grid-cols-2">
                   {card.points.map((point) => (
-                    <li className="flex items-start gap-3" key={point}>
-                      <span
-                        className={clsx(
-                          'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
-                          bold
-                            ? 'bg-white text-[#9f3632]'
-                            : 'bg-[var(--button-primary-background,#d90716)] text-white',
-                        )}
-                      >
-                        <Check aria-hidden size={12} strokeWidth={3} />
-                      </span>
+                    <li className={clsx('flex items-start', bold ? 'gap-2' : 'gap-3')} key={point}>
+                      {/* Bold cards use the bare check from the home RTA/assembled split; tint keeps the disc. */}
+                      {bold ? (
+                        <Check
+                          aria-hidden
+                          className="mt-0.5 shrink-0 text-white"
+                          size={16}
+                          strokeWidth={2.5}
+                        />
+                      ) : (
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--button-primary-background,#d90716)] text-white">
+                          <Check aria-hidden size={12} strokeWidth={3} />
+                        </span>
+                      )}
                       <span>{point}</span>
                     </li>
                   ))}
