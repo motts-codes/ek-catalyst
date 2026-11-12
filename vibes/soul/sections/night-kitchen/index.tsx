@@ -15,6 +15,11 @@ import { Image } from '~/components/image';
 // shows them still.
 const FRAME = '/images/why-us/frames/f164.webp';
 const FRAME_W = 1600;
+const FRAME_H = 900;
+// The part of the 1600×900 frame shown: the fridge-to-window run and the island, with the floor's
+// reflection but not the white fade along the frame's bottom (from y≈860), nor the bare wall
+// above. The effect coordinates below are in frame pixels and are shifted by this crop.
+const CROP = { x: 230, y: 100, w: 1140, h: 700 };
 // Faucet stream (x, top, bottom) and kettle spout (x, y), in frame pixels.
 const FX = { water: [1075, 414, 453] as const, steam: [669, 426] as const };
 
@@ -56,15 +61,15 @@ export function NightKitchen({ alt, className, priority = false }: Props) {
 
     const draw = (now: number) => {
       const W = canvas.width;
-      const k = W / FRAME_W;
+      const k = W / CROP.w;
       const t = (now - t0) / 1000;
 
       ctx.clearRect(0, 0, W, canvas.height);
 
       // Water: a pale stream with brighter droplets falling through it, and a splash at the sink.
-      const x = FX.water[0] * k;
-      const yA = FX.water[1] * k;
-      const yB = FX.water[2] * k;
+      const x = (FX.water[0] - CROP.x) * k;
+      const yA = (FX.water[1] - CROP.y) * k;
+      const yB = (FX.water[2] - CROP.y) * k;
       const w = Math.max(1.2, 2.4 * k);
 
       ctx.save();
@@ -92,8 +97,8 @@ export function NightKitchen({ alt, className, priority = false }: Props) {
 
       for (let i = 0; i < 9; i += 1) {
         const f = (t / 3 + i / 9) % 1;
-        const px = (FX.steam[0] + Math.sin(f * 5 + i * 1.7) * 5 * (0.3 + f)) * k;
-        const py = (FX.steam[1] - f * 62) * k;
+        const px = (FX.steam[0] - CROP.x + Math.sin(f * 5 + i * 1.7) * 5 * (0.3 + f)) * k;
+        const py = (FX.steam[1] - CROP.y - f * 62) * k;
         const r = (4 + f * 13) * k;
         const g = ctx.createRadialGradient(px, py, 0, px, py, r);
         const alpha = clamp01((1.15 - f) / 0.15) * 0.62 * Math.sin(Math.PI * f ** 0.55);
@@ -174,23 +179,30 @@ export function NightKitchen({ alt, className, priority = false }: Props) {
   };
 
   return (
-    // The frame's bottom 5% fades to white (the scroll story's floor fade), so the box is a touch
-    // shorter than 16:9 and the picture is pinned to its top, which crops the fade off. The
-    // effects are measured from the top-left, so they stay in place.
+    // The box takes the crop's shape, and the full frame is laid behind it, oversized and offset
+    // so the crop is what shows.
     <div
-      className={clsx(
-        'relative aspect-[1600/855] overflow-hidden rounded-3xl bg-[#1b1a1f]',
-        className,
-      )}
+      className={clsx('relative overflow-hidden rounded-3xl bg-[#1b1a1f]', className)}
+      style={{ aspectRatio: `${CROP.w} / ${CROP.h}` }}
     >
-      <Image
-        alt={alt}
-        className="object-cover object-top"
-        fill
-        preload={priority}
-        sizes="(min-width: 56rem) 50vw, 100vw"
-        src={FRAME}
-      />
+      <div
+        className="absolute"
+        style={{
+          left: `${(-CROP.x / CROP.w) * 100}%`,
+          top: `${(-CROP.y / CROP.h) * 100}%`,
+          width: `${(FRAME_W / CROP.w) * 100}%`,
+          height: `${(FRAME_H / CROP.h) * 100}%`,
+        }}
+      >
+        <Image
+          alt={alt}
+          className="object-cover"
+          fill
+          preload={priority}
+          sizes="(min-width: 56rem) 60vw, 120vw"
+          src={FRAME}
+        />
+      </div>
       <canvas aria-hidden className="absolute inset-0 h-full w-full" ref={canvasRef} />
       {canPause && (
         <button
