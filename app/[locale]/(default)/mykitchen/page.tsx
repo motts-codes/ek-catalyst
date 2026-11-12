@@ -106,6 +106,7 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
       <ProgramCards
         cards={TWO_WAYS}
         kicker="Your kitchen, your way"
+        palette="bold"
         title="Two ways to get there"
       />
 

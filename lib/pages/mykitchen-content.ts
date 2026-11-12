@@ -249,9 +249,10 @@ export const TWO_WAYS: ProgramCard[] = [
     ctaLabel: 'Book a free design consult',
     href: FREE_DESIGN_HREF,
     secondary: { label: 'Find a showroom', href: '/showrooms' },
+    // The home page's "I want a person" photo.
     image: {
-      src: '/images/pages/design-consult/hero-designer-couple-3.jpg',
-      alt: 'A designer going through a kitchen plan with a couple at a showroom table',
+      src: '/images/home/ways/design-consult.webp',
+      alt: 'A designer on a video call with a couple, their kitchen plan and door samples on her laptop',
     },
   },
 ];
