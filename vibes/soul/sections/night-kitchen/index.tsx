@@ -19,9 +19,9 @@ const FRAME_H = 900;
 // The part of the 1600×900 frame shown: the fridge-to-window run and the island, with the floor's
 // reflection but not the white fade along the frame's bottom (from y≈860), nor the bare wall
 // above. The effect coordinates below are in frame pixels and are shifted by this crop.
-const CROP = { x: 230, y: 100, w: 1140, h: 700 };
+const CROP = { x: 330, y: 140, w: 940, h: 620 };
 // Faucet stream (x, top, bottom) and kettle spout (x, y), in frame pixels.
-const FX = { water: [1075, 414, 453] as const, steam: [669, 426] as const };
+const FX = { water: [1082, 414, 447] as const, steam: [669, 426] as const };
 
 interface Props {
   alt: string;
