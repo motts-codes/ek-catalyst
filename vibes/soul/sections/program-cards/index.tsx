@@ -125,7 +125,7 @@ export function ProgramCards({
             <div className={clsx('flex grow flex-col', bold && 'p-6 @xl:p-8')}>
               <h3
                 className={clsx(
-                  'font-heading text-2xl font-semibold leading-tight @xl:text-3xl',
+                  'font-heading text-xl font-semibold leading-tight @xl:text-2xl',
                   !bold && 'mt-6',
                 )}
               >
