@@ -61,7 +61,7 @@ const menu: MenuItem[] = [
   // ── Kitchen: exactly three columns. Cabinets is the hero — it carries the two programs,
   //    hardware, tiles and clearance. ─────────────────────────────────────────────────────────
   {
-    label: 'My Kitchen',
+    label: 'Kitchen',
     // The label itself opens the whole-kitchen hub; the mega menu holds the shop columns.
     href: '/mykitchen',
     group: 'shop',

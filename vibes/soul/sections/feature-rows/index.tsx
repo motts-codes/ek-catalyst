@@ -87,7 +87,7 @@ export function FeatureRows({
 // the other with room around it, the door tiles as a slider.
 function FeatureCard({ row, flip }: { row: FeatureRow; flip: boolean }) {
   return (
-    <article className="grid items-center overflow-hidden rounded-3xl bg-white shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] @3xl:h-[560px] @3xl:grid-cols-2">
+    <article className="grid items-center overflow-hidden rounded-3xl bg-white shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] @3xl:min-h-[560px] @3xl:grid-cols-2">
       <div
         className={clsx(
           'relative aspect-[4/3] bg-contrast-100 @3xl:aspect-auto @3xl:h-full',

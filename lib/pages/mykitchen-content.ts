@@ -19,9 +19,9 @@ export const MEASURING_GUIDE_HREF = '/resources/measuring-guide';
 
 export const MYKITCHEN_HERO = {
   kicker: 'My kitchen',
-  title: 'The kitchen you want, without the long wait',
+  title: 'Your whole kitchen, every piece made to fit',
   description:
-    'Choose cabinets, countertops, appliances and a sink that all fit together. See your price before you talk to anyone, and have your cabinets on their way in as little as 2 weeks. Free shipping on orders over $2,500.',
+    'Pick the cabinets, countertop, appliances and sink that suit the way you cook and live, all in one cart. See your price before you talk to anyone. Free shipping on orders over $2,500.',
   actions: [
     { label: 'Price my kitchen', href: ESTIMATOR_HREF, primary: true },
     { label: 'Shop cabinets', href: '/cabinets' },
@@ -118,7 +118,7 @@ export const CATEGORY_ROWS: FeatureRow[] = [
     // Appliance delivery is limited to Connecticut zones; add "Delivery in Connecticut" here if
     // EK wants it up front.
     // One line: ten tiles plus the slider already fill this card.
-    description: 'Frigidaire, GE, Whirlpool, Samsung and LG, in stock now.',
+    description: 'Top brands like GE, Whirlpool and Samsung, in stock and sized for your cabinets.',
     image: category('appliances', 'A stainless range and refrigerator in a white kitchen'),
     tilesLabel: 'Shop by',
     tileCtaLabel: 'Shop',
