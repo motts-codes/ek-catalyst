@@ -14,6 +14,8 @@ import {
   REGISTER_CUSTOMER_FORM_LAYOUT,
   transformFieldsToLayout,
 } from '~/data-transformers/form-field-transformer/utils';
+import { getAudienceMode } from '~/lib/navigation/audience-mode';
+import { type AudienceMode } from '~/lib/navigation/menu-config';
 import { getRecaptchaSiteKey } from '~/lib/recaptcha';
 import { exists } from '~/lib/utils';
 
@@ -76,6 +78,51 @@ function registerSteps(fields: Array<Field | Field[]>): FormStep[] {
   ].filter((step) => step.names.length > 0);
 }
 
+// Trade-only fields. A homeowner has no company name or property / unit to give, so those two
+// optional fields stay hidden until the visitor says they are a trade professional. The switch
+// defaults to the header's Homeowner / Pro mode. Its name has no custom-field prefix, so the
+// register action ignores it; nothing new is sent to BigCommerce.
+const AUDIENCE_FIELD_NAME = 'ek_audience';
+const TRADE_ONLY_LABELS = ['Company Name', 'Property Name and Unit #'];
+
+function isTradeOnly(field: Field): boolean {
+  return (
+    field.name === 'company' ||
+    TRADE_ONLY_LABELS.some((label) => field.name.endsWith(label) || field.label === label)
+  );
+}
+
+function withAudienceSwitch(
+  fields: Array<Field | Field[]>,
+  audience: AudienceMode,
+): Array<Field | Field[]> {
+  const gate = (field: Field): Field =>
+    isTradeOnly(field)
+      ? { ...field, showWhen: { field: AUDIENCE_FIELD_NAME, equals: 'pro' } }
+      : field;
+  const gated = fields.map((field) => (Array.isArray(field) ? field.map(gate) : gate(field)));
+  const toggle: Field = {
+    type: 'button-radio-group',
+    name: AUDIENCE_FIELD_NAME,
+    label: 'I am a',
+    // Always has a value (the default), so "required" only drops the "(optional)" tag.
+    required: true,
+    defaultValue: audience,
+    options: [
+      { label: 'Homeowner', value: 'homeowner' },
+      { label: 'Trade professional', value: 'pro' },
+    ],
+  };
+  // First thing on the "About you" step: just ahead of the company field, else ahead of phone.
+  const anchor = ['company', 'phone']
+    .map((name) => gated.findIndex((field) => !Array.isArray(field) && field.name === name))
+    .find((index) => index >= 0);
+
+  gated.splice(anchor ?? gated.length, 0, toggle);
+
+  return gated;
+}
+
 export default async function Register({ params }: Props) {
   const { locale } = await params;
 
@@ -95,9 +142,12 @@ export default async function Register({ params }: Props) {
   const { addressFields, customerFields, countries, passwordComplexitySettings } =
     registerCustomerData;
 
-  const recaptchaSiteKey = await getRecaptchaSiteKey();
+  const [recaptchaSiteKey, audience] = await Promise.all([
+    getRecaptchaSiteKey(),
+    getAudienceMode(),
+  ]);
 
-  const fields = transformFieldsToLayout(
+  const baseFields = transformFieldsToLayout(
     [
       ...addressFields.map((field) => {
         if (!field.isBuiltIn) {
@@ -139,6 +189,8 @@ export default async function Register({ params }: Props) {
     })
     .filter(exists)
     .filter(removeExlusiveOffersField);
+
+  const fields = withAudienceSwitch(baseFields, audience);
 
   return (
     <DynamicFormSection
