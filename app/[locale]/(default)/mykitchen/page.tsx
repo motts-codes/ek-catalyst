@@ -14,13 +14,12 @@ import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
 import { Link } from '~/components/link';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { COST_BAND } from '~/lib/cabinets/cabinets-hub-content';
-import { ESTIMATOR_HREF, FREE_DESIGN_HREF, HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
+import { HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
 import { getLowest10x10 } from '~/lib/pages/lowest-price';
 import {
   CATEGORY_ROWS,
-  COST_BAND_ACTIONS,
-  COST_BAND_INTRO,
-  COST_BAND_OUTRO,
+  COST_BAND_COPY,
+  EVERYTHING_SECTION,
   KITCHEN_STEPS,
   MEASURING_NOTE,
   MYKITCHEN_CLOSING,
@@ -28,17 +27,21 @@ import {
   MYKITCHEN_HERO,
   MYKITCHEN_METRICS,
   PRISM_TILE_NAME,
+  REVIEWS_TITLE,
+  STEPS_SECTION,
   TWO_WAYS,
 } from '~/lib/pages/mykitchen-content';
 
 export const metadata: Metadata = {
-  title: 'Kitchen Remodeling: Cabinets, Countertops and Appliances',
+  // The site template appends " - Express Kitchens".
+  title: 'Your Whole Kitchen: Cabinets, Countertops and Appliances',
   description:
-    'Your whole kitchen from one place: cabinets, countertops, appliances, sinks and hardware on one quote. Free design consult in a showroom or by video. Installation on showroom orders in Connecticut.',
+    'Cabinets, countertops, appliances, sinks and hardware that fit together, in stock and ready to order online. See your price in four steps. Free shipping over $2,500.',
 };
 
 // The whole-kitchen hub, on the /cabinets layout: story-band hero, proof strip, one feature row
-// per category, the two ways to do it, five steps, the cost band, reviews, FAQ, closing.
+// per category, the two ways to get there (online first), five steps, the cost band, reviews,
+// FAQ, closing. Brief v3, 12 Nov 2026: outcome-led headlines, facts underneath as proof.
 export default async function MyKitchen({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -58,10 +61,11 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
   }));
 
   // The "ours start at" sentence only when both prices loaded; never "$[X]".
-  const priceLine =
-    lowest.rta && lowest.assembled
-      ? ` Ours start at ${lowest.rta} RTA and ${lowest.assembled} assembled, cabinets only.`
-      : '';
+  const costDescription =
+    COST_BAND_COPY.intro +
+    (lowest.rta && lowest.assembled
+      ? COST_BAND_COPY.withPrices(lowest.rta, lowest.assembled)
+      : COST_BAND_COPY.withoutPrices);
 
   return (
     <>
@@ -69,10 +73,7 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
 
       {/* 1 · Hero */}
       <StoryBand
-        actions={[
-          { label: 'Book a free design consult', href: FREE_DESIGN_HREF, primary: true },
-          { label: 'Price my kitchen', href: ESTIMATOR_HREF },
-        ]}
+        actions={MYKITCHEN_HERO.actions}
         description={MYKITCHEN_HERO.description}
         headingLevel={1}
         image={MYKITCHEN_HERO.image}
@@ -82,6 +83,7 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
         kicker={MYKITCHEN_HERO.kicker}
         plate={false}
         split="even"
+        textLink={MYKITCHEN_HERO.textLink}
         title={MYKITCHEN_HERO.title}
       />
 
@@ -91,19 +93,23 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
       {/* 3 · Everything for your kitchen */}
       <FeatureRows
         className="bg-[#fdf8f8]"
-        description="Choose it all together, so it all fits together."
+        description={EVERYTHING_SECTION.description}
         id="everything"
-        kicker="One consult, one quote"
+        kicker={EVERYTHING_SECTION.kicker}
         rows={rows}
         stacked
-        title="Everything for your kitchen"
+        title={EVERYTHING_SECTION.title}
       />
 
-      {/* 4 · Two ways to do it */}
-      <ProgramSplit cards={TWO_WAYS} kicker="Your kitchen, your way" title="Two ways to do it" />
+      {/* 4 · Two ways to get there */}
+      <ProgramSplit
+        cards={TWO_WAYS}
+        kicker="Your kitchen, your way"
+        title="Two ways to get there"
+      />
 
       {/* 5 · How it comes together */}
-      <HomeSection kicker="How it goes" tint title="Five steps, start to finish">
+      <HomeSection kicker={STEPS_SECTION.kicker} tint title={STEPS_SECTION.title}>
         <ol className="grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-5">
           {KITCHEN_STEPS.map((step, index) => (
             <li
@@ -135,15 +141,15 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
         <p className="mt-6 text-sm text-contrast-500">{MEASURING_NOTE}</p>
       </HomeSection>
 
-      {/* 6 · What will my kitchen cost? */}
+      {/* 6 · Know your budget */}
       <StoryBand
-        actions={COST_BAND_ACTIONS}
-        description={`${COST_BAND_INTRO}${priceLine} ${COST_BAND_OUTRO}`}
+        actions={COST_BAND_COPY.actions}
+        description={costDescription}
         image={COST_BAND.image}
         imageLabel={COST_BAND.imageLabel}
-        kicker="Prices, up front"
+        kicker={COST_BAND_COPY.kicker}
         plate={false}
-        title="One honest number to start from"
+        title={COST_BAND_COPY.title}
         tone="red"
       />
 
@@ -152,15 +158,16 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
         action={{ label: 'Read all reviews', href: '/reviews' }}
         reviews={HOME_REVIEWS}
         summary="4.5 · 360+ Google reviews"
-        title="From people who’ve done it"
+        title={REVIEWS_TITLE}
       />
 
       {/* 8 · FAQ */}
       <CabinetFaq data={MYKITCHEN_FAQ} />
 
-      {/* 9 · Closing */}
+      {/* 9 · Closing: three CTAs at most (price, consult, showroom list), so no call button. */}
       <ClosingBand
         description={MYKITCHEN_CLOSING.description}
+        phone={null}
         primary={MYKITCHEN_CLOSING.primary}
         secondary={MYKITCHEN_CLOSING.secondary}
         showrooms={SHOWROOMS}

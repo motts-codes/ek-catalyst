@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { ArrowRight } from 'lucide-react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import {
@@ -7,6 +8,7 @@ import {
   MediaPlaceholder,
 } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
+import { Link } from '~/components/link';
 
 interface Action {
   label: string;
@@ -26,6 +28,8 @@ interface Props {
   headingLevel?: 1 | 2;
   /** Small line under the paragraph, e.g. a stock/line count. */
   note?: string;
+  /** A quiet text link under the buttons, e.g. "Rather have a designer help? Book a free consult". */
+  textLink?: { label: string; href: string };
   tint?: boolean;
   /** The blush plate offset behind the photo (off for a cleaner hero). */
   plate?: boolean;
@@ -62,6 +66,7 @@ export function StoryBand({
   imagePosition = 'right',
   headingLevel = 2,
   note,
+  textLink,
   tint = false,
   plate = true,
   imageHeight = 'full',
@@ -73,7 +78,7 @@ export function StoryBand({
   tone = 'default',
   className,
 }: Props) {
-  const copy = { kicker, title, description, note, actions, headingLevel };
+  const copy = { kicker, title, description, note, textLink, actions, headingLevel };
 
   if (tone === 'red') {
     return (
@@ -164,6 +169,7 @@ function Copy({
   title,
   description,
   note,
+  textLink,
   actions,
   headingLevel,
   red = false,
@@ -172,6 +178,7 @@ function Copy({
   title: string;
   description: string;
   note?: string;
+  textLink?: { label: string; href: string };
   actions: Action[];
   headingLevel: 1 | 2;
   red?: boolean;
@@ -228,6 +235,25 @@ function Copy({
             </ButtonLink>
           ))}
         </div>
+      )}
+      {textLink && (
+        <Link
+          className={clsx(
+            'group/text mt-5 inline-flex items-center gap-1.5 text-sm font-semibold focus-visible:outline-0 focus-visible:ring-2',
+            red
+              ? 'text-white focus-visible:ring-white'
+              : 'text-[var(--button-primary-background,#d90716)] focus-visible:ring-primary',
+          )}
+          href={textLink.href}
+        >
+          {textLink.label}
+          <ArrowRight
+            aria-hidden
+            className="transition-transform group-hover/text:translate-x-1"
+            size={15}
+            strokeWidth={2.5}
+          />
+        </Link>
       )}
     </>
   );
