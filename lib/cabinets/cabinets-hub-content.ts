@@ -123,7 +123,7 @@ export const STYLE_ROWS: StyleRow[] = [
 export const GLASS_BAND = {
   title: 'Add a glass door',
   description:
-    'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles. Frosted glass comes in [all five collections]; clear glass with a finished interior comes in Rochelle, Derry and Barcelona.',
+    'Break up a run of doors with a glass-front wall cabinet, in straight or diagonal-corner styles.',
   kicker: 'A detail worth adding',
   image: {
     src: '/images/cabinets/glass-front-uppers.jpg',
