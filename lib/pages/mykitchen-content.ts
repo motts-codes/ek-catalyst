@@ -53,11 +53,9 @@ export const EVERYTHING_SECTION = {
   description: 'No juggling five stores and hoping it all lines up.',
 };
 
-// One row per category. The page fills two photos in from the live collections: the Cabinets
-// row's kitchen (Avon, the best seller; the live collection is "Avon Painted White" on the Star
-// line) and the Prism tile.
+// One row per category. The page fills the Cabinets row's kitchen photo in from the live
+// collections (Avon, the best seller; the live collection is "Avon Painted White" on the Star line).
 export const CABINETS_ROW_COLLECTION = { line: 'Star', name: 'Avon' };
-export const PRISM_TILE_NAME = 'Painted (Prism)';
 
 export const CATEGORY_ROWS: FeatureRow[] = [
   {
@@ -75,7 +73,11 @@ export const CATEGORY_ROWS: FeatureRow[] = [
         image: nav('assembled', 'Assembled kitchen cabinets'),
       },
       { name: 'RTA', href: RTA_LISTING_HREF, image: nav('rta', 'Ready-to-assemble cabinets') },
-      { name: PRISM_TILE_NAME, href: `${ASSEMBLED_LISTING_HREF}?line=prism` },
+      {
+        name: 'Painted (Prism)',
+        href: `${ASSEMBLED_LISTING_HREF}?line=prism`,
+        image: nav('prism-painted', 'A navy blue painted shaker sink base with black handles'),
+      },
     ],
     action: { label: 'Explore cabinets', href: '/cabinets' },
   },
@@ -205,11 +207,6 @@ export const CATEGORY_ROWS: FeatureRow[] = [
         name: 'Organizers',
         href: '/cabinet-hardware/accessories',
         image: nav('accessories', 'Drawer organizer'),
-      },
-      {
-        name: 'Fillers and panels',
-        href: '/cabinet-hardware',
-        image: { src: '/images/cabinets/accessories.jpg', alt: 'A filler strip and end panel' },
       },
       { name: 'Tiles', href: '/cabinet-hardware/tiles', image: nav('tiles', 'Backsplash tiles') },
     ],

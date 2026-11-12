@@ -28,7 +28,6 @@ import {
   MYKITCHEN_FAQ,
   MYKITCHEN_HERO,
   MYKITCHEN_METRICS,
-  PRISM_TILE_NAME,
   REVIEWS_TITLE,
   STEPS_SECTION,
   TWO_WAYS,
@@ -51,25 +50,18 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
 
   const [lowest, lines] = await Promise.all([getLowest10x10(), getCabinetLines('assembled')]);
 
-  // Two photos come from the live collections: the Avon kitchen fronts the Cabinets row, and the
-  // Prism tile shows a Prism kitchen.
+  // The Avon kitchen from the live collections fronts the Cabinets row.
   const avon = lines.find(
     (line) =>
       line.productLine === CABINETS_ROW_COLLECTION.line &&
       line.name.startsWith(CABINETS_ROW_COLLECTION.name) &&
       line.image,
   );
-  const prism = lines.find((line) => line.productLine === 'Prism' && line.image);
-  const rows = CATEGORY_ROWS.map((row, index) => ({
-    ...row,
-    image:
-      index === 0 && avon?.image ? { src: avon.image.src, alt: row.image?.alt ?? '' } : row.image,
-    tiles: row.tiles?.map((tile) =>
-      tile.name === PRISM_TILE_NAME && prism?.image
-        ? { ...tile, image: prism.hoverImage ?? prism.image }
-        : tile,
-    ),
-  }));
+  const rows = CATEGORY_ROWS.map((row, index) =>
+    index === 0 && avon?.image
+      ? { ...row, image: { src: avon.image.src, alt: row.image?.alt ?? '' } }
+      : row,
+  );
 
   // The "ours start at" sentence only when both prices loaded; never "$[X]".
   const costDescription =
