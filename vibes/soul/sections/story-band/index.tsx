@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { ArrowRight } from 'lucide-react';
+import { type ReactNode } from 'react';
 
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import {
@@ -22,6 +23,9 @@ interface Props {
   description: string;
   actions?: Action[];
   image?: { src: string; alt: string };
+  /** Something other than a photo on the media side (a video, an animated scene). It brings its
+   *  own shape and frame; `imageHeight` / `imageFrame` / `imageFit` are ignored. */
+  media?: ReactNode;
   imageLabel?: string;
   imagePosition?: 'left' | 'right';
   /** 1 when the band opens a page (bigger title, h1). */
@@ -62,6 +66,7 @@ export function StoryBand({
   description,
   actions = [],
   image,
+  media,
   imageLabel,
   imagePosition = 'right',
   headingLevel = 2,
@@ -133,29 +138,31 @@ export function StoryBand({
               )}
             />
           )}
-          <div
-            className={clsx('relative overflow-hidden', frameClassName(imageFrame, imageFit), {
-              'aspect-[40/21]': imageHeight === 'short',
-              'aspect-[3/2]': imageHeight === 'medium',
-              'aspect-[5/3]': imageHeight === 'wide',
-              'aspect-[4/3]': imageHeight === 'full',
-            })}
-          >
-            {image ? (
-              <Image
-                alt={image.alt}
-                className={clsx(
-                  imageFit === 'contain' ? 'object-contain' : 'object-cover',
-                  imageAlign === 'left' && 'object-left',
-                )}
-                fill
-                sizes="(min-width: 56rem) 40vw, 100vw"
-                src={image.src}
-              />
-            ) : (
-              <MediaPlaceholder label={imageLabel ?? title} />
-            )}
-          </div>
+          {media ?? (
+            <div
+              className={clsx('relative overflow-hidden', frameClassName(imageFrame, imageFit), {
+                'aspect-[40/21]': imageHeight === 'short',
+                'aspect-[3/2]': imageHeight === 'medium',
+                'aspect-[5/3]': imageHeight === 'wide',
+                'aspect-[4/3]': imageHeight === 'full',
+              })}
+            >
+              {image ? (
+                <Image
+                  alt={image.alt}
+                  className={clsx(
+                    imageFit === 'contain' ? 'object-contain' : 'object-cover',
+                    imageAlign === 'left' && 'object-left',
+                  )}
+                  fill
+                  sizes="(min-width: 56rem) 40vw, 100vw"
+                  src={image.src}
+                />
+              ) : (
+                <MediaPlaceholder label={imageLabel ?? title} />
+              )}
+            </div>
+          )}
         </div>
       </div>
     </HomeSection>
@@ -238,21 +245,26 @@ function Copy({
       )}
       {textLink && (
         <Link
+          // Inline, not flex, so when the label wraps the arrow stays with the last word.
           className={clsx(
-            'group/text mt-5 inline-flex items-center gap-1.5 text-sm font-semibold focus-visible:outline-0 focus-visible:ring-2',
+            'group/text mt-5 inline-block text-sm font-semibold focus-visible:outline-0 focus-visible:ring-2',
             red
               ? 'text-white focus-visible:ring-white'
               : 'text-[var(--button-primary-background,#d90716)] focus-visible:ring-primary',
           )}
           href={textLink.href}
         >
-          {textLink.label}
-          <ArrowRight
-            aria-hidden
-            className="transition-transform group-hover/text:translate-x-1"
-            size={15}
-            strokeWidth={2.5}
-          />
+          {textLink.label.split(' ').slice(0, -1).join(' ')}{' '}
+          {/* The last word and the arrow wrap together, so the arrow never sits on a line alone. */}
+          <span className="whitespace-nowrap">
+            {textLink.label.split(' ').at(-1)}
+            <ArrowRight
+              aria-hidden
+              className="ml-1.5 inline-block align-[-2px] transition-transform group-hover/text:translate-x-1"
+              size={15}
+              strokeWidth={2.5}
+            />
+          </span>
         </Link>
       )}
     </>

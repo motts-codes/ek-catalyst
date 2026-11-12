@@ -4,7 +4,6 @@ import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type Metric } from '@/vibes/soul/sections/why-us-scroll';
 import {
   ASSEMBLED_LISTING_HREF,
-  GLASS_DOORS_HREF,
   INSTALLER_HREF,
   RTA_LISTING_HREF,
 } from '~/lib/cabinets/cabinets-hub-content';
@@ -27,11 +26,10 @@ export const MYKITCHEN_HERO = {
     { label: 'Shop cabinets', href: '/cabinets' },
   ],
   textLink: { label: 'Rather have a designer help? Book a free consult', href: FREE_DESIGN_HREF },
-  image: {
-    src: '/images/why-us/final.webp',
-    // The photo's pendants are brushed nickel, so the alt says so (the brief's draft said black).
-    alt: 'A finished white shaker kitchen with a stone countertop, stainless range and nickel pendant lights',
-  },
+  // The media is the Why-us night kitchen (NightKitchen): the finished kitchen with the lights
+  // down, water running at the faucet and steam from the kettle.
+  imageAlt:
+    'A finished white shaker kitchen at night, with the pendant lights on, water running at the faucet and a kettle steaming on the range',
 };
 
 // The ticker fits short labels, so these are the brief's short set.
@@ -78,11 +76,6 @@ export const CATEGORY_ROWS: FeatureRow[] = [
       },
       { name: 'RTA', href: RTA_LISTING_HREF, image: nav('rta', 'Ready-to-assemble cabinets') },
       { name: PRISM_TILE_NAME, href: `${ASSEMBLED_LISTING_HREF}?line=prism` },
-      {
-        name: 'Glass doors',
-        href: GLASS_DOORS_HREF,
-        image: { src: '/images/cabinets/glass-front-uppers.jpg', alt: 'Glass-front wall cabinets' },
-      },
     ],
     action: { label: 'Explore cabinets', href: '/cabinets' },
   },

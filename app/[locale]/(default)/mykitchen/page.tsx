@@ -6,6 +6,7 @@ import { CabinetFaq } from '@/vibes/soul/sections/cabinet-faq';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { FeatureRows } from '@/vibes/soul/sections/feature-rows';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
+import { NightKitchen } from '@/vibes/soul/sections/night-kitchen';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { ProgramSplit } from '@/vibes/soul/sections/program-split';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
@@ -86,11 +87,8 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
         actions={MYKITCHEN_HERO.actions}
         description={MYKITCHEN_HERO.description}
         headingLevel={1}
-        image={MYKITCHEN_HERO.image}
-        imageFit="contain"
-        imageFrame="none"
-        imageHeight="medium"
         kicker={MYKITCHEN_HERO.kicker}
+        media={<NightKitchen alt={MYKITCHEN_HERO.imageAlt} priority />}
         plate={false}
         split="even"
         textLink={MYKITCHEN_HERO.textLink}
