@@ -117,8 +117,8 @@ export const CATEGORY_ROWS: FeatureRow[] = [
     title: 'Appliances that fit the space you have',
     // Appliance delivery is limited to Connecticut zones; add "Delivery in Connecticut" here if
     // EK wants it up front.
-    description:
-      'Ranges, refrigerators, dishwashers and microwaves from Frigidaire, GE, Whirlpool, Samsung, LG and more, sized to sit flush with your cabinets. In stock, so there’s nothing to wait for.',
+    // One line: ten tiles plus the slider already fill this card.
+    description: 'Frigidaire, GE, Whirlpool, Samsung and LG, in stock now.',
     image: category('appliances', 'A stainless range and refrigerator in a white kitchen'),
     tilesLabel: 'Shop by',
     tileCtaLabel: 'Shop',
