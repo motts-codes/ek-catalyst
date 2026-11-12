@@ -140,7 +140,7 @@ export function ProgramCards({
                 {card.description}
               </p>
               {card.points.length > 0 && (
-                <ul className="mt-5 space-y-2.5 text-sm">
+                <ul className="mt-5 grid gap-x-6 gap-y-2.5 text-sm @7xl:grid-cols-2">
                   {card.points.map((point) => (
                     <li className="flex items-start gap-3" key={point}>
                       <span
