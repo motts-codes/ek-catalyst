@@ -240,7 +240,7 @@ export const TWO_WAYS: ProgramCard[] = [
     title: 'Let us take it off your plate',
     tag: 'Showroom or video',
     description:
-      'Visit a showroom or book a video consult. A designer goes through your kitchen with you and hands you one itemized quote for everything. In Connecticut, we can install it too.',
+      'In a showroom or by video, a designer prices your whole kitchen on one itemized quote. In Connecticut, we can install it too.',
     points: [
       'Free design consult',
       'One quote for the whole kitchen',
