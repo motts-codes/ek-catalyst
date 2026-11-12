@@ -8,10 +8,9 @@ import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
 import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { OUTLINE_RED_BUTTON, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
-import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { Image } from '~/components/image';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
-import { FREE_DESIGN_HREF, SAMPLES_VIDEO, SHOWROOMS } from '~/lib/home/home-content';
+import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
   title: 'Free Door Samples',
@@ -107,18 +106,6 @@ export default async function Samples({ params }: { params: Promise<{ locale: st
             ))}
           </ul>
         )}
-      </HomeSection>
-      <HomeSection compact>
-        <SamplesCallout
-          cta={{ label: 'Choose your samples', href: '#collections' }}
-          description={[
-            'Add your samples to the cart and use FREESAMPLES at checkout. When they arrive, look at them in morning and evening light, next to your countertop or floor.',
-            'Want a second opinion? Bring them to a showroom, or hold them up on a video call with our design team.',
-          ]}
-          kicker="How samples work"
-          title="Order, hold, decide"
-          video={SAMPLES_VIDEO}
-        />
       </HomeSection>
       <CabinetFaq
         data={{
