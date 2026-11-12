@@ -111,7 +111,7 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
 
       {/* 5 · How it comes together */}
       <HomeSection kicker={STEPS_SECTION.kicker} tint title={STEPS_SECTION.title}>
-        <StepsAccordion steps={KITCHEN_STEPS} />
+        <StepsAccordion photoHeight="match" steps={KITCHEN_STEPS} />
         <p className="mt-6 text-sm text-contrast-500">{MEASURING_NOTE}</p>
       </HomeSection>
 

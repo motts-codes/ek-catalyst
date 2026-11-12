@@ -27,6 +27,9 @@ interface Props {
   split?: 'default' | 'even';
   /** `large` steps the row title and body up a size (18px / 16px). */
   size?: 'default' | 'large';
+  /** With photos: `match` makes the photo as tall as the step stack from tablet up (4:3 on
+   *  phones); the default keeps it 4:3 everywhere. */
+  photoHeight?: 'ratio' | 'match';
 }
 
 /** How long each step stays open before the next one takes over. */
@@ -41,6 +44,7 @@ export function StepsAccordion({
   numbered = true,
   split = 'default',
   size = 'default',
+  photoHeight = 'ratio',
 }: Props) {
   const Heading = headingLevel === 4 ? 'h4' : 'h3';
   const [value, setValue] = useState(steps[0]?.title ?? '');
@@ -72,7 +76,8 @@ export function StepsAccordion({
       // Split layout (every step has a photo): the photo takes the wider left column from tablet
       // up, so the stack on the right runs a little taller; on phones the photo sits above.
       className={clsx(
-        withPhotos && 'grid items-start gap-8 @3xl:gap-12',
+        withPhotos && 'grid gap-8 @3xl:gap-12',
+        withPhotos && (photoHeight === 'match' ? 'items-stretch' : 'items-start'),
         withPhotos && (split === 'even' ? '@3xl:grid-cols-2' : '@3xl:grid-cols-[3fr_2fr]'),
       )}
       onBlur={() => setPaused(false)}
@@ -81,7 +86,12 @@ export function StepsAccordion({
       onMouseLeave={() => setPaused(false)}
     >
       {withPhotos && (
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100">
+        <div
+          className={clsx(
+            'relative aspect-[4/3] overflow-hidden rounded-3xl bg-contrast-100',
+            photoHeight === 'match' && '@3xl:aspect-auto @3xl:h-full @3xl:min-h-[20rem]',
+          )}
+        >
           {steps.map((step) =>
             step.image ? (
               <Image
