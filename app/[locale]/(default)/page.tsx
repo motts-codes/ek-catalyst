@@ -31,6 +31,7 @@ import {
   PROGRAM_CARDS,
   PROGRAM_FOOTNOTE,
   SAMPLES_HREF,
+  SAMPLES_VIDEO,
   SHOWROOMS,
   STORY,
   THREE_WAYS,
@@ -193,11 +194,7 @@ export default async function Home({ params }: Props) {
         <SamplesCallout
           className="mb-2 mt-10 @4xl:mt-12"
           cta={{ label: 'Order samples', href: SAMPLES_HREF }}
-          video={{
-            webm: '/images/home/samples/sample-wheel-marble-v3.webm',
-            mp4: '/images/home/samples/sample-wheel-marble-v3.mp4',
-            poster: '/images/home/samples/sample-wheel-marble-v3-poster.jpg',
-          }}
+          video={SAMPLES_VIDEO}
         />
       </HomeSection>
 

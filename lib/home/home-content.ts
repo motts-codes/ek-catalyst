@@ -17,10 +17,11 @@ export const FREE_DESIGN_HREF = '/mykitchen/free-design-consult';
 export const SAMPLES_HREF = '/samples';
 
 // The looping clip in the samples callout (home, consult, samples page).
+// The one samples clip (the marble sample wheel, Nov 2026). Every samples callout reads this.
 export const SAMPLES_VIDEO = {
-  webm: '/images/home/samples/samples.webm',
-  mp4: '/images/home/samples/samples.mp4',
-  poster: '/images/home/samples/samples-poster.jpg',
+  webm: '/images/home/samples/sample-wheel-marble-v3.webm',
+  mp4: '/images/home/samples/sample-wheel-marble-v3.mp4',
+  poster: '/images/home/samples/sample-wheel-marble-v3-poster.jpg',
 };
 export const ESTIMATOR_HREF = '/mykitchen/price-my-kitchen';
 

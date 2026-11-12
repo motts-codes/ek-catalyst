@@ -11,7 +11,7 @@ import { SamplesCallout } from '@/vibes/soul/sections/samples-callout';
 import { SHAPES } from '~/lib/estimator/ten-by-ten';
 import { contactRows, SHOWROOM_OPTIONS } from '~/lib/forms/fields';
 import { submitDesignLead } from '~/lib/forms/submit-lead';
-import { HOME_REVIEWS, SAMPLES_HREF } from '~/lib/home/home-content';
+import { HOME_REVIEWS, SAMPLES_HREF, SAMPLES_VIDEO } from '~/lib/home/home-content';
 import { getAudienceMode } from '~/lib/navigation/audience-mode';
 
 export const metadata: Metadata = {
@@ -264,11 +264,7 @@ export default async function FreeDesign({ params }: { params: Promise<{ locale:
         <SamplesCallout
           cta={{ label: 'Order free samples', href: SAMPLES_HREF }}
           description="Your first two door samples are free with the code FREESAMPLES. Order now and they'll arrive before your consult."
-          video={{
-            webm: '/images/home/samples/samples.webm',
-            mp4: '/images/home/samples/samples.mp4',
-            poster: '/images/home/samples/samples-poster.jpg',
-          }}
+          video={SAMPLES_VIDEO}
         />
       </HomeSection>
     </>
