@@ -67,7 +67,11 @@ export default async function MeasuringGuide({ params }: { params: Promise<{ loc
       <PageHero
         actions={[
           { label: 'Start measuring', href: '#steps', primary: true },
-          { label: 'Already measured? Send your numbers', href: FREE_DESIGN_HREF },
+          {
+            label: 'Already measured? Send your numbers',
+            href: FREE_DESIGN_HREF,
+            style: 'outline',
+          },
         ]}
         description="All you need is a tape measure and your phone. Don't worry about getting it perfect: a project manager checks every number before anything is ordered. Follow the six steps, one wall at a time, and if you get stuck, call or text 860-247-1000 and we'll talk you through it."
         image={{
