@@ -21,7 +21,7 @@ const FRAME_H = 900;
 // above. The effect coordinates below are in frame pixels and are shifted by this crop.
 const CROP = { x: 330, y: 140, w: 940, h: 620 };
 // Faucet stream (x, top, bottom) and kettle spout (x, y), in frame pixels.
-const FX = { water: [1066, 414, 448] as const, steam: [669, 426] as const };
+const FX = { water: [1076, 414, 448] as const, steam: [669, 426] as const };
 
 interface Props {
   alt: string;
