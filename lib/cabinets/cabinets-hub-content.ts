@@ -48,11 +48,10 @@ export const STYLE_ROWS: StyleRow[] = [
     kicker: 'The door most kitchens are built around',
     title: 'Painted shaker',
     description:
-      'A five-piece door with a flat recessed panel, in white or cream (Avon, Barcelona, Cambridge, Mero) or gray (Derry, Edinburgh).',
+      'A five-piece door with a flat recessed panel, in white or cream (Avon, Cambridge, Mero) or gray (Derry, Edinburgh).',
     imageLabel: 'Painted shaker kitchen',
     collections: [
       c('Avon Painted White', 'Avon'),
-      c('Barcelona'),
       c('Cambridge'),
       c('Mero'),
       c('Derry Stratus', 'Derry'),
@@ -98,7 +97,6 @@ export const STYLE_ROWS: StyleRow[] = [
       c('Dover'),
       c('Dublin'),
       c('Lasalle', 'LaSalle'),
-      c('Rochelle'),
       c('Northampton'),
     ],
   },
