@@ -1,4 +1,3 @@
-import { ArrowRight } from 'lucide-react';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
@@ -8,11 +7,11 @@ import { FeatureRows } from '@/vibes/soul/sections/feature-rows';
 import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { NightKitchen } from '@/vibes/soul/sections/night-kitchen';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
+import { StepsAccordion } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { ProgramCards } from '@/vibes/soul/sections/program-cards';
 import { ReviewMarquee } from '@/vibes/soul/sections/review-marquee';
 import { StoryBand } from '@/vibes/soul/sections/story-band';
 import { MetricsTicker } from '@/vibes/soul/sections/why-us-scroll';
-import { Link } from '~/components/link';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { COST_BAND } from '~/lib/cabinets/cabinets-hub-content';
 import { HOME_REVIEWS, SHOWROOMS } from '~/lib/home/home-content';
@@ -112,34 +111,7 @@ export default async function MyKitchen({ params }: { params: Promise<{ locale: 
 
       {/* 5 · How it comes together */}
       <HomeSection kicker={STEPS_SECTION.kicker} tint title={STEPS_SECTION.title}>
-        <ol className="grid gap-4 @xl:grid-cols-2 @4xl:grid-cols-5">
-          {KITCHEN_STEPS.map((step, index) => (
-            <li
-              className="flex flex-col rounded-3xl border border-contrast-100 bg-white p-5"
-              key={step.title}
-            >
-              <span className="font-heading text-3xl font-bold text-[var(--button-primary-background,#d90716)]">
-                {index + 1}
-              </span>
-              <h3 className="mt-2 font-heading text-lg font-semibold">{step.title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-contrast-500">{step.description}</p>
-              {step.link && (
-                <Link
-                  className="group/link mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-semibold text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
-                  href={step.link.href}
-                >
-                  {step.link.label}
-                  <ArrowRight
-                    aria-hidden
-                    className="transition-transform group-hover/link:translate-x-1"
-                    size={15}
-                    strokeWidth={2.5}
-                  />
-                </Link>
-              )}
-            </li>
-          ))}
-        </ol>
+        <StepsAccordion steps={KITCHEN_STEPS} />
         <p className="mt-6 text-sm text-contrast-500">{MEASURING_NOTE}</p>
       </HomeSection>
 

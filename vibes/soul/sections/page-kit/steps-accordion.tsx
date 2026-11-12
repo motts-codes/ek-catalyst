@@ -2,16 +2,19 @@
 
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { clsx } from 'clsx';
-import { ChevronDown, Pause, Play } from 'lucide-react';
+import { ArrowRight, ChevronDown, Pause, Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Image } from '~/components/image';
+import { Link } from '~/components/link';
 
 export interface AccordionStep {
   title: string;
   description: string;
   /** With a photo on every step, the stack sits beside one photo that swaps with the open step. */
   image?: { src: string; alt: string };
+  /** A text link under the open step's copy ("Measuring guide →"). */
+  link?: { label: string; href: string };
 }
 
 interface Props {
@@ -157,6 +160,23 @@ export function StepsAccordion({
                 >
                   {step.description}
                 </p>
+                {step.link != null && (
+                  <Link
+                    className={clsx(
+                      'group/link mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white',
+                      numbered ? 'ml-[4.25rem]' : 'ml-5',
+                    )}
+                    href={step.link.href}
+                  >
+                    {step.link.label}
+                    <ArrowRight
+                      aria-hidden
+                      className="transition-transform group-hover/link:translate-x-1"
+                      size={14}
+                      strokeWidth={2.5}
+                    />
+                  </Link>
+                )}
               </AccordionPrimitive.Content>
             </AccordionPrimitive.Item>
           ))}

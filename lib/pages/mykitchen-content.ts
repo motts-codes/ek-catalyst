@@ -1,5 +1,6 @@
 import { type CabinetFaqData } from '@/vibes/soul/sections/cabinet-faq';
 import { type FeatureRow } from '@/vibes/soul/sections/feature-rows';
+import { type AccordionStep } from '@/vibes/soul/sections/page-kit/steps-accordion';
 import { type ProgramCard } from '@/vibes/soul/sections/program-cards';
 import { type Metric } from '@/vibes/soul/sections/why-us-scroll';
 import {
@@ -257,43 +258,59 @@ export const TWO_WAYS: ProgramCard[] = [
   },
 ];
 
-export interface KitchenStep {
-  title: string;
-  description: string;
-  link?: { label: string; href: string };
-}
-
 export const STEPS_SECTION = {
   kicker: 'How it goes',
   title: 'From empty room to finished kitchen',
 };
 
-export const KITCHEN_STEPS: KitchenStep[] = [
+// The five steps as the measuring guide's accordion: one photo per step, swapped as each opens.
+export const KITCHEN_STEPS: AccordionStep[] = [
   {
     title: 'Know your space',
     description: 'Twenty minutes with a tape measure. Our measuring guide shows you how.',
     link: { label: 'Measuring guide', href: MEASURING_GUIDE_HREF },
+    image: {
+      src: '/images/pages/measuring/tape-across-wall.jpg',
+      alt: 'A tape measure stretched across a kitchen wall',
+    },
   },
   {
     title: 'See it before you buy',
     description:
       'Your first two door samples are free, so you can check the finish in your own light.',
     link: { label: 'Order samples', href: SAMPLES_HREF },
+    image: {
+      src: '/images/pages/samples/quarter-doors-fanned.jpg',
+      alt: 'Quarter-door cabinet samples fanned out on a table',
+    },
   },
   {
     title: 'Know your price',
     description:
       'The estimator gives you a range in four steps. Want it itemized? A designer will quote it, free.',
+    link: { label: 'Price my kitchen', href: ESTIMATOR_HREF },
+    image: {
+      src: '/images/home/ways/estimator.webp',
+      alt: 'A couple at their kitchen island, checking a price range on a phone',
+    },
   },
   {
     title: 'Get it on its way',
     description: 'RTA ships in 2 weeks and assembled in 3, plus 7–10 days of transit.',
+    image: {
+      src: '/images/pages/shipping/ek-truck-unloading.jpg',
+      alt: 'A driver unloading a shrink-wrapped pallet of cabinets from an Express Kitchens truck',
+    },
   },
   {
     title: 'Get it installed',
     description:
       'By you or your installer. Ordered through a showroom in Connecticut? We can install it.',
     link: { label: 'Find an installer', href: INSTALLER_HREF },
+    image: {
+      src: '/images/pages/find-a-pro/installer-levelling.jpg',
+      alt: 'An installer levelling a white shaker base cabinet',
+    },
   },
 ];
 
