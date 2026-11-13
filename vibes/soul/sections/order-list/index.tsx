@@ -187,7 +187,7 @@ function OrderListEmptyState({
           <h2 className="text-center text-lg font-semibold text-[var(--order-list-empty-state-title,hsl(var(--foreground)))]">
             {emptyStateTitle}
           </h2>
-          <ButtonLink className="w-fit" href={emptyStateActionHref}>
+          <ButtonLink className="w-fit" href={emptyStateActionHref} size="small">
             {emptyStateActionLabel}
           </ButtonLink>
         </header>
