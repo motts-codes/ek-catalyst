@@ -22,6 +22,7 @@ export function StickySidebarLayout({
   sidebarPosition = 'before',
   containerSize = '2xl',
   hideOverflow = false,
+  compact = false,
 }: {
   className?: string;
   sidebar: React.ReactNode;
@@ -30,6 +31,8 @@ export function StickySidebarLayout({
   sidebarSize?: '1/4' | '1/3' | '1/2' | 'small' | 'medium' | 'large';
   sidebarPosition?: 'before' | 'after';
   hideOverflow?: boolean;
+  /** Tighter vertical padding, for utility pages like the cart where density matters. */
+  compact?: boolean;
 }) {
   return (
     <section
@@ -37,7 +40,8 @@ export function StickySidebarLayout({
     >
       <div
         className={clsx(
-          'mx-auto flex flex-col items-stretch gap-x-16 gap-y-10 px-4 py-10 @xl:px-6 @xl:py-14 @4xl:flex-row @4xl:px-8 @4xl:py-20',
+          'mx-auto flex flex-col items-stretch gap-x-16 px-4 @xl:px-6 @4xl:flex-row @4xl:px-8',
+          compact ? 'gap-y-8 py-6 @xl:py-8 @4xl:py-10' : 'gap-y-10 py-10 @xl:py-14 @4xl:py-20',
           {
             md: 'max-w-[var(--section-max-width-md,768px)]',
             lg: 'max-w-[var(--section-max-width-lg,1024px)]',

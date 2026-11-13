@@ -396,15 +396,16 @@ export function CartClient<LineItem extends CartLineItem>({
   return (
     <StickySidebarLayout
       className="font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))]"
+      compact
       sidebar={
         <div>
-          <h2 className="mb-10 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-4xl font-medium leading-none @xl:text-5xl">
+          <h2 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
             {summaryTitle}
           </h2>
           <dl aria-label="Receipt Summary" className="w-full">
             <div className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
               {cart.summaryItems.map((summaryItem, index) => (
-                <div className="flex justify-between py-4" key={index}>
+                <div className="flex justify-between py-2.5 text-sm" key={index}>
                   <dt>{summaryItem.label}</dt>
                   {isLineItemActionPending ? (
                     <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
@@ -438,8 +439,8 @@ export function CartClient<LineItem extends CartLineItem>({
                 removeLabel={giftCertificate.removeLabel}
               />
             )}
-            <div className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-6">
-              <div className="flex justify-between text-xl font-bold">
+            <div className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-4">
+              <div className="flex justify-between text-base font-bold">
                 <dt>{cart.totalLabel ?? 'Total'}</dt>
                 {isLineItemActionPending ? (
                   <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
@@ -456,7 +457,7 @@ export function CartClient<LineItem extends CartLineItem>({
           </dl>
           <CheckoutButton
             action={checkoutAction}
-            className="mt-4 w-full"
+            className="mt-3 w-full"
             isCartUpdatePending={isLineItemActionPending}
           >
             {checkoutLabel}
@@ -468,20 +469,20 @@ export function CartClient<LineItem extends CartLineItem>({
       sidebarSize="1/3"
     >
       <div className="w-full">
-        <h1 className="mb-10 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-4xl font-medium leading-none @xl:text-5xl">
+        <h1 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
           {title}
           <span className="ml-4 text-[var(--cart-subtext-text,hsl(var(--contrast-300)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
             {optimisticQuantity}
           </span>
         </h1>
         {/* Cart Items */}
-        <ul className="flex flex-col gap-5">
+        <ul className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
           {optimisticLineItems.map((lineItem) => (
             <li
-              className="flex flex-col items-start gap-x-5 gap-y-4 @container @sm:flex-row"
+              className="flex flex-col items-start gap-x-4 gap-y-3 py-3 @container first:pt-0 @sm:flex-row"
               key={lineItem.id}
             >
-              <div className="relative aspect-square w-full max-w-24 overflow-hidden rounded-xl bg-[var(--cart-image-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4">
+              <div className="relative aspect-square w-full max-w-16 overflow-hidden rounded-lg bg-[var(--cart-image-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4">
                 {lineItem.typename === 'CartGiftCertificate' ? (
                   <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
                     <GiftIcon className="h-full w-full text-[var(--cart-icon,hsl(var(--contrast-300)))]" />
@@ -492,16 +493,16 @@ export function CartClient<LineItem extends CartLineItem>({
                       alt={lineItem.image.alt}
                       className="object-cover"
                       fill
-                      sizes="(min-width: 28rem) 9rem, (min-width: 24rem) 6rem, 100vw"
+                      sizes="4rem"
                       src={lineItem.image.src}
                     />
                   )
                 )}
               </div>
-              <div className="flex grow flex-col flex-wrap justify-between gap-y-2 @xl:flex-row">
+              <div className="flex grow flex-col flex-wrap justify-between gap-y-1 @xl:flex-row">
                 <div className="flex w-full flex-1 flex-col @xl:w-1/2 @xl:pr-4">
-                  <span className="font-medium">{lineItem.title}</span>
-                  <span className="text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+                  <span className="text-sm font-medium leading-snug">{lineItem.title}</span>
+                  <span className="text-sm text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
                     {lineItem.subtitle}
                   </span>
                 </div>
@@ -611,10 +612,10 @@ function CounterForm({
   return (
     <form {...getFormProps(form)} action={action}>
       <input {...getInputProps(fields.id, { type: 'hidden' })} key={fields.id.id} />
-      <div className="flex w-full flex-wrap items-center gap-x-5 gap-y-2">
-        <PriceLabel className="mt-3 self-start @xl:ml-auto" price={lineItem.price} />
+      <div className="flex w-full flex-wrap items-center gap-x-4 gap-y-1">
+        <PriceLabel className="mt-1.5 self-start text-sm @xl:ml-auto" price={lineItem.price} />
         <div className="flex size-min flex-col gap-y-0">
-          <div className="mb-1 mt-1 flex items-center gap-x-5">
+          <div className="flex items-center gap-x-3">
             {/* Counter */}
             <div
               className={clsx(
@@ -627,7 +628,7 @@ function CounterForm({
               <button
                 aria-label={decrementLabel}
                 className={clsx(
-                  'group rounded-l-lg bg-[var(--cart-counter-background,hsl(var(--background)))] p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
+                  'group rounded-l-lg bg-[var(--cart-counter-background,hsl(var(--background)))] p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
                   lineItem.quantity === 1
                     ? 'opacity-50'
                     : 'hover:bg-[var(--cart-counter-background-hover,hsl(var(--contrast-100)/50%))]',
@@ -643,17 +644,17 @@ function CounterForm({
                     lineItem.quantity !== 1 &&
                       'group-hover:text-[var(--cart-counter-icon-hover,hsl(var(--foreground)))]',
                   )}
-                  size={18}
+                  size={16}
                   strokeWidth={1.5}
                 />
               </button>
-              <span className="flex w-8 select-none justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))]">
+              <span className="flex w-7 select-none justify-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))]">
                 {lineItem.quantity}
               </span>
               <button
                 aria-label={incrementLabel}
                 className={clsx(
-                  'group rounded-r-lg bg-[var(--cart-counter-background,hsl(var(--background)))] p-3 transition-colors duration-300 hover:bg-[var(--cart-counter-background-hover,hsl(var(--contrast-100)/50%))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
+                  'group rounded-r-lg bg-[var(--cart-counter-background,hsl(var(--background)))] p-2 transition-colors duration-300 hover:bg-[var(--cart-counter-background-hover,hsl(var(--contrast-100)/50%))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
                 )}
                 name="intent"
                 type="submit"
@@ -661,21 +662,21 @@ function CounterForm({
               >
                 <Plus
                   className="text-[var(--cart-counter-icon,hsl(var(--contrast-300)))] transition-colors duration-300 group-hover:text-[var(--cart-counter-icon-hover,hsl(var(--foreground)))]"
-                  size={18}
+                  size={16}
                   strokeWidth={1.5}
                 />
               </button>
             </div>
             <button
               aria-label={deleteLabel}
-              className="group -ml-1 mt-1.5 flex h-8 w-8 shrink-0 items-center justify-center self-start rounded-full transition-colors duration-300 hover:bg-[var(--cart-button-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4"
+              className="group -ml-1 flex h-8 w-8 shrink-0 items-center justify-center self-start rounded-full transition-colors duration-300 hover:bg-[var(--cart-button-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4"
               name="intent"
               type="submit"
               value="delete"
             >
               <Trash2
                 className="text-[var(--cart-icon,hsl(var(--contrast-300)))] group-hover:text-[var(--cart-icon-hover,hsl(var(--foreground)))]"
-                size={20}
+                size={18}
                 strokeWidth={1}
               />
             </button>
