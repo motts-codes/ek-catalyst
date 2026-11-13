@@ -28,6 +28,8 @@ interface Props<F extends Field> {
   steps?: FormStep[];
   /** Server-side check run on Next (see DynamicForm). */
   validateStep?: StepValidator;
+  /** Fields that also run that check on blur (see DynamicForm). */
+  checkOnBlur?: string[];
 }
 
 export function DynamicFormSection<F extends Field>({
@@ -42,6 +44,7 @@ export function DynamicFormSection<F extends Field>({
   recaptchaSiteKey,
   steps,
   validateStep,
+  checkOnBlur,
 }: Props<F>) {
   return (
     <SectionLayout className={clsx('mx-auto w-full max-w-2xl', className)} containerSize="lg">
@@ -57,6 +60,7 @@ export function DynamicFormSection<F extends Field>({
       )}
       <DynamicForm
         action={action}
+        checkOnBlur={checkOnBlur}
         errorTranslations={errorTranslations}
         fields={fields}
         passwordComplexity={passwordComplexity}

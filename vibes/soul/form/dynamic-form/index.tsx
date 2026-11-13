@@ -14,6 +14,7 @@ import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
 import {
+  type FocusEvent,
   FormEvent,
   MouseEvent,
   ReactNode,
@@ -21,6 +22,7 @@ import {
   useActionState,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { useFormStatus } from 'react-dom';
@@ -141,6 +143,11 @@ export interface DynamicFormProps<F extends Field> {
    * to move on. Failures move on too, so the check can never block the form.
    */
   validateStep?: StepValidator;
+  /**
+   * Field names whose validateStep check also runs as soon as the field loses focus (e.g. the
+   * email), so the visitor hears early. The Next check still runs as the backstop.
+   */
+  checkOnBlur?: string[];
 }
 
 export type StepValidator = (
@@ -169,6 +176,7 @@ export function DynamicForm<F extends Field>({
   recaptchaSiteKey,
   steps,
   validateStep,
+  checkOnBlur,
 }: DynamicFormProps<F>) {
   const t = useTranslations('Form');
   const [step, setStep] = useState(0);
@@ -176,6 +184,10 @@ export function DynamicForm<F extends Field>({
   // Result of the server-side step check, shown through conform like an action result.
   const [stepResult, setStepResult] = useState<SubmissionResult | null>(null);
   const [checking, setChecking] = useState(false);
+  // On-blur checks: which field is being checked now, and the last value checked per field, so
+  // tabbing in and out of an unchanged field does not query again.
+  const [blurChecking, setBlurChecking] = useState<string | null>(null);
+  const lastBlurChecked = useRef<Record<string, string>>({});
   const isLastStep = steps == null || step >= steps.length - 1;
   // Remove options from fields before passing to action to reduce payload size
   // Options are only needed for rendering, not for processing form submissions
@@ -265,6 +277,43 @@ export function DynamicForm<F extends Field>({
     }
   }, [lastResult, successMessage, onSuccess]);
 
+  // A watched field lost focus: run the server check for just that field. Invalid or empty values
+  // are the action's call (it returns null for them), and failures stay silent.
+  const handleBlur = (event: FocusEvent<HTMLFormElement>) => {
+    const target = event.target;
+
+    if (
+      validateStep == null ||
+      !(target instanceof HTMLInputElement) ||
+      !checkOnBlur?.includes(target.name)
+    ) {
+      return;
+    }
+
+    const { name } = target;
+    const value = target.value.trim();
+
+    if (value === '' || lastBlurChecked.current[name] === value) return;
+
+    lastBlurChecked.current[name] = value;
+    setBlurChecking(name);
+    validateStep([name], { [name]: value })
+      .then((errors) => {
+        if (errors != null && Object.keys(errors).length > 0) {
+          // `fields` is what conform treats as touched; keep it to this one field so the
+          // untouched rest of the step does not light up on the next keystroke.
+          setStepResult({
+            status: 'error',
+            initialValue: readFormValues(form.id),
+            error: errors,
+            fields: [name],
+          });
+        }
+      })
+      .catch(() => undefined)
+      .finally(() => setBlurChecking(null));
+  };
+
   // Stepped form: "Next" validates the current step's fields (conform reports on the next
   // render), then moves on only when they're clean.
   const stepNames = useMemo(() => steps?.[step]?.names ?? [], [steps, step]);
@@ -294,7 +343,8 @@ export function DynamicForm<F extends Field>({
             status: 'error',
             initialValue: values,
             error: errors,
-            fields: Object.keys(values),
+            // Only this step's fields count as touched; later steps stay untouched.
+            fields: stepNames,
           });
 
           return;
@@ -342,7 +392,7 @@ export function DynamicForm<F extends Field>({
 
   return (
     <FormProvider context={form.context}>
-      <form {...getFormProps(form)} action={formAction} onChange={onChange}>
+      <form {...getFormProps(form)} action={formAction} onBlur={handleBlur} onChange={onChange}>
         <AntiSpamFields />
         <TrackingFields />
         {steps != null && (
@@ -407,6 +457,11 @@ export function DynamicForm<F extends Field>({
             return (
               <div className={fieldClass(field)} key={formField.id}>
                 <DynamicFormField field={field} formField={formField} />
+                {blurChecking === field.name && (
+                  <p aria-live="polite" className="mt-1.5 text-xs text-contrast-400">
+                    Checking…
+                  </p>
+                )}
               </div>
             );
           })}

@@ -164,6 +164,7 @@ export default async function Register({ params }: Props) {
   return (
     <DynamicFormSection
       action={registerCustomer}
+      checkOnBlur={['email']}
       errorTranslations={{
         firstName: {
           invalid_type: t('FieldErrors.firstNameRequired'),
