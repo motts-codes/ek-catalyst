@@ -79,10 +79,10 @@ function registerSteps(fields: Array<Field | Field[]>): FormStep[] {
 }
 
 // Trade-only fields. A homeowner has no company name or property / unit to give, so those two
-// optional fields stay hidden until the visitor says they are a trade professional. The switch
-// defaults to the header's Homeowner / Pro mode. Its name has no custom-field prefix, so the
-// register action ignores it; nothing new is sent to BigCommerce.
-const AUDIENCE_FIELD_NAME = 'ek_audience';
+// optional fields appear only in the header's Pro mode (the `ek_audience` cookie). The header
+// toggle reloads the page, so flipping it on this form shows or hides them at once. Nothing new
+// is sent to BigCommerce. (13 Nov 2026: replaces an in-form "I am a" switch; the client wants
+// the header toggle to be the one deciding factor.)
 const TRADE_ONLY_LABELS = ['Company Name', 'Property Name and Unit #'];
 
 function isTradeOnly(field: Field): boolean {
@@ -92,35 +92,15 @@ function isTradeOnly(field: Field): boolean {
   );
 }
 
-function withAudienceSwitch(
+function forAudience(
   fields: Array<Field | Field[]>,
   audience: AudienceMode,
 ): Array<Field | Field[]> {
-  const gate = (field: Field): Field =>
-    isTradeOnly(field)
-      ? { ...field, showWhen: { field: AUDIENCE_FIELD_NAME, equals: 'pro' } }
-      : field;
-  const gated = fields.map((field) => (Array.isArray(field) ? field.map(gate) : gate(field)));
-  const toggle: Field = {
-    type: 'button-radio-group',
-    name: AUDIENCE_FIELD_NAME,
-    label: 'I am a',
-    // Always has a value (the default), so "required" only drops the "(optional)" tag.
-    required: true,
-    defaultValue: audience,
-    options: [
-      { label: 'Homeowner', value: 'homeowner' },
-      { label: 'Trade professional', value: 'pro' },
-    ],
-  };
-  // First thing on the "About you" step: just ahead of the company field, else ahead of phone.
-  const anchor = ['company', 'phone']
-    .map((name) => gated.findIndex((field) => !Array.isArray(field) && field.name === name))
-    .find((index) => index >= 0);
+  if (audience === 'pro') return fields;
 
-  gated.splice(anchor ?? gated.length, 0, toggle);
-
-  return gated;
+  return fields
+    .map((field) => (Array.isArray(field) ? field.filter((f) => !isTradeOnly(f)) : field))
+    .filter((field) => (Array.isArray(field) ? field.length > 0 : !isTradeOnly(field)));
 }
 
 export default async function Register({ params }: Props) {
@@ -190,7 +170,7 @@ export default async function Register({ params }: Props) {
     .filter(exists)
     .filter(removeExlusiveOffersField);
 
-  const fields = withAudienceSwitch(baseFields, audience);
+  const fields = forAudience(baseFields, audience);
 
   return (
     <DynamicFormSection
