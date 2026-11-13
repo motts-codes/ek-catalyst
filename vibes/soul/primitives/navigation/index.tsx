@@ -1680,7 +1680,9 @@ function AccountMenu({
 
   return (
     <NavigationMenu.Item asChild value="account">
-      <div>
+      {/* A flex wrapper keeps the icon link a flex child (block-level, 32px square) exactly as the
+          search and cart buttons beside it; a plain div made it inline and stretched the nav row. */}
+      <div className="flex items-center">
         <NavigationMenu.Trigger asChild>
           <Link
             aria-label={isLoggedIn ? signedInAccountLabel : accountLabel}

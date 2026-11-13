@@ -48,7 +48,8 @@ const logo = Group({
   label: 'Logo',
   preferredLayout: Group.Layout.Popover,
   props: {
-    desktop: logoGroup('Desktop', { width: 180, height: 36 }),
+    // 144×29 = 0.8× the earlier 180×36 (client ask, 13 Nov 2026). Makeswift can still override.
+    desktop: logoGroup('Desktop', { width: 144, height: 29 }),
     mobile: logoGroup('Mobile', { width: 100, height: 32 }),
     link: Link({ label: 'Logo link' }),
   },
