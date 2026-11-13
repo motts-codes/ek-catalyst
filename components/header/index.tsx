@@ -150,12 +150,12 @@ export const Header = async () => {
         accountLabel: t('Icons.account'),
         signedInAccountHref: '/account/orders',
         signedInAccountLabel: t('Icons.accountSignedIn'),
-        // 3D icons (arrow into a door, person with a plus, arrow out of a door). The tile label
+        // 3D icons (arrow into a door, person with a plus, person, arrow out of a door). The tile label
         // beneath says the same thing, so the images are decorative.
         accountTiles: {
           signIn: { src: '/images/nav/account-sign-in-icon.webp', alt: '' },
           createAccount: { src: '/images/nav/account-create-icon.webp', alt: '' },
-          myAccount: { src: '/images/nav/account-sign-in-icon.webp', alt: '' },
+          myAccount: { src: '/images/nav/account-my-account-icon.webp', alt: '' },
           signOut: { src: '/images/nav/account-sign-out-icon.webp', alt: '' },
         },
         isLoggedIn: streamableIsLoggedIn,
