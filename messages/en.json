@@ -187,8 +187,7 @@
       "orders": "Orders",
       "settings": "Account",
       "wishlists": "Wish lists",
-      "welcome": "Welcome back, <name>{firstName}</name>",
-      "welcomeNoName": "Welcome back",
+      "welcome": "Welcome back",
       "signedInAs": "Signed in as {email}"
     },
     "Orders": {

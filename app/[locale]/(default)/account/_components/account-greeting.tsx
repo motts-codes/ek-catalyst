@@ -14,16 +14,13 @@ export async function AccountGreeting() {
 
   return (
     <div className="mb-5 border-b border-contrast-100 px-3 pb-5">
-      <p className="break-words font-heading text-xl font-semibold leading-tight">
-        {customer.firstName
-          ? t.rich('welcome', {
-              firstName: customer.firstName,
-              name: (chunks) => (
-                <span className="text-[var(--button-primary-background,#d90716)]">{chunks}</span>
-              ),
-            })
-          : t('welcomeNoName')}
-      </p>
+      {/* Two lines: a quiet "Welcome back", then the first name large and in red. */}
+      <p className="text-sm text-contrast-500">{t('welcome')}</p>
+      {customer.firstName ? (
+        <p className="mt-0.5 break-words font-heading text-2xl font-semibold leading-tight text-[var(--button-primary-background,#d90716)]">
+          {customer.firstName}
+        </p>
+      ) : null}
       {/* Wraps rather than truncates: the whole address must be readable. */}
       <p className="mt-1 break-all text-xs leading-snug text-contrast-500">
         {t('signedInAs', { email: customer.email })}
