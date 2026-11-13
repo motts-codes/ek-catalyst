@@ -12,6 +12,8 @@ import {
   mapFormFieldValueToName,
   transformFieldsToLayout,
 } from '~/data-transformers/form-field-transformer/utils';
+import { forAudience } from '~/lib/forms/trade-only-fields';
+import { getAudienceMode } from '~/lib/navigation/audience-mode';
 import { exists } from '~/lib/utils';
 
 import { addressAction } from './_actions/address-action';
@@ -75,7 +77,9 @@ export default async function Addresses({ params, searchParams }: Props) {
     }, {}),
   }));
 
-  const fields = transformFieldsToLayout(shippingAddressFields, ADDRESS_FORM_LAYOUT)
+  // Company and property / unit only in the header's Pro mode, same as the create-account form.
+  const audience = await getAudienceMode();
+  const baseFields = transformFieldsToLayout(shippingAddressFields, ADDRESS_FORM_LAYOUT)
     .map((field) => {
       if (Array.isArray(field)) {
         return field.map(formFieldTransformer).filter(exists);
@@ -92,6 +96,7 @@ export default async function Addresses({ params, searchParams }: Props) {
       return injectCountryCodeOptions(field, countries ?? []);
     })
     .filter(exists);
+  const fields = forAudience(baseFields, audience);
 
   return (
     <AddressListSection

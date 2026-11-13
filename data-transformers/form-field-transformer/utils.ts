@@ -31,21 +31,23 @@ export const REGISTER_CUSTOMER_FORM_LAYOUT = [
   FieldNameToFieldId.phone,
   FieldNameToFieldId.password,
   FieldNameToFieldId.confirmPassword,
-  FieldNameToFieldId.company,
   FieldNameToFieldId.address1,
   FieldNameToFieldId.address2,
   [FieldNameToFieldId.city, FieldNameToFieldId.stateOrProvince],
   [FieldNameToFieldId.postalCode, FieldNameToFieldId.countryCode],
+  // Trade details last: company, then the custom "Property Name and Unit #" that follows the
+  // layout, so a contractor sees them together.
+  FieldNameToFieldId.company,
 ];
 
 export const ADDRESS_FORM_LAYOUT = [
   [FieldNameToFieldId.firstName, FieldNameToFieldId.lastName],
-  FieldNameToFieldId.company,
   FieldNameToFieldId.phone,
   FieldNameToFieldId.address1,
   FieldNameToFieldId.address2,
   [FieldNameToFieldId.city, FieldNameToFieldId.stateOrProvince],
   [FieldNameToFieldId.postalCode, FieldNameToFieldId.countryCode],
+  FieldNameToFieldId.company,
 ];
 
 export const mapFormFieldValueToName = (field: FormFieldValue): Record<string, unknown> => {
