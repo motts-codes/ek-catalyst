@@ -2,7 +2,7 @@
 
 import { clsx } from 'clsx';
 import { LocateFixed, Search } from 'lucide-react';
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 import { Button } from '@/vibes/soul/primitives/button';
 import { geocodeZip, isUsZip, type SearchOrigin } from '~/lib/pages/showroom-distance';
@@ -11,6 +11,10 @@ interface Props {
   /** The Mapbox public token the geocoder uses. Without one the form isn't shown. */
   token?: string;
   onLocate: (origin: SearchOrigin) => void;
+  /** The visitor's remembered ZIP: pre-fills the field and runs the search once on load. */
+  initialZip?: string;
+  /** Called with a ZIP the visitor searched, so the site can remember it. */
+  onRemember?: (origin: SearchOrigin) => void;
   className?: string;
 }
 
@@ -26,11 +30,25 @@ const MESSAGES = {
 // "Find your nearest showroom": a ZIP code field with a button, and a link that uses the browser's
 // location instead. ZIP only, by design: the six showrooms are all in Connecticut, and a ZIP is
 // what people know. The result is handed up; the locator does the ranking.
-export function ZipSearch({ token, onLocate, className }: Props) {
+export function ZipSearch({ token, onLocate, initialZip, onRemember, className }: Props) {
   const id = useId();
-  const [zip, setZip] = useState('');
+  const [zip, setZip] = useState(initialZip ?? '');
   const [busy, setBusy] = useState<Busy>('idle');
   const [message, setMessage] = useState<string | null>(null);
+  const searchedInitial = useRef(false);
+
+  // A remembered ZIP searches itself once, quietly: no error if it can't be found.
+  useEffect(() => {
+    if (!token || !initialZip || searchedInitial.current || !isUsZip(initialZip)) return;
+
+    searchedInitial.current = true;
+
+    geocodeZip(initialZip, token)
+      .then((origin) => {
+        if (origin) onLocate(origin);
+      })
+      .catch(() => undefined);
+  }, [initialZip, onLocate, token]);
 
   if (!token) return null;
 
@@ -49,8 +67,12 @@ export function ZipSearch({ token, onLocate, className }: Props) {
     try {
       const origin = await geocodeZip(value, token);
 
-      if (origin) onLocate(origin);
-      else setMessage(MESSAGES.unknown);
+      if (origin) {
+        onLocate(origin);
+        onRemember?.(origin);
+      } else {
+        setMessage(MESSAGES.unknown);
+      }
     } catch {
       setMessage(MESSAGES.failed);
     } finally {

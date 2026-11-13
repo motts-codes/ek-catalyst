@@ -38,7 +38,7 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
 
     // The Homeowner/Pro switch lives in the utility strip (per the wireframe), not the nav row —
     // pull it out of the navigation props so the Navigation primitive doesn't render it too.
-    const { audienceToggle, ...navigationProps } = navigation;
+    const { audienceToggle, deliveryZip, ...navigationProps } = navigation;
 
     return (
       // `@container` so the width classes below resolve exactly like the page sections do — the
@@ -47,7 +47,11 @@ export const HeaderSection = forwardRef<React.ComponentRef<'div'>, Props>(
       <div className="@container" ref={ref}>
         {banner && <Banner ref={setBannerElement} {...banner} />}
         {/* Thin utility strip — sits above the sticky nav and scrolls away with the page. */}
-        <UtilityBar audienceToggle={audienceToggle} mode={navigation.audienceMode} />
+        <UtilityBar
+          audienceToggle={audienceToggle}
+          deliveryZip={deliveryZip}
+          mode={navigation.audienceMode}
+        />
         <Headroom
           onUnfix={() => setIsFloating(false)}
           onUnpin={() => setIsFloating(true)}

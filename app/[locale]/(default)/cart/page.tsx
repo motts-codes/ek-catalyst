@@ -8,6 +8,7 @@ import { CartAnalyticsProvider } from '~/app/[locale]/(default)/cart/_components
 import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { getCartId } from '~/lib/cart';
 import { getPreferredCurrencyCode } from '~/lib/currency';
+import { getDeliveryZip } from '~/lib/delivery/zip';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { Slot } from '~/lib/makeswift/slot';
 import { exists } from '~/lib/utils';
@@ -19,7 +20,8 @@ import { updateLineItem } from './_actions/update-line-item';
 import { updateShippingInfo } from './_actions/update-shipping-info';
 import { CartViewed } from './_components/cart-viewed';
 import { CheckoutPreconnect } from './_components/checkout-preconnect';
-import { getCart, getShippingCountries } from './page-data';
+import { ShippingAutoEstimate } from './_components/shipping-auto-estimate';
+import { getCart } from './page-data';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -244,31 +246,10 @@ export default async function Cart({ params }: Props) {
     checkout?.shippingConsignments?.find((consignment) => consignment.selectedShippingOption) ||
     checkout?.shippingConsignments?.[0];
 
-  const shippingCountries = await getShippingCountries();
-
-  const countries = shippingCountries.map((country) => ({
-    value: country.code,
-    label: country.name,
-  }));
-
-  // These US states share the same abbreviation (AE), which causes issues:
-  // 1. The shipping API uses abbreviations, so it can't distinguish between them
-  // 2. React select dropdowns require unique keys, causing duplicate key warnings
-  const blacklistedUSStates = new Set([
-    'Armed Forces Africa',
-    'Armed Forces Canada',
-    'Armed Forces Middle East',
-  ]);
-
-  const statesOrProvinces = shippingCountries.map((country) => ({
-    country: country.code,
-    states: country.statesOrProvinces
-      .filter((state) => country.code !== 'US' || !blacklistedUSStates.has(state.name))
-      .map((state) => ({
-        value: state.abbreviation,
-        label: state.name,
-      })),
-  }));
+  // The visitor's remembered ZIP (utility bar). When the cart has no estimate yet, the page quotes
+  // shipping for it on load, so the summary is right without anyone typing.
+  const deliveryZip = await getDeliveryZip();
+  const needsEstimate = Boolean(deliveryZip) && !shippingConsignment?.address;
 
   const showShippingForm =
     shippingConsignment?.address && !shippingConsignment.selectedShippingOption;
@@ -278,6 +259,7 @@ export default async function Cart({ params }: Props) {
   return (
     <>
       <Slot label="Cart top content" snapshotId="cart-top-content" />
+      {needsEstimate && deliveryZip ? <ShippingAutoEstimate value={deliveryZip} /> : null}
       <CartAnalyticsProvider data={Streamable.from(() => getAnalyticsData(cartId))}>
         {checkoutUrl ? <CheckoutPreconnect url={checkoutUrl} /> : null}
         <CartComponent
@@ -376,8 +358,6 @@ export default async function Cart({ params }: Props) {
           restoreLineItemAction={restoreLineItem}
           shipping={{
             action: updateShippingInfo,
-            countries,
-            states: statesOrProvinces,
             address: shippingConsignment?.address
               ? {
                   country: shippingConsignment.address.countryCode,
@@ -421,10 +401,10 @@ export default async function Cart({ params }: Props) {
               : t('CheckoutSummary.Shipping.shipping'),
             addLabel: t('CheckoutSummary.Shipping.add'),
             changeLabel: t('CheckoutSummary.Shipping.change'),
-            countryLabel: t('CheckoutSummary.Shipping.country'),
-            cityLabel: t('CheckoutSummary.Shipping.city'),
-            stateLabel: t('CheckoutSummary.Shipping.state'),
-            postalCodeLabel: t('CheckoutSummary.Shipping.postalCode'),
+            postalCodeLabel: t('CheckoutSummary.Shipping.zipCode'),
+            postalCodeHint: t('CheckoutSummary.Shipping.zipHint'),
+            estimateNote: t('CheckoutSummary.Shipping.estimateNote'),
+            defaultPostalCode: deliveryZip?.zip,
             updateShippingOptionsLabel: t('CheckoutSummary.Shipping.updatedShippingOptions'),
             viewShippingOptionsLabel: t('CheckoutSummary.Shipping.viewShippingOptions'),
             cancelLabel: t('CheckoutSummary.Shipping.cancel'),

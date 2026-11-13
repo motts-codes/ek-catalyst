@@ -31,6 +31,10 @@ interface Props {
   showrooms: Showroom[];
   /** A Mapbox public token. Without one the list still renders, beside a placeholder. */
   token?: string;
+  /** The visitor's remembered delivery ZIP: the search runs for it on load. */
+  initialZip?: string;
+  /** Called with a ZIP the visitor searched, so the site can remember it. */
+  onRememberZip?: (origin: SearchOrigin) => void;
   kicker?: string;
   title?: string;
   description?: string;
@@ -51,6 +55,8 @@ const FLY_MS = 1200;
 export function ShowroomLocator({
   showrooms,
   token,
+  initialZip,
+  onRememberZip,
   kicker = 'On the map',
   title = 'Six showrooms across Connecticut',
   description,
@@ -304,7 +310,12 @@ export function ShowroomLocator({
           and list in the left column, the map the full height on the right. */}
       <div className="grid gap-4 @3xl:h-[36rem] @3xl:grid-cols-[23.5rem_1fr] @3xl:grid-rows-[auto_minmax(0,1fr)] @3xl:gap-5">
         <div className="@3xl:col-start-1 @3xl:row-start-1">
-          <ZipSearch onLocate={locate} token={token} />
+          <ZipSearch
+            initialZip={initialZip}
+            onLocate={locate}
+            onRemember={onRememberZip}
+            token={token}
+          />
           {nearest && origin ? (
             <ResultsHeader
               farAway={nearest.miles > FAR_AWAY_MILES}

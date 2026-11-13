@@ -8,6 +8,8 @@ import { ClosingBand } from '@/vibes/soul/sections/closing-band';
 import { FinePrint, PageBreadcrumbs, Prose } from '@/vibes/soul/sections/page-kit';
 import { ShowroomCards } from '@/vibes/soul/sections/page-kit/showrooms';
 import { ShowroomLocator } from '@/vibes/soul/sections/showroom-locator';
+import { rememberShowroomZip } from '~/lib/delivery/remember-showroom-zip';
+import { getDeliveryZip } from '~/lib/delivery/zip';
 import {
   FREE_DESIGN_HREF,
   SAMPLES_HREF,
@@ -25,6 +27,9 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
 
   setRequestLocale(locale);
+
+  // The utility bar's delivery ZIP pre-fills the showroom search; a ZIP searched here is remembered.
+  const deliveryZip = await getDeliveryZip();
 
   return (
     <>
@@ -84,7 +89,12 @@ export default async function Showrooms({ params }: { params: Promise<{ locale: 
       <FinePrint className="[&>div]:pt-0" variant="plain">
         Price match and financing aren't available online or at our Factory Outlet.
       </FinePrint>
-      <ShowroomLocator showrooms={SHOWROOMS} token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} />
+      <ShowroomLocator
+        initialZip={deliveryZip?.zip}
+        onRememberZip={rememberShowroomZip}
+        showrooms={SHOWROOMS}
+        token={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+      />
       <ShowroomCards
         bookHref="/book"
         id="showroom-cards"

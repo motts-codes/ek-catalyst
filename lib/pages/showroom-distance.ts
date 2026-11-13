@@ -51,6 +51,9 @@ export interface SearchOrigin extends LatLng {
   label: string;
   /** The town Mapbox put the ZIP in, when it gave one ("New Haven, CT"). */
   place?: string;
+  /** The same town and state apart ("New Haven", "CT"), for an address. */
+  town?: string;
+  state?: string;
 }
 
 const US_ZIP = /^\d{5}$/;
@@ -106,5 +109,7 @@ export async function geocodeZip(zip: string, token: string): Promise<SearchOrig
     lng: coordinates.longitude,
     label: zip,
     place: town ? [town, state].filter(Boolean).join(', ') : undefined,
+    town,
+    state,
   };
 }

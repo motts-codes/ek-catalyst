@@ -7,6 +7,8 @@ import { getTranslations } from 'next-intl/server';
 import { shippingActionFormDataSchema } from '@/vibes/soul/sections/cart/schema';
 import { ShippingFormState } from '@/vibes/soul/sections/cart/shipping-form';
 import { getCartId } from '~/lib/cart';
+import { resolveZip } from '~/lib/delivery/resolve-zip';
+import { setDeliveryZip } from '~/lib/delivery/zip';
 
 import { getCart } from '../page-data';
 
@@ -15,6 +17,30 @@ import {
   addCheckoutShippingConsignments,
   updateCheckoutShippingConsignment,
 } from './add-shipping-info';
+
+// The form only asks for a ZIP; the town and state come from the geocoder when it knows them
+// (shipping zones are usually drawn by state). The ZIP is remembered for the utility bar.
+async function addressForZip({
+  postalCode,
+  city,
+  state,
+}: {
+  postalCode: string;
+  city?: string;
+  state?: string;
+}) {
+  const resolved =
+    city && state ? { zip: postalCode, town: city, state } : await resolveZip(postalCode);
+
+  await setDeliveryZip(resolved);
+
+  return {
+    countryCode: 'US',
+    city: resolved.town,
+    stateOrProvince: resolved.state,
+    postalCode,
+  };
+}
 
 export const updateShippingInfo = async (
   prevState: Awaited<ShippingFormState>,
@@ -69,26 +95,18 @@ export const updateShippingInfo = async (
   switch (submission.value.intent) {
     case 'add-address': {
       try {
+        const address = await addressForZip(submission.value);
+
         const result = shippingId
           ? await updateCheckoutShippingConsignment({
               checkoutEntityId,
-              address: {
-                countryCode: submission.value.country,
-                city: submission.value.city,
-                stateOrProvince: submission.value.state,
-                postalCode: submission.value.postalCode,
-              },
+              address,
               lineItems,
               shippingId,
             })
           : await addCheckoutShippingConsignments({
               checkoutEntityId,
-              address: {
-                countryCode: submission.value.country,
-                city: submission.value.city,
-                stateOrProvince: submission.value.state,
-                postalCode: submission.value.postalCode,
-              },
+              address,
               lineItems,
             });
 

@@ -33,9 +33,12 @@ const FADE_FROM: Record<'homeowner' | 'pro', string> = {
 export function UtilityBar({
   mode = 'homeowner',
   audienceToggle,
+  deliveryZip,
 }: {
   mode?: 'homeowner' | 'pro';
   audienceToggle?: React.ReactNode;
+  /** "Deliver to 06010" control, after the call number. */
+  deliveryZip?: React.ReactNode;
 }) {
   return (
     // Full-bleed fade; the content inside is constrained to the same container as the nav card and
@@ -44,16 +47,27 @@ export function UtilityBar({
       className="text-[var(--utility-bar-text,#d1d1d1)]"
       style={{ background: `linear-gradient(to bottom, ${FADE_FROM[mode]}, transparent)` }}
     >
-      <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-1.5 text-xs @xl:px-9 @4xl:px-14">
-        {/* Left: call number */}
-        <Link
-          className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-medium transition-colors hover:text-[var(--utility-bar-text-hover,#fff)]"
-          href={PHONE.href}
-        >
-          <Phone size={13} strokeWidth={1.75} />
-          <span className="hidden sm:inline">Call </span>
-          {PHONE.label}
-        </Link>
+      <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-3 px-6 py-1.5 text-xs @xl:px-9 @4xl:px-14">
+        {/* Left: call number, then the delivery ZIP */}
+        <div className="flex min-w-0 items-center">
+          <Link
+            className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap font-medium transition-colors hover:text-[var(--utility-bar-text-hover,#fff)]"
+            href={PHONE.href}
+          >
+            <Phone size={13} strokeWidth={1.75} />
+            <span className="hidden sm:inline">Call </span>
+            {PHONE.label}
+          </Link>
+          {deliveryZip != null && (
+            <>
+              <span
+                aria-hidden
+                className="mx-2 h-3 w-px bg-[var(--utility-bar-divider,#3a3a3a)] md:mx-3"
+              />
+              {deliveryZip}
+            </>
+          )}
+        </div>
 
         {/* Right: utility links, separated by dividers. Non-mobile links (and their dividers) are
             hidden below md; the divider sits before each link and hides on the first shown one via

@@ -10,14 +10,13 @@ import {
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
-import { startTransition, useActionState, useEffect, useMemo, useState } from 'react';
+import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { FormStatus } from '@/vibes/soul/form/form-status';
 import { Input } from '@/vibes/soul/form/input';
 import { Label } from '@/vibes/soul/form/label';
 import { RadioGroup } from '@/vibes/soul/form/radio-group';
-import { Select } from '@/vibes/soul/form/select';
 import { Button } from '@/vibes/soul/primitives/button';
 
 import { shippingActionFormDataSchema } from '../schema';
@@ -38,19 +37,6 @@ interface ShippingOption {
   price: string;
 }
 
-interface Country {
-  label: string;
-  value: string;
-}
-
-interface States {
-  country: string;
-  states: Array<{
-    label: string;
-    value: string;
-  }>;
-}
-
 interface Address {
   country: string;
   city?: string;
@@ -60,18 +46,17 @@ interface Address {
 
 interface Props {
   action: Action<ShippingFormState, FormData>;
-  countries?: Country[];
-  states?: States[];
   address?: Address;
   shippingOptions?: ShippingOption[];
   shippingOption?: ShippingOption;
   shippingLabel?: string;
   addLabel?: string;
   changeLabel?: string;
-  countryLabel?: string;
-  cityLabel?: string;
-  stateLabel?: string;
   postalCodeLabel?: string;
+  postalCodeHint?: string;
+  estimateNote?: string;
+  /** The visitor's remembered ZIP (utility bar), to pre-fill the field. */
+  defaultPostalCode?: string;
   updateShippingOptionsLabel?: string;
   viewShippingOptionsLabel?: string;
   cancelLabel?: string;
@@ -83,24 +68,34 @@ interface Props {
   noShippingOptionsLabel?: string;
 }
 
+// "Bristol, CT 06010", or the ZIP alone when the town isn't known.
+function formatAddress(address: Address | null): string {
+  if (!address) return '';
+
+  const place = [address.city, address.state].filter(Boolean).join(', ');
+
+  return [place, address.postalCode].filter(Boolean).join(' ');
+}
+
+// The shipping estimate in the cart summary. EK ships within the US only, so the whole address is
+// one ZIP field: BigCommerce quotes the options for it, and the visitor picks one. Town and state
+// are filled in from the ZIP on the server when known.
 export function ShippingForm({
   action,
   address,
-  countries,
-  states,
   shippingOptions,
   shippingOption,
   shippingLabel = 'Shipping',
   addLabel = 'Add',
   changeLabel = 'Change',
-  countryLabel = 'Country',
-  cityLabel = 'City',
-  stateLabel = 'State/Province',
-  postalCodeLabel = 'Postal code',
+  postalCodeLabel = 'ZIP code',
+  postalCodeHint,
+  estimateNote,
+  defaultPostalCode,
   updateShippingOptionsLabel = 'Update shipping options',
   viewShippingOptionsLabel = 'View shipping options',
   cancelLabel = 'Cancel',
-  editAddressLabel = 'Edit address',
+  editAddressLabel = 'Change ZIP',
   shippingOptionsLabel = 'Shipping options',
   updateShippingLabel = 'Update shipping',
   addShippingLabel = 'Add shipping',
@@ -108,7 +103,7 @@ export function ShippingForm({
   noShippingOptionsLabel = 'There are no shipping options available for your address',
 }: Props) {
   const t = useTranslations('Cart.CheckoutSummary.Shipping');
-  const schema = shippingActionFormDataSchema({ required_error: t('countryRequired') });
+  const schema = shippingActionFormDataSchema({ required_error: t('zipRequired') });
   const [showForms, setShowForms] = useState(showShippingForm);
   const [showAddressForm, setShowAddressForm] = useState(!address);
 
@@ -126,10 +121,8 @@ export function ShippingForm({
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
     defaultValue: {
-      country: state.address?.country,
-      city: state.address?.city,
-      state: state.address?.state,
-      postalCode: state.address?.postalCode,
+      country: 'US',
+      postalCode: state.address?.postalCode ?? defaultPostalCode,
     },
     onValidate({ formData }) {
       return parseWithZod(formData, { schema });
@@ -165,51 +158,6 @@ export function ShippingForm({
     },
   });
 
-  const formattedAddress = useMemo(() => {
-    const country = Array.isArray(countries)
-      ? countries.find((c) => c.value === state.address?.country)?.label
-      : state.address?.country;
-
-    const city = state.address?.city;
-
-    const statesArray = Array.isArray(states)
-      ? states.find((s) => {
-          if (s.country === state.address?.country) {
-            return true;
-          }
-
-          return false;
-        })
-      : undefined;
-
-    const stateOrProvince = Array.isArray(statesArray?.states)
-      ? statesArray.states.find((s) => s.value === state.address?.state)?.label
-      : state.address?.state;
-
-    const cityAndState = [city, stateOrProvince].filter((item) => item !== undefined).join(', ');
-    const postalCode = state.address?.postalCode ?? '';
-
-    const firstLine = `${cityAndState} ${postalCode}`.trim();
-
-    return (
-      <div>
-        {Boolean(firstLine) && (
-          <>
-            {firstLine} <br />
-          </>
-        )}
-        {country}
-      </div>
-    );
-  }, [
-    countries,
-    state.address?.country,
-    state.address?.city,
-    state.address?.state,
-    state.address?.postalCode,
-    states,
-  ]);
-
   useEffect(() => {
     if (addressForm.errors && addressForm.errors.length > 0) {
       if (state.shippingOptions) {
@@ -226,8 +174,7 @@ export function ShippingForm({
   }, [setShowForms, shippingOptionsForm.errors]);
 
   const shippingOptionsControl = useInputControl(shippingOptionsFields.shippingOption);
-  const countryControl = useInputControl(addressFields.country);
-  const stateControl = useInputControl(addressFields.state);
+  const formattedAddress = formatAddress(state.address);
 
   return (
     <div className="py-4">
@@ -249,8 +196,10 @@ export function ShippingForm({
         </div>
 
         {state.shippingOption && (
-          <div className="flex gap-1.5 text-xs">
-            <span className="font-medium text-contrast-400">{state.shippingOption.label}</span>
+          <div className="flex flex-wrap gap-x-1.5 text-xs">
+            <span className="font-medium text-contrast-400">
+              {[state.shippingOption.label, formattedAddress].filter(Boolean).join(' · ')}
+            </span>
             {!showForms && (
               <button
                 className="font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-focus,hsl(var(--primary)))] focus-visible:ring-offset-2"
@@ -261,75 +210,32 @@ export function ShippingForm({
             )}
           </div>
         )}
+        {state.shippingOption && estimateNote ? (
+          <p className="mt-0.5 text-xs text-contrast-400">{estimateNote}</p>
+        ) : null}
       </div>
 
       <div className={clsx('space-y-4', { hidden: !showForms })}>
         <form
           {...getFormProps(addressForm)}
           action={formAction}
-          className={clsx('mt-4 space-y-4', { hidden: !showAddressForm })}
+          className={clsx('mt-4 space-y-3', { hidden: !showAddressForm })}
         >
-          {Array.isArray(countries) ? (
-            <Select
-              errors={addressFields.country.errors}
-              key={addressFields.country.id}
-              label={countryLabel}
-              name={addressFields.country.name}
-              onBlur={countryControl.blur}
-              onFocus={countryControl.focus}
-              onValueChange={countryControl.change}
-              options={countries}
-              placeholder=""
-              required
-              value={countryControl.value ?? ''}
-            />
-          ) : (
-            <Input
-              {...getInputProps(addressFields.country, { type: 'text' })}
-              errors={addressFields.country.errors}
-              key={addressFields.country.id}
-              label={countryLabel}
-              required
-            />
-          )}
+          {/* EK ships within the US only: the country rides along, fixed. */}
+          <input {...getInputProps(addressFields.country, { type: 'hidden' })} value="US" />
           <Input
-            {...getInputProps(addressFields.city, { type: 'text' })}
-            errors={addressFields.city.errors}
-            key={addressFields.city.id}
-            label={cityLabel}
+            {...getInputProps(addressFields.postalCode, { type: 'text' })}
+            autoComplete="postal-code"
+            errors={addressFields.postalCode.errors}
+            inputMode="numeric"
+            key={addressFields.postalCode.id}
+            label={postalCodeLabel}
+            maxLength={5}
+            pattern="[0-9]{5}"
+            placeholder="06010"
+            required
           />
-          <div className="flex gap-3">
-            {Array.isArray(states) ? (
-              <Select
-                disabled={addressFields.country.value === undefined}
-                errors={addressFields.state.errors}
-                key={addressFields.state.id}
-                label={stateLabel}
-                name={addressFields.state.name}
-                onBlur={stateControl.blur}
-                onFocus={stateControl.focus}
-                onValueChange={stateControl.change}
-                options={
-                  states.find((s) => s.country === addressFields.country.value)?.states ?? []
-                }
-                placeholder=""
-                value={stateControl.value ?? ''}
-              />
-            ) : (
-              <Input
-                {...getInputProps(addressFields.state, { type: 'text' })}
-                errors={addressFields.state.errors}
-                key={addressFields.state.id}
-                label={stateLabel}
-              />
-            )}
-            <Input
-              {...getInputProps(addressFields.postalCode, { type: 'text' })}
-              errors={addressFields.postalCode.errors}
-              key={addressFields.postalCode.id}
-              label={postalCodeLabel}
-            />
-          </div>
+          {postalCodeHint ? <p className="text-xs text-contrast-400">{postalCodeHint}</p> : null}
 
           {addressForm.errors?.map((error, index) => (
             <FormStatus key={index} type="error">
@@ -357,8 +263,12 @@ export function ShippingForm({
           </div>
         </form>
 
-        <div className={clsx('mt-4 space-y-2.5', { hidden: showAddressForm })}>
-          {formattedAddress}
+        <div
+          className={clsx('mt-4 flex flex-wrap items-center justify-between gap-2', {
+            hidden: showAddressForm,
+          })}
+        >
+          <span className="text-sm">{formattedAddress}</span>
           <Button
             onClick={() => setShowAddressForm(true)}
             size="small"
@@ -396,6 +306,7 @@ export function ShippingForm({
                   description: option.price,
                 })) ?? []
               }
+              required
               value={shippingOptionsControl.value}
             />
 

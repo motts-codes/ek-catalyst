@@ -171,6 +171,8 @@ interface Props<S extends SearchResult> {
   ctaButton?: ReactNode;
   /** Current audience mode — used by the header (e.g. utility bar tint in Pro mode). */
   audienceMode?: 'homeowner' | 'pro';
+  /** "Deliver to 06010" control; the header moves it into the utility strip. */
+  deliveryZip?: ReactNode;
 }
 
 const MobileMenuButton = forwardRef<
@@ -535,6 +537,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     // Consumed by HeaderSection (utility-bar tint); accepted here so it's a valid navigation prop
     // and not spread onto the DOM.
     audienceMode: _audienceMode,
+    deliveryZip: _deliveryZip,
   }: Props<S>,
   ref: Ref<HTMLDivElement>,
 ) {

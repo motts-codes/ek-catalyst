@@ -13,6 +13,7 @@ import { routing } from '~/i18n/routing';
 import { BRAND_LOGO } from '~/lib/brand';
 import { getCartId } from '~/lib/cart';
 import { getPreferredCurrencyCode } from '~/lib/currency';
+import { getDeliveryZip } from '~/lib/delivery/zip';
 import { SiteHeader as HeaderSection } from '~/lib/makeswift/components/site-header';
 import { getAudienceMode } from '~/lib/navigation/audience-mode';
 import { AUDIENCE_CTA, getMenu } from '~/lib/navigation/menu-config';
@@ -21,6 +22,7 @@ import { switchAudienceMode } from '~/lib/navigation/switch-audience-action';
 import { search } from './_actions/search';
 import { switchCurrency } from './_actions/switch-currency';
 import { AudienceToggle } from './audience-toggle';
+import { DeliveryZip } from './delivery-zip';
 import { CurrencyCode, HeaderFragment, HeaderLinksFragment } from './fragment';
 
 const GetCartCountQuery = graphql(`
@@ -103,6 +105,7 @@ export const Header = async () => {
   // BigCommerce category tree — the menu is developer-edited and decoupled from the catalog.
   // The current mode (homeowner default / pro) is read from the ek_audience cookie.
   const audienceMode = await getAudienceMode();
+  const deliveryZip = await getDeliveryZip();
   const streamableLinks = Streamable.from(async () => getMenu(audienceMode));
 
   const streamableGiftCertificatesEnabled = Streamable.from(async () => {
@@ -172,6 +175,9 @@ export const Header = async () => {
         links: streamableLinks,
         audienceMode,
         audienceToggle: <AudienceToggle mode={audienceMode} />,
+        deliveryZip: (
+          <DeliveryZip mapboxToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN} value={deliveryZip} />
+        ),
         ctaButton: (
           // Audience-aware label (Free Design Consult / Free Design & Quote): brand blue (#2162a1)
           // base, BLACK on hover. The tertiary variant animates its hover via an ::after overlay,

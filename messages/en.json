@@ -462,13 +462,17 @@
         "postalCode": "Postal code",
         "updatedShippingOptions": "Update shipping options",
         "viewShippingOptions": "View shipping options",
-        "editAddress": "Edit address",
+        "editAddress": "Change ZIP",
         "shippingOptions": "Shipping options",
         "updateShipping": "Update shipping",
         "addShipping": "Add shipping",
         "cartNotFound": "An error occurred when retrieving your cart",
         "noShippingOptions": "There are no shipping options available for your address",
-        "countryRequired": "Country is required"
+        "countryRequired": "Enter a 5-digit ZIP code",
+        "zipCode": "ZIP code",
+        "zipRequired": "Enter a 5-digit ZIP code",
+        "zipHint": "We ship within the US. Your ZIP code is all we need for an estimate.",
+        "estimateNote": "Estimated. Confirmed at checkout."
       }
     },
     "GiftCertificate": {

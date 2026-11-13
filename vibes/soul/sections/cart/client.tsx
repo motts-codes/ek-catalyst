@@ -111,19 +111,6 @@ interface ShippingOption {
   price: string;
 }
 
-interface Country {
-  label: string;
-  value: string;
-}
-
-interface States {
-  country: string;
-  states: Array<{
-    label: string;
-    value: string;
-  }>;
-}
-
 interface Address {
   country: string;
   city?: string;
@@ -133,18 +120,17 @@ interface Address {
 
 interface Shipping {
   action: Action<ShippingFormState, FormData>;
-  countries?: Country[];
-  states?: States[];
   address?: Address;
   shippingOptions?: ShippingOption[];
   shippingOption?: ShippingOption;
   shippingLabel?: string;
   addLabel?: string;
   changeLabel?: string;
-  countryLabel?: string;
-  cityLabel?: string;
-  stateLabel?: string;
   postalCodeLabel?: string;
+  postalCodeHint?: string;
+  estimateNote?: string;
+  /** The visitor's remembered ZIP, to pre-fill the field. */
+  defaultPostalCode?: string;
   updateShippingOptionsLabel?: string;
   viewShippingOptionsLabel?: string;
   cancelLabel?: string;
@@ -415,7 +401,12 @@ export function CartClient<LineItem extends CartLineItem>({
                 </div>
               ))}
 
-              {shipping && <ShippingForm {...shipping} />}
+              {shipping && (
+                <ShippingForm
+                  {...shipping}
+                  key={`${shipping.address?.postalCode ?? ''}-${shipping.shippingOption?.value ?? ''}`}
+                />
+              )}
             </div>
             {couponCode && (
               <CouponCodeForm
