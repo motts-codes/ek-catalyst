@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 
@@ -14,9 +14,11 @@ interface MenuLink {
 interface Props {
   links: Streamable<MenuLink[]>;
   placeholderCount?: number;
+  /** Shown above the menu on every width, e.g. a "Welcome back" line. */
+  header?: ReactNode;
 }
 
-export function SidebarMenu({ links: streamableLinks, placeholderCount = 5 }: Props) {
+export function SidebarMenu({ links: streamableLinks, placeholderCount = 5, header }: Props) {
   return (
     <Stream
       fallback={<SidebarMenuSkeleton placeholderCount={placeholderCount} />}
@@ -29,6 +31,7 @@ export function SidebarMenu({ links: streamableLinks, placeholderCount = 5 }: Pr
 
         return (
           <nav>
+            {header}
             <ul className="hidden @2xl:block">
               {links.map((link, index) => (
                 <li key={index}>

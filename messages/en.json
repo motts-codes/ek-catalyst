@@ -186,7 +186,10 @@
       "logout": "Sign out",
       "orders": "Orders",
       "settings": "Account",
-      "wishlists": "Wish lists"
+      "wishlists": "Wish lists",
+      "welcome": "Welcome back, {firstName}",
+      "welcomeNoName": "Welcome back",
+      "signedInAs": "Signed in as {email}"
     },
     "Orders": {
       "title": "Orders",

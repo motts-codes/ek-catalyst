@@ -113,7 +113,7 @@ function WishlistListItemItems({
         return (
           <div className="my-8 flex flex-1 gap-4 overflow-hidden [mask-image:linear-gradient(to_right,_black_70%,_transparent_100%)]">
             {items.map(({ product }) => (
-              <div className="min-w-36" key={product.id}>
+              <div className="w-44 shrink-0 @sm:w-56 @2xl:w-64" key={product.id}>
                 <ProductCard aspectRatio="1:1" product={product} />
               </div>
             ))}
@@ -155,7 +155,7 @@ function WishlistListItemItemsSkeleton({
   return (
     <div className="my-8 flex flex-1 gap-4 overflow-hidden [mask-image:linear-gradient(to_right,_black_70%,_transparent_100%)]">
       {Array.from({ length: placeholderCount }).map((_, index) => (
-        <div className={clsx('min-w-36', className)} key={index}>
+        <div className={clsx('w-44 shrink-0 @sm:w-56 @2xl:w-64', className)} key={index}>
           <ProductCardSkeleton aspectRatio="1:1" />
         </div>
       ))}

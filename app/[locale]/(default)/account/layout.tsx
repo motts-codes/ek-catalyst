@@ -1,8 +1,10 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 
 import { SidebarMenu } from '@/vibes/soul/sections/sidebar-menu';
 import { StickySidebarLayout } from '@/vibes/soul/sections/sticky-sidebar-layout';
+
+import { AccountGreeting } from './_components/account-greeting';
 
 interface Props extends PropsWithChildren {
   params: Promise<{ locale: string }>;
@@ -19,6 +21,11 @@ export default async function Layout({ children, params }: Props) {
     <StickySidebarLayout
       sidebar={
         <SidebarMenu
+          header={
+            <Suspense fallback={null}>
+              <AccountGreeting />
+            </Suspense>
+          }
           links={[
             { href: '/account/orders/', label: t('orders') },
             { href: '/account/addresses/', label: t('addresses') },
