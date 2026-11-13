@@ -1,4 +1,4 @@
-import { NextResponse, URLPattern } from 'next/server';
+import { type NextRequest, NextResponse, URLPattern } from 'next/server';
 
 import { anonymousSignIn, auth, clearAnonymousSession, getAnonymousSession } from '~/auth';
 
@@ -6,7 +6,11 @@ import { type ProxyFactory } from './compose-proxies';
 
 // Path matcher for any routes that require authentication
 const protectedPathPattern = new URLPattern({ pathname: `{/:locale}?/(account)/*` });
+const logoutPathPattern = new URLPattern({ pathname: `{/:locale}?/logout` });
 const SESSION_TOKEN_COOKIE_RE = /^(__Secure-)?authjs\.session-token(\.\d+)?=/;
+const SESSION_TOKEN_NAME_RE = /^(__Secure-)?authjs\.session-token(\.\d+)?$/;
+const DELETION_COOKIE_RE = /;\s*max-age=0(?:;|$)/i;
+const LAX_SWEEP_PARAM = 'swept';
 
 function redirectToLogin(url: string) {
   return NextResponse.redirect(new URL('/login', url), { status: 302 });
@@ -17,8 +21,9 @@ function redirectToLogin(url: string) {
 // for Essential cookie classification compliance.
 function stripSessionCookieExpiry(response: Response): Response {
   const setCookies = response.headers.getSetCookie();
+  // A deletion (Max-Age=0) must keep its expiry or it stops being a deletion.
   const stripped = setCookies.map((cookie) =>
-    SESSION_TOKEN_COOKIE_RE.test(cookie)
+    SESSION_TOKEN_COOKIE_RE.test(cookie) && !DELETION_COOKIE_RE.test(cookie)
       ? cookie.replace(/;\s*(?:expires|max-age)=[^;]+/gi, '')
       : cookie,
   );
@@ -33,9 +38,53 @@ function stripSessionCookieExpiry(response: Response): Response {
   return modified;
 }
 
+// Sign-ins before 13 Nov 2026 re-wrote the session cookie as SameSite=Lax without the Partitioned
+// flag (patchSessionTokenCookies in ~/auth), so those browsers hold two cookies of the same name.
+// Auth.js's sign-out deletes only its Partitioned one; the Lax twin kept the visitor "signed in"
+// with a token BigCommerce had already rejected, and /login ↔ /account bounced forever.
+//
+// Next merges Set-Cookie by name, so one response cannot delete both flavours. On the logout
+// route the proxy therefore answers first with a redirect back to the same URL that deletes the
+// Lax flavour (raw headers, sent as-is), and the second request runs the real sign-out.
+function sweepLaxSessionCookies(req: NextRequest): NextResponse | null {
+  if (req.method !== 'GET' || !logoutPathPattern.test(req.nextUrl.toString().toLowerCase())) {
+    return null;
+  }
+
+  if (req.nextUrl.searchParams.has(LAX_SWEEP_PARAM)) return null;
+
+  const names = req.cookies
+    .getAll()
+    .map(({ name }) => name)
+    .filter((name) => SESSION_TOKEN_NAME_RE.test(name));
+
+  if (names.length === 0) return null;
+
+  const url = req.nextUrl.clone();
+
+  url.searchParams.set(LAX_SWEEP_PARAM, '1');
+
+  const response = NextResponse.redirect(url, { status: 302 });
+
+  names.forEach((name) => {
+    const secure = name.startsWith('__Secure-') ? '; Secure' : '';
+
+    response.headers.append(
+      'set-cookie',
+      `${name}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax${secure}`,
+    );
+  });
+
+  return response;
+}
+
 export const withAuth: ProxyFactory = (next) => {
   return async (request, event) => {
     const response = await auth(async (req) => {
+      const sweep = sweepLaxSessionCookies(req);
+
+      if (sweep) return sweep;
+
       const anonymousSession = await getAnonymousSession();
       const isProtectedRoute = protectedPathPattern.test(req.nextUrl.toString().toLowerCase());
       const isGetRequest = req.method === 'GET';

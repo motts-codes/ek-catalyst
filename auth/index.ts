@@ -344,6 +344,11 @@ const SESSION_TOKEN_NAME_RE = /^(__Secure-)?authjs\.session-token(\.\d+)?$/;
 // Auth.js sets Expires on session token cookies via cookies().set() when signIn/updateSession
 // are called from server actions. Re-set those cookies without Expires so they comply with
 // Essential classification (session cookies that expire when the browser closes).
+//
+// The attributes must match the ones Auth.js writes (see `partitionedCookie`): a cookie with the
+// same name but SameSite=Lax and no Partitioned flag is a *second* cookie to the browser. Sign-out
+// then deletes only Auth.js's copy, the Lax twin keeps the visitor "signed in" with a token
+// BigCommerce has already rejected, and /login ↔ /account bounce forever (seen 13 Nov 2026).
 async function patchSessionTokenCookies() {
   const cookieJar = await cookies();
 
@@ -351,9 +356,8 @@ async function patchSessionTokenCookies() {
     if (SESSION_TOKEN_NAME_RE.test(name) && value) {
       cookieJar.set(name, value, {
         httpOnly: true,
-        sameSite: 'lax' as const,
         path: '/',
-        secure: name.startsWith('__Secure-'),
+        ...partitionedCookie().options,
       });
     }
   });
