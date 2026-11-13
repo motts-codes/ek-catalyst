@@ -128,6 +128,9 @@ interface Props<S extends SearchResult> {
   signOutLabel?: string;
   createAccountLabel?: string;
   myAccountLabel?: string;
+  accountMenuLabel?: string;
+  /** Photo tiles for the account menu (same square tiles as the shop menus). */
+  accountTiles?: Partial<Record<AccountTileKey, { src: string; alt: string }>>;
   /** Signed-in state: shows a small solid green dot on the account icon. */
   isLoggedIn?: Streamable<boolean>;
   cartCount?: Streamable<number | null>;
@@ -325,6 +328,11 @@ const navLinkClassName =
   'hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 data-[state=open]:text-[var(--button-primary-background,#d90716)] @[700px]:inline-flex';
 const navSubLinkClassName =
   'block rounded-lg bg-[var(--nav-sub-link-background,transparent)] px-3 py-1.5 font-[family-name:var(--nav-sub-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-sub-link-text,hsl(var(--contrast-500)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-sub-link-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-sub-link-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
+// The mega-menu panel and its tile grid, shared by the link menus and the account menu.
+const navPanelClassName =
+  'rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))] duration-300 data-[motion=from-end]:animate-in data-[motion=from-start]:animate-in data-[motion=to-end]:animate-out data-[motion=to-start]:animate-out data-[motion=from-end]:fade-in data-[motion=from-start]:fade-in data-[motion=to-end]:fade-out data-[motion=to-start]:fade-out data-[motion=from-end]:slide-in-from-right-6 data-[motion=from-start]:slide-in-from-left-6 data-[motion=to-end]:slide-out-to-right-6 data-[motion=to-start]:slide-out-to-left-6';
+const navPanelGridClassName =
+  'grid w-full grid-cols-[minmax(0,max-content)] justify-center gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[900px]:grid-cols-[minmax(0,max-content)_minmax(0,max-content)] @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6';
 const navGroupClassName =
   'block rounded-lg bg-[var(--nav-group-background,transparent)] px-3 py-2 font-[family-name:var(--nav-group-font-family,var(--font-family-body))] font-medium text-[var(--nav-group-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors hover:bg-[var(--nav-group-background-hover,hsl(var(--contrast-100)))] hover:text-[var(--nav-group-text-hover,hsl(var(--foreground)))] focus-visible:outline-0 focus-visible:ring-2';
 
@@ -489,6 +497,8 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     signOutLabel = 'Sign out',
     createAccountLabel = 'Create account',
     myAccountLabel = 'My account',
+    accountMenuLabel = 'Account',
+    accountTiles,
     isLoggedIn: streamableIsLoggedIn = false,
     links: streamableLinks,
     logo: streamableLogo,
@@ -884,13 +894,13 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                     </Link>
                   </NavigationMenu.Trigger>
                   {item.groups != null && item.groups.length > 0 && (
-                    <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))] duration-300 data-[motion=from-end]:animate-in data-[motion=from-start]:animate-in data-[motion=to-end]:animate-out data-[motion=to-start]:animate-out data-[motion=from-end]:fade-in data-[motion=from-start]:fade-in data-[motion=to-end]:fade-out data-[motion=to-start]:fade-out data-[motion=from-end]:slide-in-from-right-6 data-[motion=from-start]:slide-in-from-left-6 data-[motion=to-end]:slide-out-to-right-6 data-[motion=to-start]:slide-out-to-left-6">
+                    <NavigationMenu.Content className={navPanelClassName}>
                       {/* Each group is a block: a grey heading tile, then the links as square photo
                           tiles. The blocks fill a two-column grid in config order — Cabinets beside
                           Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own.
                           Tiles scale with the nav width (80 → 100 → 120px) so nothing overflows;
                           below 900px the grid drops to one column so the row still fits. */}
-                      <div className="grid w-full grid-cols-[minmax(0,max-content)] justify-center gap-x-8 gap-y-7 px-6 pb-7 pt-5 @[900px]:grid-cols-[minmax(0,max-content)_minmax(0,max-content)] @[1100px]:gap-x-12 @[1360px]:gap-x-24 @[1360px]:px-8 @[1360px]:pb-8 @[1360px]:pt-6">
+                      <div className={navPanelGridClassName}>
                         {item.groups.map((group, groupIndex) => (
                           <div
                             className={clsx(
@@ -1106,8 +1116,14 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                 accountLabel={accountLabel}
                 createAccountLabel={createAccountLabel}
                 isLoggedIn={false}
+                menuLabel={accountMenuLabel}
                 myAccountLabel={myAccountLabel}
+                onNavigate={() => {
+                  hoverSuppressed.current = true;
+                  setMenuValue('');
+                }}
                 registerHref={registerHref}
+                tiles={accountTiles}
                 signInLabel={signInLabel}
                 signOutHref={signOutHref}
                 signOutLabel={signOutLabel}
@@ -1123,8 +1139,14 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                 accountLabel={accountLabel}
                 createAccountLabel={createAccountLabel}
                 isLoggedIn={isLoggedIn}
+                menuLabel={accountMenuLabel}
                 myAccountLabel={myAccountLabel}
+                onNavigate={() => {
+                  hoverSuppressed.current = true;
+                  setMenuValue('');
+                }}
                 registerHref={registerHref}
+                tiles={accountTiles}
                 signInLabel={signInLabel}
                 signOutHref={signOutHref}
                 signOutLabel={signOutLabel}
@@ -1607,6 +1629,8 @@ function CurrencyForm({
   );
 }
 
+type AccountTileKey = 'signIn' | 'createAccount' | 'myAccount' | 'signOut';
+
 interface AccountMenuProps {
   isLoggedIn: boolean;
   accountHref: string;
@@ -1619,11 +1643,14 @@ interface AccountMenuProps {
   signOutLabel: string;
   createAccountLabel: string;
   myAccountLabel: string;
+  menuLabel: string;
+  tiles?: Partial<Record<AccountTileKey, { src: string; alt: string }>>;
+  onNavigate: () => void;
 }
 
-// The account icon with its hover menu. CSS-only (group hover + focus-within), so the icon stays
-// a plain link: click still goes to login or the account. The pt-2 gap is inside the hover area,
-// so the pointer can travel from the icon to the menu without it closing.
+// The account icon as a menu item of the main navigation, so its panel opens in the shared
+// viewport: full width, same panel, same photo tiles and animation as the shop menus. The icon
+// stays a link (login, or the account once signed in); hover opens, click navigates.
 function AccountMenu({
   isLoggedIn,
   accountHref,
@@ -1636,45 +1663,61 @@ function AccountMenu({
   signOutLabel,
   createAccountLabel,
   myAccountLabel,
+  menuLabel,
+  tiles,
+  onNavigate,
 }: AccountMenuProps) {
-  const items = isLoggedIn
+  const href = isLoggedIn ? signedInAccountHref : accountHref;
+  const items: Array<{ key: AccountTileKey; label: string; href: string }> = isLoggedIn
     ? [
-        { label: myAccountLabel, href: signedInAccountHref },
-        { label: signOutLabel, href: signOutHref },
+        { key: 'myAccount', label: myAccountLabel, href: signedInAccountHref },
+        { key: 'signOut', label: signOutLabel, href: signOutHref },
       ]
     : [
-        { label: signInLabel, href: accountHref },
-        { label: createAccountLabel, href: registerHref },
+        { key: 'signIn', label: signInLabel, href: accountHref },
+        { key: 'createAccount', label: createAccountLabel, href: registerHref },
       ];
 
   return (
-    <div className="group/account relative">
-      <Link
-        aria-label={isLoggedIn ? signedInAccountLabel : accountLabel}
-        className={navButtonClassName}
-        href={isLoggedIn ? signedInAccountHref : accountHref}
-      >
-        <User size={20} strokeWidth={1} />
-        {isLoggedIn && (
-          // Signed-in status dot: solid green, ringed in the nav background so it reads
-          // as a badge on the icon rather than part of it (like a presence indicator).
-          <span
-            aria-hidden
-            className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-[#22c55e] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
-          />
-        )}
-      </Link>
-      <div className="invisible absolute right-0 top-full z-50 hidden pt-2 opacity-0 transition-opacity duration-200 group-focus-within/account:visible group-focus-within/account:opacity-100 group-hover/account:visible group-hover/account:opacity-100 @[700px]:block">
-        <ul className="min-w-[11rem] rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] p-2 shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
-          {items.map((item) => (
-            <li key={item.href}>
-              <Link className={navSubLinkClassName} href={item.href}>
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <NavigationMenu.Item asChild value="account">
+      <div>
+        <NavigationMenu.Trigger asChild>
+          <Link
+            aria-label={isLoggedIn ? signedInAccountLabel : accountLabel}
+            className={navButtonClassName}
+            href={href}
+            onClick={onNavigate}
+          >
+            <User size={20} strokeWidth={1} />
+            {isLoggedIn && (
+              // Signed-in status dot: solid green, ringed in the nav background so it reads
+              // as a badge on the icon rather than part of it (like a presence indicator).
+              <span
+                aria-hidden
+                className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-[#22c55e] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
+              />
+            )}
+          </Link>
+        </NavigationMenu.Trigger>
+        <NavigationMenu.Content className={navPanelClassName}>
+          <div className={navPanelGridClassName}>
+            <div className="ek-menu-row flex min-w-0 items-start gap-3.5">
+              <GroupTile href={href} label={menuLabel} />
+              <ul className="flex min-w-0 flex-1 flex-wrap gap-x-3.5 gap-y-4">
+                {items.map((item, idx) => (
+                  <li
+                    className="ek-menu-tile"
+                    key={item.key}
+                    style={{ animationDelay: `${idx * 30}ms` }}
+                  >
+                    <MenuTile href={item.href} image={tiles?.[item.key]} label={item.label} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </NavigationMenu.Content>
       </div>
-    </div>
+    </NavigationMenu.Item>
   );
 }

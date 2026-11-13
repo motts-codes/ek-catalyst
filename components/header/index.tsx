@@ -150,6 +150,18 @@ export const Header = async () => {
         accountLabel: t('Icons.account'),
         signedInAccountHref: '/account/orders',
         signedInAccountLabel: t('Icons.accountSignedIn'),
+        accountTiles: {
+          signIn: { src: '/images/nav/account-sign-in.webp', alt: 'Saved kitchens on a phone' },
+          createAccount: {
+            src: '/images/nav/account-create.webp',
+            alt: 'A kitchen plan and quote form on a counter',
+          },
+          myAccount: { src: '/images/nav/account-sign-in.webp', alt: 'Saved kitchens on a phone' },
+          signOut: {
+            src: '/images/nav/account-sign-out.webp',
+            alt: 'A hand holding a phone in a finished kitchen',
+          },
+        },
         isLoggedIn: streamableIsLoggedIn,
         cartHref: '/cart',
         cartLabel: t('Icons.cart'),
