@@ -108,7 +108,7 @@ export const formFieldTransformer = (
     case 'TextFormField':
       return {
         id: String(field.entityId),
-        type: field.entityId === FieldNameToFieldId.email ? 'email' : 'text',
+        type: textFieldType(field.entityId),
         name,
         label: field.label,
         required: field.isRequired,
@@ -118,6 +118,15 @@ export const formFieldTransformer = (
       return null;
   }
 };
+
+// The built-in email and phone fields come from BigCommerce as plain text fields; render them as
+// the email and US-formatted tel inputs so the keyboard, autofill and validation fit.
+function textFieldType(entityId: number): 'email' | 'tel' | 'text' {
+  if (entityId === FieldNameToFieldId.email) return 'email';
+  if (entityId === FieldNameToFieldId.phone) return 'tel';
+
+  return 'text';
+}
 
 export const injectCountryCodeOptions = (
   field: Field,

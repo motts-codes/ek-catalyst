@@ -48,32 +48,20 @@ function removeExlusiveOffersField(field: Field | Field[]): boolean {
   return field.id !== '25';
 }
 
-// Three short steps instead of one long form. Built-in fields are placed by name; any custom
-// fields the store adds go with the group they belong to (address or customer). An empty step
-// is dropped.
-const ACCOUNT_NAMES = ['firstName', 'lastName', 'email', 'password', 'confirmPassword'];
-const ADDRESS_NAMES = [
-  'address1',
-  'address2',
-  'city',
-  'stateOrProvince',
-  'postalCode',
-  'countryCode',
-];
+// Two short steps instead of one long form: who you are (with phone, so it is reachable from
+// the start), then where you are. Company and any custom fields go with the address step, so a
+// homeowner (no company) never sees a step with one lonely field. An empty step is dropped.
+const ACCOUNT_NAMES = ['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword'];
 
 function registerSteps(fields: Array<Field | Field[]>): FormStep[] {
   const names = fields
     .flatMap((field) => (Array.isArray(field) ? field : [field]))
     .map((f) => f.name);
-  const isAddress = (name: string) =>
-    ADDRESS_NAMES.includes(name) || name.startsWith(ADDRESS_FIELDS_NAME_PREFIX);
   const account = names.filter((name) => ACCOUNT_NAMES.includes(name));
-  const address = names.filter(isAddress);
-  const details = names.filter((name) => !ACCOUNT_NAMES.includes(name) && !isAddress(name));
+  const address = names.filter((name) => !ACCOUNT_NAMES.includes(name));
 
   return [
     { title: 'Your account', names: account },
-    { title: 'About you', names: details },
     { title: 'Your address', names: address },
   ].filter((step) => step.names.length > 0);
 }
@@ -200,7 +188,11 @@ export default async function Register({ params }: Props) {
           passwords_must_match: t('FieldErrors.passwordsMustMatch'),
         },
         confirmPassword: {
-          invalid_type: t('FieldErrors.passwordRequired'),
+          invalid_type: t('FieldErrors.confirmPasswordRequired'),
+        },
+        phone: {
+          invalid_type: t('FieldErrors.phoneRequired'),
+          invalid_string: t('FieldErrors.phoneInvalid'),
         },
         address1: {
           invalid_type: t('FieldErrors.addressLine1Required'),

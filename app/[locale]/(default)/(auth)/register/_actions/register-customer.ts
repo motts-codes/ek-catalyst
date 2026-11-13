@@ -31,6 +31,7 @@ const RegisterCustomerMutation = graphql(`
           lastName
         }
         errors {
+          __typename
           ... on EmailAlreadyInUseError {
             message
           }
@@ -393,9 +394,17 @@ export async function registerCustomer<F extends Field>(
     const result = response.data.customer.registerCustomer;
 
     if (result.errors.length > 0) {
+      // A taken email is the one error the visitor can act on: put it on the email field (the
+      // stepped form jumps back to it) instead of a banner on the last step.
+      if (result.errors.some((error) => error.__typename === 'EmailAlreadyInUseError')) {
+        return {
+          lastResult: submission.reply({ fieldErrors: { email: [t('FieldErrors.emailInUse')] } }),
+        };
+      }
+
       return {
         lastResult: submission.reply({
-          formErrors: response.data.customer.registerCustomer.errors.map((error) => error.message),
+          formErrors: result.errors.map((error) => error.message),
         }),
       };
     }

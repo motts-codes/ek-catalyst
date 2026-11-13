@@ -115,7 +115,11 @@
         "cityRequired": "City is required",
         "countryRequired": "Country is required",
         "stateRequired": "State/Province is required",
-        "postalCodeRequired": "Postal code is required"
+        "postalCodeRequired": "Postal code is required",
+        "phoneRequired": "Phone number is required",
+        "phoneInvalid": "Enter a 10-digit US phone number",
+        "emailInUse": "An account with this email already exists. Sign in instead, or reset your password.",
+        "confirmPasswordRequired": "Please confirm your password"
       }
     }
   },

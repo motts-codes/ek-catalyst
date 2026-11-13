@@ -162,6 +162,20 @@ export function DynamicForm<F extends Field>({
   });
 
   const dynamicSchema = schema(fields, passwordComplexity, errorTranslations);
+  // Field labels, so an empty required field without a translated message still says which
+  // field it is ("Phone number is required") rather than a bare "Required".
+  const labelByName = new Map<string, string>();
+
+  fields
+    .flatMap((f) => (Array.isArray(f) ? f : [f]))
+    .forEach((field) => labelByName.set(field.name, field.label ?? field.name));
+
+  const requiredMessage = (issue: z.ZodIssueOptionalMessage): string | undefined => {
+    const name = issue.path[0];
+    const label = typeof name === 'string' ? labelByName.get(name) : undefined;
+
+    return issue.code === z.ZodIssueCode.invalid_type && label ? `${label} is required` : undefined;
+  };
   const defaultValue = fields
     .flatMap((f) => (Array.isArray(f) ? f : [f]))
     .reduce<z.infer<typeof dynamicSchema>>(
@@ -188,14 +202,17 @@ export function DynamicForm<F extends Field>({
           }
 
           if (!errorTranslations) {
-            return { message: issue.message ?? t('Errors.invalidInput') };
+            return { message: requiredMessage(issue) ?? issue.message ?? t('Errors.invalidInput') };
           }
 
           const field = issue.path[0];
           const fieldKey = typeof field === 'string' ? field : '';
           const errorMessage = errorTranslations[fieldKey]?.[issue.code];
 
-          return { message: errorMessage ?? issue.message ?? t('Errors.invalidInput') };
+          return {
+            message:
+              errorMessage ?? requiredMessage(issue) ?? issue.message ?? t('Errors.invalidInput'),
+          };
         },
       });
     },
