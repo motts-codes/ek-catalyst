@@ -19,6 +19,7 @@ import { type AudienceMode } from '~/lib/navigation/menu-config';
 import { getRecaptchaSiteKey } from '~/lib/recaptcha';
 import { exists } from '~/lib/utils';
 
+import { checkRegisterStep } from './_actions/check-register-step';
 import { ADDRESS_FIELDS_NAME_PREFIX, CUSTOMER_FIELDS_NAME_PREFIX } from './_actions/prefixes';
 import { registerCustomer } from './_actions/register-customer';
 import { getRegisterCustomerQuery } from './page-data';
@@ -216,6 +217,7 @@ export default async function Register({ params }: Props) {
       steps={registerSteps(fields)}
       submitLabel={t('cta')}
       title={t('heading')}
+      validateStep={checkRegisterStep}
     />
   );
 }

@@ -20,6 +20,7 @@ import {
   startTransition,
   useActionState,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { useFormStatus } from 'react-dom';
@@ -101,6 +102,20 @@ interface State {
 
 export type DynamicFormAction<F extends Field> = Action<F, State, FormData>;
 
+// Current string values of a form, by field name (files are skipped).
+function readFormValues(formId: string): Record<string, string> {
+  const values: Record<string, string> = {};
+  const element = document.getElementById(formId);
+
+  if (element instanceof HTMLFormElement) {
+    new FormData(element).forEach((value, key) => {
+      if (typeof value === 'string') values[key] = value;
+    });
+  }
+
+  return values;
+}
+
 export interface DynamicFormProps<F extends Field> {
   fields: Array<F | FieldGroup<F>>;
   action: DynamicFormAction<F>;
@@ -120,7 +135,18 @@ export interface DynamicFormProps<F extends Field> {
    * values survive going back; Next validates just that step; Submit appears on the last step.
    */
   steps?: FormStep[];
+  /**
+   * Server-side check for a step, run when Next is pressed and the step is clean client-side
+   * (e.g. "is this email already registered?"). Return field errors to stay on the step, or null
+   * to move on. Failures move on too, so the check can never block the form.
+   */
+  validateStep?: StepValidator;
 }
+
+export type StepValidator = (
+  names: string[],
+  values: Record<string, string>,
+) => Promise<Record<string, string[]> | null>;
 
 export interface FormStep {
   title: string;
@@ -142,10 +168,14 @@ export function DynamicForm<F extends Field>({
   errorTranslations,
   recaptchaSiteKey,
   steps,
+  validateStep,
 }: DynamicFormProps<F>) {
   const t = useTranslations('Form');
   const [step, setStep] = useState(0);
   const [advancing, setAdvancing] = useState(false);
+  // Result of the server-side step check, shown through conform like an action result.
+  const [stepResult, setStepResult] = useState<SubmissionResult | null>(null);
+  const [checking, setChecking] = useState(false);
   const isLastStep = steps == null || step >= steps.length - 1;
   // Remove options from fields before passing to action to reduce payload size
   // Options are only needed for rendering, not for processing form submissions
@@ -187,7 +217,7 @@ export function DynamicForm<F extends Field>({
     );
 
   const [form, formFields] = useForm({
-    lastResult,
+    lastResult: stepResult ?? lastResult,
     constraint: getZodConstraint(dynamicSchema),
     onValidate({ formData }) {
       return parseWithZod(formData, {
@@ -221,6 +251,7 @@ export function DynamicForm<F extends Field>({
     shouldRevalidate: 'onInput',
     onSubmit(event, { formData }) {
       event.preventDefault();
+      setStepResult(null);
 
       startTransition(() => {
         formAction(formData);
@@ -236,7 +267,7 @@ export function DynamicForm<F extends Field>({
 
   // Stepped form: "Next" validates the current step's fields (conform reports on the next
   // render), then moves on only when they're clean.
-  const stepNames = steps?.[step]?.names ?? [];
+  const stepNames = useMemo(() => steps?.[step]?.names ?? [], [steps, step]);
   const stepHasErrors = stepNames.some((name) => (formFields[name]?.errors?.length ?? 0) > 0);
 
   useEffect(() => {
@@ -244,8 +275,40 @@ export function DynamicForm<F extends Field>({
 
     setAdvancing(false);
 
-    if (!stepHasErrors) setStep((current) => current + 1);
-  }, [advancing, stepHasErrors]);
+    if (stepHasErrors) return;
+
+    if (validateStep == null) {
+      setStep((current) => current + 1);
+
+      return;
+    }
+
+    const values = readFormValues(form.id);
+    const stepValues = Object.fromEntries(stepNames.map((name) => [name, values[name] ?? '']));
+
+    setChecking(true);
+    validateStep(stepNames, stepValues)
+      .then((errors) => {
+        if (errors != null && Object.keys(errors).length > 0) {
+          setStepResult({
+            status: 'error',
+            initialValue: values,
+            error: errors,
+            fields: Object.keys(values),
+          });
+
+          return;
+        }
+
+        setStepResult(null);
+        setStep((current) => current + 1);
+      })
+      .catch(() => {
+        setStepResult(null);
+        setStep((current) => current + 1);
+      })
+      .finally(() => setChecking(false));
+  }, [advancing, stepHasErrors, validateStep, form.id, stepNames]);
 
   // A failed submit with an error on an earlier step jumps back to that step.
   useEffect(() => {
@@ -386,6 +449,7 @@ export function DynamicForm<F extends Field>({
               </SubmitButton>
             ) : (
               <Button
+                disabled={checking}
                 onClick={() => {
                   stepNames.forEach((name) => form.validate({ name }));
                   setAdvancing(true);
@@ -393,7 +457,7 @@ export function DynamicForm<F extends Field>({
                 size={buttonSize}
                 type="button"
               >
-                Next
+                {checking ? 'Checking…' : 'Next'}
               </Button>
             )}
           </div>
