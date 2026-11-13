@@ -142,7 +142,8 @@ function WishlistItems({
 
         return (
           <div className="w-full @container">
-            <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 @sm:grid-cols-3 @2xl:grid-cols-4 @2xl:gap-x-5 @2xl:gap-y-8 @5xl:grid-cols-5 @7xl:grid-cols-6">
+            {/* At most four across so each card is wide enough for a one-line Add to cart. */}
+            <div className="mx-auto grid grid-cols-1 gap-x-4 gap-y-6 @sm:grid-cols-2 @2xl:gap-x-5 @2xl:gap-y-8 @3xl:grid-cols-3 @6xl:grid-cols-4">
               {items.map((item, index) => (
                 <WishlistItemCard
                   action={action}
@@ -194,7 +195,7 @@ function WishlistItemsSkeleton({
   return (
     <div
       className={clsx(
-        'mx-auto grid grid-cols-2 gap-x-4 gap-y-6 [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_100%)] @sm:grid-cols-3 @2xl:grid-cols-4 @2xl:gap-x-5 @2xl:gap-y-8 @5xl:grid-cols-5 @7xl:grid-cols-6',
+        'mx-auto grid grid-cols-1 gap-x-4 gap-y-6 [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_100%)] @sm:grid-cols-2 @2xl:gap-x-5 @2xl:gap-y-8 @3xl:grid-cols-3 @6xl:grid-cols-4',
         pending ? 'animate-pulse' : '',
         className,
       )}
