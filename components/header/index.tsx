@@ -150,17 +150,13 @@ export const Header = async () => {
         accountLabel: t('Icons.account'),
         signedInAccountHref: '/account/orders',
         signedInAccountLabel: t('Icons.accountSignedIn'),
+        // 3D icons (arrow into a door, person with a plus, arrow out of a door). The tile label
+        // beneath says the same thing, so the images are decorative.
         accountTiles: {
-          signIn: { src: '/images/nav/account-sign-in.webp', alt: 'Saved kitchens on a phone' },
-          createAccount: {
-            src: '/images/nav/account-create.webp',
-            alt: 'A kitchen plan and quote form on a counter',
-          },
-          myAccount: { src: '/images/nav/account-sign-in.webp', alt: 'Saved kitchens on a phone' },
-          signOut: {
-            src: '/images/nav/account-sign-out.webp',
-            alt: 'A hand holding a phone in a finished kitchen',
-          },
+          signIn: { src: '/images/nav/account-sign-in-icon.webp', alt: '' },
+          createAccount: { src: '/images/nav/account-create-icon.webp', alt: '' },
+          myAccount: { src: '/images/nav/account-sign-in-icon.webp', alt: '' },
+          signOut: { src: '/images/nav/account-sign-out-icon.webp', alt: '' },
         },
         isLoggedIn: streamableIsLoggedIn,
         cartHref: '/cart',

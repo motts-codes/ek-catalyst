@@ -56,16 +56,16 @@
       }
     },
     "Login": {
-      "title": "Login",
-      "heading": "Log in",
+      "title": "Sign in",
+      "heading": "Sign in",
       "forgotPassword": "Forgot your password?",
-      "cta": "Log in",
+      "cta": "Sign in",
       "email": "Email",
       "password": "Password",
       "invalidCredentials": "Your email address or password is incorrect. Try signing in again or reset your password",
       "somethingWentWrong": "Something went wrong. Please try again later.",
       "passwordResetRequired": "Password reset required. Please check your email for instructions to reset your password.",
-      "invalidToken": "Your login link is invalid or has expired. Please try logging in again.",
+      "invalidToken": "Your login link is invalid or has expired. Please try signing in again.",
       "FieldErrors": {
         "emailRequired": "Email is required",
         "emailInvalid": "Please enter a valid email address",
@@ -179,7 +179,7 @@
   "Account": {
     "Layout": {
       "addresses": "Addresses",
-      "logout": "Logout",
+      "logout": "Sign out",
       "orders": "Orders",
       "settings": "Account",
       "wishlists": "Wish lists"
