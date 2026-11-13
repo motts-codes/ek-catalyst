@@ -333,7 +333,7 @@ export function AddressListSection<A extends Address, F extends Field>({
                 <h2 className="text-center text-lg font-semibold text-[var(--order-list-empty-state-title,hsl(var(--foreground)))]">
                   {emptyStateTitle}
                 </h2>
-                <Button className="w-fit" onClick={() => setShowNewAddressForm(true)}>
+                <Button className="w-fit" onClick={() => setShowNewAddressForm(true)} size="small">
                   {showAddFormLabel}
                 </Button>
               </header>
