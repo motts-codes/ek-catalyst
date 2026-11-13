@@ -15,9 +15,17 @@ export async function AccountGreeting() {
   return (
     <div className="mb-5 border-b border-contrast-100 px-3 pb-5">
       <p className="font-heading text-xl font-semibold leading-tight">
-        {customer.firstName ? t('welcome', { firstName: customer.firstName }) : t('welcomeNoName')}
+        {customer.firstName
+          ? t.rich('welcome', {
+              firstName: customer.firstName,
+              name: (chunks) => (
+                <span className="text-[var(--button-primary-background,#d90716)]">{chunks}</span>
+              ),
+            })
+          : t('welcomeNoName')}
       </p>
-      <p className="mt-1 truncate text-xs text-contrast-500" title={customer.email}>
+      {/* Wraps rather than truncates: the whole address must be readable. */}
+      <p className="mt-1 break-all text-xs leading-snug text-contrast-500">
         {t('signedInAs', { email: customer.email })}
       </p>
     </div>

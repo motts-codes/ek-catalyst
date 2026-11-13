@@ -35,7 +35,8 @@ export default async function Layout({ children, params }: Props) {
           ]}
         />
       }
-      sidebarSize="small"
+      // "medium" (240px) gives the welcome line and email room; "small" cut long addresses.
+      sidebarSize="medium"
     >
       {children}
     </StickySidebarLayout>
