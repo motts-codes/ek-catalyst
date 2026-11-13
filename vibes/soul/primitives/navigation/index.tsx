@@ -121,6 +121,13 @@ interface Props<S extends SearchResult> {
   accountHref: string;
   /** Where the account icon goes once the customer is signed in (defaults to accountHref). */
   signedInAccountHref?: string;
+  /** Hover menu under the account icon: sign in / create account, or my account / sign out. */
+  signOutHref?: string;
+  registerHref?: string;
+  signInLabel?: string;
+  signOutLabel?: string;
+  createAccountLabel?: string;
+  myAccountLabel?: string;
   /** Signed-in state: shows a small solid green dot on the account icon. */
   isLoggedIn?: Streamable<boolean>;
   cartCount?: Streamable<number | null>;
@@ -476,6 +483,12 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
     cartCount: streamableCartCount,
     accountHref,
     signedInAccountHref = accountHref,
+    signOutHref = '/logout',
+    registerHref = '/register',
+    signInLabel = 'Sign in',
+    signOutLabel = 'Sign out',
+    createAccountLabel = 'Create account',
+    myAccountLabel = 'My account',
     isLoggedIn: streamableIsLoggedIn = false,
     links: streamableLinks,
     logo: streamableLogo,
@@ -1083,30 +1096,41 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
             </Link>
           )}
 
+          {/* Account icon: click keeps its destination (login, or the account once signed in);
+              hovering or focusing it drops a small menu in the nav-panel style. Hidden on phones,
+              where there is no hover and the mobile menu carries the links. */}
           <Stream
             fallback={
-              <Link aria-label={accountLabel} className={navButtonClassName} href={accountHref}>
-                <User size={20} strokeWidth={1} />
-              </Link>
+              <AccountMenu
+                accountHref={accountHref}
+                accountLabel={accountLabel}
+                createAccountLabel={createAccountLabel}
+                isLoggedIn={false}
+                myAccountLabel={myAccountLabel}
+                registerHref={registerHref}
+                signInLabel={signInLabel}
+                signOutHref={signOutHref}
+                signOutLabel={signOutLabel}
+                signedInAccountHref={signedInAccountHref}
+                signedInAccountLabel={signedInAccountLabel}
+              />
             }
             value={streamableIsLoggedIn}
           >
             {(isLoggedIn) => (
-              <Link
-                aria-label={isLoggedIn ? signedInAccountLabel : accountLabel}
-                className={navButtonClassName}
-                href={isLoggedIn ? signedInAccountHref : accountHref}
-              >
-                <User size={20} strokeWidth={1} />
-                {isLoggedIn && (
-                  // Signed-in status dot: solid green, ringed in the nav background so it reads
-                  // as a badge on the icon rather than part of it (like a presence indicator).
-                  <span
-                    aria-hidden
-                    className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-[#22c55e] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
-                  />
-                )}
-              </Link>
+              <AccountMenu
+                accountHref={accountHref}
+                accountLabel={accountLabel}
+                createAccountLabel={createAccountLabel}
+                isLoggedIn={isLoggedIn}
+                myAccountLabel={myAccountLabel}
+                registerHref={registerHref}
+                signInLabel={signInLabel}
+                signOutHref={signOutHref}
+                signOutLabel={signOutLabel}
+                signedInAccountHref={signedInAccountHref}
+                signedInAccountLabel={signedInAccountLabel}
+              />
             )}
           </Stream>
           <Link aria-label={cartLabel} className={navButtonClassName} href={cartHref}>
@@ -1579,6 +1603,78 @@ function CurrencyForm({
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
+    </div>
+  );
+}
+
+interface AccountMenuProps {
+  isLoggedIn: boolean;
+  accountHref: string;
+  signedInAccountHref: string;
+  accountLabel: string;
+  signedInAccountLabel: string;
+  signOutHref: string;
+  registerHref: string;
+  signInLabel: string;
+  signOutLabel: string;
+  createAccountLabel: string;
+  myAccountLabel: string;
+}
+
+// The account icon with its hover menu. CSS-only (group hover + focus-within), so the icon stays
+// a plain link: click still goes to login or the account. The pt-2 gap is inside the hover area,
+// so the pointer can travel from the icon to the menu without it closing.
+function AccountMenu({
+  isLoggedIn,
+  accountHref,
+  signedInAccountHref,
+  accountLabel,
+  signedInAccountLabel,
+  signOutHref,
+  registerHref,
+  signInLabel,
+  signOutLabel,
+  createAccountLabel,
+  myAccountLabel,
+}: AccountMenuProps) {
+  const items = isLoggedIn
+    ? [
+        { label: myAccountLabel, href: signedInAccountHref },
+        { label: signOutLabel, href: signOutHref },
+      ]
+    : [
+        { label: signInLabel, href: accountHref },
+        { label: createAccountLabel, href: registerHref },
+      ];
+
+  return (
+    <div className="group/account relative">
+      <Link
+        aria-label={isLoggedIn ? signedInAccountLabel : accountLabel}
+        className={navButtonClassName}
+        href={isLoggedIn ? signedInAccountHref : accountHref}
+      >
+        <User size={20} strokeWidth={1} />
+        {isLoggedIn && (
+          // Signed-in status dot: solid green, ringed in the nav background so it reads
+          // as a badge on the icon rather than part of it (like a presence indicator).
+          <span
+            aria-hidden
+            className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-[#22c55e] ring-2 ring-[var(--nav-background,hsl(var(--background)))]"
+          />
+        )}
+      </Link>
+      <div className="invisible absolute right-0 top-full z-50 hidden pt-2 opacity-0 transition-opacity duration-200 group-focus-within/account:visible group-focus-within/account:opacity-100 group-hover/account:visible group-hover/account:opacity-100 @[700px]:block">
+        <ul className="min-w-[11rem] rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] p-2 shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
+          {items.map((item) => (
+            <li key={item.href}>
+              <Link className={navSubLinkClassName} href={item.href}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
