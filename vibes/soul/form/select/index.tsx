@@ -105,7 +105,7 @@ export function Select({
           className={clsx(
             'flex w-full select-none items-center justify-between gap-2 border pr-3 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
             variant === 'rectangle'
-              ? 'h-[52px] rounded-lg pl-5 text-[15px]'
+              ? 'h-11 rounded-lg pl-5 text-[15px]'
               : 'h-9 rounded-full pl-4 text-sm',
             {
               light:
