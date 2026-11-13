@@ -73,7 +73,7 @@ function OfferCard({ offer, preload }: { offer: OfferStackItem; preload: boolean
           size="small"
           variant="primary"
         >
-          {offer.ctaLabel ?? 'See the offer'}
+          {offer.ctaLabel ?? 'View details'}
         </ButtonLink>
       </div>
     </article>
