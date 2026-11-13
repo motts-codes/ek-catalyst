@@ -111,7 +111,9 @@ function WishlistListItemItems({
         }
 
         return (
-          <div className="my-8 flex flex-1 gap-4 overflow-hidden [mask-image:linear-gradient(to_right,_black_70%,_transparent_100%)]">
+          // Padding inside the clipping box so the card's hover lift and shadow are not cut off;
+          // the negative margins keep the strip where it was.
+          <div className="-mx-5 mb-[-1rem] mt-6 flex flex-1 gap-4 overflow-hidden px-5 pb-12 pt-2 [mask-image:linear-gradient(to_right,_black_70%,_transparent_100%)]">
             {items.map(({ product }) => (
               <div className="w-44 shrink-0 @sm:w-56 @2xl:w-64" key={product.id}>
                 <ProductCard aspectRatio="1:1" product={product} />
@@ -153,7 +155,7 @@ function WishlistListItemItemsSkeleton({
   placeholderCount?: number;
 }) {
   return (
-    <div className="my-8 flex flex-1 gap-4 overflow-hidden [mask-image:linear-gradient(to_right,_black_70%,_transparent_100%)]">
+    <div className="-mx-5 mb-[-1rem] mt-6 flex flex-1 gap-4 overflow-hidden px-5 pb-12 pt-2 [mask-image:linear-gradient(to_right,_black_70%,_transparent_100%)]">
       {Array.from({ length: placeholderCount }).map((_, index) => (
         <div className={clsx('w-44 shrink-0 @sm:w-56 @2xl:w-64', className)} key={index}>
           <ProductCardSkeleton aspectRatio="1:1" />
