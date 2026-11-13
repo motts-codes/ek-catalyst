@@ -48,7 +48,7 @@ const WAYS: RowCard[] = [
     icon: Store,
     title: 'Factory Outlet',
     description:
-      '18 Main Street, Bristol. Clearance and in-stock cabinets, closets, appliances, windows and doors.',
+      '18 Main Street, Bristol, CT. Clearance and in-stock cabinets, closets, appliances, windows and doors.',
     ctaLabel: 'Visit the outlet ↗',
     href: FACTORY_OUTLET_URL,
   },

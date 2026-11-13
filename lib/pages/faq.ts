@@ -396,7 +396,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       ),
       q(
         "What's the Factory Outlet?",
-        "Our outlet at 18 Main Street, Bristol. It sells clearance and brand-new products at a discount: quick-ship cabinets (Eden, Madison, Avon and Derry), discontinued and clearance cabinets, closets, in-stock appliances, windows, vanities, countertops, siding and interior doors. It isn't a showroom, so price match and financing aren't available there.",
+        "Our outlet at 18 Main Street, Bristol, CT. It sells clearance and brand-new products at a discount: quick-ship cabinets (Eden, Madison, Avon and Derry), discontinued and clearance cabinets, closets, in-stock appliances, windows, vanities, countertops, siding and interior doors. It isn't a showroom, so price match and financing aren't available there.",
       ),
       q(
         "What can I do in a showroom that I can't do online?",
