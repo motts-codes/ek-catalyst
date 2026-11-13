@@ -14,7 +14,7 @@ export async function AccountGreeting() {
 
   return (
     <div className="mb-5 border-b border-contrast-100 px-3 pb-5">
-      <p className="font-heading text-xl font-semibold leading-tight">
+      <p className="break-words font-heading text-xl font-semibold leading-tight">
         {customer.firstName
           ? t.rich('welcome', {
               firstName: customer.firstName,
