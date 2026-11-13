@@ -27,10 +27,10 @@ export function SidebarMenuLink({
       aria-current={isActive ? 'page' : undefined}
       className={clsx(
         'flex min-h-10 items-center rounded-md px-3 text-sm font-semibold transition-colors',
-        // Active: brand red on the light red band; the rest turn red on hover, no band.
+        // Active: brand red on the light red band; the rest turn red on a very light grey on hover.
         isActive
           ? 'bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]'
-          : 'hover:text-[var(--button-primary-background,#d90716)]',
+          : 'hover:bg-[hsl(var(--contrast-100)/50%)] hover:text-[var(--button-primary-background,#d90716)]',
         className,
       )}
       href={href}
