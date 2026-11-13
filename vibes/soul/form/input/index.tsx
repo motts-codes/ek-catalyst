@@ -1,4 +1,7 @@
+'use client';
+
 import { clsx } from 'clsx';
+import { Eye, EyeOff } from 'lucide-react';
 import * as React from 'react';
 
 import { FieldError } from '@/vibes/soul/form/field-error';
@@ -33,62 +36,92 @@ export const Input = React.forwardRef<
     errors?: string[];
     colorScheme?: 'light' | 'dark';
   }
->(({ prepend, label, className, required, errors, colorScheme = 'light', id, ...rest }, ref) => {
-  const generatedId = React.useId();
+>(
+  (
+    { prepend, label, className, required, errors, colorScheme = 'light', id, type, ...rest },
+    ref,
+  ) => {
+    const generatedId = React.useId();
+    // Password fields get a show / hide toggle (an eye at the right edge). Only the type flips;
+    // the value, name and validation are untouched.
+    const isPassword = type === 'password';
+    const [revealed, setRevealed] = React.useState(false);
 
-  return (
-    <div className={clsx('w-full space-y-2', className)}>
-      {label != null && label !== '' && (
-        <Label colorScheme={colorScheme} htmlFor={id ?? generatedId} required={required}>
-          {label}
-        </Label>
-      )}
-      <div
-        className={clsx(
-          'relative overflow-hidden rounded-lg border transition-colors duration-200 focus:outline-none',
-          {
-            light:
-              'bg-[var(--input-light-background,hsl(var(--background)))] focus-within:border-[var(--input-light-focus,hsl(var(--foreground)))]',
-            dark: 'bg-[var(--input-dark-background,hsl(var(--foreground)))] focus-within:border-[var(--input-dark-focus,hsl(var(--background)))]',
-          }[colorScheme],
-          {
-            light:
-              errors && errors.length > 0
-                ? 'border-[var(--input-light-border-error,hsl(var(--error)))]'
-                : 'border-[var(--input-light-border,hsl(var(--contrast-100)))]',
-            dark:
-              errors && errors.length > 0
-                ? 'border-[var(--input-dark-border-error,hsl(var(--error)))]'
-                : 'border-[var(--input-dark-border,hsl(var(--contrast-500)))]',
-          }[colorScheme],
+    return (
+      <div className={clsx('w-full space-y-2', className)}>
+        {label != null && label !== '' && (
+          <Label colorScheme={colorScheme} htmlFor={id ?? generatedId} required={required}>
+            {label}
+          </Label>
         )}
-      >
-        {prepend != null && prepend !== '' && (
-          <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2">
-            {prepend}
-          </span>
-        )}
-        <input
-          {...rest}
+        <div
           className={clsx(
-            'w-full px-5 py-3.5 text-[15px] [appearance:textfield] placeholder:font-normal placeholder:text-contrast-500 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+            'relative overflow-hidden rounded-lg border transition-colors duration-200 focus:outline-none',
             {
               light:
-                'bg-[var(--input-light-background,hsl(var(--background)))] text-[var(--input-light-text,hsl(var(--foreground)))] placeholder:text-[var(--input-light-placeholder,hsl(var(--contrast-500)))]',
-              dark: 'bg-[var(--input-dark-background,hsl(var(--foreground)))] text-[var(--input-dark-text,hsl(var(--background)))] placeholder:text-[var(--input-dark-placeholder,hsl(var(--contrast-100)))]',
+                'bg-[var(--input-light-background,hsl(var(--background)))] focus-within:border-[var(--input-light-focus,hsl(var(--foreground)))]',
+              dark: 'bg-[var(--input-dark-background,hsl(var(--foreground)))] focus-within:border-[var(--input-dark-focus,hsl(var(--background)))]',
             }[colorScheme],
-            { 'pe-4 ps-12': prepend },
+            {
+              light:
+                errors && errors.length > 0
+                  ? 'border-[var(--input-light-border-error,hsl(var(--error)))]'
+                  : 'border-[var(--input-light-border,hsl(var(--contrast-100)))]',
+              dark:
+                errors && errors.length > 0
+                  ? 'border-[var(--input-dark-border-error,hsl(var(--error)))]'
+                  : 'border-[var(--input-dark-border,hsl(var(--contrast-500)))]',
+            }[colorScheme],
           )}
-          id={id ?? generatedId}
-          ref={ref}
-          required={required}
-        />
+        >
+          {prepend != null && prepend !== '' && (
+            <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2">
+              {prepend}
+            </span>
+          )}
+          <input
+            {...rest}
+            className={clsx(
+              'w-full px-5 py-3.5 text-[15px] [appearance:textfield] placeholder:font-normal placeholder:text-contrast-500 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+              {
+                light:
+                  'bg-[var(--input-light-background,hsl(var(--background)))] text-[var(--input-light-text,hsl(var(--foreground)))] placeholder:text-[var(--input-light-placeholder,hsl(var(--contrast-500)))]',
+                dark: 'bg-[var(--input-dark-background,hsl(var(--foreground)))] text-[var(--input-dark-text,hsl(var(--background)))] placeholder:text-[var(--input-dark-placeholder,hsl(var(--contrast-100)))]',
+              }[colorScheme],
+              { 'pe-4 ps-12': prepend, 'pe-12': isPassword },
+            )}
+            id={id ?? generatedId}
+            ref={ref}
+            required={required}
+            type={isPassword && revealed ? 'text' : type}
+          />
+          {isPassword && (
+            <button
+              aria-label={revealed ? 'Hide password' : 'Show password'}
+              aria-pressed={revealed}
+              className={clsx(
+                'absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--input-light-focus,hsl(var(--foreground)))]',
+                colorScheme === 'light'
+                  ? 'text-contrast-400 hover:text-foreground'
+                  : 'text-contrast-200 hover:text-background',
+              )}
+              onClick={() => setRevealed((current) => !current)}
+              type="button"
+            >
+              {revealed ? (
+                <EyeOff aria-hidden size={18} strokeWidth={1.75} />
+              ) : (
+                <Eye aria-hidden size={18} strokeWidth={1.75} />
+              )}
+            </button>
+          )}
+        </div>
+        {errors?.map((error) => (
+          <FieldError key={error}>{error}</FieldError>
+        ))}
       </div>
-      {errors?.map((error) => (
-        <FieldError key={error}>{error}</FieldError>
-      ))}
-    </div>
-  );
-});
+    );
+  },
+);
 
 Input.displayName = 'Input';

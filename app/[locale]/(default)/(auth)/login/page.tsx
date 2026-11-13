@@ -57,12 +57,12 @@ export default async function Login({ params, searchParams }: Props) {
         <Slot
           fallback={
             <div className="font-[family-name:var(--sign-in-font-family,var(--font-family-body))]">
-              <h2 className="mb-10 font-[family-name:var(--sign-in-title-font-family,var(--font-family-heading))] text-4xl font-medium leading-none text-[var(--reset-password-title,hsl(var(--foreground)))] @xl:text-5xl">
+              <h2 className="mb-6 font-[family-name:var(--sign-in-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none text-[var(--reset-password-title,hsl(var(--foreground)))] @xl:text-3xl">
                 {t('CreateAccount.title')}
               </h2>
-              <div className="text-[var(--sign-in-description,hsl(var(--contrast-500)))]">
+              <div className="text-sm text-[var(--sign-in-description,hsl(var(--contrast-500)))] @xl:text-base">
                 <p>{t('CreateAccount.accountBenefits')}</p>
-                <ul className="mb-10 ml-4 mt-4 list-disc">
+                <ul className="mb-8 ml-4 mt-3 list-disc space-y-1">
                   <li>{t('CreateAccount.fastCheckout')}</li>
                   <li>{t('CreateAccount.multipleAddresses')}</li>
                   <li>{t('CreateAccount.ordersHistory')}</li>

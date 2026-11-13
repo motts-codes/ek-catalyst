@@ -42,7 +42,7 @@ export function SignInSection({
     <div className="@container">
       <div className="flex flex-col justify-center gap-y-24 px-3 py-10 @xl:flex-row @xl:px-6 @4xl:py-20 @5xl:px-20">
         <div className="w-full @xl:max-w-md @xl:border-r @xl:pr-10 @4xl:pr-20">
-          <h1 className="mb-10 font-[family-name:var(--sign-in-title-font-family,var(--font-family-heading))] text-4xl font-medium leading-none text-[var(--sign-in-title,hsl(var(--foreground)))] @xl:text-5xl">
+          <h1 className="mb-6 font-[family-name:var(--sign-in-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none text-[var(--sign-in-title,hsl(var(--foreground)))] @xl:text-3xl">
             {title}
           </h1>
           <SignInForm
