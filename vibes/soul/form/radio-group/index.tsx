@@ -9,8 +9,14 @@ interface Option {
   value: string;
   label: string;
   description?: string;
+  /** Small muted line under the label (e.g. "Delivers Tue, Nov 17"). Stacked layout only. */
+  detail?: string;
   disabled?: boolean;
 }
+
+// 'inline' wraps the options in a row (the default). 'stacked' lists them one per line with the
+// description right-aligned, for option + price lists such as the cart's shipping estimate.
+type Layout = 'inline' | 'stacked';
 
 export const RadioGroup = React.forwardRef<
   React.ComponentRef<typeof RadioGroupPrimitive.Root>,
@@ -19,6 +25,8 @@ export const RadioGroup = React.forwardRef<
     options: Option[];
     errors?: string[];
     colorScheme?: 'light' | 'dark';
+    layout?: Layout;
+    panelClassName?: string;
     onOptionMouseEnter?: (value: string) => void;
   }
 >(
@@ -30,6 +38,8 @@ export const RadioGroup = React.forwardRef<
       className,
       onOptionMouseEnter,
       colorScheme = 'light',
+      layout = 'inline',
+      panelClassName,
       required,
       ...rest
     },
@@ -48,8 +58,12 @@ export const RadioGroup = React.forwardRef<
           {...rest}
           aria-labelledby={id}
           className={clsx(
-            'flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg px-5 py-3.5',
+            'flex rounded-lg',
+            layout === 'inline'
+              ? 'flex-wrap items-center gap-x-6 gap-y-3 px-5 py-3.5'
+              : 'flex-col items-stretch gap-y-2.5 px-4 py-3',
             colorScheme === 'light' && 'bg-[var(--radio-group-light-panel,transparent)]',
+            panelClassName,
           )}
           ref={ref}
           required={required}
@@ -59,6 +73,7 @@ export const RadioGroup = React.forwardRef<
               colorScheme={colorScheme}
               error={errors != null && errors.length > 0}
               key={index}
+              layout={layout}
               onOptionMouseEnter={onOptionMouseEnter}
               option={option}
             />
@@ -104,17 +119,20 @@ function RadioGroupItem({
   option,
   error = false,
   colorScheme = 'light',
+  layout = 'inline',
   onOptionMouseEnter,
 }: {
   option: Option;
   error?: boolean;
   colorScheme?: 'light' | 'dark';
+  layout?: Layout;
   onOptionMouseEnter?: (value: string) => void;
 }) {
   const id = React.useId();
+  const stacked = layout === 'stacked';
 
   return (
-    <div className="flex items-start" key={option.value}>
+    <div className={clsx('flex items-start', stacked && 'w-full')} key={option.value}>
       <RadioGroupPrimitive.Item
         aria-labelledby={
           option.description !== undefined ? `${id}-label ${id}-description` : `${id}-label`
@@ -155,6 +173,7 @@ function RadioGroupItem({
       <label
         className={clsx(
           'flex grow justify-between pl-3 text-sm leading-5',
+          stacked && 'items-baseline gap-x-3',
           {
             light: 'text-[var(--radio-group-light-label,hsl(var(--foreground)))]',
             dark: 'text-[var(--radio-group-dark-label,hsl(var(--background)))]',
@@ -162,9 +181,23 @@ function RadioGroupItem({
         )}
         htmlFor={id}
       >
-        <span id={`${id}-label`}>{option.label}</span>
+        {stacked ? (
+          <span className="min-w-0" id={`${id}-label`}>
+            <span className="block">{option.label}</span>
+            {option.detail !== undefined && option.detail !== '' && (
+              <span className="block text-xs text-contrast-400">{option.detail}</span>
+            )}
+          </span>
+        ) : (
+          <span id={`${id}-label`}>{option.label}</span>
+        )}
         {option.description !== undefined && (
-          <span id={`${id}-description`}>{option.description}</span>
+          <span
+            className={clsx(stacked && 'shrink-0 font-medium tabular-nums')}
+            id={`${id}-description`}
+          >
+            {option.description}
+          </span>
         )}
       </label>
     </div>

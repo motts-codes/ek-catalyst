@@ -2,7 +2,7 @@
 
 import * as Popover from '@radix-ui/react-popover';
 import { clsx } from 'clsx';
-import { Truck } from 'lucide-react';
+import { LocateFixed, Truck } from 'lucide-react';
 import { useId, useState, useTransition } from 'react';
 
 import { Button } from '@/vibes/soul/primitives/button';
@@ -17,9 +17,54 @@ interface Props {
   mapboxToken?: string;
 }
 
+const LOCATION_ERROR = "We couldn't get your location. Enter your ZIP instead.";
+
+interface ZipInput {
+  zip: string;
+  town?: string;
+  state?: string;
+}
+
+// Browser position → ZIP (plus town/state) through Mapbox. Only asked for on the button, never on
+// load: an unprompted permission dialog is easy to deny for good. Coordinates are not kept.
+async function locateZip(token: string): Promise<ZipInput | null> {
+  if (!('geolocation' in navigator)) return null;
+
+  const coords = await new Promise<GeolocationCoordinates | null>((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => resolve(position.coords),
+      () => resolve(null),
+      { maximumAge: 300_000, timeout: 10_000 },
+    );
+  });
+
+  if (!coords) return null;
+
+  const { reverseGeocodeZip } = await import('~/lib/pages/showroom-distance');
+  const origin = await reverseGeocodeZip({ lat: coords.latitude, lng: coords.longitude }, token);
+
+  return origin ? { zip: origin.label, town: origin.town, state: origin.state } : null;
+}
+
+// Name a typed ZIP in the browser when we can (a URL-locked Mapbox token only works here); the
+// action falls back to its own lookup, and to the bare ZIP, when we can't.
+async function nameZip(zip: string, token?: string): Promise<ZipInput> {
+  if (!token) return { zip };
+
+  try {
+    const { geocodeZip } = await import('~/lib/pages/showroom-distance');
+    const origin = await geocodeZip(zip, token);
+
+    return { zip, town: origin?.town, state: origin?.state };
+  } catch {
+    return { zip };
+  }
+}
+
 // "Deliver to 06010" in the utility strip, after the call number. Click for a small popover with a
-// single ZIP field; saving sets the ek_zip cookie, re-quotes the cart's shipping, and the label
-// updates in place. EK ships within the US only, so a ZIP is all that's asked for.
+// "Use my location" button and a single ZIP field; saving sets the ek_zip cookie, re-quotes the
+// cart's shipping, and the label updates in place. EK ships within the US only, so a ZIP is all
+// that's asked for.
 export function DeliveryZip({ value, mapboxToken }: Props) {
   const id = useId();
   const router = useRouter();
@@ -28,6 +73,22 @@ export function DeliveryZip({ value, mapboxToken }: Props) {
   const [zip, setZip] = useState(value?.zip ?? '');
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [locating, setLocating] = useState(false);
+
+  const persist = async (input: ZipInput) => {
+    const result = await saveDeliveryZip(input);
+
+    if (!result.ok) {
+      setError(result.error);
+
+      return;
+    }
+
+    setCurrent(result.value);
+    setOpen(false);
+    // Pages that read the cookie (cart, showrooms) pick up the new ZIP.
+    router.refresh();
+  };
 
   const submit = () => {
     const trimmed = zip.trim();
@@ -40,35 +101,30 @@ export function DeliveryZip({ value, mapboxToken }: Props) {
 
     setError(null);
     startTransition(async () => {
-      // Name the ZIP in the browser when we can (a URL-locked Mapbox token only works here); the
-      // action falls back to its own lookup, and to the bare ZIP, when we can't.
-      let town: string | undefined;
-      let state: string | undefined;
+      await persist(await nameZip(trimmed, mapboxToken));
+    });
+  };
 
-      if (mapboxToken) {
-        try {
-          const { geocodeZip } = await import('~/lib/pages/showroom-distance');
-          const origin = await geocodeZip(trimmed, mapboxToken);
+  const useMyLocation = () => {
+    if (!mapboxToken) return;
 
-          town = origin?.town;
-          state = origin?.state;
-        } catch {
-          // Fine: the server will try, or the ZIP goes through on its own.
+    setError(null);
+    setLocating(true);
+    startTransition(async () => {
+      try {
+        const found = await locateZip(mapboxToken);
+
+        if (found) {
+          setZip(found.zip);
+          await persist(found);
+        } else {
+          setError(LOCATION_ERROR);
         }
+      } catch {
+        setError(LOCATION_ERROR);
+      } finally {
+        setLocating(false);
       }
-
-      const result = await saveDeliveryZip({ zip: trimmed, town, state });
-
-      if (!result.ok) {
-        setError(result.error);
-
-        return;
-      }
-
-      setCurrent(result.value);
-      setOpen(false);
-      // Pages that read the cookie (cart, showrooms) pick up the new ZIP.
-      router.refresh();
     });
   };
 
@@ -124,7 +180,27 @@ export function DeliveryZip({ value, mapboxToken }: Props) {
                 ? `Showing delivery for ${label}.`
                 : 'Your ZIP code gives you a shipping estimate in the cart and your nearest showroom.'}
             </p>
-            <div className="mt-3 flex gap-2">
+            {mapboxToken ? (
+              <>
+                <button
+                  aria-busy={locating || undefined}
+                  className="mt-3 flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-contrast-200 bg-white px-3 text-sm font-medium text-foreground transition-colors hover:border-[var(--button-primary-background,#d90716)] hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 disabled:opacity-60"
+                  disabled={pending}
+                  onClick={useMyLocation}
+                  type="button"
+                >
+                  <LocateFixed aria-hidden size={16} strokeWidth={1.75} />
+                  {locating ? 'Finding your ZIP…' : 'Use my location'}
+                </button>
+                <p
+                  aria-hidden
+                  className="my-2 flex items-center gap-2 text-[11px] uppercase tracking-wide text-contrast-400 before:h-px before:flex-1 before:bg-contrast-100 after:h-px after:flex-1 after:bg-contrast-100"
+                >
+                  or
+                </p>
+              </>
+            ) : null}
+            <div className={clsx('flex gap-2', !mapboxToken && 'mt-3')}>
               <input
                 aria-describedby={error ? `${id}-error` : undefined}
                 aria-invalid={error ? true : undefined}

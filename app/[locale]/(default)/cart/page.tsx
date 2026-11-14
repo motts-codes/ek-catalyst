@@ -7,6 +7,7 @@ import { Cart as CartComponent, CartEmptyState } from '@/vibes/soul/sections/car
 import { CartAnalyticsProvider } from '~/app/[locale]/(default)/cart/_components/cart-analytics-provider';
 import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { getCartId } from '~/lib/cart';
+import { describeShippingOption } from '~/lib/cart/shipping-option-label';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getDeliveryZip } from '~/lib/delivery/zip';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
@@ -377,7 +378,7 @@ export default async function Cart({ params }: Props) {
               : undefined,
             shippingOptions: shippingConsignment?.availableShippingOptions
               ? shippingConsignment.availableShippingOptions.map((option) => ({
-                  label: option.description,
+                  ...describeShippingOption(option.description),
                   value: option.entityId,
                   price: format.number(option.cost.value, {
                     style: 'currency',
@@ -388,7 +389,7 @@ export default async function Cart({ params }: Props) {
             shippingOption: shippingConsignment?.selectedShippingOption
               ? {
                   value: shippingConsignment.selectedShippingOption.entityId,
-                  label: shippingConsignment.selectedShippingOption.description,
+                  ...describeShippingOption(shippingConsignment.selectedShippingOption.description),
                   price: format.number(shippingConsignment.selectedShippingOption.cost.value, {
                     style: 'currency',
                     currency: checkout?.cart?.currencyCode,

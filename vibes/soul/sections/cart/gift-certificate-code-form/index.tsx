@@ -91,12 +91,13 @@ export function GiftCertificateCodeForm({
     <div className="space-y-2 border-t border-[var(--cart-border,hsl(var(--contrast-100)))] pb-5 pt-4">
       <form {...getFormProps(form)} action={formAction} className="space-y-2">
         <label htmlFor={fields.giftCertificateCode.id}>{label}</label>
-        <div className="mt-2 flex gap-1.5">
+        <div className="mt-2 flex items-start gap-3">
           <Input
             {...getInputProps(fields.giftCertificateCode, {
               required: true,
               type: 'text',
             })}
+            className="max-w-56"
             disabled={disabled}
             errors={fields.giftCertificateCode.errors}
             id={fields.giftCertificateCode.id}

@@ -113,3 +113,41 @@ export async function geocodeZip(zip: string, token: string): Promise<SearchOrig
     state,
   };
 }
+
+// A point to its US ZIP, through Mapbox's reverse geocoder: the "use my location" path. Only the
+// ZIP (and its town/state) leaves this function; the coordinates are never stored.
+export async function reverseGeocodeZip(
+  coords: LatLng,
+  token: string,
+): Promise<SearchOrigin | null> {
+  const url = new URL('https://api.mapbox.com/search/geocode/v6/reverse');
+
+  url.searchParams.set('longitude', String(coords.lng));
+  url.searchParams.set('latitude', String(coords.lat));
+  url.searchParams.set('country', 'us');
+  url.searchParams.set('types', 'postcode');
+  url.searchParams.set('limit', '1');
+  url.searchParams.set('access_token', token);
+
+  const response = await fetch(url.toString());
+
+  if (!response.ok) throw new Error(`Reverse geocoding failed (${response.status})`);
+
+  const data = GeocodeResponse.parse(await response.json());
+  const feature = data.features?.[0];
+  const zip = feature?.properties.name;
+
+  if (!zip || !isUsZip(zip)) return null;
+
+  const town = feature.properties.context?.place?.name;
+  const state = feature.properties.context?.region?.region_code;
+
+  return {
+    lat: coords.lat,
+    lng: coords.lng,
+    label: zip,
+    place: town ? [town, state].filter(Boolean).join(', ') : undefined,
+    town,
+    state,
+  };
+}

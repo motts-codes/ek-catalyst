@@ -35,6 +35,8 @@ interface ShippingOption {
   label: string;
   value: string;
   price: string;
+  /** Secondary line, e.g. "Delivers Tue, Nov 17". */
+  detail?: string;
 }
 
 interface Address {
@@ -295,6 +297,7 @@ export function ShippingForm({
               errors={shippingOptionsFields.shippingOption.errors}
               key={shippingOptionsFields.shippingOption.id}
               label={shippingOptionsLabel}
+              layout="stacked"
               name="shippingOption"
               onBlur={shippingOptionsControl.blur}
               onFocus={shippingOptionsControl.focus}
@@ -304,8 +307,11 @@ export function ShippingForm({
                   label: option.label,
                   value: option.value,
                   description: option.price,
+                  detail: option.detail,
                 })) ?? []
               }
+              // Cream panel (same pair as the delivery map) instead of the rose form panel.
+              panelClassName="border border-[#f6ebd6] [--radio-group-light-panel:#fbf5ea]"
               required
               value={shippingOptionsControl.value}
             />
