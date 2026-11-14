@@ -8,6 +8,7 @@ import { client } from '~/client';
 import { graphql, VariablesOf } from '~/client/graphql';
 import { getCartId } from '~/lib/cart';
 
+import { rememberShippingOption, restoreShippingOption } from './keep-shipping-option';
 import { removeItem } from './remove-item';
 
 const UpdateCartLineItemMutation = graphql(`
@@ -60,6 +61,9 @@ export const updateQuantity = async ({
     return result;
   }
 
+  // Keep the shipping option the visitor already chose across the quantity change.
+  const keptShippingOption = await rememberShippingOption(cartId);
+
   const cartLineItemData = Object.assign(
     { quantity, productEntityId },
     variantEntityId && { variantEntityId },
@@ -86,6 +90,8 @@ export const updateQuantity = async ({
   if (!cart) {
     throw new Error(t('failedToUpdateQuantity'));
   }
+
+  await restoreShippingOption(cartId, keptShippingOption);
 
   revalidatePath('/cart');
 

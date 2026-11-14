@@ -250,7 +250,13 @@ export default async function Cart({ params }: Props) {
   // The visitor's remembered ZIP (utility bar). When the cart has no estimate yet, the page quotes
   // shipping for it on load, so the summary is right without anyone typing.
   const deliveryZip = await getDeliveryZip();
-  const needsEstimate = Boolean(deliveryZip) && !shippingConsignment?.address;
+  // Quote on load when a ZIP is known and the cart has no address yet, or has one saved without a
+  // state code (older carts): without the code BigCommerce can't match the tax zone.
+  const staleAddress =
+    Boolean(shippingConsignment?.address) &&
+    !shippingConsignment?.address?.stateOrProvinceCode &&
+    Boolean(deliveryZip?.state);
+  const needsEstimate = Boolean(deliveryZip) && (!shippingConsignment?.address || staleAddress);
 
   const showShippingForm =
     shippingConsignment?.address && !shippingConsignment.selectedShippingOption;

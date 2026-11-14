@@ -9,6 +9,8 @@ import { graphql, VariablesOf } from '~/client/graphql';
 import { TAGS } from '~/client/tags';
 import { clearCartId, getCartId } from '~/lib/cart';
 
+import { rememberShippingOption, restoreShippingOption } from './keep-shipping-option';
+
 const DeleteCartLineItemMutation = graphql(`
   mutation DeleteCartLineItemMutation($input: DeleteCartLineItemInput!) {
     cart {
@@ -41,6 +43,9 @@ export async function removeItem({
     throw new Error(t('lineItemNotFound'));
   }
 
+  // Keep the shipping option the visitor already chose when another item is removed.
+  const keptShippingOption = await rememberShippingOption(cartId);
+
   const response = await client.fetch({
     document: DeleteCartLineItemMutation,
     variables: {
@@ -60,6 +65,8 @@ export async function removeItem({
   // TODO: We need to figure out if it actually failed.
   if (!cart) {
     await clearCartId();
+  } else {
+    await restoreShippingOption(cartId, keptShippingOption);
   }
 
   revalidateTag(TAGS.cart, { expire: 0 });
