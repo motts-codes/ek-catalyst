@@ -30,6 +30,54 @@ interface Props {
 
 const CHECKOUT_URL = process.env.TRAILING_SLASH !== 'false' ? '/checkout/' : '/checkout';
 
+// Brand, SKU, line total and the "Change options" link for a cart line.
+function lineItemDetails(
+  item: {
+    brand: string | null;
+    sku: string | null;
+    extendedSalePrice: { value: number; currencyCode: string };
+  } & Parameters<typeof changeOptionsHref>[0],
+  format: Awaited<ReturnType<typeof getFormatter>>,
+) {
+  return {
+    brand: item.brand ?? undefined,
+    sku: item.sku ?? undefined,
+    lineTotal: format.number(item.extendedSalePrice.value, {
+      style: 'currency',
+      currency: item.extendedSalePrice.currencyCode,
+    }),
+    changeHref: changeOptionsHref(item),
+  };
+}
+
+// "Change options" sends the visitor back to the product page with the current choices
+// pre-selected and the cart line to replace; the page's add-to-cart then updates that line.
+function changeOptionsHref(item: {
+  entityId: string;
+  quantity: number;
+  url: string;
+  selectedOptions: Array<{ __typename: string; entityId: number; valueEntityId?: number }>;
+}): string | undefined {
+  const params = new URLSearchParams();
+
+  item.selectedOptions.forEach((option) => {
+    if (
+      (option.__typename === 'CartSelectedMultipleChoiceOption' ||
+        option.__typename === 'CartSelectedCheckboxOption') &&
+      option.valueEntityId !== undefined
+    ) {
+      params.set(String(option.entityId), String(option.valueEntityId));
+    }
+  });
+
+  if ([...params.keys()].length === 0) return undefined;
+
+  params.set('editLine', item.entityId);
+  params.set('qty', String(item.quantity));
+
+  return `${new URL(item.url).pathname}?${params.toString()}`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
@@ -214,7 +262,7 @@ export default async function Cart({ params }: Props) {
         })
         .join(', '),
       title: item.name,
-      sku: item.sku ?? undefined,
+      ...lineItemDetails(item, format),
       image: item.image?.url ? { src: item.image.url, alt: item.name } : undefined,
       href: new URL(item.url).pathname,
       selectedOptions: item.selectedOptions,
@@ -320,6 +368,9 @@ export default async function Cart({ params }: Props) {
                   currency: cart.currencyCode,
                 })}`,
               })),
+            ].filter(exists),
+            // Rendered under the shipping block: tax depends on the destination and the carrier.
+            tax:
               !taxIncluded && checkout?.taxTotal
                 ? {
                     label: t('CheckoutSummary.tax'),
@@ -328,9 +379,9 @@ export default async function Cart({ params }: Props) {
                       currency: cart.currencyCode,
                     }),
                   }
-                : null,
-            ].filter(exists),
+                : undefined,
           }}
+          changeOptionsLabel={t('changeOptions')}
           checkoutAction={CHECKOUT_URL}
           checkoutLabel={t('proceedToCheckout')}
           couponCode={{

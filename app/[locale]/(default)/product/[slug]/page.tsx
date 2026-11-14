@@ -164,6 +164,11 @@ export default async function Product({ params, searchParams }: Props) {
   const { locale, slug } = await params;
   const options = await searchParams;
 
+  // "Change options" from the cart: the line to replace and its quantity.
+  const editLineItemId = typeof options.editLine === 'string' ? options.editLine : undefined;
+  const defaultQuantity =
+    typeof options.qty === 'string' && Number(options.qty) > 0 ? Number(options.qty) : undefined;
+
   const optionValueIds = Object.keys(options)
     .map((option) => ({
       optionEntityId: Number(option),
@@ -402,7 +407,9 @@ export default async function Product({ params, searchParams }: Props) {
       return t('ProductDetails.Submit.outOfStock');
     }
 
-    return t('ProductDetails.Submit.addToCart');
+    return editLineItemId
+      ? t('ProductDetails.Submit.updateCartItem')
+      : t('ProductDetails.Submit.addToCart');
   });
 
   const streameableCtaDisabled = Streamable.from(async () => {
@@ -800,7 +807,9 @@ export default async function Product({ params, searchParams }: Props) {
           ctaDisabled={streameableCtaDisabled}
           ctaLabel={streameableCtaLabel}
           decrementLabel={t('ProductDetails.decreaseQuantity')}
+          defaultQuantity={defaultQuantity}
           deliveryMessage={deliveryMessage}
+          editLineItemId={editLineItemId}
           emptySelectPlaceholder={t('ProductDetails.emptySelectPlaceholder')}
           fields={withDefaultSelections(
             productOptionsTransformer(baseProduct.productOptions),

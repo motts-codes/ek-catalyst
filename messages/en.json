@@ -497,7 +497,8 @@
       "lineItemNotFound": "Line item not found.",
       "failedToUpdateQuantity": "Failed to update quantity.",
       "somethingWentWrong": "Something went wrong. Please try again later."
-    }
+    },
+    "changeOptions": "Change options"
   },
   "Compare": {
     "title": "Compare products",
@@ -542,7 +543,8 @@
         "addToCart": "Add to cart",
         "outOfStock": "Out of stock",
         "preorder": "Preorder",
-        "unavailable": "Unavailable"
+        "unavailable": "Unavailable",
+        "updateCartItem": "Update item in cart"
       },
       "Accordions": {
         "specifications": "Specifications",

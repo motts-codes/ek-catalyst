@@ -107,6 +107,9 @@ export interface ProductDetailProps<F extends Field> {
   // Quote-only products (countertops): no purchase panel or options; a 40/60 gallery/details
   // split with "Request a quote" (to the form on the page) and a phone link instead.
   quoteOnly?: QuoteActions;
+  // Cart line being edited ("Change options" from the cart) + its quantity to pre-fill.
+  editLineItemId?: string;
+  defaultQuantity?: number;
 }
 
 /**
@@ -173,6 +176,8 @@ export function ProductDetail<F extends Field>({
   deliveryMessage,
   priceUnit,
   quoteOnly,
+  editLineItemId,
+  defaultQuantity,
 }: ProductDetailProps<F>) {
   return (
     <section className="@container">
@@ -260,6 +265,7 @@ export function ProductDetail<F extends Field>({
                           ctaDisabled={ctaDisabled ?? undefined}
                           ctaLabel={ctaLabel ?? undefined}
                           decrementLabel={decrementLabel}
+                          defaultQuantity={defaultQuantity}
                           deliveryMessage={deliveryMessage}
                           descriptionSlot={
                             <Stream
@@ -276,6 +282,7 @@ export function ProductDetail<F extends Field>({
                               }
                             </Stream>
                           }
+                          editLineItemId={editLineItemId}
                           emptySelectPlaceholder={emptySelectPlaceholder}
                           fields={fields}
                           fulfillmentMessage={fulfillmentMessage}

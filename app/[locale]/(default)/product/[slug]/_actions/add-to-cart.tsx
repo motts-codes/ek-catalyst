@@ -3,16 +3,19 @@
 import { BigCommerceGQLError } from '@bigcommerce/catalyst-client';
 import { SubmissionResult } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { ReactNode } from 'react';
 
 import { type CartDrawerData } from '@/vibes/soul/primitives/cart-drawer/store';
 import { Field, schema } from '@/vibes/soul/sections/product-detail/schema';
 import { graphql } from '~/client/graphql';
 import { Link } from '~/components/link';
+import { redirect } from '~/i18n/routing';
 import { addToOrCreateCart } from '~/lib/cart';
 import { getCartDrawerSummary } from '~/lib/cart/drawer-summary';
 import { MissingCartError } from '~/lib/cart/error';
+
+import { updateQuantity } from '../../../cart/_actions/update-quantity';
 
 type CartSelectedOptionsInput = ReturnType<typeof graphql.scalar<'CartSelectedOptionsInput'>>;
 
@@ -145,6 +148,29 @@ export const addToCart = async (prevState: State, payload: FormData): Promise<St
         return { ...accum };
     }
   }, {});
+
+  // "Change options" from the cart: replace that cart line with the new selection, then go back.
+  const editLine = payload.get('editLine');
+
+  if (typeof editLine === 'string' && editLine !== '') {
+    try {
+      await updateQuantity({
+        lineItemEntityId: editLine,
+        productEntityId,
+        quantity,
+        selectedOptions,
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+
+      const message = error instanceof Error ? error.message : String(error);
+
+      return { lastResult: submission.reply({ formErrors: [message] }), fields: prevState.fields };
+    }
+
+    redirect({ href: '/cart', locale: await getLocale() });
+  }
 
   try {
     await addToOrCreateCart({

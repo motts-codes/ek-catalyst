@@ -224,6 +224,21 @@ export interface ProductDetailFormProps<F extends Field> {
   // When set, the form shows no options, quantity, cart buttons or trust block: just the header,
   // the two quote buttons and the description, full width.
   quoteOnly?: QuoteActions;
+  // Cart line being edited: posted as a hidden field so the action replaces it instead of adding.
+  editLineItemId?: string;
+  defaultQuantity?: number;
+}
+
+// The quantity the form opens on: the cart line's when editing, else the product minimum.
+function initialQuantity(defaultQuantity?: number, minQuantity?: number): number {
+  return defaultQuantity ?? minQuantity ?? 1;
+}
+
+// Hidden cart-line id when the visitor came from "Change options" in the cart.
+function EditLineField({ id }: { id?: string }) {
+  if (!id) return null;
+
+  return <input name="editLine" type="hidden" value={id} />;
 }
 
 export function ProductDetailForm<F extends Field>({
@@ -249,6 +264,8 @@ export function ProductDetailForm<F extends Field>({
   deliveryMessage,
   stockStatus,
   quoteOnly,
+  editLineItemId,
+  defaultQuantity,
 }: ProductDetailFormProps<F>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -328,7 +345,7 @@ export function ProductDetailForm<F extends Field>({
         [field.name]: params[field.name] ?? field.defaultValue,
       };
     },
-    { quantity: minQuantity ?? 1 },
+    { quantity: initialQuantity(defaultQuantity, minQuantity) },
   );
 
   const [{ lastResult, successMessage, cartDrawer }, formAction] = useActionState(action, {
@@ -443,6 +460,7 @@ export function ProductDetailForm<F extends Field>({
         {/* Every option here is required, so the asterisks would be noise. */}
         <RequiredMarks show={false}>
           <input name="id" type="hidden" value={productId} />
+          <EditLineField id={editLineItemId} />
           <div className="grid grid-cols-1 gap-6 pb-8 @5xl:grid-cols-[minmax(0,44fr)_minmax(0,21fr)] @5xl:items-start">
             {/* LEFT (70%): product header (title/price/etc.) + variant option groups.
               The header keeps its own internal margins, so it's wrapped in a single element

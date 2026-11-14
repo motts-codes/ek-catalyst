@@ -30,6 +30,10 @@ export const PhysicalItemFragment = graphql(
         currencyCode
         value
       }
+      extendedSalePrice {
+        currencyCode
+        value
+      }
       discountedAmount {
         currencyCode
         value
@@ -96,6 +100,10 @@ export const DigitalItemFragment = graphql(
         value
       }
       salePrice {
+        currencyCode
+        value
+      }
+      extendedSalePrice {
         currencyCode
         value
       }

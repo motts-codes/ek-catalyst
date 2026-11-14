@@ -25,6 +25,7 @@ import {
 import { StickySidebarLayout } from '@/vibes/soul/sections/sticky-sidebar-layout';
 import { useEvents } from '~/components/analytics/events';
 import { Image } from '~/components/image';
+import { Link } from '~/components/link';
 import { useRouter } from '~/i18n/routing';
 
 import { CouponCodeForm, CouponCodeFormState } from './coupon-code-form';
@@ -49,8 +50,14 @@ export interface CartLineItem {
   title: string;
   image?: { alt: string; src: string };
   subtitle: string;
+  /** Small brand line above the title (appliances etc. carry other brands). */
+  brand?: string;
   /** Shown as a small "SKU …" line under the options, when the product has one. */
   sku?: string;
+  /** quantity × price, shown on desktop next to the counter. */
+  lineTotal?: string;
+  /** Product page link with the current options pre-selected, to change size/colour in place. */
+  changeHref?: string;
   quantity: number;
   price: Price;
   href?: string;
@@ -82,6 +89,8 @@ export interface CartState<LineItem extends CartLineItem> {
 export interface Cart<LineItem extends CartLineItem> {
   lineItems: LineItem[];
   summaryItems: CartSummaryItem[];
+  /** Shown under the shipping block rather than among summaryItems. */
+  tax?: CartSummaryItem;
   total: string;
   totalLabel?: string;
   totalSubtitle?: string;
@@ -159,6 +168,7 @@ export interface CartProps<LineItem extends CartLineItem> {
   giftCertificate?: GiftCertificate;
   /** Heading over the coupon / gift certificate card. */
   offersLabel?: string;
+  changeOptionsLabel?: string;
   shipping?: Shipping;
   lineItemActionPendingLabel?: string;
   // Puts a removed line back (the "Undo" in the removal toast): receives the line item object as
@@ -205,6 +215,7 @@ export function CartClient<LineItem extends CartLineItem>({
   couponCode,
   giftCertificate,
   offersLabel = 'Offers & rewards',
+  changeOptionsLabel = 'Change options',
   decrementLineItemLabel,
   incrementLineItemLabel,
   deleteLineItemLabel,
@@ -413,6 +424,17 @@ export function CartClient<LineItem extends CartLineItem>({
                   key={`${shipping.address?.postalCode ?? ''}-${shipping.shippingOption?.value ?? ''}`}
                 />
               )}
+
+              {cart.tax && (
+                <div className="flex justify-between py-2.5 text-sm">
+                  <dt>{cart.tax.label}</dt>
+                  {isLineItemActionPending ? (
+                    <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
+                  ) : (
+                    <dd>{cart.tax.value}</dd>
+                  )}
+                </div>
+              )}
             </div>
             {(couponCode ?? giftCertificate) && (
               <section
@@ -510,6 +532,11 @@ export function CartClient<LineItem extends CartLineItem>({
               </div>
               <div className="flex grow flex-col flex-wrap justify-between gap-y-1 @xl:flex-row">
                 <div className="flex w-full flex-1 flex-col @xl:w-1/2 @xl:pr-4">
+                  {lineItem.brand ? (
+                    <span className="text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+                      {lineItem.brand}
+                    </span>
+                  ) : null}
                   <span className="text-sm font-medium leading-snug">{lineItem.title}</span>
                   <span className="text-sm text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
                     {lineItem.subtitle}
@@ -518,6 +545,14 @@ export function CartClient<LineItem extends CartLineItem>({
                     <span className="mt-0.5 text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
                       SKU {lineItem.sku}
                     </span>
+                  ) : null}
+                  {lineItem.changeHref ? (
+                    <Link
+                      className="mt-1 self-start text-xs font-semibold text-[var(--button-primary-background,#d90716)] underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-2"
+                      href={lineItem.changeHref}
+                    >
+                      {changeOptionsLabel}
+                    </Link>
                   ) : null}
                 </div>
                 <CounterForm
@@ -694,6 +729,11 @@ function CounterForm({
                 strokeWidth={1}
               />
             </button>
+            {lineItem.lineTotal ? (
+              <span className="hidden min-w-20 text-right text-sm font-semibold tabular-nums @xl:inline-block">
+                {lineItem.lineTotal}
+              </span>
+            ) : null}
           </div>
           {lineItem.inventoryMessages?.outOfStockMessage != null && (
             <span className="text-xs/5 font-light text-red-500">
