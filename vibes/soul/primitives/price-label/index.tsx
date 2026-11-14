@@ -169,8 +169,9 @@ export function PriceLabel({
             </span>
           </span>
           {saved != null && percent != null && (
-            <span className="text-[0.667em] font-normal">
-              <span className="text-success">Save {saved}</span>{' '}
+            <span className="text-[0.55em] font-normal">
+              {/* Muted forest green (AA on white) rather than the bright success token. */}
+              <span className="text-[#2e7d4f]">Save {saved}</span>{' '}
               <span className="text-error">(-{percent}%)</span>
             </span>
           )}
