@@ -448,7 +448,8 @@
         "couponCode": "Coupon code",
         "removeCouponCode": "Remove coupon code",
         "invalidCouponCode": "Please enter a valid coupon code",
-        "cartNotFound": "An error occurred when retrieving your cart"
+        "cartNotFound": "An error occurred when retrieving your cart",
+        "placeholder": "Enter coupon code"
       },
       "Shipping": {
         "shipping": "Shipping",
@@ -473,7 +474,8 @@
         "zipRequired": "Enter a 5-digit ZIP code",
         "zipHint": "We ship within the US. Your ZIP code is all we need for an estimate.",
         "estimateNote": "Estimated. Confirmed at checkout."
-      }
+      },
+      "offersAndRewards": "Offers & rewards"
     },
     "GiftCertificate": {
       "giftCertificate": "Gift certificate",

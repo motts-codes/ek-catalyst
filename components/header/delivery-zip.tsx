@@ -17,7 +17,14 @@ interface Props {
   mapboxToken?: string;
 }
 
-const LOCATION_ERROR = "We couldn't get your location. Enter your ZIP instead.";
+const LOCATION_MESSAGES = {
+  denied: 'Location access is blocked in your browser. Enter your ZIP instead.',
+  'outside-us':
+    "Looks like you're outside the US. We deliver within the US only, so enter a US ZIP.",
+  unknown: "We couldn't work out your ZIP from your location. Enter it instead.",
+} as const;
+
+type LocateResult = { status: 'ok'; value: ZipInput } | { status: keyof typeof LOCATION_MESSAGES };
 
 interface ZipInput {
   zip: string;
@@ -27,23 +34,33 @@ interface ZipInput {
 
 // Browser position → ZIP (plus town/state) through Mapbox. Only asked for on the button, never on
 // load: an unprompted permission dialog is easy to deny for good. Coordinates are not kept.
-async function locateZip(token: string): Promise<ZipInput | null> {
-  if (!('geolocation' in navigator)) return null;
+async function locateZip(token: string): Promise<LocateResult> {
+  if (!('geolocation' in navigator)) return { status: 'unknown' };
 
-  const coords = await new Promise<GeolocationCoordinates | null>((resolve) => {
+  const position = await new Promise<
+    { coords: GeolocationCoordinates } | { deniedOrFailed: 'denied' | 'unknown' }
+  >((resolve) => {
     navigator.geolocation.getCurrentPosition(
-      (position) => resolve(position.coords),
-      () => resolve(null),
+      ({ coords }) => resolve({ coords }),
+      (error) =>
+        resolve({ deniedOrFailed: error.code === error.PERMISSION_DENIED ? 'denied' : 'unknown' }),
       { maximumAge: 300_000, timeout: 10_000 },
     );
   });
 
-  if (!coords) return null;
+  if ('deniedOrFailed' in position) return { status: position.deniedOrFailed };
 
   const { reverseGeocodeZip } = await import('~/lib/pages/showroom-distance');
-  const origin = await reverseGeocodeZip({ lat: coords.latitude, lng: coords.longitude }, token);
+  const result = await reverseGeocodeZip(
+    { lat: position.coords.latitude, lng: position.coords.longitude },
+    token,
+  );
 
-  return origin ? { zip: origin.label, town: origin.town, state: origin.state } : null;
+  if (result.status !== 'ok') return { status: result.status };
+
+  const { origin } = result;
+
+  return { status: 'ok', value: { zip: origin.label, town: origin.town, state: origin.state } };
 }
 
 // Name a typed ZIP in the browser when we can (a URL-locked Mapbox token only works here); the
@@ -114,14 +131,14 @@ export function DeliveryZip({ value, mapboxToken }: Props) {
       try {
         const found = await locateZip(mapboxToken);
 
-        if (found) {
-          setZip(found.zip);
-          await persist(found);
+        if (found.status === 'ok') {
+          setZip(found.value.zip);
+          await persist(found.value);
         } else {
-          setError(LOCATION_ERROR);
+          setError(LOCATION_MESSAGES[found.status]);
         }
       } catch {
-        setError(LOCATION_ERROR);
+        setError(LOCATION_MESSAGES.unknown);
       } finally {
         setLocating(false);
       }

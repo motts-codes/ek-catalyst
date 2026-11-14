@@ -2,14 +2,13 @@
 
 import { getFormProps, getInputProps, SubmissionResult, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
+import { BadgePercent } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { startTransition, useActionState, useOptimistic } from 'react';
-import { useFormStatus } from 'react-dom';
 
 import { FieldError } from '@/vibes/soul/form/field-error';
-import { Input } from '@/vibes/soul/form/input';
-import { Button } from '@/vibes/soul/primitives/button';
 
+import { CodeField } from '../code-field';
 import { couponCodeActionFormDataSchema } from '../schema';
 
 import { CouponChip } from './coupon-chip';
@@ -36,8 +35,8 @@ export function CouponCodeForm({
   couponCodes,
   ctaLabel = 'Apply',
   disabled = false,
-  label = 'Promo code',
-  placeholder,
+  label = 'Coupon code',
+  placeholder = 'Enter coupon code',
   removeLabel,
 }: CouponCodeFormProps) {
   const t = useTranslations('Cart.CheckoutSummary.CouponCode');
@@ -85,24 +84,21 @@ export function CouponCodeForm({
   });
 
   return (
-    <div className="space-y-2 border-t border-[var(--cart-border,hsl(var(--contrast-100)))] pb-5 pt-4">
+    <div className="space-y-2 py-3.5">
       <form {...getFormProps(form)} action={formAction} className="space-y-2">
-        <label htmlFor={fields.couponCode.id}>{label}</label>
-        <div className="mt-2 flex items-start gap-3">
-          <Input
-            {...getInputProps(fields.couponCode, {
-              required: true,
-              type: 'text',
-            })}
-            className="max-w-56"
-            disabled={disabled}
-            errors={fields.couponCode.errors}
-            id={fields.couponCode.id}
-            key={fields.couponCode.id}
-            placeholder={placeholder}
-          />
-          <SubmitButton disabled={disabled}>{ctaLabel}</SubmitButton>
-        </div>
+        <CodeField
+          ctaLabel={ctaLabel}
+          disabled={disabled}
+          icon={<BadgePercent size={22} strokeWidth={1.5} />}
+          inputProps={getInputProps(fields.couponCode, { required: true, type: 'text' })}
+          invalid={Boolean(fields.couponCode.errors?.length)}
+          key={fields.couponCode.id}
+          label={label}
+          placeholder={placeholder}
+        />
+        {fields.couponCode.errors?.map((error, index) => (
+          <FieldError key={index}>{error}</FieldError>
+        ))}
       </form>
       {optimisticCouponCodes.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
@@ -126,23 +122,5 @@ export function CouponCodeForm({
         <FieldError key={index}>{error}</FieldError>
       ))}
     </div>
-  );
-}
-
-function SubmitButton({ disabled, ...props }: React.ComponentPropsWithoutRef<typeof Button>) {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button
-      {...props}
-      className="shrink-0"
-      disabled={disabled ?? pending}
-      loading={pending}
-      name="intent"
-      size="small"
-      type="submit"
-      value="apply"
-      variant="secondary"
-    />
   );
 }

@@ -71,6 +71,7 @@ const GeocodeResponse = z.object({
             .object({
               place: z.object({ name: z.string().optional() }).optional(),
               region: z.object({ region_code: z.string().optional() }).optional(),
+              country: z.object({ country_code: z.string().optional() }).optional(),
             })
             .optional(),
         }),
@@ -114,17 +115,20 @@ export async function geocodeZip(zip: string, token: string): Promise<SearchOrig
   };
 }
 
+export type ReverseGeocodeResult =
+  { status: 'ok'; origin: SearchOrigin } | { status: 'outside-us' } | { status: 'unknown' };
+
 // A point to its US ZIP, through Mapbox's reverse geocoder: the "use my location" path. Only the
-// ZIP (and its town/state) leaves this function; the coordinates are never stored.
+// ZIP (and its town/state) leaves this function; the coordinates are never stored. A point outside
+// the US is reported as such so the UI can say so.
 export async function reverseGeocodeZip(
   coords: LatLng,
   token: string,
-): Promise<SearchOrigin | null> {
+): Promise<ReverseGeocodeResult> {
   const url = new URL('https://api.mapbox.com/search/geocode/v6/reverse');
 
   url.searchParams.set('longitude', String(coords.lng));
   url.searchParams.set('latitude', String(coords.lat));
-  url.searchParams.set('country', 'us');
   url.searchParams.set('types', 'postcode');
   url.searchParams.set('limit', '1');
   url.searchParams.set('access_token', token);
@@ -135,19 +139,29 @@ export async function reverseGeocodeZip(
 
   const data = GeocodeResponse.parse(await response.json());
   const feature = data.features?.[0];
-  const zip = feature?.properties.name;
 
-  if (!zip || !isUsZip(zip)) return null;
+  if (!feature) return { status: 'unknown' };
+
+  const countryCode = feature.properties.context?.country?.country_code?.toUpperCase();
+
+  if (countryCode && countryCode !== 'US') return { status: 'outside-us' };
+
+  const zip = feature.properties.name;
+
+  if (!zip || !isUsZip(zip)) return { status: 'unknown' };
 
   const town = feature.properties.context?.place?.name;
   const state = feature.properties.context?.region?.region_code;
 
   return {
-    lat: coords.lat,
-    lng: coords.lng,
-    label: zip,
-    place: town ? [town, state].filter(Boolean).join(', ') : undefined,
-    town,
-    state,
+    status: 'ok',
+    origin: {
+      lat: coords.lat,
+      lng: coords.lng,
+      label: zip,
+      place: town ? [town, state].filter(Boolean).join(', ') : undefined,
+      town,
+      state,
+    },
   };
 }

@@ -331,6 +331,7 @@ export default async function Cart({ params }: Props) {
             couponCodes: checkout?.coupons.map((coupon) => coupon.code) ?? [],
             ctaLabel: t('CheckoutSummary.CouponCode.apply'),
             label: t('CheckoutSummary.CouponCode.couponCode'),
+            placeholder: t('CheckoutSummary.CouponCode.placeholder'),
             removeLabel: t('CheckoutSummary.CouponCode.removeCouponCode'),
           }}
           decrementLineItemLabel={t('decrement')}
@@ -356,6 +357,7 @@ export default async function Cart({ params }: Props) {
           key={`${cart.entityId}-${cart.version}`}
           lineItemAction={updateLineItem}
           lineItemActionPendingLabel={t('cartUpdateInProgress')}
+          offersLabel={t('CheckoutSummary.offersAndRewards')}
           restoreLineItemAction={restoreLineItem}
           shipping={{
             action: updateShippingInfo,

@@ -155,6 +155,8 @@ export interface CartProps<LineItem extends CartLineItem> {
   cart: Cart<LineItem>;
   couponCode?: CouponCode;
   giftCertificate?: GiftCertificate;
+  /** Heading over the coupon / gift certificate card. */
+  offersLabel?: string;
   shipping?: Shipping;
   lineItemActionPendingLabel?: string;
   // Puts a removed line back (the "Undo" in the removal toast): receives the line item object as
@@ -200,6 +202,7 @@ export function CartClient<LineItem extends CartLineItem>({
   cart,
   couponCode,
   giftCertificate,
+  offersLabel = 'Offers & rewards',
   decrementLineItemLabel,
   incrementLineItemLabel,
   deleteLineItemLabel,
@@ -408,27 +411,39 @@ export function CartClient<LineItem extends CartLineItem>({
                 />
               )}
             </div>
-            {couponCode && (
-              <CouponCodeForm
-                action={couponCode.action}
-                couponCodes={couponCode.couponCodes}
-                ctaLabel={couponCode.ctaLabel}
-                disabled={couponCode.disabled}
-                label={couponCode.label}
-                placeholder={couponCode.placeholder}
-                removeLabel={couponCode.removeLabel}
-              />
-            )}
-            {giftCertificate && (
-              <GiftCertificateCodeForm
-                action={giftCertificate.action}
-                ctaLabel={giftCertificate.ctaLabel}
-                disabled={giftCertificate.disabled}
-                giftCertificateCodes={giftCertificate.giftCertificateCodes}
-                label={giftCertificate.label}
-                placeholder={giftCertificate.placeholder}
-                removeLabel={giftCertificate.removeLabel}
-              />
+            {(couponCode ?? giftCertificate) && (
+              <section
+                aria-label={offersLabel}
+                className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] pb-5 pt-4"
+              >
+                <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500">
+                  {offersLabel}
+                </h3>
+                <div className="mt-2 divide-y divide-contrast-100 rounded-2xl border border-contrast-100 bg-white px-3">
+                  {couponCode && (
+                    <CouponCodeForm
+                      action={couponCode.action}
+                      couponCodes={couponCode.couponCodes}
+                      ctaLabel={couponCode.ctaLabel}
+                      disabled={couponCode.disabled}
+                      label={couponCode.label}
+                      placeholder={couponCode.placeholder}
+                      removeLabel={couponCode.removeLabel}
+                    />
+                  )}
+                  {giftCertificate && (
+                    <GiftCertificateCodeForm
+                      action={giftCertificate.action}
+                      ctaLabel={giftCertificate.ctaLabel}
+                      disabled={giftCertificate.disabled}
+                      giftCertificateCodes={giftCertificate.giftCertificateCodes}
+                      label={giftCertificate.label}
+                      placeholder={giftCertificate.placeholder}
+                      removeLabel={giftCertificate.removeLabel}
+                    />
+                  )}
+                </div>
+              </section>
             )}
             <div className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-4">
               <div className="flex justify-between text-base font-bold">
