@@ -32,7 +32,7 @@ export function CodeField({
     <div className="flex items-center gap-3">
       <span
         aria-hidden
-        className="flex size-10 shrink-0 items-center justify-center text-contrast-500"
+        className="flex size-12 shrink-0 items-center justify-center text-contrast-500"
       >
         {icon}
       </span>

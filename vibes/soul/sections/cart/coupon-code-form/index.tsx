@@ -84,12 +84,12 @@ export function CouponCodeForm({
   });
 
   return (
-    <div className="space-y-2 py-3.5">
+    <div className="space-y-2 py-2">
       <form {...getFormProps(form)} action={formAction} className="space-y-2">
         <CodeField
           ctaLabel={ctaLabel}
           disabled={disabled}
-          icon={<BadgePercent size={22} strokeWidth={1.5} />}
+          icon={<BadgePercent size={34} strokeWidth={1.25} />}
           inputProps={getInputProps(fields.couponCode, { required: true, type: 'text' })}
           invalid={Boolean(fields.couponCode.errors?.length)}
           key={fields.couponCode.id}

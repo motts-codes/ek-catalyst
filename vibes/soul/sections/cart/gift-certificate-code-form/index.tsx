@@ -87,12 +87,12 @@ export function GiftCertificateCodeForm({
   });
 
   return (
-    <div className="space-y-2 py-3.5">
+    <div className="space-y-2 py-2">
       <form {...getFormProps(form)} action={formAction} className="space-y-2">
         <CodeField
           ctaLabel={ctaLabel}
           disabled={disabled}
-          icon={<Gift size={22} strokeWidth={1.5} />}
+          icon={<Gift size={34} strokeWidth={1.25} />}
           inputProps={getInputProps(fields.giftCertificateCode, { required: true, type: 'text' })}
           invalid={Boolean(fields.giftCertificateCode.errors?.length)}
           key={fields.giftCertificateCode.id}

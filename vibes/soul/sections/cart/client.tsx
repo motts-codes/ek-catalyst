@@ -384,7 +384,8 @@ export function CartClient<LineItem extends CartLineItem>({
 
   return (
     <StickySidebarLayout
-      className="font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))]"
+      // Extra room under the cart so it doesn't run straight into the newsletter band.
+      className="pb-12 font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))] @xl:pb-20"
       compact
       sidebar={
         <div>
@@ -414,12 +415,12 @@ export function CartClient<LineItem extends CartLineItem>({
             {(couponCode ?? giftCertificate) && (
               <section
                 aria-label={offersLabel}
-                className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] pb-5 pt-4"
+                className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-3"
               >
                 <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500">
                   {offersLabel}
                 </h3>
-                <div className="mt-2 divide-y divide-contrast-100 rounded-2xl border border-contrast-100 bg-white px-3">
+                <div className="mt-1 divide-y divide-contrast-100">
                   {couponCode && (
                     <CouponCodeForm
                       action={couponCode.action}
