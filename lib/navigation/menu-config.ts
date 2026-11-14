@@ -284,15 +284,33 @@ const menu: MenuItem[] = [
     href: '#',
     group: 'shop',
     groups: [
+      // Replacement windows are the volume line, so the three types lead; new construction and
+      // accessories sit beside them as "Other Windows" (client, 15 Nov 2026).
       {
-        label: 'Windows',
-        href: '/windows',
+        label: 'Replacement Windows',
+        href: '/windows/replacement',
         links: [
           {
-            label: 'Replacement',
-            href: '/windows/replacement',
-            image: nav('windows-replacement', 'Replacement window'),
+            label: 'Double Hung',
+            href: '/windows/replacement/double-hung-windows',
+            image: nav('windows-double-hung', 'White vinyl double-hung window'),
           },
+          {
+            label: 'Hopper',
+            href: '/windows/replacement/hopper-windows',
+            image: nav('windows-hopper', 'White vinyl hopper window, tilted open'),
+          },
+          {
+            label: 'Slider',
+            href: '/windows/replacement/slider-windows',
+            image: nav('windows-slider', 'White vinyl slider window'),
+          },
+        ],
+      },
+      {
+        label: 'Other Windows',
+        href: '/windows',
+        links: [
           {
             label: 'New Construction',
             href: '/windows/new-construction',

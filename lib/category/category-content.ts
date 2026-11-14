@@ -78,6 +78,11 @@ export const DEFAULT_CATEGORY_CONTENT: Required<Pick<CategoryContent, 'subTitle'
 };
 
 const navImage = (file: string, alt: string) => ({ src: `/images/nav/${file}.webp`, alt });
+// 4:3 photo cards made for the "shop by" tiles (800 x 600).
+const tileImage = (file: string, alt: string) => ({
+  src: `/images/category/tiles/${file}.webp`,
+  alt,
+});
 
 export interface BrandTile {
   name: string;
@@ -108,6 +113,26 @@ const handleImage = (file: string, alt: string) => ({
   alt,
 });
 const search = (term: string) => `/search?term=${encodeURIComponent(term)}`;
+
+// The three replacement-window types: the volume line, so they lead on /windows as well as on
+// /windows/replacement. Client photos (15 Nov 2026).
+const WINDOW_TYPE_TILES: SubcategoryOverride[] = [
+  {
+    name: 'Double Hung',
+    fallbackHref: '/windows/replacement/double-hung-windows',
+    image: tileImage('windows-double-hung', 'White vinyl double-hung window'),
+  },
+  {
+    name: 'Hopper',
+    fallbackHref: '/windows/replacement/hopper-windows',
+    image: tileImage('windows-hopper', 'White vinyl hopper window, tilted open'),
+  },
+  {
+    name: 'Slider',
+    fallbackHref: '/windows/replacement/slider-windows',
+    image: tileImage('windows-slider', 'White vinyl slider window'),
+  },
+];
 
 const APPLIANCE_TILES: SubcategoryOverride[] = [
   {
@@ -317,6 +342,14 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     lede: 'Double hung, sliders and hoppers, in stock in Bristol. Double hung windows are $179.99 in almost any size.',
     imageLabel: 'A white vinyl double-hung window, installed',
     subTitle: 'Shop by window type',
+    subcategories: [
+      ...WINDOW_TYPE_TILES,
+      {
+        name: 'New Construction',
+        fallbackHref: '/windows/new-construction',
+        image: navImage('windows-new-construction', 'New-construction window in a framed wall'),
+      },
+    ],
     points: [...PICKUP_POINTS, { icon: 'price', label: 'Factory-direct pricing' }],
     fine: undefined,
   },
@@ -406,6 +439,8 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   '/windows/replacement': {
     heading: 'Swap old windows without reframing',
     lede: 'Double hung, sliders and hoppers made to fit your existing opening.',
+    subTitle: 'Shop by window type',
+    subcategories: WINDOW_TYPE_TILES,
   },
   '/windows/replacement/double-hung-windows': {
     heading: '$179.99, almost any size',
