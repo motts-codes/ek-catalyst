@@ -409,7 +409,7 @@ export function ProductDetail<F extends Field>({
                                   {(price) => (
                                     <span className="flex flex-wrap items-baseline gap-x-2">
                                       <PriceLabel
-                                        className="my-2 text-2xl @xl:text-3xl"
+                                        className="mb-2 mt-5 text-2xl @xl:text-3xl"
                                         price={price ?? ''}
                                         showSavings
                                       />
