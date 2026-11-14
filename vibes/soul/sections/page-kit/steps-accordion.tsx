@@ -3,7 +3,7 @@
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { clsx } from 'clsx';
 import { ArrowRight, ChevronDown, Pause, Play } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -36,8 +36,10 @@ interface Props {
 const DWELL_MS = 5000;
 
 // Numbered steps as a stack of boxes: the open step is red with white copy, the rest show their
-// headline only. The stack walks itself one step every five seconds until someone taps a step or
-// the pause button; it also waits while hovered or focused, and holds still under reduced motion.
+// headline only. The stack walks itself one step every five seconds, but only while it is on
+// screen: it holds on step 1 until scrolled into view (so nobody arrives to find it on the last
+// step) and pauses again when scrolled away. A tap or the pause button stops it; it also waits
+// while hovered or focused, and holds still under reduced motion.
 export function StepsAccordion({
   steps,
   headingLevel = 3,
@@ -51,13 +53,31 @@ export function StepsAccordion({
   const [paused, setPaused] = useState(false);
   const [stopped, setStopped] = useState(false);
   const [still, setStill] = useState(false);
+  const [inView, setInView] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setStill(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, []);
 
+  // Only run the timer while a good part of the stack is actually visible.
   useEffect(() => {
-    if (paused || stopped || still || steps.length < 2) return;
+    const el = rootRef.current;
+
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry?.isIntersecting ?? false),
+      { threshold: 0.4 },
+    );
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView || paused || stopped || still || steps.length < 2) return;
 
     const timer = window.setTimeout(() => {
       const i = steps.findIndex((s) => s.title === value);
@@ -66,7 +86,7 @@ export function StepsAccordion({
     }, DWELL_MS);
 
     return () => window.clearTimeout(timer);
-  }, [paused, stopped, still, steps, value]);
+  }, [inView, paused, stopped, still, steps, value]);
 
   const current = steps.find((s) => s.title === value);
   const withPhotos = steps.every((s) => s.image != null);
@@ -84,6 +104,7 @@ export function StepsAccordion({
       onFocus={() => setPaused(true)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      ref={rootRef}
     >
       {withPhotos && (
         <div
