@@ -58,7 +58,7 @@ import { Field, schema, SchemaRawShape } from './schema';
 // `href` undefined → plain text (no page to send people to, e.g. installation).
 const TRUST_ITEMS: Array<{ label: string; href?: string; icon: ReactNode }> = [
   {
-    label: 'Same Day Pickup',
+    label: 'Shipping policy',
     href: '/shipping-policy',
     icon: (
       <svg
@@ -704,13 +704,11 @@ export function ProductDetailForm<F extends Field>({
                 {TRUST_ITEMS.map((item, idx) => {
                   const isDeliveryRow = idx === 0;
 
-                  // The delivery row (first) is driven by the __delivery custom field — only shown when
-                  // that field is set. The other trust items always render.
-                  if (isDeliveryRow && (deliveryMessage == null || deliveryMessage === '')) {
-                    return null;
-                  }
-
-                  const label = isDeliveryRow ? deliveryMessage : item.label;
+                  // The delivery row (first) shows the __delivery custom field when set; without it
+                  // the row still renders, as a plain "Shipping policy" link, so the truck icon and
+                  // the shipping page are always one click away.
+                  const hasDeliveryMessage = deliveryMessage != null && deliveryMessage !== '';
+                  const label = isDeliveryRow && hasDeliveryMessage ? deliveryMessage : item.label;
 
                   const icon = <span className="shrink-0 text-foreground">{item.icon}</span>;
 
