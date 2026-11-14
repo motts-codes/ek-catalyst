@@ -79,7 +79,7 @@ export const HERO_OFFERS: HeroOffer[] = [
     kicker: 'Kitchens @$299/month',
     headline: 'FREE APPLIANCE\nwith every kitchen',
     description: '+ up to 4 Bonus gifts: Roll-out trays, organizers, handle, faucet',
-    href: '/promotions',
+    href: '/offers-free-appliance',
     ctaLabel: 'View offer',
     image: {
       src: '/images/home/offers/free-appliance.webp',
