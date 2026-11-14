@@ -11,7 +11,7 @@ import {
 } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
-import { BadgeDollarSign, LucideIcon, RotateCcw, ShieldCheck, Truck, Wrench } from 'lucide-react';
+import { CircleDollarSign, Drill, LucideIcon, RotateCcw, ShieldCheck, Truck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { createSerializer, parseAsString, useQueryStates } from 'nuqs';
 import {
@@ -58,16 +58,16 @@ import { Field, schema, SchemaRawShape } from './schema';
 // price match, returns.
 // `href` undefined → plain text (no page to send people to, e.g. installation).
 // Lucide icons (same set as the cart / header), 1.5 stroke so they sit quietly next to 12px text.
-const trustIcon = (Icon: LucideIcon) => <Icon aria-hidden size={24} strokeWidth={1.5} />;
+const trustIcon = (Icon: LucideIcon) => <Icon aria-hidden size={20} strokeWidth={1.5} />;
 
 const TRUST_ITEMS: Array<{ label: string; href?: string; icon: ReactNode }> = [
   { label: 'Shipping policy', href: '/shipping-policy', icon: trustIcon(Truck) },
   { label: 'Secure Transaction', href: '/secure-shopping', icon: trustIcon(ShieldCheck) },
-  { label: 'Installation, Not Included', icon: trustIcon(Wrench) },
+  { label: 'Installation, Not Included', icon: trustIcon(Drill) },
   {
     label: 'Price Match Guarantee',
     href: '/price-match-guarantee',
-    icon: trustIcon(BadgeDollarSign),
+    icon: trustIcon(CircleDollarSign),
   },
   { label: 'Returns Policy', href: '/returns-policy', icon: trustIcon(RotateCcw) },
 ];
@@ -617,7 +617,7 @@ export function ProductDetailForm<F extends Field>({
               link to its policy page (installation has none, so it's plain text). The first row's label comes from
               the __delivery custom field (deliveryMessage) when set. Only the TEXT is link-colored
               (#2162a1, darker on hover); the icon keeps its own color (SVGs to be supplied). */}
-              <ul className="flex flex-col gap-2 rounded-xl border border-contrast-100 p-4 [&_svg]:size-6">
+              <ul className="flex flex-col gap-2 rounded-xl border border-contrast-100 p-4 [&_svg]:size-5">
                 {TRUST_ITEMS.map((item, idx) => {
                   const isDeliveryRow = idx === 0;
 
