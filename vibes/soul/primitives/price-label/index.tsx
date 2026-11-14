@@ -118,7 +118,7 @@ export function PriceLabel({
 
     return (
       <span className={clsx('block font-semibold', baseColorClass, className)}>
-        <span className="flex items-baseline gap-2 leading-none">
+        <span className="flex items-baseline gap-3 leading-none">
           <span
             className={clsx(
               'font-[family-name:var(--font-family-heading)] font-bold',
@@ -130,10 +130,11 @@ export function PriceLabel({
               <SuperscriptPrice formatted={current} />
             </span>
           </span>
-        </span>
-        <span className="mt-[1px] block text-base font-normal text-contrast-400 line-through">
-          <span className="sr-only">{t('originalPrice', { price: previous })}</span>
-          <span aria-hidden="true">{previous}</span>
+          {/* Original price to the right, on the same baseline. */}
+          <span className="text-base font-normal text-contrast-400 line-through">
+            <span className="sr-only">{t('originalPrice', { price: previous })}</span>
+            <span aria-hidden="true">{previous}</span>
+          </span>
         </span>
       </span>
     );
