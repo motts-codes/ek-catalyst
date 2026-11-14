@@ -423,8 +423,9 @@ export function CartClient<LineItem extends CartLineItem>({
         compact
         sidebar={
           // Cream card so the summary reads as its own panel; the rules inside pick up a warmer
-          // tint through --cart-border so they still show on cream.
-          <div className="rounded-xl bg-[var(--cart-summary-background,#fbf5ea)] p-5 [--cart-border:#eadcc0] @xl:p-6">
+          // tint through --cart-border so they still show on cream. Side by side, the card is
+          // pulled up by its own padding so its title shares a baseline with the cart title.
+          <div className="rounded-xl bg-[var(--cart-summary-background,#fbf5ea)] p-5 [--cart-border:#eadcc0] @xl:p-6 @4xl:-mt-6">
             <h2 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
               {summaryTitle}
             </h2>
