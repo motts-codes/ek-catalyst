@@ -17,6 +17,8 @@ interface Props {
   mapboxToken?: string;
 }
 
+const LONG_CODE_NOTE = 'US ZIP codes are 5 digits. We deliver within the US only.';
+
 const LOCATION_MESSAGES = {
   denied: 'Location access is blocked in your browser. Enter your ZIP instead.',
   'outside-us':
@@ -230,14 +232,16 @@ export function DeliveryZip({ value, mapboxToken }: Props) {
                 )}
                 id={`${id}-zip`}
                 inputMode="numeric"
-                maxLength={5}
                 name="zip"
                 onChange={(event) => {
-                  setZip(event.target.value.replace(/\D/g, '').slice(0, 5));
-                  if (error) setError(null);
+                  const digits = event.target.value.replace(/\D/g, '');
+
+                  setZip(digits.slice(0, 5));
+                  // A 6-digit code (an Indian PIN, say) would otherwise be cut off silently.
+                  setError(digits.length > 5 ? LONG_CODE_NOTE : null);
                 }}
                 pattern="[0-9]{5}"
-                placeholder="ZIP code"
+                placeholder="US ZIP code"
                 type="text"
                 value={zip}
               />

@@ -246,7 +246,13 @@ export function ShippingForm({
           ))}
 
           <div className="flex gap-1.5">
-            <SubmitButton className="grow" name="intent" value="add-address">
+            <SubmitButton
+              // Outline look: the ZIP step is secondary to "Add shipping" below it.
+              className="grow [--button-ghost-border:#1a1a1a] [--button-ghost-text:#1a1a1a]"
+              name="intent"
+              value="add-address"
+              variant="ghost"
+            >
               {state.address ? updateShippingOptionsLabel : viewShippingOptionsLabel}
             </SubmitButton>
             <Button
@@ -355,8 +361,11 @@ export function ShippingForm({
   );
 }
 
-function SubmitButton(props: React.ComponentPropsWithoutRef<typeof Button>) {
+function SubmitButton({
+  variant = 'secondary',
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Button>) {
   const { pending } = useFormStatus();
 
-  return <Button {...props} loading={pending} size="small" type="submit" variant="secondary" />;
+  return <Button {...props} loading={pending} size="small" type="submit" variant={variant} />;
 }
