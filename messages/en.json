@@ -461,7 +461,7 @@
         "city": "City",
         "state": "State/Province",
         "postalCode": "Postal code",
-        "updatedShippingOptions": "Update shipping options",
+        "updatedShippingOptions": "Update ZIP",
         "viewShippingOptions": "View shipping options",
         "editAddress": "Change ZIP",
         "shippingOptions": "Shipping options",

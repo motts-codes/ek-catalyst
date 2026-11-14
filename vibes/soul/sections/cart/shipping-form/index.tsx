@@ -94,7 +94,7 @@ export function ShippingForm({
   postalCodeHint,
   estimateNote,
   defaultPostalCode,
-  updateShippingOptionsLabel = 'Update shipping options',
+  updateShippingOptionsLabel = 'Update ZIP',
   viewShippingOptionsLabel = 'View shipping options',
   cancelLabel = 'Cancel',
   editAddressLabel = 'Change ZIP',
