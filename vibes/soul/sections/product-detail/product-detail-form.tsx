@@ -467,7 +467,7 @@ export function ProductDetailForm<F extends Field>({
               (not spread into the space-y-6 flow, which would add 24px between every header row). */}
             <div className="space-y-3">
               <HeaderBox>{header}</HeaderBox>
-              <div className="space-y-2.5">
+              <div className="space-y-5">
                 {(() => {
                   // Windows-style products expose a "Width (in.)" and "Height (in.)" option. When
                   // both are present, render them side-by-side as `Width [ ] × Height [ ]` instead
