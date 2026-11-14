@@ -18,6 +18,7 @@ import { Button } from '@/vibes/soul/primitives/button';
 import { Price, PriceLabel } from '@/vibes/soul/primitives/price-label';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { toast } from '@/vibes/soul/primitives/toaster';
+import { type Breadcrumb, Breadcrumbs } from '@/vibes/soul/sections/breadcrumbs';
 import {
   GiftCertificateCodeForm,
   GiftCertificateCodeFormState,
@@ -170,6 +171,8 @@ export interface CartProps<LineItem extends CartLineItem> {
   /** Heading over the coupon / gift certificate card. */
   offersLabel?: string;
   changeOptionsLabel?: string;
+  /** Home › Cart trail above the page. */
+  breadcrumbs?: Breadcrumb[];
   /** "item" / "items" for the heading count. */
   itemLabels?: { one: string; other: string };
   /** Desktop column headings over the line items. */
@@ -221,6 +224,7 @@ export function CartClient<LineItem extends CartLineItem>({
   giftCertificate,
   offersLabel = 'Offers & rewards',
   changeOptionsLabel = 'Change options',
+  breadcrumbs,
   itemLabels = { one: 'item', other: 'items' },
   columnLabels = { details: 'Product details', price: 'Price', quantity: 'Qty', total: 'Total' },
   decrementLineItemLabel,
@@ -403,217 +407,243 @@ export function CartClient<LineItem extends CartLineItem>({
   }
 
   return (
-    <StickySidebarLayout
-      // Extra room under the cart so it doesn't run straight into the newsletter band.
-      className="pb-16 font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))] @xl:pb-40 @4xl:pb-[250px]"
-      compact
-      sidebar={
-        <div>
-          <h2 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
-            {summaryTitle}
-          </h2>
-          <dl aria-label="Receipt Summary" className="w-full">
-            <div className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
-              {cart.summaryItems.map((summaryItem, index) => (
-                <div className="flex justify-between py-2.5 text-sm" key={index}>
-                  <dt>{summaryItem.label}</dt>
-                  {isLineItemActionPending ? (
-                    <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
-                  ) : (
-                    <dd>{summaryItem.value}</dd>
-                  )}
-                </div>
-              ))}
+    <>
+      {breadcrumbs && breadcrumbs.length > 0 ? (
+        <div className="@container">
+          <div className="mx-auto max-w-[var(--section-max-width-2xl,1536px)] px-4 pt-6 @xl:px-6 @xl:pt-8 @4xl:px-8">
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+          </div>
+        </div>
+      ) : null}
+      <StickySidebarLayout
+        // Extra room under the cart so it doesn't run straight into the newsletter band; light top
+        // padding because the breadcrumbs sit just above.
+        className="pb-16 font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))] @xl:pb-40 @4xl:pb-[250px] [&>div]:pt-4 [&>div]:@xl:pt-5"
+        compact
+        sidebar={
+          <div>
+            <h2 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
+              {summaryTitle}
+            </h2>
+            {/* Same height as the column-heading row on the left, so the first rules line up. */}
+            <div
+              aria-hidden
+              className="hidden h-[27px] border-b border-[var(--cart-border,hsl(var(--contrast-100)))] @4xl:block"
+            />
+            <dl aria-label="Receipt Summary" className="w-full">
+              <div className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
+                {cart.summaryItems.map((summaryItem, index) => (
+                  <div className="flex justify-between py-2.5 text-sm" key={index}>
+                    <dt>{summaryItem.label}</dt>
+                    {isLineItemActionPending ? (
+                      <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
+                    ) : (
+                      <dd>{summaryItem.value}</dd>
+                    )}
+                  </div>
+                ))}
 
-              {shipping && (
-                <ShippingForm
-                  {...shipping}
-                  key={`${shipping.address?.postalCode ?? ''}-${shipping.shippingOption?.value ?? ''}`}
-                />
-              )}
+                {shipping && (
+                  <ShippingForm
+                    {...shipping}
+                    key={`${shipping.address?.postalCode ?? ''}-${shipping.shippingOption?.value ?? ''}`}
+                  />
+                )}
 
-              {cart.tax && (
-                <div className="flex justify-between py-2.5 text-sm">
-                  <dt>{cart.tax.label}</dt>
-                  {isLineItemActionPending ? (
-                    <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
-                  ) : (
-                    <dd>{cart.tax.value}</dd>
-                  )}
-                </div>
-              )}
-            </div>
-            {(couponCode ?? giftCertificate) && (
-              <section
-                aria-label={offersLabel}
-                className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-3"
-              >
-                <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500">
-                  {offersLabel}
-                </h3>
-                <div className="mt-1 divide-y divide-contrast-100">
-                  {couponCode && (
-                    <CouponCodeForm
-                      action={couponCode.action}
-                      couponCodes={couponCode.couponCodes}
-                      ctaLabel={couponCode.ctaLabel}
-                      disabled={couponCode.disabled}
-                      label={couponCode.label}
-                      placeholder={couponCode.placeholder}
-                      removeLabel={couponCode.removeLabel}
-                    />
-                  )}
-                  {giftCertificate && (
-                    <GiftCertificateCodeForm
-                      action={giftCertificate.action}
-                      ctaLabel={giftCertificate.ctaLabel}
-                      disabled={giftCertificate.disabled}
-                      giftCertificateCodes={giftCertificate.giftCertificateCodes}
-                      label={giftCertificate.label}
-                      placeholder={giftCertificate.placeholder}
-                      removeLabel={giftCertificate.removeLabel}
-                    />
-                  )}
-                </div>
-              </section>
-            )}
-            <div className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-4">
-              <div className="flex justify-between text-base font-bold">
-                <dt>{cart.totalLabel ?? 'Total'}</dt>
-                {isLineItemActionPending ? (
-                  <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
-                ) : (
-                  <dd>{cart.total}</dd>
+                {cart.tax && (
+                  <div className="flex justify-between py-2.5 text-sm">
+                    <dt>{cart.tax.label}</dt>
+                    {isLineItemActionPending ? (
+                      <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
+                    ) : (
+                      <dd>{cart.tax.value}</dd>
+                    )}
+                  </div>
                 )}
               </div>
-              {cart.totalSubtitle != null && (
-                <div className="mt-1 flex justify-end text-sm font-normal opacity-70">
-                  {cart.totalSubtitle}
-                </div>
-              )}
-            </div>
-          </dl>
-          <CheckoutButton
-            action={checkoutAction}
-            className="mt-3 w-full"
-            isCartUpdatePending={isLineItemActionPending}
-          >
-            {checkoutLabel}
-            <ArrowRight size={20} strokeWidth={1} />
-          </CheckoutButton>
-        </div>
-      }
-      sidebarPosition="after"
-      sidebarSize="1/3"
-    >
-      <div className="w-full">
-        <h1 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
-          {title}:{' '}
-          <span className="ml-2 font-normal text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
-            {optimisticQuantity} {optimisticQuantity === 1 ? itemLabels.one : itemLabels.other}
-          </span>
-        </h1>
-        {/* Cart Items. On desktop each row is a grid so the column headings line up. */}
-        <div className="@container">
-          <div
-            aria-hidden
-            className={clsx(
-              'hidden border-b border-[var(--cart-border,hsl(var(--contrast-100)))] pb-2 text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500',
-              GRID_ROW,
-            )}
-          >
-            <span className="col-span-2">{columnLabels.details}</span>
-            <span className="text-right">{columnLabels.price}</span>
-            <span className="text-center">{columnLabels.quantity}</span>
-            <span className="text-right">{columnLabels.total}</span>
-          </div>
-          <ul className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
-            {optimisticLineItems.map((lineItem) => (
-              <li
-                className={clsx(
-                  'flex flex-col items-start gap-x-4 gap-y-3 py-3 @container first:pt-0 @sm:flex-row @xl:items-center',
-                  GRID_ROW,
-                )}
-                key={lineItem.id}
-              >
-                <div className="relative aspect-square w-full max-w-16 overflow-hidden rounded-lg bg-[var(--cart-image-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4">
-                  {lineItem.typename === 'CartGiftCertificate' ? (
-                    <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
-                      <GiftIcon className="h-full w-full text-[var(--cart-icon,hsl(var(--contrast-300)))]" />
-                    </div>
-                  ) : (
-                    lineItem.image != null && (
-                      <Image
-                        alt={lineItem.image.alt}
-                        className="object-cover"
-                        fill
-                        sizes="4rem"
-                        src={lineItem.image.src}
+              {(couponCode ?? giftCertificate) && (
+                <section
+                  aria-label={offersLabel}
+                  className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-3"
+                >
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500">
+                    {offersLabel}
+                  </h3>
+                  <div className="mt-1 divide-y divide-contrast-100">
+                    {couponCode && (
+                      <CouponCodeForm
+                        action={couponCode.action}
+                        couponCodes={couponCode.couponCodes}
+                        ctaLabel={couponCode.ctaLabel}
+                        disabled={couponCode.disabled}
+                        label={couponCode.label}
+                        placeholder={couponCode.placeholder}
+                        removeLabel={couponCode.removeLabel}
                       />
-                    )
+                    )}
+                    {giftCertificate && (
+                      <GiftCertificateCodeForm
+                        action={giftCertificate.action}
+                        ctaLabel={giftCertificate.ctaLabel}
+                        disabled={giftCertificate.disabled}
+                        giftCertificateCodes={giftCertificate.giftCertificateCodes}
+                        label={giftCertificate.label}
+                        placeholder={giftCertificate.placeholder}
+                        removeLabel={giftCertificate.removeLabel}
+                      />
+                    )}
+                  </div>
+                </section>
+              )}
+              <div className="border-t border-[var(--cart-border,hsl(var(--contrast-100)))] py-4">
+                <div className="flex justify-between text-base font-bold">
+                  <dt>{cart.totalLabel ?? 'Total'}</dt>
+                  {isLineItemActionPending ? (
+                    <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
+                  ) : (
+                    <dd>{cart.total}</dd>
                   )}
                 </div>
-                <div className="flex grow flex-col flex-wrap justify-between gap-y-1 @xl:contents">
-                  <div className="flex w-full flex-1 flex-col @xl:min-w-0">
-                    <span className="text-sm font-medium leading-snug">{lineItem.title}</span>
-                    <span className="text-sm text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
-                      {lineItem.subtitle}
-                    </span>
-                    {lineItem.sku ? (
-                      <span className="mt-0.5 text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
-                        SKU {lineItem.sku}
-                      </span>
-                    ) : null}
-                    {lineItem.changeHref ? (
-                      <Link
-                        className="mt-1 self-start text-xs font-semibold text-[var(--button-primary-background,#d90716)] underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-2"
-                        href={lineItem.changeHref}
-                      >
-                        {changeOptionsLabel}
-                      </Link>
-                    ) : null}
+                {cart.totalSubtitle != null && (
+                  <div className="mt-1 flex justify-end text-sm font-normal opacity-70">
+                    {cart.totalSubtitle}
                   </div>
-                  <CounterForm
-                    action={formAction}
-                    decrementLabel={decrementLineItemLabel}
-                    deleteLabel={deleteLineItemLabel}
-                    incrementLabel={incrementLineItemLabel}
-                    lineItem={lineItem}
-                    onSubmit={(formData) => {
-                      startTransition(() => {
-                        formAction(formData);
-                        setOptimisticLineItems(formData);
+                )}
+              </div>
+            </dl>
+            <CheckoutButton
+              action={checkoutAction}
+              className="mt-3 w-full"
+              isCartUpdatePending={isLineItemActionPending}
+            >
+              {checkoutLabel}
+              <ArrowRight size={20} strokeWidth={1} />
+            </CheckoutButton>
+          </div>
+        }
+        sidebarPosition="after"
+        sidebarSize="1/3"
+      >
+        <div className="w-full">
+          <h1 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
+            {title}:{' '}
+            <span className="ml-2 font-normal text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+              {optimisticQuantity} {optimisticQuantity === 1 ? itemLabels.one : itemLabels.other}
+            </span>
+          </h1>
+          {/* Cart Items. On desktop each row is a grid so the column headings line up. */}
+          <div>
+            <div
+              aria-hidden
+              className={clsx(
+                'hidden border-b border-[var(--cart-border,hsl(var(--contrast-100)))] pb-2 text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500',
+                GRID_ROW,
+              )}
+            >
+              <span className="col-span-2">{columnLabels.details}</span>
+              <span className="text-right">{columnLabels.price}</span>
+              <span className="text-center">{columnLabels.quantity}</span>
+              <span className="text-right">{columnLabels.total}</span>
+            </div>
+            <ul className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
+              {optimisticLineItems.map((lineItem) => (
+                <li
+                  className={clsx(
+                    'flex flex-col items-start gap-x-4 gap-y-3 py-4 @sm:flex-row @xl:items-center',
+                    GRID_ROW,
+                  )}
+                  key={lineItem.id}
+                >
+                  <div className="relative aspect-square w-full max-w-16 overflow-hidden rounded-lg bg-[var(--cart-image-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4">
+                    {lineItem.typename === 'CartGiftCertificate' ? (
+                      <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
+                        <GiftIcon className="h-full w-full text-[var(--cart-icon,hsl(var(--contrast-300)))]" />
+                      </div>
+                    ) : (
+                      lineItem.image != null && (
+                        <Image
+                          alt={lineItem.image.alt}
+                          className="object-cover"
+                          fill
+                          sizes="4rem"
+                          src={lineItem.image.src}
+                        />
+                      )
+                    )}
+                  </div>
+                  <div className="flex grow flex-col flex-wrap justify-between gap-y-1 @xl:contents">
+                    <div className="flex w-full flex-1 flex-col @xl:min-w-0">
+                      {lineItem.href ? (
+                        <Link
+                          className="self-start text-sm font-medium leading-snug underline-offset-2 transition-colors hover:text-[var(--button-primary-background,#d90716)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-2"
+                          href={lineItem.href}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {lineItem.title}
+                        </Link>
+                      ) : (
+                        <span className="text-sm font-medium leading-snug">{lineItem.title}</span>
+                      )}
+                      <span className="text-sm text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+                        {lineItem.subtitle}
+                      </span>
+                      {lineItem.sku ? (
+                        <span className="mt-0.5 text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+                          SKU {lineItem.sku}
+                        </span>
+                      ) : null}
+                      {lineItem.changeHref ? (
+                        <Link
+                          className="mt-1 self-start text-xs font-semibold text-[var(--button-primary-background,#d90716)] underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-2"
+                          href={lineItem.changeHref}
+                        >
+                          {changeOptionsLabel}
+                        </Link>
+                      ) : null}
+                    </div>
+                    <CounterForm
+                      action={formAction}
+                      decrementLabel={decrementLineItemLabel}
+                      deleteLabel={deleteLineItemLabel}
+                      incrementLabel={incrementLineItemLabel}
+                      lineItem={lineItem}
+                      onSubmit={(formData) => {
+                        startTransition(() => {
+                          formAction(formData);
+                          setOptimisticLineItems(formData);
 
-                        const intent = formData.get('intent');
+                          const intent = formData.get('intent');
 
-                        if (intent === 'increment') {
-                          formData.set('quantity', '1');
+                          if (intent === 'increment') {
+                            formData.set('quantity', '1');
 
-                          events.onAddToCart?.(formData);
-                        }
+                            events.onAddToCart?.(formData);
+                          }
 
-                        if (intent === 'decrement') {
-                          formData.set('quantity', '1');
+                          if (intent === 'decrement') {
+                            formData.set('quantity', '1');
 
-                          events.onRemoveFromCart?.(formData);
-                        }
+                            events.onRemoveFromCart?.(formData);
+                          }
 
-                        if (intent === 'delete') {
-                          toastRemoved(lineItem);
-                          formData.set('quantity', lineItem.quantity.toString());
+                          if (intent === 'delete') {
+                            toastRemoved(lineItem);
+                            formData.set('quantity', lineItem.quantity.toString());
 
-                          events.onRemoveFromCart?.(formData);
-                        }
-                      });
-                    }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+                            events.onRemoveFromCart?.(formData);
+                          }
+                        });
+                      }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-    </StickySidebarLayout>
+      </StickySidebarLayout>
+    </>
   );
 }
 

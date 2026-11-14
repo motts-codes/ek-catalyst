@@ -506,6 +506,9 @@
       "price": "Price",
       "quantity": "Qty",
       "total": "Total"
+    },
+    "Breadcrumbs": {
+      "home": "Home"
     }
   },
   "Compare": {

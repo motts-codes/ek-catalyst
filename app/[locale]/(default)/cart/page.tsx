@@ -320,6 +320,10 @@ export default async function Cart({ params }: Props) {
       <CartAnalyticsProvider data={Streamable.from(() => getAnalyticsData(cartId))}>
         {checkoutUrl ? <CheckoutPreconnect url={checkoutUrl} /> : null}
         <CartComponent
+          breadcrumbs={[
+            { label: t('Breadcrumbs.home'), href: '/' },
+            { label: t('heading'), href: '/cart' },
+          ]}
           cart={{
             lineItems: formattedLineItems,
             total: format.number(checkout?.grandTotal?.value || 0, {
