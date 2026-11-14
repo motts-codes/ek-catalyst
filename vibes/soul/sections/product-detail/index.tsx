@@ -434,8 +434,9 @@ export function ProductDetail<F extends Field>({
                                   in past month
                                 </p>
                               )}
-                              {/* >1rem gap below the divider before the options/summary. */}
-                              <hr className="mb-8 w-full border-t border-[hsl(var(--product-detail-divider))]" />
+                              {/* ~20px above the divider (price) and ~20px below it to the first option
+                                  group, matching the gap between option groups. */}
+                              <hr className="mb-4 mt-3 w-full border-t border-[hsl(var(--product-detail-divider))]" />
                               {/* Mobile gallery moved to the top of the grid (image-first layout);
                                   it no longer renders here between price and summary. */}
                               <div className="group/product-summary">
