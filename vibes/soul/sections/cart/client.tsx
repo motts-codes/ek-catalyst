@@ -208,6 +208,7 @@ const defaultEmptyState = {
  *   --cart-icon: hsl(var(--contrast-300));
  *   --cart-icon-hover: hsl(var(--foreground));
  *   --cart-border: hsl(var(--contrast-100));
+ *   --cart-summary-background: #fbf5ea;
  *   --cart-image-background: hsl(var(--contrast-100));
  *   --cart-button-background: hsl(var(--contrast-100));
  *   --cart-counter-icon: hsl(var(--contrast-300));
@@ -421,15 +422,12 @@ export function CartClient<LineItem extends CartLineItem>({
         className="pb-16 font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))] @xl:pb-40 @4xl:pb-[250px] [&>div]:pt-4 [&>div]:@xl:pt-5"
         compact
         sidebar={
-          <div>
+          // Cream card so the summary reads as its own panel; the rules inside pick up a warmer
+          // tint through --cart-border so they still show on cream.
+          <div className="rounded-xl bg-[var(--cart-summary-background,#fbf5ea)] p-5 [--cart-border:#eadcc0] @xl:p-6">
             <h2 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
               {summaryTitle}
             </h2>
-            {/* Same height as the column-heading row on the left, so the first rules line up. */}
-            <div
-              aria-hidden
-              className="hidden h-[27px] border-b border-[var(--cart-border,hsl(var(--contrast-100)))] @4xl:block"
-            />
             <dl aria-label="Receipt Summary" className="w-full">
               <div className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
                 {cart.summaryItems.map((summaryItem, index) => (
@@ -469,7 +467,7 @@ export function CartClient<LineItem extends CartLineItem>({
                   <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500">
                     {offersLabel}
                   </h3>
-                  <div className="mt-1 divide-y divide-contrast-100">
+                  <div className="mt-1 divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
                     {couponCode && (
                       <CouponCodeForm
                         action={couponCode.action}

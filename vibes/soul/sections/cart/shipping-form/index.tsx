@@ -316,8 +316,8 @@ export function ShippingForm({
                   detail: option.detail,
                 })) ?? []
               }
-              // Cream panel (same pair as the delivery map) instead of the rose form panel.
-              panelClassName="border border-[#f6ebd6] [--radio-group-light-panel:#fbf5ea]"
+              // White panel: the whole summary now sits on the cream card.
+              panelClassName="border border-[#eadcc0] [--radio-group-light-panel:#ffffff]"
               required
               value={shippingOptionsControl.value}
             />
