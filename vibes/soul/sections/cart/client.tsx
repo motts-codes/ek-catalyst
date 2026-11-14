@@ -432,7 +432,12 @@ export function CartClient<LineItem extends CartLineItem>({
             <dl aria-label="Receipt Summary" className="w-full">
               <div className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
                 {cart.summaryItems.map((summaryItem, index) => (
-                  <div className="flex justify-between py-2.5 text-sm" key={index}>
+                  // The first row (Subtotal) is the same height as the column-heading row on the
+                  // left, so the rule under it continues the rule under the headings.
+                  <div
+                    className="flex justify-between py-2.5 text-sm first:pb-1.5 first:pt-0"
+                    key={index}
+                  >
                     <dt>{summaryItem.label}</dt>
                     {isLineItemActionPending ? (
                       <Skeleton.Text characterCount={8} className="animate-pulse rounded-md" />
