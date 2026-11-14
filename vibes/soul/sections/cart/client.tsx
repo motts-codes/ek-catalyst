@@ -385,7 +385,7 @@ export function CartClient<LineItem extends CartLineItem>({
   return (
     <StickySidebarLayout
       // Extra room under the cart so it doesn't run straight into the newsletter band.
-      className="pb-12 font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))] @xl:pb-20"
+      className="pb-16 font-[family-name:var(--cart-font-family,var(--font-family-body))] text-[var(--cart-text,hsl(var(--foreground)))] @xl:pb-40 @4xl:pb-[250px]"
       compact
       sidebar={
         <div>
