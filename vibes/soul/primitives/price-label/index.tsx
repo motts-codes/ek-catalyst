@@ -44,25 +44,6 @@ interface Props {
   superscript?: boolean;
 }
 
-// Parse a formatted currency string (e.g. "$791.99") to a number for computing the discount.
-// Returns null if it can't parse — callers must render no percentage in that case.
-function parseAmount(formatted: string): number | null {
-  const num = Number(formatted.replace(/[^0-9.]/g, ''));
-
-  return Number.isFinite(num) ? num : null;
-}
-
-function discountPercent(previous: string, current: string): number | null {
-  const prev = parseAmount(previous);
-  const curr = parseAmount(current);
-
-  if (prev == null || curr == null || prev <= 0 || curr >= prev) {
-    return null;
-  }
-
-  return Math.round(((prev - curr) / prev) * 100);
-}
-
 // Render a formatted price (e.g. "$708.99") with the currency symbol and cents as superscript
 // and the period dropped: $⁷⁰⁸ with a raised ⁹⁹. Falls back to the raw string if it doesn't match
 // the expected <symbol><whole>.<cents> shape (e.g. ranges, unusual formats), so nothing breaks.
@@ -86,23 +67,6 @@ export function SuperscriptPrice({ formatted }: { formatted: string }) {
       {suffix || null}
     </span>
   );
-}
-
-// The amount saved, formatted to match the store's currency string by reusing the currency
-// symbol/prefix from the original price (e.g. "$791.99" → "$83.00"). Returns null when it can't
-// compute. Assumes a leading currency symbol (correct for this store's USD formatting).
-function savedAmount(previous: string, current: string): string | null {
-  const prev = parseAmount(previous);
-  const curr = parseAmount(current);
-
-  if (prev == null || curr == null || curr >= prev) {
-    return null;
-  }
-
-  const firstDigit = previous.search(/[0-9]/);
-  const prefix = firstDigit > 0 ? previous.slice(0, firstDigit) : '';
-
-  return `${prefix}${(prev - curr).toFixed(2)}`;
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -139,15 +103,13 @@ export function PriceLabel({
 
   const mode: TaxMode = price.mode ?? 'EX';
 
-  // Detailed sale layout (PDP): savings % before the current price, original price struck-through
-  // on a line below. Only for actual sales — plain/range prices fall through to the default layout,
+  // Detailed sale layout (PDP): current price with the original price struck-through on a line
+  // below. No savings line, by design: the group discount is a permanent price, not a deal. Only for actual sales — plain/range prices fall through to the default layout,
   // so products with no previous price never show a savings/original block.
   if (showSavings && price.type === 'sale' && mode !== 'BOTH') {
     const tax: 'inc' | 'ex' = mode === 'EX' ? 'ex' : 'inc';
     const previous = price.previous[tax];
     const current = price.current[tax];
-    const percent = discountPercent(previous, current);
-    const saved = savedAmount(previous, current);
 
     const saleColorClass = {
       light: 'text-[var(--price-light-sale-text,hsl(var(--foreground)))]',
@@ -168,13 +130,6 @@ export function PriceLabel({
               <SuperscriptPrice formatted={current} />
             </span>
           </span>
-          {saved != null && percent != null && (
-            <span className="text-[0.55em] font-normal">
-              {/* Muted forest green (AA on white) rather than the bright success token. */}
-              <span className="text-[#2e7d4f]">Save {saved}</span>{' '}
-              <span className="text-error">(-{percent}%)</span>
-            </span>
-          )}
         </span>
         <span className="mt-[1px] block text-base font-normal text-contrast-400 line-through">
           <span className="sr-only">{t('originalPrice', { price: previous })}</span>
