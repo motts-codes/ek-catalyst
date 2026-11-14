@@ -179,9 +179,10 @@ export function ShippingForm({
   const formattedAddress = formatAddress(state.address);
 
   return (
-    <div className="py-4">
+    <div className="py-2.5">
       <div>
-        <div className="flex justify-between">
+        {/* Same size and rhythm as the Subtotal / Tax rows around it. */}
+        <div className="flex justify-between text-sm">
           <span>{shippingLabel}</span>
           {state.shippingOption ? (
             <span>{state.shippingOption.price}</span>
