@@ -19,6 +19,12 @@ const toMoney = (
   ex: format.number(ex.value, { style: 'currency', currency: ex.currencyCode }),
 });
 
+// A sale is either an explicit sale price, or a selling price below the base price: customer
+// group discounts (e.g. the 14.35% Closets rule) lower `price` but leave `salePrice` alone.
+const isDiscounted = (prices: NonNullable<Pricing['pricesIncludingTax']>): boolean =>
+  prices.salePrice?.value !== prices.basePrice?.value ||
+  (prices.basePrice != null && prices.price.value < prices.basePrice.value);
+
 export const pricesTransformer = (
   pricing: Pricing,
   format: Format,
@@ -50,7 +56,7 @@ export const pricesTransformer = (
   }
 
   const isPriceRange = inc.priceRange.min.value !== inc.priceRange.max.value;
-  const isSalePrice = inc.salePrice?.value !== inc.basePrice?.value;
+  const isSalePrice = isDiscounted(inc);
 
   if (isPriceRange) {
     return {

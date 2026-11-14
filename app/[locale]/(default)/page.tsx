@@ -120,8 +120,12 @@ export default async function Home({ params }: Props) {
 
       const base = product.pricesExcludingTax?.basePrice?.value;
       const salePrice = product.pricesExcludingTax?.salePrice?.value;
+      const price = product.pricesExcludingTax?.price.value;
 
-      return base != null && salePrice != null && salePrice < base;
+      // Explicit sale price, or a group discount pulling the selling price under base.
+      return (
+        base != null && ((salePrice != null && salePrice < base) || (price != null && price < base))
+      );
     });
 
     return productCardTransformer(sale, format);
