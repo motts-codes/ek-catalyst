@@ -33,7 +33,15 @@ export async function estimateShippingByZip(
     checkout.shippingConsignments?.find((c) => c.selectedShippingOption) ??
     checkout.shippingConsignments?.[0];
 
-  const address = { countryCode: 'US', postalCode: zip, city: town, stateOrProvince: state };
+  // stateOrProvinceCode is what picks the tax zone (Connecticut 6.35%, etc.); the name alone
+  // falls through to the 0% default zone.
+  const address = {
+    countryCode: 'US',
+    postalCode: zip,
+    city: town,
+    stateOrProvince: state,
+    stateOrProvinceCode: state,
+  };
 
   const result = consignment?.entityId
     ? await updateCheckoutShippingConsignment({

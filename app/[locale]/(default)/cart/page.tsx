@@ -368,10 +368,12 @@ export default async function Cart({ params }: Props) {
                     shippingConsignment.address.city !== ''
                       ? (shippingConsignment.address.city ?? undefined)
                       : undefined,
+                  // Prefer the code ("CT") for the "Bristol, CT 06010" line; BigCommerce fills the
+                  // name field with "Connecticut" once the code is set.
                   state:
-                    shippingConsignment.address.stateOrProvince !== ''
-                      ? (shippingConsignment.address.stateOrProvince ?? undefined)
-                      : undefined,
+                    shippingConsignment.address.stateOrProvinceCode ||
+                    shippingConsignment.address.stateOrProvince ||
+                    undefined,
                   postalCode:
                     shippingConsignment.address.postalCode !== ''
                       ? (shippingConsignment.address.postalCode ?? undefined)

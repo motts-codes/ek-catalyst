@@ -38,6 +38,8 @@ async function addressForZip({
     countryCode: 'US',
     city: resolved.town,
     stateOrProvince: resolved.state,
+    // The code is what BigCommerce matches tax zones on.
+    stateOrProvinceCode: resolved.state,
     postalCode,
   };
 }

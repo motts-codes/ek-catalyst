@@ -197,6 +197,7 @@ const ShippingInfoFragment = graphql(`
         city
         countryCode
         stateOrProvince
+        stateOrProvinceCode
         postalCode
       }
     }

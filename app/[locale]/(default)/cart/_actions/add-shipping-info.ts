@@ -34,6 +34,8 @@ interface AddProps {
     countryCode: string;
     city?: string;
     stateOrProvince?: string;
+    /** Two-letter code: BigCommerce matches tax (and shipping) zones on this, not the name. */
+    stateOrProvinceCode?: string;
     postalCode?: string;
   };
   lineItems: Array<{ quantity: number; lineItemEntityId: string }>;
@@ -101,6 +103,8 @@ interface UpdateProps {
     countryCode: string;
     city?: string;
     stateOrProvince?: string;
+    /** Two-letter code: BigCommerce matches tax (and shipping) zones on this, not the name. */
+    stateOrProvinceCode?: string;
     postalCode?: string;
   };
   lineItems: Array<{ quantity: number; lineItemEntityId: string }>;
