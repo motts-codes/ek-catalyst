@@ -11,7 +11,7 @@ import {
 } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { clsx } from 'clsx';
-import { CircleDollarSign, Drill, LucideIcon, RotateCcw, ShieldCheck, Truck } from 'lucide-react';
+import { Award, Drill, LucideIcon, RotateCcw, ShieldCheck, Truck } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { createSerializer, parseAsString, useQueryStates } from 'nuqs';
 import {
@@ -67,7 +67,7 @@ const TRUST_ITEMS: Array<{ label: string; href?: string; icon: ReactNode }> = [
   {
     label: 'Price Match Guarantee',
     href: '/price-match-guarantee',
-    icon: trustIcon(CircleDollarSign),
+    icon: trustIcon(Award),
   },
   { label: 'Returns Policy', href: '/returns-policy', icon: trustIcon(RotateCcw) },
 ];
