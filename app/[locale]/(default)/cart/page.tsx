@@ -33,14 +33,12 @@ const CHECKOUT_URL = process.env.TRAILING_SLASH !== 'false' ? '/checkout/' : '/c
 // Brand, SKU, line total and the "Change options" link for a cart line.
 function lineItemDetails(
   item: {
-    brand: string | null;
     sku: string | null;
     extendedSalePrice: { value: number; currencyCode: string };
   } & Parameters<typeof changeOptionsHref>[0],
   format: Awaited<ReturnType<typeof getFormatter>>,
 ) {
   return {
-    brand: item.brand ?? undefined,
     sku: item.sku ?? undefined,
     lineTotal: format.number(item.extendedSalePrice.value, {
       style: 'currency',
@@ -239,8 +237,8 @@ export default async function Cart({ params }: Props) {
       id: item.entityId,
       quantity: item.quantity,
       price,
-      subtitle: item.selectedOptions
-        .map((option) => {
+      subtitle: [
+        ...item.selectedOptions.map((option) => {
           switch (option.__typename) {
             case 'CartSelectedMultipleChoiceOption':
             case 'CartSelectedCheckboxOption':
@@ -259,7 +257,10 @@ export default async function Cart({ params }: Props) {
             default:
               return '';
           }
-        })
+        }),
+        item.brand ? `Brand: ${item.brand}` : '',
+      ]
+        .filter(Boolean)
         .join(', '),
       title: item.name,
       ...lineItemDetails(item, format),
@@ -384,6 +385,12 @@ export default async function Cart({ params }: Props) {
           changeOptionsLabel={t('changeOptions')}
           checkoutAction={CHECKOUT_URL}
           checkoutLabel={t('proceedToCheckout')}
+          columnLabels={{
+            details: t('Columns.details'),
+            price: t('Columns.price'),
+            quantity: t('Columns.quantity'),
+            total: t('Columns.total'),
+          }}
           couponCode={{
             action: updateCouponCode,
             couponCodes: checkout?.coupons.map((coupon) => coupon.code) ?? [],
@@ -412,6 +419,7 @@ export default async function Cart({ params }: Props) {
               : undefined
           }
           incrementLineItemLabel={t('increment')}
+          itemLabels={{ one: t('itemOne'), other: t('itemOther') }}
           key={`${cart.entityId}-${cart.version}`}
           lineItemAction={updateLineItem}
           lineItemActionPendingLabel={t('cartUpdateInProgress')}
@@ -478,7 +486,7 @@ export default async function Cart({ params }: Props) {
             noShippingOptionsLabel: t('CheckoutSummary.Shipping.noShippingOptions'),
           }}
           summaryTitle={t('CheckoutSummary.title')}
-          title={t('title')}
+          title={t('heading')}
         />
       </CartAnalyticsProvider>
       <Slot label="Cart bottom content" snapshotId="cart-bottom-content" />

@@ -34,6 +34,9 @@ import { ShippingForm, ShippingFormState } from './shipping-form';
 
 import { CartEmptyState } from '.';
 
+// Desktop columns: image, details, price, quantity (with remove), line total.
+const GRID_ROW = '@xl:grid @xl:grid-cols-[4rem_minmax(0,1fr)_5.5rem_9rem_6rem] @xl:gap-x-4';
+
 type Action<State, Payload> = (state: Awaited<State>, payload: Payload) => State | Promise<State>;
 
 interface CartLineIteminventoryMessages {
@@ -50,8 +53,6 @@ export interface CartLineItem {
   title: string;
   image?: { alt: string; src: string };
   subtitle: string;
-  /** Small brand line above the title (appliances etc. carry other brands). */
-  brand?: string;
   /** Shown as a small "SKU …" line under the options, when the product has one. */
   sku?: string;
   /** quantity × price, shown on desktop next to the counter. */
@@ -169,6 +170,10 @@ export interface CartProps<LineItem extends CartLineItem> {
   /** Heading over the coupon / gift certificate card. */
   offersLabel?: string;
   changeOptionsLabel?: string;
+  /** "item" / "items" for the heading count. */
+  itemLabels?: { one: string; other: string };
+  /** Desktop column headings over the line items. */
+  columnLabels?: { details: string; price: string; quantity: string; total: string };
   shipping?: Shipping;
   lineItemActionPendingLabel?: string;
   // Puts a removed line back (the "Undo" in the removal toast): receives the line item object as
@@ -216,6 +221,8 @@ export function CartClient<LineItem extends CartLineItem>({
   giftCertificate,
   offersLabel = 'Offers & rewards',
   changeOptionsLabel = 'Change options',
+  itemLabels = { one: 'item', other: 'items' },
+  columnLabels = { details: 'Product details', price: 'Price', quantity: 'Qty', total: 'Total' },
   decrementLineItemLabel,
   incrementLineItemLabel,
   deleteLineItemLabel,
@@ -501,98 +508,110 @@ export function CartClient<LineItem extends CartLineItem>({
     >
       <div className="w-full">
         <h1 className="mb-4 font-[family-name:var(--cart-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-none @xl:text-3xl">
-          {title}
-          <span className="ml-4 text-[var(--cart-subtext-text,hsl(var(--contrast-300)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
-            {optimisticQuantity}
+          {title}:{' '}
+          <span className="ml-2 font-normal text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+            {optimisticQuantity} {optimisticQuantity === 1 ? itemLabels.one : itemLabels.other}
           </span>
         </h1>
-        {/* Cart Items */}
-        <ul className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
-          {optimisticLineItems.map((lineItem) => (
-            <li
-              className="flex flex-col items-start gap-x-4 gap-y-3 py-3 @container first:pt-0 @sm:flex-row"
-              key={lineItem.id}
-            >
-              <div className="relative aspect-square w-full max-w-16 overflow-hidden rounded-lg bg-[var(--cart-image-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4">
-                {lineItem.typename === 'CartGiftCertificate' ? (
-                  <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
-                    <GiftIcon className="h-full w-full text-[var(--cart-icon,hsl(var(--contrast-300)))]" />
-                  </div>
-                ) : (
-                  lineItem.image != null && (
-                    <Image
-                      alt={lineItem.image.alt}
-                      className="object-cover"
-                      fill
-                      sizes="4rem"
-                      src={lineItem.image.src}
-                    />
-                  )
+        {/* Cart Items. On desktop each row is a grid so the column headings line up. */}
+        <div className="@container">
+          <div
+            aria-hidden
+            className={clsx(
+              'hidden border-b border-[var(--cart-border,hsl(var(--contrast-100)))] pb-2 text-xs font-semibold uppercase tracking-[0.08em] text-contrast-500',
+              GRID_ROW,
+            )}
+          >
+            <span className="col-span-2">{columnLabels.details}</span>
+            <span className="text-right">{columnLabels.price}</span>
+            <span className="text-center">{columnLabels.quantity}</span>
+            <span className="text-right">{columnLabels.total}</span>
+          </div>
+          <ul className="divide-y divide-[var(--cart-border,hsl(var(--contrast-100)))]">
+            {optimisticLineItems.map((lineItem) => (
+              <li
+                className={clsx(
+                  'flex flex-col items-start gap-x-4 gap-y-3 py-3 @container first:pt-0 @sm:flex-row @xl:items-center',
+                  GRID_ROW,
                 )}
-              </div>
-              <div className="flex grow flex-col flex-wrap justify-between gap-y-1 @xl:flex-row">
-                <div className="flex w-full flex-1 flex-col @xl:w-1/2 @xl:pr-4">
-                  {lineItem.brand ? (
-                    <span className="text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
-                      {lineItem.brand}
-                    </span>
-                  ) : null}
-                  <span className="text-sm font-medium leading-snug">{lineItem.title}</span>
-                  <span className="text-sm text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
-                    {lineItem.subtitle}
-                  </span>
-                  {lineItem.sku ? (
-                    <span className="mt-0.5 text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
-                      SKU {lineItem.sku}
-                    </span>
-                  ) : null}
-                  {lineItem.changeHref ? (
-                    <Link
-                      className="mt-1 self-start text-xs font-semibold text-[var(--button-primary-background,#d90716)] underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-2"
-                      href={lineItem.changeHref}
-                    >
-                      {changeOptionsLabel}
-                    </Link>
-                  ) : null}
+                key={lineItem.id}
+              >
+                <div className="relative aspect-square w-full max-w-16 overflow-hidden rounded-lg bg-[var(--cart-image-background,hsl(var(--contrast-100)))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-4">
+                  {lineItem.typename === 'CartGiftCertificate' ? (
+                    <div className="flex h-full w-full flex-col items-center justify-center p-4 text-center">
+                      <GiftIcon className="h-full w-full text-[var(--cart-icon,hsl(var(--contrast-300)))]" />
+                    </div>
+                  ) : (
+                    lineItem.image != null && (
+                      <Image
+                        alt={lineItem.image.alt}
+                        className="object-cover"
+                        fill
+                        sizes="4rem"
+                        src={lineItem.image.src}
+                      />
+                    )
+                  )}
                 </div>
-                <CounterForm
-                  action={formAction}
-                  decrementLabel={decrementLineItemLabel}
-                  deleteLabel={deleteLineItemLabel}
-                  incrementLabel={incrementLineItemLabel}
-                  lineItem={lineItem}
-                  onSubmit={(formData) => {
-                    startTransition(() => {
-                      formAction(formData);
-                      setOptimisticLineItems(formData);
+                <div className="flex grow flex-col flex-wrap justify-between gap-y-1 @xl:contents">
+                  <div className="flex w-full flex-1 flex-col @xl:min-w-0">
+                    <span className="text-sm font-medium leading-snug">{lineItem.title}</span>
+                    <span className="text-sm text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+                      {lineItem.subtitle}
+                    </span>
+                    {lineItem.sku ? (
+                      <span className="mt-0.5 text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+                        SKU {lineItem.sku}
+                      </span>
+                    ) : null}
+                    {lineItem.changeHref ? (
+                      <Link
+                        className="mt-1 self-start text-xs font-semibold text-[var(--button-primary-background,#d90716)] underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] focus-visible:ring-offset-2"
+                        href={lineItem.changeHref}
+                      >
+                        {changeOptionsLabel}
+                      </Link>
+                    ) : null}
+                  </div>
+                  <CounterForm
+                    action={formAction}
+                    decrementLabel={decrementLineItemLabel}
+                    deleteLabel={deleteLineItemLabel}
+                    incrementLabel={incrementLineItemLabel}
+                    lineItem={lineItem}
+                    onSubmit={(formData) => {
+                      startTransition(() => {
+                        formAction(formData);
+                        setOptimisticLineItems(formData);
 
-                      const intent = formData.get('intent');
+                        const intent = formData.get('intent');
 
-                      if (intent === 'increment') {
-                        formData.set('quantity', '1');
+                        if (intent === 'increment') {
+                          formData.set('quantity', '1');
 
-                        events.onAddToCart?.(formData);
-                      }
+                          events.onAddToCart?.(formData);
+                        }
 
-                      if (intent === 'decrement') {
-                        formData.set('quantity', '1');
+                        if (intent === 'decrement') {
+                          formData.set('quantity', '1');
 
-                        events.onRemoveFromCart?.(formData);
-                      }
+                          events.onRemoveFromCart?.(formData);
+                        }
 
-                      if (intent === 'delete') {
-                        toastRemoved(lineItem);
-                        formData.set('quantity', lineItem.quantity.toString());
+                        if (intent === 'delete') {
+                          toastRemoved(lineItem);
+                          formData.set('quantity', lineItem.quantity.toString());
 
-                        events.onRemoveFromCart?.(formData);
-                      }
-                    });
-                  }}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
+                          events.onRemoveFromCart?.(formData);
+                        }
+                      });
+                    }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </StickySidebarLayout>
   );
@@ -629,9 +648,9 @@ function CounterForm({
 
   if (lineItem.typename === 'CartGiftCertificate') {
     return (
-      <form {...getFormProps(form)} action={action}>
+      <form {...getFormProps(form)} action={action} className="@xl:contents">
         <input {...getInputProps(fields.id, { type: 'hidden' })} key={fields.id.id} />
-        <div className="flex w-full flex-wrap items-center gap-x-5 gap-y-2">
+        <div className="flex w-full flex-wrap items-center gap-x-5 gap-y-2 @xl:contents">
           {typeof lineItem.price === 'string' && (
             <span className="font-medium @xl:ml-auto">{lineItem.price}</span>
           )}
@@ -659,11 +678,14 @@ function CounterForm({
   }
 
   return (
-    <form {...getFormProps(form)} action={action}>
+    <form {...getFormProps(form)} action={action} className="@xl:contents">
       <input {...getInputProps(fields.id, { type: 'hidden' })} key={fields.id.id} />
-      <div className="flex w-full flex-wrap items-center gap-x-4 gap-y-1">
-        <PriceLabel className="mt-1.5 self-start text-sm @xl:ml-auto" price={lineItem.price} />
-        <div className="flex size-min flex-col gap-y-0">
+      <div className="flex w-full flex-wrap items-center gap-x-4 gap-y-1 @xl:contents">
+        <PriceLabel
+          className="mt-1.5 self-start text-sm @xl:mt-0 @xl:self-center @xl:text-right"
+          price={lineItem.price}
+        />
+        <div className="flex size-min flex-col gap-y-0 @xl:mx-auto">
           <div className="flex items-center gap-x-3">
             {/* Counter */}
             <div
@@ -729,11 +751,6 @@ function CounterForm({
                 strokeWidth={1}
               />
             </button>
-            {lineItem.lineTotal ? (
-              <span className="hidden min-w-20 text-right text-sm font-semibold tabular-nums @xl:inline-block">
-                {lineItem.lineTotal}
-              </span>
-            ) : null}
           </div>
           {lineItem.inventoryMessages?.outOfStockMessage != null && (
             <span className="text-xs/5 font-light text-red-500">
@@ -761,6 +778,11 @@ function CounterForm({
             </span>
           )}
         </div>
+        {lineItem.lineTotal ? (
+          <span className="hidden text-right text-sm font-semibold tabular-nums @xl:block">
+            {lineItem.lineTotal}
+          </span>
+        ) : null}
       </div>
     </form>
   );

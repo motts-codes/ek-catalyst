@@ -437,7 +437,7 @@
     "quantityOnBackorder": "{quantity, number} will be backordered",
     "partiallyAvailable": "Only {quantity, number} available",
     "CheckoutSummary": {
-      "title": "Summary",
+      "title": "Pricing & shipping",
       "subTotal": "Subtotal",
       "discounts": "Discounts",
       "tax": "Tax",
@@ -498,7 +498,15 @@
       "failedToUpdateQuantity": "Failed to update quantity.",
       "somethingWentWrong": "Something went wrong. Please try again later."
     },
-    "changeOptions": "Change options"
+    "changeOptions": "Change options",
+    "itemOne": "item",
+    "itemOther": "items",
+    "Columns": {
+      "details": "Product details",
+      "price": "Price",
+      "quantity": "Qty",
+      "total": "Total"
+    }
   },
   "Compare": {
     "title": "Compare products",
