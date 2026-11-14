@@ -213,7 +213,7 @@ export function ShippingForm({
           </div>
         )}
         {state.shippingOption && estimateNote ? (
-          <p className="mt-0.5 text-xs text-contrast-400">{estimateNote}</p>
+          <p className="mt-0.5 text-xs text-[#9f3632]">{estimateNote}</p>
         ) : null}
       </div>
 
