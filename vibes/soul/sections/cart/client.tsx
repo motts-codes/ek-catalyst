@@ -49,6 +49,8 @@ export interface CartLineItem {
   title: string;
   image?: { alt: string; src: string };
   subtitle: string;
+  /** Shown as a small "SKU …" line under the options, when the product has one. */
+  sku?: string;
   quantity: number;
   price: Price;
   href?: string;
@@ -512,6 +514,11 @@ export function CartClient<LineItem extends CartLineItem>({
                   <span className="text-sm text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
                     {lineItem.subtitle}
                   </span>
+                  {lineItem.sku ? (
+                    <span className="mt-0.5 text-xs text-[var(--cart-subtext-text,hsl(var(--contrast-400)))] contrast-more:text-[var(--cart-subtitle-text,hsl(var(--contrast-500)))]">
+                      SKU {lineItem.sku}
+                    </span>
+                  ) : null}
                 </div>
                 <CounterForm
                   action={formAction}

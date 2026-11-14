@@ -214,6 +214,7 @@ export default async function Cart({ params }: Props) {
         })
         .join(', '),
       title: item.name,
+      sku: item.sku ?? undefined,
       image: item.image?.url ? { src: item.image.url, alt: item.name } : undefined,
       href: new URL(item.url).pathname,
       selectedOptions: item.selectedOptions,
@@ -252,11 +253,11 @@ export default async function Cart({ params }: Props) {
   const deliveryZip = await getDeliveryZip();
   // Quote on load when a ZIP is known and the cart has no address yet, or has one saved without a
   // state code (older carts): without the code BigCommerce can't match the tax zone.
-  const staleAddress =
-    Boolean(shippingConsignment?.address) &&
-    !shippingConsignment?.address?.stateOrProvinceCode &&
-    Boolean(deliveryZip?.state);
-  const needsEstimate = Boolean(deliveryZip) && (!shippingConsignment?.address || staleAddress);
+  const savedAddress = shippingConsignment?.address;
+  const staleAddress = Boolean(
+    savedAddress && !savedAddress.stateOrProvinceCode && deliveryZip?.state,
+  );
+  const needsEstimate = Boolean(deliveryZip) && (!savedAddress || staleAddress);
 
   const showShippingForm =
     shippingConsignment?.address && !shippingConsignment.selectedShippingOption;
