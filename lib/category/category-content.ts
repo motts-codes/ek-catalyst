@@ -2,6 +2,8 @@
 // over the subcategory tiles). Keyed by the category's storefront path. Everything is optional: a
 // category with no entry uses its BigCommerce name + description and the default points.
 
+import { applianceFacetsFor } from './appliance-facets';
+
 export type CategoryPointIcon =
   'truck' | 'returns' | 'stock' | 'clock' | 'pickup' | 'price' | 'gift' | 'tag' | 'phone' | 'zap';
 
@@ -28,6 +30,8 @@ export interface CategoryContent {
   tileGroups?: Array<{ title: string; items: SubcategoryOverride[] }>;
   /** "Shop by brand": equal logo boxes linking to the brand pages. */
   brands?: BrandTile[];
+  /** Chip rows after the tiles (widths, finishes). */
+  chipGroups?: ChipGroup[];
   /** Overrides the BigCommerce category name in the hero. */
   heading?: string;
   /** Hero panel colour for a top-level category: brand red (default) or black. */
@@ -103,7 +107,21 @@ const tileImage = (file: string, alt: string) => ({
 export interface BrandTile {
   name: string;
   href: string;
-  logo: { src: string; alt: string };
+  /** Without a logo the tile shows the name. */
+  logo?: { src: string; alt: string };
+}
+
+export interface ChipItem {
+  label: string;
+  href: string;
+  /** A colour behind the label's dot (finishes). */
+  swatch?: string;
+}
+
+/** A row of small link chips under a heading ("Shop by width", "Shop by finish"). */
+export interface ChipGroup {
+  title: string;
+  items: ChipItem[];
 }
 
 const brand = (name: string, file: string, href: string): BrandTile => ({
@@ -607,10 +625,25 @@ function resolvePoints(key: string, base: CategoryContent): CategoryContent {
   return base;
 }
 
+// Appliance sub-categories: the kinds, widths, finishes and brands the live catalogue holds
+// (lib/category/appliance-facets.json), unless the entry authors its own.
+function withApplianceFacets(key: string, base: CategoryContent): CategoryContent {
+  const facets = key.startsWith('/appliances/') ? applianceFacetsFor(key) : null;
+
+  if (!facets) return base;
+
+  return {
+    ...base,
+    tileGroups: base.tileGroups ?? facets.tileGroups,
+    chipGroups: base.chipGroups ?? facets.chipGroups,
+    brands: base.brands ?? facets.brands,
+  };
+}
+
 export function getCategoryContent(path: string): CategoryContent {
   const key = normalize(path);
   const base = CATEGORY_CONTENT[key] ?? {};
-  const content = resolvePoints(key, base);
+  const content = withApplianceFacets(key, resolvePoints(key, base));
   // The authored lede (client copy, Oct 2026) wins; HERO_LEDES is the older fallback set.
   const lede = content.lede ?? HERO_LEDES[key];
 

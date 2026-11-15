@@ -419,7 +419,7 @@ export function SubcategoryTiles({
 
 interface BrandTilesProps {
   title?: string;
-  brands: Array<{ name: string; href: string; logo: { src: string; alt: string } }>;
+  brands: Array<{ name: string; href: string; logo?: { src: string; alt: string } }>;
   /** Follows another tile row: trims the top padding so the rows read as one block. */
   stacked?: boolean;
   className?: string;
@@ -455,16 +455,75 @@ export function BrandTiles({
                 className="group flex aspect-[5/3] items-center justify-center rounded-2xl border border-[#fcb6bb] bg-white px-5 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
                 href={item.href}
               >
-                <span className="relative block h-full w-full">
-                  <Image
-                    alt={item.logo.alt}
-                    className="object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-105 @3xl:p-3"
-                    fill
-                    sizes="(min-width: 64rem) 12vw, (min-width: 36rem) 25vw, 50vw"
-                    src={item.logo.src}
-                    unoptimized
+                {item.logo ? (
+                  <span className="relative block h-full w-full">
+                    <Image
+                      alt={item.logo.alt}
+                      className="object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-105 @3xl:p-3"
+                      fill
+                      sizes="(min-width: 64rem) 12vw, (min-width: 36rem) 25vw, 50vw"
+                      src={item.logo.src}
+                      unoptimized
+                    />
+                  </span>
+                ) : (
+                  // No logo on file: the name, set like a wordmark.
+                  <span className="text-center text-sm font-bold leading-tight tracking-tight transition-colors group-hover:text-[var(--button-primary-background,#d90716)]">
+                    {item.name}
+                  </span>
+                )}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+interface FacetChipsProps {
+  title: string;
+  items: Array<{ label: string; href: string; swatch?: string }>;
+  /** Follows another row: trims the top padding so the rows read as one block. */
+  stacked?: boolean;
+  className?: string;
+}
+
+// "Shop by width" / "Shop by finish": a row of small link chips, each with a dot in the finish
+// colour when there is one. The same chip as the cabinet collection pages' finish picker.
+export function FacetChips({ title, items, stacked = false, className }: FacetChipsProps) {
+  if (items.length === 0) return null;
+
+  return (
+    <section className={clsx('@container', className)}>
+      <div
+        className={clsx(
+          containerClassName,
+          'pb-8 @4xl:pb-10',
+          stacked ? 'pt-0' : 'pt-8 @4xl:pt-10',
+        )}
+      >
+        <h2 className="mb-3 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
+          {title}
+        </h2>
+        <ul className="flex flex-wrap gap-2">
+          {items.map((item) => (
+            <li key={item.label}>
+              <Link
+                className={clsx(
+                  'inline-flex items-center gap-2 rounded-full border border-contrast-200 bg-white py-1.5 pr-3.5 text-sm font-medium transition-colors hover:border-[var(--button-primary-background,#d90716)] hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+                  item.swatch ? 'pl-1.5' : 'pl-3.5',
+                )}
+                href={item.href}
+              >
+                {item.swatch != null && item.swatch !== '' && (
+                  <span
+                    aria-hidden
+                    className="size-5 rounded-full ring-1 ring-inset ring-black/10"
+                    style={{ backgroundColor: item.swatch }}
                   />
-                </span>
+                )}
+                {item.label}
               </Link>
             </li>
           ))}

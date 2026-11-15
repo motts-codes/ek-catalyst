@@ -4,6 +4,7 @@ import {
   BrandTiles,
   CategoryHero,
   CategoryPoints,
+  FacetChips,
   SubcategoryTiles,
 } from '@/vibes/soul/sections/category-hero';
 import { type CategoryPointIcon } from '~/lib/category/category-content';
@@ -48,6 +49,10 @@ export function MSCategoryHeader({
   if (!defaults) return null;
 
   const image = imageSrc ? { src: imageSrc, alt: imageAlt || defaults.title } : defaults.image;
+  // Each row after the first trims its top padding so the rows read as one block.
+  const hasSubcategories = defaults.subcategories.length > 0;
+  const hasTileGroups = (defaults.tileGroups?.length ?? 0) > 0;
+  const hasChipGroups = (defaults.chipGroups?.length ?? 0) > 0;
   const resolvedPoints = points.filter((point) => point.label !== '');
 
   return (
@@ -70,11 +75,28 @@ export function MSCategoryHeader({
         <SubcategoryTiles items={defaults.subcategories} title={subTitle || defaults.subTitle} />
       )}
       {showTiles &&
-        defaults.tileGroups?.map((group) => (
-          <SubcategoryTiles items={group.items} key={group.title} stacked title={group.title} />
+        defaults.tileGroups?.map((group, index) => (
+          <SubcategoryTiles
+            items={group.items}
+            key={group.title}
+            stacked={hasSubcategories || index > 0}
+            title={group.title}
+          />
+        ))}
+      {showTiles &&
+        defaults.chipGroups?.map((group, index) => (
+          <FacetChips
+            items={group.items}
+            key={group.title}
+            stacked={hasSubcategories || hasTileGroups || index > 0}
+            title={group.title}
+          />
         ))}
       {showTiles && defaults.brands != null && defaults.brands.length > 0 && (
-        <BrandTiles brands={defaults.brands} stacked={defaults.subcategories.length > 0} />
+        <BrandTiles
+          brands={defaults.brands}
+          stacked={hasSubcategories || hasTileGroups || hasChipGroups}
+        />
       )}
     </div>
   );

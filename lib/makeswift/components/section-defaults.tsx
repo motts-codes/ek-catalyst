@@ -5,7 +5,11 @@ import { createContext, type PropsWithChildren, useContext } from 'react';
 import { type CategoryTile } from '@/vibes/soul/sections/category-carousel';
 import { type SubcategoryTile } from '@/vibes/soul/sections/category-hero';
 import { type HeroOffer, type HeroSlide } from '@/vibes/soul/sections/home-hero-split';
-import { type BrandTile, type CategoryPoint } from '~/lib/category/category-content';
+import {
+  type BrandTile,
+  type CategoryPoint,
+  type ChipGroup,
+} from '~/lib/category/category-content';
 
 // Page-level defaults for a directly-editable Makeswift section. The page (server) supplies the
 // content to show until marketing edits the component in the builder; the registered component
@@ -40,6 +44,8 @@ export interface CategoryHeaderDefaults {
   tileGroups?: Array<{ title: string; items: SubcategoryTile[] }>;
   /** "Shop by brand" logo boxes. */
   brands?: BrandTile[];
+  /** Chip rows after the tiles (widths, finishes). */
+  chipGroups?: ChipGroup[];
 }
 
 const SectionDefaultsContext = createContext<SectionDefaults>({});

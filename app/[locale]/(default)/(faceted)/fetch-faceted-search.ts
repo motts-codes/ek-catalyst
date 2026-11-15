@@ -362,6 +362,8 @@ export const PublicToPrivateParams = PublicSearchParamsSchema.catchall(SearchPar
       ...additionalParams
     } = filters;
 
+    const searchWithinCategory = category != null && term != null && term !== '';
+
     // Assuming the rest of the params are product attributes for now. We need to see if we can get the GQL endpoint to ingore unknown params.
     const productAttributes = Object.entries(additionalParams)
       .filter(([attribute]) => AttributeKey.safeParse(attribute).success)
@@ -378,11 +380,14 @@ export const PublicToPrivateParams = PublicSearchParamsSchema.catchall(SearchPar
       sort,
       filters: {
         brandEntityIds: brand,
-        categoryEntityId: category,
-        categoryEntityIds: categoryIn,
+        // The storefront ignores `searchTerm` next to the browse filter `categoryEntityId`, so a
+        // category listing narrowed by a term ("top freezer" on Fridges) sends the category through
+        // the search filter `categoryEntityIds` instead, where the term applies.
+        categoryEntityId: searchWithinCategory ? undefined : category,
+        categoryEntityIds: searchWithinCategory ? [category, ...(categoryIn ?? [])] : categoryIn,
         // Parent categories (Appliances, Cabinet Hardware…) hold no products of their own; the
         // store assigns products to the leaf category only. Roll the subcategories up.
-        searchSubCategories: category != null ? true : undefined,
+        searchSubCategories: category != null && !searchWithinCategory ? true : undefined,
         hideOutOfStock: stock?.includes('in_stock'),
         isFreeShipping: shipping?.includes('free_shipping'),
         isFeatured,

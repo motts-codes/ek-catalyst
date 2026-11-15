@@ -1,0 +1,1033 @@
+{
+  "_source": "Live store, Stencil tree appliance categories (visible products). Built by scripts/appliances/build-appliance-facets.py; do not edit by hand.",
+  "categories": {
+    "/appliances/fridges-freezers": {
+      "count": 140,
+      "kinds": [
+        {
+          "label": "Top Freezer",
+          "term": "top freezer",
+          "count": 76,
+          "image": "/images/category/tiles/appliances/fridges-freezers-top-freezer.webp",
+          "imageAlt": "Element 28 Inch Freestanding Top-Freezer Refrigerator with 17.6 Cu. Ft. Capacity - Stainless Look - ENR18TFGCS"
+        },
+        {
+          "label": "French Door",
+          "term": "french door",
+          "count": 28,
+          "image": "/images/category/tiles/appliances/fridges-freezers-french-door.webp",
+          "imageAlt": "Frigidaire Gallery Series 36 Inch French Door Refrigerator - Stainless Steel - GRFN2853AF"
+        },
+        {
+          "label": "Side-by-Side",
+          "term": "side by side",
+          "count": 16,
+          "image": "/images/category/tiles/appliances/fridges-freezers-side-by-side.webp",
+          "imageAlt": "Frigidaire 36 Inch Freestanding Side by Side Refrigerator - Stainless Steel - FRSS2633AS"
+        },
+        {
+          "label": "Bottom Freezer",
+          "term": "bottom freezer",
+          "count": 10,
+          "image": "/images/category/tiles/appliances/fridges-freezers-bottom-freezer.webp",
+          "imageAlt": "Whirlpool 33 Inch Freestanding Bottom-Freezer Refrigerator - Stainless Steel - WRB322DMBM"
+        },
+        {
+          "label": "Counter-Depth",
+          "term": "counter depth",
+          "count": 15,
+          "image": "/images/category/tiles/appliances/fridges-freezers-counter-depth.webp",
+          "imageAlt": "KitchenAid 36 Inch Counter Depth French Door Refrigerator with 20 Cu. Ft. Capacity - Stainless Steel - KRFC300ESS"
+        },
+        {
+          "label": "Garage Ready",
+          "term": "garage ready",
+          "count": 9,
+          "image": "/images/category/tiles/appliances/fridges-freezers-garage-ready.webp",
+          "imageAlt": "Frigidaire 18 Cu. Ft. Garage Ready Top Freezer Refrigerator Black - FFHT1835VB"
+        },
+        {
+          "label": "Chest Freezers",
+          "term": "chest freezer",
+          "count": 5,
+          "image": "/images/category/tiles/appliances/fridges-freezers-chest-freezers.webp",
+          "imageAlt": "GE 65 Inch Chest Freezer with Audible Temperature Alarm - White - FCM16DLWW"
+        },
+        {
+          "label": "Upright Freezers",
+          "term": "upright freezer",
+          "count": 4,
+          "image": "/images/category/tiles/appliances/fridges-freezers-upright-freezers.webp",
+          "imageAlt": "GE 33 Inch Upright Freezer with 21.3 Cu. Ft. Capacity - White - FUF21DLRWW"
+        }
+      ],
+      "widths": [],
+      "finishes": [
+        {
+          "label": "Fingerprint Resistant Stainless",
+          "term": "fingerprint resistant",
+          "swatch": "#b9bcc0",
+          "count": 18
+        },
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 34
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 49
+        },
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 36
+        },
+        {
+          "label": "Bisque",
+          "term": "bisque",
+          "swatch": "#e9dcc5",
+          "count": 1
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 79,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 33,
+          "logo": "/images/brands/frigidaire.svg"
+        },
+        {
+          "name": "Whirlpool",
+          "entityId": 91,
+          "count": 14,
+          "logo": "/images/brands/whirlpool.svg"
+        },
+        {
+          "name": "LG Electronics",
+          "entityId": 107,
+          "count": 3,
+          "logo": "/images/brands/lg.svg"
+        },
+        {
+          "name": "Hotpoint",
+          "entityId": 106,
+          "count": 3
+        },
+        {
+          "name": "Maytag",
+          "entityId": 117,
+          "count": 2,
+          "logo": "/images/brands/maytag.svg"
+        },
+        {
+          "name": "Café",
+          "entityId": 95,
+          "count": 1
+        },
+        {
+          "name": "KitchenAid",
+          "entityId": 89,
+          "count": 1
+        },
+        {
+          "name": "Haier",
+          "entityId": 105,
+          "count": 1,
+          "logo": "/images/brands/haier.svg"
+        }
+      ]
+    },
+    "/appliances/ranges-cooktops": {
+      "count": 61,
+      "kinds": [
+        {
+          "label": "Electric Ranges",
+          "term": "electric range",
+          "count": 26,
+          "image": "/images/category/tiles/appliances/ranges-cooktops-electric-ranges.webp",
+          "imageAlt": "Frigidaire 24\" Electric Range Stainless Steel - FCFE2425AS"
+        },
+        {
+          "label": "Gas Ranges",
+          "term": "gas range",
+          "count": 20,
+          "image": "/images/category/tiles/appliances/ranges-cooktops-gas-ranges.webp",
+          "imageAlt": "Blomberg 24 Inch Freestanding Gas Range with 4 Sealed Burners - Stainless Steel - BGR24102SS"
+        },
+        {
+          "label": "Induction Ranges",
+          "term": "induction",
+          "count": 2,
+          "image": "/images/category/tiles/appliances/ranges-cooktops-induction-ranges.webp",
+          "imageAlt": "Frigidaire Gallery 30\" Front Control Induction Range with Air Fry - Stainless Steel - FGIH3047VF"
+        },
+        {
+          "label": "Free-Standing",
+          "term": "free-standing",
+          "count": 40,
+          "image": "/images/category/tiles/appliances/ranges-cooktops-free-standing.webp",
+          "imageAlt": "GE 30\" Free-Standing Self-Clean Electric Range - Stainless Steel - JB258RTSS"
+        },
+        {
+          "label": "Slide-In",
+          "term": "slide-in",
+          "count": 8,
+          "image": "/images/category/tiles/appliances/ranges-cooktops-slide-in.webp",
+          "imageAlt": "GE 24\" Steam Clean Free-Standing/Slide-in Gas Range - Stainless Steel - JGAS640RMSS"
+        },
+        {
+          "label": "Cooktops",
+          "term": "cooktop",
+          "count": 3,
+          "image": "/images/category/tiles/appliances/ranges-cooktops-cooktops.webp",
+          "imageAlt": "GE 30\" Free-standing Electric Radiant Smooth Cooktop Range - Stainless Steel - JB480STSS"
+        }
+      ],
+      "widths": [
+        {
+          "label": "24\"",
+          "term": "24 inch",
+          "count": 11
+        },
+        {
+          "label": "30\"",
+          "term": "30 inch",
+          "count": 46
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Fingerprint Resistant Stainless",
+          "term": "fingerprint resistant",
+          "swatch": "#b9bcc0",
+          "count": 2
+        },
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 29
+        },
+        {
+          "label": "Slate",
+          "term": "slate",
+          "swatch": "#5b6066",
+          "count": 1
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 19
+        },
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 9
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 30,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 18,
+          "logo": "/images/brands/frigidaire.svg"
+        },
+        {
+          "name": "Avanti",
+          "entityId": 103,
+          "count": 3
+        },
+        {
+          "name": "Premier Ranges",
+          "entityId": 104,
+          "count": 3
+        },
+        {
+          "name": "Amana",
+          "entityId": 110,
+          "count": 2,
+          "logo": "/images/brands/amana.svg"
+        },
+        {
+          "name": "Summit",
+          "entityId": 102,
+          "count": 2
+        },
+        {
+          "name": "Haier",
+          "entityId": 105,
+          "count": 1,
+          "logo": "/images/brands/haier.svg"
+        },
+        {
+          "name": "Blomberg",
+          "entityId": 86,
+          "count": 1
+        },
+        {
+          "name": "Hotpoint",
+          "entityId": 106,
+          "count": 1
+        }
+      ]
+    },
+    "/appliances/dishwashers": {
+      "count": 39,
+      "kinds": [
+        {
+          "label": "Top Control",
+          "term": "top control",
+          "count": 15,
+          "image": "/images/category/tiles/appliances/dishwashers-top-control.webp",
+          "imageAlt": "Frigidaire 24 Inch Fully Integrated Built In Dishwasher - Stainless Steel - FFID2426TS"
+        },
+        {
+          "label": "Front Control",
+          "term": "front control",
+          "count": 15,
+          "image": "/images/category/tiles/appliances/dishwashers-front-control.webp",
+          "imageAlt": "Frigidaire 18 Inch Full Console Built In Dishwasher with 8 Place Settings - Stainless Steel - FFBD1831US"
+        },
+        {
+          "label": "Compact 18\"",
+          "term": "18 inch",
+          "count": 6,
+          "image": "/images/category/tiles/appliances/dishwashers-compact-18.webp",
+          "imageAlt": "Frigidaire 18 Inch Full Console Built In Dishwasher with 8 Place Settings - Stainless Steel - FFBD1831US"
+        },
+        {
+          "label": "ADA Compliant",
+          "term": "ada",
+          "count": 5,
+          "image": "/images/category/tiles/appliances/dishwashers-ada-compliant.webp",
+          "imageAlt": "GE Profile ENERGY STAR 18\" ADA Compliant Stainless Steel Interior Dishwasher - PDT145SSLSS"
+        },
+        {
+          "label": "Stainless Tub",
+          "term": "stainless steel interior",
+          "count": 6,
+          "image": "/images/category/tiles/appliances/dishwashers-stainless-tub.webp",
+          "imageAlt": "GE Profile ENERGY STAR 18\" ADA Compliant Stainless Steel Interior Dishwasher - PDT145SSLSS"
+        }
+      ],
+      "widths": [
+        {
+          "label": "18\"",
+          "term": "18 inch",
+          "count": 6
+        },
+        {
+          "label": "24\"",
+          "term": "24 inch",
+          "count": 17
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Fingerprint Resistant Stainless",
+          "term": "fingerprint resistant",
+          "swatch": "#b9bcc0",
+          "count": 5
+        },
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 20
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 10
+        },
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 3
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 18,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 11,
+          "logo": "/images/brands/frigidaire.svg"
+        },
+        {
+          "name": "Whirlpool",
+          "entityId": 91,
+          "count": 6,
+          "logo": "/images/brands/whirlpool.svg"
+        },
+        {
+          "name": "Danby",
+          "entityId": 116,
+          "count": 1
+        },
+        {
+          "name": "Amana",
+          "entityId": 110,
+          "count": 1,
+          "logo": "/images/brands/amana.svg"
+        },
+        {
+          "name": "Samsung",
+          "entityId": 85,
+          "count": 1,
+          "logo": "/images/brands/samsung.svg"
+        },
+        {
+          "name": "JennAir",
+          "entityId": 88,
+          "count": 1
+        }
+      ]
+    },
+    "/appliances/microwaves": {
+      "count": 25,
+      "kinds": [
+        {
+          "label": "Over-the-Range",
+          "term": "over the range",
+          "count": 21,
+          "image": "/images/category/tiles/appliances/microwaves-over-the-range.webp",
+          "imageAlt": "Frigidaire Gallery 1.7 Cu. Ft. Over-The-Range Microwave - Stainless Steel - FGMV17WNVF"
+        },
+        {
+          "label": "Countertop",
+          "term": "countertop",
+          "count": 2,
+          "image": "/images/category/tiles/appliances/microwaves-countertop.webp",
+          "imageAlt": "GE 0.7 Cu. Ft. Capacity Countertop Microwave Oven - Stainless Steel - JES1072SHSS"
+        },
+        {
+          "label": "Built-In",
+          "term": "built-in",
+          "count": 1,
+          "image": "/images/category/tiles/appliances/microwaves-built-in.webp",
+          "imageAlt": "Sharp 1.2 cu. ft. Built-In Microwave Drawer Oven with 950-Watt Cooking Power - Black Stainless Steel - SMD2470AH"
+        },
+        {
+          "label": "Drawer",
+          "term": "drawer",
+          "count": 1,
+          "image": "/images/category/tiles/appliances/microwaves-drawer.webp",
+          "imageAlt": "Sharp 1.2 cu. ft. Built-In Microwave Drawer Oven with 950-Watt Cooking Power - Black Stainless Steel - SMD2470AH"
+        }
+      ],
+      "widths": [
+        {
+          "label": "24\"",
+          "term": "24 inch",
+          "count": 1
+        },
+        {
+          "label": "30\"",
+          "term": "30 inch",
+          "count": 1
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Fingerprint Resistant Stainless",
+          "term": "fingerprint resistant",
+          "swatch": "#b9bcc0",
+          "count": 1
+        },
+        {
+          "label": "Black Stainless Steel",
+          "term": "black stainless",
+          "swatch": "#3a3d42",
+          "count": 1
+        },
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 11
+        },
+        {
+          "label": "Slate",
+          "term": "slate",
+          "swatch": "#5b6066",
+          "count": 1
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 6
+        },
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 4
+        },
+        {
+          "label": "Bisque",
+          "term": "bisque",
+          "swatch": "#e9dcc5",
+          "count": 1
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 13,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 5,
+          "logo": "/images/brands/frigidaire.svg"
+        },
+        {
+          "name": "Whirlpool",
+          "entityId": 91,
+          "count": 4,
+          "logo": "/images/brands/whirlpool.svg"
+        },
+        {
+          "name": "Samsung",
+          "entityId": 85,
+          "count": 1,
+          "logo": "/images/brands/samsung.svg"
+        },
+        {
+          "name": "Sharp",
+          "entityId": 92,
+          "count": 1
+        },
+        {
+          "name": "Hotpoint",
+          "entityId": 106,
+          "count": 1
+        }
+      ]
+    },
+    "/appliances/wall-ovens": {
+      "count": 3,
+      "kinds": [
+        {
+          "label": "Single Wall Ovens",
+          "term": "single wall oven",
+          "count": 2,
+          "image": "/images/category/tiles/appliances/wall-ovens-single-wall-ovens.webp",
+          "imageAlt": "Frigidaire 30\" Single Electric Wall Oven Stainless Steel - FCWS3027AS"
+        },
+        {
+          "label": "Double Wall Ovens",
+          "term": "double wall oven",
+          "count": 1,
+          "image": "/images/category/tiles/appliances/wall-ovens-double-wall-ovens.webp",
+          "imageAlt": "GE 30\" Smart Built-In Self-Clean Double Wall Oven - White - JTD3000DNWW"
+        }
+      ],
+      "widths": [
+        {
+          "label": "24\"",
+          "term": "24 inch",
+          "count": 1
+        },
+        {
+          "label": "30\"",
+          "term": "30 inch",
+          "count": 2
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 1
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 1
+        },
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 1
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 2,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 1,
+          "logo": "/images/brands/frigidaire.svg"
+        }
+      ]
+    },
+    "/appliances/range-hoods": {
+      "count": 15,
+      "kinds": [
+        {
+          "label": "Under Cabinet",
+          "term": "under cabinet",
+          "count": 14,
+          "image": "/images/category/tiles/appliances/range-hoods-under-cabinet.webp",
+          "imageAlt": "GE ENERGY STAR 30\" Under The Cabinet Hood - Stainless Steel - JVX5305SJSS"
+        },
+        {
+          "label": "Wall Mount",
+          "term": "wall mount",
+          "count": 1,
+          "image": "/images/category/tiles/appliances/range-hoods-wall-mount.webp",
+          "imageAlt": "Nova Faber Nova Pro Collection Wall Mount Convertible Hood with 600 CFM Pro Motor - Stainless Steel - NOPR30SSV"
+        },
+        {
+          "label": "Convertible",
+          "term": "convertible",
+          "count": 1,
+          "image": "/images/category/tiles/appliances/range-hoods-convertible.webp",
+          "imageAlt": "Nova Faber Nova Pro Collection Wall Mount Convertible Hood with 600 CFM Pro Motor - Stainless Steel - NOPR30SSV"
+        }
+      ],
+      "widths": [
+        {
+          "label": "24\"",
+          "term": "24 inch",
+          "count": 5
+        },
+        {
+          "label": "30\"",
+          "term": "30 inch",
+          "count": 9
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 5
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 5
+        },
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 4
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 8,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Broan",
+          "entityId": 93,
+          "count": 6
+        },
+        {
+          "name": "Nova",
+          "entityId": 94,
+          "count": 1
+        }
+      ]
+    },
+    "/appliances/washers-dryers": {
+      "count": 44,
+      "kinds": [
+        {
+          "label": "Washers",
+          "term": "washer",
+          "count": 18,
+          "image": "/images/category/tiles/appliances/washers-dryers-washers.webp",
+          "imageAlt": "GE ENERGY STAR 4.6 cu. ft. Capacity Washer with Stainless Steel Basket - White on White - GTW500ASNWS"
+        },
+        {
+          "label": "Electric Dryers",
+          "term": "electric dryer",
+          "count": 18,
+          "image": "/images/category/tiles/appliances/washers-dryers-electric-dryers.webp",
+          "imageAlt": "GE ENERGY STAR 24\" 4.1 Cu.Ft. Front Load Ventless Condenser Electric Dryer - White - GFT14ESSMWW"
+        },
+        {
+          "label": "Gas Dryers",
+          "term": "gas dryer",
+          "count": 6,
+          "image": "/images/category/tiles/appliances/washers-dryers-gas-dryers.webp",
+          "imageAlt": "GE ENERGY STAR 7.8 cu. ft. Capacity Smart Front Load Gas Dryer with Sanitize Cycle - White - GFD55GSSNWW"
+        },
+        {
+          "label": "Laundry Centers",
+          "term": "laundry center",
+          "count": 4,
+          "image": "/images/category/tiles/appliances/washers-dryers-laundry-centers.webp",
+          "imageAlt": "GE Unitized Spacemaker ENERGY STAR 3.9 cu. ft. Capacity Washer - White - GUD27EESNWW"
+        },
+        {
+          "label": "Front Load",
+          "term": "front load",
+          "count": 11,
+          "image": "/images/category/tiles/appliances/washers-dryers-front-load.webp",
+          "imageAlt": "GE ENERGY STAR 24\" 4.1 Cu.Ft. Front Load Ventless Condenser Electric Dryer - White - GFT14ESSMWW"
+        },
+        {
+          "label": "Top Load",
+          "term": "top load",
+          "count": 3,
+          "image": "/images/category/tiles/appliances/washers-dryers-top-load.webp",
+          "imageAlt": "Samsung 27 Inch Top Load Washer with 4.0 Cu. Ft. Capacity - White - WA40A3005AW"
+        },
+        {
+          "label": "Compact 24\"",
+          "term": "24 inch",
+          "count": 3,
+          "image": "/images/category/tiles/appliances/washers-dryers-compact-24.webp",
+          "imageAlt": "GE ENERGY STAR 24\" 4.1 Cu.Ft. Front Load Ventless Condenser Electric Dryer - White - GFT14ESSMWW"
+        }
+      ],
+      "widths": [],
+      "finishes": [
+        {
+          "label": "Fingerprint Resistant Stainless",
+          "term": "fingerprint resistant",
+          "swatch": "#b9bcc0",
+          "count": 1
+        },
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 3
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 35
+        },
+        {
+          "label": "Diamond Gray",
+          "term": "diamond gray",
+          "swatch": "#6e7276",
+          "count": 2
+        },
+        {
+          "label": "Sapphire Blue",
+          "term": "sapphire blue",
+          "swatch": "#2a4b8d",
+          "count": 1
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 31,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Whirlpool",
+          "entityId": 91,
+          "count": 5,
+          "logo": "/images/brands/whirlpool.svg"
+        },
+        {
+          "name": "Electrolux",
+          "entityId": 98,
+          "count": 4
+        },
+        {
+          "name": "Hotpoint",
+          "entityId": 106,
+          "count": 2
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 1,
+          "logo": "/images/brands/frigidaire.svg"
+        },
+        {
+          "name": "Samsung",
+          "entityId": 85,
+          "count": 1,
+          "logo": "/images/brands/samsung.svg"
+        }
+      ]
+    },
+    "/appliances/garbage-disposals": {
+      "count": 6,
+      "kinds": [
+        {
+          "label": "Corded",
+          "term": "corded",
+          "count": 2,
+          "image": "/images/category/tiles/appliances/garbage-disposals-corded.webp",
+          "imageAlt": "GE DISPOSALL 1/3 HP Continuous Feed Garbage Disposer - Corded - Black - GFC325N"
+        },
+        {
+          "label": "Non-Corded",
+          "term": "non-corded",
+          "count": 4,
+          "image": "/images/category/tiles/appliances/garbage-disposals-non-corded.webp",
+          "imageAlt": "GE DISPOSALL 1 HP Continuous Feed Garbage Disposer Non-Corded - Black - GFC1020N"
+        }
+      ],
+      "widths": [
+        {
+          "label": "1/3 HP",
+          "term": "1/3 hp",
+          "count": 2
+        },
+        {
+          "label": "1/2 HP",
+          "term": "1/2 hp",
+          "count": 2
+        },
+        {
+          "label": "3/4 HP",
+          "term": "3/4 hp",
+          "count": 1
+        },
+        {
+          "label": "1 HP",
+          "term": "1 hp",
+          "count": 1
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 6
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 6,
+          "logo": "/images/brands/ge-appliances.svg"
+        }
+      ]
+    },
+    "/appliances/air-conditioning": {
+      "count": 17,
+      "kinds": [
+        {
+          "label": "Window Units",
+          "term": "window air conditioner",
+          "count": 6,
+          "image": "/images/category/tiles/appliances/air-conditioning-window-units.webp",
+          "imageAlt": "Frigidaire 5,000 BTU Window Room Air Conditioner - FHWC054WB1"
+        },
+        {
+          "label": "Built-In / Through-the-Wall",
+          "term": "wall air conditioner",
+          "count": 8,
+          "image": "/images/category/tiles/appliances/air-conditioning-built-in-through-the-wall.webp",
+          "imageAlt": "Frigidaire 12,000 BTU Built-In Room Air Conditioner- 115V/60Hz - White - FFTA123WA1"
+        },
+        {
+          "label": "Dehumidifiers",
+          "term": "dehumidifier",
+          "count": 3,
+          "image": "/images/category/tiles/appliances/air-conditioning-dehumidifiers.webp",
+          "imageAlt": "GE ENERGY STAR 22 Pint Portable Dehumidifier with Smart Dry for Damp Spaces - White - ADHR22LB"
+        }
+      ],
+      "widths": [],
+      "finishes": [
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 12
+        },
+        {
+          "label": "Soft Gray",
+          "term": "soft gray",
+          "swatch": "#b7b9bb",
+          "count": 2
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 13,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 4,
+          "logo": "/images/brands/frigidaire.svg"
+        }
+      ]
+    },
+    "/appliances/accessories": {
+      "count": 29,
+      "kinds": [
+        {
+          "label": "Cords",
+          "term": "cord",
+          "count": 11,
+          "image": "/images/category/tiles/appliances/accessories-cords.webp",
+          "imageAlt": "Frigidaire 6 Ft 30 Amp 4 Wire Dryer Cord Stainless Steel - 5304512982"
+        },
+        {
+          "label": "Ice Maker Kits",
+          "term": "ice maker",
+          "count": 5,
+          "image": "/images/category/tiles/appliances/accessories-ice-maker-kits.webp",
+          "imageAlt": "5308815072 - SMART CHOICE - 6 FOOT - BRAIDED STAINLESS -  ICE MAKER WATER LINE"
+        },
+        {
+          "label": "Hoses & Connectors",
+          "term": "hose",
+          "count": 4,
+          "image": "/images/category/tiles/appliances/accessories-hoses-connectors.webp",
+          "imageAlt": "Frigidaire Smart Choice 6 ft. Braided Stainless Steel Washer Fill Hoses - 2SSFILHOSE"
+        },
+        {
+          "label": "AC Sleeves & Cases",
+          "term": "sleeve",
+          "count": 3,
+          "image": "/images/category/tiles/appliances/accessories-ac-sleeves-cases.webp",
+          "imageAlt": "GE Galvanized Steel Solid-Sided Room Air Conditioner Wall Case - RAB46A"
+        },
+        {
+          "label": "Ducts & Vents",
+          "term": "duct",
+          "count": 1,
+          "image": "/images/category/tiles/appliances/accessories-ducts-vents.webp",
+          "imageAlt": "5304522091 - SMART CHOICE - 8 FT SEMI-RIGID ALUMINUM DRYER DUCT W/ CLAMPS"
+        },
+        {
+          "label": "Stacking Kits & Risers",
+          "term": "stacking kit",
+          "count": 4,
+          "image": "/images/category/tiles/appliances/accessories-stacking-kits-risers.webp",
+          "imageAlt": "GE Appliances Dryer Accessories-GE(R) Laundry 7\" RightHeight(TM) Riser - Fingerprint Resistant Stainless - GFR0728PTDS"
+        },
+        {
+          "label": "Grates & Trim",
+          "term": "grate",
+          "count": 1,
+          "image": "/images/category/tiles/appliances/accessories-grates-trim.webp",
+          "imageAlt": "GE Appliances Gas Range Center Cast Iron Grate - Black - JXGRATE1"
+        }
+      ],
+      "widths": [],
+      "finishes": [
+        {
+          "label": "Fingerprint Resistant Stainless",
+          "term": "fingerprint resistant",
+          "swatch": "#b9bcc0",
+          "count": 1
+        },
+        {
+          "label": "Stainless Steel",
+          "term": "stainless steel",
+          "swatch": "#c7c9cc",
+          "count": 4
+        },
+        {
+          "label": "White",
+          "term": "white",
+          "swatch": "#f4f4f4",
+          "count": 2
+        },
+        {
+          "label": "Black",
+          "term": "black",
+          "swatch": "#141414",
+          "count": 1
+        },
+        {
+          "label": "Satin Nickel",
+          "term": "satin nickel",
+          "swatch": "#a8a9ad",
+          "count": 1
+        },
+        {
+          "label": "Sapphire Blue",
+          "term": "sapphire blue",
+          "swatch": "#2a4b8d",
+          "count": 1
+        }
+      ],
+      "brands": [
+        {
+          "name": "GE Appliances",
+          "entityId": 115,
+          "count": 15,
+          "logo": "/images/brands/ge-appliances.svg"
+        },
+        {
+          "name": "Frigidaire",
+          "entityId": 96,
+          "count": 12,
+          "logo": "/images/brands/frigidaire.svg"
+        },
+        {
+          "name": "Electrolux",
+          "entityId": 98,
+          "count": 1
+        },
+        {
+          "name": "Whirlpool",
+          "entityId": 91,
+          "count": 1,
+          "logo": "/images/brands/whirlpool.svg"
+        }
+      ]
+    }
+  }
+}

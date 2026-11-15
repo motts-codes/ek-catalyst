@@ -85,6 +85,7 @@ export function getCategoryHeaderDefaults({
           image: toImage(child.image, child.name) ?? navImageFor(child.name),
         })),
     brands: content.brands,
+    chipGroups: content.chipGroups,
     tileGroups: content.tileGroups?.map((group) => ({
       title: group.title,
       items: group.items.map((tile) => ({
