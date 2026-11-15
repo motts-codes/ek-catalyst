@@ -426,8 +426,8 @@ function TilePanel({ color, label }: { color?: string; label: string }) {
   return <span aria-hidden className="absolute inset-0 block" style={{ backgroundColor: color }} />;
 }
 
-// "Shop by finish": the brand row's small boxes, the swatch filling each one and the finish name on
-// a white strip along the bottom so it reads on black and white swatches alike.
+// "Shop by finish": the brand row's small boxes, the swatch filling each one, with the finish
+// name beneath the box so the swatch keeps the brand box's full height.
 export function SwatchTiles({
   title = 'Shop by finish',
   items,
@@ -452,21 +452,23 @@ export function SwatchTiles({
           {items.map((item) => (
             <li key={item.href}>
               <Link
-                className="group relative flex aspect-[5/3] flex-col justify-end overflow-hidden rounded-2xl border border-[#fcb6bb] bg-contrast-100 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                className="group flex flex-col gap-2 focus-visible:outline-0 [&:focus-visible>span:first-child]:ring-2 [&:focus-visible>span:first-child]:ring-primary"
                 href={item.href}
               >
-                {item.image ? (
-                  <Image
-                    alt={item.image.alt}
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    fill
-                    sizes="(min-width: 64rem) 12vw, (min-width: 36rem) 25vw, 50vw"
-                    src={item.image.src}
-                  />
-                ) : (
-                  <TilePanel color={item.color} label={item.name} />
-                )}
-                <span className="relative z-10 line-clamp-2 border-t border-black/5 bg-white/95 px-2 py-1.5 text-center text-xs font-semibold leading-tight text-foreground transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @3xl:text-[11px] @5xl:text-xs">
+                <span className="relative block aspect-[5/3] overflow-hidden rounded-2xl border border-[#fcb6bb] bg-contrast-100 transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]">
+                  {item.image ? (
+                    <Image
+                      alt={item.image.alt}
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      fill
+                      sizes="(min-width: 64rem) 12vw, (min-width: 36rem) 25vw, 50vw"
+                      src={item.image.src}
+                    />
+                  ) : (
+                    <TilePanel color={item.color} label={item.name} />
+                  )}
+                </span>
+                <span className="line-clamp-2 text-center text-xs font-semibold leading-tight text-foreground transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @3xl:text-[11px] @5xl:text-xs">
                   {item.name}
                 </span>
               </Link>
