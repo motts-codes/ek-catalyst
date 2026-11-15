@@ -349,6 +349,11 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
         fallbackHref: '/windows/new-construction',
         image: navImage('windows-new-construction', 'New-construction window in a framed wall'),
       },
+      {
+        name: 'Accessories',
+        fallbackHref: search('window accessories'),
+        image: navImage('windows-accessories', 'Window accessories'),
+      },
     ],
     points: [...PICKUP_POINTS, { icon: 'price', label: 'Factory-direct pricing' }],
     fine: undefined,

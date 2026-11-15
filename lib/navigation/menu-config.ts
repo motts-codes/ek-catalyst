@@ -318,7 +318,7 @@ const menu: MenuItem[] = [
           },
           {
             label: 'Accessories',
-            href: '#',
+            href: '/search?term=window%20accessories',
             image: nav('windows-accessories', 'Window accessories'),
           },
         ],
