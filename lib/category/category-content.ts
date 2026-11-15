@@ -65,6 +65,25 @@ const PICKUP_ONLY_POINTS: CategoryPoint[] = [
   { icon: 'returns', label: 'Easy returns' },
 ];
 
+// Swatch tiles for the top-level appliances page (public/images/category/tiles/finishes), linking
+// to the whole appliance listing narrowed by the finish term.
+const applianceFinish = (name: string, term: string, file: string): SubcategoryOverride => ({
+  name,
+  fallbackHref: `/appliances?term=${encodeURIComponent(term)}`,
+  image: { src: `/images/category/tiles/finishes/${file}.webp`, alt: `${name} finish` },
+});
+
+const APPLIANCE_FINISH_TILES: SubcategoryOverride[] = [
+  applianceFinish('Stainless Steel', 'stainless steel', 'stainless-steel'),
+  applianceFinish(
+    'Fingerprint Resistant',
+    'fingerprint resistant',
+    'fingerprint-resistant-stainless',
+  ),
+  applianceFinish('White', 'white', 'white'),
+  applianceFinish('Black', 'black', 'black'),
+];
+
 const isPickupOnlyPath = (key: string) =>
   key === '/windows' ||
   key.startsWith('/windows/') ||
@@ -375,6 +394,9 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     brands: APPLIANCE_BRANDS,
     heading: 'Appliances you can take home this week',
     subcategories: APPLIANCE_TILES,
+    // The four finishes every kitchen category carries, across all appliances (a matching fridge,
+    // range and dishwasher). The rarer finishes stay on the sub-category pages.
+    tileGroups: [{ title: 'Shop by finish', look: 'swatch', items: APPLIANCE_FINISH_TILES }],
     lede: 'Fridges, ranges, dishwashers and laundry, in stock below retail. Pick up in Bristol in two days.',
     imageLabel: 'A range and hood in a finished kitchen',
     subTitle: 'Shop by appliance',
