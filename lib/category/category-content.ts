@@ -32,6 +32,8 @@ export interface CategoryContent {
   heading?: string;
   /** Hero panel colour for a top-level category: brand red (default) or black. */
   heroTone?: 'black' | 'red';
+  /** A subcategory that is a major landing page gets the full top-level hero instead of the compact one. */
+  hero?: 'full';
   /** Overrides the BigCommerce category description in the hero. */
   lede?: string;
   /** What the hero photo should show — used as the placeholder label until an image is set. */
@@ -48,6 +50,20 @@ const SHIPPED_POINTS: CategoryPoint[] = [
   { icon: 'truck', label: 'Free & fast shipping' },
   { icon: 'returns', label: 'Easy returns' },
 ];
+
+// Windows and appliances are collected, never shipped: the shipping promise and the free-shipping
+// small print come off, and the two-day pickup takes its place (client, 15 Nov 2026).
+const PICKUP_ONLY_POINTS: CategoryPoint[] = [
+  { icon: 'stock', label: 'In stock' },
+  { icon: 'zap', label: '2 Day Pickup' },
+  { icon: 'returns', label: 'Easy returns' },
+];
+
+const isPickupOnlyPath = (key: string) =>
+  key === '/windows' ||
+  key.startsWith('/windows/') ||
+  key === '/appliances' ||
+  key.startsWith('/appliances/');
 
 const PICKUP_POINTS: CategoryPoint[] = [
   { icon: 'stock', label: 'In stock' },
@@ -447,6 +463,7 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     lede: 'Trim kits, hoses, vents and filters.',
   },
   '/windows/replacement': {
+    hero: 'full',
     heading: 'Swap old windows without reframing',
     lede: 'Double hung, sliders and hoppers made to fit your existing opening.',
     subTitle: 'Shop by window type',
@@ -576,13 +593,24 @@ const HERO_LEDES: Record<string, string> = {
 
 const normalize = (path: string) => `/${path.replace(/^\/+|\/+$/g, '')}`;
 
+// The points row and its small print by family: quoted countertops, pickup-only windows and
+// appliances, otherwise whatever the entry says (or the shipped defaults).
+function resolvePoints(key: string, base: CategoryContent): CategoryContent {
+  if (isQuotedCountertopPath(key) && base.points == null) {
+    return { ...base, points: COUNTERTOP_POINTS, fine: base.fine ?? COUNTERTOP_FINE };
+  }
+
+  if (isPickupOnlyPath(key)) {
+    return { ...base, points: base.points ?? PICKUP_ONLY_POINTS, fine: base.fine };
+  }
+
+  return base;
+}
+
 export function getCategoryContent(path: string): CategoryContent {
   const key = normalize(path);
   const base = CATEGORY_CONTENT[key] ?? {};
-  const content =
-    isQuotedCountertopPath(key) && base.points == null
-      ? { ...base, points: COUNTERTOP_POINTS, fine: base.fine ?? COUNTERTOP_FINE }
-      : base;
+  const content = resolvePoints(key, base);
   // The authored lede (client copy, Oct 2026) wins; HERO_LEDES is the older fallback set.
   const lede = content.lede ?? HERO_LEDES[key];
 

@@ -54,8 +54,9 @@ export function getCategoryHeaderDefaults({
   seoIntro,
 }: Props): CategoryHeaderDefaults {
   const content = getCategoryContent(category.path);
-  // A subcategory ("/countertops/granite/") gets the compact hero with just the first sentence.
-  const compact = category.path.split('/').filter(Boolean).length > 1;
+  // A subcategory ("/countertops/granite/") gets the compact hero with just the first sentence,
+  // unless its entry asks for the full hero (a major landing page like Replacement Windows).
+  const compact = category.path.split('/').filter(Boolean).length > 1 && content.hero !== 'full';
   // Authored line first; otherwise the first sentence of the BigCommerce description or SEO copy.
   const description = content.lede ?? firstSentence(toPlainText(category.description) || seoIntro);
 
