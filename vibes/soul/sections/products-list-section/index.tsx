@@ -249,7 +249,7 @@ export function ProductsListSection({
               </FiltersAside>
             )}
 
-            <div className="group-has-data-pending/products-list-section:animate-pulse flex-1">
+            <div className="group-has-data-pending/products-list-section:animate-pulse min-w-0 flex-1">
               <ProductList
                 addToCartAction={addToCartAction}
                 compareHref={compareHref}

@@ -39,8 +39,10 @@ export function NumberedPagination(props: Props) {
   );
 }
 
+// Pills tighten below the @md container width so nine of them (seven pages plus the arrows) fit
+// a phone; the row wraps rather than widening the page if they still do not.
 const LINK_CLASS =
-  'flex h-10 min-w-10 items-center justify-center rounded-full px-3 text-sm font-medium ring-primary transition-colors duration-200 focus-visible:outline-0 focus-visible:ring-2';
+  'flex h-9 min-w-9 items-center justify-center rounded-full px-2 text-sm font-medium ring-primary transition-colors duration-200 focus-visible:outline-0 focus-visible:ring-2 @md:h-10 @md:min-w-10 @md:px-3';
 
 function pageWindow(current: number, total: number): Array<number | 'gap'> {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
@@ -86,7 +88,7 @@ function NumberedPaginationResolved({
 
   return (
     <nav aria-label={label} className="flex flex-col items-center gap-4 py-10">
-      <ul className="flex items-center gap-1 @md:gap-1.5">
+      <ul className="flex flex-wrap items-center justify-center gap-px @md:gap-1.5">
         <li>
           <ArrowLink disabled={page <= 1} href={hrefFor(page - 1)} label={previousLabel}>
             <ChevronLeft aria-hidden size={20} strokeWidth={1.5} />
