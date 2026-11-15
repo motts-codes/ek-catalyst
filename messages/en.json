@@ -196,6 +196,11 @@
       "totalPrice": "Total",
       "viewDetails": "View Details",
       "progressLabel": "Order progress",
+      "datePlaced": "Placed",
+      "itemsCount": "{count, plural, =1 {1 item} other {# items}}",
+      "showItems": "Show items",
+      "hideItems": "Hide items",
+      "quantity": "Qty",
       "Progress": {
         "placed": "Order placed",
         "processing": "Processing",

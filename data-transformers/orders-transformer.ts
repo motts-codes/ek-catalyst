@@ -10,6 +10,7 @@ export const ordersTransformer = (
   format: ExistingResultType<typeof getFormatter>,
   tGiftCertificate: ExistingResultType<typeof getTranslations<'Cart.GiftCertificate'>>,
   tProgress: ExistingResultType<typeof getTranslations<'Account.Orders.Progress'>>,
+  tOrders?: ExistingResultType<typeof getTranslations<'Account.Orders'>>,
 ): Order[] => {
   return orders.map((order) => {
     const lineItems =
@@ -30,6 +31,7 @@ export const ordersTransformer = (
             href: lineItem.baseCatalogProduct?.path ?? '#',
             title: lineItem.name,
             subtitle: lineItem.brand ?? undefined,
+            quantity: lineItem.quantity,
             price,
             totalPrice: format.number(lineItem.subTotalListPrice.value, {
               style: 'currency',
@@ -57,6 +59,7 @@ export const ordersTransformer = (
             id: lineItem.entityId.toString(),
             href: '#',
             title: tGiftCertificate('giftCertificate'),
+            quantity: 1,
             price: formattedAmount,
             totalPrice: formattedAmount,
             image: undefined,
@@ -64,16 +67,21 @@ export const ordersTransformer = (
         });
       }) ?? [];
 
+    const allItems = [...lineItems, ...giftCertificates];
+    const count = allItems.reduce((sum, item) => sum + item.quantity, 0);
+
     return {
       id: order.entityId.toString(),
       href: `/account/orders/${order.entityId}`,
+      date: format.dateTime(new Date(order.orderedAt.utc), { dateStyle: 'medium' }),
+      itemsSummary: tOrders?.('itemsCount', { count }),
       status: order.status.label,
       progress: orderProgress(order.status.value, tProgress),
       totalPrice: format.number(order.totalIncTax.value, {
         style: 'currency',
         currency: order.totalIncTax.currencyCode,
       }),
-      lineItems: [...lineItems, ...giftCertificates].flat(),
+      lineItems: allItems,
     } satisfies Order;
   });
 };

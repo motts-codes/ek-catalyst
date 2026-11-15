@@ -19,6 +19,7 @@ async function getOrders(after?: string, before?: string): Promise<Order[]> {
   const format = await getFormatter();
   const tGiftCertificate = await getTranslations('Cart.GiftCertificate');
   const tProgress = await getTranslations('Account.Orders.Progress');
+  const tOrders = await getTranslations('Account.Orders');
   const customerOrdersDetails = await getCustomerOrders({
     ...(after && { after }),
     ...(before && { before }),
@@ -30,7 +31,7 @@ async function getOrders(after?: string, before?: string): Promise<Order[]> {
 
   const { orders } = customerOrdersDetails;
 
-  return ordersTransformer(orders, format, tGiftCertificate, tProgress);
+  return ordersTransformer(orders, format, tGiftCertificate, tProgress, tOrders);
 }
 
 async function getPaginationInfo(after?: string, before?: string) {
@@ -52,12 +53,16 @@ export default async function Orders({ params, searchParams }: Props) {
 
   return (
     <OrderList
+      dateLabel={t('datePlaced')}
       emptyStateActionLabel={t('EmptyState.cta')}
       emptyStateTitle={t('EmptyState.title')}
+      hideItemsLabel={t('hideItems')}
       orderNumberLabel={t('orderNumber')}
       orders={getOrders(after, before)}
       paginationInfo={getPaginationInfo(after, before)}
       progressLabel={t('progressLabel')}
+      quantityLabel={t('quantity')}
+      showItemsLabel={t('showItems')}
       title={t('title')}
       totalLabel={t('totalPrice')}
       viewDetailsLabel={t('viewDetails')}
