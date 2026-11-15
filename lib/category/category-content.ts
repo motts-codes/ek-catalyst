@@ -531,6 +531,15 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
         fallbackHref: '/sinks-faucets/kitchen-sinks?term=workstation',
         image: tileImage('sinks/workstation', 'A stainless steel workstation sink with a ledge'),
       },
+      {
+        // Links to the Sinks & Faucets accessories page until there is a child under Kitchen Sinks.
+        name: 'Accessories',
+        fallbackHref: '/sinks-faucets/accessories',
+        image: tileImage(
+          'sinks/accessories',
+          'A bottom grid, basket strainer and roll-up drying mat',
+        ),
+      },
     ],
   },
   '/sinks-faucets/kitchen-faucets': {
