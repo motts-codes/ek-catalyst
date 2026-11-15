@@ -88,6 +88,34 @@ const BRAND_DISPLAY_NAMES: Record<string, string> = {
   'Rev-a-shelf': 'Rev-A-Shelf',
 };
 
+// Logos on file in public/images/brands, keyed by the BigCommerce brand name (the live store's
+// uploads plus the brands' own, see docs). Brands without one render as a wordmark. Oakland, Paani,
+// Amerock (and its Everyday Basics line), Swanstone, Infinity Design and Rynone publish none.
+const BRAND_LOGOS: Record<string, string> = {
+  'M S International': 'msi.svg',
+  'Fine Fixtures': 'fine-fixtures.png',
+  'Home Products Source Ltd': 'home-products-source.png',
+  'Star Hardware': 'star-hardware.png',
+  'Crystal Windows': 'crystal-windows.svg',
+  'United Windows': 'united-windows.png',
+  'Silver Line Building Products': 'silver-line.png',
+  Richelieu: 'richelieu.png',
+  'Rev-a-shelf': 'rev-a-shelf.png',
+  'Star Cabinetry': 'star-cabinetry.png',
+  'Hartson-Kennedy Cabinet Top': 'hartson-kennedy.png',
+};
+
+function brandTile(path: string, brand: FacetBrand): BrandTile {
+  const name = BRAND_DISPLAY_NAMES[brand.name] ?? brand.name;
+  const file = BRAND_LOGOS[brand.name];
+
+  return {
+    name,
+    href: `${path}?brand=${brand.entityId}`,
+    logo: file ? { src: `/images/brands/${file}`, alt: `${name} logo` } : undefined,
+  };
+}
+
 const finishHref = (path: string, value: string) =>
   `${path}?${encodeURIComponent(`attr_${FINISH_FIELD}`)}=${encodeURIComponent(value)}`;
 
@@ -123,9 +151,6 @@ export function categoryFacetsFor(path: string): CategoryFacets | null {
     tileGroups:
       finishes.length > 0 ? [{ title: 'Shop by finish', items: finishes, look: 'swatch' }] : [],
     chipGroups: [],
-    brands: entry.brands.map((brand) => ({
-      name: BRAND_DISPLAY_NAMES[brand.name] ?? brand.name,
-      href: `${path}?brand=${brand.entityId}`,
-    })),
+    brands: entry.brands.map((brand) => brandTile(path, brand)),
   };
 }
