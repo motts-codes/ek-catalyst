@@ -42,6 +42,8 @@ export function OrderProgress({
       {steps.map((step, i) => {
         const Icon = ICONS[step.icon];
         const state = stateOf(i, current);
+        // The journey's end turns green (the "In stock" green) once the order gets there.
+        const finished = step.icon === 'completed' && state === 'current';
 
         return (
           <li
@@ -55,9 +57,9 @@ export function OrderProgress({
                 aria-hidden
                 className={clsx(
                   'absolute left-[-50%] top-[21px] h-0.5 w-full',
-                  state === 'todo'
-                    ? 'bg-contrast-100'
-                    : 'bg-[var(--button-primary-background,#d90716)]',
+                  state === 'todo' && 'bg-contrast-100',
+                  state !== 'todo' && !finished && 'bg-[var(--button-primary-background,#d90716)]',
+                  finished && 'bg-[#16a34a]',
                 )}
               />
             )}
@@ -67,7 +69,9 @@ export function OrderProgress({
                 state === 'done' &&
                   'border-[#fcb6bb] bg-[#fdf3f5] text-[var(--button-primary-background,#d90716)]',
                 state === 'current' &&
+                  !finished &&
                   'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white',
+                finished && 'border-[#16a34a] bg-[#16a34a] text-white',
                 state === 'todo' && 'border-contrast-200 bg-white text-contrast-400',
               )}
             >
@@ -77,7 +81,9 @@ export function OrderProgress({
               className={clsx(
                 'text-xs leading-tight @sm:text-sm',
                 state === 'current' &&
+                  !finished &&
                   'font-semibold text-[var(--button-primary-background,#d90716)]',
+                finished && 'font-semibold text-[#16a34a]',
                 state === 'done' && 'font-medium text-foreground',
                 state === 'todo' && 'text-contrast-400',
               )}
