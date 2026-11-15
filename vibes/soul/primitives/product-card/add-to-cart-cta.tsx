@@ -7,6 +7,7 @@ import { requestFormReset } from 'react-dom';
 import { type CartDrawerData, openCartDrawer } from '@/vibes/soul/primitives/cart-drawer/store';
 import { toast } from '@/vibes/soul/primitives/toaster';
 import { useRouter } from '~/i18n/routing';
+import { EK_PHONE } from '~/lib/contact/phone';
 
 interface State {
   lastResult: SubmissionResult | null;
@@ -32,6 +33,21 @@ interface Props {
 // red label at rest, filling red left-to-right on hover like the home card's "Shop Now".
 export const CTA_BUTTON_CLASS =
   'relative inline-flex min-h-10 w-full items-center justify-center overflow-hidden rounded-full border border-[var(--button-primary-background,#d90716)] bg-transparent px-3 py-2.5 text-xs font-semibold @[14rem]:px-4 @[14rem]:text-sm text-[var(--button-primary-background,#d90716)] transition-colors after:absolute after:inset-0 after:-z-10 after:-translate-x-[105%] after:rounded-full after:bg-[var(--button-primary-background,#d90716)] after:duration-300 after:[animation-timing-function:cubic-bezier(0,0.25,0,1)] hover:text-white hover:after:translate-x-0 disabled:opacity-50';
+
+// The same pill in green for products that can't be carted right now: a call places the order.
+export const CALL_BUTTON_CLASS = CTA_BUTTON_CLASS.replace(
+  /var\(--button-primary-background,#d90716\)/g,
+  '#15803d',
+);
+
+// "Call to order" for an out-of-stock product: the phone line instead of an add the API refuses.
+export function CallToOrderCta() {
+  return (
+    <a className={CALL_BUTTON_CLASS} href={EK_PHONE.href}>
+      Call to order
+    </a>
+  );
+}
 
 // "Add to Cart" CTA for no-option products: fires the add-to-cart action directly.
 export function AddToCartCta({ id, action, selectedOption, disabled = false }: Props) {

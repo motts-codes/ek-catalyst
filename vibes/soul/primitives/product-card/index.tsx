@@ -7,7 +7,12 @@ import { Link } from '~/components/link';
 
 import { Rating } from '../rating';
 
-import { AddToCartCta, CTA_BUTTON_CLASS, ProductCardAddToCartAction } from './add-to-cart-cta';
+import {
+  AddToCartCta,
+  CallToOrderCta,
+  CTA_BUTTON_CLASS,
+  ProductCardAddToCartAction,
+} from './add-to-cart-cta';
 import { Compare } from './compare';
 import { DeliveryLine } from './delivery-line';
 import { cardSwatchOption, optionsCtaLabel, type RequiredOption } from './options';
@@ -45,6 +50,8 @@ export interface Product {
   specLine?: string;
   rating?: number;
   inventoryMessage?: string;
+  /** BigCommerce reports no stock: the CTA becomes "Call to order" and the stock line is hidden. */
+  outOfStock?: boolean;
   numberOfReviews?: number;
   /** True when the product has required options; the CTA then links to the PDP to choose them. */
   requiresOptions?: boolean;
@@ -118,6 +125,7 @@ export function ProductCard({
     quoteOnly = false,
     priceUnit,
     inventoryMessage,
+    outOfStock = false,
     rating,
     numberOfReviews,
   },
@@ -286,7 +294,7 @@ export function ProductCard({
                   }[colorScheme],
                 )}
               >
-                {inventoryMessage}
+                {outOfStock ? null : inventoryMessage}
               </span>
               {href !== '#' && (
                 // CTA wrapper: mt-auto pins it to the card bottom so buttons align across a row;
@@ -296,6 +304,7 @@ export function ProductCard({
                     addToCartAction={addToCartAction}
                     href={href}
                     id={id}
+                    outOfStock={outOfStock}
                     productName={title}
                     quoteHref={quoteHref}
                     quoteOnly={quoteOnly}
@@ -340,9 +349,11 @@ export function ProductCard({
   );
 }
 
-// The card's one CTA: "Request a quote" for quote-only products; "Add to Cart" for products
-// without options (when the action is wired); swatches + "Add to Cart" for a single small swatch
-// option; otherwise "Choose size / finish / options" to the product page.
+// The card's one CTA: "Request a quote" for quote-only products; "Call to order" when the store
+// has no stock; "Add to Cart" for products without options (when the action is wired); swatches +
+// "Add to Cart" for a single small swatch option; otherwise "Choose size / finish / options" to
+// the product page.
+
 export function CardCta({
   quoteOnly,
   quoteHref,
@@ -352,8 +363,10 @@ export function CardCta({
   requiresOptions,
   requiredOptions,
   addToCartAction,
+  outOfStock = false,
 }: {
   quoteOnly: boolean;
+  outOfStock?: boolean;
   quoteHref?: string;
   /** Named in the quote link (?product=…) so the quote form knows which stone. */
   productName?: string;
@@ -375,6 +388,10 @@ export function CardCta({
         Request a quote
       </Link>
     );
+  }
+
+  if (outOfStock) {
+    return <CallToOrderCta />;
   }
 
   if (requiresOptions === false && addToCartAction != null) {

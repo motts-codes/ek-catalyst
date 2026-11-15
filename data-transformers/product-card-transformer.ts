@@ -302,6 +302,9 @@ export const singleProductCardTransformer = (
     ),
     rating: product.reviewSummary.averageRating,
     numberOfReviews: product.reviewSummary.numberOfReviews,
+    // BigCommerce's verdict (tracked stock at zero, or unavailable): the card then offers a call
+    // instead of an add that the API would refuse.
+    outOfStock: 'inventory' in product ? !product.inventory.isInStock : undefined,
     inventoryMessage:
       'variants' in product
         ? getInventoryMessage(product, outOfStockMessage, showBackorderMessage)

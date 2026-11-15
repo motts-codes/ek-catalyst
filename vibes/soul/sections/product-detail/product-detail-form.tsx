@@ -16,6 +16,7 @@ import { useTranslations } from 'next-intl';
 import { createSerializer, parseAsString, useQueryStates } from 'nuqs';
 import {
   ReactNode,
+  type RefObject,
   startTransition,
   useActionState,
   useCallback,
@@ -120,6 +121,8 @@ export interface ProductDetailFormProps<F extends Field> {
   decrementLabel?: string;
   emptySelectPlaceholder?: string;
   ctaDisabled?: boolean;
+  // Out of stock: a green "Call to order" link to this tel: href replaces Add to cart / Buy now.
+  callToOrderHref?: string;
   prefetch?: boolean;
   additionalActions?: ReactNode;
   minQuantity?: number;
@@ -170,6 +173,7 @@ export function ProductDetailForm<F extends Field>({
   decrementLabel = 'Decrease quantity',
   emptySelectPlaceholder = 'Select an option',
   ctaDisabled = false,
+  callToOrderHref,
   prefetch = false,
   additionalActions,
   minQuantity,
@@ -365,6 +369,7 @@ export function ProductDetailForm<F extends Field>({
   }, [backorderDisplayData, formFields.quantity.value, t]);
 
   const quantityControl = useInputControl(formFields.quantity);
+  const callToOrder = callToOrderHref != null;
 
   if (quoteOnly != null) {
     return <QuoteOnlyPanel actions={quoteOnly} descriptionSlot={descriptionSlot} header={header} />;
@@ -559,7 +564,8 @@ export function ProductDetailForm<F extends Field>({
                     </p>
                   )
                 )}
-                <div>
+                {/* No quantity when the order is placed by phone (the input stays mounted, hidden). */}
+                <div className={clsx({ hidden: callToOrder })}>
                   <Label className="mb-2" id="quantity-label" required>
                     {quantityLabel}
                   </Label>
@@ -592,16 +598,12 @@ export function ProductDetailForm<F extends Field>({
                 </div>
                 {/* In-flow buttons — desktop only. On mobile they live in the sticky bottom bar. */}
                 <div className="hidden flex-col gap-3 @2xl:flex">
-                  <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
-                  <SubmitButton
-                    disabled={ctaDisabled}
-                    onClick={() => {
-                      buyNowRef.current = true;
-                    }}
-                    variant="tertiary"
-                  >
-                    Buy now
-                  </SubmitButton>
+                  <PurchaseButtons
+                    buyNowRef={buyNowRef}
+                    callToOrderHref={callToOrderHref}
+                    ctaDisabled={ctaDisabled}
+                    ctaLabel={ctaLabel}
+                  />
                 </div>
               </div>
               {/* Fulfillment box (__fulfillment custom field): delivery/pickup message with an icon. */}
@@ -671,7 +673,10 @@ export function ProductDetailForm<F extends Field>({
               so we don't submit a duplicate quantity field. Black icons like the main stepper. */}
             <NumberInput
               aria-label={quantityLabel}
-              className="shrink-0 [&_button:active]:!bg-[#666666] [&_button:not(:hover):not(:disabled)_svg]:!text-foreground [&_input]:w-6"
+              className={clsx(
+                'shrink-0 [&_button:active]:!bg-[#666666] [&_button:not(:hover):not(:disabled)_svg]:!text-foreground [&_input]:w-6',
+                { hidden: callToOrder },
+              )}
               decrementLabel={decrementLabel}
               incrementLabel={incrementLabel}
               max={maxQuantity}
@@ -681,20 +686,13 @@ export function ProductDetailForm<F extends Field>({
               onFocus={quantityControl.focus}
               value={quantityControl.value}
             />
-            <div className="flex-1 [&_button]:h-full [&_button]:w-full">
-              <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
-            </div>
-            <div className="flex-1 [&_button]:h-full [&_button]:w-full">
-              <SubmitButton
-                disabled={ctaDisabled}
-                onClick={() => {
-                  buyNowRef.current = true;
-                }}
-                variant="tertiary"
-              >
-                Buy now
-              </SubmitButton>
-            </div>
+            <PurchaseButtons
+              buyNowRef={buyNowRef}
+              callToOrderHref={callToOrderHref}
+              ctaDisabled={ctaDisabled}
+              ctaLabel={ctaLabel}
+              sideBySide
+            />
           </div>
         </RequiredMarks>
       </form>
@@ -747,6 +745,66 @@ function HeaderBox({ children }: { children?: ReactNode }) {
 
 function DescriptionBox({ children }: { children?: ReactNode }) {
   return children != null ? <div className="pt-2">{children}</div> : null;
+}
+
+// The purchase panel's buttons: Add to cart + Buy now, or one green "Call to order" link when the
+// store has no stock. `sideBySide` is the mobile sticky bar, where each fills half the row.
+function PurchaseButtons({
+  callToOrderHref,
+  ctaDisabled,
+  ctaLabel,
+  buyNowRef,
+  sideBySide = false,
+}: {
+  callToOrderHref?: string;
+  ctaDisabled?: boolean;
+  ctaLabel: string;
+  buyNowRef: RefObject<boolean>;
+  sideBySide?: boolean;
+}) {
+  const cell = sideBySide
+    ? 'flex-1 [&_a]:h-full [&_a]:w-full [&_button]:h-full [&_button]:w-full'
+    : undefined;
+
+  if (callToOrderHref != null) {
+    return (
+      <div className={cell}>
+        <CallToOrderButton href={callToOrderHref} />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className={cell}>
+        <SubmitButton disabled={ctaDisabled}>{ctaLabel}</SubmitButton>
+      </div>
+      <div className={cell}>
+        <SubmitButton
+          disabled={ctaDisabled}
+          onClick={() => {
+            buyNowRef.current = true;
+          }}
+          variant="tertiary"
+        >
+          Buy now
+        </SubmitButton>
+      </div>
+    </>
+  );
+}
+
+// Out-of-stock CTA: the primary button in EK green (AA on white text), linking to the phone line.
+function CallToOrderButton({ href }: { href: string }) {
+  return (
+    <ButtonLink
+      className="w-full [--button-primary-background-hover:#166534] [--button-primary-background:#15803d] [--button-primary-border:#15803d] [--button-primary-text:#ffffff]"
+      href={href}
+      size="medium"
+    >
+      Call to order
+    </ButtonLink>
+  );
 }
 
 function SubmitButton({

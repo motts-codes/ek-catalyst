@@ -18,6 +18,7 @@ import { pricesTransformer } from '~/data-transformers/prices-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { productInfoFeaturesTransformer } from '~/data-transformers/product-info-features-transformer';
 import { productOptionsTransformer } from '~/data-transformers/product-options-transformer';
+import { EK_PHONE } from '~/lib/contact/phone';
 import { COUNTERTOP_PHONE, quotePageHref } from '~/lib/countertops/quote-form';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
@@ -412,6 +413,18 @@ export default async function Product({ params, searchParams }: Props) {
       : t('ProductDetails.Submit.addToCart');
   });
 
+  // Out of stock (but not discontinued or preorder): the form swaps the cart buttons for a green
+  // "Call to order" link, since the API would refuse the add anyway.
+  const streamableCallToOrderHref = Streamable.from(async () => {
+    const product = await streamableProductInventory;
+
+    if (product.availabilityV2.status !== 'Available') {
+      return null;
+    }
+
+    return product.inventory.isInStock ? null : EK_PHONE.href;
+  });
+
   const streameableCtaDisabled = Streamable.from(async () => {
     const product = await streamableProductInventory;
 
@@ -533,19 +546,17 @@ export default async function Product({ params, searchParams }: Props) {
     }
 
     const {
-      showOutOfStockMessage,
       stockLevelDisplay,
-      defaultOutOfStockMessage,
       showBackorderAvailabilityPrompt,
       showBackorderMessage,
       showQuantityOnBackorder,
       backorderAvailabilityPrompt,
     } = inventorySetting;
 
+    // The store's default out-of-stock message ("Call … to place order") is replaced by the
+    // "Call to order" button, so nothing is shown here.
     if (!inventory.isInStock) {
-      return showOutOfStockMessage
-        ? { stockLevelMessage: defaultOutOfStockMessage, backorderAvailabilityPrompt: null }
-        : null;
+      return null;
     }
 
     const {
@@ -807,6 +818,7 @@ export default async function Product({ params, searchParams }: Props) {
           }
           additionalInformationTitle={t('ProductDetails.additionalInformation')}
           breadcrumbs={breadcrumbs}
+          callToOrderHref={streamableCallToOrderHref}
           ctaDisabled={streameableCtaDisabled}
           ctaLabel={streameableCtaLabel}
           decrementLabel={t('ProductDetails.decreaseQuantity')}

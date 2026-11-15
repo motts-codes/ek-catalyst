@@ -79,6 +79,8 @@ export interface ProductDetailProps<F extends Field> {
   emptySelectPlaceholder?: string;
   ctaLabel?: Streamable<string | null>;
   ctaDisabled?: Streamable<boolean | null>;
+  /** When set, the cart buttons give way to a green "Call to order" link to this tel: href. */
+  callToOrderHref?: Streamable<string | null>;
   stockStatus?: Streamable<'in' | 'out' | { low: number } | null>;
   prefetch?: boolean;
   thumbnailLabel?: string;
@@ -155,6 +157,7 @@ export function ProductDetail<F extends Field>({
   emptySelectPlaceholder,
   ctaLabel: streamableCtaLabel,
   ctaDisabled: streamableCtaDisabled,
+  callToOrderHref: streamableCallToOrderHref,
   stockStatus: streamableStockStatus,
   prefetch,
   thumbnailLabel,
@@ -247,6 +250,7 @@ export function ProductDetail<F extends Field>({
                         product.stockDisplayData,
                         product.backorderDisplayData,
                         streamableStockStatus ?? Streamable.from(async () => null),
+                        streamableCallToOrderHref ?? null,
                       ])}
                     >
                       {([
@@ -258,10 +262,12 @@ export function ProductDetail<F extends Field>({
                         stockDisplayData,
                         backorderDisplayData,
                         stockStatus,
+                        callToOrderHref,
                       ]) => (
                         <ProductDetailForm
                           action={action}
                           backorderDisplayData={backorderDisplayData ?? undefined}
+                          callToOrderHref={callToOrderHref ?? undefined}
                           ctaDisabled={ctaDisabled ?? undefined}
                           ctaLabel={ctaLabel ?? undefined}
                           decrementLabel={decrementLabel}
