@@ -4,6 +4,7 @@ import { Order } from '@/vibes/soul/sections/order-list';
 import { getCustomerOrders } from '~/app/[locale]/(default)/account/orders/page-data';
 import { ExistingResultType } from '~/client/util';
 import { orderProgress } from '~/lib/orders/progress';
+import { orderStatusTone } from '~/lib/orders/status-tone';
 
 export const ordersTransformer = (
   orders: ExistingResultType<typeof getCustomerOrders>['orders'],
@@ -83,6 +84,7 @@ export const ordersTransformer = (
       date: format.dateTime(new Date(order.orderedAt.utc), { dateStyle: 'medium' }),
       itemsSummary: tOrders?.('itemsCount', { count }),
       status: order.status.label,
+      statusTone: orderStatusTone(order.status.value),
       progress: orderProgress(order.status.value, tProgress),
       totalPrice: format.number(order.totalIncTax.value, {
         style: 'currency',

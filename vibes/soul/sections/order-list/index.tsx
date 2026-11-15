@@ -2,10 +2,10 @@ import { clsx } from 'clsx';
 import { ChevronDown } from 'lucide-react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
-import { Badge } from '@/vibes/soul/primitives/badge';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { CursorPagination, CursorPaginationInfo } from '@/vibes/soul/primitives/cursor-pagination';
 import { OrderProgress, OrderProgressStep } from '@/vibes/soul/primitives/order-progress';
+import { OrderStatusPill, OrderStatusTone } from '@/vibes/soul/primitives/order-status-pill';
 import { type Product } from '@/vibes/soul/primitives/product-card';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { Image } from '~/components/image';
@@ -15,6 +15,8 @@ export interface Order {
   id: string;
   totalPrice: string;
   status: string;
+  /** Brand hue for the status pill; grey when unknown. */
+  statusTone?: OrderStatusTone;
   href: string;
   /** "Nov 14, 2026" */
   date?: string;
@@ -129,7 +131,9 @@ export function OrderList({
                       <Fact label={orderNumberLabel} value={order.id} />
                       {order.date != null && <Fact label={dateLabel} value={order.date} />}
                       <Fact label={totalLabel} value={order.totalPrice} />
-                      <Badge className="mt-0.5">{order.status}</Badge>
+                      <OrderStatusPill className="mt-0.5" tone={order.statusTone}>
+                        {order.status}
+                      </OrderStatusPill>
                     </div>
                     <ButtonLink href={order.href} size="small">
                       {viewDetailsLabel}

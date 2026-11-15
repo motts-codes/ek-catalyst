@@ -1,9 +1,9 @@
 import { ArrowLeft } from 'lucide-react';
 
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
-import { Badge } from '@/vibes/soul/primitives/badge';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { OrderProgress, OrderProgressStep } from '@/vibes/soul/primitives/order-progress';
+import { OrderStatusPill, OrderStatusTone } from '@/vibes/soul/primitives/order-status-pill';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -86,7 +86,8 @@ interface EmailDestination {
 export interface Order {
   id: string;
   status: string;
-  statusColor?: 'success' | 'warning' | 'error' | 'info';
+  /** Brand hue for the status pill; grey when unknown. */
+  statusTone?: OrderStatusTone;
   /** Where the order is on the placed → completed track; absent for cancelled/refunded orders. */
   progress?: { steps: OrderProgressStep[]; current: number };
   date: string;
@@ -161,7 +162,7 @@ export function OrderDetailsSection({
                   <h1 className="font-[family-name:var(--order-details-section-title-font-family,var(--font-family-heading))] text-4xl">
                     {title ?? `Order #${order.id}`}
                   </h1>
-                  <Badge variant={order.statusColor}>{order.status}</Badge>
+                  <OrderStatusPill tone={order.statusTone}>{order.status}</OrderStatusPill>
                 </div>
                 <p className="text-base font-light">{order.date}</p>
               </div>

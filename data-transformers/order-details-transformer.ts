@@ -4,37 +4,9 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 import { Order } from '@/vibes/soul/sections/order-details-section';
 import { ExistingResultType } from '~/client/util';
 import { orderProgress } from '~/lib/orders/progress';
+import { orderStatusTone } from '~/lib/orders/status-tone';
 
 import { getCustomerOrderDetails } from '../app/[locale]/(default)/account/orders/[id]/page-data';
-
-function getStatusColor(
-  status: ExistingResultType<typeof getCustomerOrderDetails>['status']['value'],
-) {
-  switch (status) {
-    case 'AWAITING_FULFILLMENT':
-    case 'AWAITING_SHIPMENT':
-    case 'AWAITING_PICKUP':
-    case 'PARTIALLY_SHIPPED':
-    case 'PENDING':
-    case 'SHIPPED':
-      return 'info';
-
-    case 'AWAITING_PAYMENT':
-    case 'DISPUTED':
-    case 'INCOMPLETE':
-    case 'MANUAL_VERIFICATION_REQUIRED':
-      return 'warning';
-
-    case 'CANCELLED':
-    case 'DECLINED':
-      return 'error';
-
-    case 'COMPLETED':
-    case 'PARTIALLY_REFUNDED':
-    case 'REFUNDED':
-      return 'success';
-  }
-}
 
 export const orderDetailsTransformer = (
   order: ExistingResultType<typeof getCustomerOrderDetails>,
@@ -85,7 +57,7 @@ export const orderDetailsTransformer = (
     date: format.dateTime(new Date(order.orderedAt.utc)),
     id: String(order.entityId),
     status: order.status.label,
-    statusColor: getStatusColor(order.status.value),
+    statusTone: orderStatusTone(order.status.value),
     progress: orderProgress(order.status.value, tProgress),
     destinations:
       order.consignments.shipping?.map((consignment, index, arr) => {
