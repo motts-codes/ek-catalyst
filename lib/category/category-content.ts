@@ -635,6 +635,12 @@ const HERO_LEDES: Record<string, string> = {
     'Vinyl replacement windows sized to your existing opening.',
   '/windows/new-construction': 'With a nailing fin, for a brand-new opening.',
   '/windows/accessories': 'Screens, locks, balances and trim for your windows.',
+  '/sinks-faucets/kitchen-sinks/single-bowl': 'One wide, deep bowl: the roasting pan fits flat.',
+  '/sinks-faucets/kitchen-sinks/double-bowls': 'Wash on one side, rinse or dry on the other.',
+  '/sinks-faucets/kitchen-sinks/apron-farmhouse': 'The exposed front that makes the kitchen.',
+  '/sinks-faucets/kitchen-sinks/workstation-sinks':
+    'A ledge for boards, colanders and racks, so prep stays over the sink.',
+  '/sinks-faucets/kitchen-sinks/accessories': 'Grids, strainers and mats made to fit our sinks.',
   '/closets':
     'Twelve organizer pieces in three colours that fit together. Buy what your closet needs and put it up in an afternoon.',
   '/bath':
@@ -752,6 +758,27 @@ const HERO_IMAGES: Record<string, { src: string; alt: string }> = {
   '/sinks-faucets/accessories': heroImage('sub-sink-accessories', 'Sink accessories'),
   '/sinks-faucets/kitchen-faucets': heroImage('sub-kitchen-faucets', 'A kitchen faucet'),
   '/sinks-faucets/kitchen-sinks': heroImage('sub-kitchen-sinks', 'A kitchen sink'),
+  '/sinks-faucets/kitchen-sinks/single-bowl': heroImage(
+    'sub-single-bowl',
+    'A single bowl stainless sink with a bottom grid and a plate on it',
+  ),
+  '/sinks-faucets/kitchen-sinks/double-bowls': heroImage(
+    'sub-double-bowls',
+    'A double bowl stainless sink in a white kitchen island',
+  ),
+  '/sinks-faucets/kitchen-sinks/apron-farmhouse': heroImage(
+    'sub-apron-farmhouse',
+    'A stainless apron-front farmhouse sink with a bowl of lemons beside it',
+  ),
+  '/sinks-faucets/kitchen-sinks/workstation-sinks': heroImage(
+    'sub-workstation-sinks',
+    'A workstation sink with a cutting board and colander on its ledge',
+  ),
+  '/sinks-faucets/kitchen-sinks/accessories': heroImage(
+    'sub-kitchen-sink-accessories',
+    'A sink with a roll-up drying mat and a bottom grid',
+  ),
+  '/windows/accessories': heroImage('sub-window-accessories', 'Window accessories'),
   '/windows/new-construction': heroImage(
     'sub-windows-new-construction',
     'A new-construction window',
