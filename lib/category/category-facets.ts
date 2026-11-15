@@ -89,10 +89,12 @@ const BRAND_DISPLAY_NAMES: Record<string, string> = {
 };
 
 // Logos on file in public/images/brands, keyed by the BigCommerce brand name (the live store's
-// uploads plus the brands' own, see docs). Brands without one render as a wordmark. Oakland, Paani,
-// Amerock (and its Everyday Basics line), Swanstone, Infinity Design and Rynone publish none.
+// uploads plus the brands' own, see docs/brand-logo-sources.csv). Brands without one render as a
+// wordmark: Paani, Everyday Basics (an Amerock line), Swanstone, Infinity Design and Rynone.
 const BRAND_LOGOS: Record<string, string> = {
   'M S International': 'msi.svg',
+  Oakland: 'oakland.png',
+  Amerock: 'amerock.png',
   'Fine Fixtures': 'fine-fixtures.png',
   'Home Products Source Ltd': 'home-products-source.png',
   'Star Hardware': 'star-hardware.png',
