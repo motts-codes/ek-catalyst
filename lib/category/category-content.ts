@@ -3,6 +3,7 @@
 // category with no entry uses its BigCommerce name + description and the default points.
 
 import { applianceFacetsFor } from './appliance-facets';
+import { categoryFacetsFor } from './category-facets';
 
 export type CategoryPointIcon =
   'truck' | 'returns' | 'stock' | 'clock' | 'pickup' | 'price' | 'gift' | 'tag' | 'phone' | 'zap';
@@ -652,25 +653,31 @@ function resolvePoints(key: string, base: CategoryContent): CategoryContent {
   return base;
 }
 
-// Appliance sub-categories: the kinds, widths, finishes and brands the live catalogue holds
-// (lib/category/appliance-facets.json), unless the entry authors its own.
-function withApplianceFacets(key: string, base: CategoryContent): CategoryContent {
-  const facets = key.startsWith('/appliances/') ? applianceFacetsFor(key) : null;
+// What the live catalogue holds per category, unless the entry authors its own rows: appliance
+// sub-categories get kinds, widths, finishes and brands (appliance-facets.json); the other
+// non-cabinet categories get finishes and brands (category-facets.json). An empty mined row is
+// left off rather than rendered empty.
+function withCatalogFacets(key: string, base: CategoryContent): CategoryContent {
+  const facets = key.startsWith('/appliances/') ? applianceFacetsFor(key) : categoryFacetsFor(key);
 
   if (!facets) return base;
 
+  const tileGroups = base.tileGroups ?? facets.tileGroups;
+  const chipGroups = base.chipGroups ?? facets.chipGroups;
+  const brands = base.brands ?? facets.brands;
+
   return {
     ...base,
-    tileGroups: base.tileGroups ?? facets.tileGroups,
-    chipGroups: base.chipGroups ?? facets.chipGroups,
-    brands: base.brands ?? facets.brands,
+    tileGroups: tileGroups.length > 0 ? tileGroups : undefined,
+    chipGroups: chipGroups.length > 0 ? chipGroups : undefined,
+    brands: brands.length > 0 ? brands : undefined,
   };
 }
 
 export function getCategoryContent(path: string): CategoryContent {
   const key = normalize(path);
   const base = CATEGORY_CONTENT[key] ?? {};
-  const content = withApplianceFacets(key, resolvePoints(key, base));
+  const content = withCatalogFacets(key, resolvePoints(key, base));
   // The authored lede (client copy, Oct 2026) wins; HERO_LEDES is the older fallback set.
   const lede = content.lede ?? HERO_LEDES[key];
 

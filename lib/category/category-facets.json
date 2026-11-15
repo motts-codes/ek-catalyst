@@ -1,0 +1,452 @@
+{
+  "_source": "Live store, tree 1 (visible products). Built by scripts/build-category-facets.py; do not edit by hand.",
+  "categories": {
+    "/bath": {
+      "count": 201,
+      "brands": [
+        {
+          "name": "Swanstone",
+          "entityId": 68,
+          "count": 104
+        },
+        {
+          "name": "Infinity Design Co. Inc.",
+          "entityId": 67,
+          "count": 44
+        },
+        {
+          "name": "Home Products Source Ltd",
+          "entityId": 109,
+          "count": 32
+        },
+        {
+          "name": "Oakland",
+          "entityId": 113,
+          "count": 7
+        },
+        {
+          "name": "Fine Fixtures",
+          "entityId": 42,
+          "count": 5
+        },
+        {
+          "name": "Rynone Manufacturing Corp.",
+          "entityId": 129,
+          "count": 5
+        }
+      ],
+      "finishes": [
+        {
+          "label": "White",
+          "value": "White",
+          "count": 71
+        },
+        {
+          "label": "Biscuit",
+          "value": "Biscuit",
+          "count": 14
+        },
+        {
+          "label": "Bone",
+          "value": "Bone",
+          "count": 8
+        },
+        {
+          "label": "Gray",
+          "value": "Gray",
+          "count": 8
+        },
+        {
+          "label": "Black",
+          "value": "Black",
+          "count": 7
+        }
+      ]
+    },
+    "/bath/vanity-tops": {
+      "count": 72,
+      "brands": [
+        {
+          "name": "Infinity Design Co. Inc.",
+          "entityId": 67,
+          "count": 35
+        },
+        {
+          "name": "Home Products Source Ltd",
+          "entityId": 109,
+          "count": 28
+        },
+        {
+          "name": "Rynone Manufacturing Corp.",
+          "entityId": 129,
+          "count": 5
+        },
+        {
+          "name": "Fine Fixtures",
+          "entityId": 42,
+          "count": 3
+        }
+      ],
+      "finishes": [
+        {
+          "label": "White",
+          "value": "White",
+          "count": 54
+        },
+        {
+          "label": "Biscuit",
+          "value": "Biscuit",
+          "count": 8
+        },
+        {
+          "label": "Black",
+          "value": "Black",
+          "count": 4
+        }
+      ]
+    },
+    "/bath/side-splashes": {
+      "count": 13,
+      "brands": [
+        {
+          "name": "Infinity Design Co. Inc.",
+          "entityId": 67,
+          "count": 9
+        },
+        {
+          "name": "Home Products Source Ltd",
+          "entityId": 109,
+          "count": 4
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Black",
+          "value": "Black",
+          "count": 3
+        },
+        {
+          "label": "White",
+          "value": "White",
+          "count": 3
+        }
+      ]
+    },
+    "/bath/bathroom-sinks": {
+      "count": 108,
+      "brands": [],
+      "finishes": [
+        {
+          "label": "White",
+          "value": "White",
+          "count": 14
+        },
+        {
+          "label": "Bone",
+          "value": "Bone",
+          "count": 8
+        },
+        {
+          "label": "Gray",
+          "value": "Gray",
+          "count": 8
+        },
+        {
+          "label": "Biscuit",
+          "value": "Biscuit",
+          "count": 6
+        }
+      ]
+    },
+    "/bath/bathroom-faucets": {
+      "count": 8,
+      "brands": [],
+      "finishes": []
+    },
+    "/bath/drains-accessories": {
+      "count": 0,
+      "brands": [],
+      "finishes": []
+    },
+    "/sinks-faucets": {
+      "count": 348,
+      "brands": [
+        {
+          "name": "Oakland",
+          "entityId": 113,
+          "count": 266
+        },
+        {
+          "name": "M S International",
+          "entityId": 43,
+          "count": 36
+        },
+        {
+          "name": "Fine Fixtures",
+          "entityId": 42,
+          "count": 19
+        },
+        {
+          "name": "Paani Faucets",
+          "entityId": 40,
+          "count": 11
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Stainless Steel",
+          "value": "Stainless Steel",
+          "count": 132
+        },
+        {
+          "label": "Brushed Nickel",
+          "value": "Brushed Nickel",
+          "count": 38
+        },
+        {
+          "label": "Polished Chrome",
+          "value": "Polished Chrome",
+          "count": 35
+        },
+        {
+          "label": "Ceramic",
+          "value": "Ceramic",
+          "count": 20
+        },
+        {
+          "label": "Matte Black",
+          "value": "Matte Black",
+          "count": 15
+        },
+        {
+          "label": "Satin Gold",
+          "value": "Satin Gold",
+          "count": 13
+        }
+      ]
+    },
+    "/sinks-faucets/kitchen-sinks": {
+      "count": 158,
+      "brands": [
+        {
+          "name": "Oakland",
+          "entityId": 113,
+          "count": 105
+        },
+        {
+          "name": "M S International",
+          "entityId": 43,
+          "count": 25
+        },
+        {
+          "name": "Fine Fixtures",
+          "entityId": 42,
+          "count": 17
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Stainless Steel",
+          "value": "Stainless Steel",
+          "count": 79
+        },
+        {
+          "label": "Ceramic",
+          "value": "Ceramic",
+          "count": 20
+        },
+        {
+          "label": "Fire Clay",
+          "value": "Fire Clay",
+          "count": 7
+        }
+      ]
+    },
+    "/sinks-faucets/kitchen-faucets": {
+      "count": 110,
+      "brands": [
+        {
+          "name": "Oakland",
+          "entityId": 113,
+          "count": 98
+        },
+        {
+          "name": "Paani Faucets",
+          "entityId": 40,
+          "count": 9
+        },
+        {
+          "name": "Star Hardware",
+          "entityId": 38,
+          "count": 3
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Brushed Nickel",
+          "value": "Brushed Nickel",
+          "count": 36
+        },
+        {
+          "label": "Polished Chrome",
+          "value": "Polished Chrome",
+          "count": 33
+        },
+        {
+          "label": "Satin Gold",
+          "value": "Satin Gold",
+          "count": 12
+        },
+        {
+          "label": "Matte Black",
+          "value": "Matte Black",
+          "count": 11
+        },
+        {
+          "label": "Oil Rubbed Bronze",
+          "value": "Oil Rubbed Bronze",
+          "count": 6
+        }
+      ]
+    },
+    "/sinks-faucets/accessories": {
+      "count": 80,
+      "brands": [
+        {
+          "name": "Oakland",
+          "entityId": 113,
+          "count": 63
+        },
+        {
+          "name": "M S International",
+          "entityId": 43,
+          "count": 11
+        },
+        {
+          "name": "Fine Fixtures",
+          "entityId": 42,
+          "count": 2
+        },
+        {
+          "name": "Paani Faucets",
+          "entityId": 40,
+          "count": 2
+        }
+      ],
+      "finishes": []
+    },
+    "/countertops": {
+      "count": 167,
+      "brands": [],
+      "finishes": []
+    },
+    "/countertops/granite": {
+      "count": 56,
+      "brands": [],
+      "finishes": []
+    },
+    "/countertops/quartz": {
+      "count": 96,
+      "brands": [],
+      "finishes": []
+    },
+    "/countertops/laminate": {
+      "count": 16,
+      "brands": [],
+      "finishes": []
+    },
+    "/countertops/prefabricated": {
+      "count": 18,
+      "brands": [],
+      "finishes": []
+    },
+    "/windows": {
+      "count": 151,
+      "brands": [
+        {
+          "name": "Crystal Windows",
+          "entityId": 79,
+          "count": 88
+        },
+        {
+          "name": "United Windows",
+          "entityId": 78,
+          "count": 56
+        },
+        {
+          "name": "Silver Line Building Products",
+          "entityId": 81,
+          "count": 4
+        }
+      ],
+      "finishes": []
+    },
+    "/windows/replacement": {
+      "count": 127,
+      "brands": [
+        {
+          "name": "Crystal Windows",
+          "entityId": 79,
+          "count": 87
+        },
+        {
+          "name": "United Windows",
+          "entityId": 78,
+          "count": 36
+        },
+        {
+          "name": "Silver Line Building Products",
+          "entityId": 81,
+          "count": 4
+        }
+      ],
+      "finishes": []
+    },
+    "/windows/replacement/double-hung-windows": {
+      "count": 88,
+      "brands": [],
+      "finishes": []
+    },
+    "/windows/replacement/slider-windows": {
+      "count": 21,
+      "brands": [
+        {
+          "name": "United Windows",
+          "entityId": 78,
+          "count": 17
+        },
+        {
+          "name": "Silver Line Building Products",
+          "entityId": 81,
+          "count": 4
+        }
+      ],
+      "finishes": []
+    },
+    "/windows/replacement/hopper-windows": {
+      "count": 8,
+      "brands": [],
+      "finishes": []
+    },
+    "/windows/replacement/rep-vinyl-windows": {
+      "count": 10,
+      "brands": [],
+      "finishes": []
+    },
+    "/windows/new-construction": {
+      "count": 19,
+      "brands": [],
+      "finishes": []
+    },
+    "/windows/accessories": {
+      "count": 5,
+      "brands": [],
+      "finishes": []
+    },
+    "/closets": {
+      "count": 24,
+      "brands": [],
+      "finishes": []
+    }
+  }
+}
