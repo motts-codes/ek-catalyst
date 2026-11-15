@@ -195,6 +195,14 @@
       "orderNumber": "Order #",
       "totalPrice": "Total",
       "viewDetails": "View Details",
+      "progressLabel": "Order progress",
+      "Progress": {
+        "placed": "Order placed",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "readyForPickup": "Ready for pickup",
+        "completed": "Completed"
+      },
       "EmptyState": {
         "title": "You don't have any orders",
         "cta": "Shop now"

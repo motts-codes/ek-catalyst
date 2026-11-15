@@ -21,6 +21,8 @@ export default async function OrderDetails(props: Props) {
 
   const t = await getTranslations('Account.Orders.Details');
   const tGiftCertificate = await getTranslations('Cart.GiftCertificate');
+  const tProgress = await getTranslations('Account.Orders.Progress');
+  const tOrders = await getTranslations('Account.Orders');
   const format = await getFormatter();
 
   const streamableOrder = Streamable.from(async () => {
@@ -30,7 +32,7 @@ export default async function OrderDetails(props: Props) {
       notFound();
     }
 
-    return orderDetailsTransformer(order, t, format, tGiftCertificate);
+    return orderDetailsTransformer(order, t, format, tGiftCertificate, tProgress);
   });
 
   return (
@@ -38,6 +40,7 @@ export default async function OrderDetails(props: Props) {
       order={streamableOrder}
       orderSummaryLabel={t('orderSummary')}
       prevHref="/account/orders"
+      progressLabel={tOrders('progressLabel')}
       shipmentAddressLabel={t('shippingAddress')}
       shipmentMethodLabel={t('shippingMethod')}
       summaryTotalLabel={t('summaryTotal')}

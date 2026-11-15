@@ -4,6 +4,7 @@ import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { CursorPagination, CursorPaginationInfo } from '@/vibes/soul/primitives/cursor-pagination';
+import { OrderProgress, OrderProgressStep } from '@/vibes/soul/primitives/order-progress';
 import {
   type Product,
   ProductCard,
@@ -16,6 +17,8 @@ export interface Order {
   totalPrice: string;
   status: string;
   href: string;
+  /** Where the order is on the placed → completed track; absent for cancelled/refunded orders. */
+  progress?: { steps: OrderProgressStep[]; current: number };
   lineItems: OrderLineItem[];
 }
 
@@ -32,6 +35,7 @@ export interface OrderListProps {
   orderNumberLabel?: string;
   totalLabel?: string;
   viewDetailsLabel?: string;
+  progressLabel?: string;
   emptyStateTitle?: string;
   emptyStateActionLabel?: string;
   emptyStateActionHref?: string;
@@ -62,6 +66,7 @@ export function OrderList({
   orderNumberLabel = 'Order #',
   totalLabel = 'Total',
   viewDetailsLabel = 'View details',
+  progressLabel = 'Order progress',
   emptyStateTitle = "You don't have any orders",
   emptyStateActionLabel = 'Shop now',
   emptyStateActionHref = '/',
@@ -121,13 +126,18 @@ export function OrderList({
                       {viewDetailsLabel}
                     </ButtonLink>
                   </div>
-                  <div className="mt-6 flex gap-4 overflow-hidden [mask-image:linear-gradient(to_right,_black_0%,_black_80%,_transparent_98%)]">
+                  {order.progress && (
+                    <OrderProgress
+                      className="mt-6 max-w-2xl"
+                      current={order.progress.current}
+                      label={progressLabel}
+                      steps={order.progress.steps}
+                    />
+                  )}
+                  {/* Same grid as the wishlist, so the cards are the same size there and here. */}
+                  <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 @sm:grid-cols-2 @2xl:gap-x-5 @2xl:gap-y-8 @3xl:grid-cols-3 @6xl:grid-cols-4">
                     {order.lineItems.map((lineItem) => (
-                      <ProductCard
-                        className="shrink-0 basis-32 @lg:basis-40"
-                        key={lineItem.id}
-                        product={lineItem}
-                      />
+                      <ProductCard aspectRatio="3:4" key={lineItem.id} product={lineItem} />
                     ))}
                   </div>
                 </div>
@@ -164,9 +174,9 @@ function OrderListSkeleton() {
             </div>
             <Skeleton.Box className="h-[43px] min-w-[12ch] gap-x-2 rounded-full px-4 py-2.5" />
           </div>
-          <div className="mt-6 flex gap-4 overflow-hidden [mask-image:linear-gradient(to_right,_black_0%,_black_80%,_transparent_98%)]">
-            {Array.from({ length: 8 }).map((__, idx) => (
-              <ProductCardSkeleton className="shrink-0 basis-32 @lg:basis-40" key={idx} />
+          <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 @sm:grid-cols-2 @2xl:gap-x-5 @2xl:gap-y-8 @3xl:grid-cols-3 @6xl:grid-cols-4">
+            {Array.from({ length: 3 }).map((__, idx) => (
+              <ProductCardSkeleton aspectRatio="3:4" key={idx} />
             ))}
           </div>
         </div>

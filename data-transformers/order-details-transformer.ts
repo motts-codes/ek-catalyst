@@ -3,6 +3,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 
 import { Order } from '@/vibes/soul/sections/order-details-section';
 import { ExistingResultType } from '~/client/util';
+import { orderProgress } from '~/lib/orders/progress';
 
 import { getCustomerOrderDetails } from '../app/[locale]/(default)/account/orders/[id]/page-data';
 
@@ -40,6 +41,7 @@ export const orderDetailsTransformer = (
   t: ExistingResultType<typeof getTranslations<'Account.Orders.Details'>>,
   format: ExistingResultType<typeof getFormatter>,
   tGiftCertificate: ExistingResultType<typeof getTranslations<'Cart.GiftCertificate'>>,
+  tProgress: ExistingResultType<typeof getTranslations<'Account.Orders.Progress'>>,
 ): Order => {
   const paymentMethods = removeEdgesAndNodes(order.payments).map((payment) => {
     if (payment.detail?.__typename === 'CreditCardPaymentInstrument') {
@@ -84,6 +86,7 @@ export const orderDetailsTransformer = (
     id: String(order.entityId),
     status: order.status.label,
     statusColor: getStatusColor(order.status.value),
+    progress: orderProgress(order.status.value, tProgress),
     destinations:
       order.consignments.shipping?.map((consignment, index, arr) => {
         return {

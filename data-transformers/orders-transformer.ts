@@ -3,11 +3,13 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 import { Order } from '@/vibes/soul/sections/order-list';
 import { getCustomerOrders } from '~/app/[locale]/(default)/account/orders/page-data';
 import { ExistingResultType } from '~/client/util';
+import { orderProgress } from '~/lib/orders/progress';
 
 export const ordersTransformer = (
   orders: ExistingResultType<typeof getCustomerOrders>['orders'],
   format: ExistingResultType<typeof getFormatter>,
   tGiftCertificate: ExistingResultType<typeof getTranslations<'Cart.GiftCertificate'>>,
+  tProgress: ExistingResultType<typeof getTranslations<'Account.Orders.Progress'>>,
 ): Order[] => {
   return orders.map((order) => {
     const lineItems =
@@ -66,6 +68,7 @@ export const ordersTransformer = (
       id: order.entityId.toString(),
       href: `/account/orders/${order.entityId}`,
       status: order.status.label,
+      progress: orderProgress(order.status.value, tProgress),
       totalPrice: format.number(order.totalIncTax.value, {
         style: 'currency',
         currency: order.totalIncTax.currencyCode,

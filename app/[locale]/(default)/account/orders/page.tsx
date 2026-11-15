@@ -18,6 +18,7 @@ interface Props {
 async function getOrders(after?: string, before?: string): Promise<Order[]> {
   const format = await getFormatter();
   const tGiftCertificate = await getTranslations('Cart.GiftCertificate');
+  const tProgress = await getTranslations('Account.Orders.Progress');
   const customerOrdersDetails = await getCustomerOrders({
     ...(after && { after }),
     ...(before && { before }),
@@ -29,7 +30,7 @@ async function getOrders(after?: string, before?: string): Promise<Order[]> {
 
   const { orders } = customerOrdersDetails;
 
-  return ordersTransformer(orders, format, tGiftCertificate);
+  return ordersTransformer(orders, format, tGiftCertificate, tProgress);
 }
 
 async function getPaginationInfo(after?: string, before?: string) {
@@ -56,6 +57,7 @@ export default async function Orders({ params, searchParams }: Props) {
       orderNumberLabel={t('orderNumber')}
       orders={getOrders(after, before)}
       paginationInfo={getPaginationInfo(after, before)}
+      progressLabel={t('progressLabel')}
       title={t('title')}
       totalLabel={t('totalPrice')}
       viewDetailsLabel={t('viewDetails')}

@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { Badge } from '@/vibes/soul/primitives/badge';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
+import { OrderProgress, OrderProgressStep } from '@/vibes/soul/primitives/order-progress';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
@@ -86,6 +87,8 @@ export interface Order {
   id: string;
   status: string;
   statusColor?: 'success' | 'warning' | 'error' | 'info';
+  /** Where the order is on the placed → completed track; absent for cancelled/refunded orders. */
+  progress?: { steps: OrderProgressStep[]; current: number };
   date: string;
   destinations: Destination[];
   emailDestinations: EmailDestination[];
@@ -100,6 +103,7 @@ export interface OrderDetailsSectionProps {
   shipmentAddressLabel?: string;
   shipmentMethodLabel?: string;
   summaryTotalLabel?: string;
+  progressLabel?: string;
   prevHref?: string;
 }
 
@@ -135,6 +139,7 @@ export function OrderDetailsSection({
   shipmentAddressLabel,
   shipmentMethodLabel,
   summaryTotalLabel,
+  progressLabel = 'Order progress',
   prevHref = '/orders',
 }: OrderDetailsSectionProps) {
   return (
@@ -161,6 +166,14 @@ export function OrderDetailsSection({
                 <p className="text-base font-light">{order.date}</p>
               </div>
             </div>
+            {order.progress && (
+              <OrderProgress
+                className="max-w-2xl border-b border-[var(--order-details-section-border,hsl(var(--contrast-100)))] py-8"
+                current={order.progress.current}
+                label={progressLabel}
+                steps={order.progress.steps}
+              />
+            )}
             <div className="grid @3xl:flex">
               <div className="order-2 flex-1 pr-12 @3xl:order-1">
                 {order.destinations.map((destination) => (
