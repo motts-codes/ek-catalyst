@@ -7,7 +7,10 @@ field and no options, so kinds and finishes are read out of the product names wi
 below, brands from the brand id. Output:
 
   lib/category/appliance-facets.json              per Catalyst path: kinds, widths, finishes, brands
-  public/images/category/tiles/appliances/*.webp  one 800x600 tile per kind (a representative
+  public/images/category/tiles/appliances/*.webp  one 1200x900 tile per kind. The client's own card
+                                                   images live here (Nov 2026); an existing tile is
+                                                   never overwritten unless --refresh-images is passed,
+                                                   in which case it is rebuilt from a representative
                                                   product photo, padded to 4:3 on white)
 
 Usage:  python3 scripts/appliances/build-appliance-facets.py [--no-images] [--dry-run]
@@ -232,6 +235,8 @@ def make_tile(url, dest):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-images', action='store_true', help='skip downloading tile photos')
+    ap.add_argument('--refresh-images', action='store_true',
+                    help='rebuild tiles that already exist (default keeps the supplied card images)')
     ap.add_argument('--dry-run', action='store_true', help='print the result, write nothing')
     args = ap.parse_args()
 
@@ -263,7 +268,8 @@ def main():
             kind = {'label': label, 'term': term, 'count': len(hits), 'image': f'/images/category/tiles/appliances/{file}.webp'}
             if hero:
                 kind['imageAlt'] = hero['name']
-            if url and not args.no_images and not args.dry_run:
+            tile_exists = (OUT_IMG / f'{file}.webp').exists()
+            if url and not args.no_images and not args.dry_run and (args.refresh_images or not tile_exists):
                 OUT_IMG.mkdir(parents=True, exist_ok=True)
                 try:
                     make_tile(url, OUT_IMG / f'{file}.webp')
