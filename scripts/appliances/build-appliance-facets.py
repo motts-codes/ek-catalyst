@@ -130,20 +130,22 @@ WIDTHS = {
 # Horsepower chips for disposals, read the same way as widths.
 HP = {326: ['1/3 HP', '1/2 HP', '3/4 HP', '1 HP']}
 
-# Finish: (label, name pattern, search term, swatch). First match wins, so the specific ones lead.
+# Finish: (label, name pattern, search term, swatch, tile image). First match wins, so the specific
+# ones lead. Tile images are the client's finish swatches (public/images/category/tiles/finishes,
+# 15 Nov 2026); a finish without one shows its swatch colour.
 FINISHES = [
-    ('Fingerprint Resistant Stainless', r'fingerprint[- ]resistant|smudge[- ]?proof|resistant stainless', 'fingerprint resistant', '#b9bcc0'),
-    ('Black Stainless Steel', r'black stainless', 'black stainless', '#3a3d42'),
-    ('Stainless Steel', r'stainless', 'stainless steel', '#c7c9cc'),
-    ('Black Slate', r'black slate', 'black slate', '#2f3236'),
-    ('Slate', r'(?<!black )slate', 'slate', '#5b6066'),
-    ('White', r'\bwhite\b', 'white', '#f4f4f4'),
-    ('Black', r'\bblack\b', 'black', '#141414'),
-    ('Bisque', r'bisque', 'bisque', '#e9dcc5'),
-    ('Soft Gray', r'soft gray', 'soft gray', '#b7b9bb'),
-    ('Diamond Gray', r'diamond gray', 'diamond gray', '#6e7276'),
-    ('Satin Nickel', r'satin nickel', 'satin nickel', '#a8a9ad'),
-    ('Sapphire Blue', r'sapphire blue', 'sapphire blue', '#2a4b8d'),
+    ('Fingerprint Resistant', r'fingerprint[- ]resistant|smudge[- ]?proof|resistant stainless', 'fingerprint resistant', '#b9bcc0', 'fingerprint-resistant-stainless'),
+    ('Black Stainless Steel', r'black stainless', 'black stainless', '#3a3d42', 'black-stainless-steel'),
+    ('Stainless Steel', r'stainless', 'stainless steel', '#c7c9cc', 'stainless-steel'),
+    ('Black Slate', r'black slate', 'black slate', '#2f3236', None),
+    ('Slate', r'(?<!black )slate', 'slate', '#5b6066', 'slate'),
+    ('White', r'\bwhite\b', 'white', '#f4f4f4', 'white'),
+    ('Black', r'\bblack\b', 'black', '#141414', 'black'),
+    ('Bisque', r'bisque', 'bisque', '#e9dcc5', 'bisque'),
+    ('Soft Gray', r'soft gray', 'soft gray', '#b7b9bb', None),
+    ('Diamond Gray', r'diamond gray', 'diamond gray', '#6e7276', 'diamond-gray'),
+    ('Satin Nickel', r'satin nickel', 'satin nickel', '#a8a9ad', None),
+    ('Sapphire Blue', r'sapphire blue', 'sapphire blue', '#2a4b8d', None),
 ]
 
 # Brand logos we have as SVGs (public/images/brands). Others render as text.
@@ -283,13 +285,16 @@ def main():
 
         finish_counts = collections.Counter()
         for p in ps:
-            for label, pattern, _term, _swatch in FINISHES:
+            for label, pattern, _term, _swatch, _image in FINISHES:
                 if re.search(pattern, names[p['id']], re.I):
                     finish_counts[label] += 1
                     break
-        for label, _pattern, term, swatch in FINISHES:
+        for label, _pattern, term, swatch, image in FINISHES:
             if finish_counts[label]:
-                entry['finishes'].append({'label': label, 'term': term, 'swatch': swatch, 'count': finish_counts[label]})
+                finish = {'label': label, 'term': term, 'swatch': swatch, 'count': finish_counts[label]}
+                if image:
+                    finish['image'] = f'/images/category/tiles/finishes/{image}.webp'
+                entry['finishes'].append(finish)
 
         brand_counts = collections.Counter(p['brand_id'] for p in ps if p.get('brand_id'))
         for brand_id, n in brand_counts.most_common():

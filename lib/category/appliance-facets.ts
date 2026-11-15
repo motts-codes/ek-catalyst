@@ -19,6 +19,7 @@ interface FacetChip {
   term: string;
   count: number;
   swatch?: string;
+  image?: string;
 }
 
 interface FacetBrand {
@@ -70,19 +71,22 @@ export function applianceFacetsFor(path: string): ApplianceFacets | null {
     });
   }
 
-  if (entry.finishes.length > 0) {
-    chipGroups.push({
-      title: 'Shop by finish',
-      items: entry.finishes.map((chip) => ({
-        label: chip.label,
-        href: termHref(path, chip.term),
-        swatch: chip.swatch,
-      })),
-    });
-  }
+  // Finishes are cards like the kinds: the client's swatch photo, or a flat panel in the finish's
+  // colour for the few without one.
+  const finishes = entry.finishes.map((finish) => ({
+    name: finish.label,
+    fallbackHref: termHref(path, finish.term),
+    image: finish.image ? { src: finish.image, alt: `${finish.label} finish` } : undefined,
+    color: finish.image ? undefined : finish.swatch,
+  }));
+
+  const tileGroups = [
+    ...(kinds.length > 0 ? [{ title: 'Shop by type', items: kinds }] : []),
+    ...(finishes.length > 0 ? [{ title: 'Shop by finish', items: finishes }] : []),
+  ];
 
   return {
-    tileGroups: kinds.length > 0 ? [{ title: 'Shop by type', items: kinds }] : [],
+    tileGroups,
     chipGroups,
     brands: entry.brands.map((brand) => ({
       name: brand.name,

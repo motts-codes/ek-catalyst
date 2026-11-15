@@ -64,34 +64,39 @@
       "widths": [],
       "finishes": [
         {
-          "label": "Fingerprint Resistant Stainless",
+          "label": "Fingerprint Resistant",
           "term": "fingerprint resistant",
           "swatch": "#b9bcc0",
-          "count": 18
+          "count": 18,
+          "image": "/images/category/tiles/finishes/fingerprint-resistant-stainless.webp"
         },
         {
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 34
+          "count": 34,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 49
+          "count": 49,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 36
+          "count": 36,
+          "image": "/images/category/tiles/finishes/black.webp"
         },
         {
           "label": "Bisque",
           "term": "bisque",
           "swatch": "#e9dcc5",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/bisque.webp"
         }
       ],
       "brands": [
@@ -208,34 +213,39 @@
       ],
       "finishes": [
         {
-          "label": "Fingerprint Resistant Stainless",
+          "label": "Fingerprint Resistant",
           "term": "fingerprint resistant",
           "swatch": "#b9bcc0",
-          "count": 2
+          "count": 2,
+          "image": "/images/category/tiles/finishes/fingerprint-resistant-stainless.webp"
         },
         {
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 29
+          "count": 29,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "Slate",
           "term": "slate",
           "swatch": "#5b6066",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/slate.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 19
+          "count": 19,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 9
+          "count": 9,
+          "image": "/images/category/tiles/finishes/black.webp"
         }
       ],
       "brands": [
@@ -343,28 +353,32 @@
       ],
       "finishes": [
         {
-          "label": "Fingerprint Resistant Stainless",
+          "label": "Fingerprint Resistant",
           "term": "fingerprint resistant",
           "swatch": "#b9bcc0",
-          "count": 5
+          "count": 5,
+          "image": "/images/category/tiles/finishes/fingerprint-resistant-stainless.webp"
         },
         {
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 20
+          "count": 20,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 10
+          "count": 10,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 3
+          "count": 3,
+          "image": "/images/category/tiles/finishes/black.webp"
         }
       ],
       "brands": [
@@ -456,46 +470,53 @@
       ],
       "finishes": [
         {
-          "label": "Fingerprint Resistant Stainless",
+          "label": "Fingerprint Resistant",
           "term": "fingerprint resistant",
           "swatch": "#b9bcc0",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/fingerprint-resistant-stainless.webp"
         },
         {
           "label": "Black Stainless Steel",
           "term": "black stainless",
           "swatch": "#3a3d42",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/black-stainless-steel.webp"
         },
         {
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 11
+          "count": 11,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "Slate",
           "term": "slate",
           "swatch": "#5b6066",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/slate.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 6
+          "count": 6,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 4
+          "count": 4,
+          "image": "/images/category/tiles/finishes/black.webp"
         },
         {
           "label": "Bisque",
           "term": "bisque",
           "swatch": "#e9dcc5",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/bisque.webp"
         }
       ],
       "brands": [
@@ -570,19 +591,22 @@
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/black.webp"
         }
       ],
       "brands": [
@@ -642,19 +666,22 @@
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 5
+          "count": 5,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 5
+          "count": 5,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 4
+          "count": 4,
+          "image": "/images/category/tiles/finishes/black.webp"
         }
       ],
       "brands": [
@@ -732,28 +759,32 @@
       "widths": [],
       "finishes": [
         {
-          "label": "Fingerprint Resistant Stainless",
+          "label": "Fingerprint Resistant",
           "term": "fingerprint resistant",
           "swatch": "#b9bcc0",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/fingerprint-resistant-stainless.webp"
         },
         {
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 3
+          "count": 3,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 35
+          "count": 35,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Diamond Gray",
           "term": "diamond gray",
           "swatch": "#6e7276",
-          "count": 2
+          "count": 2,
+          "image": "/images/category/tiles/finishes/diamond-gray.webp"
         },
         {
           "label": "Sapphire Blue",
@@ -844,7 +875,8 @@
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 6
+          "count": 6,
+          "image": "/images/category/tiles/finishes/black.webp"
         }
       ],
       "brands": [
@@ -887,7 +919,8 @@
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 12
+          "count": 12,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Soft Gray",
@@ -967,28 +1000,32 @@
       "widths": [],
       "finishes": [
         {
-          "label": "Fingerprint Resistant Stainless",
+          "label": "Fingerprint Resistant",
           "term": "fingerprint resistant",
           "swatch": "#b9bcc0",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/fingerprint-resistant-stainless.webp"
         },
         {
           "label": "Stainless Steel",
           "term": "stainless steel",
           "swatch": "#c7c9cc",
-          "count": 4
+          "count": 4,
+          "image": "/images/category/tiles/finishes/stainless-steel.webp"
         },
         {
           "label": "White",
           "term": "white",
           "swatch": "#f4f4f4",
-          "count": 2
+          "count": 2,
+          "image": "/images/category/tiles/finishes/white.webp"
         },
         {
           "label": "Black",
           "term": "black",
           "swatch": "#141414",
-          "count": 1
+          "count": 1,
+          "image": "/images/category/tiles/finishes/black.webp"
         },
         {
           "label": "Satin Nickel",

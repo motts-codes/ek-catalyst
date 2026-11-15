@@ -16,7 +16,9 @@ export interface SubcategoryOverride {
   name: string;
   /** Used when BigCommerce has no matching child category yet (e.g. a search). */
   fallbackHref: string;
-  image: { src: string; alt: string };
+  image?: { src: string; alt: string };
+  /** A flat colour panel instead of a photo (a finish with no swatch image). */
+  color?: string;
 }
 
 export interface CategoryContent {

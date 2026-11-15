@@ -349,6 +349,8 @@ export interface SubcategoryTile {
   name: string;
   href: string;
   image?: { src: string; alt: string };
+  /** A flat colour panel when there is no photo (a finish swatch). */
+  color?: string;
 }
 
 interface TilesProps {
@@ -398,7 +400,7 @@ export function SubcategoryTiles({
                     src={item.image.src}
                   />
                 ) : (
-                  <MediaPlaceholder label={item.name} />
+                  <TilePanel color={item.color} label={item.name} />
                 )}
               </div>
               <span className="flex items-center justify-between gap-2 px-4 py-3.5 text-sm font-semibold transition-colors group-hover:text-[var(--button-primary-background,#d90716)]">
@@ -415,6 +417,13 @@ export function SubcategoryTiles({
       </div>
     </section>
   );
+}
+
+// A tile with no photo: a flat colour (finish swatch) or the labelled placeholder.
+function TilePanel({ color, label }: { color?: string; label: string }) {
+  if (color == null || color === '') return <MediaPlaceholder label={label} />;
+
+  return <span aria-hidden className="absolute inset-0 block" style={{ backgroundColor: color }} />;
 }
 
 interface BrandTilesProps {

@@ -77,6 +77,7 @@ export function getCategoryHeaderDefaults({
           name: tile.name,
           href: findChild(subcategories, tile.name)?.path ?? tile.fallbackHref,
           image: tile.image,
+          color: tile.color,
         }))
       : subcategories.map((child) => ({
           name: child.name,
@@ -92,6 +93,7 @@ export function getCategoryHeaderDefaults({
         name: tile.name,
         href: findChild(subcategories, tile.name)?.path ?? tile.fallbackHref,
         image: tile.image,
+        color: tile.color,
       })),
     })),
   };
