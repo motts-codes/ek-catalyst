@@ -447,6 +447,152 @@
       "count": 24,
       "brands": [],
       "finishes": []
+    },
+    "/cabinet-hardware": {
+      "count": 6952,
+      "brands": [
+        {
+          "name": "Amerock",
+          "entityId": 120,
+          "count": 3143
+        },
+        {
+          "name": "Richelieu",
+          "entityId": 47,
+          "count": 2510
+        },
+        {
+          "name": "Everyday Basics",
+          "entityId": 121,
+          "count": 749
+        },
+        {
+          "name": "Rev-a-shelf",
+          "entityId": 49,
+          "count": 359
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Nickel",
+          "value": "Nickel",
+          "count": 1642
+        },
+        {
+          "label": "Gold & Champagne",
+          "value": "Gold & Champagne",
+          "count": 1086
+        },
+        {
+          "label": "Chrome",
+          "value": "Chrome",
+          "count": 917
+        },
+        {
+          "label": "Black",
+          "value": "Black",
+          "count": 853
+        },
+        {
+          "label": "Bronze",
+          "value": "Bronze",
+          "count": 723
+        }
+      ]
+    },
+    "/cabinet-hardware/handles-knobs": {
+      "count": 6402,
+      "brands": [
+        {
+          "name": "Amerock",
+          "entityId": 120,
+          "count": 3143
+        },
+        {
+          "name": "Richelieu",
+          "entityId": 47,
+          "count": 2498
+        },
+        {
+          "name": "Everyday Basics",
+          "entityId": 121,
+          "count": 749
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Nickel",
+          "value": "Nickel",
+          "count": 1642
+        },
+        {
+          "label": "Gold & Champagne",
+          "value": "Gold & Champagne",
+          "count": 1086
+        },
+        {
+          "label": "Chrome",
+          "value": "Chrome",
+          "count": 879
+        },
+        {
+          "label": "Black",
+          "value": "Black",
+          "count": 843
+        },
+        {
+          "label": "Bronze",
+          "value": "Bronze",
+          "count": 723
+        }
+      ]
+    },
+    "/cabinet-hardware/tiles": {
+      "count": 30,
+      "brands": [],
+      "finishes": []
+    },
+    "/cabinet-hardware/accessories": {
+      "count": 520,
+      "brands": [
+        {
+          "name": "Rev-a-shelf",
+          "entityId": 49,
+          "count": 359
+        },
+        {
+          "name": "Star Cabinetry",
+          "entityId": 46,
+          "count": 70
+        },
+        {
+          "name": "Hartson-Kennedy Cabinet Top",
+          "entityId": 52,
+          "count": 58
+        },
+        {
+          "name": "Richelieu",
+          "entityId": 47,
+          "count": 12
+        }
+      ],
+      "finishes": [
+        {
+          "label": "Light Brown",
+          "value": "Light Brown",
+          "count": 136
+        },
+        {
+          "label": "Chrome",
+          "value": "Chrome",
+          "count": 38
+        },
+        {
+          "label": "White",
+          "value": "White",
+          "count": 24
+        }
+      ]
     }
   }
 }

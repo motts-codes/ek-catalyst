@@ -40,6 +40,7 @@ const FINISH_FIELD = 'Product Finish';
 // in the finish's colour. The metal tiles are tints of the stainless one.
 const FINISH_IMAGES: Record<string, string> = {
   'Stainless Steel': 'stainless-steel',
+  Chrome: 'polished-chrome',
   'Brushed Nickel': 'brushed-nickel',
   'Polished Chrome': 'polished-chrome',
   'Satin Gold': 'satin-gold',
@@ -50,11 +51,30 @@ const FINISH_IMAGES: Record<string, string> = {
   Biscuit: 'bisque',
 };
 
+// Cabinet hardware uses the handle photos (public/images/category/handles) for the finishes
+// they cover; the Chrome tile is the polished-chrome metal.
+const HANDLE_FINISH_IMAGES: Record<string, string> = {
+  Nickel: 'nickel',
+  'Gold & Champagne': 'brass',
+  Brass: 'brass',
+  Bronze: 'bronze',
+  Black: 'black',
+};
+
 const FINISH_COLORS: Record<string, string> = {
   Bone: '#e6dccb',
   Gray: '#9a9a98',
   Ceramic: '#f4f2ee',
   'Fire Clay': '#f1ede4',
+  'Light Brown': '#b08a5a',
+  'Dark Brown': '#5a3f2a',
+  'White & Almond': '#f1ebe0',
+  'Pewter & Grey': '#8e8f91',
+  'Glass & Crystal': '#e9f1f4',
+  'Iron & Rustic': '#4b4642',
+  Silver: '#c4c6c9',
+  Natural: '#d9c3a0',
+  Wood: '#c9a776',
 };
 
 // The tile shows the trade name; BigCommerce holds the legal one. The brand id does the filtering.
@@ -64,21 +84,31 @@ const BRAND_DISPLAY_NAMES: Record<string, string> = {
   'Infinity Design Co. Inc.': 'Infinity Design',
   'Rynone Manufacturing Corp.': 'Rynone',
   'Silver Line Building Products': 'Silver Line',
+  'Hartson-Kennedy Cabinet Top': 'Hartson-Kennedy',
+  'Rev-a-shelf': 'Rev-A-Shelf',
 };
 
 const finishHref = (path: string, value: string) =>
   `${path}?${encodeURIComponent(`attr_${FINISH_FIELD}`)}=${encodeURIComponent(value)}`;
 
+function finishImage(path: string, label: string) {
+  const handle = path.startsWith('/cabinet-hardware') ? HANDLE_FINISH_IMAGES[label] : undefined;
+
+  if (handle) return `/images/category/handles/${handle}.webp`;
+
+  const finish = FINISH_IMAGES[label];
+
+  return finish ? `/images/category/tiles/finishes/${finish}.webp` : undefined;
+}
+
 function finishTile(path: string, finish: FacetFinish): SubcategoryOverride {
-  const image = FINISH_IMAGES[finish.label];
+  const src = finishImage(path, finish.label);
 
   return {
     name: finish.label,
     fallbackHref: finishHref(path, finish.value),
-    image: image
-      ? { src: `/images/category/tiles/finishes/${image}.webp`, alt: `${finish.label} finish` }
-      : undefined,
-    color: image ? undefined : (FINISH_COLORS[finish.label] ?? '#d9d9d9'),
+    image: src ? { src, alt: `${finish.label} finish` } : undefined,
+    color: src ? undefined : (FINISH_COLORS[finish.label] ?? '#d9d9d9'),
   };
 }
 

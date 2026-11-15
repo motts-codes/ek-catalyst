@@ -69,6 +69,11 @@ SOURCES = {
     '/windows/new-construction': {1: [371, 373], 3: [843]},
     '/windows/accessories': {1: [370], 3: [881]},
     '/closets': {1: [674, 675], 3: [805]},
+    # Cabinet hardware sits under Cabinets in the Stencil tree (Handles 22, Tiles 614, Accessories 27).
+    '/cabinet-hardware': {1: [22, 521, 522, 523, 614, 615, 27], 3: [803]},
+    '/cabinet-hardware/handles-knobs': {1: [22, 521, 522, 523], 3: [837]},
+    '/cabinet-hardware/tiles': {1: [614, 615], 3: [861]},
+    '/cabinet-hardware/accessories': {1: [27], 3: [863]},
 }
 
 

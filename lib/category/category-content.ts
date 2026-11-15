@@ -324,8 +324,8 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     heading: 'Change the handles, change the kitchen',
     // No fine print: "Free & fast shipping" is already one of the icon points.
     fine: '',
-    // Until the products land (and a Finish facet with them), the tiles filter the category by
-    // search term, which the category page already supports.
+    // The type tiles filter the category by search term; the finish and brand rows come from the
+    // live catalogue (category-facets.json) and filter on the Product Finish field / brand id.
     subTitle: 'Shop by type',
     subcategories: [
       {
@@ -337,33 +337,6 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
         name: 'Knobs',
         fallbackHref: '/cabinet-hardware/handles-knobs?term=knob',
         image: handleImage('knobs', 'Three knobs in brass, nickel and black'),
-      },
-    ],
-    tileGroups: [
-      {
-        title: 'Shop by finish',
-        items: [
-          {
-            name: 'Brass',
-            fallbackHref: '/cabinet-hardware/handles-knobs?term=brass',
-            image: handleImage('brass', 'Brass pulls and a knob on marble'),
-          },
-          {
-            name: 'Nickel',
-            fallbackHref: '/cabinet-hardware/handles-knobs?term=nickel',
-            image: handleImage('nickel', 'Brushed nickel pulls and a knob on marble'),
-          },
-          {
-            name: 'Bronze',
-            fallbackHref: '/cabinet-hardware/handles-knobs?term=bronze',
-            image: handleImage('bronze', 'Champagne bronze pulls and a knob on marble'),
-          },
-          {
-            name: 'Black',
-            fallbackHref: '/cabinet-hardware/handles-knobs?term=black',
-            image: handleImage('black', 'Matte black pulls and a knob on marble'),
-          },
-        ],
       },
     ],
   },
