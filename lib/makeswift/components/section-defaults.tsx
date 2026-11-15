@@ -9,6 +9,7 @@ import {
   type BrandTile,
   type CategoryPoint,
   type ChipGroup,
+  type TileGroupLook,
 } from '~/lib/category/category-content';
 
 // Page-level defaults for a directly-editable Makeswift section. The page (server) supplies the
@@ -41,7 +42,7 @@ export interface CategoryHeaderDefaults {
   subTitle: string;
   subcategories: SubcategoryTile[];
   /** Further tile rows under the first (e.g. "Shop by finish"). */
-  tileGroups?: Array<{ title: string; items: SubcategoryTile[] }>;
+  tileGroups?: Array<{ title: string; items: SubcategoryTile[]; look?: TileGroupLook }>;
   /** "Shop by brand" logo boxes. */
   brands?: BrandTile[];
   /** Chip rows after the tiles (widths, finishes). */

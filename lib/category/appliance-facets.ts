@@ -1,5 +1,5 @@
 import facets from './appliance-facets.json' with { type: 'json' };
-import type { BrandTile, ChipGroup, SubcategoryOverride } from './category-content';
+import type { BrandTile, ChipGroup, SubcategoryOverride, TileGroupLook } from './category-content';
 
 // What the live appliance catalogue actually contains per sub-category, mined from product names
 // and brands by scripts/appliances/build-appliance-facets.py (see the JSON's `_source`). Rendered
@@ -40,7 +40,7 @@ interface FacetEntry {
 const CATEGORIES: Record<string, FacetEntry | undefined> = facets.categories;
 
 export interface ApplianceFacets {
-  tileGroups: Array<{ title: string; items: SubcategoryOverride[] }>;
+  tileGroups: Array<{ title: string; items: SubcategoryOverride[]; look?: TileGroupLook }>;
   chipGroups: ChipGroup[];
   brands: BrandTile[];
 }
@@ -82,7 +82,9 @@ export function applianceFacetsFor(path: string): ApplianceFacets | null {
 
   const tileGroups = [
     ...(kinds.length > 0 ? [{ title: 'Shop by type', items: kinds }] : []),
-    ...(finishes.length > 0 ? [{ title: 'Shop by finish', items: finishes }] : []),
+    ...(finishes.length > 0
+      ? [{ title: 'Shop by finish', items: finishes, look: 'swatch' as const }]
+      : []),
   ];
 
   return {

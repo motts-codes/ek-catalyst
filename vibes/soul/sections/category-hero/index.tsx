@@ -426,6 +426,58 @@ function TilePanel({ color, label }: { color?: string; label: string }) {
   return <span aria-hidden className="absolute inset-0 block" style={{ backgroundColor: color }} />;
 }
 
+// "Shop by finish": the brand row's small boxes, the swatch filling each one and the finish name on
+// a white strip along the bottom so it reads on black and white swatches alike.
+export function SwatchTiles({
+  title = 'Shop by finish',
+  items,
+  stacked = false,
+  className,
+}: TilesProps) {
+  if (items.length === 0) return null;
+
+  return (
+    <section className={clsx('@container', className)}>
+      <div
+        className={clsx(
+          containerClassName,
+          'pb-8 @4xl:pb-10',
+          stacked ? 'pt-0' : 'pt-8 @4xl:pt-10',
+        )}
+      >
+        <h2 className="mb-4 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
+          {title}
+        </h2>
+        <ul className="grid grid-cols-2 gap-3 @md:grid-cols-4 @3xl:grid-cols-8 @3xl:gap-4">
+          {items.map((item) => (
+            <li key={item.href}>
+              <Link
+                className="group relative flex aspect-[5/3] flex-col justify-end overflow-hidden rounded-2xl border border-[#fcb6bb] bg-contrast-100 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                href={item.href}
+              >
+                {item.image ? (
+                  <Image
+                    alt={item.image.alt}
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    fill
+                    sizes="(min-width: 64rem) 12vw, (min-width: 36rem) 25vw, 50vw"
+                    src={item.image.src}
+                  />
+                ) : (
+                  <TilePanel color={item.color} label={item.name} />
+                )}
+                <span className="relative z-10 line-clamp-2 border-t border-black/5 bg-white/95 px-2 py-1.5 text-center text-xs font-semibold leading-tight text-foreground transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @3xl:text-[11px] @5xl:text-xs">
+                  {item.name}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 interface BrandTilesProps {
   title?: string;
   brands: Array<{ name: string; href: string; logo?: { src: string; alt: string } }>;

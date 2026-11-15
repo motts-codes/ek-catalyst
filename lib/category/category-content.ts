@@ -29,7 +29,7 @@ export interface CategoryContent {
    */
   subcategories?: SubcategoryOverride[];
   /** More tile rows under the first (e.g. "Shop by finish"); same tile shape, links as given. */
-  tileGroups?: Array<{ title: string; items: SubcategoryOverride[] }>;
+  tileGroups?: Array<{ title: string; items: SubcategoryOverride[]; look?: TileGroupLook }>;
   /** "Shop by brand": equal logo boxes linking to the brand pages. */
   brands?: BrandTile[];
   /** Chip rows after the tiles (widths, finishes). */
@@ -112,6 +112,9 @@ export interface BrandTile {
   /** Without a logo the tile shows the name. */
   logo?: { src: string; alt: string };
 }
+
+/** Photo tiles (default) or the brand-row-sized swatch boxes with the name on them. */
+export type TileGroupLook = 'photo' | 'swatch';
 
 export interface ChipItem {
   label: string;

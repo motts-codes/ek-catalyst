@@ -6,6 +6,7 @@ import {
   CategoryPoints,
   FacetChips,
   SubcategoryTiles,
+  SwatchTiles,
 } from '@/vibes/soul/sections/category-hero';
 import { type CategoryPointIcon } from '~/lib/category/category-content';
 
@@ -75,14 +76,18 @@ export function MSCategoryHeader({
         <SubcategoryTiles items={defaults.subcategories} title={subTitle || defaults.subTitle} />
       )}
       {showTiles &&
-        defaults.tileGroups?.map((group, index) => (
-          <SubcategoryTiles
-            items={group.items}
-            key={group.title}
-            stacked={hasSubcategories || index > 0}
-            title={group.title}
-          />
-        ))}
+        defaults.tileGroups?.map((group, index) => {
+          const Tiles = group.look === 'swatch' ? SwatchTiles : SubcategoryTiles;
+
+          return (
+            <Tiles
+              items={group.items}
+              key={group.title}
+              stacked={hasSubcategories || index > 0}
+              title={group.title}
+            />
+          );
+        })}
       {showTiles &&
         defaults.chipGroups?.map((group, index) => (
           <FacetChips

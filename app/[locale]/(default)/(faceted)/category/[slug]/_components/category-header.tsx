@@ -89,6 +89,7 @@ export function getCategoryHeaderDefaults({
     chipGroups: content.chipGroups,
     tileGroups: content.tileGroups?.map((group) => ({
       title: group.title,
+      look: group.look,
       items: group.items.map((tile) => ({
         name: tile.name,
         href: findChild(subcategories, tile.name)?.path ?? tile.fallbackHref,
