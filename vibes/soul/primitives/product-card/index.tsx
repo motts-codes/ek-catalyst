@@ -334,8 +334,9 @@ export function ProductCard({
         </div>
         {showCompare && (
           // Smaller compare checkbox + label than the default, with a tighter (less rounded) corner
-          // so the small box doesn't read as a circle.
-          <div className="mx-4 mt-auto shrink-0 pb-3 [&_button]:!size-6 [&_button]:!rounded-[4px] [&_label]:!text-xs [&_svg]:!size-3.5">
+          // so the small box doesn't read as a circle. Quiet grey outline (3:1 on white) instead of
+          // the form red, so it doesn't compete with the CTA; it still fills red when checked.
+          <div className="mx-4 mt-auto shrink-0 pb-3 [--checkbox-light-unchecked-border-hover:#4a4a4a] [--checkbox-light-unchecked-border:#8a8a8a] [&_button]:!size-5 [&_button]:!rounded-[4px] [&_label]:!text-xs [&_svg]:!size-3">
             <Compare
               colorScheme={colorScheme}
               label={compareLabel}
