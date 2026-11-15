@@ -33,6 +33,12 @@ import { Link } from '~/components/link';
 
 const containerClassName = 'mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14';
 
+// Below @md a tile row is one swipeable line (bleeding to the screen edge, snapping per tile,
+// no scrollbar) instead of a stacked grid; from @md up each row lays its own grid.
+const swipeRowClassName =
+  '-mx-6 flex snap-x scroll-px-6 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden @md:mx-0 @md:grid @md:overflow-visible @md:px-0';
+const swipeItemClassName = 'w-[42%] shrink-0 snap-start @md:w-auto';
+
 // The hero's buttons share the closing band's swipe: the primary is black and fills white from the
 // left on hover; the outline is a white hairline that fills white, its text taking the panel's
 // colour. The focus ring offsets against the panel.
@@ -383,10 +389,18 @@ export function SubcategoryTiles({
         <h2 className="mb-4 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
           {title}
         </h2>
-        <div className="grid grid-cols-2 gap-4 @lg:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-6 @5xl:gap-5">
+        <div
+          className={clsx(
+            swipeRowClassName,
+            'gap-4 @md:grid-cols-2 @lg:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-6 @5xl:gap-5',
+          )}
+        >
           {items.map((item) => (
             <Link
-              className="group flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+              className={clsx(
+                swipeItemClassName,
+                'group flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+              )}
               href={item.href}
               key={item.href}
             >
@@ -448,9 +462,11 @@ export function SwatchTiles({
         <h2 className="mb-4 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
           {title}
         </h2>
-        <ul className="grid grid-cols-2 gap-3 @md:grid-cols-4 @3xl:grid-cols-8 @3xl:gap-4">
+        <ul
+          className={clsx(swipeRowClassName, 'gap-3 @md:grid-cols-4 @3xl:grid-cols-8 @3xl:gap-4')}
+        >
           {items.map((item) => (
-            <li key={item.href}>
+            <li className={swipeItemClassName} key={item.href}>
               <Link
                 className="group flex flex-col gap-2 focus-visible:outline-0 [&:focus-visible>span:first-child]:ring-2 [&:focus-visible>span:first-child]:ring-primary"
                 href={item.href}
@@ -510,9 +526,11 @@ export function BrandTiles({
         <h2 className="mb-4 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
           {title}
         </h2>
-        <ul className="grid grid-cols-2 gap-3 @md:grid-cols-4 @3xl:grid-cols-8 @3xl:gap-4">
+        <ul
+          className={clsx(swipeRowClassName, 'gap-3 @md:grid-cols-4 @3xl:grid-cols-8 @3xl:gap-4')}
+        >
           {brands.map((item) => (
-            <li key={item.name}>
+            <li className={swipeItemClassName} key={item.name}>
               <Link
                 aria-label={item.name}
                 className="group flex aspect-[5/3] items-center justify-center rounded-2xl border border-[#fcb6bb] bg-white px-5 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"

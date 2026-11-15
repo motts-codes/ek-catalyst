@@ -198,6 +198,35 @@ const WINDOW_TYPE_TILES: SubcategoryOverride[] = [
   },
 ];
 
+// The kitchen sink types (tree-3 children of Kitchen Sinks), shown on the Kitchen Sinks page
+// and as a second row on Sinks & Faucets. Renders by Arun, 800 x 600.
+const sinkType = (name: string, slug: string, file: string, alt: string): SubcategoryOverride => ({
+  name,
+  fallbackHref: `/sinks-faucets/kitchen-sinks/${slug}`,
+  image: tileImage(`sinks/${file}`, alt),
+});
+const SINK_TYPE_TILES: SubcategoryOverride[] = [
+  sinkType(
+    'Single Bowl',
+    'single-bowl',
+    'single-bowl',
+    'A single bowl stainless steel undermount sink',
+  ),
+  sinkType(
+    'Double Bowl',
+    'double-bowls',
+    'double-bowl',
+    'A double bowl stainless steel undermount sink',
+  ),
+  sinkType('Farmhouse', 'apron-farmhouse', 'apron-farmhouse', 'A white fireclay farmhouse sink'),
+  sinkType(
+    'Workstation',
+    'workstation-sinks',
+    'workstation',
+    'A stainless steel workstation sink with a ledge',
+  ),
+];
+
 const APPLIANCE_TILES: SubcategoryOverride[] = [
   {
     name: 'Fridges & Freezers',
@@ -318,6 +347,9 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
         image: navImage('sink-faucet-accessories', 'Sink and faucet accessories'),
       },
     ],
+    // Bowl count is the first decision, so the sink types get a row here too; the mined finish
+    // and brand rows follow it.
+    tileGroups: [{ title: 'Kitchen sinks by type', items: SINK_TYPE_TILES }],
   },
   '/cabinet-hardware/handles-knobs': {
     lede: 'Pulls and knobs in every finish we make doors in.',
@@ -511,29 +543,11 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
     // child category once Arun adds it under Kitchen Sinks; until then it searches the category.
     subTitle: 'Shop by type',
     subcategories: [
+      ...SINK_TYPE_TILES,
       {
-        name: 'Single Bowl',
-        fallbackHref: '/sinks-faucets/kitchen-sinks?term=single%20bowl',
-        image: tileImage('sinks/single-bowl', 'A single bowl stainless steel undermount sink'),
-      },
-      {
-        name: 'Double Bowl',
-        fallbackHref: '/sinks-faucets/kitchen-sinks?term=double%20bowl',
-        image: tileImage('sinks/double-bowl', 'A double bowl stainless steel undermount sink'),
-      },
-      {
-        name: 'Farmhouse',
-        fallbackHref: '/sinks-faucets/kitchen-sinks?term=farmhouse',
-        image: tileImage('sinks/apron-farmhouse', 'A white fireclay farmhouse sink'),
-      },
-      {
-        name: 'Workstation',
-        fallbackHref: '/sinks-faucets/kitchen-sinks?term=workstation',
-        image: tileImage('sinks/workstation', 'A stainless steel workstation sink with a ledge'),
-      },
-      {
-        // Links to the Sinks & Faucets accessories page until there is a child under Kitchen Sinks.
-        name: 'Accessories',
+        // Sink-only accessories (grids, strainers, mats). Links to the Sinks & Faucets accessories
+        // page until there is an accessories child under Kitchen Sinks.
+        name: 'Sink Accessories',
         fallbackHref: '/sinks-faucets/accessories',
         image: tileImage(
           'sinks/accessories',
@@ -669,7 +683,7 @@ function withCatalogFacets(key: string, base: CategoryContent): CategoryContent 
 
   if (!facets) return base;
 
-  const tileGroups = base.tileGroups ?? facets.tileGroups;
+  const tileGroups = [...(base.tileGroups ?? []), ...facets.tileGroups];
   const chipGroups = base.chipGroups ?? facets.chipGroups;
   const brands = base.brands ?? facets.brands;
 
