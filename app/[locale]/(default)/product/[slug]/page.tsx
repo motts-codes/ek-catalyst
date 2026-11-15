@@ -694,7 +694,10 @@ export default async function Product({ params, searchParams }: Props) {
           .map((field) => ({ name: field.name, value: field.value })),
       ]
         // Drop any spec row without a value (empty SKU/condition, missing custom fields, etc.).
-        .filter((spec) => spec.value != null && spec.value.trim() !== '')
+        .filter(
+          (spec): spec is { name: string; value: string } =>
+            spec.value != null && spec.value.trim() !== '',
+        )
     );
   });
 
@@ -739,7 +742,7 @@ export default async function Product({ params, searchParams }: Props) {
   });
 
   // Effective quantity cap = min(available stock, max-purchase-quantity setting). Whichever are
-  // set constrain it; if neither, no cap (undefined). This flows to the form's `maxQuantity`,
+  // set constrain it; if neither, no cap (null). This flows to the form's `maxQuantity`,
   // which caps BOTH the +/- input AND the zod validation, so typing and clicking agree with the
   // server. `maxPurchaseQuantity` of 0 means "no limit" in BigCommerce. Falls back to the
   // purchase-limit only when stock is unknown (store setting off) or preorder (availableStock null).
@@ -756,7 +759,7 @@ export default async function Product({ params, searchParams }: Props) {
       (n): n is number => typeof n === 'number',
     );
 
-    return caps.length > 0 ? Math.min(...caps) : undefined;
+    return caps.length > 0 ? Math.min(...caps) : null;
   });
 
   const streamableAnalyticsData = Streamable.from(async () => {

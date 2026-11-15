@@ -18,7 +18,7 @@ interface VariantLike {
       node: {
         __typename?: string;
         entityId: number;
-        values?: { edges: Array<{ node: { entityId: number } }> };
+        values?: { edges: Array<{ node: { entityId: number } }> | null };
       };
     }> | null;
   };

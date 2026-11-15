@@ -116,7 +116,12 @@ export function OrderList({
             <div className="flex flex-col gap-4 @container @lg:gap-5">
               {orders.map((order) => (
                 <article
-                  className={clsx('rounded-2xl border p-5 @lg:p-6', borderClassName, className)}
+                  // A soft lift that deepens when the pointer is over the card or something inside it has focus.
+                  className={clsx(
+                    'rounded-2xl border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_14px_rgba(0,0,0,0.06)] transition-shadow duration-200 focus-within:shadow-[0_2px_6px_rgba(0,0,0,0.06),0_12px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_2px_6px_rgba(0,0,0,0.06),0_12px_32px_rgba(0,0,0,0.12)] @lg:p-6',
+                    borderClassName,
+                    className,
+                  )}
                   key={order.id}
                 >
                   <div className="flex flex-col justify-between gap-x-10 gap-y-4 @lg:flex-row @lg:items-start">
@@ -277,7 +282,10 @@ function OrderListSkeleton() {
     >
       {Array.from({ length: 3 }).map((_, id) => (
         <div
-          className={clsx('rounded-2xl border p-5 @lg:p-6', borderClassName)}
+          className={clsx(
+            'rounded-2xl border bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_14px_rgba(0,0,0,0.06)] @lg:p-6',
+            borderClassName,
+          )}
           data-pending
           key={id}
         >

@@ -30,7 +30,14 @@ export const ordersTransformer = (
             id: lineItem.entityId.toString(),
             href: lineItem.baseCatalogProduct?.path ?? '#',
             title: lineItem.name,
-            subtitle: lineItem.brand ?? undefined,
+            // Same line the cart shows under a product: chosen options, then the brand.
+            subtitle:
+              [
+                ...lineItem.productOptions.map((option) => `${option.name}: ${option.value}`),
+                lineItem.brand ? `Brand: ${lineItem.brand}` : '',
+              ]
+                .filter(Boolean)
+                .join(', ') || undefined,
             quantity: lineItem.quantity,
             price,
             totalPrice: format.number(lineItem.subTotalListPrice.value, {
