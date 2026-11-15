@@ -305,6 +305,11 @@ const menu: MenuItem[] = [
             href: '/windows/replacement/slider-windows',
             image: nav('windows-slider', 'White vinyl slider window'),
           },
+          {
+            label: 'REP Vinyl',
+            href: '/windows/replacement/rep-vinyl-windows',
+            image: nav('windows-rep-vinyl', 'White REP vinyl replacement window'),
+          },
         ],
       },
       {
@@ -318,7 +323,7 @@ const menu: MenuItem[] = [
           },
           {
             label: 'Accessories',
-            href: '/search?term=window%20accessories',
+            href: '/windows/accessories',
             image: nav('windows-accessories', 'Window accessories'),
           },
         ],

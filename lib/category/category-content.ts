@@ -132,6 +132,11 @@ const WINDOW_TYPE_TILES: SubcategoryOverride[] = [
     fallbackHref: '/windows/replacement/slider-windows',
     image: tileImage('windows-slider', 'White vinyl slider window'),
   },
+  {
+    name: 'REP Vinyl',
+    fallbackHref: '/windows/replacement/rep-vinyl-windows',
+    image: tileImage('windows-rep-vinyl', 'White REP vinyl replacement window'),
+  },
 ];
 
 const APPLIANCE_TILES: SubcategoryOverride[] = [
@@ -351,7 +356,7 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
       },
       {
         name: 'Accessories',
-        fallbackHref: search('window accessories'),
+        fallbackHref: '/windows/accessories',
         image: navImage('windows-accessories', 'Window accessories'),
       },
     ],
@@ -542,7 +547,10 @@ const HERO_LEDES: Record<string, string> = {
     'Vinyl, Low-E glass, no cranks or hinges. One price for any size.',
   '/windows/replacement/hopper-windows':
     'Vinyl, Low-E glass, for basements and utility rooms. One price for any size.',
+  '/windows/replacement/rep-vinyl-windows':
+    'Vinyl replacement windows sized to your existing opening.',
   '/windows/new-construction': 'With a nailing fin, for a brand-new opening.',
+  '/windows/accessories': 'Screens, locks, balances and trim for your windows.',
   '/closets':
     'Twelve organizer pieces in three colours that fit together. Buy what your closet needs and put it up in an afternoon.',
   '/bath':
