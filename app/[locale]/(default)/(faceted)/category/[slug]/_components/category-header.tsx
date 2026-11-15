@@ -107,8 +107,20 @@ const slug = (name: string) =>
     .replace(/[^a-z0-9]+/g, '');
 
 // The BigCommerce child category whose name matches an overridden tile ("Fridges & Freezers").
+// A plural or an extra word is forgiven ("Double Bowls" for "Double Bowl", "Workstation Sinks" for
+// "Workstation", "Apron-Farmhouse" for "Farmhouse") so the tile picks the category up however it
+// was named in the control panel.
 function findChild(children: NonNullable<Props['subcategories']>, name: string) {
-  return children.find((child) => slug(child.name) === slug(name));
+  const wanted = slug(name);
+
+  return (
+    children.find((child) => slug(child.name) === wanted) ??
+    children.find((child) => {
+      const actual = slug(child.name);
+
+      return actual.includes(wanted) || wanted.includes(actual);
+    })
+  );
 }
 
 // Breadcrumb above the header. Small and grey like the PDP's, but at a grey/size that passes AA.

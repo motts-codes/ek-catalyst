@@ -507,6 +507,31 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   '/sinks-faucets/kitchen-sinks': {
     heading: 'Big enough for the roasting pan',
     lede: 'Single, double, farmhouse and workstation, sized to our sink cabinets.',
+    // Type tiles only on the page (not in the mega menu). Each links to the matching BigCommerce
+    // child category once Arun adds it under Kitchen Sinks; until then it searches the category.
+    subTitle: 'Shop by type',
+    subcategories: [
+      {
+        name: 'Single Bowl',
+        fallbackHref: '/sinks-faucets/kitchen-sinks?term=single%20bowl',
+        image: tileImage('sinks/single-bowl', 'A single bowl stainless steel undermount sink'),
+      },
+      {
+        name: 'Double Bowl',
+        fallbackHref: '/sinks-faucets/kitchen-sinks?term=double%20bowl',
+        image: tileImage('sinks/double-bowl', 'A double bowl stainless steel undermount sink'),
+      },
+      {
+        name: 'Farmhouse',
+        fallbackHref: '/sinks-faucets/kitchen-sinks?term=farmhouse',
+        image: tileImage('sinks/apron-farmhouse', 'A white fireclay farmhouse sink'),
+      },
+      {
+        name: 'Workstation',
+        fallbackHref: '/sinks-faucets/kitchen-sinks?term=workstation',
+        image: tileImage('sinks/workstation', 'A stainless steel workstation sink with a ledge'),
+      },
+    ],
   },
   '/sinks-faucets/kitchen-faucets': {
     heading: 'Reach every corner of the sink',
