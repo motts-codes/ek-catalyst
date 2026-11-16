@@ -481,7 +481,7 @@ const CATEGORY_CONTENT: Record<string, CategoryContent> = {
   },
   '/appliances/ranges-cooktops': {
     heading: 'Cook the way you like',
-    lede: 'Gas, electric and induction, in 30 and 36 inches.',
+    lede: 'Gas, electric and induction, in 24 and 30 inches.',
   },
   '/appliances/dishwashers': {
     heading: 'Less time at the sink',
@@ -615,7 +615,7 @@ const HERO_LEDES: Record<string, string> = {
     'Fridges, ranges, hoods, dishwashers and laundry, in stock in Bristol and ready for pickup in two days.',
   '/appliances/fridges-freezers':
     'French door, side-by-side, top and bottom freezer and counter-depth.',
-  '/appliances/ranges-cooktops': 'Gas, electric and induction, in 30 and 36 inches.',
+  '/appliances/ranges-cooktops': 'Gas, electric and induction, in 24 and 30 inches.',
   '/appliances/dishwashers': 'Built-in, sized to the standard 24-inch opening.',
   '/appliances/microwaves': 'Countertop, over-the-range and built-in.',
   '/appliances/wall-ovens': 'Single and double, in 24 and 30 inches.',
