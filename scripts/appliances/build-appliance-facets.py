@@ -123,6 +123,7 @@ KINDS = {
 
 # Widths worth a chip row (categories where the opening size is the first question).
 WIDTHS = {
+    140: ['28"', '30"', '33"', '36"'],
     142: ['24"', '30"', '36"'],
     143: ['18"', '24"'],
     329: ['24"', '27"', '30"'],

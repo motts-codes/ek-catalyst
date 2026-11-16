@@ -61,7 +61,28 @@
           "imageAlt": "GE 33 Inch Upright Freezer with 21.3 Cu. Ft. Capacity - White - FUF21DLRWW"
         }
       ],
-      "widths": [],
+      "widths": [
+        {
+          "label": "28\"",
+          "term": "28 inch",
+          "count": 11
+        },
+        {
+          "label": "30\"",
+          "term": "30 inch",
+          "count": 12
+        },
+        {
+          "label": "33\"",
+          "term": "33 inch",
+          "count": 14
+        },
+        {
+          "label": "36\"",
+          "term": "36 inch",
+          "count": 12
+        }
+      ],
       "finishes": [
         {
           "label": "Fingerprint Resistant",
