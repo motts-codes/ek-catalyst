@@ -37,6 +37,7 @@ ID_MAP = 'scripts/live/category-id-map.json'
 SANDBOX_CABINETS = 863
 COPY = ('namespace', 'key', 'value', 'permission_set', 'description')
 CATEGORY_KEY = re.compile(r'(category|collection)', re.I)
+GALLERY_REF = re.compile(r'^([cf]):(\d+)(.*)$')
 
 
 def sandbox_get(path: str):
@@ -106,6 +107,13 @@ def remap_value(raw: str, id_map: dict[int, int], prod_ids: set[int], report: li
             return {k: walk(v, k) for k, v in node.items()}
         if isinstance(node, list):
             return [walk(v, key_hint) for v in node]
+        # Gallery slots ("c:864", "f:911:Lakehouse") carry the category id inside a string.
+        if isinstance(node, str) and key_hint == 'ref':
+            m = GALLERY_REF.match(node)
+            if m and int(m.group(2)) in id_map:
+                changed = True
+                return f'{m.group(1)}:{id_map[int(m.group(2))]}{m.group(3)}'
+            return node
         if isinstance(node, (int, str)) and str(node).isdigit():
             n = int(node)
             if CATEGORY_KEY.search(key_hint) and n in id_map:
