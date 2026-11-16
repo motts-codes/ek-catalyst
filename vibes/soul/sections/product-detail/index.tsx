@@ -203,7 +203,7 @@ export function ProductDetail<F extends Field>({
                   'grid grid-cols-1 items-stretch gap-x-8 gap-y-8 @5xl:gap-x-12',
                   quoteOnly
                     ? '@2xl:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]'
-                    : '@2xl:grid-cols-[minmax(0,7fr)_minmax(0,13fr)]',
+                    : '@2xl:grid-cols-[minmax(0,8fr)_minmax(0,17fr)]',
                 )}
               >
                 {/* Mobile gallery: shown FIRST (image above all details). Forced to a shorter 4:3
