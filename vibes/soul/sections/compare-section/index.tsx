@@ -104,7 +104,9 @@ export function CompareSection({
 
           return names;
         }, []);
-        const columns = { gridTemplateColumns: `repeat(${products.length}, minmax(16rem, 22rem))` };
+        // Columns shrink to 12rem before the row scrolls, so five products sit side by side on
+        // a laptop and a phone shows two; anything beyond that scrolls sideways.
+        const columns = { gridTemplateColumns: `repeat(${products.length}, minmax(12rem, 15rem))` };
         const rowHeading =
           'col-span-full border-b border-[var(--compare-card-divider,hsl(var(--contrast-100)))] pb-2 pt-8 font-[family-name:var(--compare-card-font-family-secondary,var(--font-family-mono))] text-xs font-normal uppercase text-[var(--compare-card-label,hsl(var(--foreground)))]';
         const cell =
@@ -121,7 +123,7 @@ export function CompareSection({
                 </span>
               </h1>
               <div className="overflow-x-auto">
-                <div className="grid min-w-max gap-x-6 @4xl:gap-x-10" style={columns}>
+                <div className="grid gap-x-4 @4xl:gap-x-6" style={columns}>
                   {products.map((product) => (
                     <div className="space-y-4" key={product.id}>
                       <ProductCard
