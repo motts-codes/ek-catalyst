@@ -65,9 +65,13 @@ export function applianceFacetsFor(path: string): ApplianceFacets | null {
   const chipGroups: ChipGroup[] = [];
 
   if (entry.widths.length > 0) {
+    const title = chipTitle(path);
+
     chipGroups.push({
-      title: chipTitle(path),
+      title,
       items: entry.widths.map((chip) => ({ label: chip.label, href: termHref(path, chip.term) })),
+      // Widths are drawn as a measurement (|<- 24 in ->|); horsepower stays a plain pill.
+      look: title === 'Shop by width' ? 'dimension' : 'pill',
     });
   }
 

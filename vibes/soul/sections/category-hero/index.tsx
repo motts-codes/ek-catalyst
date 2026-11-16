@@ -565,14 +565,44 @@ export function BrandTiles({
 interface FacetChipsProps {
   title: string;
   items: Array<{ label: string; href: string; swatch?: string }>;
+  /** `dimension`: measurement tiles (arrow brackets around the value) instead of pills. */
+  look?: 'pill' | 'dimension';
   /** Follows another row: trims the top padding so the rows read as one block. */
   stacked?: boolean;
   className?: string;
 }
 
-// "Shop by width" / "Shop by finish": a row of small link chips, each with a dot in the finish
-// colour when there is one. The same chip as the cabinet collection pages' finish picker.
-export function FacetChips({ title, items, stacked = false, className }: FacetChipsProps) {
+// One half of the dimension line: the end bar and the arrow pointing at it. The right half is
+// the same drawing mirrored.
+function DimensionArrow({ flip = false }: { flip?: boolean }) {
+  return (
+    <svg
+      aria-hidden
+      className={clsx('h-5 w-9 shrink-0', flip && '-scale-x-100')}
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2.25"
+      viewBox="0 0 36 20"
+    >
+      <path d="M2 2v16" />
+      <path d="M11 4.5 5.5 10l5.5 5.5" />
+      <path d="M5.5 10H35" />
+    </svg>
+  );
+}
+
+// `24"` reads as `24 in` on the tile, the way a tape measure is written.
+const dimensionLabel = (label: string) => label.replace(/\s*(?:"|”|in\.?|inch(?:es)?)$/i, ' in');
+
+export function FacetChips({
+  title,
+  items,
+  look = 'pill',
+  stacked = false,
+  className,
+}: FacetChipsProps) {
   if (items.length === 0) return null;
 
   return (
@@ -587,27 +617,47 @@ export function FacetChips({ title, items, stacked = false, className }: FacetCh
         <h2 className="mb-3 font-heading text-lg font-bold leading-tight @xl:text-xl @4xl:text-[22px]">
           {title}
         </h2>
-        <ul className="flex flex-wrap gap-2">
-          {items.map((item) => (
-            <li key={item.label}>
-              <Link
-                className={clsx(
-                  'inline-flex items-center gap-2 rounded-full border border-contrast-200 bg-white py-1.5 pr-3.5 text-sm font-medium transition-colors hover:border-[var(--button-primary-background,#d90716)] hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
-                  item.swatch ? 'pl-1.5' : 'pl-3.5',
-                )}
-                href={item.href}
-              >
-                {item.swatch != null && item.swatch !== '' && (
-                  <span
-                    aria-hidden
-                    className="size-5 rounded-full ring-1 ring-inset ring-black/10"
-                    style={{ backgroundColor: item.swatch }}
-                  />
-                )}
-                {item.label}
-              </Link>
-            </li>
-          ))}
+        <ul className={clsx('flex flex-wrap', look === 'dimension' ? 'gap-3' : 'gap-2')}>
+          {items.map((item) =>
+            look === 'dimension' ? (
+              <li key={item.label}>
+                <Link
+                  className="group/dimension flex flex-col rounded-xl border border-contrast-200 bg-white px-4 pb-3 pt-2 transition-colors hover:border-[var(--button-primary-background,#d90716)] hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                  href={item.href}
+                >
+                  <span className="text-xs text-contrast-400 group-hover/dimension:text-current">
+                    width
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <DimensionArrow />
+                    <span className="font-heading text-xl font-bold leading-none tracking-tight">
+                      {dimensionLabel(item.label)}
+                    </span>
+                    <DimensionArrow flip />
+                  </span>
+                </Link>
+              </li>
+            ) : (
+              <li key={item.label}>
+                <Link
+                  className={clsx(
+                    'inline-flex items-center gap-2 rounded-full border border-contrast-200 bg-white py-1.5 pr-3.5 text-sm font-medium transition-colors hover:border-[var(--button-primary-background,#d90716)] hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+                    item.swatch ? 'pl-1.5' : 'pl-3.5',
+                  )}
+                  href={item.href}
+                >
+                  {item.swatch != null && item.swatch !== '' && (
+                    <span
+                      aria-hidden
+                      className="size-5 rounded-full ring-1 ring-inset ring-black/10"
+                      style={{ backgroundColor: item.swatch }}
+                    />
+                  )}
+                  {item.label}
+                </Link>
+              </li>
+            ),
+          )}
         </ul>
       </div>
     </section>

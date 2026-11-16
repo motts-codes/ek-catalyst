@@ -147,6 +147,8 @@ export interface ChipItem {
 export interface ChipGroup {
   title: string;
   items: ChipItem[];
+  /** `dimension`: a measurement tile (arrow brackets around the value) instead of a pill. */
+  look?: 'pill' | 'dimension';
 }
 
 const brand = (name: string, file: string, href: string): BrandTile => ({

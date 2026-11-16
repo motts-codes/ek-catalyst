@@ -93,6 +93,7 @@ export function MSCategoryHeader({
           <FacetChips
             items={group.items}
             key={group.title}
+            look={group.look}
             stacked={hasSubcategories || hasTileGroups || index > 0}
             title={group.title}
           />
