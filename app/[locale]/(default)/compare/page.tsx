@@ -6,7 +6,7 @@ import * as z from 'zod';
 import { Streamable } from '@/vibes/soul/lib/streamable';
 import { CompareSection } from '@/vibes/soul/sections/compare-section';
 import { getSessionCustomerAccessToken } from '~/auth';
-import { pricesTransformer } from '~/data-transformers/prices-transformer';
+import { singleProductCardTransformer } from '~/data-transformers/product-card-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
@@ -77,16 +77,11 @@ export default async function Compare(props: Props) {
     );
     const format = await getFormatter();
 
+    // The card itself (badges, "Add to Cart" vs "Choose <option>", quote-only, stock) is built by
+    // the shared card transformer so compare matches the category and search grids; only the
+    // comparison rows below the card are compare-specific.
     return products.map((product) => ({
-      id: product.entityId.toString(),
-      title: product.name,
-      href: product.path,
-      image: product.defaultImage
-        ? { src: product.defaultImage.url, alt: product.defaultImage.altText }
-        : undefined,
-      price: pricesTransformer(product, format, taxDisplay),
-      subtitle: product.brand?.name ?? undefined,
-      rating: product.reviewSummary.averageRating,
+      ...singleProductCardTransformer(product, format, undefined, undefined, taxDisplay),
       description:
         product.description.trim() !== '' ? (
           <div dangerouslySetInnerHTML={{ __html: product.description }} />
@@ -99,7 +94,7 @@ export default async function Compare(props: Props) {
           .filter(({ name }) => !name.startsWith('__'))
           .map(({ name, value }) => ({ name, value })),
       ],
-      hasVariants: removeEdgesAndNodes(product.productOptions).length > 0,
+      hasVariants: removeEdgesAndNodes(product.productOptions).some((option) => option.isRequired),
       isPreorder: product.availabilityV2.status === 'Preorder',
       disabled: product.availabilityV2.status === 'Unavailable' || !product.inventory.isInStock,
     }));
