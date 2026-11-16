@@ -583,7 +583,7 @@ function DimensionArrow({ flip = false }: { flip?: boolean }) {
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth="2.25"
+      strokeWidth="1.25"
       viewBox="0 0 36 20"
     >
       <path d="M2 2v16" />
