@@ -386,8 +386,9 @@ export function ProductDetailForm<F extends Field>({
           <div className="grid grid-cols-1 gap-6 pb-8 @5xl:grid-cols-[minmax(0,44fr)_minmax(0,21fr)] @5xl:items-start">
             {/* LEFT (70%): product header (title/price/etc.) + variant option groups.
               The header keeps its own internal margins, so it's wrapped in a single element
-              (not spread into the space-y-6 flow, which would add 24px between every header row). */}
-            <div className="space-y-3">
+              (not spread into the space-y-6 flow, which would add 24px between every header row).
+              The right padding keeps the title, rule and description copy off the purchase panel. */}
+            <div className="space-y-3 @5xl:pr-8">
               <HeaderBox>{header}</HeaderBox>
               <div className="space-y-5">
                 {(() => {
