@@ -622,19 +622,14 @@ export function FacetChips({
             look === 'dimension' ? (
               <li key={item.label}>
                 <Link
-                  className="group/dimension flex flex-col rounded-xl border border-contrast-200 bg-white px-4 pb-3 pt-2 transition-colors hover:border-[var(--button-primary-background,#d90716)] hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                  className="flex items-center gap-1.5 rounded-xl border border-contrast-200 bg-white px-4 py-3 transition-colors hover:border-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
                   href={item.href}
                 >
-                  <span className="text-xs text-contrast-400 group-hover/dimension:text-current">
-                    width
+                  <DimensionArrow />
+                  <span className="font-heading text-xl font-bold leading-none tracking-tight text-[var(--button-primary-background,#d90716)]">
+                    {dimensionLabel(item.label)}
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <DimensionArrow />
-                    <span className="font-heading text-xl font-bold leading-none tracking-tight">
-                      {dimensionLabel(item.label)}
-                    </span>
-                    <DimensionArrow flip />
-                  </span>
+                  <DimensionArrow flip />
                 </Link>
               </li>
             ) : (
