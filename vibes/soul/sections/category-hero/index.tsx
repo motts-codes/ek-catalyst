@@ -622,7 +622,7 @@ export function FacetChips({
             look === 'dimension' ? (
               <li key={item.label}>
                 <Link
-                  className="flex items-center gap-1.5 rounded-xl border border-contrast-200 bg-white px-4 py-3 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                  className="flex items-center gap-1.5 rounded-xl border border-contrast-200 bg-white px-4 py-3 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_12px_24px_-10px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
                   href={item.href}
                 >
                   <DimensionArrow />
