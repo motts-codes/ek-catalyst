@@ -4,18 +4,40 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { type ProductsPage } from '~/lib/cabinet-admin/products-list';
+import {
+  DEFAULT_PRODUCT_STATUS,
+  type ProductsPage,
+  type ProductStatusFilter,
+} from '~/lib/cabinet-admin/products-list';
 
 // Edit-only, searchable, paginated data table of products. Search + pagination are server-side
 // (via URL params) so it scales to thousands of products.
-export function ProductsTable({ data, search }: { data: ProductsPage; search: string }) {
+const STATUS_OPTIONS: Array<{ value: ProductStatusFilter; label: string }> = [
+  { value: 'active', label: 'Active only' },
+  { value: 'hidden', label: 'Hidden only' },
+  { value: 'all', label: 'All products' },
+];
+
+export function ProductsTable({
+  data,
+  search,
+  status,
+}: {
+  data: ProductsPage;
+  search: string;
+  status: ProductStatusFilter;
+}) {
   const router = useRouter();
   const [term, setTerm] = useState(search);
 
+  // Every navigation keeps the current status filter unless the call overrides it; the default
+  // filter stays out of the URL.
   const go = (params: Record<string, string | number>) => {
     const sp = new URLSearchParams({ tab: 'products' });
+    const merged = { status, ...params };
 
-    Object.entries(params).forEach(([k, v]) => {
+    Object.entries(merged).forEach(([k, v]) => {
+      if (k === 'status' && v === DEFAULT_PRODUCT_STATUS) return;
       if (v !== '' && v != null) sp.set(k, String(v));
     });
     router.push(`/cabinet-admin?${sp.toString()}`);
@@ -34,6 +56,21 @@ export function ProductsTable({ data, search }: { data: ProductsPage; search: st
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Products</h1>
         <form className="flex items-center gap-2" onSubmit={submitSearch}>
+          <label className="sr-only" htmlFor="product-status">
+            Status
+          </label>
+          <select
+            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            id="product-status"
+            onChange={(e) => go({ q: search, status: e.target.value, page: 1 })}
+            value={status}
+          >
+            {STATUS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
           <input
             className="w-64 rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
             onChange={(e) => setTerm(e.target.value)}
@@ -77,7 +114,8 @@ export function ProductsTable({ data, search }: { data: ProductsPage; search: st
             {data.rows.length === 0 ? (
               <tr>
                 <td className="px-4 py-6 text-gray-500" colSpan={5}>
-                  No products found{search ? ` for “${search}”` : ''}.
+                  No {status === 'all' ? '' : `${status} `}products found
+                  {search ? ` for “${search}”` : ''}.
                 </td>
               </tr>
             ) : (

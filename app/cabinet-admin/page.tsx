@@ -11,7 +11,11 @@ import { readGalleryConfig } from '~/lib/cabinet-admin/gallery-shape';
 import { listCabinetCollections } from '~/lib/cabinet-admin/metafields-api';
 import { readCabinetOffers } from '~/lib/cabinet-admin/offers-shape';
 import { readProduct } from '~/lib/cabinet-admin/product-shape';
-import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
+import {
+  getAdminProducts,
+  parseProductStatus,
+  type ProductStatusFilter,
+} from '~/lib/cabinet-admin/products-list';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { galleryKitchens, kitchenOptions } from '~/lib/inspiration/kitchen-gallery-data';
 
@@ -35,6 +39,7 @@ interface Props {
     edit?: string; // collection id being edited (Collections tab)
     page?: string;
     q?: string;
+    status?: string; // Products tab: active (default) | hidden | all
   }>;
 }
 
@@ -72,6 +77,7 @@ export default async function CabinetAdminPage(props: Props) {
           editId={sp.edit ? Number(sp.edit) : undefined}
           page={sp.page ? Number(sp.page) : 1}
           search={sp.q ?? ''}
+          status={parseProductStatus(sp.status)}
         />
       )}
       {tab === 'attributes' && <AttributesContent />}
@@ -157,10 +163,12 @@ async function CollectionsContent({ editId }: { editId?: number }) {
 async function ProductsContent({
   page,
   search,
+  status,
   editId,
 }: {
   page: number;
   search: string;
+  status: ProductStatusFilter;
   editId?: number;
 }) {
   // When editing one product, load its view fields + editable content metafields.
@@ -174,7 +182,7 @@ async function ProductsContent({
     }
   }
 
-  const data = await getAdminProducts({ page, perPage: 25, search });
+  const data = await getAdminProducts({ page, perPage: 25, search, status });
 
-  return <ProductsTable data={data} search={search} />;
+  return <ProductsTable data={data} search={search} status={status} />;
 }

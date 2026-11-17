@@ -21,6 +21,15 @@ export interface AdminProductRow {
   isVisible: boolean;
 }
 
+/** Which products the list shows; the default hides products that are not visible on the storefront. */
+export type ProductStatusFilter = 'active' | 'hidden' | 'all';
+
+export const DEFAULT_PRODUCT_STATUS: ProductStatusFilter = 'active';
+
+export function parseProductStatus(value: string | undefined): ProductStatusFilter {
+  return value === 'hidden' || value === 'all' ? value : DEFAULT_PRODUCT_STATUS;
+}
+
 export interface ProductsPage {
   rows: AdminProductRow[];
   total: number;
@@ -33,21 +42,24 @@ export interface ProductsPage {
 function deriveType(name: string): string {
   if (/ Assembled /i.test(name)) return 'Assembled Cabinet';
   if (/ RTA /i.test(name)) return 'RTA Cabinet';
-  if (/molding|panel|filler|valance|toe kick|scribe|batten|light rail/i.test(name)) return 'Accessory';
+  if (/molding|panel|filler|valance|toe kick|scribe|batten|light rail/i.test(name))
+    return 'Accessory';
   if (/sample/i.test(name)) return 'Sample';
 
   return 'Product';
 }
 
-/** One page of products, optionally filtered by a keyword search. */
+/** One page of products, optionally filtered by a keyword search and by storefront visibility. */
 export async function getAdminProducts({
   page = 1,
   perPage = 25,
   search = '',
+  status = DEFAULT_PRODUCT_STATUS,
 }: {
   page?: number;
   perPage?: number;
   search?: string;
+  status?: ProductStatusFilter;
 }): Promise<ProductsPage> {
   const params = new URLSearchParams({
     limit: String(perPage),
@@ -58,6 +70,10 @@ export async function getAdminProducts({
 
   if (search.trim()) {
     params.set('keyword', search.trim());
+  }
+
+  if (status !== 'all') {
+    params.set('is_visible', status === 'active' ? 'true' : 'false');
   }
 
   const res = await fetch(`${BASE}/catalog/products?${params.toString()}`, {
