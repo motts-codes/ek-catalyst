@@ -117,6 +117,28 @@ export function ProductGallery({
     [emblaApi, emblaThumbsApi],
   );
 
+  // Hover switches the big photo too (mouse only; touch and keyboard still click / focus). A
+  // short wait means a cursor sweeping along the strip doesn't flick through every image, and the
+  // jump is instant rather than animated so a slow browse along the thumbnails feels direct. The
+  // last hovered image stays up when the cursor leaves.
+  const hoverTimerRef = useRef<number | null>(null);
+  const cancelHover = useCallback(() => {
+    if (hoverTimerRef.current != null) window.clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = null;
+  }, []);
+  const onThumbHover = useCallback(
+    (index: number) => {
+      cancelHover();
+      hoverTimerRef.current = window.setTimeout(() => {
+        hoverTimerRef.current = null;
+        emblaApi?.goTo(index, true);
+      }, 120);
+    },
+    [emblaApi, cancelHover],
+  );
+
+  useEffect(() => cancelHover, [cancelHover]);
+
   const onSelect = useCallback(() => {
     if (!emblaApi || !emblaThumbsApi) return;
     setSelectedIndex(emblaApi.selectedSnap());
@@ -313,7 +335,15 @@ export function ProductGallery({
                     : 'border-transparent',
                 )}
                 key={index}
-                onClick={() => onThumbClick(index)}
+                onClick={() => {
+                  cancelHover();
+                  onThumbClick(index);
+                }}
+                onFocus={() => onThumbClick(index)}
+                onPointerEnter={(event) => {
+                  if (event.pointerType === 'mouse') onThumbHover(index);
+                }}
+                onPointerLeave={cancelHover}
                 type="button"
               >
                 <div
