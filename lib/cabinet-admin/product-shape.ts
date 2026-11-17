@@ -50,6 +50,8 @@ export interface ProductView {
   name: string;
   sku: string;
   isVisible: boolean;
+  /** Storefront path from BigCommerce (custom_url), e.g. "/avon-base-cabinet-b12/". */
+  url: string;
   categoryIds: number[];
   categoryNames: string[];
   // Program sibling (RTA <-> Assembled twin), if set.
@@ -98,8 +100,16 @@ async function bcGet(path: string): Promise<unknown> {
 /** Load one product's editor data (view fields + editable content). Null if the product is gone. */
 export async function readProduct(productId: number): Promise<ProductEditorData | null> {
   const productResp = (await bcGet(
-    `/catalog/products/${productId}?include_fields=name,sku,is_visible,categories`,
-  )) as { data?: { name?: string; sku?: string; is_visible?: boolean; categories?: number[] } };
+    `/catalog/products/${productId}?include_fields=name,sku,is_visible,categories,custom_url`,
+  )) as {
+    data?: {
+      name?: string;
+      sku?: string;
+      is_visible?: boolean;
+      categories?: number[];
+      custom_url?: { url?: string };
+    };
+  };
 
   const p = productResp.data;
 
@@ -127,6 +137,7 @@ export async function readProduct(productId: number): Promise<ProductEditorData 
       name: p.name ?? '',
       sku: p.sku ?? '',
       isVisible: p.is_visible ?? true,
+      url: p.custom_url?.url ?? '',
       categoryIds,
       categoryNames,
       sibling,

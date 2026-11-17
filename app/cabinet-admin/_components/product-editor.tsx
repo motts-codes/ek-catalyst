@@ -57,6 +57,7 @@ export function ProductEditor({ product }: { product: ProductData }) {
           <ReadRow label="Name" value={view.name} />
           <ReadRow label="SKU" value={view.sku || '–'} />
           <ReadRow label="Status" value={view.isVisible ? 'Active' : 'Hidden'} />
+          <ReadRow href={view.url || undefined} label="URL" value={view.url || '–'} />
         </Group>
 
         <Group title="Categories (view only)">
@@ -151,11 +152,23 @@ export function ProductEditor({ product }: { product: ProductData }) {
   );
 }
 
-function ReadRow({ label, value }: { label: string; value: string }) {
+// With `href` the value is a link that opens the storefront page in a new tab.
+function ReadRow({ label, value, href }: { label: string; value: string; href?: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-gray-50 py-1.5 last:border-0">
       <span className="text-xs font-medium text-gray-500">{label}</span>
-      <span className="text-sm text-gray-800">{value}</span>
+      {href ? (
+        <a
+          className="truncate text-sm text-blue-700 underline-offset-2 hover:underline"
+          href={href}
+          rel="noreferrer"
+          target="_blank"
+        >
+          {value} ↗
+        </a>
+      ) : (
+        <span className="text-sm text-gray-800">{value}</span>
+      )}
     </div>
   );
 }
