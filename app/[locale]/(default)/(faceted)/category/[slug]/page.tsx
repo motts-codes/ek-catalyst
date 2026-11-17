@@ -55,6 +55,8 @@ import { EditableSection } from '~/lib/makeswift/components/editable-section';
 import { CATEGORY_HEADER_TYPE } from '~/lib/makeswift/components/section-types';
 import { Slot } from '~/lib/makeswift/slot';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
+import { cardWishlistAction } from '~/lib/wishlist/card-wishlist-action';
+import { getSavedItems } from '~/lib/wishlist/saved-items';
 
 import { MAX_COMPARE_LIMIT } from '../../../compare/page-data';
 import { getCompareProducts } from '../../fetch-compare-products';
@@ -791,6 +793,9 @@ export default async function Category(props: Props) {
           rangeFilterApplyLabel={t('FacetedSearch.Range.apply')}
           removeLabel={t('Compare.remove')}
           resetFiltersLabel={t('FacetedSearch.resetFilters')}
+          savedItems={Streamable.from(async () =>
+            getSavedItems(await getSessionCustomerAccessToken()),
+          )}
           showCompare={productComparisonsEnabled}
           showRating={showRating}
           sortDefaultValue={defaultSort(isCabinet)}
@@ -810,6 +815,7 @@ export default async function Category(props: Props) {
           sortParamName="sort"
           title={getGridTitle(category.name, isCabinet, selectedProgram)}
           totalCount={streamableTotalCount}
+          wishlistAction={cardWishlistAction}
         />
       </div>
       <CountertopQuoteBand path={category.path} />

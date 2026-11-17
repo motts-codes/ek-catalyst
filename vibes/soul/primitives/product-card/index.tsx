@@ -24,8 +24,19 @@ import {
   CardVariantProvider,
   type CardVariants,
 } from './variant-context';
+import {
+  type CardWishlistState,
+  type ProductCardWishlistAction,
+  WishlistHeart,
+} from './wishlist-heart';
 
 export type { CardVariants } from './variant-context';
+
+export type {
+  CardSavedItems,
+  CardWishlistState,
+  ProductCardWishlistAction,
+} from './wishlist-heart';
 
 export type { RequiredOption } from './options';
 
@@ -36,6 +47,8 @@ export interface Product {
   title: string;
   href: string;
   image?: { src: string; alt: string };
+  /** The product's second photo, faded in while the card is hovered. */
+  hoverImage?: { src: string; alt: string };
   price?: Price;
   subtitle?: string;
   badge?: string;
@@ -80,8 +93,37 @@ export interface ProductCardProps {
   /** Where a quote-only product's CTA goes. Defaults to the product page's quote form; listing
    *  pages that render the form themselves pass their in-page anchor. */
   quoteHref?: string;
+  /** Wish-list action for the heart on the image; without it no heart is shown. */
+  wishlistAction?: ProductCardWishlistAction;
+  /** This product's place in the customer's wish lists (filled heart when saved). */
+  wishlist?: CardWishlistState;
   product: Product;
   showRating?: boolean;
+}
+
+// Wish-list heart: top-right of the photo, below the sale blurb when there is one. Above the
+// full-card link (z-10) so a tap saves instead of opening the product. Nothing without an action.
+function CardHeart({
+  action,
+  belowSaleBlurb,
+  id,
+  wishlist,
+}: {
+  action?: ProductCardWishlistAction;
+  belowSaleBlurb: boolean;
+  id: string;
+  wishlist?: CardWishlistState;
+}) {
+  if (action == null) return null;
+
+  return (
+    <WishlistHeart
+      action={action}
+      className={belowSaleBlurb ? 'right-2 top-[60px] @md:top-[66px]' : 'right-2 top-2'}
+      productId={Number(id)}
+      wishlist={wishlist}
+    />
+  );
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -118,6 +160,7 @@ export function ProductCard({
     deliveryMessage,
     price,
     image,
+    hoverImage,
     href,
     requiresOptions,
     requiredOptions,
@@ -138,9 +181,13 @@ export function ProductCard({
   compareParamName,
   addToCartAction,
   quoteHref,
+  wishlistAction,
+  wishlist,
   imagePriority = false,
   imageSizes = '(min-width: 80rem) 20vw, (min-width: 64rem) 25vw, (min-width: 42rem) 33vw, (min-width: 24rem) 50vw, 100vw',
 }: ProductCardProps) {
+  const onSale = typeof salePercent === 'number' && salePercent > 0;
+
   return (
     <article
       className={clsx(
@@ -187,6 +234,7 @@ export function ProductCard({
                     dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
                   }[colorScheme],
                 )}
+                hover={hoverImage}
                 preload={imagePriority}
                 sizes={imageSizes}
                 src={image.src}
@@ -228,13 +276,15 @@ export function ProductCard({
 
           {/* Sale blurb — top-right, driven by the __sale custom field (percentage). Placeholder red
             disc for now; will be replaced with the supplied SVG shape. "UP TO / N% / OFF" in 3 lines. */}
-          {typeof salePercent === 'number' && salePercent > 0 && (
+          {onSale && (
             <div className="absolute right-0 top-0 flex size-[52px] flex-col items-center justify-center rounded-full bg-[var(--pill-sale-background,#d90716)] text-center leading-none text-[var(--pill-sale-text,#fff)] @md:size-[58px]">
               <span className="text-[7px] font-semibold uppercase tracking-wide">Up to</span>
               <span className="text-[15px] font-bold @md:text-base">{salePercent}%</span>
               <span className="text-[7px] font-semibold uppercase tracking-wide">Off</span>
             </div>
           )}
+
+          <CardHeart action={wishlistAction} belowSaleBlurb={onSale} id={id} wishlist={wishlist} />
 
           <div className="flex flex-1 flex-col items-start gap-x-4 gap-y-3 px-4 pb-3 pt-3 @xs:pt-4">
             <div className="flex w-full flex-1 flex-col text-sm @[16rem]:text-base">

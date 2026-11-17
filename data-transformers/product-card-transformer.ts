@@ -109,6 +109,22 @@ const getCardBadges = (
   ].filter((b): b is { label: string; color: string; textColor?: string } => Boolean(b));
 };
 
+// The photo shown while the card is hovered: the first gallery image that is not the default one.
+const getHoverImage = (
+  product: ResultOf<typeof ProductCardFragment | typeof WishlistItemProductFragment>,
+): { src: string; alt: string } | undefined => {
+  if (!('images' in product)) {
+    return undefined;
+  }
+
+  const defaultUrl = product.defaultImage?.url;
+  const next = removeEdgesAndNodes(product.images).find(
+    (image) => !image.isDefault && image.url !== defaultUrl,
+  );
+
+  return next ? { src: next.url, alt: next.altText || product.name } : undefined;
+};
+
 // Delivery/pickup message from the __delivery custom field (e.g. "Same Day Pickup", "2 Day pickup").
 // Shown on the card after the price. Absent -> nothing shown.
 const getDeliveryMessage = (
@@ -280,6 +296,7 @@ export const singleProductCardTransformer = (
     image: product.defaultImage
       ? { src: product.defaultImage.url, alt: product.defaultImage.altText }
       : undefined,
+    hoverImage: getHoverImage(product),
     price: pricesTransformer(product, format, taxDisplay),
     subtitle: product.brand?.name ?? undefined,
     badges: getCardBadges(product),

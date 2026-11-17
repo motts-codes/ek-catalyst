@@ -10,6 +10,17 @@ export const ProductCardFragment = graphql(
         altText
         url: urlTemplate(lossy: true)
       }
+      # A couple more photos so the card can show the next one on hover (the first is usually
+      # the default image again).
+      images(first: 3) {
+        edges {
+          node {
+            altText
+            url: urlTemplate(lossy: true)
+            isDefault
+          }
+        }
+      }
       path
       brand {
         name

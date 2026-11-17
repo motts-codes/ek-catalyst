@@ -1,0 +1,61 @@
+{
+ "collection": "Prism Avon",
+ "notes": [],
+ "data_issues": [
+  "BAT - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one.",
+  "CM8 - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one.",
+  "CV8 - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one.",
+  "ICM8 - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one.",
+  "LR8 - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one.",
+  "QRM8 - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one.",
+  "RCM4 - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one.",
+  "SCRIBE - PRISM-AVON MIDNIGHT: accessory carries a base cabinet's size (12 \u00d7 34.5 \u00d7 24) in every field \u2014 name left without a size until EK confirms the real one."
+ ],
+ "naming_decisions": [],
+ "duplicates": [],
+ "missing_combos": [
+  {
+   "product": "Prism Avon Base Cabinet 12 in. W in Midnight \u2013 Assembled (B12)",
+   "missing": [
+    "Standard (door + drawer) + Spice Pull-Out"
+   ]
+  }
+ ],
+ "image_problems": [
+  "variant uses product image: B12FH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B12FH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B15FH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B15FH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B18FH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B18FH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B21FH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B21FH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B24BFH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B24BFH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B27BFH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B27BFH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B30BFH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B30BFH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B33BFH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B36BFH (RT1) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B36BFH (RT2) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B39FH (RT1L/1R) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B39FH (RT2L/2R) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B42FH (RT1L/1R) - PRISM-AVON MIDNIGHT",
+  "variant uses product image: B42FH (RT2L/2R) - PRISM-AVON MIDNIGHT",
+  "NO IMAGE: Prism Avon Sink Base Cabinet 33 in. W in Midnight \u2013 Assembled (SB33B)",
+  "NO IMAGE: Prism Avon Sink Base Cabinet 36 in. W in Midnight \u2013 Assembled (SB36B)",
+  "NO IMAGE: Prism Avon Wall Cabinet 39 in. W x 36 in. H in Midnight \u2013 Assembled (W3936)",
+  "NO IMAGE: Prism Avon Wall Cabinet 60 in. W x 30 in. H in Midnight \u2013 Assembled (W6030-O)",
+  "variant uses product image: UC18X84 - PRISM-AVON MIDNIGHT"
+ ],
+ "counts": {
+  "live_skus": 327,
+  "products": 192,
+  "skus": 327,
+  "with_variants": 40,
+  "image_rows": 294,
+  "variant_rows": 175,
+  "ada_products": 0
+ }
+}

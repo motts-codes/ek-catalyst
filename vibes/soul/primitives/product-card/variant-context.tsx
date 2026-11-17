@@ -75,16 +75,20 @@ export function useCardVariant(): VariantState | null {
 
 // The card photo: the chosen variant's when there is one, else the product's. A change
 // cross-fades: the photo on screen stays until the next one has loaded, then the new one fades
-// in over it, so there is never a blank frame or a pop.
+// in over it, so there is never a blank frame or a pop. With `hoverSrc` the product's second
+// photo sits on top and fades in while the card is hovered (not once a swatch has swapped the
+// photo for a variant's own).
 export function CardImage({
   src,
   alt,
+  hover: hoverImage,
   className,
   sizes,
   preload,
 }: {
   src: string;
   alt: string;
+  hover?: { src: string; alt: string };
   className?: string;
   sizes?: string;
   preload?: boolean;
@@ -94,6 +98,11 @@ export function CardImage({
   const [shown, setShown] = useState(target);
   const [ready, setReady] = useState(true);
   const incoming = target.src !== shown.src ? target : null;
+  const hoverSrc = hoverImage?.src;
+  const hover =
+    hoverSrc != null && hoverSrc !== shown.src && state?.variant?.image == null && incoming == null
+      ? hoverSrc
+      : null;
 
   useEffect(() => {
     if (incoming != null) setReady(false);
@@ -118,6 +127,7 @@ export function CardImage({
           'transition-opacity duration-300',
           // Dimmed while the next photo loads (the click registered), gone once it has faded in.
           incoming != null && (ready ? 'opacity-0' : 'opacity-60'),
+          hover != null && 'group-hover:opacity-0',
         )}
         fill
         preload={preload}
@@ -137,6 +147,19 @@ export function CardImage({
           onLoad={() => setReady(true)}
           sizes={sizes}
           src={incoming.src}
+        />
+      )}
+      {hover != null && (
+        <Image
+          alt=""
+          aria-hidden
+          className={clsx(
+            className,
+            'opacity-0 transition-opacity duration-300 group-hover:opacity-100',
+          )}
+          fill
+          sizes={sizes}
+          src={hover}
         />
       )}
     </>

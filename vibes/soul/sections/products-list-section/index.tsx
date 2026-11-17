@@ -9,7 +9,12 @@ import {
   NumberedPagination,
   type NumberedPaginationInfo,
 } from '@/vibes/soul/primitives/numbered-pagination';
-import { Product, type ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
+import {
+  type CardSavedItems,
+  Product,
+  type ProductCardAddToCartAction,
+  type ProductCardWishlistAction,
+} from '@/vibes/soul/primitives/product-card';
 import * as SidePanel from '@/vibes/soul/primitives/side-panel';
 import { Breadcrumb, Breadcrumbs, BreadcrumbsSkeleton } from '@/vibes/soul/sections/breadcrumbs';
 import { ProductList } from '@/vibes/soul/sections/product-list';
@@ -65,6 +70,8 @@ interface Props {
   addToCartAction?: ProductCardAddToCartAction;
   /** In-page anchor for quote-only products' CTA (when the page renders the quote form). */
   quoteHref?: string;
+  wishlistAction?: ProductCardWishlistAction;
+  savedItems?: Streamable<CardSavedItems | null>;
   emptyStateSubtitle?: Streamable<string>;
   emptyStateTitle?: Streamable<string>;
   placeholderCount?: number;
@@ -105,6 +112,8 @@ export function ProductsListSection({
   compareParamName,
   addToCartAction,
   quoteHref,
+  wishlistAction,
+  savedItems,
   emptyStateSubtitle,
   emptyStateTitle,
   placeholderCount = 8,
@@ -265,8 +274,10 @@ export function ProductsListSection({
                 products={products}
                 quoteHref={quoteHref}
                 removeLabel={removeLabel}
+                savedItems={savedItems}
                 showCompare={showCompare}
                 showRating={showRating}
+                wishlistAction={wishlistAction}
               />
 
               {pagination ? (

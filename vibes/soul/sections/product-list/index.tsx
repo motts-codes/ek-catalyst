@@ -3,10 +3,12 @@ import { clsx } from 'clsx';
 import { Stream, Streamable } from '@/vibes/soul/lib/streamable';
 import { CompareDrawer, CompareDrawerProvider } from '@/vibes/soul/primitives/compare-drawer';
 import {
+  type CardSavedItems,
   type Product,
   ProductCard,
   type ProductCardAddToCartAction,
   ProductCardSkeleton,
+  type ProductCardWishlistAction,
 } from '@/vibes/soul/primitives/product-card';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 
@@ -24,6 +26,9 @@ interface ProductListProps {
   addToCartAction?: ProductCardAddToCartAction;
   /** In-page anchor for quote-only products' CTA (pages that render the quote form below). */
   quoteHref?: string;
+  /** Wish-list heart on each card; `savedItems` (null for guests) fills the saved ones. */
+  wishlistAction?: ProductCardWishlistAction;
+  savedItems?: Streamable<CardSavedItems | null>;
   emptyStateTitle?: Streamable<string>;
   emptyStateSubtitle?: Streamable<string>;
   placeholderCount?: number;
@@ -74,6 +79,8 @@ export function ProductList({
   compareParamName = 'compare',
   addToCartAction,
   quoteHref,
+  wishlistAction,
+  savedItems: streamableSavedItems = null,
   emptyStateTitle = 'No products found',
   emptyStateSubtitle = 'Try browsing our complete catalog of products.',
   placeholderCount = 8,
@@ -92,6 +99,7 @@ export function ProductList({
         streamableCompareProducts,
         streamableRemoveLabel,
         streamableMaxCompareLimitMessage,
+        streamableSavedItems,
       ])}
     >
       {([
@@ -101,6 +109,7 @@ export function ProductList({
         compareProducts,
         removeLabel,
         maxCompareLimitMessage,
+        savedItems,
       ]) => {
         if (products.length === 0) {
           return (
@@ -133,6 +142,11 @@ export function ProductList({
                     quoteHref={quoteHref}
                     showCompare={showCompare}
                     showRating={showRating}
+                    wishlist={
+                      savedItems?.items[product.id] ??
+                      (savedItems ? { wishlistId: savedItems.defaultWishlistId } : undefined)
+                    }
+                    wishlistAction={wishlistAction}
                   />
                 ))}
               </div>

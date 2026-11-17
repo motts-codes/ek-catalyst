@@ -12,6 +12,8 @@ import { facetsTransformer } from '~/data-transformers/facets-transformer';
 import { productCardTransformer } from '~/data-transformers/product-card-transformer';
 import { getPreferredCurrencyCode } from '~/lib/currency';
 import { getMakeswiftPageMetadata } from '~/lib/makeswift';
+import { cardWishlistAction } from '~/lib/wishlist/card-wishlist-action';
+import { getSavedItems } from '~/lib/wishlist/saved-items';
 
 import { MAX_COMPARE_LIMIT } from '../../compare/page-data';
 import { getCompareProducts as getCompareProductsData } from '../fetch-compare-products';
@@ -259,6 +261,7 @@ export default async function Search(props: Props) {
       rangeFilterApplyLabel={t('FacetedSearch.Range.apply')}
       removeLabel={t('Compare.remove')}
       resetFiltersLabel={t('FacetedSearch.resetFilters')}
+      savedItems={Streamable.from(async () => getSavedItems(await getSessionCustomerAccessToken()))}
       showCompare={productComparisonsEnabled}
       showRating={showRating}
       sortDefaultValue="featured"
@@ -277,6 +280,7 @@ export default async function Search(props: Props) {
       sortParamName="sort"
       title={streamableTitle}
       totalCount={streamableTotalCount}
+      wishlistAction={cardWishlistAction}
     />
   );
 }

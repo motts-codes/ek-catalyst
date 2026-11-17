@@ -38,6 +38,20 @@ are — `customFields(first: 50)` and `productOptions(first: 1)`):
   `getCardBadges`. Colors reuse the PDP pill CSS vars (`--pill-*-background`), so cards and PDP match.
   Order: New → Bestseller → Trending. Rendered as a **row** of pills, top-left over the image.
 - **`requiresOptions`** — true if any product option `isRequired`. Drives the CTA (below).
+- **`hoverImage`** — the first gallery image that is not the default (`images(first: 3)` in the
+  fragment). `CardImage` fades it in over the main photo while the card is hovered; nothing on
+  touch screens, and skipped once a swatch has swapped in a variant's own photo.
+
+## Wish-list heart
+
+`<ProductCard wishlistAction wishlist>` renders `WishlistHeart` (`product-card/wishlist-heart.tsx`)
+top-right of the photo (below the sale blurb when there is one). Hidden until hover on mouse
+devices, always visible on touch screens and whenever the product is saved. The listing pages
+(category / brand / search) pass `wishlistAction={cardWishlistAction}` (`lib/wishlist/card-wishlist-action.ts`)
+and `savedItems={getSavedItems(customerAccessToken)}` (`lib/wishlist/saved-items.ts`, one query per
+page for a signed-in customer; `null` for guests). A click saves to the customer's first wish list
+(created on the first save) or removes the item; guests are sent to `/login?redirectTo=<listing>`.
+Carousels and the Makeswift card don't pass the action, so they show no heart.
 
 ## Visual conventions
 
