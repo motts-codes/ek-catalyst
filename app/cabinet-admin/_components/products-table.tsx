@@ -6,9 +6,9 @@ import { useState } from 'react';
 
 import {
   DEFAULT_PRODUCT_STATUS,
-  type ProductsPage,
   type ProductStatusFilter,
-} from '~/lib/cabinet-admin/products-list';
+} from '~/lib/cabinet-admin/product-status';
+import { type ProductsPage } from '~/lib/cabinet-admin/products-list';
 
 // Edit-only, searchable, paginated data table of products. Search + pagination are server-side
 // (via URL params) so it scales to thousands of products.
@@ -34,7 +34,7 @@ export function ProductsTable({
   // filter stays out of the URL.
   const go = (params: Record<string, string | number>) => {
     const sp = new URLSearchParams({ tab: 'products' });
-    const merged = { status, ...params };
+    const merged: Record<string, string | number> = { status, ...params };
 
     Object.entries(merged).forEach(([k, v]) => {
       if (k === 'status' && v === DEFAULT_PRODUCT_STATUS) return;

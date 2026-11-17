@@ -11,11 +11,8 @@ import { readGalleryConfig } from '~/lib/cabinet-admin/gallery-shape';
 import { listCabinetCollections } from '~/lib/cabinet-admin/metafields-api';
 import { readCabinetOffers } from '~/lib/cabinet-admin/offers-shape';
 import { readProduct } from '~/lib/cabinet-admin/product-shape';
-import {
-  getAdminProducts,
-  parseProductStatus,
-  type ProductStatusFilter,
-} from '~/lib/cabinet-admin/products-list';
+import { parseProductStatus, type ProductStatusFilter } from '~/lib/cabinet-admin/product-status';
+import { getAdminProducts } from '~/lib/cabinet-admin/products-list';
 import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { galleryKitchens, kitchenOptions } from '~/lib/inspiration/kitchen-gallery-data';
 

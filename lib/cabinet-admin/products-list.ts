@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { DEFAULT_PRODUCT_STATUS, type ProductStatusFilter } from './product-status';
+
 // Server-side product list for the admin Products tab. Search + pagination happen on the
 // BigCommerce Management API so this scales to thousands of products (never load them all client-side).
 
@@ -19,15 +21,6 @@ export interface AdminProductRow {
   sku: string;
   type: string; // derived (cabinet program / accessory / other)
   isVisible: boolean;
-}
-
-/** Which products the list shows; the default hides products that are not visible on the storefront. */
-export type ProductStatusFilter = 'active' | 'hidden' | 'all';
-
-export const DEFAULT_PRODUCT_STATUS: ProductStatusFilter = 'active';
-
-export function parseProductStatus(value: string | undefined): ProductStatusFilter {
-  return value === 'hidden' || value === 'all' ? value : DEFAULT_PRODUCT_STATUS;
 }
 
 export interface ProductsPage {
