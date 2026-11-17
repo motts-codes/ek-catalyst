@@ -73,12 +73,12 @@ export function WishlistHeart({
         aria-label={label}
         aria-pressed={shown}
         className={clsx(
-          'flex size-[26px] items-center justify-center rounded-full border bg-white shadow-[0_2px_8px_rgb(0_0_0/0.12)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--favorite-focus,hsl(var(--primary)))]',
-          // Saved: pale red ring, red heart. Not saved: grey ring, black heart, both turning red
-          // on hover so the button answers before the click.
+          'flex size-[26px] items-center justify-center rounded-full border bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--favorite-focus,hsl(var(--primary)))]',
+          // Saved: pale red ring, red heart, flat. Not saved: grey ring, black heart, a soft
+          // shadow to lift it off the photo, both turning red on hover.
           shown
             ? 'border-[var(--favorite-on-border,#fcb6bb)] text-[var(--favorite-on-icon,var(--button-primary-background,#d90716))]'
-            : 'border-contrast-100 text-foreground hover:border-[var(--favorite-on-border,#fcb6bb)] hover:text-[var(--favorite-on-icon,var(--button-primary-background,#d90716))]',
+            : 'border-contrast-100 text-foreground shadow-[0_2px_8px_rgb(0_0_0/0.12)] hover:border-[var(--favorite-on-border,#fcb6bb)] hover:text-[var(--favorite-on-icon,var(--button-primary-background,#d90716))]',
         )}
         type="submit"
       >

@@ -109,11 +109,11 @@ export function CardImage({
   }, [incoming]);
 
   // Once the new photo has loaded and faded in, it becomes the one on screen and the old one
-  // is dropped (the fade is 300ms; wait a touch longer so it has finished).
+  // is dropped (the fade is 500ms, set by the card's className; wait a touch longer).
   useEffect(() => {
     if (incoming == null || !ready) return;
 
-    const timer = window.setTimeout(() => setShown(incoming), 350);
+    const timer = window.setTimeout(() => setShown(incoming), 550);
 
     return () => window.clearTimeout(timer);
   }, [incoming, ready]);
@@ -124,7 +124,6 @@ export function CardImage({
         alt={shown.alt}
         className={clsx(
           className,
-          'transition-opacity duration-300',
           // Dimmed while the next photo loads (the click registered), gone once it has faded in.
           incoming != null && (ready ? 'opacity-0' : 'opacity-60'),
           hover != null && 'group-hover:opacity-0',
@@ -137,11 +136,7 @@ export function CardImage({
       {incoming != null && (
         <Image
           alt={incoming.alt}
-          className={clsx(
-            className,
-            'transition-opacity duration-300',
-            ready ? 'opacity-100' : 'opacity-0',
-          )}
+          className={clsx(className, ready ? 'opacity-100' : 'opacity-0')}
           fill
           key={incoming.src}
           onLoad={() => setReady(true)}
@@ -153,10 +148,7 @@ export function CardImage({
         <Image
           alt=""
           aria-hidden
-          className={clsx(
-            className,
-            'opacity-0 transition-opacity duration-300 group-hover:opacity-100',
-          )}
+          className={clsx(className, 'opacity-0 group-hover:opacity-100')}
           fill
           sizes={sizes}
           src={hover}

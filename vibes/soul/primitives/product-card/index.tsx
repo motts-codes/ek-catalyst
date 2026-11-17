@@ -228,7 +228,8 @@ export function ProductCard({
                 alt={image.alt}
                 className={clsx(
                   // Contain (show the whole product, not cropped) and scale DOWN on hover.
-                  'h-full w-full scale-100 select-none object-contain p-4 transition-transform duration-500 ease-out group-hover:scale-95',
+                  // One transition for the hover scale and the photo crossfades (variant swap, hover photo).
+                  'h-full w-full scale-100 select-none object-contain p-4 transition-[transform,opacity] duration-500 ease-out group-hover:scale-95',
                   {
                     light: 'bg-[var(--product-card-light-background,hsl(var(--contrast-100))]',
                     dark: 'bg-[var(--product-card-dark-background,hsl(var(--contrast-500))]',
