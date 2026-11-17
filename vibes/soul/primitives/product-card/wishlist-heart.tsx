@@ -73,14 +73,19 @@ export function WishlistHeart({
         aria-label={label}
         aria-pressed={shown}
         className={clsx(
-          'flex size-9 items-center justify-center rounded-full border bg-white shadow-[0_2px_8px_rgb(0_0_0/0.12)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--favorite-focus,hsl(var(--primary)))]',
+          'flex size-[26px] items-center justify-center rounded-full border bg-white shadow-[0_2px_8px_rgb(0_0_0/0.12)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--favorite-focus,hsl(var(--primary)))]',
+          // Saved: pale red ring, red heart. Not saved: grey ring, black heart, both turning red
+          // on hover so the button answers before the click.
           shown
             ? 'border-[var(--favorite-on-border,#fcb6bb)] text-[var(--favorite-on-icon,var(--button-primary-background,#d90716))]'
-            : 'border-contrast-100 text-foreground hover:border-contrast-300',
+            : 'border-contrast-100 text-foreground hover:border-[var(--favorite-on-border,#fcb6bb)] hover:text-[var(--favorite-on-icon,var(--button-primary-background,#d90716))]',
         )}
         type="submit"
       >
-        <Heart filled={shown} title={label} />
+        {/* The shared heart is drawn at 20px; 0.7 brings it down with the smaller button. */}
+        <span className="flex origin-center scale-[0.7]">
+          <Heart filled={shown} title={label} />
+        </span>
       </button>
     </form>
   );

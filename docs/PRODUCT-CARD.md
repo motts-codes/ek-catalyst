@@ -51,7 +51,8 @@ devices, always visible on touch screens and whenever the product is saved. The 
 and `savedItems={getSavedItems(customerAccessToken)}` (`lib/wishlist/saved-items.ts`, one query per
 page for a signed-in customer; `null` for guests). A click saves to the customer's first wish list
 (created on the first save) or removes the item; guests are sent to `/login?redirectTo=<listing>`.
-Carousels and the Makeswift card don't pass the action, so they show no heart.
+The PDP related-products carousel passes the same two props through `FeaturedProductCarousel` /
+`ProductCarousel`; the home carousels and the Makeswift card don't, so they show no heart.
 
 ## Visual conventions
 

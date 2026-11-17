@@ -25,6 +25,8 @@ import { getMakeswiftPageMetadata } from '~/lib/makeswift';
 import { ProductDetail } from '~/lib/makeswift/components/product-detail';
 import { getRecaptchaSiteKey } from '~/lib/recaptcha';
 import { getMetadataAlternates } from '~/lib/seo/canonical';
+import { cardWishlistAction } from '~/lib/wishlist/card-wishlist-action';
+import { getSavedItems } from '~/lib/wishlist/saved-items';
 
 import { productCardAddToCartAction } from '../../(faceted)/product-card-add-to-cart';
 
@@ -906,8 +908,10 @@ export default async function Product({ params, searchParams }: Props) {
         nextLabel={t('RelatedProducts.nextProducts')}
         previousLabel={t('RelatedProducts.previousProducts')}
         products={streameableRelatedProducts}
+        savedItems={Streamable.from(async () => getSavedItems(await getSessionCustomerAccessToken()))}
         scrollbarLabel={t('RelatedProducts.scrollbar')}
         title={t('RelatedProducts.title')}
+        wishlistAction={cardWishlistAction}
       />
 
       {showRating && baseProduct.reviewSummary.numberOfReviews > 0 && (

@@ -1,6 +1,10 @@
 import { Streamable } from '@/vibes/soul/lib/streamable';
 import { AnimatedUnderline } from '@/vibes/soul/primitives/animated-underline';
-import { type ProductCardAddToCartAction } from '@/vibes/soul/primitives/product-card';
+import {
+  type CardSavedItems,
+  type ProductCardAddToCartAction,
+  type ProductCardWishlistAction,
+} from '@/vibes/soul/primitives/product-card';
 import { CarouselProduct, ProductCarousel } from '@/vibes/soul/sections/product-carousel';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Link } from '~/components/link';
@@ -26,6 +30,9 @@ export interface FeaturedProductCarouselProps {
   density?: 'default' | 'compact';
   /** Direct add-to-cart for the cards (swatches, Add to Cart); without it they link to the PDP. */
   addToCartAction?: ProductCardAddToCartAction;
+  /** Wish-list heart on each card; `savedItems` (null for guests) fills the saved ones. */
+  wishlistAction?: ProductCardWishlistAction;
+  savedItems?: Streamable<CardSavedItems | null>;
 }
 
 // eslint-disable-next-line valid-jsdoc
@@ -56,6 +63,8 @@ export function FeaturedProductCarousel({
   hideOverflow = false,
   density = 'default',
   addToCartAction,
+  wishlistAction,
+  savedItems,
 }: FeaturedProductCarouselProps) {
   return (
     <SectionLayout containerSize="2xl">
@@ -87,7 +96,9 @@ export function FeaturedProductCarousel({
           placeholderCount={placeholderCount}
           previousLabel={previousLabel}
           products={products}
+          savedItems={savedItems}
           scrollbarLabel={scrollbarLabel}
+          wishlistAction={wishlistAction}
         />
       </div>
     </SectionLayout>

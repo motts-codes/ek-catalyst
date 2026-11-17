@@ -11,10 +11,12 @@ import {
   CarouselScrollbar,
 } from '@/vibes/soul/primitives/carousel';
 import {
+  type CardSavedItems,
   type Product,
   ProductCard,
   type ProductCardAddToCartAction,
   ProductCardSkeleton,
+  type ProductCardWishlistAction,
 } from '@/vibes/soul/primitives/product-card';
 import * as Skeleton from '@/vibes/soul/primitives/skeleton';
 
@@ -45,6 +47,9 @@ export interface ProductCarouselProps {
   CardComponent?: typeof ProductCard;
   /** Direct add-to-cart for no-option products; without it cards link to the product page. */
   addToCartAction?: ProductCardAddToCartAction;
+  /** Wish-list heart on each card; `savedItems` (null for guests) fills the saved ones. */
+  wishlistAction?: ProductCardWishlistAction;
+  savedItems?: Streamable<CardSavedItems | null>;
 }
 
 const ITEM_CLASS = {
@@ -86,6 +91,8 @@ export function ProductCarousel({
   controls,
   CardComponent = ProductCard,
   addToCartAction,
+  wishlistAction,
+  savedItems: streamableSavedItems = null,
 }: ProductCarouselProps) {
   return (
     <Stream
@@ -98,9 +105,9 @@ export function ProductCarousel({
           placeholderCount={placeholderCount}
         />
       }
-      value={streamableProducts}
+      value={Streamable.all([streamableProducts, streamableSavedItems])}
     >
-      {(products) => {
+      {([products, savedItems]) => {
         if (products.length === 0) {
           return (
             <ProductsCarouselEmptyState
@@ -138,6 +145,11 @@ export function ProductCarousel({
                     colorScheme={colorScheme}
                     imageSizes="(min-width: 42rem) 25vw, (min-width: 32rem) 33vw, (min-width: 28rem) 50vw, 100vw"
                     product={{ id, ...product }}
+                    wishlist={
+                      savedItems?.items[id] ??
+                      (savedItems ? { wishlistId: savedItems.defaultWishlistId } : undefined)
+                    }
+                    wishlistAction={wishlistAction}
                   />
                 </CarouselItem>
               ))}

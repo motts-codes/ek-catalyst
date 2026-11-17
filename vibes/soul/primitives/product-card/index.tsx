@@ -119,7 +119,7 @@ function CardHeart({
   return (
     <WishlistHeart
       action={action}
-      className={belowSaleBlurb ? 'right-2 top-[60px] @md:top-[66px]' : 'right-2 top-2'}
+      className={belowSaleBlurb ? 'right-2 top-[58px] @md:top-[64px]' : 'right-2 top-2'}
       productId={Number(id)}
       wishlist={wishlist}
     />
