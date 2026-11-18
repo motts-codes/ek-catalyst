@@ -47,6 +47,7 @@ import { TrackingFields } from '@/vibes/soul/form/tracking-fields';
 import { Button, ButtonProps } from '@/vibes/soul/primitives/button';
 
 import { formatUsPhone } from './phone';
+import { requiredMessageFor } from './required-message';
 import {
   Field,
   FieldGroup,
@@ -219,21 +220,35 @@ export function DynamicForm<F extends Field>({
   const dynamicSchema = schema(fields, passwordComplexity, errorTranslations);
   // Field labels, so an empty required field without a translated message still says which
   // field it is ("Phone number is required") rather than a bare "Required".
-  const labelByName = new Map<string, string>();
+  const fieldByName = new Map<string, Field>();
 
   fields
     .flatMap((f) => (Array.isArray(f) ? f : [f]))
-    .forEach((field) => labelByName.set(field.name, field.label ?? field.name));
+    .forEach((field) => fieldByName.set(field.name, field));
 
-  const labelOf = (issue: z.ZodIssueOptionalMessage): string | undefined => {
+  const fieldOf = (issue: z.ZodIssueOptionalMessage): Field | undefined => {
     const name = issue.path[0];
 
-    return typeof name === 'string' ? labelByName.get(name) : undefined;
+    return typeof name === 'string' ? fieldByName.get(name) : undefined;
   };
-  const requiredMessage = (issue: z.ZodIssueOptionalMessage): string | undefined => {
-    const label = labelOf(issue);
+  const labelOf = (issue: z.ZodIssueOptionalMessage): string | undefined => {
+    const field = fieldOf(issue);
 
-    return issue.code === z.ZodIssueCode.invalid_type && label ? `${label} is required` : undefined;
+    return field ? (field.label ?? field.name) : undefined;
+  };
+  // Left empty: a missing value (invalid_type), an empty multi-select (too_small on the array) or
+  // an unticked required checkbox (invalid_literal 'true').
+  const requiredMessage = (issue: z.ZodIssueOptionalMessage): string | undefined => {
+    const field = fieldOf(issue);
+
+    if (!field) return undefined;
+
+    const empty =
+      issue.code === z.ZodIssueCode.invalid_type ||
+      (issue.code === z.ZodIssueCode.too_small && field.type === 'checkbox-group') ||
+      (issue.code === z.ZodIssueCode.invalid_literal && field.type === 'checkbox');
+
+    return empty ? requiredMessageFor(field) : undefined;
   };
   // Every message names its field ("Please enter a valid email"), never a bare "check your
   // input": the visitor should know which box to fix without hunting (standing rule, 18 Nov 2026).
