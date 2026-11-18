@@ -134,8 +134,17 @@ export function RedBox({
   kicker?: string;
   title?: string;
   children: ReactNode;
-  /** A photo (or its placeholder) on the right of the panel, the copy on the left. */
-  media?: { image?: PageImage; imageLabel?: string; split?: '70/30' | '60/40' | '50/50' };
+  /**
+   * A photo (or its placeholder) on the right of the panel, the copy on the left. `bleed`
+   * (default) runs the photo to the panel's edges; `enclosed` keeps it inside the panel padding
+   * as a rounded picture, for a subject on its own ground (an icon render) rather than a scene.
+   */
+  media?: {
+    image?: PageImage;
+    imageLabel?: string;
+    split?: '70/30' | '60/40' | '50/50';
+    style?: 'bleed' | 'enclosed';
+  };
   /** `tall`: a bigger panel (more vertical padding, a taller photo) for a statement band. */
   size?: 'default' | 'tall';
   className?: string;
@@ -181,21 +190,32 @@ export function RedBox({
           </div>
           <div
             className={clsx(
-              'relative aspect-[16/9] bg-contrast-100 @3xl:aspect-auto',
-              size === 'tall' ? '@3xl:min-h-[24rem]' : '@3xl:min-h-[14rem]',
+              'relative',
+              media.style === 'enclosed'
+                ? 'px-6 pb-6 @xl:px-12 @xl:pb-12 @xl:@3xl:pr-10 @3xl:py-10 @3xl:pl-0 @3xl:pr-8'
+                : 'aspect-[16/9] bg-contrast-100 @3xl:aspect-auto',
+              media.style !== 'enclosed' &&
+                (size === 'tall' ? '@3xl:min-h-[24rem]' : '@3xl:min-h-[14rem]'),
             )}
           >
-            {media.image ? (
-              <Image
-                alt={media.image.alt}
-                className="object-cover"
-                fill
-                sizes="(min-width: 56rem) 50vw, 100vw"
-                src={media.image.src}
-              />
-            ) : (
-              <MediaPlaceholder label={media.imageLabel ?? 'Photo'} />
-            )}
+            <div
+              className={clsx(
+                media.style === 'enclosed' &&
+                  'relative aspect-[4/3] overflow-hidden rounded-2xl bg-contrast-100 @3xl:aspect-auto @3xl:h-full @3xl:min-h-[14rem]',
+              )}
+            >
+              {media.image ? (
+                <Image
+                  alt={media.image.alt}
+                  className="object-cover"
+                  fill
+                  sizes="(min-width: 56rem) 50vw, 100vw"
+                  src={media.image.src}
+                />
+              ) : (
+                <MediaPlaceholder label={media.imageLabel ?? 'Photo'} />
+              )}
+            </div>
           </div>
         </div>
       ) : (

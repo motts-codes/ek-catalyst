@@ -4,8 +4,9 @@ import { setRequestLocale } from 'next-intl/server';
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { CardsRow } from '@/vibes/soul/sections/cards-row';
 import { CategoryPoints } from '@/vibes/soul/sections/category-hero';
+import { HomeSection } from '@/vibes/soul/sections/home-section';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
-import { PageBreadcrumbs, PageHero, Prose } from '@/vibes/soul/sections/page-kit';
+import { PageBreadcrumbs, PageHero, RedBox } from '@/vibes/soul/sections/page-kit';
 import { submitSupportLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -116,15 +117,35 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         tint
         title="How the site is built to be usable"
       />
-      <Prose
-        body={[
-          "Some parts of the site come from partners: the payment step, the embedded maps and the YouTube videos. Each partner's own accessibility statement covers those parts.",
-          'Our offer banners are images. Each one has full alt text, and the offer details are written out in plain text below it.',
-          "Need a spec sheet, a quote or anything else in another format? Ask us, and we'll send it in a format that works for you.",
-        ]}
-        kicker="Known limitations"
-        title="What we're still working on"
-      />
+      <HomeSection compact>
+        <RedBox
+          kicker="Known limitations"
+          media={{
+            image: {
+              src: '/images/pages/accessibility/limitations-checklist-wrench.webp',
+              alt: 'A white checklist with two items ticked and one open, a wrench beside it, on red',
+            },
+            split: '60/40',
+            style: 'enclosed',
+          }}
+          title="What we're still working on"
+        >
+          <div className="max-w-xl space-y-4 text-sm leading-relaxed text-white/85 @xl:text-base">
+            <p>
+              Some parts of the site come from partners: the payment step, the embedded maps and the
+              YouTube videos. Each partner's own accessibility statement covers those parts.
+            </p>
+            <p>
+              Our offer banners are images. Each one has full alt text, and the offer details are
+              written out in plain text below it.
+            </p>
+            <p>
+              Need a spec sheet, a quote or anything else in another format? Ask us, and we'll send
+              it in a format that works for you.
+            </p>
+          </div>
+        </RedBox>
+      </HomeSection>
       <LeadFormCard
         action={submitSupportLead}
         description="Tell us which page and what happened. We'll reply within 3 business days."
