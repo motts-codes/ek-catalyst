@@ -49,7 +49,7 @@ export const PROJECTS: Project[] = [
         href: '/cabinets/avon?program=rta',
       },
       { name: 'Brushed nickel pulls', meta: '$[X] each', href: '#' },
-      { name: 'Quartz countertop: [colour]', meta: 'From $59.99/sq ft', href: '#' },
+      { name: 'Quartz countertop: [color]', meta: 'From $59.99/sq ft', href: '#' },
       { name: 'Workstation sink, 30 in.', meta: '$[X]', href: '#' },
     ],
     quote: {

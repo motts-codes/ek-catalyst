@@ -42,8 +42,10 @@ export function startOfToday(): Date {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 }
 
+// Always month first, to match the MM/DD/YYYY placeholder: a UK or Indian browser would
+// otherwise show "25/11/2026" under it.
 const formatForDisplay = (date: Date | undefined) =>
-  isValidDate(date) ? Intl.DateTimeFormat().format(date) : undefined;
+  isValidDate(date) ? new Intl.DateTimeFormat('en-US').format(date) : undefined;
 
 type Props = {
   defaultValue?: string | Date;
@@ -73,14 +75,20 @@ const DatePicker = forwardRef<ComponentRef<typeof Input>, Props>(
     // State to manage the selected date (uncontrolled use)
     const [date, setDate] = useState<Date | undefined>(() => parseISODate(defaultValue));
     const current = selected ?? date;
+    // The calendar closes once a day is picked, so it never sits over the buttons below.
+    const [open, setOpen] = useState(false);
+    const handleSelect = (next: Date | undefined) => {
+      (onSelect ?? setDate)(next);
+      if (next != null) setOpen(false);
+    };
 
-    // The visible box shows the day the way the visitor's locale writes it. The form gets the
-    // same day as `yyyy-mm-dd` from the hidden input below, so the value never depends on the
-    // locale (a day-first "25/11/2026" cannot be parsed back; that crashed the booking form).
+    // The visible box shows the day month-first. The form gets the same day as `yyyy-mm-dd` from
+    // the hidden input below, so the value never depends on the locale (a day-first
+    // "25/11/2026" cannot be parsed back; that crashed the booking form).
     const display = formatForDisplay(current) ?? '';
 
     return (
-      <PopoverPrimitive.Root>
+      <PopoverPrimitive.Root onOpenChange={setOpen} open={open}>
         <PopoverPrimitive.Trigger asChild>
           <Input
             {...props}
@@ -111,7 +119,7 @@ const DatePicker = forwardRef<ComponentRef<typeof Input>, Props>(
               colorScheme={colorScheme}
               disabled={disabledDays}
               mode="single"
-              onSelect={onSelect ?? setDate}
+              onSelect={handleSelect}
               selected={current}
             />
           </PopoverPrimitive.Content>

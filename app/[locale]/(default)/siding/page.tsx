@@ -10,6 +10,7 @@ import {
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { CODE_PAGE_HERO_IMAGES } from '~/lib/category/category-content';
+import { ZIP_MESSAGE, ZIP_PATTERN } from '~/lib/forms/fields';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
@@ -25,7 +26,14 @@ const FIELDS: Array<Field | Field[]> = [
   ],
   [
     { type: 'tel', name: 'phone', label: 'Phone', required: true },
-    { type: 'text', name: 'zip', label: 'ZIP code', required: true },
+    {
+      type: 'text',
+      name: 'zip',
+      label: 'ZIP code',
+      pattern: ZIP_PATTERN,
+      patternMessage: ZIP_MESSAGE,
+      required: true,
+    },
   ],
   {
     type: 'select',
@@ -39,8 +47,15 @@ const FIELDS: Array<Field | Field[]> = [
       { label: 'Not sure yet', value: 'unsure' },
     ],
   },
-  { type: 'text', name: 'squares', label: 'Approximate squares, or the house size' },
-  { type: 'textarea', name: 'notes', label: 'Colour, timing, anything else' },
+  {
+    type: 'text',
+    name: 'squares',
+    label: 'Approximate squares, or the house size',
+    // Free text ("20 squares", "2,000 sq ft"), but it has to carry a number.
+    pattern: String.raw`^[^-]*\d[^-]*$`,
+    patternMessage: 'Please include a number, like 20 squares or 2,000 sq ft',
+  },
+  { type: 'textarea', name: 'notes', label: 'Color, timing, anything else' },
 ];
 
 const COLOURS = [
@@ -75,7 +90,7 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
         fine="Lead times to be confirmed."
         points={[
           { icon: 'clock', label: 'Quote back within 24 hours' },
-          { icon: 'stock', label: 'Stock colours ready in [X] days' },
+          { icon: 'stock', label: 'Stock colors ready in [X] days' },
           { icon: 'returns', label: 'Free elevation review' },
         ]}
       />
@@ -132,7 +147,7 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
             alt: `${name} clapboard vinyl siding, close up`,
           },
         }))}
-        title="Shop by colour"
+        title="Shop by color"
       />
       <LeadFormCard
         action={submitQuoteLead}

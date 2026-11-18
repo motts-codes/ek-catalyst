@@ -25,7 +25,7 @@ runtime.registerComponent(MSShowroomBand, {
     description: TextArea({
       label: 'Description',
       defaultValue:
-        'Bring your Pinterest saves, your measurements, or just an idea. See the real colours in real light, feel the finishes, test the soft-close, and sit down with a Project Manager who’ll price your kitchen, free.',
+        'Bring your Pinterest saves, your measurements, or just an idea. See the real colors in real light, feel the finishes, test the soft-close, and sit down with a Project Manager who’ll price your kitchen, free.',
     }),
     showrooms: List({
       label: 'Showrooms',

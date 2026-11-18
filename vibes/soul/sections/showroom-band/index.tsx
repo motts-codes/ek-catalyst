@@ -39,7 +39,7 @@ interface Props {
 export function ShowroomBand({
   kicker = 'Six showrooms across Connecticut',
   title = 'Open the drawers before you buy them.',
-  description = 'Bring your Pinterest saves, your measurements, or just an idea. See the real colours in real light, feel the finishes, test the soft-close, and sit down with a Project Manager who’ll price your kitchen, free.',
+  description = 'Bring your Pinterest saves, your measurements, or just an idea. See the real colors in real light, feel the finishes, test the soft-close, and sit down with a Project Manager who’ll price your kitchen, free.',
   showrooms,
   interval = 3500,
   tint = false,

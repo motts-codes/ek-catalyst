@@ -132,6 +132,83 @@ function readFormValues(formId: string): Record<string, string> {
   return values;
 }
 
+// A wizard draft kept in session storage: when it was saved and the declared fields' values.
+interface FormDraft {
+  at: number;
+  values: Record<string, string | string[]>;
+}
+
+const DRAFT_MAX_AGE = 2 * 60 * 60 * 1000;
+
+function isFormDraft(value: unknown): value is FormDraft {
+  if (typeof value !== 'object' || value === null) return false;
+
+  const draft: Partial<Record<keyof FormDraft, unknown>> = value;
+
+  return typeof draft.at === 'number' && typeof draft.values === 'object' && draft.values !== null;
+}
+
+const draftKey = () => `ek-form-draft:${window.location.pathname}`;
+
+// Fields whose control is a Radix radio / checkbox: their native inputs are hidden mirrors, so
+// a restored value is applied by clicking the control, the same path a tap takes (Conform's own
+// update would tick the mirror and leave the control as it was).
+const CHOICE_FIELD_TYPES = new Set<Field['type']>([
+  'radio-group',
+  'button-radio-group',
+  'card-radio-group',
+  'picture-radio-group',
+  'swatch-radio-group',
+  'checkbox-group',
+  'checkbox',
+]);
+
+// One click per tick: a checkbox group's handler reads the group's current value, so two clicks
+// in the same tick would each start from the old one and the second would undo the first.
+function restoreChoices(formId: string, values: FormDraft['values']) {
+  const element = document.getElementById(formId);
+
+  if (!(element instanceof HTMLFormElement)) return;
+
+  const clicks: HTMLElement[] = [];
+
+  element.querySelectorAll('input[type=radio], input[type=checkbox]').forEach((input) => {
+    if (!(input instanceof HTMLInputElement)) return;
+
+    const wanted = values[input.name];
+
+    if (wanted == null) return;
+
+    const shouldCheck = Array.isArray(wanted)
+      ? wanted.includes(input.value)
+      : wanted === input.value || (input.type === 'checkbox' && wanted === 'true');
+    const control =
+      input.previousElementSibling instanceof HTMLButtonElement
+        ? input.previousElementSibling
+        : input.closest('[role=radio], [role=checkbox]');
+
+    if (
+      shouldCheck &&
+      control instanceof HTMLElement &&
+      control !== input &&
+      control.getAttribute('aria-checked') !== 'true'
+    ) {
+      clicks.push(control);
+    }
+  });
+
+  const next = () => {
+    const control = clicks.shift();
+
+    if (control == null) return;
+
+    control.click();
+    window.setTimeout(next, 0);
+  };
+
+  next();
+}
+
 export interface DynamicFormProps<F extends Field> {
   fields: Array<F | FieldGroup<F>>;
   action: DynamicFormAction<F>;
@@ -194,6 +271,55 @@ export function DynamicForm<F extends Field>({
 }: DynamicFormProps<F>) {
   const t = useTranslations('Form');
   const [step, setStep] = useState(0);
+  // The current step lives in the URL (?step=2, 1-based) so a reload (the Homeowner / Pro
+  // switch reloads the page) or a shared link comes back to the same step. Read once on
+  // mount, written on every change; nothing is written until the read has happened.
+  const stepRestored = useRef(steps == null);
+
+  useEffect(() => {
+    if (steps == null) return;
+
+    const fromUrl = Number(new URLSearchParams(window.location.search).get('step'));
+
+    if (Number.isInteger(fromUrl) && fromUrl >= 2 && fromUrl <= steps.length) {
+      setStep(fromUrl - 1);
+    }
+
+    stepRestored.current = true;
+    // Mount only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (steps == null || !stepRestored.current) return;
+
+    const url = new URL(window.location.href);
+
+    if (step > 0) url.searchParams.set('step', String(step + 1));
+    else url.searchParams.delete('step');
+
+    if (url.href !== window.location.href)
+      window.history.replaceState(window.history.state, '', url);
+  }, [step, steps]);
+
+  // Wizard drafts: what the visitor has typed is kept in this tab's session storage (saveDraft,
+  // below the form), so the reload the Homeowner / Pro switch does (or an accidental refresh)
+  // brings it back along with the step. Declared fields only; cleared on submit, ignored after
+  // two hours.
+  const draftClosed = useRef(false);
+  const clearDraft = () => {
+    if (steps == null) return;
+
+    // No more saves after this: the revalidation a submit triggers would write it straight back.
+    draftClosed.current = true;
+
+    try {
+      window.sessionStorage.removeItem(draftKey());
+    } catch {
+      // Nothing to clear.
+    }
+  };
+
   const [advancing, setAdvancing] = useState(false);
   // Result of the server-side step check, shown through conform like an action result.
   const [stepResult, setStepResult] = useState<SubmissionResult | null>(null);
@@ -236,8 +362,9 @@ export function DynamicForm<F extends Field>({
 
     return field ? (field.label ?? field.name) : undefined;
   };
-  // Left empty: a missing value (invalid_type), an empty multi-select (too_small on the array) or
-  // an unticked required checkbox (invalid_literal 'true').
+  // Left empty: a missing value (invalid_type), text that trims to nothing (too_small on the
+  // string), an empty multi-select (too_small on the array) or an unticked required checkbox
+  // (invalid_literal 'true').
   const requiredMessage = (issue: z.ZodIssueOptionalMessage): string | undefined => {
     const field = fieldOf(issue);
 
@@ -245,6 +372,7 @@ export function DynamicForm<F extends Field>({
 
     const empty =
       issue.code === z.ZodIssueCode.invalid_type ||
+      (issue.code === z.ZodIssueCode.too_small && issue.type === 'string') ||
       (issue.code === z.ZodIssueCode.too_small && field.type === 'checkbox-group') ||
       (issue.code === z.ZodIssueCode.invalid_literal && field.type === 'checkbox');
 
@@ -305,12 +433,96 @@ export function DynamicForm<F extends Field>({
     onSubmit(event, { formData }) {
       event.preventDefault();
       setStepResult(null);
+      clearDraft();
 
       startTransition(() => {
         formAction(formData);
       });
     },
   });
+
+  const draftTimer = useRef<number | null>(null);
+  // Merged over the saved draft: fields on other steps are not in the DOM, and must not be lost
+  // when the current step saves. Next and Back save at once; typing saves after a pause.
+  const saveDraft = (delay = 300) => {
+    if (steps == null || draftClosed.current) return;
+
+    if (draftTimer.current != null) window.clearTimeout(draftTimer.current);
+
+    draftTimer.current = window.setTimeout(() => {
+      const element = document.getElementById(form.id);
+
+      if (!(element instanceof HTMLFormElement)) return;
+
+      const current: FormDraft['values'] = {};
+
+      new FormData(element).forEach((value, key) => {
+        if (typeof value !== 'string' || !fieldByName.has(key)) return;
+
+        const existing = current[key];
+
+        current[key] =
+          existing == null ? value : [...(Array.isArray(existing) ? existing : [existing]), value];
+      });
+
+      const values: FormDraft['values'] = {};
+
+      try {
+        const previous: unknown = JSON.parse(window.sessionStorage.getItem(draftKey()) ?? 'null');
+
+        if (isFormDraft(previous)) Object.assign(values, previous.values);
+      } catch {
+        // No usable draft yet.
+      }
+
+      Object.assign(values, current);
+
+      try {
+        window.sessionStorage.setItem(draftKey(), JSON.stringify({ at: Date.now(), values }));
+      } catch {
+        // Storage unavailable (private mode, quota): the draft is a convenience only.
+      }
+    }, delay);
+  };
+
+  useEffect(() => {
+    if (steps == null) return;
+
+    let draft: FormDraft | null = null;
+
+    try {
+      const raw = window.sessionStorage.getItem(draftKey());
+      const parsed: unknown = raw ? JSON.parse(raw) : null;
+
+      if (isFormDraft(parsed) && Date.now() - parsed.at <= DRAFT_MAX_AGE) draft = parsed;
+    } catch {
+      // A bad draft is dropped on the next save.
+    }
+
+    if (draft == null) return;
+
+    const isChoice = (key: string) => CHOICE_FIELD_TYPES.has(fieldByName.get(key)?.type ?? 'text');
+    const entries = Object.entries(draft.values).filter(([key]) => fieldByName.has(key));
+    const typed = Object.fromEntries(entries.filter(([key]) => !isChoice(key)));
+    const choices = Object.fromEntries(entries.filter(([key]) => isChoice(key)));
+
+    if (entries.length === 0) return;
+
+    // A beat later: the Radix controls add their hidden native inputs after their first render,
+    // and the update needs those in place. The choices follow once the update has re-rendered
+    // the fields (it re-keys them, so a click in the same tick would land on a node about to go).
+    const updateTimer = window.setTimeout(() => {
+      if (Object.keys(typed).length > 0) form.update({ value: typed });
+    }, 50);
+    const choiceTimer = window.setTimeout(() => restoreChoices(form.id, choices), 250);
+
+    return () => {
+      window.clearTimeout(updateTimer);
+      window.clearTimeout(choiceTimer);
+    };
+    // Mount only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (lastResult && lastResult.status === 'success' && successMessage) {
@@ -433,7 +645,16 @@ export function DynamicForm<F extends Field>({
 
   return (
     <FormProvider context={form.context}>
-      <form {...getFormProps(form)} action={formAction} onBlur={handleBlur} onChange={onChange}>
+      <form
+        {...getFormProps(form)}
+        action={formAction}
+        onBlur={handleBlur}
+        onChange={(event) => {
+          onChange?.(event);
+          saveDraft();
+        }}
+        onInput={() => saveDraft()}
+      >
         <AntiSpamFields />
         <TrackingFields />
         {steps != null && (
@@ -531,7 +752,10 @@ export function DynamicForm<F extends Field>({
               <Button
                 // White outline (some pages theme "tertiary" dark red), black fill on hover.
                 className="!border-foreground !bg-white !text-foreground after:!bg-foreground hover:!text-white"
-                onClick={() => setStep((current) => current - 1)}
+                onClick={() => {
+                  saveDraft(0);
+                  setStep((current) => current - 1);
+                }}
                 size={buttonSize}
                 type="button"
                 variant="tertiary"
@@ -547,6 +771,7 @@ export function DynamicForm<F extends Field>({
               <Button
                 disabled={checking}
                 onClick={() => {
+                  saveDraft(0);
                   stepNames.forEach((name) => form.validate({ name }));
                   setAdvancing(true);
                 }}

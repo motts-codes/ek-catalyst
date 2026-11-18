@@ -1,12 +1,23 @@
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 
+// US ZIP: five digits, with an optional four-digit extension.
+export const ZIP_PATTERN = String.raw`^\d{5}(-\d{4})?$`;
+export const ZIP_MESSAGE = 'Please enter a valid 5-digit ZIP code';
+
 // Field sets shared by the lead forms. Names are what the server action receives.
 
 export const CONTACT_FIELDS: Field[] = [
   { type: 'text', name: 'name', label: 'Your name', required: true },
   { type: 'email', name: 'email', label: 'Email', required: true },
   { type: 'tel', name: 'phone', label: 'Phone', required: true },
-  { type: 'text', name: 'zip', label: 'ZIP code', required: true },
+  {
+    type: 'text',
+    name: 'zip',
+    label: 'ZIP code',
+    pattern: ZIP_PATTERN,
+    patternMessage: ZIP_MESSAGE,
+    required: true,
+  },
 ];
 
 // The same contact details as rows (name + email, phone + ZIP) for the form card, which pairs

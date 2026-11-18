@@ -50,7 +50,7 @@ const staticMapSrc = (showroom: Showroom, token: string) => {
 export function ShowroomMapBand({
   kicker = 'Six showrooms across Connecticut',
   title = 'Open the drawers before you buy them.',
-  description = 'Bring your Pinterest saves, your measurements, or just an idea. See the real colours in real light, feel the finishes, test the soft-close, and sit down with a Project Manager who’ll price your kitchen, free.',
+  description = 'Bring your Pinterest saves, your measurements, or just an idea. See the real colors in real light, feel the finishes, test the soft-close, and sit down with a Project Manager who’ll price your kitchen, free.',
   showrooms,
   token,
   interval = 3500,

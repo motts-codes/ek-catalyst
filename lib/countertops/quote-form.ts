@@ -1,5 +1,6 @@
 import { type Field } from '@/vibes/soul/form/dynamic-form/schema';
 import { heroImageFor } from '~/lib/category/category-content';
+import { ZIP_MESSAGE, ZIP_PATTERN } from '~/lib/forms/fields';
 
 // Countertops are quoted, not carted (they're cut to the kitchen). These pieces are shared by the
 // countertop category pages, the countertop PDPs and the /countertops content page so the quote
@@ -31,7 +32,14 @@ export const COUNTERTOP_QUOTE_FIELDS: QuoteFields = [
   ],
   [
     { type: 'tel', name: 'phone', label: 'Phone', required: true },
-    { type: 'text', name: 'zip', label: 'ZIP code', required: true },
+    {
+      type: 'text',
+      name: 'zip',
+      label: 'ZIP code',
+      pattern: ZIP_PATTERN,
+      patternMessage: ZIP_MESSAGE,
+      required: true,
+    },
   ],
   [
     {
@@ -46,7 +54,13 @@ export const COUNTERTOP_QUOTE_FIELDS: QuoteFields = [
         { label: 'Not sure yet', value: 'unsure' },
       ],
     },
-    { type: 'text', name: 'sqft', label: 'Approx. square feet' },
+    {
+      type: 'text',
+      name: 'sqft',
+      label: 'Approx. square feet',
+      pattern: String.raw`^\d{1,3}(,\d{3})*(\.\d+)?$|^\d+(\.\d+)?$`,
+      patternMessage: 'Please enter square feet as a number, like 45',
+    },
   ],
   {
     type: 'select',
@@ -59,7 +73,7 @@ export const COUNTERTOP_QUOTE_FIELDS: QuoteFields = [
       { label: 'None', value: 'none' },
     ],
   },
-  { type: 'textarea', name: 'notes', label: 'Anything else: colour, edge, timing' },
+  { type: 'textarea', name: 'notes', label: 'Anything else: color, edge, timing' },
 ];
 
 // The same form with the chosen stone carried along (PDP), so the quote names the product.

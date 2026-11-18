@@ -19,7 +19,11 @@ const lowerFirst = (text: string) => text.charAt(0).toLowerCase() + text.slice(1
 // still reads as a sentence: "Please answer: Which showroom?", "Please pick a date",
 // "Please choose siding type", "Scope is required", "Please fill in: Which items you want to
 // return, and why". A bare "<Label> is required" is kept for short plain labels only.
-export function requiredMessageFor(field: Pick<Field, 'type' | 'label' | 'name'>): string {
+export function requiredMessageFor(
+  field: Pick<Field, 'type' | 'label' | 'name' | 'requiredMessage'>,
+): string {
+  if (field.requiredMessage) return field.requiredMessage;
+
   const label = (field.label ?? field.name).trim();
 
   if (label.endsWith('?')) return `Please answer: ${label}`;

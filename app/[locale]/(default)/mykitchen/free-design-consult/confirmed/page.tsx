@@ -61,7 +61,7 @@ export default async function FreeDesignConfirmed({
           {
             title: 'Anything you have saved',
             description:
-              'Screenshots, a colour, a kitchen you liked. It gives us a starting point.',
+              'Screenshots, a color, a kitchen you liked. It gives us a starting point.',
             image: {
               src: '/images/pages/design-consult/saved-screenshots.jpg',
               alt: 'A phone showing saved kitchen photos',

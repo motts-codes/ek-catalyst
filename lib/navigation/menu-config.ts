@@ -395,7 +395,7 @@ const menu: MenuItem[] = [
           {
             label: 'Kitchen Visualizer',
             href: '/mykitchen/visualize-my-kitchen',
-            image: nav('kitchen-visualizer', 'A kitchen on a tablet with colour swatches'),
+            image: nav('kitchen-visualizer', 'A kitchen on a tablet with color swatches'),
           },
           {
             label: 'Order Samples',

@@ -43,6 +43,7 @@ const FIELDS: Array<Field | Field[]> = [
     name: 'items',
     label: 'Which items you want to return, and why',
     required: true,
+    requiredMessage: 'Please describe the items you want to return and why',
   },
 ];
 

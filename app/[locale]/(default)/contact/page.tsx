@@ -7,7 +7,7 @@ import { CardsRow, type RowCard } from '@/vibes/soul/sections/cards-row';
 import { LeadFormCard } from '@/vibes/soul/sections/lead-form-card';
 import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { Link } from '~/components/link';
-import { AUDIENCE_OPTIONS } from '~/lib/forms/fields';
+import { AUDIENCE_OPTIONS, ZIP_MESSAGE, ZIP_PATTERN } from '~/lib/forms/fields';
 import { submitContactLead } from '~/lib/forms/submit-lead';
 import { FACTORY_OUTLET_URL } from '~/lib/home/pro-content';
 
@@ -79,7 +79,13 @@ const FIELDS: Array<Field | Field[]> = [
     { type: 'text', name: 'firstName', label: 'First name', required: true },
     { type: 'text', name: 'lastName', label: 'Last name', required: true },
   ],
-  { type: 'text', name: 'zip', label: 'ZIP code' },
+  {
+    type: 'text',
+    name: 'zip',
+    label: 'ZIP code',
+    pattern: ZIP_PATTERN,
+    patternMessage: ZIP_MESSAGE,
+  },
   [
     { type: 'email', name: 'email', label: 'Email', required: true },
     { type: 'tel', name: 'phone', label: 'Phone' },

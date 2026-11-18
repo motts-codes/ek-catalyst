@@ -37,6 +37,8 @@ interface FormField {
   /** Show this field only while another field has the given value (e.g. a choice that only
    *  applies to one showroom). Keep such a field optional: it is hidden, not removed. */
   showWhen?: { field: string; equals: string };
+  /** The "left empty" message, when the one worded from the label does not read well. */
+  requiredMessage?: string;
 }
 
 type RadioField = {
@@ -76,6 +78,8 @@ type TextInputField = {
   type: 'text';
   defaultValue?: string;
   pattern?: string;
+  /** Shown when the value does not match `pattern` ("Please enter a valid 5-digit ZIP code"). */
+  patternMessage?: string;
 } & FormField;
 
 type EmailInputField = {
@@ -275,6 +279,20 @@ export function getPasswordSchema(
   return fieldSchema;
 }
 
+// Text is trimmed first, so spaces alone never count as an answer; a required field then needs
+// at least one character (reported as "left empty", see the form's error map).
+function getTextSchema(field: TextInputField | TextAreaField) {
+  let fieldSchema = z.string().trim();
+
+  if (field.required === true) fieldSchema = fieldSchema.min(1);
+
+  if (field.type === 'text' && field.pattern != null) {
+    fieldSchema = fieldSchema.regex(new RegExp(field.pattern), field.patternMessage);
+  }
+
+  return field.required === true ? fieldSchema : fieldSchema.optional();
+}
+
 function getFieldSchema(
   field: Field,
   passwordComplexity?: PasswordComplexitySettings | null,
@@ -302,13 +320,8 @@ function getFieldSchema(
       break;
 
     case 'text':
-      fieldSchema = z.string();
-
-      if (field.pattern != null) {
-        fieldSchema = fieldSchema.regex(new RegExp(field.pattern));
-      }
-
-      if (field.required !== true) fieldSchema = fieldSchema.optional();
+    case 'textarea':
+      fieldSchema = getTextSchema(field);
 
       break;
 

@@ -604,7 +604,7 @@ const HERO_LEDES: Record<string, string> = {
   '/countertops/granite': 'Natural stone, every slab unique. From $49.99 a square foot.',
   '/countertops/quartz':
     'Engineered stone, consistent and never needs sealing. From $59.99 a square foot.',
-  '/countertops/laminate': 'The budget choice, in the widest range of colours and patterns.',
+  '/countertops/laminate': 'The budget choice, in the widest range of colors and patterns.',
   '/countertops/prefabricated': 'Granite and quartz in standard lengths with a finished edge.',
   '/countertops/prefabricated/granite-prefabricated':
     'Granite in standard lengths with a finished front edge.',
@@ -644,7 +644,7 @@ const HERO_LEDES: Record<string, string> = {
     'A ledge for boards, colanders and racks, so prep stays over the sink.',
   '/sinks-faucets/kitchen-sinks/accessories': 'Grids, strainers and mats made to fit our sinks.',
   '/closets':
-    'Twelve organizer pieces in three colours that fit together. Buy what your closet needs and put it up in an afternoon.',
+    'Twelve organizer pieces in three colors that fit together. Buy what your closet needs and put it up in an afternoon.',
   '/bath':
     'Vanity tops, side splashes, sinks, faucets and drains, sized to our vanities and stocked in Bristol.',
   '/bath/vanity-tops': 'Cultured marble and quartz, sized to our vanities.',
