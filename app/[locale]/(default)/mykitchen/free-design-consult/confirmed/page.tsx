@@ -27,7 +27,11 @@ export default async function FreeDesignConfirmed({
       <PageHero
         actions={[
           { label: 'Order free samples', href: SAMPLES_HREF, primary: true },
-          { label: 'See our best-selling kitchens', href: '/inspiration/best-sellers' },
+          {
+            label: 'See our best-selling kitchens',
+            href: '/inspiration/best-sellers',
+            style: 'outline',
+          },
         ]}
         description="Thank you. A designer will call you within 1 business day to confirm the day, the time and the way you'd like to meet. Until then, there's nothing you need to do. Bring a photo of the room, rough measurements if you have them, or nothing at all."
         kicker="Request received"
@@ -65,7 +69,9 @@ export default async function FreeDesignConfirmed({
             imageLabel: 'Saved kitchen screenshots on a phone',
           },
         ]}
+        imageStyle="plain"
         kicker="Before the consult"
+        numbered
         tint
         title="Three things that make it better"
       />
