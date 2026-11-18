@@ -265,8 +265,8 @@ export default async function Multifamily({ params }: { params: Promise<{ locale
         }
         id="talk"
         image={{
-          src: '/images/pages/design-consult/form-kitchen-island.jpg',
-          alt: 'A modern kitchen with a white quartz island and oak panels',
+          src: '/images/pages/industry/multifamily-form-kitchen.jpg',
+          alt: 'A compact apartment kitchen in pale oak and cream flat-panel cabinets with a dining table',
         }}
         kicker="Talk to us"
         submitLabel="Send"

@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
-import { LinkCards, PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
+import { CardsRow } from '@/vibes/soul/sections/cards-row';
+import { PageBreadcrumbs, PageHero } from '@/vibes/soul/sections/page-kit';
 
 export const metadata: Metadata = {
   title: 'Appointment Requested',
@@ -31,31 +32,48 @@ export default async function BookConfirmed({ params }: { params: Promise<{ loca
         textOnly
         title="Your appointment is requested"
       />
-      <LinkCards
+      <CardsRow
         cards={[
           {
             title: 'Measure your walls',
             description:
               'Twenty minutes with a tape measure means the plan you leave with is closer to final.',
             href: '/resources/measuring-guide',
-            linkLabel: 'Measuring guide',
+            ctaLabel: 'Measuring guide',
+            image: {
+              src: '/images/book/measure.webp',
+              alt: 'Hands stretching a tape measure into the corner of a kitchen wall, a sketch on the counter',
+            },
           },
           {
             title: 'Narrow the finishes',
             description:
               'Have a look at the collections first so the showroom visit starts with three doors rather than thirty.',
             href: '/cabinets/assembled-cabinets',
-            linkLabel: 'Browse the collections',
+            ctaLabel: 'Browse the collections',
+            image: {
+              src: '/images/book/inspiration.webp',
+              alt: 'A hand holding a phone showing a grid of saved kitchen photos, a bright kitchen behind',
+            },
           },
           {
             title: 'Get a rough number',
             description:
               'Two minutes with the estimator and you’ll know what range to expect before you sit down.',
             href: '/mykitchen/price-my-kitchen',
-            linkLabel: 'Price my kitchen',
+            ctaLabel: 'Price my kitchen',
+            image: {
+              src: '/images/estimator/card-designer-plan.jpg',
+              alt: 'A designer working through a kitchen plan',
+            },
           },
         ]}
         columns={3}
+        ctaStyle="link"
+        imageStyle="plain"
+        kicker="Before you come in"
+        tint
+        title="Three things that make the visit count"
       />
     </>
   );
