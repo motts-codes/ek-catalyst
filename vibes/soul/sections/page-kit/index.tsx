@@ -129,11 +129,14 @@ export function RedBox({
   children,
   media,
   size = 'default',
+  tone = 'red',
   className,
 }: {
   kicker?: string;
   title?: string;
   children: ReactNode;
+  /** `black`: the same panel on near-black (#141414) instead of brand red, copy still white. */
+  tone?: 'red' | 'black';
   /**
    * A photo (or its placeholder) on the right of the panel, the copy on the left. `bleed`
    * (default) runs the photo to the panel's edges; `enclosed` keeps it inside the panel padding
@@ -168,7 +171,8 @@ export function RedBox({
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-3xl bg-[#9f3632] text-white',
+        'relative overflow-hidden rounded-3xl text-white',
+        tone === 'black' ? 'bg-[#141414]' : 'bg-[#9f3632]',
         !media && 'px-6 py-10 @xl:px-12 @xl:py-14',
         className,
       )}

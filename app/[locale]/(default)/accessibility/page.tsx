@@ -126,9 +126,9 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
               alt: 'A white checklist with two items ticked and one open, a wrench beside it, on red',
             },
             split: '60/40',
-            style: 'enclosed',
           }}
           title="What we're still working on"
+          tone="black"
         >
           <div className="max-w-xl space-y-4 text-sm leading-relaxed text-white/85 @xl:text-base">
             <p>
