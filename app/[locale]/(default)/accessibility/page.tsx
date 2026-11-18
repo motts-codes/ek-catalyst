@@ -34,9 +34,12 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
       <PageHero
         actions={[{ label: 'Report a barrier', href: '#report', primary: true }]}
         description="You should be able to shop and plan a kitchen here, whatever device, browser or assistive technology you use. We're working toward the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA. If anything gets in your way, tell us and we'll fix it, or help you another way."
+        image={{
+          src: '/images/pages/accessibility/hero-wcag-checklist.webp',
+          alt: 'Hands typing on a laptop beside a printed WCAG 2.2 AA checklist with every box ticked, on a red desk',
+        }}
         kicker="Accessibility statement"
         note="Last updated November 2026."
-        textOnly
         title="This site should work for everyone"
       />
       {/* Contact details to confirm with EK: the dedicated address (else their main one) and the
@@ -101,6 +104,10 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         description="Tell us which page and what happened. We'll reply within 3 business days."
         fields={FIELDS}
         id="report"
+        image={{
+          src: '/images/pages/accessibility/form-accessibility-icon.jpg',
+          alt: 'A red clay disc with the white accessibility figure, a cursor arrow and a button beside it',
+        }}
         kicker="Tell us what isn't working"
         submitLabel="Send"
         title="Report a barrier"
