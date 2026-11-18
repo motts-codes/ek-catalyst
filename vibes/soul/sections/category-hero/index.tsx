@@ -402,7 +402,7 @@ export function SubcategoryTiles({
                 'group flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
               )}
               href={item.href}
-              key={item.href}
+              key={`${item.name}|${item.href}`}
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-contrast-100">
                 {item.image ? (

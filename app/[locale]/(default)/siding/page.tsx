@@ -43,6 +43,15 @@ const FIELDS: Array<Field | Field[]> = [
   { type: 'textarea', name: 'notes', label: 'Colour, timing, anything else' },
 ];
 
+const COLOURS = [
+  { name: 'White', slug: 'white' },
+  { name: 'Gray', slug: 'gray' },
+  { name: 'Sand', slug: 'sand' },
+  { name: 'Charcoal', slug: 'charcoal' },
+  { name: 'Cedar', slug: 'cedar' },
+  { name: 'Navy', slug: 'navy' },
+];
+
 export default async function Siding({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
@@ -112,10 +121,16 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
         ]}
         title="Shop by siding type"
       />
+      {/* Swatches are the clapboard texture tinted to each stock colour (scripts: PIL colorize),
+          stand-ins until EK supplies manufacturer swatches. */}
       <SubcategoryTiles
-        items={['White', 'Gray', 'Sand', 'Charcoal', 'Cedar', 'Navy'].map((name) => ({
+        items={COLOURS.map(({ name, slug }) => ({
           name,
           href: '#quote',
+          image: {
+            src: `/images/pages/siding/colour-${slug}.jpg`,
+            alt: `${name} clapboard vinyl siding, close up`,
+          },
         }))}
         title="Shop by colour"
       />
@@ -124,6 +139,10 @@ export default async function Siding({ params }: { params: Promise<{ locale: str
         description="A rough size is fine; we confirm quantities before anything ships."
         fields={FIELDS}
         id="quote"
+        image={{
+          src: '/images/pages/siding/quote-building.jpg',
+          alt: 'Looking up a building clad in grey corrugated metal siding with large windows, against a blue sky',
+        }}
         kicker="Get a siding quote"
         submitLabel="Request my quote"
         title="Tell us about the house"
