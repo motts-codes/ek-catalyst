@@ -33,6 +33,11 @@ export async function googleSignInAction(): Promise<void> {
   await adminSignIn('google', { redirectTo: '/cabinet-admin' });
 }
 
+/** Start Microsoft 365 sign-in (redirects to Entra ID). Same allowlist applies. */
+export async function microsoftSignInAction(): Promise<void> {
+  await adminSignIn('microsoft-entra-id', { redirectTo: '/cabinet-admin' });
+}
+
 export async function signOutAction(): Promise<void> {
   await adminSignOut({ redirectTo: '/cabinet-admin' });
 }

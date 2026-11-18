@@ -70,13 +70,17 @@ Set these on the live deployment (all server-only — never `NEXT_PUBLIC_`):
 | `BIGCOMMERCE_STORE_HASH` | Live store hash |
 | `CATALYST_ACCESS_TOKEN` | Storefront **and** management token (read + write metafields) |
 | `AUTH_SECRET` | Signs both shopper and admin sessions (already set for the app) |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth web-client for the `/cabinet-admin` Google sign-in |
-| `EK_ADMIN_EMAILS` | Comma-separated allowlist of staff emails allowed into `/cabinet-admin` |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth web-client for the `/cabinet-admin` Google sign-in (agency) |
+| `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET` / `MICROSOFT_TENANT_ID` | Entra ID app registration for the `/cabinet-admin` Microsoft 365 sign-in (EK staff). Optional: the button appears only when all three are set. See [CABINET-ADMIN-MICROSOFT-SIGNIN.md](CABINET-ADMIN-MICROSOFT-SIGNIN.md) |
+| `EK_ADMIN_EMAILS` | Comma-separated allowlist of staff emails allowed into `/cabinet-admin` (exact addresses, case-insensitive; applies to both sign-in buttons) |
 
 **Google OAuth redirect URI** for the live domain must be added in the Google Cloud console:
 `https://<live-domain>/api/admin-auth/callback/google` (Authorized redirect URIs), and the bare
 domain under Authorized JavaScript origins. The admin auth instance uses basePath `/api/admin-auth`
 and its own cookie `ek-admin.session-token` (separate from shopper login).
+
+**Microsoft redirect URI** likewise: `https://<live-domain>/api/admin-auth/callback/microsoft-entra-id`
+on the Entra app registration (plus the preview alias while testing).
 
 `/cabinet-admin` is already excluded from the proxy matcher in [proxy.ts](../proxy.ts) so it isn't
 resolved as a BigCommerce entity — no change needed.

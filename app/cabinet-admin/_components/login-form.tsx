@@ -1,18 +1,41 @@
-import { googleSignInAction } from '../actions';
+import { hasMicrosoftSignIn } from '~/lib/cabinet-admin/admin-auth';
 
-// Google sign-in gate. Access is restricted to the EK admin email allowlist (enforced server-side in
-// the admin-auth signIn callback); a non-allowlisted Google account is rejected after sign-in.
+import { googleSignInAction, microsoftSignInAction } from '../actions';
+
+const buttonClass =
+  'flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50';
+
+// Sign-in gate. Microsoft 365 for EK staff (shown once the Entra app is configured), Google for the
+// agency. Access is restricted to the EK admin email allowlist (enforced server-side in the
+// admin-auth signIn callback); an account that is not on the list is rejected after sign-in.
 export function LoginForm() {
+  const microsoft = hasMicrosoftSignIn();
+
   return (
     <div className="w-full rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
       <h1 className="text-xl font-semibold text-gray-900">Cabinet Admin</h1>
-      <p className="mt-1 text-sm text-gray-500">Sign in with your EK Google account to continue.</p>
+      <p className="mt-1 text-sm text-gray-500">
+        {microsoft
+          ? 'Sign in with your Express Kitchens work account to continue.'
+          : 'Sign in with your EK Google account to continue.'}
+      </p>
+
+      {microsoft && (
+        <form action={microsoftSignInAction}>
+          <button className={`mt-6 ${buttonClass}`} type="submit">
+            <svg aria-hidden height="18" viewBox="0 0 21 21" width="18">
+              <rect fill="#F25022" height="9" width="9" x="1" y="1" />
+              <rect fill="#7FBA00" height="9" width="9" x="11" y="1" />
+              <rect fill="#00A4EF" height="9" width="9" x="1" y="11" />
+              <rect fill="#FFB900" height="9" width="9" x="11" y="11" />
+            </svg>
+            Sign in with Microsoft
+          </button>
+        </form>
+      )}
 
       <form action={googleSignInAction}>
-        <button
-          className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-          type="submit"
-        >
+        <button className={`${microsoft ? 'mt-3' : 'mt-6'} ${buttonClass}`} type="submit">
           <svg aria-hidden height="18" viewBox="0 0 24 24" width="18">
             <path
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1Z"

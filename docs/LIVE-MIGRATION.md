@@ -123,6 +123,7 @@ Server-only unless prefixed `NEXT_PUBLIC_`.
 | `BIGCOMMERCE_CLIENT_ID` / `BIGCOMMERCE_CLIENT_SECRET`                           | Customer login (if used)                                                  |
 | `AUTH_SECRET` (+ `AUTH_TRUST_HOST=true` behind a proxy)                         | Session signing                                                           |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `EK_ADMIN_EMAILS`                 | `/cabinet-admin` Google sign-in + staff allowlist                         |
+| `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET` / `MICROSOFT_TENANT_ID`        | `/cabinet-admin` Microsoft 365 sign-in for EK staff (pending EK's app registration) |
 | `MAKESWIFT_SITE_API_KEY`                                                        | Makeswift site (reuse the sandbox key to keep all edits)                  |
 | `NEXT_PUBLIC_BIGCOMMERCE_CDN_HOSTNAME`                                          | Image CDN host                                                            |
 | `DEFAULT_REVALIDATE_TARGET`, `TRAILING_SLASH`, `ENABLE_ADMIN_ROUTE`             | As in sandbox                                                             |
