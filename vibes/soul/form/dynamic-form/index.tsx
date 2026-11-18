@@ -34,7 +34,7 @@ import { ButtonRadioGroup } from '@/vibes/soul/form/button-radio-group';
 import { CardRadioGroup } from '@/vibes/soul/form/card-radio-group';
 import { Checkbox } from '@/vibes/soul/form/checkbox';
 import { CheckboxGroup } from '@/vibes/soul/form/checkbox-group';
-import { DatePicker } from '@/vibes/soul/form/date-picker';
+import { DatePicker, parseISODate, startOfToday, toISODate } from '@/vibes/soul/form/date-picker';
 import { FormStatus } from '@/vibes/soul/form/form-status';
 import { Input } from '@/vibes/soul/form/input';
 import { NumberInput } from '@/vibes/soul/form/number-input';
@@ -55,6 +55,19 @@ import {
   schema,
 } from './schema';
 import { removeOptionsFromFields } from './utils';
+
+// Which days a date field greys out: before its minimum, after its maximum, or both. `'today'`
+// is the visitor's own date, worked out in their browser, so yesterday is never offered.
+function dateBounds(field: { minDate?: string; maxDate?: string }) {
+  const before = field.minDate === 'today' ? startOfToday() : parseISODate(field.minDate);
+  const after = parseISODate(field.maxDate);
+
+  if (before && after) return { before, after };
+  if (before) return { before };
+  if (after) return { after };
+
+  return undefined;
+}
 
 export interface DynamicFormActionArgs<F extends Field> {
   fields: Array<F | FieldGroup<F>>;
@@ -769,25 +782,16 @@ function DynamicFormField({
       return (
         <DatePicker
           defaultValue={field.defaultValue}
-          disabledDays={
-            field.minDate != null && field.maxDate != null
-              ? {
-                  before: new Date(field.minDate),
-                  after: new Date(field.maxDate),
-                }
-              : undefined
-          }
+          disabledDays={dateBounds(field)}
           errors={formField.errors}
           key={field.name}
           label={field.label}
           name={formField.name}
           onBlur={controls.blur}
           onFocus={controls.focus}
-          onSelect={(date) =>
-            controls.change(date ? Intl.DateTimeFormat().format(date) : undefined)
-          }
+          onSelect={(date) => controls.change(date ? toISODate(date) : undefined)}
           required={formField.required}
-          selected={typeof controls.value === 'string' ? new Date(controls.value) : undefined}
+          selected={typeof controls.value === 'string' ? parseISODate(controls.value) : undefined}
         />
       );
 

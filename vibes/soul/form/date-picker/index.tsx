@@ -7,6 +7,44 @@ import { Calendar } from '@/vibes/soul/primitives/calendar';
 
 type CalendarProps = ComponentPropsWithoutRef<typeof Calendar>;
 
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+const isValidDate = (date: Date | undefined): date is Date =>
+  date != null && !Number.isNaN(date.getTime());
+
+// A calendar day as `yyyy-mm-dd` in the visitor's own time zone (no UTC shift).
+export function toISODate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+// The reverse: `yyyy-mm-dd` to local midnight of that day. Anything else goes through `Date`
+// parsing; an unparseable value (a day-first locale string, say) gives undefined, never an
+// Invalid Date that would throw inside `Intl.DateTimeFormat`.
+export function parseISODate(value: string | Date | undefined): Date | undefined {
+  if (value == null || value === '') return undefined;
+  if (value instanceof Date) return isValidDate(value) ? value : undefined;
+
+  const match = ISO_DATE.exec(value);
+  const date = match
+    ? new Date(Number(value.slice(0, 4)), Number(value.slice(5, 7)) - 1, Number(value.slice(8, 10)))
+    : new Date(value);
+
+  return isValidDate(date) ? date : undefined;
+}
+
+// Local midnight today, in the visitor's browser.
+export function startOfToday(): Date {
+  const now = new Date();
+
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
+const formatForDisplay = (date: Date | undefined) =>
+  isValidDate(date) ? Intl.DateTimeFormat().format(date) : undefined;
+
 type Props = {
   defaultValue?: string | Date;
   disabledDays?: CalendarProps['disabled'];
@@ -27,20 +65,19 @@ const DatePicker = forwardRef<ComponentRef<typeof Input>, Props>(
       required = false,
       selected,
       colorScheme = 'light',
+      name,
       ...props
     },
     ref,
   ) => {
-    // State to manage the selected date
-    const [date, setDate] = useState<Date | undefined>(
-      defaultValue != null ? new Date(defaultValue) : undefined,
-    );
+    // State to manage the selected date (uncontrolled use)
+    const [date, setDate] = useState<Date | undefined>(() => parseISODate(defaultValue));
+    const current = selected ?? date;
 
-    // Format the selected date for display
-    const formattedSelected = selected ? Intl.DateTimeFormat().format(selected) : undefined;
-
-    // Format the default date for display
-    const formattedDate = date ? Intl.DateTimeFormat().format(date) : undefined;
+    // The visible box shows the day the way the visitor's locale writes it. The form gets the
+    // same day as `yyyy-mm-dd` from the hidden input below, so the value never depends on the
+    // locale (a day-first "25/11/2026" cannot be parsed back; that crashed the booking form).
+    const display = formatForDisplay(current) ?? '';
 
     return (
       <PopoverPrimitive.Root>
@@ -58,10 +95,12 @@ const DatePicker = forwardRef<ComponentRef<typeof Input>, Props>(
             // combobox, not a plain textbox (axe aria-allowed-attr).
             role="combobox"
             type="text"
-            // We control the value of the input based on the selected date or the default date
-            value={formattedSelected ?? formattedDate ?? ''}
+            value={display}
           />
         </PopoverPrimitive.Trigger>
+        {name != null && (
+          <input name={name} type="hidden" value={current != null ? toISODate(current) : ''} />
+        )}
         <PopoverPrimitive.Portal>
           <PopoverPrimitive.Content
             align="start"
@@ -73,7 +112,7 @@ const DatePicker = forwardRef<ComponentRef<typeof Input>, Props>(
               disabled={disabledDays}
               mode="single"
               onSelect={onSelect ?? setDate}
-              selected={selected ?? date}
+              selected={current}
             />
           </PopoverPrimitive.Content>
         </PopoverPrimitive.Portal>

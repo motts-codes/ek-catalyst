@@ -20,8 +20,6 @@ const TIME_OPTIONS = ['9:00 AM', '10:30 AM', '12:00 PM', '1:30 PM', '3:00 PM', '
   (t) => ({ label: `${t} ET`, value: t }),
 );
 
-const today = () => new Date().toISOString().slice(0, 10);
-
 // Showrooms with two Project Managers get a "who would you like to meet?" choice that appears
 // only while that showroom is selected.
 const PM_CHOICES: Field[] = SHOWROOMS.filter((s) => s.secondPm != null).map((s) => ({
@@ -63,7 +61,8 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
       name: 'appointmentDate',
       label: 'Pick a date',
       required: true,
-      minDate: today(),
+      // The visitor's own today, not the server's: no past days offered.
+      minDate: 'today',
     },
     {
       type: 'select',

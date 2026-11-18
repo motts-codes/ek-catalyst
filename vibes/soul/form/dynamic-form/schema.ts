@@ -96,7 +96,9 @@ type TextAreaField = {
 
 type DateField = {
   type: 'date';
+  /** `yyyy-mm-dd`. The field's value is always sent in this form, whatever the visitor's locale. */
   defaultValue?: string;
+  /** `yyyy-mm-dd`, or `'today'` for the visitor's current date (worked out in their browser). */
   minDate?: string;
   maxDate?: string;
 } & FormField;
