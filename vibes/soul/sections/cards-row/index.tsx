@@ -37,7 +37,10 @@ interface Props {
   columns?: 2 | 3 | 4 | 5;
   /** Hide the image area (text-only reasons-to-believe cards get an accent bar instead). */
   hideImages?: boolean;
-  /** With `hideImages`: a big red number (1, 2, 3…) in place of the accent bar. */
+  /**
+   * A big red number (1, 2, 3…) on each card: in place of the accent bar on text-only cards,
+   * between the photo and the title on image cards.
+   */
   numbered?: boolean;
   /**
    * 'inset' (default) keeps the photo inside the card padding; 'bleed' runs it edge to edge;
@@ -259,6 +262,13 @@ export function CardsRow({
                     )}
                     <CardBadge label={card.badge} />
                   </div>
+                )}
+                {numbered && !hideImages && (
+                  <CardLead
+                    number={i + 1}
+                    onLight={surface === 'light'}
+                    onRed={surface === 'red'}
+                  />
                 )}
                 <CardTitle
                   card={card}

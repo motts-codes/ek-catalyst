@@ -59,35 +59,41 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         cards={[
           {
             title: 'Text for every image',
+            imageLabel: 'Alt text',
             description:
               'Product photos, door samples and offer banners have descriptive alt text, so a screen reader describes the cabinet, not the file name.',
           },
           {
             title: 'Works from the keyboard',
+            imageLabel: 'Keyboard',
             description:
               'Menus, filters, forms and checkout work with Tab, Enter and the arrow keys, and you can always see where you are.',
           },
           {
             title: 'Readable contrast',
+            imageLabel: 'Contrast',
             description: 'Text and buttons are designed to meet WCAG contrast ratios.',
           },
           {
             title: 'Clear structure',
+            imageLabel: 'Structure',
             description: 'Headings in order, labeled form fields and clear error messages.',
           },
           {
             title: 'Motion you control',
+            imageLabel: 'Motion',
             description:
               "Slideshows pause when you hover or focus on them, and follow your device's reduced-motion setting.",
           },
           {
             title: 'Zoom without breaking',
+            imageLabel: 'Zoom',
             description: 'The site works at 200% zoom and on a phone without sideways scrolling.',
           },
         ]}
         columns={3}
-        hideImages
         kicker="What we do"
+        numbered
         tint
         title="How the site is built to be usable"
       />
