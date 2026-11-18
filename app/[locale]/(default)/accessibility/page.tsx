@@ -11,7 +11,7 @@ import { submitSupportLead } from '~/lib/forms/submit-lead';
 export const metadata: Metadata = {
   title: 'Accessibility Statement',
   description:
-    'Express Kitchens aims to meet WCAG 2.2 AA across this site and to fix anything that falls short quickly when it is reported.',
+    "We're working toward WCAG 2.2 AA across this site. If something gets in your way, call or text 860-247-1000 or tell us online, and we'll fix it or help you another way.",
 };
 
 const FIELDS: Array<Field | Field[]> = [
@@ -33,62 +33,55 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
       <PageBreadcrumbs breadcrumbs={[{ label: 'Accessibility', href: '/accessibility' }]} />
       <PageHero
         actions={[{ label: 'Report a barrier', href: '#report', primary: true }]}
-        description="This site should work for you whatever device, browser or assistive technology you use. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA across every page, we check it with automated tools and real screen readers, and when something falls short we'd like to hear about it so we can fix it quickly. Updated [date], reviewed every six months."
+        description="You should be able to shop and plan a kitchen here, whatever device, browser or assistive technology you use. We're working toward the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA. If anything gets in your way, tell us and we'll fix it, or help you another way."
         kicker="Accessibility statement"
+        note="Last updated November 2026."
         textOnly
         title="This site should work for everyone"
       />
+      {/* Contact details to confirm with EK: the dedicated address (else their main one) and the
+          3-business-day reply time. */}
       <CategoryPoints
-        fine="A dedicated address, monitored. (To confirm.)"
         points={[
           { icon: 'tag', label: 'accessibility@expresskitchens.com' },
-          { icon: 'phone', label: 'Call or text 860-247-1000' },
-          { icon: 'clock', label: 'We respond within 3 business days' },
+          { icon: 'phone', label: 'Call or text 860-247-1000, any time' },
+          { icon: 'clock', label: 'We reply within 3 business days' },
         ]}
       />
+      {/* Only claims the build backs up. Re-check keyboard, contrast and motion cards against the
+          live build before launch; captions/transcripts and real-text cards were dropped because
+          the videos sit on YouTube without transcripts and the offer banners are images. */}
       <CardsRow
         cards={[
           {
             title: 'Text for every image',
             description:
-              'Product photos, door samples and diagrams carry meaningful alternative text, so a screen reader describes the cabinet, not the file name.',
+              'Product photos, door samples and offer banners have descriptive alt text, so a screen reader describes the cabinet, not the file name.',
           },
           {
             title: 'Works from the keyboard',
             description:
-              'Menus, filters, forms and checkout can all be used with Tab, Enter and the arrow keys, and focus is always visible.',
+              'Menus, filters, forms and checkout work with Tab, Enter and the arrow keys, and you can always see where you are.',
           },
           {
             title: 'Readable contrast',
-            description:
-              'Text and controls meet the WCAG contrast ratios, including price bars, badges and the footer.',
+            description: 'Text and buttons are designed to meet WCAG contrast ratios.',
           },
           {
-            title: 'Proper structure',
-            description:
-              'One main heading per page, headings in order, landmarks for navigation and content, and labelled form fields with clear error messages.',
+            title: 'Clear structure',
+            description: 'Headings in order, labeled form fields and clear error messages.',
           },
           {
-            title: "No motion you can't stop",
+            title: 'Motion you control',
             description:
-              "Slideshows and the review wall pause on hover and focus, and respect your system's reduced-motion setting.",
+              "Slideshows pause when you hover or focus on them, and follow your device's reduced-motion setting.",
           },
           {
-            title: 'Resizable text',
-            description: 'The site works at 200% zoom and on a phone without horizontal scrolling.',
-          },
-          {
-            title: 'Captions and transcripts',
-            description:
-              'Videos in the library carry captions, and the factory film has a transcript.',
-          },
-          {
-            title: 'Real text, not pictures of text',
-            description:
-              'Comparison tables, prices and lists are text, so they can be read aloud, searched and translated.',
+            title: 'Zoom without breaking',
+            description: 'The site works at 200% zoom and on a phone without sideways scrolling.',
           },
         ]}
-        columns={4}
+        columns={3}
         hideImages
         kicker="What we do"
         tint
@@ -96,15 +89,16 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
       />
       <Prose
         body={[
-          'The site relies on HTML, WAI-ARIA, CSS and JavaScript, and is tested with current versions of Chrome, Safari, Firefox and Edge, and with VoiceOver on Mac and iOS, NVDA on Windows and TalkBack on Android.',
-          'Some content comes from partners (the financing application, the map embeds and the payment step) and is covered by their own accessibility statements. Older PDF spec sheets are being replaced with tagged versions; if you need one sooner, ask us and we will send the information in another format.',
+          "Some parts of the site come from partners: the payment step, the embedded maps and the YouTube videos. Each partner's own accessibility statement covers those parts.",
+          'Our offer banners are images. Each one has full alt text, and the offer details are written out in plain text below it.',
+          "Need a spec sheet, a quote or anything else in another format? Ask us, and we'll send it in a format that works for you.",
         ]}
-        kicker="Technology and known limitations"
-        title="What we test with, and what we're still fixing"
+        kicker="Known limitations"
+        title="What we're still working on"
       />
       <LeadFormCard
         action={submitSupportLead}
-        description="Tell us which page and what happened. We reply within three business days."
+        description="Tell us which page and what happened. We'll reply within 3 business days."
         fields={FIELDS}
         id="report"
         kicker="Tell us what isn't working"
