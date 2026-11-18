@@ -63,8 +63,8 @@ export default async function BookConfirmed({ params }: { params: Promise<{ loca
             href: '/mykitchen/price-my-kitchen',
             ctaLabel: 'Price my kitchen',
             image: {
-              src: '/images/estimator/card-designer-plan.jpg',
-              alt: 'A designer working through a kitchen plan',
+              src: '/images/home/ways/estimator.webp',
+              alt: 'A couple at their kitchen island, checking a price range on a phone',
             },
           },
         ]}
