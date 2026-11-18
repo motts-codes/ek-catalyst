@@ -10,12 +10,12 @@ it stays greyed out with "Not currently active" under it until `MICROSOFT_CLIENT
 
 ## Status (18 Nov 2026)
 
-EK sent the Application (client) ID, the Directory (tenant) ID and the **Secret ID**. The first
-two are set in `.env.local` and on Vercel (Production, Preview, Development). The Secret ID is only
-the label of the secret, not the secret itself; the button stays inactive until EK sends the secret
-**Value** (the long string shown once when the secret is created, usually containing `~`). If that
-value was not copied at the time, they add a new client secret and send its Value. Then set
-`MICROSOFT_CLIENT_SECRET` in the same three places and redeploy.
+EK sent all three values (client id, tenant id and the client secret Value; the first batch had
+only the Secret ID, which is just the secret's label). All three `MICROSOFT_*` vars are set in
+`.env.local` and on Vercel (Production, Preview, Development). Locally the button is active and
+clicking it reaches Microsoft's sign-in for EK's tenant with the expected redirect URI and scope,
+and no redirect-URI error. The preview site picks the vars up on its next deploy. Still to do once
+deployed: one EK person on the allowlist signs in end to end; note the secret's expiry date.
 
 ## What EK's Microsoft 365 admin does (about ten minutes)
 
