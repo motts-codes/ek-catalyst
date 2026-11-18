@@ -295,8 +295,8 @@ function getFieldSchema(
     case 'number':
       fieldSchema = z.number();
 
-      if (field.min != null) fieldSchema = fieldSchema.min(field.min);
-      if (field.max != null) fieldSchema = fieldSchema.max(field.max);
+      if (field.min != null) fieldSchema = fieldSchema.min(field.min, `Enter ${field.min} or more`);
+      if (field.max != null) fieldSchema = fieldSchema.max(field.max, `Enter ${field.max} or less`);
       if (field.required !== true) fieldSchema = fieldSchema.optional();
 
       break;

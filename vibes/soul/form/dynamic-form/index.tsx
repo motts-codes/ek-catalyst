@@ -225,11 +225,22 @@ export function DynamicForm<F extends Field>({
     .flatMap((f) => (Array.isArray(f) ? f : [f]))
     .forEach((field) => labelByName.set(field.name, field.label ?? field.name));
 
-  const requiredMessage = (issue: z.ZodIssueOptionalMessage): string | undefined => {
+  const labelOf = (issue: z.ZodIssueOptionalMessage): string | undefined => {
     const name = issue.path[0];
-    const label = typeof name === 'string' ? labelByName.get(name) : undefined;
+
+    return typeof name === 'string' ? labelByName.get(name) : undefined;
+  };
+  const requiredMessage = (issue: z.ZodIssueOptionalMessage): string | undefined => {
+    const label = labelOf(issue);
 
     return issue.code === z.ZodIssueCode.invalid_type && label ? `${label} is required` : undefined;
+  };
+  // Every message names its field ("Please enter a valid email"), never a bare "check your
+  // input": the visitor should know which box to fix without hunting (standing rule, 18 Nov 2026).
+  const invalidMessage = (issue: z.ZodIssueOptionalMessage): string | undefined => {
+    const label = labelOf(issue);
+
+    return label ? `Please enter a valid ${label.toLowerCase()}` : undefined;
   };
   const defaultValue = fields
     .flatMap((f) => (Array.isArray(f) ? f : [f]))
@@ -248,16 +259,14 @@ export function DynamicForm<F extends Field>({
       return parseWithZod(formData, {
         schema: dynamicSchema,
         errorMap: (issue) => {
-          if (
-            !errorTranslations &&
-            issue.code === z.ZodIssueCode.invalid_string &&
-            issue.validation === 'regex'
-          ) {
-            return { message: t('Errors.invalidFormat') };
-          }
-
           if (!errorTranslations) {
-            return { message: requiredMessage(issue) ?? issue.message ?? t('Errors.invalidInput') };
+            return {
+              message:
+                requiredMessage(issue) ??
+                issue.message ??
+                invalidMessage(issue) ??
+                t('Errors.invalidInput'),
+            };
           }
 
           const field = issue.path[0];
@@ -266,7 +275,11 @@ export function DynamicForm<F extends Field>({
 
           return {
             message:
-              errorMessage ?? requiredMessage(issue) ?? issue.message ?? t('Errors.invalidInput'),
+              errorMessage ??
+              requiredMessage(issue) ??
+              issue.message ??
+              invalidMessage(issue) ??
+              t('Errors.invalidInput'),
           };
         },
       });
