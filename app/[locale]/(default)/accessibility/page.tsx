@@ -35,9 +35,10 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         actions={[{ label: 'Report a barrier', href: '#report', primary: true }]}
         description="You should be able to shop and plan a kitchen here, whatever device, browser or assistive technology you use. We're working toward the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA. If anything gets in your way, tell us and we'll fix it, or help you another way."
         image={{
-          src: '/images/pages/accessibility/hero-wcag-checklist.webp',
-          alt: 'Hands typing on a laptop beside a printed WCAG 2.2 AA checklist with every box ticked, on a red desk',
+          src: '/images/pages/accessibility/hero-accessibility-icon.jpg',
+          alt: 'A red clay disc with the white accessibility figure, a cursor arrow and a button beside it',
         }}
+        imageStyle="plain"
         kicker="Accessibility statement"
         note="Last updated November 2026."
         title="This site should work for everyone"
@@ -105,8 +106,8 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         fields={FIELDS}
         id="report"
         image={{
-          src: '/images/pages/accessibility/form-accessibility-icon.jpg',
-          alt: 'A red clay disc with the white accessibility figure, a cursor arrow and a button beside it',
+          src: '/images/pages/accessibility/form-wcag-checklist.webp',
+          alt: 'Hands typing on a laptop beside a printed WCAG 2.2 AA checklist with every box ticked, on a red desk',
         }}
         kicker="Tell us what isn't working"
         submitLabel="Send"
