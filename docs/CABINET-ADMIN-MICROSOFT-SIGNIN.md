@@ -8,6 +8,15 @@ The Microsoft button is always on the login card so the provision is visible to 
 it stays greyed out with "Not currently active" under it until `MICROSOFT_CLIENT_ID`,
 `MICROSOFT_CLIENT_SECRET` and `MICROSOFT_TENANT_ID` are set. Then it goes live on the next load.
 
+## Status (18 Nov 2026)
+
+EK sent the Application (client) ID, the Directory (tenant) ID and the **Secret ID**. The first
+two are set in `.env.local` and on Vercel (Production, Preview, Development). The Secret ID is only
+the label of the secret, not the secret itself; the button stays inactive until EK sends the secret
+**Value** (the long string shown once when the secret is created, usually containing `~`). If that
+value was not copied at the time, they add a new client secret and send its Value. Then set
+`MICROSOFT_CLIENT_SECRET` in the same three places and redeploy.
+
 ## What EK's Microsoft 365 admin does (about ten minutes)
 
 In the [Microsoft Entra admin center](https://entra.microsoft.com) → **Applications → App
