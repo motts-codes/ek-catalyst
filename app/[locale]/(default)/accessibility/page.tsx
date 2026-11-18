@@ -15,12 +15,17 @@ export const metadata: Metadata = {
     "We're working toward WCAG 2.2 AA across this site. If something gets in your way, call or text 860-247-1000 or tell us online, and we'll fix it or help you another way.",
 };
 
+// Phone is the one contact we can verify (10-digit US check); email stays optional for anyone who
+// needs a written channel, which on this form matters.
 const FIELDS: Array<Field | Field[]> = [
   [
     { type: 'text', name: 'name', label: 'Your name', required: true },
-    { type: 'text', name: 'contact', label: 'Email or phone', required: true },
+    { type: 'tel', name: 'phone', label: 'Phone', required: true },
   ],
-  { type: 'text', name: 'page', label: 'The page or feature' },
+  [
+    { type: 'email', name: 'email', label: 'Email' },
+    { type: 'text', name: 'page', label: 'The page or feature' },
+  ],
   { type: 'textarea', name: 'message', label: 'What happened', required: true },
 ];
 
