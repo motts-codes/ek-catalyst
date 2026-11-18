@@ -122,13 +122,12 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
           kicker="Known limitations"
           media={{
             image: {
-              src: '/images/pages/accessibility/limitations-checklist-wrench.webp',
-              alt: 'A white checklist with two items ticked and one open, a wrench beside it, on red',
+              src: '/images/pages/accessibility/limitations-checklist-wrench-dark.webp',
+              alt: 'A white checklist with two items ticked and one open, a wrench beside it, on black',
             },
             split: '60/40',
           }}
           title="What we're still working on"
-          tone="black"
         >
           <div className="max-w-xl space-y-4 text-sm leading-relaxed text-white/85 @xl:text-base">
             <p>

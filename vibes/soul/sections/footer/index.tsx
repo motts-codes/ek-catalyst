@@ -247,13 +247,15 @@ export const Footer = ({
               ))}
 
               {contactPanel && (
-                <div className="col-span-2 @2xl:col-span-1 @5xl:col-span-2">
+                // Full row at the 3-column stage (a third of the footer is narrower than the pill);
+                // the pill's own size steps up with this column's width, not the footer's.
+                <div className="col-span-2 @container @2xl:col-span-3 @5xl:col-span-2">
                   {/* Phone pill, after the brand-guidelines mockup: a pale red pill with a red hairline,
                       the phone in a pink disc flush to the left edge, the "Have a question?" line
                       small above the number. On hover a red fill swipes in from the disc side, the
                       disc goes dark red, the text reverses to white and the phone turns 25° and rings. */}
                   <Link
-                    className="group relative isolate inline-flex h-[68px] max-w-full items-center gap-3 overflow-hidden rounded-full border-[0.5px] border-[#d90716]/50 bg-[#fdf3f5] pr-5 text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] ring-offset-2 transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:-translate-x-full before:rounded-full before:bg-[var(--button-primary-background,#d90716)] before:transition-transform before:duration-500 before:ease-smooth before:content-[''] hover:border-[var(--button-primary-background,#d90716)] hover:text-white hover:before:translate-x-0 focus-visible:outline-0 focus-visible:ring-2 @xl:h-[72px]"
+                    className="group relative isolate inline-flex h-[60px] max-w-full items-center gap-3 overflow-hidden rounded-full border-[0.5px] border-[#d90716]/50 bg-[#fdf3f5] pr-5 text-foreground ring-[var(--footer-focus,hsl(var(--primary)))] ring-offset-2 transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:-translate-x-full before:rounded-full before:bg-[var(--button-primary-background,#d90716)] before:transition-transform before:duration-500 before:ease-smooth before:content-[''] hover:border-[var(--button-primary-background,#d90716)] hover:text-white hover:before:translate-x-0 focus-visible:outline-0 focus-visible:ring-2 @[18rem]:h-[68px] @[21rem]:h-[72px]"
                     href={contactPanel.phone.href}
                   >
                     <span className="flex aspect-square h-full shrink-0 items-center justify-center rounded-full bg-[#eea3a8] text-white transition-colors duration-300 group-hover:bg-[#9f3632]">
@@ -273,10 +275,10 @@ export const Footer = ({
                       </span>
                     </span>
                     <span className="flex min-w-0 flex-col">
-                      <span className="whitespace-nowrap text-[10px] leading-none tracking-tight text-contrast-500 transition-colors group-hover:text-white @xl:text-[11px]">
+                      <span className="whitespace-nowrap text-[10px] leading-none tracking-tight text-contrast-500 transition-colors group-hover:text-white @[21rem]:text-[11px]">
                         {contactPanel.title}
                       </span>
-                      <span className="mt-2.5 font-heading text-[26px] font-bold leading-none tracking-tight @xl:text-[30px]">
+                      <span className="mt-2 whitespace-nowrap font-heading text-[22px] font-bold leading-none tracking-tight @[18rem]:mt-2.5 @[18rem]:text-[26px] @[21rem]:text-[30px]">
                         {contactPanel.phone.label}
                       </span>
                     </span>
