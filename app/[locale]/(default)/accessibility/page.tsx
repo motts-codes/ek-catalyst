@@ -59,39 +59,58 @@ export default async function Accessibility({ params }: { params: Promise<{ loca
         cards={[
           {
             title: 'Text for every image',
-            imageLabel: 'Alt text',
+            image: {
+              src: '/images/pages/accessibility/card-alt-text.webp',
+              alt: 'A white picture frame with a swing tag attached, on red',
+            },
             description:
               'Product photos, door samples and offer banners have descriptive alt text, so a screen reader describes the cabinet, not the file name.',
           },
           {
             title: 'Works from the keyboard',
-            imageLabel: 'Keyboard',
+            image: {
+              src: '/images/pages/accessibility/card-keyboard.webp',
+              alt: 'Four white arrow keys, up, left, down and right, on red',
+            },
             description:
               'Menus, filters, forms and checkout work with Tab, Enter and the arrow keys, and you can always see where you are.',
           },
           {
             title: 'Readable contrast',
-            imageLabel: 'Contrast',
+            image: {
+              src: '/images/pages/accessibility/card-contrast.webp',
+              alt: 'A round disc split into a white half and a black half, on red',
+            },
             description: 'Text and buttons are designed to meet WCAG contrast ratios.',
           },
           {
             title: 'Clear structure',
-            imageLabel: 'Structure',
+            image: {
+              src: '/images/pages/accessibility/card-structure.webp',
+              alt: 'A white form with a heading, labeled fields and a button, on red',
+            },
             description: 'Headings in order, labeled form fields and clear error messages.',
           },
           {
             title: 'Motion you control',
-            imageLabel: 'Motion',
+            image: {
+              src: '/images/pages/accessibility/card-motion.webp',
+              alt: 'A white pause button, on red',
+            },
             description:
               "Slideshows pause when you hover or focus on them, and follow your device's reduced-motion setting.",
           },
           {
             title: 'Zoom without breaking',
-            imageLabel: 'Zoom',
+            image: {
+              src: '/images/pages/accessibility/card-zoom.webp',
+              alt: 'A white magnifying glass with a plus sign, on red',
+            },
             description: 'The site works at 200% zoom and on a phone without sideways scrolling.',
           },
         ]}
         columns={3}
+        imageStyle="plain"
         kicker="What we do"
         numbered
         tint
