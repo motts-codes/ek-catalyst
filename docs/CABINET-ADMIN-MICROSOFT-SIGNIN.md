@@ -4,8 +4,9 @@ EK staff use Microsoft 365, so `/cabinet-admin` offers "Sign in with Microsoft" 
 agency's Google button. Both buttons end at the same gate: the signed-in email must be on the
 `EK_ADMIN_EMAILS` allowlist (exact addresses, compared lowercase). A domain alone is never enough.
 
-The Microsoft button shows only once `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET` and
-`MICROSOFT_TENANT_ID` are set. Until EK's app registration exists the panel is Google-only, as before.
+The Microsoft button is always on the login card so the provision is visible to the client, but
+it stays greyed out with "Not currently active" under it until `MICROSOFT_CLIENT_ID`,
+`MICROSOFT_CLIENT_SECRET` and `MICROSOFT_TENANT_ID` are set. Then it goes live on the next load.
 
 ## What EK's Microsoft 365 admin does (about ten minutes)
 
