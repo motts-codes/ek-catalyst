@@ -84,10 +84,18 @@ const config: NextAuthConfig = {
   },
   callbacks: {
     // Only allow sign-in for allowlisted EK emails; everyone else is rejected at the door.
-    signIn({ profile, user }) {
+    // Every attempt is logged (Vercel → Logs, filter "[cabinet-admin]") so sign-ins, and rejected
+    // ones in particular, can be seen without a store: who, via which provider, allowed or not.
+    signIn({ profile, user, account }) {
       const email = profile?.email ?? user?.email;
+      const allowed = isAllowedAdminEmail(email);
 
-      return isAllowedAdminEmail(email);
+      // eslint-disable-next-line no-console
+      console.info(
+        `[cabinet-admin] sign-in ${allowed ? 'allowed' : 'rejected'} email=${email ?? 'none'} provider=${account?.provider ?? 'unknown'}`,
+      );
+
+      return allowed;
     },
     // Carry the email onto the token/session so saves can attribute changes to a person.
     jwt({ token, profile }) {

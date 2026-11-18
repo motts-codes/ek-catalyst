@@ -64,3 +64,19 @@ it is rechecked against the list on every admin action and page load, not only a
 - Verified 18 Nov 2026 with placeholder credentials: the button renders when the vars are set and
   the redirect lands on `login.microsoftonline.com/<tenant>/oauth2/v2.0/authorize` with
   `redirect_uri=/api/admin-auth/callback/microsoft-entra-id` and scope `openid profile email`.
+
+## Seeing who signs in
+
+Every sign-in attempt, allowed or rejected, is logged by the sign-in callback in
+`lib/cabinet-admin/admin-auth.ts` as one line:
+
+```
+[cabinet-admin] sign-in allowed email=someone@expresskitchens.com provider=microsoft-entra-id
+[cabinet-admin] sign-in rejected email=someone@gmail.com provider=google
+```
+
+Read them in Vercel → the project → **Logs**, filter on `[cabinet-admin]`. Rejected lines are the
+ones to watch: a stranger or a bot trying the door. Retention in the Vercel log view is short (about
+a day on Pro); add a log drain if EK wants history. Microsoft-side sign-ins are also visible to EK's
+admin in Entra under the app registration → Sign-in logs.
+
