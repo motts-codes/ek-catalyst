@@ -15,14 +15,14 @@ export interface BlogPostCardBlogPost {
   };
   href: string;
   title: string;
-  /** Short label over the title on the compact card, e.g. Guide / Trends / Pricing (first tag). */
+  /** Short label over the title: the post's first tag, when it has one. */
   label?: string;
 }
 
 interface Props {
   blogPost: BlogPostCardBlogPost;
   /**
-   * `compact`: the home-page version — "Guide · date" over a two-line bold title, no summary
+   * `compact`: the home-page version — "tag · date" over a two-line bold title, no summary
    * or author. `list`: the blog page card — bordered, red label eyebrow, bold title, summary and
    * a "Read more" button.
    */
@@ -56,8 +56,9 @@ export function BlogPostCard({ blogPost, variant = 'default', className }: Props
           ) : null}
         </div>
         <div className="flex flex-1 flex-col p-6 @xl:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--button-primary-background,#d90716)]">
-            {label ?? 'Guide'}
+          {/* Always rendered, so titles line up across cards whether or not the post has a tag. */}
+          <p className="min-h-4 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--button-primary-background,#d90716)]">
+            {label}
           </p>
           <h3 className="mt-3 font-heading text-xl font-bold leading-snug transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @xl:text-2xl">
             {title}
@@ -106,7 +107,8 @@ export function BlogPostCard({ blogPost, variant = 'default', className }: Props
       {compact ? (
         <>
           <p className="text-xs font-semibold text-contrast-500">
-            {label ?? 'Guide'} · <time dateTime={date}>{date}</time>
+            {label != null && label !== '' && `${label} · `}
+            <time dateTime={date}>{date}</time>
           </p>
           <h3 className="mt-1.5 line-clamp-2 font-heading text-lg font-bold leading-snug transition-colors group-hover:text-[var(--button-primary-background,#d90716)]">
             {title}

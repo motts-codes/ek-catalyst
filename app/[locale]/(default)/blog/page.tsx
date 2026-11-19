@@ -19,9 +19,6 @@ interface Props {
 
 const defaultPostLimit = 9;
 
-// The editorial topics a post can carry as a tag (the card label); shown as filter chips.
-const BLOG_TOPICS = ['Guide', 'Trends', 'Pricing', 'News'];
-
 const searchParamsCache = createSearchParamsCache({
   tag: parseAsString,
   before: parseAsString,
@@ -112,14 +109,6 @@ export default async function Blog(props: Props) {
       }
       emptyStateSubtitle={Streamable.from(getEmptyStateSubtitle)}
       emptyStateTitle={Streamable.from(getEmptyStateTitle)}
-      filters={[
-        { label: 'All', href: blog.path, active: !tag },
-        ...BLOG_TOPICS.map((topic) => ({
-          label: topic,
-          href: `${blog.path}?tag=${topic}`,
-          active: tag === topic,
-        })),
-      ]}
       kicker="Blog"
       paginationInfo={Streamable.from(() => getPaginationInfo(props.searchParams))}
       placeholderCount={6}

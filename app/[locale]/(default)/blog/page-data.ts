@@ -7,7 +7,21 @@ import { PaginationFragment } from '~/client/fragments/pagination';
 import { graphql } from '~/client/graphql';
 import { revalidate } from '~/client/revalidate-target';
 
-const CARD_LABELS = new Set(['Guide', 'Trends', 'Pricing', 'News']);
+// BigCommerce cuts the plain-text summary at a character count, mid-word. Ask for a little more
+// than the card shows, then end it on a whole word with an ellipsis. The limit is written into the
+// query as a literal: passed as a GraphQL variable, BigCommerce ignores it and returns 120.
+const SUMMARY_LIMIT = 220;
+
+function tidySummary(text: string): string {
+  const summary = text.trim();
+
+  if (summary.length < SUMMARY_LIMIT - 1 || /[.!?]$/.test(summary)) return summary;
+
+  const cut = summary.lastIndexOf(' ');
+  const whole = (cut > 0 ? summary.slice(0, cut) : summary).replace(/[\s,;:–-]+$/, '');
+
+  return `${whole}…`;
+}
 
 const BlogQuery = graphql(`
   query BlogQuery {
@@ -42,7 +56,7 @@ const BlogPostsPageQuery = graphql(
                   entityId
                   name
                   path
-                  plainTextSummary
+                  plainTextSummary(characterLimit: 220)
                   tags
                   publishedDate {
                     utc
@@ -108,11 +122,10 @@ export const getBlogPosts = cache(
       posts: removeEdgesAndNodes(blog.posts).map((post) => ({
         id: String(post.entityId),
         author: post.author,
-        content: post.plainTextSummary,
+        content: tidySummary(post.plainTextSummary),
         date: format.dateTime(new Date(post.publishedDate.utc)),
-        // The card label is one of a few editorial tags on the post (Guide / Trends / Pricing); the
-        // topic tags are left alone.
-        label: post.tags.find((postTag) => CARD_LABELS.has(postTag)),
+        // The card label is the post's first tag, when it has one (most posts have none).
+        label: post.tags[0],
         image: post.thumbnailImage
           ? {
               src: post.thumbnailImage.url,
