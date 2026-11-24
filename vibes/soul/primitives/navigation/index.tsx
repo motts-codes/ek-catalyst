@@ -1086,7 +1086,9 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                     below the nav: width = viewport minus page gutter, aligned to the nav edges. */}
                 <Popover.Content
                   align="end"
-                  className="max-h-[calc(var(--radix-popover-content-available-height)-16px)] w-[calc(100vw-2rem)] max-w-screen-2xl py-2 @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+                  // z-50 like the other header dropdowns: without it, positioned page content
+                  // (the hero's slide dots and play/pause, z-[1]) paints over the search bar.
+                  className="z-50 max-h-[calc(var(--radix-popover-content-available-height)-16px)] w-[calc(100vw-2rem)] max-w-screen-2xl py-2 @container data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
                   collisionPadding={16}
                   side="bottom"
                   sideOffset={12}
