@@ -33,6 +33,30 @@ export const Toaster = ({ ...props }: ToasterProps) => {
   );
 };
 
+// The action button closes the toast once pressed: a second press must not repeat the action
+// (the cart's Undo re-adds the line every time it is run).
+function once(options: ToastOptions | undefined, dismiss: () => void): ToastOptions | undefined {
+  const action = options?.action;
+
+  if (!action) return options;
+
+  let done = false;
+
+  return {
+    ...options,
+    action: {
+      label: action.label,
+      onClick: () => {
+        if (done) return;
+
+        done = true;
+        dismiss();
+        action.onClick();
+      },
+    },
+  };
+}
+
 export const toast = {
   success: (message: ReactNode, options?: ToastOptions) => {
     const position = options?.position;
@@ -42,7 +66,7 @@ export const toast = {
         message={message}
         onDismiss={() => SonnerToast.dismiss(toastId)}
         variant="success"
-        {...options}
+        {...once(options, () => SonnerToast.dismiss(toastId))}
       />,
       { position, duration: options?.duration },
     );
@@ -55,7 +79,7 @@ export const toast = {
         message={message}
         onDismiss={() => SonnerToast.dismiss(toastId)}
         variant="error"
-        {...options}
+        {...once(options, () => SonnerToast.dismiss(toastId))}
       />,
       { position },
     );
@@ -68,7 +92,7 @@ export const toast = {
         message={message}
         onDismiss={() => SonnerToast.dismiss(toastId)}
         variant="warning"
-        {...options}
+        {...once(options, () => SonnerToast.dismiss(toastId))}
       />,
       { position },
     );
@@ -81,7 +105,7 @@ export const toast = {
         message={message}
         onDismiss={() => SonnerToast.dismiss(toastId)}
         variant="info"
-        {...options}
+        {...once(options, () => SonnerToast.dismiss(toastId))}
       />,
       { position },
     );

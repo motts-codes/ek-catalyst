@@ -15,17 +15,25 @@ export interface EstimatorVisuals {
   lines: Partial<Record<LineId, Picture>>;
   /** Keyed by `${lineId}:${door}`. */
   doors: Record<string, Picture>;
+  /** The kitchen photo of the collection a door style lives in, keyed like `doors`. */
+  kitchens: Record<string, Picture>;
+  /** A finish's own kitchen photo (Prism), keyed by `${lineId}:${door}|${color}`. */
+  finishKitchens: Record<string, Picture>;
   /** Keyed by color name; Prism's measured hexes. */
   colors: Record<string, { hex: string }>;
 }
 
 export const doorKey = (line: LineId, door: string) => `${line}:${door}`;
+export const finishKey = (line: LineId, door: string, color: string) =>
+  `${doorKey(line, door)}|${color}`;
 
 const letters = (s: string) => s.toLowerCase().replace(/[^a-z]/g, '');
 
-// The door sample and the kitchen photo of a collection, whichever way round the audience-aware
-// card put them (contractors get the door as the cover, homeowners get the kitchen).
+// The door sample and the kitchen photo of a collection. `photos` carries both whatever the
+// audience; older callers without it are read off the card images (contractors get the door as
+// the cover and no kitchen, homeowners get the kitchen with the door on hover).
 function photosOf(line: CabinetLine): { door?: string; kitchen?: string } {
+  if (line.photos) return line.photos;
   if (line.containCover) return { door: line.image?.src, kitchen: line.hoverImage?.src };
 
   return { door: line.hoverImage?.src, kitchen: line.image?.src };
@@ -80,7 +88,13 @@ export function buildEstimatorVisuals(
   collections: CabinetLine[],
   doorsByLine: Record<LineId, string[]>,
 ): EstimatorVisuals {
-  const visuals: EstimatorVisuals = { lines: {}, doors: {}, colors: {} };
+  const visuals: EstimatorVisuals = {
+    lines: {},
+    doors: {},
+    kitchens: {},
+    finishKitchens: {},
+    colors: {},
+  };
 
   LINES.forEach((line) => {
     const kitchen = lineKitchen(collections, line.id);
@@ -93,6 +107,22 @@ export function buildEstimatorVisuals(
 
       if (doorPhoto)
         visuals.doors[doorKey(line.id, door)] = { src: doorPhoto, alt: `${door} door` };
+
+      const kitchenPhoto = collection ? photosOf(collection).kitchen : undefined;
+
+      if (collection && kitchenPhoto) {
+        visuals.kitchens[doorKey(line.id, door)] = {
+          src: kitchenPhoto,
+          alt: `A ${collection.name} kitchen`,
+        };
+      }
+
+      Object.entries(collection?.finishKitchens ?? {}).forEach(([finish, src]) => {
+        visuals.finishKitchens[finishKey(line.id, door, finish)] = {
+          src,
+          alt: `A ${collection?.name ?? door} kitchen in ${finish}`,
+        };
+      });
 
       collection?.finishSwatches?.forEach((swatch) => {
         if (swatch.hex && !visuals.colors[swatch.name])

@@ -1,7 +1,7 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { Check, Link2, Plus, Search, X } from 'lucide-react';
+import { Check, Link2, Minus, Plus, Search, X } from 'lucide-react';
 import { useDeferredValue, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { type GlossaryGroup, termId } from '~/lib/pages/cabinet-glossary';
@@ -249,15 +249,19 @@ function GroupRow({
               {group.terms.length}
             </span>
           </span>
-          <Plus
+          {/* + closed, − open: the same expand / collapse sign as the FAQ rows elsewhere, rather
+              than a rotated + that reads as "close". */}
+          <span
             aria-hidden
             className={clsx(
-              'shrink-0 text-contrast-400 transition-transform duration-300 group-hover:text-[var(--button-primary-background,#d90716)]',
-              open && 'rotate-45',
+              'flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors',
+              open
+                ? 'border-[var(--button-primary-background,#d90716)] text-[var(--button-primary-background,#d90716)]'
+                : 'border-contrast-200 text-contrast-500 group-hover:border-[var(--button-primary-background,#d90716)] group-hover:text-[var(--button-primary-background,#d90716)]',
             )}
-            size={22}
-            strokeWidth={1.75}
-          />
+          >
+            {open ? <Minus size={16} strokeWidth={2.25} /> : <Plus size={16} strokeWidth={2.25} />}
+          </span>
         </button>
       </h2>
       <div

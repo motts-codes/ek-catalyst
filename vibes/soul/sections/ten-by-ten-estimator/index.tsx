@@ -25,7 +25,12 @@ import {
   TEN_BY_TEN_FINE_PRINT,
   type TenByTenEstimate,
 } from '~/lib/estimator/ten-by-ten';
-import { doorKey, type EstimatorVisuals, type Picture } from '~/lib/estimator/ten-by-ten-visuals';
+import {
+  doorKey,
+  type EstimatorVisuals,
+  finishKey,
+  type Picture,
+} from '~/lib/estimator/ten-by-ten-visuals';
 
 import { fireConfetti } from './confetti';
 
@@ -47,7 +52,9 @@ const STEPS = ['Shape', 'Line', 'Door style', 'Color'] as const;
 const SINGLE_FINISH = 'Standard finish (single color)';
 const RESULT = 5;
 
-// How the color step resolves for a door style: shown as swatches, or decided for the visitor.
+// How the color step is asked for a door style: Prism's painted colors as swatches; a door that
+// comes in one standard finish (Star) shown as that door, already chosen; a Euro door's long list
+// of laminates (same price for every one) as named chips.
 type ColorMode = 'pick' | 'single' | 'any';
 
 interface Wizard {
@@ -75,8 +82,8 @@ interface Wizard {
   reset: () => void;
 }
 
-// Whether the color is a real choice (swatches to show), or there is only one, or the door comes
-// in a long list of finishes with no swatch to show (Euro laminates: same price for every one).
+// Whether the color is a choice with swatches to show, or there is only one, or the door comes in
+// a long list of finishes with no swatch to show (Euro laminates).
 function colorModeFor(colors: ColorOption[], visuals: EstimatorVisuals): ColorMode {
   if (colors.length <= 1) return 'single';
   if (colors.some((c) => visuals.colors[c.name])) return 'pick';
@@ -102,7 +109,7 @@ function useWizard(visuals: EstimatorVisuals): Wizard {
   let reach = 2;
 
   if (lineReady) reach = 3;
-  if (door) reach = colorMode === 'pick' ? 4 : RESULT;
+  if (door) reach = 4;
   if (estimate) reach = RESULT;
 
   const canContinue = [true, lineReady, door !== null, color !== null][step - 1] ?? false;
@@ -120,9 +127,10 @@ function useWizard(visuals: EstimatorVisuals): Wizard {
     reach,
     canContinue,
     go: setStep,
-    // Door → price when there is no color to pick; otherwise one step on.
-    next: () => setStep(step === 3 && colorMode !== 'pick' ? RESULT : step + 1),
-    back: () => setStep(step === RESULT && colorMode !== 'pick' ? 3 : step - 1),
+    // Every pick is asked, the color one included (a single finish arrives already chosen), so a
+    // change of shape or line on the way back always walks through the color again.
+    next: () => setStep(step + 1),
+    back: () => setStep(step - 1),
     pickShape: setShape,
     pickLine: (id) => {
       setLineId(id);
@@ -140,8 +148,8 @@ function useWizard(visuals: EstimatorVisuals): Wizard {
       const mode = colorModeFor(next, visuals);
 
       setDoor(d);
-      // One finish, or a laminate list with nothing to show: decided for them.
-      setColor(mode === 'pick' ? null : (next[0]?.name ?? null));
+      // One finish: chosen for them (the color step shows it). Otherwise they pick.
+      setColor(mode === 'single' ? (next[0]?.name ?? null) : null);
     },
     pickColor: setColor,
     reset: () => {
@@ -444,10 +452,77 @@ function DoorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
   );
 }
 
-// 4 · Color: big swatches, standard first, the premium ones tagged.
+// 4 · Color: Prism's swatches (standard first, the premium ones tagged); a Star door's one
+// standard finish, shown as the door itself; a Euro door's laminates as named chips.
 function ColorStep({ w, visuals }: { w: Wizard; visuals: EstimatorVisuals }) {
+  const door = w.door ?? 'the door';
+
+  if (w.colorMode === 'single') {
+    const picture = w.line && w.door ? visuals.doors[doorKey(w.line.id, w.door)] : undefined;
+
+    return (
+      <Panel
+        help={`${door} comes in one standard finish, the one you see here. It's chosen for you.`}
+        n={4}
+        title={`${door} comes in one finish`}
+        w={w}
+      >
+        <div aria-label="Color" className="max-w-[14rem]" role="radiogroup">
+          <PictureChoice
+            aspect="aspect-square"
+            fit="contain"
+            inset="p-[10%]"
+            label="Standard finish"
+            note={door}
+            on
+            onPick={() => w.pickColor(w.colors[0]?.name ?? SINGLE_FINISH)}
+            picture={picture}
+            sizes="(min-width: 56rem) 14rem, 60vw"
+          />
+        </div>
+      </Panel>
+    );
+  }
+
+  if (w.colorMode === 'any') {
+    return (
+      <Panel
+        help={`${door} comes in ${w.colors.length} finishes, all at the same price. Pick the one you have in mind; you can change it with your designer.`}
+        n={4}
+        title={`Which finish for ${door}?`}
+        w={w}
+      >
+        <div aria-label="Finish" className="flex flex-wrap gap-2" role="radiogroup">
+          {w.colors.map((c) => {
+            const on = w.color === c.name;
+
+            return (
+              <button
+                aria-checked={on}
+                className={clsx(
+                  'inline-flex min-h-10 items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors',
+                  RING,
+                  on
+                    ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white shadow-sm'
+                    : 'border-contrast-200 bg-white text-foreground hover:border-[#fcb6bb] hover:bg-[#fdf3f5]',
+                )}
+                key={c.name}
+                onClick={() => w.pickColor(c.name)}
+                role="radio"
+                type="button"
+              >
+                {on ? <Check size={14} strokeWidth={3} /> : null}
+                {c.name}
+              </button>
+            );
+          })}
+        </div>
+      </Panel>
+    );
+  }
+
   return (
-    <Panel n={4} title={`Which color for ${w.door ?? 'the door'}?`} w={w}>
+    <Panel n={4} title={`Which color for ${door}?`} w={w}>
       <BalancedRows
         colsFor={(width) => columnsFor(width, 7, 5, 4)}
         items={w.colors}
@@ -786,9 +861,20 @@ function useContainerWidth<T extends HTMLElement>(): [RefObject<T | null>, numbe
   return [ref, width];
 }
 
+// The big picture on the price card: the kitchen of what they picked. The finish's own photo
+// when there is one (Prism), else the door's collection; the layout render when neither exists.
+function kitchenFor(w: Wizard, visuals: EstimatorVisuals): Picture | undefined {
+  if (!w.line || !w.door) return undefined;
+
+  const byFinish = w.color
+    ? visuals.finishKitchens[finishKey(w.line.id, w.door, w.color)]
+    : undefined;
+
+  return byFinish ?? visuals.kitchens[doorKey(w.line.id, w.door)];
+}
+
 // What the color pick reads as on the card.
 function colorLabel(w: Wizard): string {
-  if (w.colorMode === 'any') return `Your choice of ${w.colors.length} finishes`;
   if (w.color === SINGLE_FINISH) return 'Standard finish';
 
   return w.color ?? 'Not chosen yet';
@@ -809,6 +895,7 @@ function ResultStep({
   const build = w.line?.variants.find((v) => v.program === w.program)?.label;
   const door = w.line && w.door ? visuals.doors[doorKey(w.line.id, w.door)] : undefined;
   const hex = w.color ? visuals.colors[w.color]?.hex : undefined;
+  const kitchen = kitchenFor(w, visuals);
 
   // A little celebration the moment the price lands.
   useEffect(() => fireConfetti(), []);
@@ -833,12 +920,13 @@ function ResultStep({
         <div className="grid @3xl:grid-cols-[1.1fr_1fr]">
           <div className="relative aspect-[4/3] bg-[#f9fafd] @3xl:aspect-auto @3xl:min-h-[26rem]">
             <Image
-              alt={shape.image.alt}
+              alt={kitchen?.alt ?? shape.image.alt}
               className="object-cover"
               fill
               preload
               sizes="(min-width: 56rem) 40rem, 100vw"
-              src={shape.image.src}
+              src={kitchen?.src ?? shape.image.src}
+              unoptimized={(kitchen?.src ?? shape.image.src).startsWith('http')}
             />
             <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide shadow-sm">
               {shape.label}
@@ -866,16 +954,24 @@ function ResultStep({
                   </span>
                 ) : null}
               </PickRow>
-              <PickRow
-                edit={w.colorMode === 'pick' ? () => w.go(4) : undefined}
-                label="Color"
-                value={colorLabel(w)}
-              >
+              <PickRow edit={() => w.go(4)} label="Color" value={colorLabel(w)}>
                 {hex ? (
                   <span
                     className="size-9 shrink-0 rounded-full border border-black/10"
                     style={{ backgroundColor: hex }}
                   />
+                ) : null}
+                {!hex && w.colorMode === 'single' && door ? (
+                  <span className="relative size-9 shrink-0 overflow-hidden rounded-full border border-contrast-100 bg-[#f6f6f8]">
+                    <Image
+                      alt=""
+                      className="object-cover"
+                      fill
+                      sizes="36px"
+                      src={door.src}
+                      unoptimized={door.src.startsWith('http')}
+                    />
+                  </span>
                 ) : null}
               </PickRow>
             </dl>

@@ -136,6 +136,48 @@ export const updateLineItem = async (
       };
     }
 
+    case 'set': {
+      const parsedSelectedOptions = parseSelectedOptions(cartLineItem.selectedOptions);
+      const { quantity } = submission.value;
+
+      try {
+        await updateQuantity({
+          lineItemEntityId: cartLineItem.id,
+          productEntityId: cartLineItem.productEntityId,
+          variantEntityId: cartLineItem.variantEntityId,
+          selectedOptions: parsedSelectedOptions,
+          quantity,
+        });
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+
+        if (error instanceof BigCommerceGQLError) {
+          return {
+            ...prevState,
+            lastResult: submission.reply({
+              formErrors: error.errors.map(({ message }) => message),
+            }),
+          };
+        }
+
+        if (error instanceof Error) {
+          return { ...prevState, lastResult: submission.reply({ formErrors: [error.message] }) };
+        }
+
+        return { ...prevState, lastResult: submission.reply({ formErrors: [String(error)] }) };
+      }
+
+      const item = submission.value;
+
+      return {
+        lineItems: prevState.lineItems.map((lineItem) =>
+          lineItem.id === item.id ? { ...lineItem, quantity } : lineItem,
+        ),
+        lastResult: submission.reply({ resetForm: true }),
+      };
+    }
+
     case 'delete': {
       try {
         await removeItem({ lineItemEntityId: submission.value.id });

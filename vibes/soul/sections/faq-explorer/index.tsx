@@ -8,6 +8,7 @@ import {
   Layers,
   Link2,
   type LucideIcon,
+  Minus,
   PackageOpen,
   PencilRuler,
   Plus,
@@ -288,15 +289,19 @@ function TopicRow({
         >
           <Icon aria-hidden className={clsx('shrink-0', RED)} size={22} strokeWidth={1.75} />
           <span className="flex-1">{group.title}</span>
-          <Plus
+          {/* + closed, − open: the same expand / collapse sign as the FAQ rows elsewhere, rather
+              than a rotated + that reads as "close". */}
+          <span
             aria-hidden
             className={clsx(
-              'shrink-0 text-contrast-400 transition-transform duration-300 group-hover:text-[var(--button-primary-background,#d90716)]',
-              open && 'rotate-45',
+              'flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors',
+              open
+                ? 'border-[var(--button-primary-background,#d90716)] text-[var(--button-primary-background,#d90716)]'
+                : 'border-contrast-200 text-contrast-500 group-hover:border-[var(--button-primary-background,#d90716)] group-hover:text-[var(--button-primary-background,#d90716)]',
             )}
-            size={22}
-            strokeWidth={1.75}
-          />
+          >
+            {open ? <Minus size={16} strokeWidth={2.25} /> : <Plus size={16} strokeWidth={2.25} />}
+          </span>
         </button>
       </h2>
       <div

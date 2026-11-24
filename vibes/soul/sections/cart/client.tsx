@@ -11,6 +11,8 @@ import {
   useEffect,
   useMemo,
   useOptimistic,
+  useRef,
+  useState,
 } from 'react';
 import { useFormStatus } from 'react-dom';
 
@@ -165,6 +167,8 @@ export interface CartProps<LineItem extends CartLineItem> {
   deleteLineItemLabel?: string;
   decrementLineItemLabel?: string;
   incrementLineItemLabel?: string;
+  /** Accessible name of the typed quantity box ("Quantity"). */
+  quantityLabel?: string;
   cart: Cart<LineItem>;
   couponCode?: CouponCode;
   giftCertificate?: GiftCertificate;
@@ -230,6 +234,7 @@ export function CartClient<LineItem extends CartLineItem>({
   columnLabels = { details: 'Product details', price: 'Price', quantity: 'Qty', total: 'Total' },
   decrementLineItemLabel,
   incrementLineItemLabel,
+  quantityLabel,
   deleteLineItemLabel,
   lineItemAction,
   lineItemActionPendingLabel = 'You have a cart update in progress. Are you sure you want to leave this page? Your changes may be lost.',
@@ -384,6 +389,12 @@ export function CartClient<LineItem extends CartLineItem>({
           return prevState.map((item) =>
             item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
           );
+        }
+
+        case 'set': {
+          const { id, quantity } = submission.value;
+
+          return prevState.map((item) => (item.id === id ? { ...item, quantity } : item));
         }
 
         case 'delete': {
@@ -619,6 +630,16 @@ export function CartClient<LineItem extends CartLineItem>({
 
                           const intent = formData.get('intent');
 
+                          if (intent === 'set') {
+                            const next = Number(formData.get('quantity'));
+                            const delta = next - lineItem.quantity;
+
+                            formData.set('quantity', Math.abs(delta).toString());
+
+                            if (delta > 0) events.onAddToCart?.(formData);
+                            if (delta < 0) events.onRemoveFromCart?.(formData);
+                          }
+
                           if (intent === 'increment') {
                             formData.set('quantity', '1');
 
@@ -639,6 +660,8 @@ export function CartClient<LineItem extends CartLineItem>({
                           }
                         });
                       }}
+                      pending={isLineItemActionPending}
+                      quantityLabel={quantityLabel}
                     />
                   </div>
                 </li>
@@ -651,21 +674,96 @@ export function CartClient<LineItem extends CartLineItem>({
   );
 }
 
+// How long the counter waits after the last click or keystroke before it sends the new quantity.
+const QUANTITY_SETTLE_MS = 500;
+
 function CounterForm({
   lineItem,
   action,
   onSubmit,
+  pending,
   incrementLabel = 'Increase count',
   decrementLabel = 'Decrease count',
   deleteLabel = 'Remove item',
+  quantityLabel = 'Quantity',
 }: {
   lineItem: CartLineItem;
   incrementLabel?: string;
   decrementLabel?: string;
   deleteLabel?: string;
+  quantityLabel?: string;
   action: (payload: FormData) => void;
   onSubmit: (formData: FormData) => void;
+  /** A cart update is in flight (the draft is not re-synced from the line until it lands). */
+  pending: boolean;
 }) {
+  // The quantity shown in the box. +/- and typing change it at once; the cart is updated once
+  // the visitor pauses (one request for a burst of clicks), or when the box loses focus / Enter
+  // is pressed. `dirty` marks a draft the cart has not been told about yet.
+  const [draft, setDraftState] = useState(String(lineItem.quantity));
+  // The draft as of the last change, for clicks that land before React re-renders (a quick
+  // triple-click must count three, not one).
+  const draftRef = useRef(draft);
+  const dirty = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const setDraft = (value: string) => {
+    draftRef.current = value;
+    setDraftState(value);
+  };
+
+  useEffect(() => {
+    if (!dirty.current && !pending) {
+      draftRef.current = String(lineItem.quantity);
+      setDraftState(draftRef.current);
+    }
+  }, [lineItem.quantity, pending]);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  const commit = () => {
+    clearTimeout(timer.current);
+    dirty.current = false;
+
+    const next = Number.parseInt(draftRef.current, 10);
+
+    // Blank or nonsense: back to what the cart has.
+    if (!Number.isInteger(next) || next < 1) {
+      setDraft(String(lineItem.quantity));
+
+      return;
+    }
+
+    if (next === lineItem.quantity) return;
+
+    const formData = new FormData();
+
+    formData.set('id', lineItem.id);
+    formData.set('intent', 'set');
+    formData.set('quantity', String(next));
+    onSubmit(formData);
+  };
+
+  // Latest draft for the settle timer (the closure above reads `draft` from its own render).
+  const commitRef = useRef(commit);
+
+  commitRef.current = commit;
+
+  const change = (value: string, settleMs = QUANTITY_SETTLE_MS) => {
+    dirty.current = true;
+    setDraft(value);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => commitRef.current(), settleMs);
+  };
+
+  // The quantity the +/- buttons step from: the draft when it is a number, else the line's.
+  const currentOf = () => {
+    const shown = Number.parseInt(draftRef.current, 10);
+
+    return Number.isInteger(shown) && shown >= 1 ? shown : lineItem.quantity;
+  };
+  const current = currentOf();
+
   const [form, fields] = useForm({
     defaultValue: { id: lineItem.id },
     shouldValidate: 'onBlur',
@@ -734,36 +832,48 @@ function CounterForm({
                 aria-label={decrementLabel}
                 className={clsx(
                   'group rounded-l-lg bg-[var(--cart-counter-background,hsl(var(--background)))] p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
-                  lineItem.quantity === 1
+                  current === 1
                     ? 'opacity-50'
                     : 'hover:bg-[var(--cart-counter-background-hover,hsl(var(--contrast-100)/50%))]',
                 )}
-                disabled={lineItem.quantity === 1}
-                name="intent"
-                type="submit"
-                value="decrement"
+                disabled={current === 1}
+                onClick={() => change(String(Math.max(1, currentOf() - 1)))}
+                type="button"
               >
                 <Minus
                   className={clsx(
                     'text-[var(--cart-counter-icon,hsl(var(--contrast-300)))] transition-colors duration-300',
-                    lineItem.quantity !== 1 &&
+                    current !== 1 &&
                       'group-hover:text-[var(--cart-counter-icon-hover,hsl(var(--foreground)))]',
                   )}
                   size={16}
                   strokeWidth={1.5}
                 />
               </button>
-              <span className="flex w-7 select-none justify-center text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))]">
-                {lineItem.quantity}
-              </span>
+              <input
+                aria-label={quantityLabel}
+                className="w-10 border-0 bg-transparent p-0 text-center text-sm tabular-nums [appearance:textfield] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                inputMode="numeric"
+                max={999}
+                min={1}
+                onBlur={commit}
+                onChange={(event) => change(event.target.value, 900)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    commit();
+                  }
+                }}
+                type="number"
+                value={draft}
+              />
               <button
                 aria-label={incrementLabel}
                 className={clsx(
                   'group rounded-r-lg bg-[var(--cart-counter-background,hsl(var(--background)))] p-2 transition-colors duration-300 hover:bg-[var(--cart-counter-background-hover,hsl(var(--contrast-100)/50%))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--cart-focus,hsl(var(--primary)))] disabled:cursor-not-allowed',
                 )}
-                name="intent"
-                type="submit"
-                value="increment"
+                onClick={() => change(String(Math.min(999, currentOf() + 1)))}
+                type="button"
               >
                 <Plus
                   className="text-[var(--cart-counter-icon,hsl(var(--contrast-300)))] transition-colors duration-300 group-hover:text-[var(--cart-counter-icon-hover,hsl(var(--foreground)))]"

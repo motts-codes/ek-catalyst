@@ -24,6 +24,9 @@ export interface CabinetLine {
   containCover?: boolean;
   /** Second gallery image (e.g. door sample) — revealed on hover, bottom-right, sliding up. */
   hoverImage?: { src: string; alt: string };
+  /** The door sample and the kitchen photo as such, whichever way the audience-aware card uses
+   *  them (contractor cards drop the kitchen; the estimator still needs it). */
+  photos?: { door?: string; kitchen?: string };
   /** "Basic Kitchen Starting" price for the selected program. */
   price?: string;
   /** Strikethrough / was-price. */

@@ -499,6 +499,7 @@ export const getCabinetLines = cache(async (program: CabinetProgram): Promise<Ca
         image,
         containCover: containCover ?? false,
         hoverImage,
+        photos: named,
         price: pricing?.price,
         strikePrice: pricing?.strike_price,
         emiText: pricing?.emi_text,

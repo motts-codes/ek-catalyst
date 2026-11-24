@@ -423,6 +423,7 @@ export default async function Cart({ params }: Props) {
               : undefined
           }
           incrementLineItemLabel={t('increment')}
+          quantityLabel={t('quantity')}
           itemLabels={{ one: t('itemOne'), other: t('itemOther') }}
           key={`${cart.entityId}-${cart.version}`}
           lineItemAction={updateLineItem}

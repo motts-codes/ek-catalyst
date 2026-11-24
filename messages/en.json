@@ -441,6 +441,7 @@
     "proceedToCheckout": "Proceed to checkout",
     "increment": "Increase quantity",
     "decrement": "Decrease quantity",
+    "quantity": "Quantity",
     "removeItem": "Remove item",
     "cartCombined": "We noticed you had items saved in a previous cart, so we've added them to your current cart for you.",
     "cartRestored": "You started a cart on another device, and we've restored it here so you can pick up where you left off.",

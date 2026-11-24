@@ -13,6 +13,13 @@ export const cartLineItemActionFormDataSchema = z.discriminatedUnion('intent', [
     intent: z.literal('delete'),
     id: z.string(),
   }),
+  // The counter sends the quantity it has settled on (a burst of clicks, or a typed number) as
+  // one update rather than one request per click.
+  z.object({
+    intent: z.literal('set'),
+    id: z.string(),
+    quantity: z.coerce.number().int().min(1, 'Quantity must be at least 1'),
+  }),
 ]);
 
 export const couponCodeActionFormDataSchema = ({
