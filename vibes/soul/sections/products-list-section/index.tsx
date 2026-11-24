@@ -157,7 +157,7 @@ export function ProductsListSection({
                     <span className="inline-flex h-5 w-[9ch] animate-pulse rounded-lg bg-contrast-100" />
                   }
                 >
-                  <p aria-live="polite" className="text-sm text-contrast-500">
+                  <p aria-live="polite" className="text-sm font-medium text-contrast-500">
                     {countLabel}
                   </p>
                 </Suspense>
