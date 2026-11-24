@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { Search } from 'lucide-react';
 
+import { slideFill } from '@/vibes/soul/lib/slide-fill';
 import { Actions, type PageAction } from '@/vibes/soul/sections/page-kit';
 import { Image } from '~/components/image';
 
@@ -57,7 +58,10 @@ export function EkNotFound({
               type="search"
             />
             <button
-              className="shrink-0 rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+              className={clsx(
+                slideFill,
+                'shrink-0 rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-white after:rounded-full after:bg-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2',
+              )}
               type="submit"
             >
               {search.label}

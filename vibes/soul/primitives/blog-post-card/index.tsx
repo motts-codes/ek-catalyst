@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { ArrowRight } from 'lucide-react';
 
+import { groupSlideFill } from '@/vibes/soul/lib/slide-fill';
 import { Image } from '~/components/image';
 import { Link } from '~/components/link';
 
@@ -67,7 +68,12 @@ export function BlogPostCard({ blogPost, variant = 'default', className }: Props
             {content}
           </p>
           <div className="mt-auto flex items-center justify-between gap-4 pt-6">
-            <span className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-semibold text-white transition-colors group-hover:bg-[var(--button-primary-background,#d90716)]">
+            <span
+              className={clsx(
+                groupSlideFill,
+                'inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-sm font-semibold text-white after:rounded-full after:bg-[var(--button-primary-background,#d90716)]',
+              )}
+            >
               Read more
               <ArrowRight aria-hidden size={16} strokeWidth={2} />
             </span>

@@ -1,6 +1,7 @@
 import { clsx } from 'clsx';
 import { ArrowDown, PencilRuler, Repeat, Truck, WalletMinimal } from 'lucide-react';
 
+import { slideFill } from '@/vibes/soul/lib/slide-fill';
 import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { Amount, withCommas } from '@/vibes/soul/sections/cabinet-lines';
 import { Image } from '~/components/image';
@@ -394,7 +395,10 @@ export function CabinetCollectionHeader({
                 </div>
                 {Boolean(switchHref) && (
                   <Link
-                    className="inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-foreground px-3.5 py-1.5 text-xs font-semibold transition-colors hover:bg-foreground hover:text-white"
+                    className={clsx(
+                      slideFill,
+                      'inline-flex items-center gap-1.5 rounded-full border-[0.5px] border-foreground px-3.5 py-1.5 text-xs font-semibold transition-colors duration-300 after:rounded-full after:bg-foreground hover:text-white',
+                    )}
                     href={switchHref ?? '#'}
                   >
                     <Repeat size={13} strokeWidth={2.25} />

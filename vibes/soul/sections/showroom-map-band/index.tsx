@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { MapPin, Pause, Play } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { slideFill } from '@/vibes/soul/lib/slide-fill';
 import {
   homeHeadingClassName,
   HomeSection,
@@ -236,7 +237,10 @@ function MapPanel({
           from @xl it floats over the map's bottom-left corner. */}
       <div className="relative -mt-10 flex flex-col items-start px-4 @xl:absolute @xl:inset-x-5 @xl:bottom-5 @xl:mt-0 @xl:px-0">
         <Link
-          className="group/pm flex origin-bottom-left items-center gap-3 rounded-2xl bg-[var(--button-primary-background,#d90716)] p-2 pr-5 text-white shadow-md transition-[transform,box-shadow,background-color] duration-300 ease-smooth hover:scale-[1.04] hover:bg-[#9f3632] hover:shadow-[0_18px_40px_-12px_rgb(0_0_0/0.45)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white motion-reduce:hover:scale-100"
+          className={clsx(
+            slideFill,
+            'group/pm flex origin-bottom-left items-center gap-3 rounded-2xl bg-[var(--button-primary-background,#d90716)] p-2 pr-5 text-white shadow-md transition-[transform,box-shadow] duration-300 ease-smooth after:rounded-2xl after:bg-[#9f3632] hover:scale-[1.04] hover:shadow-[0_18px_40px_-12px_rgb(0_0_0/0.45)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-white motion-reduce:hover:scale-100',
+          )}
           href={showroomHref(current.slug)}
         >
           {/* Two managers: the headshots overlap vertically, the lower one in front. */}

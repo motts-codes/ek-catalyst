@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { ArrowUpRight, CalendarCheck, Download, Phone, PlayCircle, Plus } from 'lucide-react';
 import { useId, useState } from 'react';
 
+import { slideFill } from '@/vibes/soul/lib/slide-fill';
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { Link } from '~/components/link';
 
@@ -274,8 +275,10 @@ export function HelpRow({
   phone?: string;
   consultHref?: string;
 }) {
-  const pill =
-    'inline-flex min-h-7 items-center gap-1.5 rounded-full bg-[#F6EBD6]/50 px-3 text-xs font-medium transition-colors duration-300 hover:bg-[#F6EBD6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2';
+  const pill = clsx(
+    slideFill,
+    'inline-flex min-h-7 items-center gap-1.5 rounded-full bg-[#F6EBD6]/50 px-3 text-xs font-medium after:rounded-full after:bg-[#F6EBD6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2',
+  );
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-contrast-100 py-3 text-sm text-contrast-500">

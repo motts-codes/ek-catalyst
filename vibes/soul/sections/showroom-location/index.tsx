@@ -8,6 +8,7 @@ import type { Map as MapboxMap, Marker } from 'mapbox-gl';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { slideFill } from '@/vibes/soul/lib/slide-fill';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import {
   easternDay,
@@ -279,7 +280,10 @@ function ShowroomMap({ showroom, token }: { showroom: Showroom; token?: string }
         </p>
         <p className="mt-1 text-[13px] leading-snug text-[#404040]">{showroom.address}</p>
         <a
-          className="mt-3 inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--button-primary-background,#d90716)] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#9f3632] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+          className={clsx(
+            slideFill,
+            'mt-3 inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--button-primary-background,#d90716)] px-4 text-[13px] font-semibold text-white after:rounded-full after:bg-[#9f3632] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2',
+          )}
           href={mapsHref(showroom.address)}
           rel="noreferrer"
           target="_blank"

@@ -5,6 +5,8 @@ import { Loader2 } from 'lucide-react';
 import { ComponentPropsWithoutRef, ReactNode, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
+import { slideFillPositioned } from '@/vibes/soul/lib/slide-fill';
+
 // One row of the cart's "Offers & rewards" card: an icon, a pill-shaped code input and an Apply
 // button tucked inside the pill. Shared by the coupon and gift certificate forms.
 interface Props {
@@ -66,7 +68,10 @@ function ApplyButton({ children, disabled }: { children: ReactNode; disabled: bo
   return (
     <button
       aria-busy={pending || undefined}
-      className="absolute right-1.5 top-1/2 inline-flex h-9 -translate-y-1/2 items-center gap-1.5 rounded-full px-4 text-sm font-semibold text-[var(--button-primary-background,#d90716)] transition-colors hover:bg-[#fdf3f5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] disabled:pointer-events-none disabled:opacity-40"
+      className={clsx(
+        slideFillPositioned,
+        'absolute right-1.5 top-1/2 inline-flex h-9 -translate-y-1/2 items-center gap-1.5 rounded-full px-4 text-sm font-semibold text-[var(--button-primary-background,#d90716)] after:rounded-full after:bg-[#fdf3f5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] disabled:pointer-events-none disabled:opacity-40',
+      )}
       disabled={disabled || pending}
       name="intent"
       type="submit"
