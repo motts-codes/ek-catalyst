@@ -162,6 +162,14 @@ export default async function Search(props: Props) {
     return format.number(search.products.collectionInfo?.totalItems ?? 0);
   });
 
+  const streamableCountLabel = Streamable.from(async () => {
+    const search = await streamableFacetedSearch;
+
+    return t('FacetedSearch.productsCount', {
+      count: search.products.collectionInfo?.totalItems ?? 0,
+    });
+  });
+
   const streamableEmptyStateTitle = Streamable.from(async () => {
     const searchParams = await props.searchParams;
     const searchTerm = typeof searchParams.term === 'string' ? searchParams.term : '';
@@ -248,6 +256,7 @@ export default async function Search(props: Props) {
       ]}
       compareLabel={t('Compare.compare')}
       compareProducts={streamableCompareProducts}
+      countLabel={streamableCountLabel}
       density="compact"
       emptyStateSubtitle={t('Search.Empty.subtitle')}
       emptyStateTitle={streamableEmptyStateTitle}

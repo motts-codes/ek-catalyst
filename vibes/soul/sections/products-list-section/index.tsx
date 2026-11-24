@@ -39,6 +39,8 @@ interface Props {
   /** 2 when the page already has its own h1 above the grid (smaller, section-sized heading). */
   headingLevel?: 1 | 2;
   totalCount: Streamable<string>;
+  /** "90 products": shown at the left of the toolbar when the heading (and its count) is hidden. */
+  countLabel?: Streamable<string>;
   products: Streamable<Product[]>;
   filters: Streamable<Filter[]>;
   sortOptions: Streamable<SortOption[]>;
@@ -86,6 +88,7 @@ export function ProductsListSection({
   hideHeader = false,
   headingLevel = 1,
   totalCount,
+  countLabel,
   products,
   showRating,
   compareProducts,
@@ -148,6 +151,17 @@ export function ProductsListSection({
                 hideHeader ? 'justify-between pb-4 pt-2' : 'justify-between pb-8 pt-6',
               )}
             >
+              {hideHeader && countLabel != null && (
+                <Suspense
+                  fallback={
+                    <span className="inline-flex h-5 w-[9ch] animate-pulse rounded-lg bg-contrast-100" />
+                  }
+                >
+                  <p aria-live="polite" className="text-sm text-contrast-500">
+                    {countLabel}
+                  </p>
+                </Suspense>
+              )}
               {!hideHeader && (
                 <Heading
                   className={clsx(
@@ -177,7 +191,8 @@ export function ProductsListSection({
                 className={clsx(
                   'flex items-center gap-2',
                   // Search, sort and the filters toggle sit together at the right end of the row.
-                  hideHeader && 'w-full justify-end',
+                  hideHeader && 'ml-auto justify-end',
+                  hideHeader && countLabel == null && 'w-full',
                   // Narrow toolbars put the search on its own line (see ListSearch).
                   '[&>div:first-child]:min-w-0 [&>div:first-child]:flex-1 @md:[&>div:first-child]:flex-none',
                 )}

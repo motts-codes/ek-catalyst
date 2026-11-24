@@ -598,6 +598,14 @@ export default async function Category(props: Props) {
     return format.number(search.products.collectionInfo?.totalItems ?? 0);
   });
 
+  const streamableCountLabel = Streamable.from(async () => {
+    const search = await streamableFacetedSearch;
+
+    return t('FacetedSearch.productsCount', {
+      count: search.products.collectionInfo?.totalItems ?? 0,
+    });
+  });
+
   const streamablePagination = Streamable.from(async () => {
     const searchParams = await props.searchParams;
     const search = await streamableFacetedSearch;
@@ -776,6 +784,7 @@ export default async function Category(props: Props) {
           addToCartAction={productCardAddToCartAction}
           compareLabel={t('Compare.compare')}
           compareProducts={streamableCompareProducts}
+          countLabel={streamableCountLabel}
           density={density}
           emptyStateSubtitle={t('Category.Empty.subtitle')}
           emptyStateTitle={t('Category.Empty.title')}

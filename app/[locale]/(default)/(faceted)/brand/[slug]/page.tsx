@@ -172,6 +172,14 @@ export default async function Brand(props: Props) {
     return format.number(search.products.collectionInfo?.totalItems ?? 0);
   });
 
+  const streamableCountLabel = Streamable.from(async () => {
+    const search = await streamableFacetedSearch;
+
+    return t('FacetedSearch.productsCount', {
+      count: search.products.collectionInfo?.totalItems ?? 0,
+    });
+  });
+
   const streamablePagination = Streamable.from(async () => {
     const searchParams = await props.searchParams;
     const search = await streamableFacetedSearch;
@@ -233,6 +241,7 @@ export default async function Brand(props: Props) {
     <ProductsListSection
       compareLabel={t('Compare.compare')}
       compareProducts={streamableCompareProducts}
+      countLabel={streamableCountLabel}
       density="compact"
       emptyStateSubtitle={t('Brand.Empty.subtitle')}
       emptyStateTitle={t('Brand.Empty.title')}

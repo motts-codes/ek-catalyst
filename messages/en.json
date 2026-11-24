@@ -153,6 +153,7 @@
     "FacetedSearch": {
       "filters": "Filters",
       "resetFilters": "Reset filters",
+      "productsCount": "{count, plural, =1 {1 product} other {# products}}",
       "Range": {
         "apply": "Apply"
       },
