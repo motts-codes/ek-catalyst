@@ -8,3 +8,7 @@ tests/
 
 # Local dev-server logs.
 nohup*.out
+
+# Never upload local env files (secrets); the build reads Vercel env vars.
+.env*.local
+.env.local.*
