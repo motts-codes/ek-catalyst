@@ -122,6 +122,9 @@ export function BlogPostContent({
                       // Section titles: Gilroy bold, our size, with room to jump to from the list.
                       '[&_h2:first-child]:mt-0 [&_h2]:mb-3 [&_h2]:mt-10 [&_h2]:scroll-mt-28 [&_h2]:font-heading [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:leading-tight [&_h2]:text-foreground @xl:[&_h2]:text-3xl',
                       '[&_h3]:mt-8 [&_h3]:font-heading [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-foreground',
+                      // Tables written in BigCommerce's editor can be wider than the column: let
+                      // them scroll sideways inside the article instead of widening the page.
+                      'min-w-0 prose-table:block prose-table:max-w-full prose-table:overflow-x-auto prose-table:whitespace-nowrap @3xl:prose-table:whitespace-normal',
                     )}
                     dangerouslySetInnerHTML={{ __html: content }}
                   />
