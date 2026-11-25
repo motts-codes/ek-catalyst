@@ -417,16 +417,20 @@ export function MoneyOrTime({
   return (
     <HomeSection>
       <div className="grid gap-10 @3xl:grid-cols-2 @3xl:gap-16">
-        <div>
+        {/* `min-w-0`: a grid column is otherwise as wide as the table's minimum, which pushed the
+            whole page sideways on phones. */}
+        <div className="min-w-0">
           <p className={EYEBROW}>{kicker}</p>
           <h2 className={homeHeadingClassName}>{title}</h2>
           <p className="mt-3 text-sm leading-relaxed text-contrast-500 @xl:text-base">
             {description}
           </p>
           <div className="mt-8">
-            {/* The feature column fits its labels; RTA runs a little wider than Assembled. */}
+            {/* Three short columns, so the table wraps to the column's width instead of scrolling;
+                RTA runs a little wider than Assembled. */}
             <MinimalTable
               columns={columns}
+              fit
               inline
               narrow
               rows={rows}
