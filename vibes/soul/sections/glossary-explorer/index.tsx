@@ -254,13 +254,18 @@ function GroupRow({
           <span
             aria-hidden
             className={clsx(
-              'flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors',
+              // A quarter smaller on phones (21px ring, 12px glyph); the full 28px ring from tablet up.
+              'flex size-[21px] shrink-0 items-center justify-center rounded-full border transition-colors @md:size-7',
               open
                 ? 'border-[var(--button-primary-background,#d90716)] text-[var(--button-primary-background,#d90716)]'
                 : 'border-contrast-200 text-contrast-500 group-hover:border-[var(--button-primary-background,#d90716)] group-hover:text-[var(--button-primary-background,#d90716)]',
             )}
           >
-            {open ? <Minus size={16} strokeWidth={2.25} /> : <Plus size={16} strokeWidth={2.25} />}
+            {open ? (
+              <Minus className="size-3 @md:size-4" strokeWidth={2.25} />
+            ) : (
+              <Plus className="size-3 @md:size-4" strokeWidth={2.25} />
+            )}
           </span>
         </button>
       </h2>
