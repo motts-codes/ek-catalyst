@@ -12,6 +12,7 @@
     "build:analyze": "ANALYZE=true npm run build",
     "start": "catalyst start",
     "prelint": "next typegen",
+    "overflow": "node scripts/overflow-sweep.mjs",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "typecheck": "tsc --noEmit",
     "deploy": "npm run generate && catalyst deploy"
