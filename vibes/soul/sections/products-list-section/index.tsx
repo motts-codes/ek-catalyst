@@ -18,6 +18,7 @@ import {
 import * as SidePanel from '@/vibes/soul/primitives/side-panel';
 import { Breadcrumb, Breadcrumbs, BreadcrumbsSkeleton } from '@/vibes/soul/sections/breadcrumbs';
 import { ProductList } from '@/vibes/soul/sections/product-list';
+import { ActiveTerm } from '@/vibes/soul/sections/products-list-section/active-term';
 import { Filter, FiltersPanel } from '@/vibes/soul/sections/products-list-section/filters-panel';
 import {
   FiltersAside,
@@ -276,6 +277,8 @@ export function ProductsListSection({
             )}
 
             <div className="group-has-data-pending/products-list-section:animate-pulse min-w-0 flex-1">
+              {/* "Showing results for “stainless steel” ×" when a term narrows the grid. */}
+              <ActiveTerm />
               <ProductList
                 addToCartAction={addToCartAction}
                 compareHref={compareHref}

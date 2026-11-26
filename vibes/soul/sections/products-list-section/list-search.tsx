@@ -1,6 +1,7 @@
 'use client';
 
 import { Loader2, Search, X } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { parseAsString, useQueryStates } from 'nuqs';
 import { useEffect, useState, useTransition } from 'react';
 
@@ -8,16 +9,19 @@ import { useEffect, useState, useTransition } from 'react';
 // param, which the faceted search already understands, so it combines with the sidebar filters,
 // the type tiles and the program. Submitting resets to page one.
 export function ListSearch({ placeholder = 'Search products' }: { placeholder?: string }) {
-  const [params, setParams] = useQueryStates(
+  const [, setParams] = useQueryStates(
     { term: parseAsString, before: parseAsString, after: parseAsString, page: parseAsString },
     { shallow: false, history: 'push' },
   );
-  const [value, setValue] = useState(params.term ?? '');
+  // The URL's own term (not nuqs's copy, which lags behind a client-side navigation such as a
+  // "Shop by finish" tile), so the box always shows what the grid is narrowed by.
+  const urlTerm = useSearchParams().get('term') ?? '';
+  const [value, setValue] = useState(urlTerm);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    setValue(params.term ?? '');
-  }, [params.term]);
+    setValue(urlTerm);
+  }, [urlTerm]);
 
   const apply = (term: string) => {
     startTransition(async () => {

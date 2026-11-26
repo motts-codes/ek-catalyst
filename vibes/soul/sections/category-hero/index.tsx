@@ -2,6 +2,7 @@ import { clsx } from 'clsx';
 import {
   ArrowDown,
   ArrowRight,
+  Check,
   CircleDollarSign,
   Clock,
   DoorOpen,
@@ -29,7 +30,8 @@ import { ButtonLink } from '@/vibes/soul/primitives/button-link';
 import { ShieldHouse } from '@/vibes/soul/primitives/icons/shield-house';
 import { MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Image } from '~/components/image';
-import { Link } from '~/components/link';
+
+import { FacetLink } from './facet-link';
 
 const containerClassName = 'mx-auto max-w-screen-2xl px-6 @xl:px-9 @4xl:px-14';
 
@@ -396,10 +398,12 @@ export function SubcategoryTiles({
           )}
         >
           {items.map((item) => (
-            <Link
+            <FacetLink
               className={clsx(
                 swipeItemClassName,
                 'group flex flex-col overflow-hidden rounded-3xl border border-contrast-100 bg-white transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+                // The tile already applied: red hairline; clicking it again clears (see FacetLink).
+                'aria-[current=true]:border-[var(--button-primary-background,#d90716)]',
               )}
               href={item.href}
               key={`${item.name}|${item.href}`}
@@ -417,7 +421,7 @@ export function SubcategoryTiles({
                   <TilePanel color={item.color} label={item.name} />
                 )}
               </div>
-              <span className="flex items-center justify-between gap-2 px-4 py-3.5 text-sm font-semibold transition-colors group-hover:text-[var(--button-primary-background,#d90716)]">
+              <span className="flex items-center justify-between gap-2 px-4 py-3.5 text-sm font-semibold transition-colors group-hover:text-[var(--button-primary-background,#d90716)] group-aria-[current=true]:text-[var(--button-primary-background,#d90716)]">
                 {item.name}
                 <ArrowRight
                   className="shrink-0 text-[var(--button-primary-background,#d90716)] transition-transform duration-300 group-hover:-translate-x-1"
@@ -425,7 +429,7 @@ export function SubcategoryTiles({
                   strokeWidth={2.5}
                 />
               </span>
-            </Link>
+            </FacetLink>
           ))}
         </div>
       </div>
@@ -467,11 +471,18 @@ export function SwatchTiles({
         >
           {items.map((item) => (
             <li className={swipeItemClassName} key={item.href}>
-              <Link
+              <FacetLink
                 className="group flex flex-col gap-2 focus-visible:outline-0 [&:focus-visible>span:first-child]:ring-2 [&:focus-visible>span:first-child]:ring-primary"
                 href={item.href}
               >
-                <span className="relative block aspect-[5/3] overflow-hidden rounded-2xl border border-[#fcb6bb] bg-contrast-100 transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)]">
+                <span className="relative block aspect-[5/3] overflow-hidden rounded-2xl border border-[#fcb6bb] bg-contrast-100 transition-[transform,box-shadow] duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] group-aria-[current=true]:border-[var(--button-primary-background,#d90716)]">
+                  {/* The finish already applied: a red tick in the corner; click again to clear. */}
+                  <span
+                    aria-hidden
+                    className="absolute right-1.5 top-1.5 z-10 hidden size-5 place-items-center rounded-full bg-[var(--button-primary-background,#d90716)] text-white group-aria-[current=true]:grid"
+                  >
+                    <Check size={12} strokeWidth={3} />
+                  </span>
                   {item.image ? (
                     <Image
                       alt={item.image.alt}
@@ -484,10 +495,10 @@ export function SwatchTiles({
                     <TilePanel color={item.color} label={item.name} />
                   )}
                 </span>
-                <span className="line-clamp-2 text-center text-xs font-semibold leading-tight text-foreground transition-colors group-hover:text-[var(--button-primary-background,#d90716)] @3xl:text-[11px] @5xl:text-xs">
+                <span className="line-clamp-2 text-center text-xs font-semibold leading-tight text-foreground transition-colors group-hover:text-[var(--button-primary-background,#d90716)] group-aria-[current=true]:text-[var(--button-primary-background,#d90716)] @3xl:text-[11px] @5xl:text-xs">
                   {item.name}
                 </span>
-              </Link>
+              </FacetLink>
             </li>
           ))}
         </ul>
@@ -531,9 +542,9 @@ export function BrandTiles({
         >
           {brands.map((item) => (
             <li className={swipeItemClassName} key={item.name}>
-              <Link
+              <FacetLink
                 aria-label={item.name}
-                className="group flex aspect-[5/3] items-center justify-center rounded-2xl border border-[#fcb6bb] bg-white px-5 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                className="group flex aspect-[5/3] items-center justify-center rounded-2xl border border-[#fcb6bb] bg-white px-5 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary aria-[current=true]:border-[var(--button-primary-background,#d90716)]"
                 href={item.href}
               >
                 {item.logo ? (
@@ -553,7 +564,7 @@ export function BrandTiles({
                     {item.name}
                   </span>
                 )}
-              </Link>
+              </FacetLink>
             </li>
           ))}
         </ul>
@@ -621,8 +632,8 @@ export function FacetChips({
           {items.map((item) =>
             look === 'dimension' ? (
               <li key={item.label}>
-                <Link
-                  className="flex items-center gap-1.5 rounded-xl border border-contrast-200 bg-white px-4 py-3 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_12px_24px_-10px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary"
+                <FacetLink
+                  className="flex items-center gap-1.5 rounded-xl border border-contrast-200 bg-white px-4 py-3 transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_12px_24px_-10px_rgb(0_0_0/0.3)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary aria-[current=true]:border-[var(--button-primary-background,#d90716)]"
                   href={item.href}
                 >
                   <DimensionArrow />
@@ -630,13 +641,14 @@ export function FacetChips({
                     {dimensionLabel(item.label)}
                   </span>
                   <DimensionArrow flip />
-                </Link>
+                </FacetLink>
               </li>
             ) : (
               <li key={item.label}>
-                <Link
+                <FacetLink
                   className={clsx(
                     'inline-flex items-center gap-2 rounded-full border border-contrast-200 bg-white py-1.5 pr-3.5 text-sm font-medium transition-colors hover:border-[var(--button-primary-background,#d90716)] hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-primary',
+                    'aria-[current=true]:border-[var(--button-primary-background,#d90716)] aria-[current=true]:bg-[#fdf3f5] aria-[current=true]:text-[var(--button-primary-background,#d90716)]',
                     item.swatch ? 'pl-1.5' : 'pl-3.5',
                   )}
                   href={item.href}
@@ -649,7 +661,7 @@ export function FacetChips({
                     />
                   )}
                   {item.label}
-                </Link>
+                </FacetLink>
               </li>
             ),
           )}
