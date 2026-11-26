@@ -19,6 +19,9 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
 
   private readonly dataLayerScriptId = 'data-layer-script';
   private readonly gtagScriptId = 'gtag-script';
+  // Whether gtag.js has been asked for. In "basic" consent mode (consentModeEnabled) that waits
+  // for measurement consent, so a visitor who rejects never contacts Google at all.
+  private tagRequested = false;
 
   constructor(private readonly config: GoogleAnalyticsConfig) {
     this.validateConfig();
@@ -35,8 +38,36 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
       throw new Error('Google Analytics is only available in the browser environment');
     }
 
+    // Order matters to Google: the consent default must be on the data layer before `config`,
+    // or the tag starts with storage allowed and writes _ga cookies regardless of the choice.
     this.initializeDataLayer();
     this.initializeConsent();
+
+    if (this.measurementAllowed()) {
+      this.loadTag();
+    }
+  }
+
+  // No consent manager (or no consent lookup): the tag loads at once, as a plain install would.
+  // With one, only a recorded "measurement" grant loads it (basic consent mode).
+  private measurementAllowed() {
+    if (!this.config.consentModeEnabled || !this.config.getConsent) {
+      return true;
+    }
+
+    return this.config.getConsent()?.measurement === true;
+  }
+
+  // `config` (which sends the page view) and then the gtag.js script. Events queued on the data
+  // layer before this point go out once the script runs, so nothing from the session is lost.
+  private loadTag() {
+    if (this.tagRequested) {
+      return;
+    }
+
+    this.tagRequested = true;
+
+    gtag('config', this.config.gaId, this.config.debugMode ? { debug_mode: true } : {});
     this.initializeGTM();
   }
 
@@ -68,7 +99,6 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
       gtag('js', new Date());
 
       ${this.config.developerId ? `gtag('set', 'developer_id.${this.config.developerId}', true)` : ''};
-      gtag('config', '${this.config.gaId}' ${this.config.debugMode ? ",{ 'debug_mode': true }" : ''});
     `;
 
     document.body.appendChild(script);
@@ -258,6 +288,11 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
           ad_personalization: consent.marketing ? 'granted' : 'denied',
           analytics_storage: consent.measurement ? 'granted' : 'denied',
         });
+
+        // First grant of the session: now the tag may load.
+        if (consent.measurement) {
+          this.loadTag();
+        }
       },
     } satisfies Analytics.Consent.ProviderEvents;
   }

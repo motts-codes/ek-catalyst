@@ -56,8 +56,8 @@ export function AnalyticsProvider({
   settings,
   children,
 }: PropsWithChildren<Props>) {
-  const { consents } = useConsentManager();
-  const prevConsentsRef = useRef<Record<string, boolean> | null>(null);
+  const { consents, hasConsented } = useConsentManager();
+  const prevConsentsRef = useRef<string | null>(null);
 
   const analytics = getAnalytics({
     channelId,
@@ -65,26 +65,28 @@ export function AnalyticsProvider({
     settings,
   });
 
-  // Update consent when user changes preferences
+  // Tell the providers whenever the shopper's recorded choice changes (Accept All, Reject All,
+  // or a later edit). Read from c15t's state, not the consent cookie: c15t updates its state
+  // before it persists the cookie, so a cookie read at this moment can still be the old choice,
+  // and the first Accept would never reach Google Analytics (whose tag waits for it).
   useEffect(() => {
-    if (!isCookieConsentEnabled || !analytics) {
+    if (!isCookieConsentEnabled || !analytics || !hasConsented()) {
       return;
     }
 
-    const currentConsents = consents;
-    const prevConsents = prevConsentsRef.current;
+    const current = {
+      functionality: consents.functionality,
+      marketing: consents.marketing,
+      measurement: consents.measurement,
+      necessary: consents.necessary,
+    };
+    const key = JSON.stringify(current);
 
-    // Check if consents have changed
-    if (prevConsents && JSON.stringify(currentConsents) !== JSON.stringify(prevConsents)) {
-      const consentState = getConsent();
-
-      if (consentState) {
-        analytics.consent.consentUpdated(consentState);
-      }
+    if (prevConsentsRef.current !== key) {
+      prevConsentsRef.current = key;
+      analytics.consent.consentUpdated(current);
     }
-
-    prevConsentsRef.current = currentConsents;
-  }, [isCookieConsentEnabled, analytics, consents]);
+  }, [isCookieConsentEnabled, analytics, consents, hasConsented]);
 
   return <AnalyticsProviderLib analytics={analytics ?? null}>{children}</AnalyticsProviderLib>;
 }
