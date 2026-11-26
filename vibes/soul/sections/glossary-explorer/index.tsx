@@ -14,19 +14,20 @@ interface Props {
 
 const RED = 'text-[var(--button-primary-background,#d90716)]';
 
-// The glossary as an explorer. A sticky bar under the hero holds a live search and a pill per
-// group (the pill of the group in view is lit as you scroll). Each group is an accordion row;
-// the first opens by default, and a search opens every group with a match and highlights the
-// matched text. Every term is an anchor (#undermount-glides) with a copy-link button, and a
-// term arrived at by link glows blush for a moment so the eye finds it.
+// The glossary as an explorer, laid out like the FAQ: a table of contents on the left (one row
+// per group with its count, every group visible at once, the group in view lit as you scroll),
+// and on the right a live search and the groups as accordion rows. One group is open at a time
+// (the first by default); opening another closes it. A search opens every group with a match and
+// highlights the matched text. Every term is an anchor (#undermount-glides) with a copy-link
+// button, and a term arrived at by link glows blush for a moment. On phones the contents become
+// a scrolling row of pills above the terms.
 export function GlossaryExplorer({ groups, className }: Props) {
   const [query, setQuery] = useState('');
   const deferred = useDeferredValue(query.trim().toLowerCase());
-  const [openIds, setOpenIds] = useState<Set<string>>(
-    () => new Set(groups[0] ? [groups[0].id] : []),
-  );
+  const [openId, setOpenId] = useState<string | null>(groups[0]?.id ?? null);
   const [activeId, setActiveId] = useState(groups[0]?.id ?? '');
   const searchId = useId();
+  const searching = deferred !== '';
 
   // A–Z inside each group, and, while searching, only the groups and terms that match.
   const visible = useMemo(() => {
@@ -37,7 +38,7 @@ export function GlossaryExplorer({ groups, className }: Props) {
       ),
     }));
 
-    if (deferred === '') return sorted;
+    if (!searching) return sorted;
 
     return sorted
       .map((group) => ({
@@ -49,12 +50,11 @@ export function GlossaryExplorer({ groups, className }: Props) {
         ),
       }))
       .filter((group) => group.terms.length > 0);
-  }, [groups, deferred]);
+  }, [groups, deferred, searching]);
 
   const total = visible.reduce((n, group) => n + group.terms.length, 0);
-  const searching = deferred !== '';
 
-  // Opening the term that a #anchor points at, on arrival and when the hash changes.
+  // A #anchor (a group or a term) opens its group on arrival and whenever the hash changes.
   useEffect(() => {
     const openHash = () => {
       const id = decodeURIComponent(window.location.hash.replace(/^#/, ''));
@@ -65,7 +65,7 @@ export function GlossaryExplorer({ groups, className }: Props) {
         (group) => group.id === id || group.terms.some((entry) => termId(entry.term) === id),
       );
 
-      if (owner) setOpenIds((current) => new Set(current).add(owner.id));
+      if (owner) setOpenId(owner.id);
     };
 
     openHash();
@@ -74,13 +74,13 @@ export function GlossaryExplorer({ groups, className }: Props) {
     return () => window.removeEventListener('hashchange', openHash);
   }, [groups]);
 
-  // Scroll-spy: the pill for the group nearest the top of the viewport is lit.
+  // Scroll-spy for the contents.
   useEffect(() => {
-    const headings = groups
+    const sections = groups
       .map((group) => document.getElementById(group.id))
       .filter((el): el is HTMLElement => el !== null);
 
-    if (headings.length === 0) return;
+    if (sections.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -90,129 +90,125 @@ export function GlossaryExplorer({ groups, className }: Props) {
 
         if (hit) setActiveId(hit.target.id);
       },
-      { rootMargin: '-120px 0px -70% 0px', threshold: 0 },
+      { rootMargin: '-100px 0px -65% 0px', threshold: 0 },
     );
 
-    headings.forEach((el) => observer.observe(el));
+    sections.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
   }, [groups, visible]);
 
-  const toggle = (id: string) =>
-    setOpenIds((current) => {
-      const next = new Set(current);
-
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-
-      return next;
-    });
+  const toggle = (id: string) => setOpenId((current) => (current === id ? null : id));
 
   const jump = (id: string) => {
-    setOpenIds((current) => new Set(current).add(id));
+    setOpenId(id);
     setActiveId(id);
   };
 
   return (
-    <div className={clsx('@container', className)}>
-      {/* The bar: search on the left, the group pills scrolling on the right. It sticks under the
-          site header. */}
-      <div className="sticky top-0 z-20 -mx-6 border-b border-contrast-100 bg-white/95 px-6 py-3 backdrop-blur @xl:-mx-9 @xl:px-9 @4xl:-mx-14 @4xl:px-14">
-        <div className="mx-auto flex max-w-screen-2xl flex-col gap-3 @3xl:flex-row @3xl:items-center">
-          <div className="relative shrink-0 @3xl:w-72">
-            <label className="sr-only" htmlFor={searchId}>
-              Search the glossary
-            </label>
-            <Search
-              aria-hidden
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-contrast-400"
-              size={16}
-            />
-            <input
-              autoComplete="off"
-              className="h-10 w-full rounded-full border border-contrast-200 bg-white pl-10 pr-10 text-sm text-foreground placeholder:text-contrast-400 focus:border-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 [&::-webkit-search-cancel-button]:hidden"
-              id={searchId}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search a term…"
-              type="search"
-              value={query}
-            />
-            {query !== '' && (
-              <button
-                aria-label="Clear search"
-                className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-contrast-500 hover:bg-contrast-100 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]"
-                onClick={() => setQuery('')}
-                type="button"
-              >
-                <X size={14} strokeWidth={2.25} />
-              </button>
-            )}
+    <div
+      className={clsx('grid gap-10 @container @3xl:grid-cols-[17rem_1fr] @3xl:gap-14', className)}
+    >
+      {/* Contents: a column on desktop that sticks while you scroll; a pill row on phones. */}
+      <nav aria-label="Glossary groups" className="min-w-0 @3xl:sticky @3xl:top-6 @3xl:self-start">
+        <p className="mb-3 hidden text-xs font-semibold uppercase tracking-wide text-contrast-500 @3xl:block">
+          Groups
+        </p>
+        <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 [scrollbar-width:none] @3xl:mx-0 @3xl:flex-col @3xl:gap-1 @3xl:overflow-visible @3xl:px-0 @3xl:pb-0 [&::-webkit-scrollbar]:hidden">
+          {groups.map((group) => {
+            const on = group.id === activeId && !searching;
+            const dimmed = searching && !visible.some((v) => v.id === group.id);
+
+            return (
+              <li className="shrink-0" key={group.id}>
+                <a
+                  aria-current={on ? 'location' : undefined}
+                  className={clsx(
+                    'group/topic flex items-center gap-2.5 whitespace-nowrap rounded-full border px-3.5 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 @3xl:rounded-xl @3xl:border-transparent @3xl:px-3 @3xl:py-2.5',
+                    on
+                      ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white @3xl:bg-[#fdf3f5] @3xl:text-[var(--button-primary-background,#d90716)]'
+                      : 'border-contrast-200 bg-white text-foreground hover:border-[#fcb6bb] hover:bg-[#fdf3f5] @3xl:hover:border-transparent',
+                    dimmed && 'opacity-40',
+                  )}
+                  href={`#${group.id}`}
+                  onClick={() => jump(group.id)}
+                >
+                  <span className="flex-1">{group.title}</span>
+                  <span
+                    className={clsx(
+                      'hidden rounded-full px-1.5 py-px text-[11px] font-semibold tabular-nums @3xl:inline',
+                      on
+                        ? 'bg-white text-[var(--button-primary-background,#d90716)]'
+                        : 'bg-contrast-100 text-contrast-500',
+                    )}
+                  >
+                    {group.terms.length}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <div className="min-w-0">
+        {/* Search, with a live count beneath. */}
+        <div className="relative">
+          <label className="sr-only" htmlFor={searchId}>
+            Search the glossary
+          </label>
+          <Search
+            aria-hidden
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-contrast-400"
+            size={18}
+          />
+          <input
+            autoComplete="off"
+            className="h-12 w-full rounded-full border border-contrast-200 bg-white pl-12 pr-12 text-base text-foreground placeholder:text-contrast-400 focus:border-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2 [&::-webkit-search-cancel-button]:hidden"
+            id={searchId}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search a term, like “toe kick” or “soft close”…"
+            type="search"
+            value={query}
+          />
+          {query !== '' && (
+            <button
+              aria-label="Clear search"
+              className="absolute right-3 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full text-contrast-500 hover:bg-contrast-100 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]"
+              onClick={() => setQuery('')}
+              type="button"
+            >
+              <X size={15} strokeWidth={2.25} />
+            </button>
+          )}
+        </div>
+        <p aria-live="polite" className="mt-3 text-sm text-contrast-500">
+          {searching
+            ? `${total} ${total === 1 ? 'term' : 'terms'} match “${query.trim()}”`
+            : `${total} terms in ${groups.length} groups`}
+        </p>
+
+        {visible.length === 0 ? (
+          <div className="mt-6 rounded-3xl border border-contrast-100 bg-[#fdf8f8] px-6 py-10 text-center">
+            <p className="font-heading text-lg font-semibold">No term matches that.</p>
+            <p className="mt-2 text-sm text-contrast-500">
+              Try a shorter word, or clear the search and browse the groups.
+            </p>
           </div>
-          <nav aria-label="Glossary sections" className="min-w-0 flex-1">
-            <ul className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {visible.map((group) => {
-                const on = group.id === activeId && !searching;
-
-                return (
-                  <li className="shrink-0" key={group.id}>
-                    <a
-                      aria-current={on ? 'location' : undefined}
-                      className={clsx(
-                        'inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2',
-                        on
-                          ? 'border-[var(--button-primary-background,#d90716)] bg-[var(--button-primary-background,#d90716)] text-white'
-                          : 'border-contrast-200 bg-white text-foreground hover:border-foreground',
-                      )}
-                      href={`#${group.id}`}
-                      onClick={() => jump(group.id)}
-                    >
-                      {group.title}
-                      <span
-                        className={clsx(
-                          'rounded-full px-1.5 py-px text-[10px] font-semibold tabular-nums',
-                          on
-                            ? 'bg-white text-[var(--button-primary-background,#d90716)]'
-                            : 'bg-contrast-100 text-contrast-500',
-                        )}
-                      >
-                        {group.terms.length}
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
+        ) : (
+          <div className="mt-5 divide-y divide-contrast-100 border-y border-contrast-100">
+            {visible.map((group) => (
+              <GroupRow
+                group={group}
+                highlight={deferred}
+                key={group.id}
+                onToggle={() => toggle(group.id)}
+                open={searching || openId === group.id}
+              />
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* Live status for the search. */}
-      <p aria-live="polite" className="mt-6 text-sm text-contrast-500">
-        {searching
-          ? `${total} ${total === 1 ? 'term' : 'terms'} match “${query.trim()}”`
-          : `${total} terms in ${groups.length} groups`}
-      </p>
-
-      {visible.length === 0 ? (
-        <div className="mt-6 rounded-3xl border border-contrast-100 bg-[#fdf8f8] px-6 py-10 text-center">
-          <p className="font-heading text-lg font-semibold">No term matches that.</p>
-          <p className="mt-2 text-sm text-contrast-500">
-            Try a shorter word, or clear the search and browse the groups.
-          </p>
-        </div>
-      ) : (
-        <div className="mt-4 divide-y divide-contrast-100 border-y border-contrast-100">
-          {visible.map((group) => (
-            <GroupRow
-              group={group}
-              highlight={deferred}
-              key={group.id}
-              onToggle={() => toggle(group.id)}
-              open={searching || openIds.has(group.id)}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -232,7 +228,7 @@ function GroupRow({
   const panelId = `${group.id}-terms`;
 
   return (
-    <section className="scroll-mt-28" id={group.id}>
+    <section className="scroll-mt-6" id={group.id}>
       <h2>
         <button
           aria-controls={panelId}
@@ -262,7 +258,7 @@ function GroupRow({
         id={panelId}
       >
         <div className="overflow-hidden">
-          <dl className="grid gap-x-12 pb-8 @3xl:grid-cols-2">
+          <dl className="grid gap-x-12 pb-8 @4xl:grid-cols-2">
             {group.terms.map((entry) => (
               <TermRow
                 definition={entry.definition}
