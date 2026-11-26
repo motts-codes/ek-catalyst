@@ -87,9 +87,11 @@ function fields(
       name: 'rooms',
       label: 'What are you planning?',
       required: true,
+      // Order per EK (26 Nov 2026): Kitchen, Bath, Appliances, Closets, Windows.
       options: [
         { label: 'Kitchen', value: 'kitchen' },
         { label: 'Bath', value: 'bath' },
+        { label: 'Appliances', value: 'appliances' },
         { label: 'Closets', value: 'closets' },
         { label: 'Windows', value: 'windows' },
       ],
