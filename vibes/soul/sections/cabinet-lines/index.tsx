@@ -207,9 +207,10 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             (was-price #d4d4d4, finance #f9858d) and are replaced with #6b6b6b and brand red. */}
         {hasFacts(line) && (
           <>
-            {/* A quiet eyebrow: it repeats on every card, so small on purpose (per Arun), but 11px
-                uppercase rather than the landing page's 9px, which failed EK's audit. */}
-            <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b]">
+            {/* A quiet eyebrow, 9px on purpose: it repeats on every card and only labels the price
+                (Arun's call, 26 Nov 2026, after EK's audit flagged the size; the finance line beside
+                it is smaller still and was not raised). */}
+            <p className="mt-1 text-[9px] font-semibold uppercase tracking-wider text-[#6b6b6b]">
               10x10 Kitchen starting
             </p>
             {/* Two cells: the price (and was-price) on the left; on the right the finance line and
