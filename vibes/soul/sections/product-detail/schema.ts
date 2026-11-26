@@ -119,16 +119,34 @@ export interface SchemaRawShape {
   quantity: z.ZodNumber;
 }
 
+// Most of one product a single order may hold; the same ceiling as the cart's quantity box.
+export const MAX_PER_ORDER = 999;
+
+// The quantity cap the form enforces: the stock / purchase-limit cap when BigCommerce gives one,
+// never more than MAX_PER_ORDER (most live products carry no tracked stock, and without a
+// ceiling a typed 99999 went straight into the cart).
+export function quantityCap(maxQuantity?: number): number {
+  return Math.min(maxQuantity ?? MAX_PER_ORDER, MAX_PER_ORDER);
+}
+
+// The note shown when a typed quantity is pulled down to the cap. Names its field (site rule).
+export function quantityCapMessage(cap: number, maxQuantity?: number): string {
+  return maxQuantity != null && maxQuantity <= MAX_PER_ORDER
+    ? `Quantity: only ${cap} available`
+    : `Quantity: up to ${MAX_PER_ORDER} per order`;
+}
+
 export function schema(
   fields: Field[],
   minQuantity?: number,
   maxQuantity?: number,
 ): z.ZodObject<SchemaRawShape> {
-  let quantitySchema = z.number().min(minQuantity ?? 1);
-
-  if (maxQuantity != null) {
-    quantitySchema = quantitySchema.max(maxQuantity);
-  }
+  const min = minQuantity ?? 1;
+  const cap = quantityCap(maxQuantity);
+  const quantitySchema = z
+    .number({ invalid_type_error: 'Quantity is required' })
+    .min(min, { message: `Quantity must be at least ${min}` })
+    .max(cap, { message: quantityCapMessage(cap, maxQuantity) });
 
   const shape: SchemaRawShape = {
     id: z.string(),

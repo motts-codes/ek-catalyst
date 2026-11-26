@@ -129,7 +129,7 @@ export const NumberInput = React.forwardRef<
           <input
             {...rest}
             className={clsx(
-              'w-8 flex-1 select-none justify-center bg-transparent text-center [appearance:textfield] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-30 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+              'w-10 flex-1 select-none justify-center bg-transparent text-center [appearance:textfield] focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-30 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
               {
                 light: 'text-[var(--number-input-light-text,hsl(var(--foreground)))]',
                 dark: 'text-[var(--number-input-dark-text,hsl(var(--background)))]',

@@ -23,6 +23,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { useFormStatus } from 'react-dom';
 import { z } from 'zod';
@@ -51,7 +52,7 @@ import { usePathname, useRouter } from '~/i18n/routing';
 
 import { revalidateCart } from './actions/revalidate-cart';
 import { FulfillmentIcon } from './fulfillment-icon';
-import { Field, schema, SchemaRawShape } from './schema';
+import { Field, quantityCap, quantityCapMessage, schema, SchemaRawShape } from './schema';
 
 // Trust/service reassurances shown under the purchase panel. Each is a link to its policy page
 // (hrefs are '#' placeholders for now). Icons are the supplied brand SVGs, which keep their own
@@ -370,6 +371,24 @@ export function ProductDetailForm<F extends Field>({
 
   const quantityControl = useInputControl(formFields.quantity);
   const callToOrder = callToOrderHref != null;
+  // Leaving the quantity box with more than the cap pulls the value down to it and says why,
+  // right there, instead of waiting for Add to cart. Cleared as soon as the value changes again.
+  const cap = quantityCap(maxQuantity);
+  const [quantityNote, setQuantityNote] = useState<string | null>(null);
+  const clampQuantity = () => {
+    const typed = Number(quantityControl.value);
+    const floor = minQuantity ?? 1;
+
+    if (Number.isNaN(typed) || quantityControl.value === '') return;
+
+    if (typed > cap) {
+      quantityControl.change(String(cap));
+      setQuantityNote(quantityCapMessage(cap, maxQuantity));
+    } else if (typed < floor) {
+      quantityControl.change(String(floor));
+      setQuantityNote(`Quantity must be at least ${floor}`);
+    }
+  };
 
   if (quoteOnly != null) {
     return <QuoteOnlyPanel actions={quoteOnly} descriptionSlot={descriptionSlot} header={header} />;
@@ -586,12 +605,19 @@ export function ProductDetailForm<F extends Field>({
                       '[&_button:disabled]:hover:!bg-contrast-100 [&_button:disabled_svg]:!text-foreground',
                     )}
                     decrementLabel={decrementLabel}
+                    errors={quantityNote != null ? [quantityNote] : formFields.quantity.errors}
                     incrementLabel={incrementLabel}
-                    max={maxQuantity}
+                    max={cap}
                     min={minQuantity ?? 1}
                     name={formFields.quantity.name}
-                    onBlur={quantityControl.blur}
-                    onChange={(e) => quantityControl.change(e.currentTarget.value)}
+                    onBlur={() => {
+                      clampQuantity();
+                      quantityControl.blur();
+                    }}
+                    onChange={(e) => {
+                      setQuantityNote(null);
+                      quantityControl.change(e.currentTarget.value);
+                    }}
                     onFocus={quantityControl.focus}
                     required
                     value={quantityControl.value}
