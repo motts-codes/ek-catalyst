@@ -21,21 +21,31 @@ const TIME_OPTIONS = ['9:00 AM', '10:30 AM', '12:00 PM', '1:30 PM', '3:00 PM', '
 );
 
 // Showrooms with two Project Managers get a "who would you like to meet?" choice that appears
-// only while that showroom is selected.
-const PM_CHOICES: Field[] = SHOWROOMS.filter((s) => s.secondPm != null).map((s) => ({
-  type: 'radio-group',
-  name: `pm-${s.slug}`,
-  label: `Who would you like to meet at ${s.name}?`,
-  options: [
-    { label: s.pm.name, value: s.pm.name },
-    { label: s.secondPm?.name ?? '', value: s.secondPm?.name ?? '' },
-    { label: 'No preference', value: 'either' },
-  ],
-  defaultValue: 'either',
-  showWhen: { field: 'showroom', equals: s.slug },
-}));
+// only while that showroom is selected. `preferred` (from a "Book with Chris" link) preselects
+// that person on their showroom's choice; everywhere else it is "No preference".
+const pmFieldName = (slug: string) => `pm-${slug}`;
 
-function fields(showroom: string | undefined): Array<Field | Field[]> {
+function pmChoices(preferred?: { showroom: string; pm: string }): Field[] {
+  return SHOWROOMS.filter((s) => s.secondPm != null).map((s) => ({
+    type: 'radio-group',
+    name: pmFieldName(s.slug),
+    label: `Who would you like to meet at ${s.name}?`,
+    options: [
+      { label: s.pm.name, value: s.pm.name },
+      { label: s.secondPm?.name ?? '', value: s.secondPm?.name ?? '' },
+      { label: 'No preference', value: 'either' },
+    ],
+    defaultValue: preferred?.showroom === s.slug ? preferred.pm : 'either',
+    showWhen: { field: 'showroom', equals: s.slug },
+  }));
+}
+
+const PM_CHOICES = pmChoices();
+
+function fields(
+  showroom: string | undefined,
+  preferred?: { showroom: string; pm: string },
+): Array<Field | Field[]> {
   return [
     {
       type: 'select',
@@ -45,7 +55,7 @@ function fields(showroom: string | undefined): Array<Field | Field[]> {
       options: SHOWROOM_OPTIONS,
       defaultValue: showroom,
     },
-    ...PM_CHOICES,
+    ...pmChoices(preferred),
     {
       type: 'radio-group',
       name: 'format',
@@ -99,13 +109,20 @@ export default async function Book({
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ showroom?: string }>;
+  searchParams: Promise<{ showroom?: string; pm?: string }>;
 }) {
-  const [{ locale }, { showroom }] = await Promise.all([params, searchParams]);
+  const [{ locale }, { showroom, pm }] = await Promise.all([params, searchParams]);
 
   setRequestLocale(locale);
 
   const chosen = showroom ? getShowroom(showroom) : undefined;
+  // The Project Manager named in the link, if they really work at the chosen showroom and the
+  // form has a choice to make there (one-PM showrooms have no such field).
+  const chosenPm =
+    chosen?.secondPm != null && pm != null && [chosen.pm.name, chosen.secondPm.name].includes(pm)
+      ? pm
+      : undefined;
+  const preferred = chosen && chosenPm ? { showroom: chosen.slug, pm: chosenPm } : undefined;
 
   return (
     <>
@@ -121,7 +138,7 @@ export default async function Book({
         chips={['60–90 minutes', 'No deposit', 'No obligation', 'Confirmed within 1 business day']}
         description={
           chosen
-            ? `Book time with ${chosen.secondPm ? `${chosen.pm.name} or ${chosen.secondPm.name}` : chosen.pm.name} at our ${chosen.name} showroom. You'll walk the displays together, plan the room and leave with an itemized quote. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy.`
+            ? `Book time with ${chosenPm ?? (chosen.secondPm ? `${chosen.pm.name} or ${chosen.secondPm.name}` : chosen.pm.name)} at our ${chosen.name} showroom. You'll walk the displays together, plan the room and leave with an itemized quote. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy.`
             : "Every showroom has a Project Manager who plans and prices your kitchen with you. Pick the showroom, a day and a time that suit you, and you'll walk the displays together, plan the room and leave with an itemized quote. It takes about an hour and a half, there's no deposit, and you're under no obligation to buy."
         }
         image={{
@@ -135,7 +152,7 @@ export default async function Book({
       <LeadFormCard
         action={submitBookingLead}
         description="Your Project Manager confirms by text and email within 1 business day. Times are Eastern."
-        fields={fields(chosen?.slug)}
+        fields={fields(chosen?.slug, preferred)}
         fine={
           <>
             Showrooms are closed on Sundays, and some on Mondays. If the slot you choose turns out
@@ -148,7 +165,9 @@ export default async function Book({
           alt: 'A showroom aisle between a marble waterfall island and a navy island, display kitchens beyond',
         }}
         kicker="Your appointment"
-        linkedDefaults={chosen ? ['showroom'] : undefined}
+        linkedDefaults={
+          chosen ? ['showroom', ...(preferred ? [pmFieldName(chosen.slug)] : [])] : undefined
+        }
         spacing="tight"
         steps={[
           { title: 'Where', names: ['showroom', ...PM_CHOICES.map((f) => f.name), 'format'] },

@@ -206,6 +206,8 @@ export function ProjectManagerPanel({
 // the card is hovered or anything in it has focus; on phones they sit under the button.
 function ProjectManagerCard({ pm, bookHref }: { pm: ProjectManager; bookHref: string }) {
   const firstName = pmFirstName(pm);
+  // "Book with Chris" books with Chris: the form preselects this Project Manager.
+  const bookWithHref = `${bookHref}${bookHref.includes('?') ? '&' : '?'}pm=${encodeURIComponent(pm.name)}`;
 
   return (
     <div className="group/card flex flex-col overflow-hidden rounded-3xl bg-[#151515] text-white @3xl:h-full @3xl:min-h-0">
@@ -237,7 +239,7 @@ function ProjectManagerCard({ pm, bookHref }: { pm: ProjectManager; bookHref: st
         <ButtonLink
           // The house swipe: red, filling black from the left on hover, as on the closing band.
           className="mt-5 w-full [--button-primary-background-hover:black] [--button-primary-text:white] focus-visible:ring-white focus-visible:ring-offset-[#151515] [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2.5"
-          href={bookHref}
+          href={bookWithHref}
           shape="pill"
           size="medium"
           variant="primary"
