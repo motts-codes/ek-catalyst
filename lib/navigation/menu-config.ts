@@ -131,7 +131,8 @@ const menu: MenuItem[] = [
       },
       {
         label: 'Sale',
-        href: '/sale',
+        // No href: a plain heading box (no link, no hover) in the menu; the /sale page stays
+        // reachable by URL and from the sitemap only (Arun, 26 Nov 2026).
         links: [
           {
             label: 'Clearance',

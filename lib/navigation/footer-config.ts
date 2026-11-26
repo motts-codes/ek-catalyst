@@ -20,7 +20,6 @@ export const FOOTER_SECTIONS: Section[] = [
       { label: 'Cabinet hardware', href: '/cabinet-hardware' },
       { label: 'Sinks & faucets', href: '/sinks-faucets' },
       { label: 'Offers' },
-      { label: 'Sale', href: '/sale' },
       { label: 'Clearance', href: '/clearance-sale' },
       { label: 'Promotions', href: '/promotions' },
     ],
