@@ -734,6 +734,7 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
               aria-label={mobileMenuTriggerLabel}
               aria-modal="true"
               className="fixed inset-0 z-[100] flex flex-col bg-[var(--nav-mobile-background,hsl(var(--background)))] @container"
+              id="ek-mobile-menu"
               role="dialog"
             >
               <div className="flex items-center justify-end border-b border-[var(--nav-mobile-divider,hsl(var(--contrast-100)))] px-4 py-3">
@@ -1128,12 +1129,12 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   setMenuValue('');
                 }}
                 registerHref={registerHref}
-                tiles={accountTiles}
                 signInLabel={signInLabel}
                 signOutHref={signOutHref}
                 signOutLabel={signOutLabel}
                 signedInAccountHref={signedInAccountHref}
                 signedInAccountLabel={signedInAccountLabel}
+                tiles={accountTiles}
               />
             }
             value={streamableIsLoggedIn}
@@ -1151,12 +1152,12 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                   setMenuValue('');
                 }}
                 registerHref={registerHref}
-                tiles={accountTiles}
                 signInLabel={signInLabel}
                 signOutHref={signOutHref}
                 signOutLabel={signOutLabel}
                 signedInAccountHref={signedInAccountHref}
                 signedInAccountLabel={signedInAccountLabel}
+                tiles={accountTiles}
               />
             )}
           </Stream>
@@ -1196,6 +1197,8 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           {/* Hamburger — last in the icon cluster, after the cart, with a little extra room to
               its left. Opens the full-screen mobile menu (portaled above). */}
           <MobileMenuButton
+            aria-controls="ek-mobile-menu"
+            aria-expanded={isMobileMenuOpen}
             aria-label={mobileMenuTriggerLabel}
             className="ml-3 @[700px]:hidden"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
