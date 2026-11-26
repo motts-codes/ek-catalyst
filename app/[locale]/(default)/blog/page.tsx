@@ -33,14 +33,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const blog = await getBlog();
   const makeswiftMetadata = await getMakeswiftPageMetadata({ path: '/blog', locale });
 
+  // BigCommerce names the blog plain "Blog" with no description, so the generic values fall
+  // through to copy written for search (≤41 chars before the brand suffix, ≤175 chars).
   const description =
     makeswiftMetadata?.description ||
     (blog?.description && blog.description.length > 150
       ? `${blog.description.substring(0, 150)}...`
-      : blog?.description);
+      : blog?.description) ||
+    'Ideas and guides for the kitchen you are planning: cabinet styles, layouts, materials, budgets, and what to expect from ordering to the day it arrives.';
+  const genericName = !blog?.name || blog.name === t('title');
 
   return {
-    title: makeswiftMetadata?.title || blog?.name || t('title'),
+    title: makeswiftMetadata?.title || (genericName ? 'Kitchen Ideas and Guides Blog' : blog.name),
     ...(description && { description }),
     ...(blog?.path && { alternates: await getMetadataAlternates({ path: blog.path, locale }) }),
   };
