@@ -34,7 +34,8 @@ export function MSReviewCarousel({
   layout,
 }: Props) {
   const shared = {
-    action: actionLabel ? { label: actionLabel, href: actionLink?.href ?? '#' } : undefined,
+    // No link set in Makeswift: the button goes to the reviews page, never to '#'.
+    action: actionLabel ? { label: actionLabel, href: actionLink?.href ?? '/reviews' } : undefined,
     className,
     reviews:
       reviews.length > 0
