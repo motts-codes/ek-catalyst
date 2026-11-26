@@ -62,13 +62,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Absolute: the home title names the brand itself, so the layout's "- Express Kitchens"
     // suffix is not added again.
     title: {
-      absolute: metadata?.title ?? 'Express Kitchens: Kitchen cabinets made in Connecticut',
+      // The live site's title, kept for continuity (per Arun, 26 Nov 2026).
+      absolute:
+        metadata?.title ??
+        'Best Kitchen Cabinets Remodelling & Bathroom Vanities | Express Kitchens',
     },
     // Makeswift's description for "/" is a stub ("Express"); only a real sentence overrides ours.
     description:
       (metadata?.description?.trim().length ?? 0) >= 40
         ? metadata?.description
-        : 'Kitchen cabinets built in Connecticut and stocked in Bristol. RTA in two weeks, assembled in three, plus countertops, sinks, appliances and windows from one supplier.',
+        : 'Upgrade your home with best kitchen remodeling, premium kitchen cabinets, & stylish bathroom vanities. Smart designs, quality craftsmanship, and affordable solutions.',
     alternates: await getMetadataAlternates({ path: '/', locale }),
   };
 }
