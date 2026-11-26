@@ -148,6 +148,7 @@ export default async function Book({
           alt: 'A showroom aisle between a marble waterfall island and a navy island, display kitchens beyond',
         }}
         kicker="Your appointment"
+        linkedDefaults={chosen ? ['showroom'] : undefined}
         spacing="tight"
         steps={[
           { title: 'Where', names: ['showroom', ...PM_CHOICES.map((f) => f.name), 'format'] },

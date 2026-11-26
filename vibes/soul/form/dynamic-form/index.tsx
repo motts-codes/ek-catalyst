@@ -239,6 +239,12 @@ export interface DynamicFormProps<F extends Field> {
    * email), so the visitor hears early. The Next check still runs as the backstop.
    */
   checkOnBlur?: string[];
+  /**
+   * Field names whose `defaultValue` came from the link the visitor arrived by (e.g. the showroom
+   * in /book?showroom=orange). The link wins over the saved session draft for these, so a visitor
+   * who opened the form earlier still lands on the showroom they just clicked.
+   */
+  linkedDefaults?: string[];
 }
 
 export type StepValidator = (
@@ -268,6 +274,7 @@ export function DynamicForm<F extends Field>({
   steps,
   validateStep,
   checkOnBlur,
+  linkedDefaults,
 }: DynamicFormProps<F>) {
   const t = useTranslations('Form');
   const [step, setStep] = useState(0);
@@ -502,7 +509,17 @@ export function DynamicForm<F extends Field>({
     if (draft == null) return;
 
     const isChoice = (key: string) => CHOICE_FIELD_TYPES.has(fieldByName.get(key)?.type ?? 'text');
-    const entries = Object.entries(draft.values).filter(([key]) => fieldByName.has(key));
+    // The restore replaces the form's values as a whole, so a linked field is not left out (that
+    // would blank it) but carried through with its link-given default in place of the draft's.
+    const linked = new Set(linkedDefaults ?? []);
+    const entries = Object.entries(draft.values)
+      .filter(([key]) => fieldByName.has(key))
+      .map(([key, value]): [string, string | string[]] => {
+        const field = linked.has(key) ? fieldByName.get(key) : undefined;
+        const fromLink: unknown = field && 'defaultValue' in field ? field.defaultValue : undefined;
+
+        return typeof fromLink === 'string' ? [key, fromLink] : [key, value];
+      });
     const typed = Object.fromEntries(entries.filter(([key]) => !isChoice(key)));
     const choices = Object.fromEntries(entries.filter(([key]) => isChoice(key)));
 

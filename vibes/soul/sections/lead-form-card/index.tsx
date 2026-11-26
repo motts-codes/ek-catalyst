@@ -25,6 +25,8 @@ interface Props<F extends Field> {
   fine?: ReactNode;
   /** Split the form into steps (see DynamicForm). */
   steps?: FormStep[];
+  /** Fields whose default came from the link the visitor arrived by (see DynamicForm). */
+  linkedDefaults?: string[];
   /** `tight` trims the space above the card (when a hero sits directly above it). */
   spacing?: 'default' | 'tight';
 }
@@ -44,6 +46,7 @@ export function LeadFormCard<F extends Field>({
   image,
   fine = 'Your details stay with us. No spam, ever.',
   steps,
+  linkedDefaults,
   spacing = 'default',
 }: Props<F>) {
   return (
@@ -104,6 +107,7 @@ export function LeadFormCard<F extends Field>({
                 <DynamicForm
                   action={action}
                   fields={fields}
+                  linkedDefaults={linkedDefaults}
                   steps={steps}
                   submitLabel={submitLabel}
                 />
