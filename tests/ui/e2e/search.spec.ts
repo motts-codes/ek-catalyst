@@ -91,9 +91,7 @@ test('Searching for non-existent product displays no results on the Search Resul
   await searchInput.press('Enter');
   await page.waitForLoadState('networkidle');
 
-  await expect(
-    page.getByText(t('Faceted.Search.Empty.title', { term: randomSearchTerm })),
-  ).toBeVisible();
+  await expect(page.getByText(t('Faceted.Search.Empty.title'))).toBeVisible();
 
   await expect(page.getByText(t('Faceted.Search.Empty.subtitle'))).toBeVisible();
 });

@@ -326,6 +326,22 @@ function GroupHeading({
   );
 }
 
+// The item lists are plain <ul>s rather than NavigationMenu.List, so Radix cannot tell a trigger
+// from "outside": a pointerdown on a trigger dismissed the open panel, and the click that followed
+// toggled it straight back open (a hover-opened button could never be clicked shut). Keep the panel
+// for the click to decide.
+function keepOpenOnTriggerPointerDown(
+  event: Parameters<
+    NonNullable<NavigationMenu.NavigationMenuContentProps['onPointerDownOutside']>
+  >[0],
+) {
+  const target = event.target;
+
+  if (target instanceof Element && target.closest('[data-radix-collection-item]')) {
+    event.preventDefault();
+  }
+}
+
 const navLinkClassName =
   'hidden items-center whitespace-nowrap rounded-full bg-[var(--nav-link-background,transparent)] px-3.5 py-2 font-[family-name:var(--nav-link-font-family,var(--font-family-body))] text-sm font-medium text-[var(--nav-link-text,hsl(var(--foreground)))] ring-[var(--nav-focus,hsl(var(--primary)))] transition-colors duration-200 hover:text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 data-[state=open]:text-[var(--button-primary-background,#d90716)] @[700px]:inline-flex';
 const navSubLinkClassName =
@@ -878,100 +894,152 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
           >
             {(links) => {
               const shownCount = visibleCount ?? links.length;
-              const renderItem = (item: Link, i: number, position: number) => (
-                <NavigationMenu.Item
-                  key={i}
-                  ref={getItemRef(position)}
-                  style={position >= shownCount ? { display: 'none' } : undefined}
-                  value={i.toString()}
-                >
-                  <NavigationMenu.Trigger asChild>
-                    <Link
+              const renderItem = (item: Link, i: number, position: number) => {
+                const hasPanel = item.groups != null && item.groups.length > 0;
+                // '#' marks a section whose landing page doesn't exist yet (see menu-config).
+                const hasPage = item.href !== '' && item.href !== '#';
+                const value = i.toString();
+
+                // Disclosure semantics (EK audit, 27 Nov 2026). Only items with a panel are
+                // Radix triggers (aria-expanded / aria-controls); plain links stay plain links.
+                // A link trigger follows its page on Enter — that page lists the same things — and
+                // opens the panel on Space or ArrowDown, after which Radix takes ArrowDown into the
+                // panel and Escape closes it. A section without a page is a real button.
+                const openPanelOnKey = (event: React.KeyboardEvent<HTMLAnchorElement>) => {
+                  if (menuValue === value) return;
+
+                  if (event.key === ' ' || event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    hoverSuppressed.current = false;
+                    setMenuValue(value);
+                  }
+                };
+
+                let trigger = (
+                  <NavigationMenu.Link asChild>
+                    <Link className={navLinkClassName} href={item.href}>
+                      {item.label}
+                    </Link>
+                  </NavigationMenu.Link>
+                );
+
+                if (hasPanel && hasPage) {
+                  trigger = (
+                    <NavigationMenu.Trigger asChild>
+                      <Link
+                        className={navLinkClassName}
+                        href={item.href}
+                        onClick={() => {
+                          hoverSuppressed.current = true;
+                          setMenuValue('');
+                        }}
+                        onKeyDown={openPanelOnKey}
+                      >
+                        {item.label}
+                      </Link>
+                    </NavigationMenu.Trigger>
+                  );
+                } else if (hasPanel) {
+                  trigger = (
+                    <NavigationMenu.Trigger
                       className={navLinkClassName}
-                      href={item.href}
                       onClick={() => {
-                        hoverSuppressed.current = true;
-                        setMenuValue('');
+                        // A click always counts, even right after a link click suppressed hover.
+                        hoverSuppressed.current = false;
                       }}
                     >
                       {item.label}
-                    </Link>
-                  </NavigationMenu.Trigger>
-                  {item.groups != null && item.groups.length > 0 && (
-                    <NavigationMenu.Content className={navPanelClassName}>
-                      {/* Each group is a block: a grey heading tile, then the links as square photo
+                    </NavigationMenu.Trigger>
+                  );
+                }
+
+                return (
+                  <NavigationMenu.Item
+                    key={i}
+                    ref={getItemRef(position)}
+                    style={position >= shownCount ? { display: 'none' } : undefined}
+                    value={value}
+                  >
+                    {trigger}
+                    {hasPanel && (
+                      <NavigationMenu.Content
+                        className={navPanelClassName}
+                        onPointerDownOutside={keepOpenOnTriggerPointerDown}
+                      >
+                        {/* Each group is a block: a grey heading tile, then the links as square photo
                           tiles. The blocks fill a two-column grid in config order — Cabinets beside
                           Cabinet Hardware, Countertops beside Sale, Sinks & Faucets on its own.
                           Tiles scale with the nav width (80 → 100 → 120px) so nothing overflows;
                           below 900px the grid drops to one column so the row still fits. */}
-                      <div className={navPanelGridClassName}>
-                        {item.groups.map((group, groupIndex) => (
-                          <div
-                            className={clsx(
-                              'ek-menu-row flex min-w-0 items-start gap-3.5',
-                              group.fullRow && '@[900px]:col-span-2',
-                            )}
-                            key={groupIndex}
-                            style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
-                          >
-                            {group.label != null && group.label !== '' && (
-                              <GroupTile href={group.href} label={group.label} />
-                            )}
-                            {(group.label == null || group.label === '') &&
-                              item.groups?.some((g) => g.label) && (
-                                // Unlabelled group in a menu that has headings: keep an empty slot
-                                // so its tiles line up with the row above.
-                                <span
-                                  aria-hidden
-                                  className="w-20 shrink-0 @[1100px]:w-[100px] @[1360px]:w-[120px]"
-                                />
+                        <div className={navPanelGridClassName}>
+                          {(item.groups ?? []).map((group, groupIndex) => (
+                            <div
+                              className={clsx(
+                                'ek-menu-row flex min-w-0 items-start gap-3.5',
+                                group.fullRow && '@[900px]:col-span-2',
                               )}
-                            <ul className="flex min-w-0 flex-1 flex-wrap gap-x-3.5 gap-y-4">
-                              {group.links.map((link, idx) => (
-                                // Each tile rises in turn when the panel opens (see ek-tile-in in globals.css).
-                                <li
-                                  className={clsx('ek-menu-tile', link.spaceBefore && 'ml-6')}
-                                  key={idx}
-                                  style={{
-                                    animationDelay: `${Math.floor(groupIndex / 2) * 240 + Math.min(idx, 12) * 30}ms`,
-                                  }}
-                                >
-                                  <MenuTile
-                                    href={link.href}
-                                    image={link.image}
-                                    label={link.label}
-                                  />
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                        {item.panelLink != null && (
-                          // Full-width last row, so the link lines up with the heading tiles.
-                          <div className="-mt-2 border-t border-[hsl(var(--foreground)/6%)] pt-4 @[900px]:col-span-2">
-                            <Link
-                              className="group/all inline-flex items-center gap-1.5 rounded-lg text-sm font-semibold text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]"
-                              href={item.panelLink.href}
-                              onClick={() => {
-                                hoverSuppressed.current = true;
-                                setMenuValue('');
-                              }}
+                              key={groupIndex}
+                              style={{ animationDelay: `${Math.floor(groupIndex / 2) * 240}ms` }}
                             >
-                              {item.panelLink.label}
-                              <ArrowRight
-                                aria-hidden
-                                className="transition-transform group-hover/all:translate-x-1"
-                                size={15}
-                                strokeWidth={2.5}
-                              />
-                            </Link>
-                          </div>
-                        )}
-                      </div>
-                    </NavigationMenu.Content>
-                  )}
-                </NavigationMenu.Item>
-              );
+                              {group.label != null && group.label !== '' && (
+                                <GroupTile href={group.href} label={group.label} />
+                              )}
+                              {(group.label == null || group.label === '') &&
+                                item.groups?.some((g) => g.label) && (
+                                  // Unlabelled group in a menu that has headings: keep an empty slot
+                                  // so its tiles line up with the row above.
+                                  <span
+                                    aria-hidden
+                                    className="w-20 shrink-0 @[1100px]:w-[100px] @[1360px]:w-[120px]"
+                                  />
+                                )}
+                              <ul className="flex min-w-0 flex-1 flex-wrap gap-x-3.5 gap-y-4">
+                                {group.links.map((link, idx) => (
+                                  // Each tile rises in turn when the panel opens (see ek-tile-in in globals.css).
+                                  <li
+                                    className={clsx('ek-menu-tile', link.spaceBefore && 'ml-6')}
+                                    key={idx}
+                                    style={{
+                                      animationDelay: `${Math.floor(groupIndex / 2) * 240 + Math.min(idx, 12) * 30}ms`,
+                                    }}
+                                  >
+                                    <MenuTile
+                                      href={link.href}
+                                      image={link.image}
+                                      label={link.label}
+                                    />
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                          {item.panelLink != null && (
+                            // Full-width last row, so the link lines up with the heading tiles.
+                            <div className="-mt-2 border-t border-[hsl(var(--foreground)/6%)] pt-4 @[900px]:col-span-2">
+                              <Link
+                                className="group/all inline-flex items-center gap-1.5 rounded-lg text-sm font-semibold text-[var(--button-primary-background,#d90716)] focus-visible:outline-0 focus-visible:ring-2 focus-visible:ring-[var(--nav-focus,hsl(var(--primary)))]"
+                                href={item.panelLink.href}
+                                onClick={() => {
+                                  hoverSuppressed.current = true;
+                                  setMenuValue('');
+                                }}
+                              >
+                                {item.panelLink.label}
+                                <ArrowRight
+                                  aria-hidden
+                                  className="transition-transform group-hover/all:translate-x-1"
+                                  size={15}
+                                  strokeWidth={2.5}
+                                />
+                              </Link>
+                            </div>
+                          )}
+                        </div>
+                      </NavigationMenu.Content>
+                    )}
+                  </NavigationMenu.Item>
+                );
+              };
 
               // Preserve original indices when filtering so each item's mega-menu value is stable.
               // `position` is the item's place in row order (shop cluster first) — overflow hides
@@ -1005,7 +1073,10 @@ export const Navigation = forwardRef(function Navigation<S extends SearchResult>
                         >
                           <MoreHorizontal size={20} strokeWidth={1.5} />
                         </NavigationMenu.Trigger>
-                        <NavigationMenu.Content className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]">
+                        <NavigationMenu.Content
+                          className="rounded-2xl bg-[var(--nav-menu-background,hsl(var(--background)))] shadow-xl ring-1 ring-[var(--nav-menu-border,hsl(var(--foreground)/5%))]"
+                          onPointerDownOutside={keepOpenOnTriggerPointerDown}
+                        >
                           <div className="m-auto grid w-full max-w-screen-lg grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-5 px-5 pb-8 pt-5">
                             {hidden.map(({ item, i }) => (
                               <ul className="flex flex-col" key={i}>
@@ -1709,7 +1780,10 @@ function AccountMenu({
             )}
           </Link>
         </NavigationMenu.Trigger>
-        <NavigationMenu.Content className={navPanelClassName}>
+        <NavigationMenu.Content
+          className={navPanelClassName}
+          onPointerDownOutside={keepOpenOnTriggerPointerDown}
+        >
           <div className={navPanelGridClassName}>
             <div className="ek-menu-row flex min-w-0 items-start gap-3.5">
               <GroupTile href={href} label={menuLabel} />
