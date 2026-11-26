@@ -154,6 +154,25 @@ export default async (): Promise<NextConfig> => {
               key: 'Content-Security-Policy',
               value: cspHeader.replace(/\n/g, ''),
             },
+            // Standard hardening set (EK security audit, 27 Nov 2026).
+            // Browsers ignore X-Frame-Options when CSP frame-ancestors is present (above), so the
+            // Makeswift builder keeps working; this only covers very old browsers.
+            { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+            { key: 'X-Content-Type-Options', value: 'nosniff' },
+            { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+            // Two years, no includeSubDomains / preload: EK has other subdomains (e.g. the Laravel
+            // system) that would have to be confirmed HTTPS-only first. Vercel adds its own HSTS
+            // on HTTPS anyway; this makes the policy explicit and portable.
+            { key: 'Strict-Transport-Security', value: 'max-age=63072000' },
+            // Geolocation is used by the ZIP / showroom "use my location" buttons on this origin.
+            // Features the YouTube embeds delegate (autoplay, picture-in-picture, gyroscope…) are
+            // deliberately not listed, so their default allowlists still apply.
+            {
+              key: 'Permissions-Policy',
+              value:
+                'camera=(), microphone=(), geolocation=(self), payment=(), usb=(), interest-cohort=()',
+            },
+            { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
             ...cdnLinks,
           ],
         },
