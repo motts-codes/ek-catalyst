@@ -40,13 +40,6 @@ function pmNames(showroom: Showroom): string {
 
 // "meet Project Manager Lanaisha Rodrigues" / "meet Project Managers Chris Jones and Ulrike
 // Robinson", for the meta description.
-function pmMeta(showroom: Showroom): string {
-  if (showroom.pm.name.startsWith('[')) return 'meet our Project Managers';
-
-  return showroom.secondPm
-    ? `meet Project Managers ${showroom.pm.name} and ${showroom.secondPm.name}`
-    : `meet Project Manager ${showroom.pm.name}`;
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const showroom = getShowroom((await params).slug);
@@ -56,8 +49,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const street = showroom.address.split(',')[0] ?? showroom.address;
 
   return {
-    title: `Kitchen Cabinet Showroom in ${showroom.name}, CT`,
-    description: `Visit Express Kitchens in ${showroom.name}, CT, at ${street}. See full kitchens, ${pmMeta(showroom)}, and get your kitchen priced. Walk-ins welcome.`,
+    // Longest name (New London) keeps the full title inside 60 characters with the brand suffix.
+    title: `${showroom.name}, CT Kitchen Cabinet Showroom`,
+    description: `Visit Express Kitchens at ${street} in ${showroom.name}, CT. Walk through full kitchens, hold the doors, and leave with your kitchen priced. Walk-ins welcome.`,
   };
 }
 

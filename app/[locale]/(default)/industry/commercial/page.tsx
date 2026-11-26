@@ -18,7 +18,7 @@ import { COMMERCIAL_PROJECTS } from '~/lib/pages/commercial-projects';
 import { PROJECT_LOGOS } from '~/lib/pages/project-logos';
 
 export const metadata: Metadata = {
-  title: 'Commercial Cabinets and Kitchens: WBE/MBE Certified',
+  title: 'Commercial Cabinets, WBE/MBE Certified',
   description:
     'Hit your date on every unit. Cabinets, countertops, appliances and installation from one supplier, with pricing in 48 hours. WBE/MBE certified, across CT, NY, NJ, MA and RI.',
 };

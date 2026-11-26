@@ -269,7 +269,7 @@ const NEXT_STEP: ExplainerV2['next'] = {
 
 export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
   meta: {
-    title: 'What are assembled kitchen cabinets?',
+    title: 'What Are Assembled Kitchen Cabinets?',
     description:
       'Assembled cabinets arrive built and ready to install. What arrives, how it differs from RTA, what it costs, and where it fits in your remodel.',
   },
@@ -407,7 +407,7 @@ export const ASSEMBLED_EXPLAINER: ExplainerV2 = {
 
 export const RTA_EXPLAINER: ExplainerV2 = {
   meta: {
-    title: 'What are RTA cabinets? Ready-to-assemble explained',
+    title: 'What Are RTA Cabinets? A Plain Guide',
     description:
       'RTA cabinets ship flat for you to build. What’s in the box, how long it takes, what you save, and whether it suits your kitchen.',
   },

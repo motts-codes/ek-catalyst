@@ -18,15 +18,16 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
-  const t = await getTranslations({ locale, namespace: 'GiftCertificates' });
   const makeswiftMetadata = await getMakeswiftPageMetadata({
     path: '/gift-certificates/balance',
     locale,
   });
 
   return {
-    title: makeswiftMetadata?.title || t('title') || 'Gift certificates - Check balance',
-    ...(makeswiftMetadata?.description && { description: makeswiftMetadata.description }),
+    title: makeswiftMetadata?.title || 'Check Your Gift Certificate Balance',
+    description:
+      makeswiftMetadata?.description ||
+      'Express Kitchens gift certificates are delivered by email and redeemed at checkout on cabinets, countertops, appliances and everything else in the store.',
     alternates: await getMetadataAlternates({ path: '/gift-certificates/balance', locale }),
   };
 }

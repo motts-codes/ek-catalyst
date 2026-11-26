@@ -21,7 +21,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: makeswiftMetadata?.title || t('title') || 'Gift certificates',
-    ...(makeswiftMetadata?.description && { description: makeswiftMetadata.description }),
+    description:
+      makeswiftMetadata?.description ||
+      'Express Kitchens gift certificates are delivered by email and redeemed at checkout on cabinets, countertops, appliances and everything else in the store.',
     alternates: await getMetadataAlternates({ path: '/gift-certificates', locale }),
   };
 }

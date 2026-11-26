@@ -24,7 +24,7 @@ import {
 export const metadata: Metadata = {
   title: 'Why Express Kitchens',
   description:
-    'Six reasons to buy your kitchen from the company that makes it: built and stocked in Connecticut, shown in six showrooms, priced on the page, designed for free and shipped in two weeks.',
+    'Six reasons to buy your kitchen from the company that makes it: built and stocked in Connecticut, six showrooms, prices on the page, free design and two-week shipping.',
 };
 
 export default async function WhyExpressKitchens({

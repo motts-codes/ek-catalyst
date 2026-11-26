@@ -14,7 +14,7 @@ import { ZIP_MESSAGE, ZIP_PATTERN } from '~/lib/forms/fields';
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
-  title: 'Siding',
+  title: 'Vinyl Siding in Connecticut',
   description:
     'Vinyl clapboard, Dutch lap, board and batten and shake, new at Express Kitchens. Quoted by the square; tell us the elevation and we price it.',
 };

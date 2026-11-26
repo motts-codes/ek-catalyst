@@ -64,9 +64,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: {
       absolute: metadata?.title ?? 'Express Kitchens: Kitchen cabinets made in Connecticut',
     },
+    // Makeswift's description for "/" is a stub ("Express"); only a real sentence overrides ours.
     description:
-      metadata?.description ??
-      'Kitchen cabinets built in Connecticut and stocked in Bristol. RTA in two weeks, assembled in three, plus countertops, sinks, appliances and windows from one supplier.',
+      (metadata?.description?.trim().length ?? 0) >= 40
+        ? metadata?.description
+        : 'Kitchen cabinets built in Connecticut and stocked in Bristol. RTA in two weeks, assembled in three, plus countertops, sinks, appliances and windows from one supplier.',
     alternates: await getMetadataAlternates({ path: '/', locale }),
   };
 }

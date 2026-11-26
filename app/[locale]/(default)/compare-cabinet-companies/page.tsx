@@ -11,7 +11,7 @@ import { StepsTimeline } from '@/vibes/soul/sections/page-kit/steps-timeline';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'How Express Kitchens Compares to Big-Box, Online and Custom Cabinet Sellers',
+  title: 'How We Compare to Other Cabinet Sellers',
   description:
     'Who makes the cabinet, how long you wait, whether you can see it first, and price match. Express Kitchens side by side with big-box stores, online sellers and custom shops.',
 };

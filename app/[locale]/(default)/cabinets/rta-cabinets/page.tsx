@@ -37,7 +37,7 @@ interface Props {
 export const metadata: Metadata = {
   title: 'RTA Kitchen Cabinets',
   description:
-    'Ready-to-assemble (RTA) cabinets in a range of door styles and finishes at a lower price point.',
+    'Ready-to-assemble kitchen cabinets at a lower price, shipped flat in about two weeks. Shaker, modern and traditional doors, all-plywood boxes, first two door samples free.',
 };
 
 // RTA (ready-to-assemble) cabinet lines landing page — same view as the Assembled page, driven by

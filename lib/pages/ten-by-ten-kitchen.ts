@@ -13,7 +13,7 @@ export const PRICES_AS_OF = 'October 16, 2026';
 export const TEN_BY_TEN_META = {
   title: 'What is a 10×10 kitchen?',
   description:
-    'A 10×10 is the standard sample kitchen used to compare cabinet prices: two 10-foot walls in an L shape, 13 cabinets, cabinets only. See what’s in it and how to scale it to your room.',
+    'A 10×10 is the standard sample kitchen for comparing cabinet prices: two 10-foot walls in an L, 13 cabinets. See what is in it and how to scale it to your room.',
 };
 
 export const TEN_BY_TEN_HERO = {

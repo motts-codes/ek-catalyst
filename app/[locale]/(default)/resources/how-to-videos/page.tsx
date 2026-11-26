@@ -10,7 +10,7 @@ import type { Video } from '~/lib/pages/projects';
 export const metadata: Metadata = {
   title: 'How-To Videos',
   description:
-    'Watch our cabinets and closet units go together, step by step: base cabinets, lazy susans, corner walls, tall utility cabinets, roll-out trays and four closet units. Filmed by Express Kitchens.',
+    'Watch our cabinets and closet units go together step by step: base cabinets, lazy susans, corner walls, tall utility cabinets, roll-out trays and closet units.',
 };
 
 const YOUTUBE_CHANNEL = 'https://www.youtube.com/@expresskitchensct';

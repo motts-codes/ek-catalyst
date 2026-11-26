@@ -20,9 +20,9 @@ import { submitReturnLead } from '~/lib/forms/submit-lead';
 import { SAMPLES_HREF } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'Returns',
+  title: 'Returns Policy',
   description:
-    "Unopened items can come back within 30 days of purchase with a 30% restocking fee, once we've approved the return. What qualifies, how to do it, and what to do if something arrived damaged.",
+    'Unopened items can come back within 30 days with a 30% restocking fee once we approve the return. What qualifies, how to start one, and what to do about damage on arrival.',
 };
 
 const PHONE_HREF = 'tel:+18602471000';

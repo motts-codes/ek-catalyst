@@ -15,7 +15,7 @@ import { buildEstimatorVisuals } from '~/lib/estimator/ten-by-ten-visuals';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'Kitchen Estimator: what would your kitchen cost?',
+  title: 'Kitchen Estimator: Price Your Kitchen',
   description:
     'Pick a kitchen shape, a cabinet line, a door style and a color, and see the 10×10 price, the price per linear foot and a monthly payment. No email, no sales call.',
 };

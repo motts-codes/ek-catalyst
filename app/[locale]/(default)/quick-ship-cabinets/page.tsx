@@ -11,9 +11,9 @@ import { getCabinetLines } from '~/lib/cabinets/cabinet-lines-data';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'Ships Next Day',
+  title: 'Quick Ship Cabinets: Ships Next Day',
   description:
-    'Fully assembled, all-plywood cabinets in stock and shipped the next business day: Avon, Madison, Birmingham, Cambridge, Derry and Eden, plus handles, faucets, sinks, bath and accessories.',
+    'Fully assembled, all-plywood cabinets in stock and shipped the next business day: Avon, Madison, Birmingham, Cambridge, Derry and Eden, plus handles, sinks and faucets.',
   // Hidden at the client's request (27 Oct 2026): out of the nav, footer and sitemap, not indexed.
   robots: { index: false },
 };

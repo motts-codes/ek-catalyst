@@ -8,9 +8,9 @@ import { EXPLAINER_V2_HREF } from '~/lib/cabinets/explainer-v2-content';
 import { ESTIMATOR_HREF, FREE_DESIGN_HREF, SAMPLES_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'Resources',
+  title: 'Kitchen Planning Guides and Tools',
   description:
-    'Guides, tools and straight answers for planning a kitchen: RTA vs assembled, the 10×10 kitchen, pricing, measuring, samples, financing, shipping, returns, videos, care and warranty.',
+    'Guides, tools and straight answers for planning a kitchen: RTA vs assembled, the 10×10 kitchen, pricing, measuring, samples, financing, shipping, care and warranty.',
 };
 
 // Copy checked against EK's policy pages and their Oct 27 answers. Each card points at the page

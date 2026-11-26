@@ -17,7 +17,7 @@ import { getAudienceMode } from '~/lib/navigation/audience-mode';
 export const metadata: Metadata = {
   title: 'Free Kitchen Design Consult',
   description:
-    'A designer goes through your kitchen with you and gives you an itemized quote, priced RTA and assembled. In a showroom or on a video call from any state. Free, no deposit, no obligation.',
+    'A designer goes through your kitchen with you and gives you an itemized quote, priced RTA and assembled, in a showroom or on a video call. Free, no deposit, no obligation.',
 };
 
 // Arun's brief of 27 Oct 2026 (revised the same day: quote-led copy, same-day reply, the $85

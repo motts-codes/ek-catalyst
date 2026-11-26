@@ -34,7 +34,7 @@ import {
 
 export const metadata: Metadata = {
   // The site template appends " - Express Kitchens".
-  title: 'Your Whole Kitchen: Cabinets, Countertops and Appliances',
+  title: 'Your Whole Kitchen From One Supplier',
   description:
     'Cabinets, countertops, appliances, sinks and hardware that fit together, in stock and ready to order online. See your price in four steps. Free shipping over $2,500.',
 };

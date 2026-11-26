@@ -9,7 +9,7 @@ import { SHOWROOMS } from '~/lib/home/home-content';
 export const metadata: Metadata = {
   title: 'Price Match Guarantee',
   description:
-    "Bring any competitor cabinet quote of $3,000+ to an Express Kitchens showroom. We'll beat it with plywood boxes, soft-close hinges and full-extension glides included, or give you a $500 credit. Until Nov 30, 2026.",
+    "Bring any competitor cabinet quote of $3,000 or more to a showroom. We beat it, plywood boxes and soft-close hardware included, or you get a $500 credit. Until Nov 30, 2026.",
 };
 
 // The live offer (until Nov 30, 2026): in-store, at the showrooms, on Star Cabinetry cabinets

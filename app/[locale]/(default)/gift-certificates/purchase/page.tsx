@@ -21,10 +21,10 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
-  const t = await getTranslations({ locale, namespace: 'GiftCertificates' });
-
   return {
-    title: t('Purchase.title'),
+    title: 'Buy a Digital Gift Certificate',
+    description:
+      'Express Kitchens gift certificates are delivered by email and redeemed at checkout on cabinets, countertops, appliances and everything else in the store.',
     alternates: await getMetadataAlternates({ path: '/gift-certificates/purchase', locale }),
   };
 }

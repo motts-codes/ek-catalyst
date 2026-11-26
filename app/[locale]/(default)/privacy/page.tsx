@@ -7,7 +7,8 @@ import { PRIVACY_SECTIONS } from '~/lib/pages/legal';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'What Express Kitchens collects, why, and how it is protected.',
+  description:
+    'How Express Kitchens collects, uses and protects your information, which cookies this site sets, and how to reach us about your data.',
 };
 
 export default async function Privacy({ params }: { params: Promise<{ locale: string }> }) {

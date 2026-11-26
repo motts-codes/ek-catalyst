@@ -37,7 +37,7 @@ interface Props {
 export const metadata: Metadata = {
   title: 'Assembled Kitchen Cabinets',
   description:
-    'Premium, ready-to-install assembled cabinets in a range of door styles and finishes.',
+    'Assembled kitchen cabinets built in Connecticut, shipped ready to install in about three weeks. Shaker, modern and traditional doors, framed or frameless, one-year warranty.',
 };
 
 // Assembled cabinet lines landing page. A card per cabinet line/finish (Avon, Dover, …), driven by

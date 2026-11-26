@@ -11,7 +11,7 @@ import { PageBreadcrumbs } from '@/vibes/soul/sections/page-kit';
 import { FREE_DESIGN_HREF, SHOWROOMS } from '~/lib/home/home-content';
 
 export const metadata: Metadata = {
-  title: 'Sale',
+  title: 'Sale: Cabinets, Appliances and More',
   description:
     'Everything with a sale price on it right now: cabinets, closets, appliances, windows and accessories.',
 };

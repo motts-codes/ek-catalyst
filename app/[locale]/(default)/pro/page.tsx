@@ -41,7 +41,7 @@ interface Props {
 
 export function generateMetadata(): Metadata {
   return {
-    title: 'Pro: Contractors, Designers, Multifamily and Commercial',
+    title: 'Pro: Contractors, Designers and Builders',
     description:
       'Special pricing for contractors and builders, 50,000+ cabinets in stock, and ship dates you can quote. Express Kitchens for the trade. Call or text 860-247-1000, 24/7.',
   };

@@ -12,7 +12,7 @@ import { SPOTLIGHT_REVIEWS } from '~/lib/pages/reviews';
 export const metadata: Metadata = {
   title: 'Customer Reviews',
   description:
-    'Over 110 years, thousands of homeowners have planned, ordered and lived with Express Kitchens cabinets. What they say about our designers, delivery, prices and the cabinets themselves.',
+    'Thousands of homeowners have planned, ordered and lived with Express Kitchens cabinets over 110 years. What they say about our designers, delivery, prices and the cabinets.',
 };
 
 const BEST_SELLERS = { label: 'See our best-selling kitchens', href: '/inspiration/best-sellers' };

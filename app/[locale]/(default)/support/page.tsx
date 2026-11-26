@@ -8,7 +8,7 @@ import { ShowroomMapBand } from '@/vibes/soul/sections/showroom-map-band';
 import { SHOWROOMS } from '~/lib/pages/showrooms';
 
 export const metadata: Metadata = {
-  title: 'Support',
+  title: 'Customer Support',
   description:
     'Call or text 860-247-1000 any time. Order status and changes, Bristol pickups, delivery damage, and the policies that answer most questions.',
 };

@@ -17,7 +17,7 @@ import { FINANCING_PLANS, monthlyExample } from '~/lib/pages/financing';
 export const metadata: Metadata = {
   title: 'Kitchen Financing through GreenSky',
   description:
-    'Spread the cost of your kitchen with GreenSky financing: fixed rates from 9.99% APR, promo plans that waive interest, terms up to 180 months. Apply in any Express Kitchens showroom.',
+    'Spread the cost of your kitchen with GreenSky financing: fixed rates from 9.99% APR, promo plans that waive interest and terms up to 180 months. Apply in any showroom.',
 };
 
 const SHOWROOMS_HREF = '/showrooms';

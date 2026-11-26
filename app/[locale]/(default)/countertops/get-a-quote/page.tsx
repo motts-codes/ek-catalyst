@@ -14,9 +14,9 @@ import {
 import { submitQuoteLead } from '~/lib/forms/submit-lead';
 
 export const metadata: Metadata = {
-  title: 'Get a Countertop Quote: Granite from $49.99, Quartz from $59.99 per sq ft',
+  title: 'Countertop Quote: Granite and Quartz',
   description:
-    'Tell us the rough size, material and cut-outs and we price your countertop within 1 business day. Granite from $49.99 and quartz from $59.99 a square foot. Or call 860-247-1000 to order.',
+    'Tell us the rough size, material and cut-outs and we price your countertop within one business day. Granite from $49.99 and quartz from $59.99 per square foot.',
 };
 
 // The one countertop quote page. Product cards and product pages in the countertop categories

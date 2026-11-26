@@ -18,7 +18,7 @@ import {
 } from '@/vibes/soul/sections/page-kit';
 
 export const metadata: Metadata = {
-  title: 'Warranty',
+  title: 'Cabinet Warranty',
   description:
     "Every cabinet is covered for 1 year from the date of purchase against defects in materials and workmanship. What's covered, what isn't, and how to make a claim.",
 };

@@ -7,7 +7,8 @@ import { TERMS_SECTIONS } from '~/lib/pages/legal';
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
-  description: 'The terms for using this site and ordering from Express Kitchens.',
+  description:
+    'The terms for using this site and ordering from Express Kitchens: orders, payment, delivery, returns and what we ask of you.',
 };
 
 export default async function Terms({ params }: { params: Promise<{ locale: string }> }) {

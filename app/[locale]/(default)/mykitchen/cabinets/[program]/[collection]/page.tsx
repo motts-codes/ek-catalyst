@@ -41,8 +41,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const label = prog === 'assembled' ? 'Assembled' : 'RTA';
 
   return {
-    title: `${ref.name} ${label} Cabinets: Overview`,
-    description: `Explore the ${ref.name} ${label} cabinet collection: materials, construction, and inspiration.`,
+    title: `${ref.name} ${label} Cabinets`,
+    description: `${ref.name} ${prog === 'assembled' ? 'assembled' : 'RTA'} cabinets from Express Kitchens: door style, construction and finishes, 10×10 price and lead time, and real kitchens to browse before you order.`,
   };
 }
 

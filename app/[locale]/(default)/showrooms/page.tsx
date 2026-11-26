@@ -20,7 +20,7 @@ import { SHOWROOMS } from '~/lib/pages/showrooms';
 export const metadata: Metadata = {
   title: 'Showrooms in Connecticut',
   description:
-    'Six Express Kitchens showrooms across Connecticut. Walk through full kitchens, hold the doors, and get your kitchen priced by a designer while you are there. Free, and walk-ins are welcome.',
+    'Six Express Kitchens showrooms across Connecticut. Walk through full kitchens, hold the doors, and have a designer price your kitchen while you are there. Walk-ins welcome.',
 };
 
 export default async function Showrooms({ params }: { params: Promise<{ locale: string }> }) {
