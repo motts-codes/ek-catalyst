@@ -65,6 +65,8 @@ export default async (): Promise<NextConfig> => {
 
   let nextConfig: NextConfig = {
     reactStrictMode: true,
+    // No `X-Powered-By: Next.js` on responses (framework disclosure, EK security audit 26 Nov 2026).
+    poweredByHeader: false,
     experimental: {
       optimizePackageImports: ['@icons-pack/react-simple-icons'],
       // Build-time prerendering hits the BigCommerce API for ~100 pages at once; a single 429
