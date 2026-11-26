@@ -168,7 +168,9 @@ export function ProductsListSection({
                     'flex items-center gap-2 font-heading',
                     headingLevel === 2
                       ? 'text-lg font-bold leading-tight @xl:text-xl'
-                      : 'text-3xl font-medium leading-none @lg:text-4xl @2xl:text-5xl',
+                      : // Brand and search pages: a listing title, not a hero (48px read as too big
+                        // next to the 2xl category heroes, per EK 26 Nov 2026).
+                        'text-2xl font-medium leading-none @lg:text-3xl',
                   )}
                 >
                   <Suspense
