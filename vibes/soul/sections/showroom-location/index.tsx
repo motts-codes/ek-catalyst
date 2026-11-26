@@ -8,6 +8,7 @@ import type { Map as MapboxMap, Marker } from 'mapbox-gl';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { retryStyleOnce } from '@/vibes/soul/lib/mapbox-style-retry';
 import { slideFill } from '@/vibes/soul/lib/slide-fill';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import {
@@ -237,6 +238,7 @@ function ShowroomMap({ showroom, token }: { showroom: Showroom; token?: string }
       });
 
       map = created;
+      retryStyleOnce(created, MAP_STYLE, () => cancelled);
       // The address card sits top-left over the map, so the pin is pushed below it.
       created.setPadding({ top: 150, left: 0, right: 0, bottom: 0 });
       created.jumpTo({ center: [showroom.coords.lng, showroom.coords.lat] });

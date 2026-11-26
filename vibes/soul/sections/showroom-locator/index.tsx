@@ -8,6 +8,7 @@ import type { Map as MapboxMap, Marker } from 'mapbox-gl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { retryStyleOnce } from '@/vibes/soul/lib/mapbox-style-retry';
 import { animatedUnderlineClassName } from '@/vibes/soul/primitives/animated-underline';
 import { HomeSection, MediaPlaceholder } from '@/vibes/soul/sections/home-section';
 import { Link } from '~/components/link';
@@ -123,6 +124,7 @@ export function ShowroomLocator({
       });
 
       map = created;
+      retryStyleOnce(created, MAP_STYLE, () => cancelled);
       mapRef.current = created;
 
       // Belt and braces: measure again on the next frame and once the first tiles are in, in
