@@ -65,6 +65,8 @@ function fields(
         { label: 'In the showroom', value: 'showroom' },
         { label: 'On a video call', value: 'video' },
       ],
+      // In the showroom is the usual answer, so it is picked for you (per EK, 26 Nov 2026).
+      defaultValue: 'showroom',
     },
     {
       type: 'date',
