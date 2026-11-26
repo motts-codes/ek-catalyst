@@ -3,6 +3,7 @@
 import { clsx } from 'clsx';
 import { Fragment, useState } from 'react';
 
+import { PlusMinus } from '@/vibes/soul/primitives/plus-minus';
 import { FaqSchema } from '@/vibes/soul/sections/faq/faq-schema';
 import { SectionLayout } from '@/vibes/soul/sections/section-layout';
 import { Link } from '~/components/link';
@@ -75,23 +76,15 @@ function FaqRow({
       <dt>
         <button
           aria-expanded={open}
-          className="flex w-full items-center justify-between gap-4 py-4 text-left"
+          className="group flex w-full items-center justify-between gap-4 py-4 text-left"
           onClick={onToggle}
           type="button"
         >
           <span className="font-[family-name:var(--font-family-heading)] text-base font-semibold leading-snug @xl:text-lg">
             {q}
           </span>
-          <span aria-hidden className="relative size-5 shrink-0 text-contrast-400">
-            {/* +/- toggle */}
-            <span className="absolute left-0 top-1/2 h-0.5 w-5 -translate-y-1/2 bg-current" />
-            <span
-              className={clsx(
-                'absolute left-1/2 top-0 h-5 w-0.5 -translate-x-1/2 bg-current transition-transform duration-200',
-                open && 'rotate-90 opacity-0',
-              )}
-            />
-          </span>
+          {/* Bare + / − sign, red on hover and while open: the same toggle as the FAQ page. */}
+          <PlusMinus open={open} />
         </button>
       </dt>
       <dd

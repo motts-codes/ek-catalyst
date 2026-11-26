@@ -1,9 +1,10 @@
 'use client';
 
 import { clsx } from 'clsx';
-import { Check, Link2, Minus, Plus, Search, X } from 'lucide-react';
+import { Check, Link2, Search, X } from 'lucide-react';
 import { useDeferredValue, useEffect, useId, useMemo, useRef, useState } from 'react';
 
+import { PlusMinus } from '@/vibes/soul/primitives/plus-minus';
 import { type GlossaryGroup, termId } from '~/lib/pages/cabinet-glossary';
 
 interface Props {
@@ -249,24 +250,8 @@ function GroupRow({
               {group.terms.length}
             </span>
           </span>
-          {/* + closed, − open: the same expand / collapse sign as the FAQ rows elsewhere, rather
-              than a rotated + that reads as "close". */}
-          <span
-            aria-hidden
-            className={clsx(
-              // Small on phones (16px ring, 9px glyph, per Arun); the full 28px ring from tablet up.
-              'flex size-4 shrink-0 items-center justify-center rounded-full border transition-colors @md:size-7',
-              open
-                ? 'border-[var(--button-primary-background,#d90716)] text-[var(--button-primary-background,#d90716)]'
-                : 'border-contrast-200 text-contrast-500 group-hover:border-[var(--button-primary-background,#d90716)] group-hover:text-[var(--button-primary-background,#d90716)]',
-            )}
-          >
-            {open ? (
-              <Minus className="size-[9px] @md:size-4" strokeWidth={2.25} />
-            ) : (
-              <Plus className="size-[9px] @md:size-4" strokeWidth={2.25} />
-            )}
-          </span>
+          {/* + closed, − open (bare sign, no ring): shared with every other FAQ toggle. */}
+          <PlusMinus open={open} size="lg" />
         </button>
       </h2>
       <div
