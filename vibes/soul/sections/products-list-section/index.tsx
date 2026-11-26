@@ -139,10 +139,11 @@ export function ProductsListSection({
               {(breadcrumbs) =>
                 breadcrumbs &&
                 breadcrumbs.length > 1 && (
-                  // Match the PDP breadcrumb treatment: 10px, light grey.
+                  // The same treatment as the category and content pages (11px, contrast-500,
+                  // 7:1). The old 10px contrast-300 measured 2:1 in EK's audit (26 Nov 2026).
                   <Breadcrumbs
                     breadcrumbs={breadcrumbs}
-                    className="[&_a]:!text-contrast-300 [&_ol]:!text-[10px] [&_span]:!text-contrast-300 [&_svg]:!text-contrast-300"
+                    className="[&_a]:!text-contrast-500 [&_ol]:!text-[11px] [&_span]:!text-contrast-500 [&_svg]:!text-contrast-400"
                   />
                 )
               }
