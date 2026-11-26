@@ -116,7 +116,6 @@ export function ProductList({
             <ProductListEmptyState
               emptyStateSubtitle={emptyStateSubtitle}
               emptyStateTitle={emptyStateTitle}
-              placeholderCount={placeholderCount}
             />
           );
         }
@@ -187,34 +186,30 @@ export function ProductListSkeleton({
 
 export function ProductListEmptyState({
   className,
-  placeholderCount = 8,
   emptyStateTitle,
   emptyStateSubtitle,
 }: Pick<
   ProductListProps,
   'className' | 'placeholderCount' | 'emptyStateTitle' | 'emptyStateSubtitle'
 >) {
+  // Just the message, in the soft panel the FAQ and glossary use for "nothing matches". The
+  // stock Catalyst version drew a faded grid of ghost product cards behind it, which EK's audit
+  // read as loading skeletons stuck on the page (26 Nov 2026).
   return (
-    <Skeleton.Root className={clsx('relative', className)}>
-      <div
-        className={clsx(
-          'mx-auto grid grid-cols-2 gap-x-4 gap-y-6 [mask-image:linear-gradient(to_bottom,_black_0%,_transparent_90%)] @2xl:grid-cols-3 @2xl:gap-x-6 @2xl:gap-y-8 @5xl:grid-cols-4',
-        )}
-      >
-        {Array.from({ length: placeholderCount }).map((_, index) => (
-          <ProductCardSkeleton key={index} />
-        ))}
+    <div
+      className={clsx(
+        'rounded-3xl border border-contrast-100 bg-[#fdf8f8] px-6 py-14 text-center @4xl:py-20',
+        className,
+      )}
+    >
+      <div className="mx-auto max-w-xl space-y-2 @4xl:space-y-3">
+        <h3 className="font-[family-name:var(--product-list-empty-state-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-tight text-[var(--product-list-empty-state-title,hsl(var(--foreground)))] @4xl:text-3xl">
+          {emptyStateTitle}
+        </h3>
+        <p className="font-[family-name:var(--product-list-empty-state-subtitle-font-family,var(--font-family-body))] text-sm text-[var(--product-list-empty-state-subtitle,hsl(var(--contrast-500)))] @4xl:text-base">
+          {emptyStateSubtitle}
+        </p>
       </div>
-      <div className="absolute inset-0 mx-auto px-3 py-16 pb-3 @4xl:px-10 @4xl:pb-10 @4xl:pt-28">
-        <div className="mx-auto max-w-xl space-y-2 text-center @4xl:space-y-3">
-          <h3 className="font-[family-name:var(--product-list-empty-state-title-font-family,var(--font-family-heading))] text-2xl leading-tight text-[var(--product-list-empty-state-title,hsl(var(--foreground)))] @4xl:text-4xl @4xl:leading-none">
-            {emptyStateTitle}
-          </h3>
-          <p className="font-[family-name:var(--product-list-empty-state-subtitle-font-family,var(--font-family-body))] text-sm text-[var(--product-list-empty-state-subtitle,hsl(var(--contrast-500)))] @4xl:text-lg">
-            {emptyStateSubtitle}
-          </p>
-        </div>
-      </div>
-    </Skeleton.Root>
+    </div>
   );
 }
