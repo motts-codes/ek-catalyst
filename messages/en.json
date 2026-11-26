@@ -146,8 +146,8 @@
         "search": "Search"
       },
       "Empty": {
-        "title": "Sorry, no results for \"{term}\".",
-        "subtitle": "Please try another search."
+        "title": "Nothing matched that search.",
+        "subtitle": "Try a shorter word or check the spelling, or browse the categories in the menu."
       }
     },
     "FacetedSearch": {

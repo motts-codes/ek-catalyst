@@ -170,13 +170,6 @@ export default async function Search(props: Props) {
     });
   });
 
-  const streamableEmptyStateTitle = Streamable.from(async () => {
-    const searchParams = await props.searchParams;
-    const searchTerm = typeof searchParams.term === 'string' ? searchParams.term : '';
-
-    return t('Search.Empty.title', { term: searchTerm });
-  });
-
   const streamablePagination = Streamable.from(async () => {
     const searchParams = await props.searchParams;
     const searchTerm = typeof searchParams.term === 'string' ? searchParams.term : '';
@@ -259,10 +252,11 @@ export default async function Search(props: Props) {
       countLabel={streamableCountLabel}
       density="compact"
       emptyStateSubtitle={t('Search.Empty.subtitle')}
-      emptyStateTitle={streamableEmptyStateTitle}
+      emptyStateTitle={t('Search.Empty.title')}
       filterLabel={t('FacetedSearch.filters')}
       filters={streamableFilters}
       filtersPanelTitle={t('FacetedSearch.filters')}
+      hideActiveTerm
       maxCompareLimitMessage={t('Compare.maxCompareLimit')}
       maxItems={MAX_COMPARE_LIMIT}
       pagination={streamablePagination}

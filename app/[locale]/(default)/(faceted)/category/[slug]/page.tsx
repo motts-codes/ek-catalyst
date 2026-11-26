@@ -431,6 +431,9 @@ export default async function Category(props: Props) {
   //  - selectedProgram: the EXPLICIT ?program= selection, or null when absent — drives the GRID
   //    filter, so a bare /cabinets/avon (no ?program) shows ALL products (both programs).
   const searchParamsForLinks = await props.searchParams;
+  // A search term (typed, or from a "Shop by" tile) that leaves the grid empty: name it.
+  const emptyTerm =
+    typeof searchParamsForLinks.term === 'string' ? searchParamsForLinks.term.trim() : '';
   const programParam = searchParamsForLinks.program;
   // A collection sold in one program only (Prism, Euro Value, Rochelle…) ignores a request for the
   // other: header, pricing, FAQ and grid all fall back to the program it actually has.
@@ -786,8 +789,12 @@ export default async function Category(props: Props) {
           compareProducts={streamableCompareProducts}
           countLabel={streamableCountLabel}
           density={density}
-          emptyStateSubtitle={t('Category.Empty.subtitle')}
-          emptyStateTitle={t('Category.Empty.title')}
+          emptyStateSubtitle={
+            emptyTerm ? 'Clear the search above or try another word.' : t('Category.Empty.subtitle')
+          }
+          emptyStateTitle={
+            emptyTerm ? `No products match “${emptyTerm}” here.` : t('Category.Empty.title')
+          }
           filterLabel={t('FacetedSearch.filters')}
           filters={streamableFilters}
           filtersPanelTitle={t('FacetedSearch.filters')}

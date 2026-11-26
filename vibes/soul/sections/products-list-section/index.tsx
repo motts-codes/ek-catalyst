@@ -37,6 +37,8 @@ interface Props {
   title?: Streamable<string | null>;
   /** Hide the page heading (title + product count); the sort control moves to the left. */
   hideHeader?: boolean;
+  /** The heading already names the search term (the search page), so don't repeat it inline. */
+  hideActiveTerm?: boolean;
   /** 2 when the page already has its own h1 above the grid (smaller, section-sized heading). */
   headingLevel?: 1 | 2;
   totalCount: Streamable<string>;
@@ -87,6 +89,7 @@ export function ProductsListSection({
   breadcrumbs: streamableBreadcrumbs,
   title = 'Products',
   hideHeader = false,
+  hideActiveTerm = false,
   headingLevel = 1,
   totalCount,
   countLabel,
@@ -193,7 +196,7 @@ export function ProductsListSection({
                   >
                     <span className="text-contrast-400">{totalCount}</span>
                   </Suspense>
-                  <ActiveTerm />
+                  {!hideActiveTerm && <ActiveTerm />}
                 </Heading>
               )}
               <div
