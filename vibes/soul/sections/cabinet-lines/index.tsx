@@ -195,7 +195,7 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
                   />
                 ))}
               </span>
-              <span className="text-xs font-semibold tracking-wide text-[#6b6b6b]">
+              <span className="text-[11px] font-semibold tracking-wide text-[#6b6b6b]">
                 Choose from {line.finishSwatches.length} colors
               </span>
             </div>
@@ -207,8 +207,9 @@ export function CabinetLineCard({ line }: { line: CabinetLine }) {
             (was-price #d4d4d4, finance #f9858d) and are replaced with #6b6b6b and brand red. */}
         {hasFacts(line) && (
           <>
-            {/* 12px: the live landing page's 9px label failed EK's audit ("body text renders at 9.33px"). */}
-            <p className="mt-1 text-xs font-semibold tracking-wide text-[#6b6b6b]">
+            {/* A quiet eyebrow: it repeats on every card, so small on purpose (per Arun), but 11px
+                uppercase rather than the landing page's 9px, which failed EK's audit. */}
+            <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b]">
               10x10 Kitchen starting
             </p>
             {/* Two cells: the price (and was-price) on the left; on the right the finance line and
