@@ -42,7 +42,7 @@ export function ListSearch({ placeholder = 'Search products' }: { placeholder?: 
       <Search aria-hidden className="shrink-0 text-contrast-400" size={14} strokeWidth={1.75} />
       <input
         aria-label={placeholder}
-        className="h-full w-full min-w-0 bg-transparent px-2 text-xs placeholder:text-contrast-400 focus:outline-none @md:w-40 @2xl:w-56"
+        className="h-full w-full min-w-0 bg-transparent px-2 text-xs placeholder:text-contrast-400 focus:outline-none @md:w-40 @2xl:w-56 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-cancel-button]:[-webkit-appearance:none] [&::-webkit-search-decoration]:hidden"
         name="term"
         onChange={(event) => setValue(event.currentTarget.value)}
         placeholder={placeholder}

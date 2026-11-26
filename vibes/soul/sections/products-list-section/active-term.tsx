@@ -5,9 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import { parseAsString, useQueryStates } from 'nuqs';
 import { useTransition } from 'react';
 
-// Says, above the grid, that the listing is narrowed by a search term (typed, or from a "Shop by
-// finish / type / width" tile, which narrows by term too) and offers to clear it in one click.
-// Without a term it renders nothing.
+// The search term the listing is narrowed by (typed, or from a "Shop by finish / type / width"
+// tile, which narrows by term too), shown inline after the product count as
+// "18 products | fingerprint ×", the × clearing it. Without a term it renders nothing.
 export function ActiveTerm() {
   const [, setParams] = useQueryStates(
     { term: parseAsString, before: parseAsString, after: parseAsString, page: parseAsString },
@@ -15,7 +15,7 @@ export function ActiveTerm() {
   );
   const [isPending, startTransition] = useTransition();
   // Read from the URL itself: the nuqs value lags behind a client-side navigation (a "Shop by"
-  // tile is a plain link), and the chip must appear the moment the tile lands.
+  // tile is a plain link), and the term must show the moment the tile lands.
   const term = useSearchParams().get('term')?.trim();
 
   if (!term) return null;
@@ -27,22 +27,26 @@ export function ActiveTerm() {
   };
 
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-contrast-500">
-      <span>Showing results for</span>
+    <span className="inline-flex items-center gap-1.5 text-sm font-normal text-foreground">
+      <span aria-hidden className="text-contrast-300">
+        |
+      </span>
+      <span>
+        <span className="sr-only">matching </span>
+        {term}
+      </span>
       <button
         aria-label={`Clear “${term}” and show everything`}
-        className="inline-flex items-center gap-1.5 rounded-full border border-[#fcb6bb] bg-[#fdf3f5] py-1 pl-3 pr-2 text-sm font-semibold capitalize text-[var(--button-primary-background,#d90716)] transition-colors hover:border-[var(--button-primary-background,#d90716)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)] focus-visible:ring-offset-2"
+        className="flex size-5 items-center justify-center rounded-full text-contrast-400 transition-colors hover:bg-contrast-100 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--button-primary-background,#d90716)]"
         onClick={clear}
         type="button"
       >
-        {term}
         {isPending ? (
-          <Loader2 aria-hidden className="animate-spin" size={14} />
+          <Loader2 aria-hidden className="animate-spin" size={13} />
         ) : (
-          <X aria-hidden size={14} strokeWidth={2.25} />
+          <X aria-hidden size={13} strokeWidth={2.25} />
         )}
       </button>
-      <span className="text-xs text-contrast-400">Click to clear</span>
-    </div>
+    </span>
   );
 }

@@ -158,8 +158,13 @@ export function ProductsListSection({
                     <span className="inline-flex h-5 w-[9ch] animate-pulse rounded-lg bg-contrast-100" />
                   }
                 >
-                  <p aria-live="polite" className="text-sm font-bold text-foreground">
+                  <p
+                    aria-live="polite"
+                    className="flex items-center gap-1.5 text-sm font-bold text-foreground"
+                  >
                     {countLabel}
+                    {/* "18 products | fingerprint ×" when a term narrows the grid. */}
+                    <ActiveTerm />
                   </p>
                 </Suspense>
               )}
@@ -188,6 +193,7 @@ export function ProductsListSection({
                   >
                     <span className="text-contrast-400">{totalCount}</span>
                   </Suspense>
+                  <ActiveTerm />
                 </Heading>
               )}
               <div
@@ -277,8 +283,6 @@ export function ProductsListSection({
             )}
 
             <div className="group-has-data-pending/products-list-section:animate-pulse min-w-0 flex-1">
-              {/* "Showing results for “stainless steel” ×" when a term narrows the grid. */}
-              <ActiveTerm />
               <ProductList
                 addToCartAction={addToCartAction}
                 compareHref={compareHref}
