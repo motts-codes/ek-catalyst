@@ -192,16 +192,11 @@ export function ProductListEmptyState({
   ProductListProps,
   'className' | 'placeholderCount' | 'emptyStateTitle' | 'emptyStateSubtitle'
 >) {
-  // Just the message, in the soft panel the FAQ and glossary use for "nothing matches". The
-  // stock Catalyst version drew a faded grid of ghost product cards behind it, which EK's audit
-  // read as loading skeletons stuck on the page (26 Nov 2026).
+  // Just the message: no panel, no ghost cards. The stock Catalyst version drew a faded grid of
+  // skeleton product cards behind it, which EK's audit read as loading cards stuck on the page
+  // (26 Nov 2026); a tinted box was tried and dropped too, per Arun.
   return (
-    <div
-      className={clsx(
-        'rounded-3xl border border-contrast-100 bg-[#fdf8f8] px-6 py-14 text-center @4xl:py-20',
-        className,
-      )}
-    >
+    <div className={clsx('px-6 py-14 text-center @4xl:py-20', className)}>
       <div className="mx-auto max-w-xl space-y-2 @4xl:space-y-3">
         <h3 className="font-[family-name:var(--product-list-empty-state-title-font-family,var(--font-family-heading))] text-2xl font-semibold leading-tight text-[var(--product-list-empty-state-title,hsl(var(--foreground)))] @4xl:text-3xl">
           {emptyStateTitle}
