@@ -45,25 +45,36 @@ interface Props {
 }
 
 // Render a formatted price (e.g. "$708.99") with the currency symbol and cents as superscript
-// and the period dropped: $⁷⁰⁸ with a raised ⁹⁹. Falls back to the raw string if it doesn't match
-// the expected <symbol><whole>.<cents> shape (e.g. ranges, unusual formats), so nothing breaks.
+// and the period visually dropped: $⁷⁰⁸ with a raised ⁹⁹. Falls back to the raw string if it doesn't
+// match the expected <symbol><whole>.<cents> shape (e.g. ranges, unusual formats), so nothing breaks.
 // Exported so other surfaces (e.g. cabinet line cards) render the identical PDP price style.
+//
+// The decimal separator stays in the DOM, visually hidden, so screen readers, innerText and
+// copy/paste all read "$708.99" (EK's audit, 27 Nov 2026: cards announced "$7399"). An aria-label
+// on a plain <span> is not reliably announced, so the real text has to be right.
 export function SuperscriptPrice({ formatted }: { formatted: string }) {
-  const match = /^(\D*)(\d[\d,]*)(?:[.,](\d+))?(\D*)$/.exec(formatted);
+  const match = /^(\D*)(\d[\d,]*)(?:([.,])(\d+))?(\D*)$/.exec(formatted);
 
   if (!match) {
-    return <>{formatted}</>;
+    return formatted;
   }
 
-  const [, symbol, whole, cents, suffix] = match;
+  const [, symbol, whole, separator, cents, suffix] = match;
 
   // Superscript pieces sit ~2px lower than the default super baseline (align-[1em] instead of
   // align-super). The whole-number portion is 1.5x the base size so it reads as the dominant price.
   return (
-    <span aria-label={formatted}>
+    <span>
       {symbol ? <span className="align-[1em] text-[0.6em]">{symbol}</span> : null}
       <span className="text-[1.5em]">{whole}</span>
-      {cents ? <span className="align-[1em] text-[0.6em]">{cents}</span> : null}
+      {cents ? (
+        <>
+          {/* Zero-width but still in the inline flow: sr-only's position:absolute makes innerText
+              break the line around the separator ("$70 . 06"). */}
+          <span className="inline-block w-0 overflow-hidden whitespace-nowrap">{separator}</span>
+          <span className="align-[1em] text-[0.6em]">{cents}</span>
+        </>
+      ) : null}
       {suffix || null}
     </span>
   );
@@ -196,8 +207,9 @@ export function PriceLabel({
         <span aria-hidden>
           <SuperscriptPrice formatted={price.current[tax]} />
         </span>
+        <span className="sr-only">{t('originalPrice', { price: price.previous[tax] })}</span>
         <s
-          aria-label={t('originalPrice', { price: price.previous[tax] })}
+          aria-hidden
           className="ml-2 font-[family-name:var(--font-family-body)] text-[0.9em] font-normal text-contrast-400"
         >
           {price.previous[tax]}
